@@ -4,13 +4,23 @@ import sys
 sys.path.append("../geonode")
 from pavement import *
 
+
+@cmdopts([
+    ('bind=', 'b', 'Bind server to provided IP address and port number.')
+])
 @task
-def paste(options):
+def start_django():
+    """
+    Start the GeoNode Django application
+    """
+    bind = options.get('bind', '127.0.0.1')
     # make mapstory.settings resolve
     sys.path.append(".")
     # work for potential paster system install
     from paste.script import command
-    command.run('serve --reload paster.ini'.split())
+    cmd = 'serve --reload paster.ini host=%s &' % bind
+    command.run(cmd.split())
+
 
 _geonode_static = static
 @task
