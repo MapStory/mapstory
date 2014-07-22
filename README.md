@@ -4,7 +4,7 @@ mapstory-geonode
 
 **PROVISIONAL SETUP INSTRUCTIONS**
 
-Checkout geonode, mapstory, MapLoom, django-maploom as siblings to each other.
+Checkout geonode, mapstory-geonode, MapLoom, django-maploom as siblings to each other.
 This directory will be referred to as the `root`.
 
 Follow the instructions in MapLoom to build and ensure artifacts in the `build`
