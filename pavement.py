@@ -16,6 +16,8 @@ _geonode_static = static
 @task
 def static(options):
     with pushd('mapstory/static'):
-        sh("lessc mapstory/less/base.less > geonode/css/base.css")
+        dest = 'geonode/css'
+        os.path.exists(dest) or os.makedirs(dest)
+        sh("lessc mapstory/less/base.less > %s/base.css" % dest)
     with pushd('../geonode'):
         _geonode_static(options)
