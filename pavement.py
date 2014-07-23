@@ -18,7 +18,7 @@ def start_django():
     sys.path.append(".")
     # work for potential paster system install
     from paste.script import command
-    cmd = 'serve --reload paster.ini host=%s &' % bind
+    cmd = 'serve --reload paster.ini host=%s' % bind
     command.run(cmd.split())
 
 
@@ -31,3 +31,7 @@ def static(options):
         sh("lessc mapstory/less/base.less > %s/base.css" % dest)
     with pushd('../geonode'):
         _geonode_static(options)
+
+@task
+def watch(options):
+    sh('grunt watchall', cwd='mapstory/static')
