@@ -1,0 +1,62 @@
+{% load staticfiles i18n avatar_tags %}
+
+<!DOCTYPE html>
+<html ng-app="ngBoilerplate" ng-controller="AppCtrl">
+<head>
+<title ng-bind="pageTitle"></title>
+
+<script type="text/javascript">
+  var CLOSURE_NO_DEPS = true;
+</script>
+
+<!-- compiled CSS -->
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}maploom/assets/MapLoom-0.0.1.css"/>
+
+{% include 'maps/_maploom_scripts.html' %}
+
+<script type="text/javascript">
+{% get_current_language as language %}
+config =  {
+     authStatus: {% if user.is_authenticated %} 200{% else %} 401{% endif %},
+      username: {% if user.is_authenticated %} "{{ user.username }}" {% else %} undefined {% endif %},
+      userprofilename: {% if user.is_authenticated %} "{{ user.profile.name }}" {% else %} undefined {% endif %},
+      userprofileemail: {% if user.is_authenticated %} "{{ user.profile.email }}" {% else %} undefined {% endif %},
+      currentLanguage: "{{language|default:'en'}}",
+      proxy: '{{ PROXY_URL }}',
+      {% if MF_PRINT_ENABLED %}
+      printService: "{{GEOSERVER_BASE_URL}}pdf/",
+      {% else %}
+      printService: "",
+      {% endif %}
+      /* The URL to a REST map configuration service.  This service
+       * provides listing and, with an authenticated user, saving of
+       * maps on the server for sharing and editing.
+       */
+      rest: "{% url "maps_browse" %}",
+      ajaxLoginUrl: "{% url "account_ajax_login" %}",
+      homeUrl: "{% url "home" %}",
+      portalItems: [{
+          xtype: "container",
+          layout: "fit",
+          {% if classification_banner_enabled %}
+          height: 99,
+          {% else %}
+          height: 81,
+          {% endif %}
+          region: "north"
+      }],
+      localGeoServerBaseUrl: "{{ GEOSERVER_BASE_URL }}",
+      localCSWBaseUrl: "{{ CATALOGUE_BASE_URL }}",
+      csrfToken: "{{ csrf_token }}",
+      tools: [{ptype: "gxp_getfeedfeatureinfo"}],
+};
+
+goog.object.extend( config, {{ config|safe }});
+</script>
+
+
+</head>
+<body style="height:100%">
+{% include 'maps/_maploom_body.html' %}
+</body>
+</html>

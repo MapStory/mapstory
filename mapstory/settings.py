@@ -61,7 +61,6 @@ DATABASES = {
 }
 
 INSTALLED_APPS += (
-    'maploom',
 )
 
 OGC_SERVER = {
