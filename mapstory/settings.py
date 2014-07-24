@@ -109,6 +109,7 @@ MAP_BASELAYERS = [
     }
 ]
 
+DEBUG_STATIC = True
 
 # Load more settings from a file called local_settings.py if it exists
 try:

@@ -58,8 +58,8 @@ module.exports = function(grunt) {
     // automated build on file change during development
     watch: {
       options: {
-        // disable (until needed) to prevent conflict with maploom
-        livereload: false
+        // prevent conflict with maploom
+        livereload: 35730
       },
       less: {
         files: ['mapstory/less/*.less'],

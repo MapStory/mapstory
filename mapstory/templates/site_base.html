@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ block.super }}
+{% if DEBUG_STATIC %}
+{% comment %}Using 35730 for mapstory css to not conflict with maploom grunt{% endcomment %}
+<script src="http://localhost:35730/livereload.js"></script>
+{% endif %}
+{% endblock head %}
