@@ -29,7 +29,7 @@ SITENAME = 'MapStory'
 
 # Defines the directory that contains the settings file as the LOCAL_ROOT
 # It is used for relative settings elsewhere.
-LOCAL_ROOT = os.path.abspath(os.path.dirname(__file__))
+LOCAL_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 WSGI_APPLICATION = "mapstory.wsgi.application"
 
@@ -110,8 +110,7 @@ MAP_BASELAYERS = [
 
 DEBUG_STATIC = True
 
-# Load more settings from a file called local_settings.py if it exists
-try:
-    from local_settings import *
-except ImportError:
-    pass
+SETTINGS = os.getenv('MAPSTORY_SETTINGS')
+if SETTINGS:
+    for mod in SETTINGS.split():
+        exec open('mapstory/settings/%s.py' % mod) in globals()
