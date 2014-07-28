@@ -3,3 +3,4 @@ geoserver
 development.db
 mapstory/static/geonode/css/base.css
 node_modules
+.ropeproject
