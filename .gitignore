@@ -1,6 +1,8 @@
+development.db
 downloaded
 geoserver
-development.db
 mapstory/static/geonode/css/base.css
 node_modules
+*.pyc
 .ropeproject
+static_root
