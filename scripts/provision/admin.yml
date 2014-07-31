@@ -1,0 +1,120 @@
+---
+- name: install pycurl package in order to use the apt_repository module
+  apt: pkg=python-pycurl state=present
+
+- name: add node repo
+  apt_repository: repo='ppa:chris-lea/node.js' update_cache=yes
+  tags: [install]
+
+- name: install geonode deps
+  apt: name={{item}} state=installed
+  with_items:
+    - build-essential
+    - gcc
+    - gdal-bin
+    - gettext
+    - git
+    - libgeos-dev
+    - libjpeg-dev
+    - libpng-dev
+    - libpq-dev
+    - libproj-dev
+    - libxml2-dev
+    - libxslt1-dev
+    - nodejs
+    - patch
+    - postgresql-9.3
+    - postgresql-9.3-postgis-2.1
+    - python-bs4
+    - python-dev
+    - python-django
+    - python-django-extensions
+    - python-django-jsonfield
+    - python-django-nose
+    - python-django-pagination
+    - python-django-taggit
+    - python-gdal
+    - python-httplib2
+    - python-imaging
+    - python-lxml
+    - python-multipartposthandler
+    - python-nose
+    - python-pastescript
+    - python-paver
+    - python-pillow
+    - python-pip
+    - python-psycopg2
+    - python-support
+    - python-urlgrabber
+    - python-virtualenv
+# we'll use jetty instead
+#    - tomcat7
+    - transifex-client
+    - unzip
+    - virtualenvwrapper
+    - zip
+  tags: [install]
+
+- name: install node tools
+  shell: npm install -y -g bower grunt-cli
+  tags: [install]
+
+- name: install extra
+  apt: name={{item}} state=installed
+  with_items:
+      - virtualenvwrapper
+      - gunicorn
+      # needed since we're not pulling in tomcat
+      - openjdk-7-jre
+  tags: [install]
+
+- name: install nginx
+  apt: pkg=nginx state=installed
+  tags: [install]
+
+- name: install supervisor
+  apt: pkg=supervisor state=installed
+  tags: [install]
+
+- name: mapstory user
+  user: name=mapstory groups=www-data
+  tags: [config, user]
+
+- name: srv layout
+  file: path=/srv/scripts state=directory owner=mapstory group=www-data
+  tags: [config, files]
+
+- name: git layout
+  file: path=/srv/git state=directory owner=mapstory group=www-data
+  tags: [config, files]
+
+- name: gunicorn-app
+  copy: src=files/gunicorn-app.sh dest=/srv/scripts/gunicorn-app.sh mode=650 owner=mapstory group=www-data
+  tags: [config, files, gunicorn]
+
+- name: supervisor-gunicorn
+  copy: src=files/supervisor-gunicorn-django.conf dest=/etc/supervisor/conf.d
+  notify: reload supervisor
+  tags: [config, gunicorn]
+
+- name: nginx-conf
+  copy: src=files/nginx.conf dest=/etc/nginx/sites-available/mapstory
+  tags: [config, nginx]
+
+- name: nginx-mimetype-ttf
+  lineinfile: dest=/etc/nginx/mime.types insertbefore="\}" line="application/x-font-ttf ttf;"
+  notify: restart nginx
+  tags: [config, nginx]
+
+- name: nginx-enable-mapstory
+  file: src=/etc/nginx/sites-available/mapstory dest=/etc/nginx/sites-enabled/mapstory state=link
+  notify: restart nginx
+  tags: [config, nginx]
+
+- name: nginx-disable-default
+  file: path=/etc/nginx/sites-enabled/default state=absent
+  notify: restart nginx
+  tags: [config, nginx]
+
+
+

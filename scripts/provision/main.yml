@@ -1,0 +1,25 @@
+---
+- hosts: mapstory
+  sudo: yes
+  tasks:
+    - include: admin.yml
+  handlers:
+    - include: handlers.yml
+
+- hosts: mapstory
+  sudo: yes
+  sudo_user: postgres
+  vars_files: [ vars.yml ]
+  tasks:
+    - include: postgres.yml
+  handlers:
+    - include: handlers.yml
+
+- hosts: mapstory
+  sudo: yes
+  sudo_user: mapstory
+
+  tasks:
+    - include: mapstory.yml
+  handlers:
+    - include: handlers.yml

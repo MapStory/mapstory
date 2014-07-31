@@ -1,0 +1,27 @@
+---
+- name: git-geonode
+  git: repo=git://github.com/geonode/geonode.git dest=/srv/git/geonode
+  tags: [git]
+
+- name: git-mapstory-geonode
+  git: repo=git://github.com/MapStory/mapstory-geonode.git dest=/srv/git/mapstory-geonode
+  tags: [git]
+  notify: [ reload supervisor, handle debug ]
+
+- name: git-mapstory-maploom
+  git: repo=git://github.com/MapStory/maploom.git dest=/srv/git/maploom
+  tags: [git]
+  notify: [ reload supervisor, handle debug ]
+
+- name: copy downloaded
+  copy: src={{ local_downloads }} dest=/srv/git/mapstory-geonode/downloaded
+  when: local_downloads is defined
+  tags: [files]
+
+- name: setup-project
+  script: files/setup.sh &> /tmp/setup-project.out
+  tags: [setup]
+
+- name: collect-static
+  shell: . ~/.virtualenvs/mapstory/bin/activate; cd /srv/git/mapstory-geonode; mkdir -p mapstory/static_root; python manage.py collectstatic --link --clear --noinput --ignore node_modules
+  tags: [static]
