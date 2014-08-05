@@ -18,8 +18,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "ansible" do |ansible|
     ansible.sudo = true
+    ansible.host_key_checking = false
     ansible.inventory_path = "inventory.ini"
-    ansible.playbook = "playbook.yml"
+    ansible.playbook = "main.yml"
   end
 
   config.vm.provider :virtualbox do |vb|
