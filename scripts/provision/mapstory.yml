@@ -6,12 +6,12 @@
 - name: git-mapstory-geonode
   git: repo=git://github.com/MapStory/mapstory-geonode.git dest=/srv/git/mapstory-geonode
   tags: [git]
-  notify: [ reload supervisor, handle debug ]
+  notify: [ reload supervisor ]
 
 - name: git-mapstory-maploom
   git: repo=git://github.com/MapStory/maploom.git dest=/srv/git/maploom
   tags: [git]
-  notify: [ reload supervisor, handle debug ]
+  notify: [ reload supervisor ]
 
 - name: copy downloaded
   copy: src={{ local_downloads }} dest=/srv/git/mapstory-geonode/downloaded

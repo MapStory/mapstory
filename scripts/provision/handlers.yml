@@ -2,10 +2,9 @@
   service: name=nginx state=restarted
 
 - name: reload supervisor
-  shell: /usr/bin/supervisorctl reread && /usr/bin/supervisorctl update
+  shell: /usr/bin/supervisorctl reread && /usr/bin/supervisorctl update && /usr/bin/supervisorctl restart
+  sudo: yes
+  sudo_user: root
 
 - name: reload postgres
   service: name=postgresql state=reloaded
-
-- name: handle debug
-  debug: msg='handle debug'
