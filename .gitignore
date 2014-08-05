@@ -6,4 +6,5 @@ node_modules
 *.pyc
 .ropeproject
 static_root
+uploaded
 .vagrant

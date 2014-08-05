@@ -39,6 +39,7 @@ STATICFILES_DIRS.insert( 0,
 )
 
 STATIC_ROOT = os.path.join(LOCAL_ROOT, "static_root")
+MEDIA_ROOT = os.path.join(LOCAL_ROOT, "uploaded")
 
 # Note that Django automatically includes the "templates" dir in all the
 # INSTALLED_APPS, se there is no need to add maps/templates or admin/templates
