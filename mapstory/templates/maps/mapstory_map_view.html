@@ -1,7 +1,7 @@
 {% load staticfiles i18n avatar_tags %}
 
 <!DOCTYPE html>
-<html ng-app="ngBoilerplate" ng-controller="AppCtrl">
+<html ng-app="ngBoilerplate">
 <head>
 <title ng-bind="pageTitle"></title>
 
@@ -12,6 +12,7 @@
 <!-- compiled CSS -->
 <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}maploom/assets/MapLoom-1.0.0.css"/>
 
+{% include 'maps/_map_view_common.html' %}
 {% include 'maps/_maploom_scripts.html' %}
 
 <script type="text/javascript">
@@ -57,6 +58,10 @@ goog.object.extend( config, {{ config|safe }});
 
 </head>
 <body style="height:100%">
-{% include 'maps/_maploom_body.html' %}
+
+<div ng-controller="AppCtrl">
+    {% include 'maps/_maploom_body.html' %}
+</div>
+
 </body>
 </html>

@@ -1,8 +1,12 @@
 {% load staticfiles %}
 <!-- compiled JavaScript -->
-<script type="text/javascript" src="{{STATIC_URL}}maploom/vendor/jquery/jquery.min.js"></script>
+{% comment %}
+This list was initially compiled from the generated index.html in MapLoom and is
+currently maintained manually.
+angular and jquery were moved to the _map_view_common.html template
+@todo generate this from MapLoom
+{% endcomment %}
 <script type="text/javascript" src="{{STATIC_URL}}maploom/vendor/jquery-sortable/source/js/jquery-sortable-min.js"></script>
-<script type="text/javascript" src="{{STATIC_URL}}maploom/vendor/angular/angular.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}maploom/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}maploom/vendor/angular-ui-router/release/angular-ui-router.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}maploom/vendor/bootstrap/dist/js/bootstrap.js"></script>
