@@ -1,0 +1,41 @@
+@maploom: '../../../../../MapLoom/';
+@maploom-src: '@{maploom}src/';
+
+@import '@{maploom}vendor/bootstrap/less/bootstrap.less';
+/* keep upstream untouched */
+@import '@{maploom-src}less/variables.less';
+/* and put variable overrides here */
+@import 'app-variables.less';
+/* pull in all the maploom less */
+@import 'maploom.less';
+
+/* Overrides
+Put any rules that we're modifiying to fix something inherited in this section
+with a comment about why.
+*/
+
+/* maploom makes ul have overflow-y */
+.tabbable {
+    .nav {
+        overflow: hidden;
+    }
+}
+
+/* hide gallery until we need it
+@todo it's CSS still needs to be pulled in for dev mode
+*/
+#blueimp-gallery {
+    display: none;
+}
+
+/* Additions
+Our own additional rules go in this section
+*/
+body, html {
+    height: 100%;
+}
+
+.todo {
+    background: pink;
+}
+

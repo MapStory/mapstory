@@ -9,8 +9,8 @@
   var CLOSURE_NO_DEPS = true;
 </script>
 
-<!-- compiled CSS -->
-<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}maploom/assets/MapLoom-1.0.0.css"/>
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}mapstory/css/app.css"/>
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}maploom/vendor/ol3/ol.css"/>
 
 {% include 'maps/_map_view_common.html' %}
 {% include 'maps/_maploom_scripts.html' %}
@@ -56,12 +56,58 @@ goog.object.extend( config, {{ config|safe }});
 </script>
 
 
-</head>
-<body style="height:100%">
+{% if DEBUG_STATIC %}
+{% comment %}Using 35730 for mapstory css to not conflict with maploom grunt{% endcomment %}
+<script src="http://localhost:35730/livereload.js"></script>
+{% endif %}
 
-<div ng-controller="AppCtrl">
-    {% include 'maps/_maploom_body.html' %}
-</div>
+</head>
+<body>
+    <div id="ms-tl-tabs" class="tabbable">
+        <ul class="nav nav-tabs nav-tabs-simple">
+            <li>
+                <a href="{% url 'home' %}" class="orange-border">
+                    <img height="14" src="{% static 'mapstory/img/mapstory_orange_logo.gif'%}">
+                </a>
+            </li>
+            <li class="active">
+                <a href="#ms-layers-tab" data-toggle="tab" target="_blank">
+                    StoryLayers
+                </a>
+            </li>
+            <li>
+                <a href="#ms-board-tab" data-toggle="tab" target="_blank">
+                    StoryBoard
+                </a>
+            </li>
+            <li>
+                <a href="#ms-pins-tab" data-toggle="tab" target="_blank">
+                    StoryPins
+                </a>
+            </li>
+            <li>
+                <a href="#ms-preview-tab" data-toggle="tab" target="_blank">
+                    StoryPreview
+                </a>
+            </li>
+        </ul>
+		<div class="tab-content">
+			<div id="ms-layers-tab" class="tab-pane active" style="position:relative;">
+                <div ng-controller="AppCtrl" class=''>
+                    {% include 'maps/_maploom_body.html' %}
+                </div>
+            </div>
+            <div id="ms-board-tab" class="tab-pane todo">
+                board
+            </div>
+            <div id="ms-pins-tab" class="tab-pane todo">
+                pins
+            </div>
+            <div id="ms-preview-tab" class="tab-pane todo">
+                preview
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

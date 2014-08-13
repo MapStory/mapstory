@@ -15,4 +15,5 @@ urlpatterns = patterns('',
 
 if settings.DEBUG_STATIC:
     # prepend static route that loads maploom from build
-    urlpatterns = static(settings.STATIC_URL + "maploom/", document_root=settings.LOCAL_ROOT + "/../../MapLoom/build") + urlpatterns
+    urlpatterns = static(settings.STATIC_URL + "maploom/", document_root=settings.LOCAL_ROOT + "/../../MapLoom/build", show_indexes=True) + urlpatterns
+    urlpatterns = static(settings.STATIC_URL + "maploom/vendor", document_root=settings.LOCAL_ROOT + "/../../MapLoom/vendor", show_indexes=True) + urlpatterns
