@@ -26,7 +26,8 @@ module.exports = function(grunt) {
         files: [
           {
             'geonode/css/base.css': 'mapstory/less/base.less',
-            'mapstory/css/app.css': 'mapstory/less/app.less'
+            'mapstory/css/app.css': 'mapstory/less/app.less',
+            'mapstory/css/index.css': 'mapstory/less/index.less'
           }
         ]
       },

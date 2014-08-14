@@ -1,9 +1,20 @@
 {% extends "base.html" %}
 
+{% load staticfiles %}
+
 {% block head %}
+<link rel="shortcut icon" href="{% static 'mapstory/img/favicon.ico' %}">
 {{ block.super }}
 {% if DEBUG_STATIC %}
 {% comment %}Using 35730 for mapstory css to not conflict with maploom grunt{% endcomment %}
 <script src="http://localhost:35730/livereload.js"></script>
 {% endif %}
 {% endblock head %}
+
+{% block header %}
+{% include 'mapstory/_header.html' %}
+{% endblock %}
+
+{% block footer %}
+{% include 'mapstory/_footer.html' %}
+{% endblock %}

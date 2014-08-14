@@ -64,6 +64,8 @@ DATABASES = {
 }
 
 INSTALLED_APPS += (
+    'mapstory',
+    'django.contrib.webdesign',
 )
 
 OGC_SERVER = {
@@ -112,6 +114,8 @@ MAP_BASELAYERS = [
 ]
 
 DEBUG_STATIC = True
+
+REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/MapStoryOrg/images'
 
 SETTINGS = os.getenv('MAPSTORY_SETTINGS')
 if SETTINGS:

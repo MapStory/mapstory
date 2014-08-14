@@ -3,6 +3,7 @@ downloaded
 geoserver
 mapstory/static/geonode/css/base.css
 mapstory/static/mapstory/css
+mapstory/static/vendor/
 node_modules
 *.pyc
 .ropeproject

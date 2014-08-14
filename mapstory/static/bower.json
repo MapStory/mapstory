@@ -1,0 +1,10 @@
+{
+  "name": "mapstory",
+  "version": "0.0.1",
+  "devDependencies": {},
+  "dependencies": {
+    "jquery.stellar" : "0.6.2",
+    "modernizr" : "2.6.1",
+    "isotope" : "1.5.21"
+  }
+}
