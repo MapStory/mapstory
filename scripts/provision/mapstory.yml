@@ -9,7 +9,7 @@
   notify: [ reload supervisor ]
 
 - name: git-mapstory-maploom
-  git: repo=git://github.com/MapStory/maploom.git dest=/srv/git/maploom
+  git: repo=git://github.com/MapStory/maploom.git dest=/srv/git/MapLoom
   tags: [git]
   notify: [ reload supervisor ]
 
