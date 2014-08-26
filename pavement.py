@@ -40,7 +40,7 @@ def _paste(bind):
     # console_scripts in place but we need to run w/ venv python and
     # get it to pickup mapstory settings
     try:
-        sh("PYTHONPATH=. python /usr/bin/paster serve --reload paster.ini host=%s" % bind)
+        sh("PYTHONPATH=. python /usr/bin/paster serve --reload paster.ini bind=%s" % bind)
     except KeyboardInterrupt:
         pass
 
