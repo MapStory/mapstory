@@ -44,3 +44,16 @@ def _paste(bind):
     except KeyboardInterrupt:
         pass
 
+
+@task
+def update_static():
+    with pushd('mapstory/static'):
+        sh('npm install')
+        sh('bower install')
+        sh('grunt less')
+
+
+@task
+@needs('update_static')
+def collect_static():
+    sh('python manage.py collectstatic --link --noinput --ignore node_modules')
