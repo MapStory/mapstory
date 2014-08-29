@@ -81,7 +81,7 @@ OGC_SERVER = {
         'MAPFISH_PRINT_ENABLED' : True,
         'PRINT_NG_ENABLED' : True,
         'GEONODE_SECURITY_ENABLED' : True,
-        'GEOGIT_ENABLED' : False,
+        'GEOGIT_ENABLED' : True,
         'WMST_ENABLED' : False,
         'BACKEND_WRITE_ENABLED': True,
         'WPS_ENABLED' : True,
@@ -117,7 +117,41 @@ DEBUG_STATIC = True
 
 REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/MapStoryOrg/images'
 
-SETTINGS = os.getenv('MAPSTORY_SETTINGS')
-if SETTINGS:
-    for mod in SETTINGS.split():
-        exec open('mapstory/settings/%s.py' % mod) in globals()
+DATABASE_PASSWORD = None
+
+if os.path.exists('mapstory/settings/local_settings.py'):
+    exec open('mapstory/settings/local_settings.py') in globals()
+
+if DATABASE_PASSWORD:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'mapstory',
+            'USER': 'mapstory',
+            'PASSWORD': DATABASE_PASSWORD,
+            'HOST' : 'localhost',
+            'PORT' : '5432',
+        },
+        'datastore' : {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': 'mapstory_data',
+            'USER' : 'mapstory',
+            'PASSWORD' : DATABASE_PASSWORD,
+            'HOST' : 'localhost',
+            'PORT' : '5432',
+        }
+    }
+
+    OGC_SERVER['default']['DATASTORE'] = 'datastore'
+
+    UPLOADER = {
+        'BACKEND': 'geonode.importer',
+        'OPTIONS': {
+            'TIME_ENABLED': True,
+            'GEOGIT_ENABLED': True,
+        }
+    }
+
+    USE_BIG_DATE = True
+
+    GEOGIT_DATASTORE_NAME = 'geogit'

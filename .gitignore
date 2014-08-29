@@ -1,6 +1,7 @@
 development.db
 downloaded
 geoserver
+local_settings.py
 mapstory/static/geonode/css/base.css
 mapstory/static/mapstory/css
 mapstory/static/vendor/
