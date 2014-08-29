@@ -1,6 +1,9 @@
 ---
 - hosts: mapstory
   sudo: yes
+  vars_files:
+    - vars.yml
+    - [ '{{ vars }}', vars.yml ]
   tasks:
     - include: admin.yml
   handlers:
@@ -9,7 +12,9 @@
 - hosts: mapstory
   sudo: yes
   sudo_user: postgres
-  vars_files: [ vars.yml ]
+  vars_files:
+    - vars.yml
+    - [ '{{ vars }}', vars.yml ]
   tasks:
     - include: postgres.yml
   handlers:
@@ -18,7 +23,9 @@
 - hosts: mapstory
   sudo: yes
   sudo_user: mapstory
-
+  vars_files:
+    - vars.yml
+    - [ '{{ vars }}', vars.yml ]
   tasks:
     - include: mapstory.yml
   handlers:

@@ -1,14 +1,16 @@
 ---
 - name: install pycurl package in order to use the apt_repository module
   apt: pkg=python-pycurl state=present
+  tags: [install]
 
 - name: add node repo
   apt_repository: repo='ppa:chris-lea/node.js' update_cache=yes
   tags: [install]
 
 - name: install geonode deps
-  apt: name={{item}} state=installed
+  apt: name={{item}} state=present
   with_items:
+# these were copied from geonode installation instructions
     - build-essential
     - gcc
     - gdal-bin
@@ -39,7 +41,6 @@
     - python-lxml
     - python-multipartposthandler
     - python-nose
-    - python-pastescript
     - python-paver
     - python-pillow
     - python-pip
@@ -60,20 +61,17 @@
   tags: [install]
 
 - name: install extra
-  apt: name={{item}} state=installed
+  apt: name={{item}} state=present
   with_items:
+      - python-pastescript
       - virtualenvwrapper
       - gunicorn
       # needed since we're not pulling in tomcat
       - openjdk-7-jre
-  tags: [install]
-
-- name: install nginx
-  apt: pkg=nginx state=installed
-  tags: [install]
-
-- name: install supervisor
-  apt: pkg=supervisor state=installed
+      - nginx
+      - supervisor
+      - ipython
+      - memcached
   tags: [install]
 
 - name: mapstory user
@@ -90,15 +88,17 @@
 
 - name: gunicorn-app
   copy: src=files/gunicorn-app.sh dest=/srv/scripts/gunicorn-app.sh mode=650 owner=mapstory group=www-data
+  notify: [restart django]
   tags: [config, files, gunicorn]
 
 - name: supervisor-gunicorn
   copy: src=files/supervisor-gunicorn-django.conf dest=/etc/supervisor/conf.d
-  notify: reload supervisor
+  notify: [reload supervisor, restart django]
   tags: [config, gunicorn]
 
 - name: nginx-conf
-  copy: src=files/nginx.conf dest=/etc/nginx/sites-available/mapstory
+  template: src=files/nginx.conf dest=/etc/nginx/sites-available/mapstory
+  notify: restart nginx
   tags: [config, nginx]
 
 - name: nginx-mimetype-ttf
@@ -116,5 +116,39 @@
   notify: restart nginx
   tags: [config, nginx]
 
+- name: django media root
+  file: path={{ media_root }} state=directory owner=www-data group=www-data mode=775 recurse=yes
+  tags: [nginx]
 
+- name: make geoserver dirs
+  file: path=/var/lib/geoserver/geoserver state=directory
+  tags: [geoserver]
 
+- name: fetch geoserver
+  shell: wget -SN http://echobase.boundlessgeo.com/~ischneider/mapstory-assets/geoserver.war chdir=/home/mapstory
+  tags: [geoserver]
+
+- name: unpack geoserver
+  shell: "unzip -o /home/mapstory/geoserver.war META-INF/* WEB-INF/* index.html -d /var/lib/geoserver/geoserver"
+  tags: [geoserver]
+
+- name: unpack geoserver datadir
+  shell: "[ ! -e /var/lib/geoserver/data ] && unzip /home/mapstory/geoserver.war data/* -d /var/lib/geoserver/ || exit 0"
+  tags: [geoserver]
+
+- name: set geoserver password
+  lineinfile: dest=/var/lib/geoserver/data/security/usergroup/default/users.xml regexp='(.*)crypt1:.*("/>)$' line='\1plain:{{gspass}}\2' backrefs=yes
+  tags: [geoserver]
+
+- name: geoserver datadir permissions
+  file: path=/var/lib/geoserver/data state=directory owner=www-data group=www-data mode=775 recurse=yes
+  tags: [geoserver]
+
+- name: jetty app permissions
+  file: path={{mapstory_geonode}}/scripts/misc/jetty-runner mode=650 owner=mapstory group=www-data
+  tags: [geoserver]
+
+- name: supervisor-jetty
+  template: src=files/supervisor-jetty.conf dest=/etc/supervisor/conf.d
+  notify: [reload supervisor, restart geoserver]
+  tags: [config, geoserver]
