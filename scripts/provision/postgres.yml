@@ -11,6 +11,11 @@
   register: db_created
   tags: ['db']
 
+- name: add bigdate udt
+  shell: psql -d mapstory_data -c "create domain bigdate as bigint"
+  when: db_created|changed
+  tags: ['db']
+
 - name: load postgis
   shell: psql -d mapstory_data -c "CREATE EXTENSION postgis"
   when: db_created|changed
