@@ -14,7 +14,7 @@
 {% block middle %}
 
 <div class="row banner">
-	<h1 style="font-size:3em;text-align:center">Get Started</h1>
+	<h1 style="font-size:3em;text-align:center">Get Lorem</h1>
 		<h3>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. </h3>
 	<hr>
 </div>
@@ -23,7 +23,7 @@
     {% for i in '12345' %}
     <div class="row get-panel">
 		<div class="col-lg-4 csection-photo">
-			<img class="photo-sm img-responsive" src="../static/mapstory/img/picture.jpg">
+			<img class="photo-sm img-responsive" src="{{ remote_content 'static_img/photo.png' }}">
 		</div>
 		<div class="col-lg-8">
 			<h2 id="get-title"> Get {% lorem 2 w random %} </h2>

@@ -116,7 +116,7 @@ MAP_BASELAYERS = [
 
 DEBUG_STATIC = True
 
-REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/MapStoryOrg/images'
+REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/mapstory-assets'
 
 DATABASE_PASSWORD = None
 

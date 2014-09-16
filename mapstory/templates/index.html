@@ -20,6 +20,14 @@
 {% block middle %}
 
 
+	<div id="paralaxSlice1" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:600px;position:absolute;z-index:2">
+		<div class="maskParent">		
+			<div class="paralaxMask"></div>
+			<div class="paralaxText container">
+			</div>
+		</div>
+	</div>
+	
     <section class="slice" id="welcome" style="background-color:chocolate;opacity:0.8;position:absolute;z-index:3;width:100%;top:410px">
 		<div class="container">
 			<div class="row">
@@ -387,7 +395,7 @@
 				</section>
 	-->
 		
-	<div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:1125px">
+	<div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:1125px">
 		<div class="maskParent">
 			<div class="paralaxMask"></div>
 			<div class="paralaxText container"></div>
@@ -407,7 +415,7 @@
 					<div class="row" style="padding:20px">
 						{% for i in '12345678' %}
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">{% lorem 1 w random %}</h5>
 						</div>
 						{% endfor %}
@@ -417,7 +425,7 @@
 		</div>
 	</section>
 				
-	<div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:1925px">
+	<div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:1925px">
 		<div class="maskParent">
 			<div class="paralaxMask"></div>
 			<div class="paralaxText container"></div>
@@ -430,35 +438,35 @@
 				<div class="col-sm-8">
 					<div class="row" style="padding:20px">
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Host a Channel</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
-							<h5 class="text-center">Launch an Initiative</h5>
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+						<h5 class="text-center">Launch an Initiative</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Share your skills </h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Become an Editor</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Found a Chapter</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Code for MapStory</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Organize an Event or Training</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Become a sponsor</h5>
 						</div>
 					</div>
@@ -474,7 +482,7 @@
 		</div>
 	</section>
 				
-	<div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:2725px">
+	<div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:2725px">
 		<div class="maskParent">
 			<div class="paralaxMask"></div>
 			<div class="paralaxText container">
@@ -492,17 +500,17 @@
 			<hr/>
 			<div class="row">
 				<div class="col-sm-4 text-center">
-					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 					<h2>1. MapStory 101</h2>
 					<h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
 				</div>
 				<div class="col-sm-4 text-center">
-					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 					<h2>2. MapStory Wiki</h2>
 					<h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
 				</div>
 				<div class="col-sm-4 text-center">
-					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 					<h2>3. Help Center</h2>
 					<h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
 				</div>
@@ -510,7 +518,7 @@
 		</div>
 	</section>
 				
-	<div id="paralaxSlice5" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:3525px">
+	<div id="paralaxSlice5" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:3525px">
 		<div class="maskParent">
 			<div class="paralaxMask"></div>
 			<div class="paralaxText container">
@@ -524,35 +532,35 @@
 				<div class="col-sm-8">
 					<div class="row" style="padding:20px">
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Mafalda Hopkirk</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Lee Jordan</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Millicent Bullstrode</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Penelope Clearwater</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Nymphadora Tonks</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Remus Lupin</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Seamus Finnigan</h5>
 						</div>
 						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 							<h5 class="text-center">Xenophilius Lovegood</h5>
 						</div>
 					</div>
@@ -567,7 +575,7 @@
 						</div>
 	</section>
 				
-	<div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:4325px">
+	<div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:4325px">
 		<div class="maskParent">
 			<div class="paralaxMask"></div>
 			<div class="paralaxText container">
@@ -594,7 +602,7 @@
 		</div>
 	</section>
 
-	<div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:5225px">
+	<div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:5225px">
 		<div class="maskParent">
 			<div class="paralaxMask"></div>
 			<div class="paralaxText container">
@@ -612,28 +620,28 @@
 			<hr/>
 			<div class="row">
 				<div class="col-sm-2">
-					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 				</div>
 				<div class="col-sm-2">
-					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 				</div>
 				<div class="col-sm-2">
-					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 				</div>
 				<div class="col-sm-2">
-					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 				</div>
 				<div class="col-sm-2">
-					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 				</div>
 				<div class="col-sm-2">
-					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
 				</div>
 			</div>
 		</div>
 	</section>
 				
-	<div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:5975px">
+	<div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:5975px">
 		<div class="maskParent">
 			<div class="paralaxMask"></div>
 			<div class="paralaxText container">
