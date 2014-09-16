@@ -21,6 +21,10 @@ urlpatterns = patterns('',
         'geonode.maps.views.map_view', {'template': 'maps/mapstory_map_view.html'},
         name='map-view2'),
     url(r'^diary$', TemplateView.as_view(template_name='mapstory/diary.html'), name='diary'),
+    url(r'^getpage$', TemplateView.as_view(template_name='mapstory/getpage.html'), name='getpage'),
+    url(r'^storylayerpage$', TemplateView.as_view(template_name='mapstory/storylayerpage.html'), name='storylayerpage'),
+    url(r'^mapstorypage$', TemplateView.as_view(template_name='mapstory/mapstorypage.html'), name='mapstorypage'),
+    url(r'^style-test$', TemplateView.as_view(template_name='testing/style_editor.html')),
 ) + urlpatterns
 
 if settings.DEBUG_STATIC:

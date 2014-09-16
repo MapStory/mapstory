@@ -18,424 +18,627 @@
 {% endblock %}
 
 {% block middle %}
-<div class="parallaxSlice" id="parallaxSlice1" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'africa.gif' %});">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
 
-<section class="slice" id="welcome" style="background-color:chocolate;opacity:0.8;position:absolute;z-index:3;width:100%;top:410px">
-    <div class="container">
-        <div class="row" style="padding-top:25px">
-            <div class="col-sm-12">
-                <h1  style="text-align:center;color:white;">The atlas of change that everyone can edit.</h1>
-            </div>
-        </div>
-        <div class="row" style="padding-top:10px">
-            <div class="input-group col-sm-6 col-sm-offset-3">
-                <input class="form-control " id="appendedInput" type="text" placeholder="Explore events, places, periods and storytellers" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
-                <span class="input-group-addon" style="background-color:chocolate;color:white;border:1px solid white"><i class="icon-magnifier"></i></span>
-            </div>
-        </div>
-        <div class="row" style="padding-top:15px;padding-bottom:5px;">
-            <div style="text-align:center">
-                <span class="col-sm-3" style="border-right:1px solid #BD5E1B;font-size:22px;font-weight:100;padding:8px;background-color:chocolate;color:white">
-                    <a style="color:white" href="#">
-                        Sign up now
-                    </a>
-                </span>
-                <span class="col-sm-3" style="border-right:1px solid #BD5E1B;font-size:22px;font-weight:100;padding:8px;background-color:chocolate;color:white">
-                    <a style="color:white" href="#">
-                        Upload StoryLayers
-                    </a>
-                </span>
-                <span class="col-sm-3" style="border-right:1px solid #BD5E1B;font-size:22px;font-weight:100;padding:8px;background-color:chocolate;color:white">
-                    <a style="color:white" href="#">
-                        Create a MapStory
-                    </a>
-                </span>
-                <span class="col-sm-3" style="font-size:22px;font-weight:100;padding:8px;background-color:chocolate;color:white">
-                    <a style="color:white" href="#">
-                        Learn more
-                    </a>
-                </span>
-            </div>
-        </div>
-        <div class="row" style="padding-top:0px">
-            <h3 style="text-align:center;color:white;font-size:14px">
-                Quickly share open data and create MapStories about how the world changes over space and time - on any subject, at any geographic scale, and into the past, present or future.
-            </h3>
-        </div>
-        <div class="row" style="padding-bottom:5px">
-            <div class="localscroll" style="text-align:center">
-                <a href="#mapstories" class="btn btn-circle btn-sm btn-default" style="background-color:#BD5E1B;color:white;border:1px solid transparent;border-radius:25%">
-                    <i class="icon-down"></i></a>
-            </div>
-        </div>
-    </div>
-</section>
 
-<section class="slice" id="mapstories" style="width:100%;height:475px;position:absolute;z-index:4;top:650px;padding-top:30px">
-    <div class="container">
-        <nav id="filter" class="col-md-12 text-center" style="text-align:center">
-            <ul class="nav nav-tabs" >
-                <li><a href="" class="btn btn-filter btn-sm" data-filter="*" data-toggle="tab">All MapStories</a></li>
-                <li><a href="" class="btn btn-filter btn-sm" data-filter=".science">Science</a></li>
-                <li><a href="" class="btn btn-filter btn-sm" data-filter=".government">Government</a></li>
-                <li><a href="" class="btn btn-filter btn-sm" data-filter=".nature">Nature</a></li>
-                <li><a href="" class="btn btn-filter btn-sm" data-filter=".crisis">Crisis</a></li>
-                <li><a href="" class="btn btn-filter btn-sm" data-filter=".settlement">Human Settlement</a></li>
-                <li><a href="" class="btn btn-filter btn-sm" data-filter=".health">Health</a></li>
-            </ul>
-        </nav>
-        <div class="portfolio-items isotopeWrapper clearfix imgHover isotope" id="4">
-            {% with groups='science government nature crisis settlement health' loop='1234' %}
-            {% for group in groups.split %}
-            {% for cnt in loop %}
-            <article class="col-sm-3 isotopeItem {{ group }} isotope-item">
-                <section class="imgWrapper">
-                    <img alt="" src="{% remote_content 'portfolio/vign6.jpg' %}" class="img-responsive">
-                </section>
-                <section class="boxContent">
-                    <h3>{% lorem 3 w random %}</h3>
-                    <h4>{% lorem 15 w random %}<br>
-                        <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-                    </h4>
-                </section>
-            </article>
-            {% endfor %}
-            {% endfor %}
-            {% endwith %}
-        </div>
-    </div>
-</section>
+    <section class="slice" id="welcome" style="background-color:chocolate;opacity:0.8;position:absolute;z-index:3;width:100%;top:410px">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12">
+					<h1 class="text-white text-center">The atlas of change that everyone can edit.</h1>
+				</div>
+			</div>
+			<div class="row" style="padding-top:10px">
+				<div class="input-group col-sm-6 col-sm-offset-3">
+                	<input class="form-control " id="appendedInput" type="text" placeholder="Explore events, places, periods and storytellers" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
+                    <span class="input-group-addon" style="background-color:chocolate;color:white;border:1px solid white"><i class="icon-magnifier"></i></span>
+               </div>
+			</div>
+			<div class="row" style="padding-top:15px;padding-bottom:5px;">
+				<div style="text-align:center">
+					<span class="col-sm-3" style="border-right:1px solid #BD5E1B">
+						<h3 class="text-white">
+							<a href="#">
+								Sign up now
+							</a>
+						</h3>
+					</span>
+					<span class="col-sm-3" style="border-right:1px solid #BD5E1B">
+						<h3 class="text-white">
+							<a href="#">
+								Upload StoryLayers
+							</a>
+						</h3>
+					</span>
+					<span class="col-sm-3" style="border-right:1px solid #BD5E1B">
+						<h3 class="text-white">
+							<a href="#">
+								Create MapStories
+							</a>
+						</h3>
+					</span>
+					<span class="col-sm-3">
+						<h3 class="text-white">
+							<a href="#">
+								Learn more
+							</a>
+						</h3>
+					</span>
+				</div>
+			</div>
+			<div class="row" style="padding-top:0px">
+				<h5 class="text-center text-white">
+					Quickly share open data and create MapStories about how the world changes over space and time - on any subject, at any geographic scale, and into the past, present or future.
+				</h5>
+			</div>
+			<div class="row" style="padding-bottom:5px">
+				<div class="localscroll" style="text-align:center">
+                     <a href="#mapstories" class="btn btn-circle btn-sm btn-default" style="background-color:#BD5E1B;color:white;border:1px solid transparent;border-radius:25%">
+                  	<i class="icon-down"></i></a>
+              </div>
+			</div>
+		</div>
+	</section>
+				
+	<!--
+	<section class="slice" id="mapstories" style="width:100%;height:475px;position:absolute;z-index:4;top:650px;padding-top:30px">
+					<div class="container">
+						<nav id="filter" class="col-md-12 text-center" style="text-align:center">
+								<ul class="nav nav-tabs" >
+									<li><a href="" class="btn btn-filter btn-sm" data-filter="*" data-toggle="tab">All MapStories</a></li>
+									<li><a href="" class="btn btn-filter btn-sm" data-filter=".science">Science</a></li>
+									<li><a href="" class="btn btn-filter btn-sm" data-filter=".government">Government</a></li>
+									<li><a href="" class="btn btn-filter btn-sm" data-filter=".nature">Nature</a></li>
+									<li><a href="" class="btn btn-filter btn-sm" data-filter=".crisis">Crisis</a></li>
+									<li><a href="" class="btn btn-filter btn-sm" data-filter=".settlement">Human Settlement</a></li>
+									<li><a href="" class="btn btn-filter btn-sm" data-filter=".health">Health</a></li>
+								</ul>
+							</nav>
+						<div class="portfolio-items  isotopeWrapper clearfix imgHover isotope" id="4">
+							<article class="col-sm-3 isotopeItem science isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem government isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem nature isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem crisis isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem health isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem settlement isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem science isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem government isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem nature isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem crisis isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem health isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem settlement isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+								<article class="col-sm-3 isotopeItem science isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem government isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem nature isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem crisis isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem health isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem settlement isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+								<article class="col-sm-3 isotopeItem science isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem government isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem nature isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem crisis isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem health isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+							<article class="col-sm-3 isotopeItem settlement isotope-item">
+									<section class="imgWrapper">
+										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+									</section>
+									<section class="boxContent">
+										<h3>MapStory Title</h3>
+										<h4>
+											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+										</h4>
+									</section>
+								</article>
+						</div>
+					</div>
+				</section>
+	-->
+		
+	<div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:1125px">
+		<div class="maskParent">
+			<div class="paralaxMask"></div>
+			<div class="paralaxText container"></div>
+		</div>
+	</div>
+				
+	<section class="slice" id="getstarted" style="width:100%;height:500px;position:absolute;z-index:4;top:1425px;padding:0">
+		<div class="csection">
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="csection-text">
+					<h1 class="text-right">Get Started</h1>
+					<h3 class="text-right">Everything happens somewhere at sometime. And everyone knows something about what’s happened in the world. MapStory turns data sitting on your desktop, in your brain, and within your networks and teams into an open educational resource that we all can learn from and use.</h3>
+					</div>
+				</div>
+				<div class="col-sm-8">
+					<div class="row" style="padding:20px">
+						{% for i in '12345678' %}
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">{% lorem 1 w random %}</h5>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+				
+	<div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:1925px">
+		<div class="maskParent">
+			<div class="paralaxMask"></div>
+			<div class="paralaxText container"></div>
+		</div>
+	</div>
+				
+	<section class="slice" id="getinvolved" style="width:100%;height:500px;position:absolute;z-index:4;top:2225px">
+		<div class="csection">
+			<div class="row">
+				<div class="col-sm-8">
+					<div class="row" style="padding:20px">
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Host a Channel</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Launch an Initiative</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Share your skills </h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Become an Editor</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Found a Chapter</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Code for MapStory</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Organize an Event or Training</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Become a sponsor</h5>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="csection-text">
+						<h1 class="text-left">Get Involved</h1>
+						<h3 class="text-left">Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.
+						</h3>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+				
+	<div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:2725px">
+		<div class="maskParent">
+			<div class="paralaxMask"></div>
+			<div class="paralaxText container">
+			</div>
+		</div>
+	</div>
+				
+	<section class="slice color1" id="getskills" style="width:100%;height:500px;position:absolute;z-index:4;top:3025px">
+		<div class="container">
+			<div class="row">
+				<h1 class="text-center">Get Skills</h1>
+				<h3 class="text-center">MapStory is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed.
+				</h3>
+			</div>
+			<hr/>
+			<div class="row">
+				<div class="col-sm-4 text-center">
+					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+					<h2>1. MapStory 101</h2>
+					<h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
+				</div>
+				<div class="col-sm-4 text-center">
+					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+					<h2>2. MapStory Wiki</h2>
+					<h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
+				</div>
+				<div class="col-sm-4 text-center">
+					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+					<h2>3. Help Center</h2>
+					<h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
+				</div>
+				</div>
+		</div>
+	</section>
+				
+	<div id="paralaxSlice5" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:3525px">
+		<div class="maskParent">
+			<div class="paralaxMask"></div>
+			<div class="paralaxText container">
+			</div>
+		</div>
+	</div>
+				
+	<section class="slice color1" id="thinkers" style="width:100%;height:500px;position:absolute;z-index:4;top:3825px">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-8">
+					<div class="row" style="padding:20px">
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Mafalda Hopkirk</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Lee Jordan</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Millicent Bullstrode</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Penelope Clearwater</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Nymphadora Tonks</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Remus Lupin</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Seamus Finnigan</h5>
+						</div>
+						<div class="col-sm-3 photobox">
+							<img class="rdphoto" src="../static/mapstory/img/photo.png">
+							<h5 class="text-center">Xenophilius Lovegood</h5>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<h1>Thinkers, Thoughts & Initiatives</h1>
+					<h3>Human beings are the only animals who write down their thoughts – so far! Here’s what a few MapStorytellers have been thinking about lately. For more, go to <a href="userdiary.html">User Diaries.</a>
+					</h3>
+				</div>
+			</div>
+							
+						</div>
+	</section>
+				
+	<div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:4325px">
+		<div class="maskParent">
+			<div class="paralaxMask"></div>
+			<div class="paralaxText container">
+			</div>
+		</div>
+	</div>
+				
+	<section class="slice color1" id="news" style="background-color:white;width:100%;height:600px;position:absolute;z-index:4;top:4625px">
+		<div class="container">
+			<div class="row">
+				<h1>In the News</h1>
+				<h3>
+					We are making headlines all over the world.	
+				</h3>
+			</div>
+			<hr/>
+			<div class="row">
+				<div class="col-sm-6">
+					<iframe frameborder="0" width="500" height="350" src="http://mapstory.tweetwally.com/embed" target="_blank" align="center" scrolling="Auto"></iframe>
+				</div>
+				<div class="col-sm-6">
+				</div>
+			</div>
+		</div>
+	</section>
 
-<div class="parallaxSlice" id="parallaxSlice2" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/teach1.jpg' %});">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
-
-<section class="slice" id="getstarted" style="width:100%;height:500px;position:absolute;z-index:4;top:1425px">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <blockquote class="bigTitle" style="text-align:right;font-weight:200">Get Started<br/></blockquote><h2 style="text-align:right">Everything happens somewhere at sometime. And everyone knows something about what’s happened in the world. MapStory turns data sitting on your desktop, in your brain, and within your networks and teams into an open educational resource that we all can learn from and use.</h2>
-            </div>
-            <div class="col-sm-8">
-                <div class="row" style="padding:20px">
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#students">
-                            <img class="img-circle" src="{% remote_content 'students.png' %}" width="150" height="150">
-                            <h4>Students</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#educators">
-                            <img class="img-circle" src="{% remote_content 'teachers.png' %}" width="150" height="150">
-                            <h4>Educators</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#culturalgroups">
-                            <img class="img-circle" src="{% remote_content 'humanitarians.png' %}" width="150" height="150">
-                            <h4>Humanitarians</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#business">
-                            <img class="img-circle" src="{% remote_content 'business.png' %}" width="150" height="150">
-                            <h4>Businesspeople</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#natsecurity">
-                            <img class="img-circle" src="{% remote_content 'librarians.png' %}" width="150" height="150">
-                            <h4>Librarians</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#researchers">
-                            <img class="img-circle" src="{% remote_content 'researchers.png' %}" width="150" height="150">
-                            <h4>Researchers</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#policymakers">
-                            <img class="img-circle" src="{% remote_content 'policy.png' %}" width="150" height="150">
-                            <h4>Policy Makers</h4>
-                        </a>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <a href="getstarted.html#journalists">
-                            <img class="img-circle" src="{% remote_content 'journalist.png' %}" width="150" height="150">
-                            <h4>Journalists</h4>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="parallaxSlice" id="parallaxSlice3" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/geog1.png' %})">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
-
-<section class="slice color1" id="getinvolved" style="width:100%;height:500px;position:absolute;z-index:4;top:2225px">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-8">
-                <div class="row" style="padding:20px">
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/initiative.jpeg' %}" width="150" height="150">
-                        <h4>Host a Channel</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/share.jpg' %}" width="150" height="150">
-                        <h4>Launch an Initiative</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/launch.jpg' %}" width="150" height="150">
-                        <h4>Share your skills </h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/edit.jpg' %}" width="150" height="150">
-                        <h4>Become an Editor</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/chapter.jpg' %}" width="150" height="150">
-                        <h4>Found a Chapter</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/code.jpg' %}" width="150" height="150">
-                        <h4>Code for MapStory</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/initiative.jpeg' %}" width="150" height="150">
-                        <h4>Organize an Event or Training</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'social/edit.jpg' %}" width="150" height="150">
-                        <h4>Become a sponsor</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <blockquote class="bigTitle" style="text-align:left;font-weight:200">Get Involved<br/></blockquote>
-                <h2 style="text-align:left">
-                    Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.
-                </h2>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="parallaxSlice" id="parallaxSlice4" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/teach2.jpg' %})">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
-
-<section class="slice color1" id="getskills" style="width:100%;height:500px;position:absolute;z-index:4;top:3025px">
-    <div class="container">
-        <div class="row">
-            <blockquote class="bigTitle" style="text-align:center;font-weight:200">Get Skills<br/></blockquote>
-            <h2 style="text-align:center">
-                MapStory is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed.
-
-            </h2>
-        </div>
-        <hr/>
-        <div class="row">
-            <section>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-4" style="text-align:center;border-right:1px solid gainsboro">
-                            <img class="img-circle" src="{% remote_content 'social/students.jpg' %}" width="80" height="80">
-                            <h2 style="font-size:1.6em;padding-top:10px">1. MapStory 101</h2>
-                            <hr style="margin:10px">
-                            <h4>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h4>
-                        </div>
-                        <div class="col-sm-4" style="text-align:center;border-right:1px solid gainsboro">
-                            <img class="img-circle" src="{% remote_content 'social/students.jpg' %}" width="80" height="80">
-                            <h2 style="font-size:1.6em;padding-top:10px">2. MapStory Wiki</h2>
-                            <hr style="margin:10px">
-                            <h4>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h4>
-                        </div>
-                        <div class="col-sm-4" style="text-align:center">
-                            <img class="img-circle" src="{% remote_content 'social/students.jpg' %}" width="80" height="80">
-                            <h2 style="font-size:1.6em;padding-top:10px">3. Help Center</h2>
-                            <hr style="margin:10px">
-                            <h4>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h4>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</section>
-
-<div class="parallaxSlice" id="parallaxSlice5" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/teach2.jpg' %})">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
-
-<section class="slice color1" id="thinkers" style="width:100%;height:500px;position:absolute;z-index:4;top:3825px">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-8">
-                <div class="row" style="padding:20px">
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Mafalda Hopkirk</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Lee Jordan</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Millicent Bullstrode</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Penelope Clearwater</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Nymphadora Tonks</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Remus Lupin</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Seamus Finnigan</h4>
-                    </div>
-                    <div class="col-sm-3" style="text-align:center;padding:5px">
-                        <img class="img-circle" src="{% remote_content 'avatar.jpg' %}" width="150" height="150">
-                        <h4>Xenophilius Lovegood</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <blockquote class="bigTitle" style="text-align:left;font-weight:200">Thinkers and Thoughts<br/></blockquote>
-                <h2 style="text-align:left">Human beings are the only animals who write down their thoughts – so far! Here’s what a few MapStorytellers have been thinking about lately. For more, go to <a href="userdiary.html">User Diaries.</a>
-                </h2>
-            </div>
-        </div>
-
-    </div>
-</section>
-
-<div class="parallaxSlice" id="parallaxSlice6" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/teach2.jpg' %})">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
-
-<section class="slice color1" id="news" style="background-color:white;width:100%;height:600px;position:absolute;z-index:4;top:4625px">
-    <div class="container">
-        <div class="row">
-            <blockquote class="bigTitle" style="text-align:center;font-weight:200">In the News<br/></blockquote>
-            <h2 style="text-align:center">
-                We are making headlines all over the world.
-            </h2>
-        </div>
-        <hr/>
-        <div class="row">
-            <section>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <iframe frameborder="0" width="500" height="350" src="http://mapstory.tweetwally.com/embed" target="_blank" align="center" scrolling="Auto"></iframe>
-                        </div>
-                        <div class="col-sm-6">
-                            <h2>Lorem ipsum headline <small class="pull-right">04-15-2014</small></h2>
-                            <p>
-                                Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne.
-                            </p>
-                            <hr>
-                            <h2>Lorem ipsum headline <small class="pull-right">04-15-2014</small></h2>
-                            <p>
-                                Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne.
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</section>
-
-<div class="parallaxSlice" id="parallaxSlice7" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/teach2.jpg' %})">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
-
-<section class="slice" id="sponsors" style="width:100%;height:450px;position:absolute;z-index:4;top:5525px;background-color:white">
-    <div class="container">
-        <div class="row">
-            <blockquote class="bigTitle" style="text-align:center;font-weight:200">Our Sponsors<br/></blockquote>
-            <h2 style="text-align:center">
-                Learning institutions like these drive innovation in the MapStory codebase, content and community. Join them.
-            </h2>
-        </div>
-        <hr/>
-        <div class="row">
-            <section>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <img class="img-responsive" src="{% remote_content 'logos/ace.png' %}" />
-                        </div>
-                        <div class="col-sm-2">
-                            <img class="img-responsive img-square" src="{% remote_content 'logos/nara.png' %}" />
-                        </div>
-                        <div class="col-sm-2">
-                            <img class="img-responsive img-square" src="{% remote_content 'logos/neh.png' %}" />
-                        </div>
-                        <div class="col-sm-2">
-                            <img class="img-responsive img-square" src="{% remote_content 'logos/dcpl.png' %}" />
-                        </div>
-                        <div class="col-sm-2">
-                            <img class="img-responsive img-square" src="{% remote_content 'logos/sf.png' %}" />
-                        </div>
-                        <div class="col-sm-2">
-                            <img class="img-responsive img-square" src="{% remote_content 'logos/nsf.png' %}" />
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-</section>
-
-<div class="parallaxSlice" id="parallaxSlice8" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'theme-pics/teach2.jpg' %})">
-    <div class="maskParent">
-        <div class="parallaxMask"></div>
-        <div class="parallaxText container">
-        </div>
-    </div>
-</div>
-
+	<div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:5225px">
+		<div class="maskParent">
+			<div class="paralaxMask"></div>
+			<div class="paralaxText container">
+			</div>
+		</div>
+	</div>
+				
+	<section class="slice color1" id="sponsors" style="width:100%;height:450px;position:absolute;z-index:4;top:5525px;background-color:white">
+		<div class="container">
+			<div class="row">
+				<h1 class="text-center">Our Sponsors</h1>
+				<h3 class="text-center">Learning institutions like these drive innovation in the MapStory codebase, content and community. Join them. 
+				</h3>
+			</div>
+			<hr/>
+			<div class="row">
+				<div class="col-sm-2">
+					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+				</div>
+				<div class="col-sm-2">
+					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+				</div>
+				<div class="col-sm-2">
+					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+				</div>
+				<div class="col-sm-2">
+					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+				</div>
+				<div class="col-sm-2">
+					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+				</div>
+				<div class="col-sm-2">
+					<img class="rdphoto" src="../static/mapstory/img/photo.png">
+				</div>
+			</div>
+		</div>
+	</section>
+				
+	<div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="height:300px;position:absolute;z-index:4;top:5975px">
+		<div class="maskParent">
+			<div class="paralaxMask"></div>
+			<div class="paralaxText container">
+			</div>
+		</div>
+	</div>
+				
 {% endblock %}

@@ -2,51 +2,37 @@
 
 {% load webdesign %}
 
+{% block body_class %}diary{% endblock %}
+
+{% block extra_head %}
+	<link href="{{ STATIC_URL }}geonode/css/base.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}mapstory/css/index.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}mapstory/css/layout.css" rel="stylesheet" />
+	<link href="{{ STATIC_URL }}mapstory/css/orange.css" rel="stylesheet" />
+{% endblock %}
+
 {% block middle %}
 
 <div class="container">
-    <div class="row" style="text-align:center;padding:50px 0 10px 0">
-        <h1 style="text-align:center">MapStory User Diary</h1>
-        <h3>{% lorem 10 w random %}</h3>
-        <hr>
-    </div>
     {% for i in '1234' %}
-    <div class="row" style="border-bottom:1px solid gainsboro">
-        <div class="col-sm-12" style="padding-bottom:10px">
+    <div class="row blog-panel">
+        <div class="col-sm-12">
             <div class="row">
-                <div class="col-sm-10 col-sm-offset-2" style="padding:30px 5px">
+                <div class="col-lg-10 col-lg-offset-2  col-xs-12 blog-header">
                     <h5>January 01, 2014</h5>
-                    <h1>{% lorem 3 w random %}</h1>
-                    <h4>
-                        <span>
-                            <img class="img-circle" width="25" src="images/avatars/ava6.png" />
-                        </span>
-                        <a>John Appleseed</a></h4>
+                    <h2>{% lorem 3 w random %}</h2>
+                    <h5>John Appleseed</h5>
                 </div>
             </div>
             <div class="row">
-                <div class="col-sm-2" style="text-align:right">
-                    <h3>
-                        <span style="color:orange">comment</span>
-                    </h3>
-                    <hr style="margin:5px">
-                    <h3>
-                        <span style="color:orange">favorite</span>
-                    </h3>
-                    <hr style="margin:5px">
-                    <h3>
-                        <span style="color:dodgerblue">facebook</span>
-                    </h3>
-                    <hr style="margin:5px">
-                    <h3>
-                        <span style="color:deepskyblue">twitter</span>
-                    </h3>
-                    <hr style="margin:5px">
-                    <h3>
-                        <span>flag/report</span>
-                    </h3>
+                <div class="col-lg-2 col-xs-6 blog-links">
+                   	<div class="qlink qlink-gen"><a href="#">comment</a></div>
+                   	<div class="qlink qlink-gen"><a href="#">favorite</a></div>
+                   	<div class="qlink qlink-fb"><a href="#">facebook</a></div>
+                   	<div class="qlink qlink-tw"><a href="#">twitter</a></div>
+                   	<div class="qlink qlink-dg"><a href="#">flag/report</a></div>
                 </div>
-                <div class="col-sm-10" style="border-left:1px solid gainsboro">
+                <div class="col-lg-10 col-xs-6 blog-text">
                     {% lorem 4 p %}
                 </div>
             </div>
