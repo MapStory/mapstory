@@ -6,13 +6,16 @@
 {% load mapstory_tags %}
 
 {% block extra_head %}
+<!--<link href="{{ STATIC_URL }}vendor/isotope/css/style.css" rel="stylesheet" />-->
+<link href="{{ STATIC_URL }}geonode/css/base.css" rel="stylesheet" />
 <link href="{{ STATIC_URL }}mapstory/css/index.css" rel="stylesheet" />
-<link href="{{ STATIC_URL }}vendor/isotope/css/style.css" rel="stylesheet" />
+<link href="{{ STATIC_URL }}mapstory/css/layout.css" rel="stylesheet" />
+<link href="{{ STATIC_URL }}mapstory/css/orange.css" rel="stylesheet" />
 {% endblock %}
 
 {% block extra_script %}
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/modernizr/modernizr.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>
+<!--<script type="text/javascript" src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>-->
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/isotope/jquery.isotope.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/index.js"></script>
 {% endblock %}

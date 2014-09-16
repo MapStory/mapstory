@@ -5,6 +5,9 @@
   "dependencies": {
     "jquery.stellar" : "0.6.2",
     "modernizr" : "2.6.1",
-    "isotope" : "1.5.21"
+    "isotope" : "1.5.21",
+    "jquery-ui": "1.11.0",
+    "angular-rangeslider": "0.0.7",
+    "angular-bootstrap" : "0.9.0"
   }
 }

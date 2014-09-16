@@ -12,3 +12,5 @@ static_root
 uploaded
 .vagrant
 .vaultpass
+.DS_Store
+._.DS_Store

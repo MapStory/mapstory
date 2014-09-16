@@ -1,20 +1,12 @@
-{% load staticfiles i18n avatar_tags %}
+{% extends "maps/_base.html" %}
+{% load staticfiles i18n%}
 
-<!DOCTYPE html>
-<html ng-app="ngBoilerplate">
-<head>
-<title ng-bind="pageTitle"></title>
-
-<script type="text/javascript">
-  var CLOSURE_NO_DEPS = true;
-</script>
-
-<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}mapstory/css/app.css"/>
+{% block styles %}
 <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}maploom/vendor/ol3/ol.css"/>
+{% endblock %}
 
-{% include 'maps/_map_view_common.html' %}
+{% block scripts %}
 {% include 'maps/_maploom_scripts.html' %}
-
 <script type="text/javascript">
 {% get_current_language as language %}
 config =  {
@@ -54,60 +46,53 @@ config =  {
 
 goog.object.extend( config, {{ config|safe }});
 </script>
+{% endblock %}
 
 
-{% if DEBUG_STATIC %}
-{% comment %}Using 35730 for mapstory css to not conflict with maploom grunt{% endcomment %}
-<script src="http://localhost:35730/livereload.js"></script>
-{% endif %}
-
-</head>
-<body>
-    <div id="ms-tl-tabs" class="tabbable">
-        <ul class="nav nav-tabs nav-tabs-simple">
-            <li>
-                <a href="{% url 'home' %}" class="orange-border">
-                    <img height="14" src="{% static 'mapstory/img/mapstory_orange_logo.gif'%}">
-                </a>
-            </li>
-            <li class="active">
-                <a href="#ms-layers-tab" data-toggle="tab" target="_blank">
-                    StoryLayers
-                </a>
-            </li>
-            <li>
-                <a href="#ms-board-tab" data-toggle="tab" target="_blank">
-                    StoryBoard
-                </a>
-            </li>
-            <li>
-                <a href="#ms-pins-tab" data-toggle="tab" target="_blank">
-                    StoryPins
-                </a>
-            </li>
-            <li>
-                <a href="#ms-preview-tab" data-toggle="tab" target="_blank">
-                    StoryPreview
-                </a>
-            </li>
-        </ul>
-		<div class="tab-content">
-			<div id="ms-layers-tab" class="tab-pane active" style="position:relative;">
-                <div ng-controller="AppCtrl" class=''>
-                    {% include 'maps/_maploom_body.html' %}
-                </div>
-            </div>
-            <div id="ms-board-tab" class="tab-pane todo">
-                board
-            </div>
-            <div id="ms-pins-tab" class="tab-pane todo">
-                pins
-            </div>
-            <div id="ms-preview-tab" class="tab-pane todo">
-                preview
+{% block body %}
+<div id="ms-tl-tabs" class="tabbable">
+    <ul class="nav nav-tabs nav-tabs-simple">
+        <li>
+            <a href="{% url 'home' %}" class="orange-border">
+                <img height="14" src="{% static 'mapstory/img/mapstory_orange_logo.gif'%}">
+            </a>
+        </li>
+        <li class="active">
+            <a href="#ms-layers-tab" data-toggle="tab" target="_blank">
+                StoryLayers
+            </a>
+        </li>
+        <li>
+            <a href="#ms-board-tab" data-toggle="tab" target="_blank">
+                StoryBoard
+            </a>
+        </li>
+        <li>
+            <a href="#ms-pins-tab" data-toggle="tab" target="_blank">
+                StoryPins
+            </a>
+        </li>
+        <li>
+            <a href="#ms-preview-tab" data-toggle="tab" target="_blank">
+                StoryPreview
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div id="ms-layers-tab" class="tab-pane active" style="position:relative;">
+            <div ng-controller="AppCtrl" class=''>
+                {% include 'maps/_maploom_body.html' %}
             </div>
         </div>
+        <div id="ms-board-tab" class="tab-pane todo">
+            board
+        </div>
+        <div id="ms-pins-tab" class="tab-pane todo">
+            pins
+        </div>
+        <div id="ms-preview-tab" class="tab-pane todo">
+            preview
+        </div>
     </div>
-
-</body>
-</html>
+</div>
+{% endblock %}
