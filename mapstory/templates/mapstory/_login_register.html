@@ -6,16 +6,18 @@
                     <div class="col-sm-6" style="border-right:1px solid darkgray">
                         <h1 style="font-size:1.4em"><strong>Log in</strong></h1>
                         <hr class="col-sm-10" style="margin:10px">
-                        <form class="form form-horizontal" method="post" action="#" accept-charset="UTF-8"><input name="authenticity_token" type="hidden"><div class="form-group">
-                                <label class="col-md-3 control-label" for="inputText1">Username</label>
+                        <form class="form form-horizontal" method="post" action="{% url 'account_login' %}?next={{ request.path }}" accept-charset="UTF-8">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="username">Username</label>
                                 <div class="col-md-8">
-                                    <input class="form-control" id="inputText1" placeholder="Username" type="text">
+                                    <input class="form-control" name="username" id="username" placeholder="Username" type="text">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 control-label" for="inputPassword4">Password</label>
+                                <label class="col-md-3 control-label" for="password">Password</label>
                                 <div class="col-md-8">
-                                    <input class="form-control" id="inputPassword4" placeholder="Password field" type="password" value="Top secret!">
+                                    <input class="form-control" name="password" id="password" placeholder="Password" type="password">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -64,7 +66,8 @@
                             <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </h1>
                         <hr class="col-sm-offset-1 col-sm-10" style="margin:10px">
-                        <form class="form form-horizontal" method="post" action="#" accept-charset="UTF-8"><input name="authenticity_token" type="hidden">
+                        <form class="form form-horizontal" method="post" action="#" accept-charset="UTF-8">
+                            {% csrf_token %}
                             <div class="form-group">
                                 <label class="col-sm-offset-1 col-md-2 control-label" for="inputText1">Name</label>
                                 <div class="col-md-4">
