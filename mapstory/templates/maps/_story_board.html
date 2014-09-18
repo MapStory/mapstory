@@ -1,4 +1,4 @@
-{% load staticfiles i18n%}
+{% load staticfiles i18n mapstory_tags %}
 
 <div id="main_area">
     <div class="row" style="padding:20px">
@@ -35,7 +35,7 @@
                                     <div class="step-pane active" id="0step1">
                                         <div class="row">
                                             <div class="col-sm-2">
-                                                <img src="storyboxes/sb1.png" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
+                                                <img src="{% remote_content 'storyboard/sb1.png' %}" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
                                                 <button class="btn btn-default">Update</button>
                                             </div>
                                             <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
@@ -248,7 +248,7 @@
                                     <div class="step-pane active" id="1step1">
                                         <div class="row">
                                             <div class="col-sm-2">
-                                                <img src="storyboxes/sb2.png" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
+                                                <img src="{% remote_content 'storyboard/sb2.png' %}" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
                                                 <button class="btn btn-default">Update</button>
                                             </div>
                                             <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
@@ -342,7 +342,7 @@
                                     <div class="step-pane" id="1step2">
                                         <div class="col-sm-6">
                                             <div class="well" style="padding:5px">
-                                                <iframe width="100%" height="200px" src="https://maps.google.co.uk/maps?f=q&source=s_q&hl=en&output=embed"></iframe>
+                                                <iframe width="100%" height="200px" src="{% remote_content 'https://maps.google.co.uk/maps?f=q&source=s_q&hl=en&output=embed' %}"></iframe>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -433,7 +433,7 @@
                                     <div class="step-pane" id="1step4">
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout1.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'composer/png/layout1.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 1</h3>
                                                     <p>Description</p>
@@ -442,7 +442,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout2.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'composer/png/layout2.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 2</h3>
                                                     <p>Description</p>
@@ -451,7 +451,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout3.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'composer/png/layout3.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 3</h3>
                                                     <p>Description</p>
@@ -489,7 +489,7 @@
                                     <div class="step-pane active" id="2step1">
                                         <div class="row">
                                             <div class="col-sm-2">
-                                                <img src="storyboxes/sb3.png" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
+                                                <img src="{% remote_content 'storyboard/sb3.png' %}" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
                                                 <button class="btn btn-default">Update</button>
                                             </div>
                                             <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
@@ -674,7 +674,7 @@
                                     <div class="step-pane" id="2step4">
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout1.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'composer/png/layout1.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 1</h3>
                                                     <p>Description</p>
@@ -683,7 +683,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout2.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'png/layout2.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 2</h3>
                                                     <p>Description</p>
@@ -692,7 +692,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout3.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'png/layout3.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 3</h3>
                                                     <p>Description</p>
@@ -730,7 +730,7 @@
                                     <div class="step-pane active" id="3step1">
                                         <div class="row">
                                             <div class="col-sm-2">
-                                                <img src="storyboxes/sb4.png" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
+                                                <img src="{% remote_content 'storyboard/sb4.png' %}" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
                                                 <button class="btn btn-default">Update</button>
                                             </div>
                                             <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
@@ -915,7 +915,7 @@
                                     <div class="step-pane" id="3step4">
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout1.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'composer/png/layout1.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 1</h3>
                                                     <p>Description</p>
@@ -924,7 +924,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout2.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'composer/png/layout2.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 2</h3>
                                                     <p>Description</p>
@@ -933,7 +933,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout3.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'composer/png/layout3.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 3</h3>
                                                     <p>Description</p>
@@ -971,7 +971,7 @@
                                     <div class="step-pane active" id="4step1">
                                         <div class="row">
                                             <div class="col-sm-2">
-                                                <img src="storyboxes/sb5.png" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
+                                                <img src="{% remote_content 'storyboard/sb5.png' %}" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
                                                 <button class="btn btn-default">Update</button>
                                             </div>
                                             <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
@@ -1156,7 +1156,7 @@
                                     <div class="step-pane" id="4step4">
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout1.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'png/layout1.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 1</h3>
                                                     <p>Description</p>
@@ -1165,7 +1165,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout2.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'png/layout2.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 2</h3>
                                                     <p>Description</p>
@@ -1174,7 +1174,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout3.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'png/layout3.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 3</h3>
                                                     <p>Description</p>
@@ -1212,7 +1212,7 @@
                                     <div class="step-pane active" id="5step1">
                                         <div class="row">
                                             <div class="col-sm-2">
-                                                <img src="storyboxes/newsb.png" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
+                                                <img src="{% remote_content 'storyboard/newsb.png' %}" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
                                                 <button class="btn btn-default">Update</button>
                                             </div>
                                             <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
@@ -1397,7 +1397,7 @@
                                     <div class="step-pane" id="5step4">
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout1.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'png/layout1.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 1</h3>
                                                     <p>Description</p>
@@ -1406,7 +1406,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout2.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'png/layout2.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 2</h3>
                                                     <p>Description</p>
@@ -1415,7 +1415,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="img-thumbnail">
-                                                <img src="png/layout3.png" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <img src="{% remote_content 'png/layout3.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
                                                 <div class="caption">
                                                     <h3>Layout 3</h3>
                                                     <p>Description</p>
@@ -1440,23 +1440,23 @@
             <!--<a class="carousel-control left" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>-->
         </div>
         <div class="col-sm-2" style="padding-right:5px;padding-left:5px">
-            <a id="carousel-selector-0" class="thumbnail"> <img src="storyboxes/sb1.png" />
+            <a id="carousel-selector-0" class="thumbnail"> <img src="{% remote_content 'storyboard/sb1.png' %}" />
             </a>
         </div>
         <div class="col-sm-2" style="padding-right:5px;padding-left:5px">
-            <a id="carousel-selector-1" class="thumbnail"> <img src="storyboxes/sb2.png" />
+            <a id="carousel-selector-1" class="thumbnail"> <img src="{% remote_content 'storyboard/sb2.png' %}" />
             </a>
         </div>
         <div class="col-sm-2" style="padding-right:5px;padding-left:5px">
-            <a id="carousel-selector-2" class="thumbnail"> <img src="storyboxes/sb3.png" />
+            <a id="carousel-selector-2" class="thumbnail"> <img src="{% remote_content 'storyboard/sb3.png' %}" />
             </a>
         </div>
         <div class="col-sm-2" style="padding-right:5px;padding-left:5px">
-            <a id="carousel-selector-3" class="thumbnail"> <img src="storyboxes/sb4.png" />
+            <a id="carousel-selector-3" class="thumbnail"> <img src="{% remote_content 'storyboard/sb4.png' %}" />
             </a>
         </div>
         <div class="col-sm-2" style="padding-right:5px;padding-left:5px">
-            <a id="carousel-selector-4" class="thumbnail"> <img src="storyboxes/sb5.png" />
+            <a id="carousel-selector-4" class="thumbnail"> <img src="{% remote_content 'storyboard/sb5.png' %}" />
             </a>
         </div>
         <div class="col-sm-1" style="text-align:left;padding-top:50px">

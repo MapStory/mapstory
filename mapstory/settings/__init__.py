@@ -33,10 +33,11 @@ LOCAL_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 WSGI_APPLICATION = "mapstory.wsgi.application"
 
-# Additional directories which hold static files
-STATICFILES_DIRS.insert( 0,
+STATICFILES_DIRS = [
     os.path.join(LOCAL_ROOT, "static"),
-)
+    ("maploom/vendor", LOCAL_ROOT + "/../../MapLoom/vendor"),
+    ("maploom", LOCAL_ROOT + "/../../MapLoom/build"),
+] + STATICFILES_DIRS
 
 STATIC_ROOT = os.path.join(LOCAL_ROOT, "static_root")
 MEDIA_ROOT = os.path.join(LOCAL_ROOT, "uploaded")
@@ -120,8 +121,13 @@ REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/mapstory-assets'
 
 DATABASE_PASSWORD = None
 
+LOCAL_CONTENT = True
+
 if os.path.exists('mapstory/settings/local_settings.py'):
     exec open('mapstory/settings/local_settings.py') in globals()
+
+if LOCAL_CONTENT:
+    REMOTE_CONTENT_URL = STATIC_URL + 'assets'
 
 if DATABASE_PASSWORD:
     DATABASES = {

@@ -57,3 +57,14 @@ def update_static():
 @needs('update_static')
 def collect_static():
     sh('python manage.py collectstatic --link --noinput --ignore node_modules')
+
+
+@cmdopts([
+    ('tags=', 't', 'ansible tags to run')
+])
+@task
+def deploy_dev():
+    tags = options.get('tags','update')
+    cmd = 'ansible-playbook -i inventory-dev.ini --vault-password-file .vaultpass --ask-sudo-pass main.yml -t %s' % tags
+    with pushd('scripts/provision'):
+        sh(cmd)

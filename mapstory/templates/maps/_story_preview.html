@@ -1,4 +1,4 @@
-{% load staticfiles i18n%}
+{% load staticfiles i18n mapstory_tags %}
 
 <div class="panel-group col-sm-3 sortable ui-sortable" style="position:absolute; z-index:1; opacity:0.95;" id="ElementsAccordion">
     <!--Basemap Header-->
@@ -16,14 +16,14 @@
                                 <!--<div id="BasemapCarousel" class="carousel slide">-->
                                     <!-- Carousel items -->
                                     <div class="carousel-inner">
-                                        <div class="active item" data-slide-number="0"><img src="png/BMosm.png" /></div>
-                                        <div class="item" data-slide-number="1"><img src="png/BMgoogle.png" /></div>
-                                        <div class="item" data-slide-number="2"><img src="png/BMgrayscale.png" /></div>
-                                        <div class="item" data-slide-number="3"><img src="png/BMhybrid.png" /></div>
-                                        <div class="item" data-slide-number="4"><img src="png/BMnight.png" /></div>
-                                        <div class="item" data-slide-number="5"><img src="png/BMsatellite.png" /></div>
-                                        <div class="item" data-slide-number="6"><img src="png/BMsolid.png" /></div>
-                                        <div class="item" data-slide-number="7"><img src="png/BMterrain.png" /></div>
+                                        <div class="active item" data-slide-number="0"><img src="{% remote_content 'png/BMosm.png' %}" /></div>
+                                        <div class="item" data-slide-number="1"><img src="{% remote_content 'png/BMgoogle.png' %}" /></div>
+                                        <div class="item" data-slide-number="2"><img src="{% remote_content 'png/BMgrayscale.png' %}" /></div>
+                                        <div class="item" data-slide-number="3"><img src="{% remote_content 'png/BMhybrid.png' %}" /></div>
+                                        <div class="item" data-slide-number="4"><img src="{% remote_content 'png/BMnight.png' %}" /></div>
+                                        <div class="item" data-slide-number="5"><img src="{% remote_content 'png/BMsatellite.png' %}" /></div>
+                                        <div class="item" data-slide-number="6"><img src="{% remote_content 'png/BMsolid.png' %}" /></div>
+                                        <div class="item" data-slide-number="7"><img src="{% remote_content 'png/BMterrain.png' %}" /></div>
                                     </div>
                                     <!-- Carousel nav -->
                                     <a class="carousel-control left" href="#BasemapCarousel" data-slide="prev">&lsaquo;</a>
@@ -57,7 +57,7 @@
                             <div class="tab-pane active" id="MELegend" style="max-height:400px; overflow-y:scroll; overflow-x:hidden">
                                 <div class="col-sm-12" style="padding:10px">
                                     <div class="alert alert-warning" align="center">
-                                        <img src="elements/Legend_Hor3.png" width="150" />
+                                        <img src="{% remote_content 'elements/Legend_Hor3.png' %}" width="150" />
                                     </div>
                                     <form class="form form-horizontal">
                                         <div class="form-group">
@@ -90,7 +90,7 @@
                             <div class="tab-pane" id="MEZoom" style="max-height:400px; overflow-y:scroll; overflow-x:hidden">
                                 <div class="col-sm-12" style="padding:10px">
                                     <div class="alert alert-warning" align="center">
-                                        <img src="elements/zoom.png" width="150" />
+                                        <img src="{% remote_content 'elements/zoom.png' %}" width="150" />
                                     </div>
                                     <form class="form form-horizontal">
                                         <div class="form-group">
@@ -116,7 +116,7 @@
                             <div class="tab-pane" id="MEStoryPin" style="max-height:400px; overflow-y:scroll; overflow-x:hidden">
                                 <div class="col-sm-12" style="padding:10px">
                                     <div class="alert alert-warning" align="center">
-                                        <img src="elements/storypin.png" width="150" />
+                                        <img src="{% remote_content 'elements/storypin.png' %}" width="150" />
                                     </div>
                                     <form class="form form-horizontal">
                                         <div class="form-group">
@@ -175,7 +175,7 @@
                             <div class="tab-pane" id="MEStoryBox" style="max-height:400px; overflow-y:scroll; overflow-x:hidden">
                                 <div class="col-sm-12" style="padding:10px">
                                     <div class="alert alert-warning" align="center">
-                                        <img src="elements/storybox.png" width="250" />
+                                        <img src="{% remote_content 'elements/storybox.png' %}" width="250" />
                                     </div>
                                     <form class="form form-horizontal">
                                         <div class="form-group">
@@ -208,7 +208,7 @@
                             <div class="tab-pane" id="MEInfobox" style="max-height:400px; overflow-y:scroll; overflow-x:hidden">
                                 <div class="col-sm-12" style="padding:10px">
                                     <div class="alert alert-warning" align="center">
-                                        <img src="elements/infobox.png" width="150" />
+                                        <img src="{% remote_content 'elements/infobox.png' %}" width="150" />
                                     </div>
                                     <form class="form form-horizontal">
                                         <div class="form-group">

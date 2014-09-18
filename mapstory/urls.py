@@ -27,8 +27,6 @@ urlpatterns = patterns('',
     url(r'^style-test$', TemplateView.as_view(template_name='testing/style_editor.html')),
 ) + urlpatterns
 
-if settings.DEBUG_STATIC:
-    # prepend static route that loads maploom from build
-    urlpatterns = static(settings.STATIC_URL + "maploom/", document_root=settings.LOCAL_ROOT + "/../../MapLoom/build", show_indexes=True) + urlpatterns
-    # stick the vendor route first to pick up other assets not included in the 'build' when debugging static
-    urlpatterns = static(settings.STATIC_URL + "maploom/vendor", document_root=settings.LOCAL_ROOT + "/../../MapLoom/vendor", show_indexes=True) + urlpatterns
+if settings.LOCAL_CONTENT:
+    urlpatterns = static(settings.STATIC_URL + "assets", document_root=settings.LOCAL_ROOT + "/../../mapstory-assets", show_indexes=True) + urlpatterns
+
