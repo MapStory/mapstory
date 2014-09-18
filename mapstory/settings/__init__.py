@@ -93,7 +93,20 @@ OGC_SERVER = {
     }
 }
 
+DEBUG_STATIC = True
+
+REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/mapstory-assets'
+
+DATABASE_PASSWORD = None
+
+LOCAL_CONTENT = True
+
+if os.path.exists('mapstory/settings/local_settings.py'):
+    exec open('mapstory/settings/local_settings.py') in globals()
+
 #@todo remove this hack once maploom can deal with other config
+# have to put this after local_settings or any adjustments to OGC_SERVER will
+# not get picked up
 MAP_BASELAYERS = [
     {
         "source": {
@@ -114,17 +127,6 @@ MAP_BASELAYERS = [
         "group":"background"
     }
 ]
-
-DEBUG_STATIC = True
-
-REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/mapstory-assets'
-
-DATABASE_PASSWORD = None
-
-LOCAL_CONTENT = True
-
-if os.path.exists('mapstory/settings/local_settings.py'):
-    exec open('mapstory/settings/local_settings.py') in globals()
 
 if LOCAL_CONTENT:
     REMOTE_CONTENT_URL = STATIC_URL + 'assets'
