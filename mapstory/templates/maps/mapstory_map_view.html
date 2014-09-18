@@ -50,48 +50,46 @@ goog.object.extend( config, {{ config|safe }});
 
 
 {% block body %}
-<div id="ms-tl-tabs" class="tabbable">
-    <ul class="nav nav-tabs nav-tabs-simple">
+<div>
+    <ul class="nav nav-tabs nav-tabs-simple" id="ms-tl-nav">
         <li>
             <a href="{% url 'home' %}" class="orange-border">
                 <img height="14" src="{% static 'mapstory/img/mapstory_orange_logo.gif'%}">
             </a>
         </li>
         <li class="active">
-            <a href="#ms-layers-tab" data-toggle="tab" target="_blank">
+            <a href="#ms-toggle-layers">
                 StoryLayers
             </a>
         </li>
         <li>
-            <a href="#ms-board-tab" data-toggle="tab" target="_blank">
+            <a href="#ms-toggle-board">
                 StoryBoard
             </a>
         </li>
         <li>
-            <a href="#ms-pins-tab" data-toggle="tab" target="_blank">
+            <a href="#ms-toggle-pins">
                 StoryPins
             </a>
         </li>
         <li>
-            <a href="#ms-preview-tab" data-toggle="tab" target="_blank">
+            <a href="#ms-toggle-preview">
                 StoryPreview
             </a>
         </li>
     </ul>
-    <div class="tab-content">
-        <div id="ms-layers-tab" class="tab-pane active" style="position:relative;">
-            <div ng-controller="AppCtrl" class=''>
-                {% include 'maps/_maploom_body.html' %}
-            </div>
+    <div id="ms-container" style="position:relative;">
+        <div ng-controller="AppCtrl" class=''>
+            {% include 'maps/_maploom_body.html' %}
         </div>
-        <div id="ms-board-tab" class="tab-pane todo">
-            board
+        <div id="ms-story-board" class="ms-tool-mode">
+            {% include 'maps/_story_board.html' %}
         </div>
-        <div id="ms-pins-tab" class="tab-pane todo">
-            pins
+        <div id="ms-story-pins" class="ms-tool-mode">
+            {% include 'maps/_story_pins.html' %}
         </div>
-        <div id="ms-preview-tab" class="tab-pane todo">
-            preview
+        <div id="ms-story-preview" class="ms-tool-mode">
+            {% include 'maps/_story_preview.html' %}
         </div>
     </div>
 </div>

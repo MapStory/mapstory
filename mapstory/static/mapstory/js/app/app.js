@@ -11,6 +11,21 @@
     'xeditable'
   ]);
 
+  var toolModes = {
+    "#ms-toggle-layers" : {
+        show: '#pulldown'
+    },
+    "#ms-toggle-board" : {
+        show: '#ms-story-board'
+    },
+    "#ms-toggle-pins" : {
+        show: '#ms-story-pins'
+    },
+    "#ms-toggle-preview" : {
+        show: '#ms-story-preview'
+    }
+  };
+
   module.run(function run(editableOptions) {
     editableOptions.theme = 'bs3';
   });
@@ -54,7 +69,24 @@
 
         $scope.mapService = mapService;
         $scope.refreshService = refreshService;
-      });
+
+        // @todo - provisional control over 'modes' - look at `toolModes`, too
+        $("#ms-tl-nav li a").click(function(ev) {
+          var href = $(this).attr('href');
+          if (href.charAt(0) === '#') {
+              ev.preventDefault();
+              var activeMode = toolModes[href];
+              for (var modeName in toolModes) {
+                  if (modeName === activeMode) {
+                      continue;
+                  }
+                  var mode = toolModes[modeName];
+                  $(mode.show).fadeOut();
+              }
+              $(activeMode.show).show();
+          }
+        });
+  });
 
   module.provider('debugService', function() {
     this.$get = function() {

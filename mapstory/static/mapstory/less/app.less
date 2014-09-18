@@ -8,17 +8,37 @@
 @import 'app-variables.less';
 /* pull in all the maploom less */
 @import 'maploom.less';
+@import 'http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800';
 
 /* Overrides
 Put any rules that we're modifiying to fix something inherited in this section
 with a comment about why.
 */
 
-/* maploom makes ul have overflow-y */
-.tabbable {
-    .nav {
-        overflow: hidden;
+.ms-tool-mode {
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 500;
+    background: none;
+    width: 100%;
+
+    .panel-heading {
+        &:extend(#pulldown-content .panel-heading);
     }
+
+    .panel-group .panel + .panel {
+        margin: 0;
+    }
+
+    .panel-group.col-sm-3 {
+        padding: 0;
+    }
+}
+
+#map-name {
+    font-style: normal;
+    font-weight: bolder;
 }
 
 /* hide gallery until we need it
