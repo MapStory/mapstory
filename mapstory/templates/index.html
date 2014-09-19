@@ -4,6 +4,7 @@
 {% load staticfiles %}
 {% load base_tags %}
 {% load mapstory_tags %}
+{% load cache %}
 
 {% block extra_head %}
 <!--<link href="{{ STATIC_URL }}vendor/isotope/css/style.css" rel="stylesheet" />-->
@@ -21,7 +22,9 @@
 {% endblock %}
 
 {% block middle %}
-
+                <code>
+                    {% for v in cache_entries %} {{ v }} {% endfor %}
+                </code>
 
 	<div id="paralaxSlice1" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:600px;position:absolute;z-index:2">
 		<div class="maskParent">		
@@ -622,24 +625,11 @@
 			</div>
 			<hr/>
 			<div class="row">
-				<div class="col-sm-2">
-					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-				</div>
-				<div class="col-sm-2">
-					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-				</div>
-				<div class="col-sm-2">
-					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-				</div>
-				<div class="col-sm-2">
-					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-				</div>
-				<div class="col-sm-2">
-					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-				</div>
-				<div class="col-sm-2">
-					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-				</div>
+                {% for sponsor in sponsors %}
+                <div class="col-sm-2">
+                    <img class="rdphoto" src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
+                </div>
+                {% endfor %}
 			</div>
 		</div>
 	</section>

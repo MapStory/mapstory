@@ -4,16 +4,10 @@ from django.conf.urls import url
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from geonode.urls import urlpatterns
-
-def placeholder(page_name):
-    class WithContext(TemplateView):
-        def get_context_data(self, **kwargs):
-            context = super(WithContext, self).get_context_data(**kwargs)
-            context['page_name'] = page_name
-            return context
-    return WithContext.as_view(template_name='_stub.html')
+from mapstory.views import IndexView
 
 urlpatterns = patterns('',
+    url(r'^$', IndexView.as_view()),
     url(r'^maps/new2$',
         'geonode.maps.views.new_map', {'template': 'maps/mapstory_map_view.html'},
         name='map-new2'),
