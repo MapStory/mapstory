@@ -23,7 +23,7 @@
     {% for i in '12345' %}
     <div class="row get-panel">
 		<div class="col-lg-4 csection-photo">
-			<img class="photo-sm img-responsive" src="{{ remote_content 'static_img/photo.png' }}">
+			<img class="photo-sm img-responsive" src="{% remote_content 'static_img/photo.png' %}">
 		</div>
 		<div class="col-lg-8">
 			<h2 id="get-title"> Get {% lorem 2 w random %} </h2>
