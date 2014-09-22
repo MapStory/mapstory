@@ -600,6 +600,11 @@
 					<iframe frameborder="0" width="500" height="350" src="http://mapstory.tweetwally.com/embed" target="_blank" align="center" scrolling="Auto"></iframe>
 				</div>
 				<div class="col-sm-6">
+                    {% for item in news_items %}
+                    <h2>{{ item.title }} <small class="pull-right">{{ item.date }}</small></h2>
+                    {{ item.html|safe  }}
+                    <hr>
+                    {% endfor %}
 				</div>
 			</div>
 		</div>

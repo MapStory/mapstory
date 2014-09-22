@@ -1,5 +1,7 @@
 from django.db import models
+from datetime import datetime
 import hashlib
+import textile
 
 
 def _stamp(data):
@@ -34,6 +36,18 @@ class Sponsor(models.Model):
         return u'<img src="%s" />' % self.url()
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
+
+
+class NewsItem(models.Model):
+    title = models.CharField(max_length=64)
+    content = models.TextField()
+    date = models.DateField(default=datetime.now)
+
+    def html(self):
+        return textile.textile(self.content)
+
+    class Meta:
+        ordering = ['date']
 
 
 def get_sponsors():

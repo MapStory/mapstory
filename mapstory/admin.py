@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from mapstory.models import Sponsor
+from mapstory.models import NewsItem
 
 
 class SponsorAdmin(admin.ModelAdmin):
@@ -11,4 +12,8 @@ class SponsorAdmin(admin.ModelAdmin):
     list_display_links = 'image_tag',
 
 
+class NewsItemAdmin(admin.ModelAdmin):
+    model = NewsItem
+
 admin.site.register(Sponsor, SponsorAdmin)
+admin.site.register(NewsItem, NewsItemAdmin)
