@@ -1,5 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 from django.views.generic import TemplateView
 from django.views.generic.edit import ModelFormMixin
 from django.views.generic.edit import CreateView
@@ -63,3 +65,7 @@ class DiaryUpdateView(DiaryMixin, UpdateView):
         if not can_edit:
             raise PermissionDenied()
         return obj
+
+
+def test_view(req, template):
+    return render_to_response('testing/%s.html' % template, RequestContext(req))

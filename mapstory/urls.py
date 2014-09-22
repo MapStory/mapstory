@@ -9,6 +9,8 @@ from mapstory.views import IndexView
 from mapstory.views import DiaryListView
 from mapstory.views import DiaryCreateView
 from mapstory.views import DiaryUpdateView
+from mapstory.views import test_view
+import os
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view()),
@@ -24,8 +26,14 @@ urlpatterns = patterns('',
     url(r'^getpage$', TemplateView.as_view(template_name='mapstory/getpage.html'), name='getpage'),
     url(r'^storylayerpage$', TemplateView.as_view(template_name='mapstory/storylayerpage.html'), name='storylayerpage'),
     url(r'^mapstorypage$', TemplateView.as_view(template_name='mapstory/mapstorypage.html'), name='mapstorypage'),
-    url(r'^style-test$', TemplateView.as_view(template_name='testing/style_editor.html')),
 ) + urlpatterns
+
+
+if settings.DEBUG:
+    urlpatterns = urlpatterns + patterns('',
+        url(r'^testing/(?P<template>.*)$', 'mapstory.views.test_view'),
+    )
+
 
 if settings.LOCAL_CONTENT:
     urlpatterns = static(settings.STATIC_URL + "assets", document_root=settings.LOCAL_ROOT + "/../../mapstory-assets", show_indexes=True) + urlpatterns
