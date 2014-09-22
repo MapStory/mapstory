@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from datetime import datetime
 import hashlib
@@ -38,16 +39,26 @@ class Sponsor(models.Model):
     image_tag.allow_tags = True
 
 
-class NewsItem(models.Model):
-    title = models.CharField(max_length=64)
+class ContentMixin(models.Model):
     content = models.TextField()
-    date = models.DateField(default=datetime.now)
+    date = models.DateTimeField(default=datetime.now)
+    publish = models.BooleanField(default=False)
 
     def html(self):
         return textile.textile(self.content)
 
     class Meta:
-        ordering = ['date']
+        abstract = True
+        ordering = ['-date']
+
+
+class NewsItem(ContentMixin ):
+    title = models.CharField(max_length=64)
+
+
+class DiaryEntry(ContentMixin):
+    title = models.CharField(max_length=32)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL)
 
 
 def get_sponsors():

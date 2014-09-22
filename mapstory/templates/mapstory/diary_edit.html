@@ -1,0 +1,43 @@
+{% extends "site_base.html" %}
+
+{% block body_class %}diary{% endblock %}
+
+{% block extra_head %}
+<link href="{{ STATIC_URL }}geonode/css/base.css" rel="stylesheet" />
+{% endblock %}
+
+{% block middle %}
+
+<div class="container">
+    <div class="row">
+        <h1 class="text-center">MapStory User Diary</h1>
+        {{ form.non_field_errors }}
+        <form id="entry-form" method="POST">
+            {% csrf_token %}
+            <div class="form-group full">
+                {{ form.title.errors }}
+                <label for="id_title">Title</label>
+                {{ form.title }}
+            </div>
+            <div class="form-group full">
+                {{ form.content.errors }}
+                <label for="id_content">Your Entry:</label>
+                {{ form.content }}
+            </div>
+            <div class="form-group">
+                <label for="id_publish">Publish</label>
+                {{ form.publish }}
+            </div>
+            <button type="submit" class="btn btn-default">Save</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_script %}
+<script>
+{# work-around django form output #}
+$("#entry-form .form-group.full input,textarea").addClass("form-control");
+</script>
+{% endblock %}

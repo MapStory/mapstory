@@ -1,26 +1,42 @@
 {% extends "site_base.html" %}
 
-{% load webdesign %}
-
 {% block body_class %}diary{% endblock %}
 
 {% block extra_head %}
-	<link href="{{ STATIC_URL }}geonode/css/base.css" rel="stylesheet" />
-	<link href="{{ STATIC_URL }}mapstory/css/index.css" rel="stylesheet" />
-	<link href="{{ STATIC_URL }}mapstory/css/orange.css" rel="stylesheet" />
+<link href="{{ STATIC_URL }}geonode/css/base.css" rel="stylesheet" />
 {% endblock %}
 
 {% block middle %}
 
 <div class="container">
-    {% for i in '1234' %}
+    <div class="row">
+        <h1 class="text-center">MapStory Community Journal</h1>
+    </div>
+    {% if user.is_authenticated %}
+    <a class="btn btn-primary btn-lg" href="{% url 'diary-create' %}">
+        Write a Journal Entry
+    </a>
+    {% if drafts %}
+    <h3>Complete a Draft Entry</h3>
+    {% for d in drafts %}
+    <a class="btn btn-primary btn-lg" href="{% url 'diary-update' pk=d.pk %}">
+        {{ d.title }} - {{ d.date }}
+    </a>
+    {% endfor %}
+    {% endif %}
+
+    {% endif %}
+    {% if not entries %}
+    <h2>No Journal Entries Yet :(</h2>
+    {% endif %}
+    {% for entry in entries %}
     <div class="row blog-panel">
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-lg-10 col-lg-offset-2  col-xs-12 blog-header">
-                    <h5>January 01, 2014</h5>
-                    <h2>{% lorem 3 w random %}</h2>
-                    <h5>John Appleseed</h5>
+                    <h5>{{ entry.date }}</h5>
+                    <h2>{{ entry.title }}</h2>
+                    <h5>{{ entry.author }}</h5>
                 </div>
             </div>
             <div class="row">
@@ -32,7 +48,7 @@
                    	<div class="qlink qlink-dg"><a href="#">flag/report</a></div>
                 </div>
                 <div class="col-lg-10 col-xs-6 blog-text">
-                    {% lorem 4 p %}
+                    {{ entry.html|safe }}
                 </div>
             </div>
         </div>
