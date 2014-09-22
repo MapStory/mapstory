@@ -46,7 +46,7 @@ def _paste(bind):
 
 
 @task
-def update_static():
+def static():
     with pushd('mapstory/static'):
         sh('npm install')
         sh('bower install')
@@ -54,7 +54,7 @@ def update_static():
 
 
 @task
-@needs('update_static')
+@needs('static')
 def collect_static():
     sh('python manage.py collectstatic --link --noinput --ignore node_modules')
 

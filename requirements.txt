@@ -1,0 +1,10 @@
+-e ../geonode
+
+-e git://github.com/pinax/django-mailer.git#egg=django-mailer
+
+docutils
+textile
+
+# dev dependencies
+dj.paste
+PasteDeploy
