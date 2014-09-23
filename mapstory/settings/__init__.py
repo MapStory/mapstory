@@ -70,6 +70,10 @@ INSTALLED_APPS += (
     'geonode.contrib.geogit'
 )
 
+TEMPLATE_CONTEXT_PROCESSORS += (
+    'mapstory.context_processors.context',
+)
+
 OGC_SERVER = {
     'default' : {
         'BACKEND' : 'geonode.geoserver',

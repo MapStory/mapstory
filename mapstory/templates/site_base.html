@@ -5,9 +5,9 @@
 {% block head %}
 <link rel="shortcut icon" href="{% static 'mapstory/img/favicon.ico' %}">
 {{ block.super }}
-{% if DEBUG_STATIC %}
+{% if LIVE_RELOAD %}
 {% comment %}Using 35730 for mapstory css to not conflict with maploom grunt{% endcomment %}
-<script src="http://localhost:35730/livereload.js"></script>
+<script src="http://{{ LIVE_RELOAD }}:35730/livereload.js"></script>
 {% endif %}
 {% endblock head %}
 
