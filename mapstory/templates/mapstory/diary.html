@@ -2,10 +2,6 @@
 
 {% block body_class %}diary{% endblock %}
 
-{% block extra_head %}
-<link href="{{ STATIC_URL }}geonode/css/base.css" rel="stylesheet" />
-{% endblock %}
-
 {% block middle %}
 
 <div class="container">
@@ -41,11 +37,11 @@
             </div>
             <div class="row">
                 <div class="col-lg-2 col-xs-6 qlink-left">
-                   	<div class="qlink qlink-gen"><a href="#">comment</a></div>
-                   	<div class="qlink qlink-gen"><a href="#">favorite</a></div>
-                   	<div class="qlink qlink-fb"><a href="#">facebook</a></div>
-                   	<div class="qlink qlink-tw"><a href="#">twitter</a></div>
-                   	<div class="qlink qlink-dg"><a href="#">flag/report</a></div>
+                    <div class="qlink qlink-gen"><a href="#">comment</a></div>
+                    <div class="qlink qlink-gen"><a href="#">favorite</a></div>
+                    <div class="qlink qlink-fb"><a href="#">facebook</a></div>
+                    <div class="qlink qlink-tw"><a href="#">twitter</a></div>
+                    <div class="qlink qlink-dg"><a href="#">flag/report</a></div>
                 </div>
                 <div class="col-lg-10 col-xs-6 blog-text">
                     {{ entry.html|safe }}

@@ -5,40 +5,40 @@
 {% block body_class %}getpage{% endblock %}
 
 {% block extra_head %}
-	<link href="{{ STATIC_URL }}geonode/css/base.css" rel="stylesheet" />
-	<link href="{{ STATIC_URL }}mapstory/css/index.css" rel="stylesheet" />
-	<link href="{{ STATIC_URL }}mapstory/css/layout.css" rel="stylesheet" />
-	<link href="{{ STATIC_URL }}mapstory/css/orange.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}geonode/css/base.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}mapstory/css/index.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}mapstory/css/layout.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}mapstory/css/orange.css" rel="stylesheet" />
 {% endblock %}
 
 {% block middle %}
 
 <div class="row banner">
-	<h1 style="font-size:3em;text-align:center">Get Lorem</h1>
-		<h3>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. </h3>
-	<hr>
+    <h1 style="font-size:3em;text-align:center">Get Lorem</h1>
+        <h3>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. </h3>
+    <hr>
 </div>
-				
+                
 <div class="csection">
     {% for i in '12345' %}
     <div class="row get-panel">
-		<div class="col-lg-4 csection-photo">
-			<img class="photo-sm img-responsive" src="{% remote_content 'static_img/photo.png' %}">
-		</div>
-		<div class="col-lg-8">
-			<h2 id="get-title"> Get {% lorem 2 w random %} </h2>
-			<div class="get-text">
-				{% lorem 2 p %}
-			</div>
-			<div class="row">
-				<div class="col-sm-offset-7">
-				{% for j in '123' %}
-					<div class="qlink qlink-dk"><a>{% lorem 2 w random %}</a></div>
-				{% endfor %}
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="col-lg-4 csection-photo">
+            <img class="photo-sm img-responsive" src="{% remote_content 'static_img/photo.png' %}">
+        </div>
+        <div class="col-lg-8">
+            <h2 id="get-title"> Get {% lorem 2 w random %} </h2>
+            <div class="get-text">
+                {% lorem 2 p %}
+            </div>
+            <div class="row">
+                <div class="col-sm-offset-7">
+                {% for j in '123' %}
+                    <div class="qlink qlink-dk"><a>{% lorem 2 w random %}</a></div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
     {% endfor %}
 </div>
 {% endblock %}

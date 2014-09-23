@@ -8,10 +8,7 @@
 
 {% block extra_head %}
 <!--<link href="{{ STATIC_URL }}vendor/isotope/css/style.css" rel="stylesheet" />-->
-<link href="{{ STATIC_URL }}geonode/css/base.css" rel="stylesheet" />
 <link href="{{ STATIC_URL }}mapstory/css/index.css" rel="stylesheet" />
-<link href="{{ STATIC_URL }}mapstory/css/layout.css" rel="stylesheet" />
-<link href="{{ STATIC_URL }}mapstory/css/orange.css" rel="stylesheet" />
 {% endblock %}
 
 {% block extra_script %}
@@ -23,625 +20,625 @@
 
 {% block middle %}
 
-	<div id="paralaxSlice1" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:600px;position:absolute;z-index:2">
-		<div class="maskParent">		
-			<div class="paralaxMask"></div>
-			<div class="paralaxText container">
-			</div>
-		</div>
-	</div>
-	
+    <div id="paralaxSlice1" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:600px;position:absolute;z-index:2">
+        <div class="maskParent">		
+            <div class="paralaxMask"></div>
+            <div class="paralaxText container">
+            </div>
+        </div>
+    </div>
+    
     <section class="slice" id="welcome" style="background-color:chocolate;opacity:0.8;position:absolute;z-index:3;width:100%;top:410px">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12">
-					<h1 class="text-white text-center">The atlas of change that everyone can edit.</h1>
-				</div>
-			</div>
-			<div class="row" style="padding-top:10px">
-				<div class="input-group col-sm-6 col-sm-offset-3">
-                	<input class="form-control " id="appendedInput" type="text" placeholder="Explore events, places, periods and storytellers" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1 class="text-white text-center">The atlas of change that everyone can edit.</h1>
+                </div>
+            </div>
+            <div class="row" style="padding-top:10px">
+                <div class="input-group col-sm-6 col-sm-offset-3">
+                    <input class="form-control " id="appendedInput" type="text" placeholder="Explore events, places, periods and storytellers" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
                     <span class="input-group-addon" style="background-color:chocolate;color:white;border:1px solid white"><i class="icon-magnifier"></i></span>
                </div>
-			</div>
-			<div class="row" style="padding-top:15px;padding-bottom:5px;">
-				<div style="text-align:center">
-					<span class="col-sm-3" style="border-right:1px solid #BD5E1B">
-						<h3 class="text-white">
-							<a href="#">
-								Sign up now
-							</a>
-						</h3>
-					</span>
-					<span class="col-sm-3" style="border-right:1px solid #BD5E1B">
-						<h3 class="text-white">
-							<a href="#">
-								Upload StoryLayers
-							</a>
-						</h3>
-					</span>
-					<span class="col-sm-3" style="border-right:1px solid #BD5E1B">
-						<h3 class="text-white">
-							<a href="#">
-								Create MapStories
-							</a>
-						</h3>
-					</span>
-					<span class="col-sm-3">
-						<h3 class="text-white">
-							<a href="#">
-								Learn more
-							</a>
-						</h3>
-					</span>
-				</div>
-			</div>
-			<div class="row" style="padding-top:0px">
-				<h5 class="text-center text-white">
-					Quickly share open data and create MapStories about how the world changes over space and time - on any subject, at any geographic scale, and into the past, present or future.
-				</h5>
-			</div>
-			<div class="row" style="padding-bottom:5px">
-				<div class="localscroll" style="text-align:center">
+            </div>
+            <div class="row" style="padding-top:15px;padding-bottom:5px;">
+                <div style="text-align:center">
+                    <span class="col-sm-3" style="border-right:1px solid #BD5E1B">
+                        <h3 class="text-white">
+                            <a href="#">
+                                Sign up now
+                            </a>
+                        </h3>
+                    </span>
+                    <span class="col-sm-3" style="border-right:1px solid #BD5E1B">
+                        <h3 class="text-white">
+                            <a href="#">
+                                Upload StoryLayers
+                            </a>
+                        </h3>
+                    </span>
+                    <span class="col-sm-3" style="border-right:1px solid #BD5E1B">
+                        <h3 class="text-white">
+                            <a href="#">
+                                Create MapStories
+                            </a>
+                        </h3>
+                    </span>
+                    <span class="col-sm-3">
+                        <h3 class="text-white">
+                            <a href="#">
+                                Learn more
+                            </a>
+                        </h3>
+                    </span>
+                </div>
+            </div>
+            <div class="row" style="padding-top:0px">
+                <h5 class="text-center text-white">
+                    Quickly share open data and create MapStories about how the world changes over space and time - on any subject, at any geographic scale, and into the past, present or future.
+                </h5>
+            </div>
+            <div class="row" style="padding-bottom:5px">
+                <div class="localscroll" style="text-align:center">
                      <a href="#mapstories" class="btn btn-circle btn-sm btn-default" style="background-color:#BD5E1B;color:white;border:1px solid transparent;border-radius:25%">
-                  	<i class="icon-down"></i></a>
+                    <i class="icon-down"></i></a>
               </div>
-			</div>
-		</div>
-	</section>
-				
-	<!--
-	<section class="slice" id="mapstories" style="width:100%;height:475px;position:absolute;z-index:4;top:650px;padding-top:30px">
-					<div class="container">
-						<nav id="filter" class="col-md-12 text-center" style="text-align:center">
-								<ul class="nav nav-tabs" >
-									<li><a href="" class="btn btn-filter btn-sm" data-filter="*" data-toggle="tab">All MapStories</a></li>
-									<li><a href="" class="btn btn-filter btn-sm" data-filter=".science">Science</a></li>
-									<li><a href="" class="btn btn-filter btn-sm" data-filter=".government">Government</a></li>
-									<li><a href="" class="btn btn-filter btn-sm" data-filter=".nature">Nature</a></li>
-									<li><a href="" class="btn btn-filter btn-sm" data-filter=".crisis">Crisis</a></li>
-									<li><a href="" class="btn btn-filter btn-sm" data-filter=".settlement">Human Settlement</a></li>
-									<li><a href="" class="btn btn-filter btn-sm" data-filter=".health">Health</a></li>
-								</ul>
-							</nav>
-						<div class="portfolio-items  isotopeWrapper clearfix imgHover isotope" id="4">
-							<article class="col-sm-3 isotopeItem science isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem government isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem nature isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem crisis isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem health isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem settlement isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem science isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem government isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem nature isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem crisis isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem health isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem settlement isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-								<article class="col-sm-3 isotopeItem science isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem government isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem nature isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem crisis isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem health isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem settlement isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-								<article class="col-sm-3 isotopeItem science isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem government isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem nature isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem crisis isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem health isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-							<article class="col-sm-3 isotopeItem settlement isotope-item">
-									<section class="imgWrapper">
-										<img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
-									</section>
-									<section class="boxContent">
-										<h3>MapStory Title</h3>
-										<h4>
-											Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
-											<a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
-										</h4>
-									</section>
-								</article>
-						</div>
-					</div>
-				</section>
-	-->
-		
-	<div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:1125px">
-		<div class="maskParent">
-			<div class="paralaxMask"></div>
-			<div class="paralaxText container"></div>
-		</div>
-	</div>
-				
-	<section class="slice" id="getstarted" style="width:100%;height:500px;position:absolute;z-index:4;top:1425px;padding:0">
-		<div class="csection">
-			<div class="row">
-				<div class="col-sm-4">
-					<div class="csection-text">
-					<h1 class="text-right">Get Started</h1>
-					<h3 class="text-right">Everything happens somewhere at sometime. And everyone knows something about what’s happened in the world. MapStory turns data sitting on your desktop, in your brain, and within your networks and teams into an open educational resource that we all can learn from and use.</h3>
-					</div>
-				</div>
-				<div class="col-sm-8">
-					<div class="row" style="padding:20px">
-						{% for i in '12345678' %}
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">{% lorem 1 w random %}</h5>
-						</div>
-						{% endfor %}
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-				
-	<div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:1925px">
-		<div class="maskParent">
-			<div class="paralaxMask"></div>
-			<div class="paralaxText container"></div>
-		</div>
-	</div>
-				
-	<section class="slice" id="getinvolved" style="width:100%;height:500px;position:absolute;z-index:4;top:2225px">
-		<div class="csection">
-			<div class="row">
-				<div class="col-sm-8">
-					<div class="row" style="padding:20px">
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Host a Channel</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-						<h5 class="text-center">Launch an Initiative</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Share your skills </h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Become an Editor</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Found a Chapter</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Code for MapStory</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Organize an Event or Training</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Become a sponsor</h5>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<div class="csection-text">
-						<h1 class="text-left">Get Involved</h1>
-						<h3 class="text-left">Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.
-						</h3>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-				
-	<div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:2725px">
-		<div class="maskParent">
-			<div class="paralaxMask"></div>
-			<div class="paralaxText container">
-			</div>
-		</div>
-	</div>
-				
-	<section class="slice color1" id="getskills" style="width:100%;height:500px;position:absolute;z-index:4;top:3025px">
-		<div class="container">
-			<div class="row">
-				<h1 class="text-center">Get Skills</h1>
-				<h3 class="text-center">MapStory is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed.
-				</h3>
-			</div>
-			<hr/>
-			<div class="row">
-				<div class="col-sm-4 text-center">
-					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-					<h2>1. MapStory 101</h2>
-					<h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
-				</div>
-				<div class="col-sm-4 text-center">
-					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-					<h2>2. MapStory Wiki</h2>
-					<h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
-				</div>
-				<div class="col-sm-4 text-center">
-					<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-					<h2>3. Help Center</h2>
-					<h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
-				</div>
-				</div>
-		</div>
-	</section>
-				
-	<div id="paralaxSlice5" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:3525px">
-		<div class="maskParent">
-			<div class="paralaxMask"></div>
-			<div class="paralaxText container">
-			</div>
-		</div>
-	</div>
-				
-	<section class="slice color1" id="thinkers" style="width:100%;height:500px;position:absolute;z-index:4;top:3825px">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-8">
-					<div class="row" style="padding:20px">
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Mafalda Hopkirk</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Lee Jordan</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Millicent Bullstrode</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Penelope Clearwater</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Nymphadora Tonks</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Remus Lupin</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Seamus Finnigan</h5>
-						</div>
-						<div class="col-sm-3 photobox">
-							<img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-							<h5 class="text-center">Xenophilius Lovegood</h5>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<h1>Thinkers, Thoughts & Initiatives</h1>
-					<h3>Human beings are the only animals who write down their thoughts – so far! Here’s what a few MapStorytellers have been thinking about lately. For more, go to <a href="userdiary.html">User Diaries.</a>
-					</h3>
-				</div>
-			</div>
-							
-						</div>
-	</section>
-				
-	<div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:4325px">
-		<div class="maskParent">
-			<div class="paralaxMask"></div>
-			<div class="paralaxText container">
-			</div>
-		</div>
-	</div>
-				
-	<section class="slice color1" id="news" style="background-color:white;width:100%;height:600px;position:absolute;z-index:4;top:4625px">
-		<div class="container">
-			<div class="row">
-				<h1>In the News</h1>
-				<h3>
-					We are making headlines all over the world.	
-				</h3>
-			</div>
-			<hr/>
-			<div class="row">
-				<div class="col-sm-6">
-					<iframe frameborder="0" width="500" height="350" src="http://mapstory.tweetwally.com/embed" target="_blank" align="center" scrolling="Auto"></iframe>
-				</div>
-				<div class="col-sm-6">
+            </div>
+        </div>
+    </section>
+                
+    <!--
+    <section class="slice" id="mapstories" style="width:100%;height:475px;position:absolute;z-index:4;top:650px;padding-top:30px">
+                    <div class="container">
+                        <nav id="filter" class="col-md-12 text-center" style="text-align:center">
+                                <ul class="nav nav-tabs" >
+                                    <li><a href="" class="btn btn-filter btn-sm" data-filter="*" data-toggle="tab">All MapStories</a></li>
+                                    <li><a href="" class="btn btn-filter btn-sm" data-filter=".science">Science</a></li>
+                                    <li><a href="" class="btn btn-filter btn-sm" data-filter=".government">Government</a></li>
+                                    <li><a href="" class="btn btn-filter btn-sm" data-filter=".nature">Nature</a></li>
+                                    <li><a href="" class="btn btn-filter btn-sm" data-filter=".crisis">Crisis</a></li>
+                                    <li><a href="" class="btn btn-filter btn-sm" data-filter=".settlement">Human Settlement</a></li>
+                                    <li><a href="" class="btn btn-filter btn-sm" data-filter=".health">Health</a></li>
+                                </ul>
+                            </nav>
+                        <div class="portfolio-items  isotopeWrapper clearfix imgHover isotope" id="4">
+                            <article class="col-sm-3 isotopeItem science isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem government isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem nature isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem crisis isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem health isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem settlement isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem science isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem government isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem nature isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem crisis isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem health isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem settlement isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                                <article class="col-sm-3 isotopeItem science isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem government isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem nature isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem crisis isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem health isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem settlement isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                                <article class="col-sm-3 isotopeItem science isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem government isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem nature isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem crisis isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem health isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                            <article class="col-sm-3 isotopeItem settlement isotope-item">
+                                    <section class="imgWrapper">
+                                        <img alt="" src="images/portfolio/vign6.jpg" class="img-responsive">
+                                    </section>
+                                    <section class="boxContent">
+                                        <h3>MapStory Title</h3>
+                                        <h4>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate nunc ut tellus sollicitudin placerat. <br>
+                                            <a href="portfolio-project-fullwidth-image.html" class="moreLink portfolioSheet">→ read more</a>
+                                        </h4>
+                                    </section>
+                                </article>
+                        </div>
+                    </div>
+                </section>
+    -->
+        
+    <div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:1125px">
+        <div class="maskParent">
+            <div class="paralaxMask"></div>
+            <div class="paralaxText container"></div>
+        </div>
+    </div>
+                
+    <section class="slice" id="getstarted" style="width:100%;height:500px;position:absolute;z-index:4;top:1425px;padding:0">
+        <div class="csection">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="csection-text">
+                    <h1 class="text-right">Get Started</h1>
+                    <h3 class="text-right">Everything happens somewhere at sometime. And everyone knows something about what’s happened in the world. MapStory turns data sitting on your desktop, in your brain, and within your networks and teams into an open educational resource that we all can learn from and use.</h3>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="row" style="padding:20px">
+                        {% for i in '12345678' %}
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">{% lorem 1 w random %}</h5>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+                
+    <div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:1925px">
+        <div class="maskParent">
+            <div class="paralaxMask"></div>
+            <div class="paralaxText container"></div>
+        </div>
+    </div>
+                
+    <section class="slice" id="getinvolved" style="width:100%;height:500px;position:absolute;z-index:4;top:2225px">
+        <div class="csection">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="row" style="padding:20px">
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Host a Channel</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                        <h5 class="text-center">Launch an Initiative</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Share your skills </h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Become an Editor</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Found a Chapter</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Code for MapStory</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Organize an Event or Training</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Become a sponsor</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="csection-text">
+                        <h1 class="text-left">Get Involved</h1>
+                        <h3 class="text-left">Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+                
+    <div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:2725px">
+        <div class="maskParent">
+            <div class="paralaxMask"></div>
+            <div class="paralaxText container">
+            </div>
+        </div>
+    </div>
+                
+    <section class="slice color1" id="getskills" style="width:100%;height:500px;position:absolute;z-index:4;top:3025px">
+        <div class="container">
+            <div class="row">
+                <h1 class="text-center">Get Skills</h1>
+                <h3 class="text-center">MapStory is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed.
+                </h3>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-sm-4 text-center">
+                    <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                    <h2>1. MapStory 101</h2>
+                    <h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                    <h2>2. MapStory Wiki</h2>
+                    <h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                    <h2>3. Help Center</h2>
+                    <h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
+                </div>
+                </div>
+        </div>
+    </section>
+                
+    <div id="paralaxSlice5" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:3525px">
+        <div class="maskParent">
+            <div class="paralaxMask"></div>
+            <div class="paralaxText container">
+            </div>
+        </div>
+    </div>
+                
+    <section class="slice color1" id="thinkers" style="width:100%;height:500px;position:absolute;z-index:4;top:3825px">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="row" style="padding:20px">
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Mafalda Hopkirk</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Lee Jordan</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Millicent Bullstrode</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Penelope Clearwater</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Nymphadora Tonks</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Remus Lupin</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Seamus Finnigan</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <h5 class="text-center">Xenophilius Lovegood</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <h1>Thinkers, Thoughts & Initiatives</h1>
+                    <h3>Human beings are the only animals who write down their thoughts – so far! Here’s what a few MapStorytellers have been thinking about lately. For more, go to <a href="userdiary.html">User Diaries.</a>
+                    </h3>
+                </div>
+            </div>
+                            
+                        </div>
+    </section>
+                
+    <div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:4325px">
+        <div class="maskParent">
+            <div class="paralaxMask"></div>
+            <div class="paralaxText container">
+            </div>
+        </div>
+    </div>
+                
+    <section class="slice color1" id="news" style="background-color:white;width:100%;height:600px;position:absolute;z-index:4;top:4625px">
+        <div class="container">
+            <div class="row">
+                <h1>In the News</h1>
+                <h3>
+                    We are making headlines all over the world.	
+                </h3>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-sm-6">
+                    <iframe frameborder="0" width="500" height="350" src="http://mapstory.tweetwally.com/embed" target="_blank" align="center" scrolling="Auto"></iframe>
+                </div>
+                <div class="col-sm-6">
                     {% for item in news_items %}
                     <h2>{{ item.title }} <small class="pull-right">{{ item.date }}</small></h2>
                     {{ item.html|safe  }}
                     <hr>
                     {% endfor %}
-				</div>
-			</div>
-		</div>
-	</section>
+                </div>
+            </div>
+        </div>
+    </section>
 
-	<div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:5225px">
-		<div class="maskParent">
-			<div class="paralaxMask"></div>
-			<div class="paralaxText container">
-			</div>
-		</div>
-	</div>
-				
-	<section class="slice color1" id="sponsors" style="width:100%;height:450px;position:absolute;z-index:4;top:5525px;background-color:white">
-		<div class="container">
-			<div class="row">
-				<h1 class="text-center">Our Sponsors</h1>
-				<h3 class="text-center">Learning institutions like these drive innovation in the MapStory codebase, content and community. Join them. 
-				</h3>
-			</div>
-			<hr/>
-			<div class="row">
+    <div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:5225px">
+        <div class="maskParent">
+            <div class="paralaxMask"></div>
+            <div class="paralaxText container">
+            </div>
+        </div>
+    </div>
+                
+    <section class="slice color1" id="sponsors" style="width:100%;height:450px;position:absolute;z-index:4;top:5525px;background-color:white">
+        <div class="container">
+            <div class="row">
+                <h1 class="text-center">Our Sponsors</h1>
+                <h3 class="text-center">Learning institutions like these drive innovation in the MapStory codebase, content and community. Join them. 
+                </h3>
+            </div>
+            <hr/>
+            <div class="row">
                 {% for sponsor in sponsors %}
                 <div class="col-sm-2">
                     <img class="rdphoto" src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
                 </div>
                 {% endfor %}
-			</div>
-		</div>
-	</section>
-				
-	<div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:5975px">
-		<div class="maskParent">
-			<div class="paralaxMask"></div>
-			<div class="paralaxText container">
-			</div>
-		</div>
-	</div>
-				
+            </div>
+        </div>
+    </section>
+                
+    <div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:5975px">
+        <div class="maskParent">
+            <div class="paralaxMask"></div>
+            <div class="paralaxText container">
+            </div>
+        </div>
+    </div>
+                
 {% endblock %}
