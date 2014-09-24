@@ -6,11 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from geonode.urls import urlpatterns
 from mapstory.views import IndexView
+from mapstory.views import DiaryDetailView
 from mapstory.views import DiaryListView
 from mapstory.views import DiaryCreateView
 from mapstory.views import DiaryUpdateView
-from mapstory.views import test_view
-import os
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view()),
@@ -21,6 +20,7 @@ urlpatterns = patterns('',
         'geonode.maps.views.map_view', {'template': 'maps/mapstory_map_view.html'},
         name='map-view2'),
     url(r'^diary$', DiaryListView.as_view(), name='diary'),
+    url(r'^diary/(?P<pk>\d+)$', DiaryDetailView.as_view(), name='diary-detail'),
     url(r'^diary/write$', login_required(DiaryCreateView.as_view()), name='diary-create'),
     url(r'^diary/write/(?P<pk>\d+)$', login_required(DiaryUpdateView.as_view()), name='diary-update'),
     url(r'^getpage$', TemplateView.as_view(template_name='mapstory/getpage.html'), name='getpage'),

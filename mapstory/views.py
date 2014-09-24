@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.views.generic import TemplateView
 from django.views.generic.edit import ModelFormMixin
 from django.views.generic.edit import CreateView
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
@@ -26,9 +27,10 @@ class IndexView(TemplateView):
 class DiaryListView(ListView):
     template_name = 'mapstory/diary.html'
     context_object_name = 'entries'
+    paginate_by = 10
 
     def get_queryset(self):
-        return DiaryEntry.objects.filter(publish=True)[:10]
+        return DiaryEntry.objects.filter(publish=True)
 
     def get_context_data(self, **kwargs):
         ctx = super(DiaryListView, self).get_context_data(**kwargs)
@@ -38,7 +40,29 @@ class DiaryListView(ListView):
         return ctx
 
 
-class DiaryMixin:
+class DiaryPermissionMixin(object):
+    need_publish = False
+
+    def get_object(self, *args, **kwargs):
+        obj = super(DiaryPermissionMixin, self).get_object(*args, **kwargs)
+        user = self.request.user
+        if self.need_publish:
+            can_view = obj.publish
+        else:
+            can_view = user.is_superuser or obj.author == self.request.user
+        if not can_view:
+            raise PermissionDenied()
+        return obj
+
+
+class DiaryDetailView(DiaryPermissionMixin, DetailView):
+    template_name = 'mapstory/diary_detail.html'
+    model = DiaryEntry
+    need_publish = True
+    context_object_name = 'entry'
+
+
+class DiaryEditMixin(object):
     template_name = 'mapstory/diary_edit.html'
     model = DiaryEntry
     fields = ['title', 'content', 'publish']
@@ -47,7 +71,7 @@ class DiaryMixin:
         return reverse('diary')
 
 
-class DiaryCreateView(DiaryMixin, CreateView):
+class DiaryCreateView(DiaryEditMixin, CreateView):
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
@@ -56,15 +80,8 @@ class DiaryCreateView(DiaryMixin, CreateView):
         return super(ModelFormMixin, self).form_valid(form)
 
 
-class DiaryUpdateView(DiaryMixin, UpdateView):
-
-    def get_object(self, *args, **kwargs):
-        obj = super(DiaryUpdateView, self).get_object(*args, **kwargs)
-        user = self.request.user
-        can_edit = user.is_superuser or obj.author == self.request.user
-        if not can_edit:
-            raise PermissionDenied()
-        return obj
+class DiaryUpdateView(DiaryEditMixin, DiaryPermissionMixin, UpdateView):
+    pass
 
 
 def test_view(req, template):

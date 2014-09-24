@@ -1,0 +1,25 @@
+{% extends "site_base.html" %}
+
+{% load avatar_tags %}
+
+{% block body_class %}diary{% endblock %}
+
+{% block middle %}
+
+<div class="container">
+    <div class="row text-center">
+        <h1>MapStory Community Journal</h1>
+        <h2>{{ entry.title }}</h2>
+    </div>
+    <div class="row blog-panel">
+        <div class="col-sm-12">
+            <p>Posted by {% avatar user 30 %}{{ entry.author }} on {{ entry.date }}</p>
+            <div class="row">
+                <div class="col-lg-10 col-xs-6 blog-text">
+                    {{ entry.html|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

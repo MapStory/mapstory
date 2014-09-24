@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.db import models
 from datetime import datetime
 import hashlib
@@ -59,6 +60,9 @@ class NewsItem(ContentMixin ):
 class DiaryEntry(ContentMixin):
     title = models.CharField(max_length=32)
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    def get_absolute_url(self):
+        return reverse('diary-detail', args=[self.pk])
 
 
 def get_sponsors():
