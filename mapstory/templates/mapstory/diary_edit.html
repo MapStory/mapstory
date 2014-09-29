@@ -6,25 +6,26 @@
 
 <div class="container">
     <div class="row">
-        <h1 class="text-center">MapStory User Diary</h1>
         {{ form.non_field_errors }}
         <form id="entry-form" method="POST">
             {% csrf_token %}
             <div class="form-group full">
                 {{ form.title.errors }}
-                <label for="id_title">Title</label>
+                <label class="label-font" for="id_title">Title</label>
+                <hr>
                 {{ form.title }}
             </div>
             <div class="form-group full">
                 {{ form.content.errors }}
-                <label for="id_content">Your Entry:</label>
+                <label class="label-font" for="id_content">Blog Content</label>
+                <hr>
                 {{ form.content }}
             </div>
             <div class="form-group">
-                <label for="id_publish">Publish</label>
+                <label class="label-font" for="id_publish">Publish</label>
                 {{ form.publish }}
             </div>
-            <button type="submit" class="btn btn-default">Save</button>
+            <button type="submit" class="btn ">Save</button>
         </form>
     </div>
 </div>
