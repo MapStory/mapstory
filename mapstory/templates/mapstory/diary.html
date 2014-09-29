@@ -2,7 +2,9 @@
 
 {% load avatar_tags %}
 
-{% block body_class %}diary{% endblock %}
+{% block extra_head %}
+<link href="{{ STATIC_URL }}mapstory/css/diary.css" rel="stylesheet" />
+{% endblock %}
 
 {% block middle %}
 
@@ -32,13 +34,13 @@
         <div class="col-sm-12">
             <div class="row">
                 <div class="col-lg-10 col-lg-offset-2  col-xs-12 blog-header">
-                    <h5>{{ entry.date }}</h5>
-                    <h2><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h2>
-                    <h5>{% avatar user 30 %} {{ entry.author }}</h5>
+                    <h5 class="blog-title">{{ entry.date }}</h5>
+                    <h2 class="blog-title"><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h2>
+                    <h5 class="blog-title">{% avatar user 30 %} {{ entry.author }}</h5>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-2 col-xs-6 qlink-left">
+                <div class="col-lg-2 col-xs-6 qlink-right br">
                     <div class="qlink qlink-gen"><a href="#">comment</a></div>
                     <div class="qlink qlink-gen"><a href="#">favorite</a></div>
                     <div class="qlink qlink-fb"><a href="#">facebook</a></div>
