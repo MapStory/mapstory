@@ -8,24 +8,38 @@
 
 {% block middle %}
 
-<div class="container">
-    <div class="row">
-        <h1 class="text-center">MapStory Community Journal</h1>
+<div class="container" id="diary-banner">
+	<div class="row text-center" >
+        <h1>MapStory Community Journal</h1>
+        <h3>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</h3>
     </div>
-    {% if user.is_authenticated %}
-    <a class="btn btn-primary btn-lg" href="{% url 'diary-create' %}">
-        Write a Journal Entry
-    </a>
-    {% if drafts %}
-    <h3>Complete a Draft Entry</h3>
-    {% for d in drafts %}
-    <a class="btn btn-primary btn-lg" href="{% url 'diary-update' pk=d.pk %}">
-        {{ d.title }} - {{ d.date }}
-    </a>
-    {% endfor %}
+</div>
+<div class="container" id="diary-menu">
+	{% if user.is_authenticated %}
+    	<span id="new-button" style="border-right: 1px solid darkgray">
+    		<a href="{% url 'diary-create' %}">
+        		write a new entry
+    		</a>
+    	</span>
+    	{% if drafts %}
+    		<span class="dropdown" id="draft-button">
+ 		 		<a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+    				complete a draft entry <span class="caret"></span>
+  				</a>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+					{% for d in drafts %}
+   			 			<li>
+   			 			 	<a href="{% url 'diary-update' pk=d.pk %}">
+        						{{ d.title }} - {{ d.date }}
+    						</a>
+    					</li>
+    				{% endfor %}
+  				</ul>
+			</span>
+		{% endif %}
     {% endif %}
-
-    {% endif %}
+</div>
+<div class="container">
     {% if not entries %}
     <h2>No Journal Entries Yet :(</h2>
     {% endif %}
@@ -40,14 +54,14 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-2 col-xs-6 qlink-right br">
+                <div class="col-lg-2 col-xs-6 qlink-right">
                     <div class="qlink qlink-gen"><a href="#">comment</a></div>
                     <div class="qlink qlink-gen"><a href="#">favorite</a></div>
                     <div class="qlink qlink-fb"><a href="#">facebook</a></div>
                     <div class="qlink qlink-tw"><a href="#">twitter</a></div>
                     <div class="qlink qlink-dg"><a href="#">flag/report</a></div>
                 </div>
-                <div class="col-lg-10 col-xs-6 blog-text">
+                <div class="col-lg-10 col-xs-6 blog-content bl">
                     {{ entry.html|safe }}
                 </div>
             </div>

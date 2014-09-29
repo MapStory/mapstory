@@ -2,24 +2,31 @@
 
 {% load avatar_tags %}
 
-{% block body_class %}diary{% endblock %}
+{% block extra_head %}
+<link href="{{ STATIC_URL }}mapstory/css/diary.css" rel="stylesheet" />
+{% endblock %}
 
 {% block middle %}
 
+<div class="container" id="diary-banner">
+    <div class="row text-left">
+        <h1>{{ entry.title }}</h1>
+        <h3>{% avatar user 30 %} {{ entry.author }} on {{ entry.date }}</h3>
+    </div>
+</div>
+
 <div class="container">
-    <div class="row text-center">
-        <h1>MapStory Community Journal</h1>
-        <h2>{{ entry.title }}</h2>
-    </div>
-    <div class="row blog-panel">
-        <div class="col-sm-12">
-            <p>Posted by {% avatar user 30 %}{{ entry.author }} on {{ entry.date }}</p>
-            <div class="row">
-                <div class="col-lg-10 col-xs-6 blog-text">
-                    {{ entry.html|safe }}
-                </div>
-            </div>
+   <div class="row">
+        <div class="col-lg-2 col-xs-6 qlink-right">
+           <div class="qlink qlink-gen"><a href="#">comment</a></div>
+            <div class="qlink qlink-gen"><a href="#">favorite</a></div>
+            <div class="qlink qlink-fb"><a href="#">facebook</a></div>
+            <div class="qlink qlink-tw"><a href="#">twitter</a></div>
+            <div class="qlink qlink-dg"><a href="#">flag/report</a></div>
         </div>
-    </div>
+       <div class="col-lg-10 col-xs-6 blog-content bl">
+           {{ entry.html|safe }}
+        </div>
+   </div>
 </div>
 {% endblock %}
