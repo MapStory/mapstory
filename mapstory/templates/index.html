@@ -20,7 +20,7 @@
 
 {% block middle %}
 
-    <div id="paralaxSlice1" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:600px;position:absolute;z-index:2">
+    <div id="paralaxSlice1" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %})">
         <div class="maskParent">		
             <div class="paralaxMask"></div>
             <div class="paralaxText container">
@@ -28,7 +28,7 @@
         </div>
     </div>
     
-    <section class="slice" id="welcome" style="background-color:chocolate;opacity:0.8;position:absolute;z-index:3;width:100%;top:410px">
+    <section class="slice" id="welcome">
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
@@ -395,14 +395,14 @@
                 </section>
     -->
         
-    <div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:1125px">
+    <div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %})">
         <div class="maskParent">
             <div class="paralaxMask"></div>
             <div class="paralaxText container"></div>
         </div>
     </div>
                 
-    <section class="slice" id="getstarted" style="width:100%;height:500px;position:absolute;z-index:4;top:1425px;padding:0">
+    <section class="slice" id="getstarted">
         <div class="csection">
             <div class="row">
                 <div class="col-sm-4">
@@ -413,61 +413,79 @@
                 </div>
                 <div class="col-sm-8">
                     <div class="row" style="padding:20px">
-                        {% for i in '12345678' %}
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-                            <h5 class="text-center">{% lorem 1 w random %}</h5>
+                            <img class="rdphoto" src="{% remote_content 'static_img/stud.png' %}">
+                            <h5 class="text-center">Students</h5>
                         </div>
-                        {% endfor %}
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/educ.png' %}">
+                            <h5 class="text-center">Educators</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/libr.png' %}">
+                            <h5 class="text-center">Librarians</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/rese.png' %}">
+                            <h5 class="text-center">Researchers</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/busi.png' %}">
+                            <h5 class="text-center">Businesspeople</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/huma.png' %}">
+                            <h5 class="text-center">Humanitarians</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/poli.png' %}">
+                            <h5 class="text-center">Policymakers</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/jour.png' %}">
+                            <h5 class="text-center">Journalists</h5>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
                 
-    <div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:1925px">
+    <div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %})">
         <div class="maskParent">
             <div class="paralaxMask"></div>
             <div class="paralaxText container"></div>
         </div>
     </div>
                 
-    <section class="slice" id="getinvolved" style="width:100%;height:500px;position:absolute;z-index:4;top:2225px">
+    <section class="slice" id="getinvolved">
         <div class="csection">
             <div class="row">
                 <div class="col-sm-8">
                     <div class="row" style="padding:20px">
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-                            <h5 class="text-center">Host a Channel</h5>
+                            <img class="rdphoto" src="{% remote_content 'static_img/proj.png' %}">
+                            <h5 class="text-center">Suggest a project</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-                        <h5 class="text-center">Launch an Initiative</h5>
+                            <img class="rdphoto" src="{% remote_content 'static_img/help.png' %}">
+                        <h5 class="text-center">Help others</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-                            <h5 class="text-center">Share your skills </h5>
+                            <img class="rdphoto" src="{% remote_content 'static_img/edit.png' %}">
+                            <h5 class="text-center">Edit StoryLayers</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-                            <h5 class="text-center">Become an Editor</h5>
+                            <img class="rdphoto" src="{% remote_content 'static_img/code.png' %}">
+                            <h5 class="text-center">Contribute code</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-                            <h5 class="text-center">Found a Chapter</h5>
+                            <img class="rdphoto" src="{% remote_content 'static_img/chan.png' %}">
+                            <h5 class="text-center">Launch a channel</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-                            <h5 class="text-center">Code for MapStory</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-                            <h5 class="text-center">Organize an Event or Training</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
-                            <h5 class="text-center">Become a sponsor</h5>
+                            <img class="rdphoto" src="{% remote_content 'static_img/amba.png' %}">
+                            <h5 class="text-center">Become an Ambassador</h5>
                         </div>
                     </div>
                 </div>
@@ -482,7 +500,7 @@
         </div>
     </section>
                 
-    <div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:2725px">
+    <div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %})">
         <div class="maskParent">
             <div class="paralaxMask"></div>
             <div class="paralaxText container">
@@ -490,7 +508,7 @@
         </div>
     </div>
                 
-    <section class="slice color1" id="getskills" style="width:100%;height:500px;position:absolute;z-index:4;top:3025px">
+    <section class="slice color1" id="getskills">
         <div class="container">
             <div class="row">
                 <h1 class="text-center">Get Skills</h1>
@@ -500,17 +518,17 @@
             <hr/>
             <div class="row">
                 <div class="col-sm-4 text-center">
-                    <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                    <img class="rdphoto" src="{% remote_content 'static_img/ms101.png' %}">
                     <h2>1. MapStory 101</h2>
                     <h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
                 </div>
                 <div class="col-sm-4 text-center">
-                    <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                    <img class="rdphoto" src="{% remote_content 'static_img/wiki.png' %}">
                     <h2>2. MapStory Wiki</h2>
                     <h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
                 </div>
                 <div class="col-sm-4 text-center">
-                    <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                    <img class="rdphoto" src="{% remote_content 'static_img/cent.png' %}">
                     <h2>3. Help Center</h2>
                     <h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
                 </div>
@@ -518,7 +536,7 @@
         </div>
     </section>
                 
-    <div id="paralaxSlice5" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:3525px">
+    <div id="paralaxSlice5" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %})">
         <div class="maskParent">
             <div class="paralaxMask"></div>
             <div class="paralaxText container">
@@ -526,41 +544,41 @@
         </div>
     </div>
                 
-    <section class="slice color1" id="thinkers" style="width:100%;height:500px;position:absolute;z-index:4;top:3825px">
+    <section class="slice color1" id="thinkers">
         <div class="container">
             <div class="row">
                 <div class="col-sm-8">
                     <div class="row" style="padding:20px">
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar1.png' %}">
                             <h5 class="text-center">Mafalda Hopkirk</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar2.png' %}">
                             <h5 class="text-center">Lee Jordan</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar1.png' %}">
                             <h5 class="text-center">Millicent Bullstrode</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar2.png' %}">
                             <h5 class="text-center">Penelope Clearwater</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar2.png' %}">
                             <h5 class="text-center">Nymphadora Tonks</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar1.png' %}">
                             <h5 class="text-center">Remus Lupin</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar2.png' %}">
                             <h5 class="text-center">Seamus Finnigan</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/thumbnail.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar1.png' %}">
                             <h5 class="text-center">Xenophilius Lovegood</h5>
                         </div>
                     </div>
@@ -575,7 +593,7 @@
                         </div>
     </section>
                 
-    <div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:4325px">
+    <div id="paralaxSlice4" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %})">
         <div class="maskParent">
             <div class="paralaxMask"></div>
             <div class="paralaxText container">
@@ -583,18 +601,18 @@
         </div>
     </div>
                 
-    <section class="slice color1" id="news" style="background-color:white;width:100%;height:600px;position:absolute;z-index:4;top:4625px">
+    <section class="slice color1" id="news">
         <div class="container">
             <div class="row">
-                <h1>In the News</h1>
-                <h3>
+                <h1 class="text-center">In the News</h1>
+                <h3 class="text-center">
                     We are making headlines all over the world.	
                 </h3>
             </div>
             <hr/>
             <div class="row">
                 <div class="col-sm-6">
-                    <iframe frameborder="0" width="500" height="350" src="http://mapstory.tweetwally.com/embed" target="_blank" align="center" scrolling="Auto"></iframe>
+                    <iframe frameborder="0" width="500" height="250" src="http://mapstory.tweetwally.com/embed" target="_blank" align="center" scrolling="Auto"></iframe>
                 </div>
                 <div class="col-sm-6">
                     {% for item in news_items %}
@@ -607,7 +625,7 @@
         </div>
     </section>
 
-    <div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:5225px">
+    <div id="paralaxSlice2" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %})">
         <div class="maskParent">
             <div class="paralaxMask"></div>
             <div class="paralaxText container">
@@ -615,7 +633,7 @@
         </div>
     </div>
                 
-    <section class="slice color1" id="sponsors" style="width:100%;height:450px;position:absolute;z-index:4;top:5525px;background-color:white">
+    <section class="slice color1" id="sponsors">
         <div class="container">
             <div class="row">
                 <h1 class="text-center">Our Sponsors</h1>
@@ -633,7 +651,7 @@
         </div>
     </section>
                 
-    <div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %});height:300px;position:absolute;z-index:4;top:5975px">
+    <div id="paralaxSlice3" data-stellar-background-ratio="0.5" style="background-image:url({% remote_content 'static_img/parallax.png' %})">
         <div class="maskParent">
             <div class="paralaxMask"></div>
             <div class="paralaxText container">
