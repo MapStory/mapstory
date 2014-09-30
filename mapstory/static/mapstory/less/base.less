@@ -108,8 +108,12 @@ p.credits a {
 	color:#EB7F37;
 }
 
+/* ======== NAVBAR ========= */
+
 .navbar-inverse {
     background: white;
+    border-bottom:1px solid gainsboro;
+    opacity: 0.98;
 }
 
 .navbar-brand {
@@ -118,17 +122,15 @@ p.credits a {
     background-size: 100%;
     width: 196px;
     height: auto;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .navbar-inverse .navbar-nav > li > a:hover {
-    color: chocolate;
+    color: orange;
 }
 
-/* ======== NAVBAR ========= */
-
 #mainHeader{background:#eee;}
-.navbar-brand{padding-top:5px;padding-left: 0;}
+.navbar-brand{padding-left: 0;}
 
 
 .fixedHeader {
@@ -139,8 +141,8 @@ p.credits a {
     z-index: 9999;
 }
 .fixedHeader #mainMenu li a {
-    padding-bottom: 0.5em;
-    padding-top: 0.5em;
+    padding-bottom: 3em;
+    padding-top: 1em;
 }
 .fixedHeader .nav-brand {
     margin-top: 0.6em;
@@ -149,21 +151,19 @@ p.credits a {
 
 .navbar-nav > li > a {
     display: block;
-    font-size: .8em;
-    font-weight: 200;
+    color: white;
+    font-size: 1em;
+    font-weight: 500;
     margin: 0;
-	padding-top:5px;
-	padding-bottom:5px;
+    padding-top:25px;
+    padding-bottom: 0px;
 	vertical-align:middle;
     text-decoration: none;
-    text-transform: uppercase;
-	-webkit-transition: all 0.2s ease-out;
-	-moz-transition: all 0.2s ease-out;
-	-o-transition: all 0.2s ease-out;
-	-ms-transition: all 0.2s ease-out;
-	transition: all 0.2s ease-out;
+    text-transform: none;
+    color: white;
 }
-.navbar-nav > li > a i {font-size: 16px; text-align: center;padding: 5px 0 10px 0; color:#46443B;}
+
+.navbar-nav > li > a i {font-size: 16px; text-align: center;padding: 5px 0 10px 0; color:pink;}
 .navbar-nav > li > a:hover i, .navbar-nav > li.active > a i {color:#fff;}
 #mainHeader .pull-right{ float:none !important; }
 
@@ -181,8 +181,6 @@ p.credits a {
 		display: block;
 	}
 	.navbar-nav > li > a {
-		padding-top:0;
-		padding-bottom:0;
 		height:50px;
 	}
 }

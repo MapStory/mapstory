@@ -6,17 +6,17 @@
         </div>
         <div class="navbar-collapse collapse pull-right">
             <ul class="nav navbar-nav">
-                <li id="nav_layers">
+                <li id="nav_layers" class="navbar-menu">
                     <a href="{% url "search" %}">{% trans "Explore" %}</a>
                 </li>
-                <li id="nav_maps">
+                <li id="nav_maps" class="navbar-menu">
                     <a href="{% url "map-new2" %}">{% trans "Create" %}</a>
                 </li>
-                <li id="nav_documents">
+                <li id="nav_documents" class="navbar-menu">
                     <a href="#" class='todo'>{% trans "How To" %}</a>
                 </li>
-                <li id="nav_groups">
-                    <a href="{% url "diary" %}">{% trans "Community Journal" %}</a>
+                <li id="nav_groups" class="navbar-menu">
+                    <a href="{% url "diary" %}">{% trans "Diary" %}</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
