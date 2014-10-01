@@ -105,6 +105,8 @@ DATABASE_PASSWORD = None
 
 LOCAL_CONTENT = True
 
+GEOGIT_DATASTORE_NAME = 'geogit'
+
 if os.path.exists('mapstory/settings/local_settings.py'):
     exec open('mapstory/settings/local_settings.py') in globals()
 
