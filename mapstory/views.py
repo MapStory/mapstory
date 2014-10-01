@@ -10,6 +10,7 @@ from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
 from mapstory.models import get_sponsors
+from mapstory.models import GetPage
 from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
 
@@ -82,6 +83,12 @@ class DiaryCreateView(DiaryEditMixin, CreateView):
 
 class DiaryUpdateView(DiaryEditMixin, DiaryPermissionMixin, UpdateView):
     pass
+
+
+class GetPageView(DetailView):
+    template_name = 'mapstory/getpage.html'
+    model = GetPage
+    slug_field = 'name'
 
 
 def test_view(req, template):

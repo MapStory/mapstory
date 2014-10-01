@@ -1,5 +1,6 @@
 {% extends "site_base.html" %}
 
+{% load mapstory_tags %}
 {% load webdesign %}
 
 {% block body_class %}getpage{% endblock %}
@@ -14,27 +15,31 @@
 {% block middle %}
 
 <div class="row banner">
-    <h1 style="font-size:3em;text-align:center">Get Lorem</h1>
-        <h3>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. </h3>
+    <h1 style="font-size:3em;text-align:center">{{ getpage.title }}</h1>
+        <h3>{{ getpage.subtitle }}</h3>
     <hr>
 </div>
                 
 <div class="csection">
-    {% for i in '12345' %}
+    {% for entry in getpage.published_entries %}
     <div class="row get-panel">
         <div class="col-lg-4 csection-photo">
-            <img class="photo-sm img-responsive" src="{% remote_content 'static_img/photo.png' %}">
+            {% link entry.main_link entry.title 600 400 %}
         </div>
         <div class="col-lg-8">
-            <h2 id="get-title"> Get {% lorem 2 w random %} </h2>
+            <h2 id="get-title">{{ entry.title }}</h2>
+            <h3 id="get-title">{{ entry.subtitle }}</h3>
             <div class="get-text">
-                {% lorem 2 p %}
+                {{ entry.html|safe }}
             </div>
             <div class="row">
                 <div class="col-sm-offset-7">
-                {% for j in '123' %}
-                    <div class="qlink qlink-dk"><a>{% lorem 2 w random %}</a></div>
-                {% endfor %}
+                    {% if entry.map %}
+                    <a href="{% url 'map_detail' entry.map %}">{{ entry.map.title }}</a>
+                    {% endif %}
+                    {% if entry.external_link %}
+                    <a href="{{ entry.external_link }}">More</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
