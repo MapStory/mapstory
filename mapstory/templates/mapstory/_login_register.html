@@ -1,21 +1,21 @@
 <div class="modal fade" id="loginModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width:1000px;margin:50px auto">
         <div class="modal-content">
-            <div class="modal-body">
-                <div class="row" style="margin:10px">
-                    <div class="col-sm-6" style="border-right:1px solid darkgray">
-                        <h1 style="font-size:1.4em"><strong>Log in</strong></h1>
-                        <hr class="col-sm-10" style="margin:10px">
+            <div class="modal-body" style="padding:20px 30px">
+                <div class="row">
+                    <div class="col-sm-6 br">
+                        <h3>Log in</h3>
+                        <hr>
                         <form class="form form-horizontal" method="post" action="{% url 'account_login' %}?next={{ request.path }}" accept-charset="UTF-8">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label class="col-md-3 control-label" for="username">Username</label>
+                                <label class="col-md-3 control-label label-font-sm" for="username">Username</label>
                                 <div class="col-md-8">
                                     <input class="form-control" name="username" id="username" placeholder="Username" type="text">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 control-label" for="password">Password</label>
+                                <label class="col-md-3 control-label label-font-sm" for="password">Password</label>
                                 <div class="col-md-8">
                                     <input class="form-control" name="password" id="password" placeholder="Password" type="password">
                                 </div>
@@ -23,53 +23,52 @@
                             <div class="form-group">
                                 <div class="col-md-8 col-md-offset-3">
                                     <div class="checkbox">
-                                        <label>
+                                        <h4>
+                                            <a href="#">Forgot password?</a>
+                                        </h4>
+                                        <h4>
                                             <input type="checkbox" value="">
                                             Remember me
-                                        </label>
+                                        </h4>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-8 col-md-offset-3">
-                                    <label>
-                                        <a href="#" style="color:black">Forgot password?</a>
-                                    </label>
                                 </div>
                             </div>
                             <div class="form-actions form-actions-padding-sm">
                                 <div class="row">
                                     <div class="col-sm-offset-2 col-sm-8">
-                                        <button class="btn btn-sm btn-block"><a href="profile.html">Sign in</a></button>
+                                        <h3 class="qlink-gen text-center" style="border: 1px solid orange;border-radius:4px; padding:10px;margin-top:0px">Sign in to MapStory</h3>
                                     </div>
                                 </div>
                             </div>
-                            <hr class="col-sm-11" style="margin:10px">
+                            <hr class="col-sm-11">
                             <div class="form-actions form-actions-padding-sm">
-                                <div class="row">
-                                    <div class="col-sm-11">
-                                        <h1 style="font-size:1.2em;">Connect your account</h1>
-                                        <div class="col-sm-6">
-                                            <button class="btn btn-sm btn-block" style="background-color:dodgerblue;color:white"><i class="icon-social-facebook"></i></button>
+                                <h3>Connect your account</h3>
+                                 <div class="row" style="padding:10px 10px">
+                                        <div class="col-sm-6 text-center qlink-wt" style="margin:5px;width:45%;border: 1px solid dodgerblue;border-radius:4px;background-color:dodgerblue">
+                                            <h4>facebook</h4>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <button class="btn btn-sm btn-block" style="background-color:deepskyblue;color:white"><i class="icon-social-twitter"></i></button>
+                                        <div class="col-sm-6 qlink-wt text-center"  style="margin:5px;width:45%;border: 1px solid deepskyblue;border-radius:4px;background-color:deepskyblue">
+                                            <h4>twitter</h4> 
+                                        </div>
+                                        <div class="col-sm-6 qlink-wt text-center"  style="margin:5px;width:45%;border: 1px solid crimson;border-radius:4px;background-color:crimson">
+                                            <h4>google</h4>  
+                                        </div>
+                                        <div class="col-sm-6 qlink-wt text-center"  style="margin:5px;width:45%;border: 1px solid blueviolet;border-radius:4px;background-color:blueviolet">
+                                            <h4>yahoo</h4> 
                                         </div>
                                     </div>
-                                </div>
                             </div>
                         </form>
                     </div>
                     <div class="col-sm-6" >
-                        <h1 class="col-sm-offset-1" style="font-size:1.4em">
-                            <strong>Sign up to MapStory</strong>
+                        <h3>Sign up to MapStory
                             <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        </h1>
-                        <hr class="col-sm-offset-1 col-sm-10" style="margin:10px">
+                        </h3>
+                        <hr>
                         <form class="form form-horizontal" method="post" action="#" accept-charset="UTF-8">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label class="col-sm-offset-1 col-md-2 control-label" for="inputText1">Name</label>
+                                <label class="col-sm-offset-1 col-md-2 control-label label-font-sm" for="inputText1">Name</label>
                                 <div class="col-md-4">
                                     <input class="form-control" id="inputText1" placeholder="First" type="text">
                                 </div>
@@ -78,46 +77,44 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-offset-1 col-md-2 control-label" for="inputText1">Email</label>
+                                <label class="col-sm-offset-1 col-md-2 control-label label-font-sm" for="inputText1">Email</label>
                                 <div class="col-md-9">
                                     <input class="form-control" id="inputText1" placeholder="@email.com" type="text">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-offset-1 col-md-2 control-label" for="inputPassword4">Password</label>
+                                <label class="col-sm-offset-1 col-md-2 control-label label-font-sm" for="inputPassword4">Password</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" id="inputPassword4" placeholder="Password field" type="password" value="Top secret!">
+                                    <input class="form-control" id="inputPassword4" placeholder="(minimum of 8 characters)" type="password" value="Top secret!">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-offset-1 col-md-2 control-label" for="inputPassword4">Confirm Password</label>
+                                <label class="col-sm-offset-1 col-md-2 control-label label-font-sm" for="inputPassword4">Confirm Password</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" id="inputPassword4" placeholder="Password field" type="password" value="Top secret!">
+                                    <input class="form-control" id="inputPassword4" placeholder="(minimum of 8 characters)" type="password" value="Top secret!">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-9 col-md-offset-3">
+                                <div class="col-md-11 col-md-offset-1">
                                     <div class="checkbox">
-                                        <label>
-                                            <a href="#" style="color:black">Signing up as an organization?</a>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-9 col-md-offset-3">
-                                    <div class="checkbox">
-                                        <label>
+                                        <h4>
+                                            <a href="#" style="font-weight:400">Signing up as an organization? Click here.</a>
+                                        </h4>
+                                        <h4>
+                                            <input type="checkbox" value="" checked>
+                                            Receive the monthly digest of cool projects and community updates.
+                                        </h4>
+                                        <h4>
                                             <input type="checkbox" value="">
-                                            I agree with the <a href="#" style="color:black">Terms and Conditions</a>.
-                                        </label>
+                                            I agree with the <a href="#">Terms and Conditions</a>.
+                                        </h4>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-actions form-actions-padding-sm">
                                 <div class="row">
                                     <div class="col-sm-offset-2 col-sm-9">
-                                        <button class="btn btn-sm btn-block">Join MapStory</button>
+                                        <h3 class="qlink-gen text-center" style="border: 1px solid orange;border-radius:4px; padding:10px;margin-top:0">Join MapStory</h3>
                                     </div>
                                 </div>
                             </div>
