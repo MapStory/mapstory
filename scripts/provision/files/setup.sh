@@ -9,12 +9,3 @@ cd /srv/git/mapstory/mapstory-geonode
 if [ ! -e ~/.virtualenvs/mapstory ]; then
     mkvirtualenv -a /srv/git/mapstory/mapstory-geonode --system-site-packages mapstory
 fi
-
-# activate venv
-workon mapstory
-
-# install geonode + deps
-pip install --download-cache ~/.pip-cache -e ../geonode
-
-# @todo extract to separate task
-paver setup

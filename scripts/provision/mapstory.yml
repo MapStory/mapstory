@@ -27,8 +27,16 @@
   shell: git pull && git submodule update --init --recursive chdir={{ top_project }}
   tags: [update]
 
-- name: setup-project
+- name: setup-virtual-env
   script: files/setup.sh &> /tmp/setup-project.out
+  tags: [setup]
+
+- name: pip install
+  shell: ~/.virtualenvs/mapstory/bin/pip install -r requirements.txt chdir={{ mapstory_geonode }}
+  tags: [update]
+
+- name: initial setup
+  shell: source ~/.virtualenvs/mapstory/bin/activate && paver setup chdir={{ mapstory_geonode }}
   tags: [setup]
 
 - name: geonode static
