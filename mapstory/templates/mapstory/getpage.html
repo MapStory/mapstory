@@ -1,47 +1,49 @@
 {% extends "site_base.html" %}
 
 {% load mapstory_tags %}
-{% load webdesign %}
 
 {% block body_class %}getpage{% endblock %}
 
 {% block extra_head %}
-    <link href="{{ STATIC_URL }}geonode/css/base.css" rel="stylesheet" />
-    <link href="{{ STATIC_URL }}mapstory/css/index.css" rel="stylesheet" />
-    <link href="{{ STATIC_URL }}mapstory/css/layout.css" rel="stylesheet" />
-    <link href="{{ STATIC_URL }}mapstory/css/orange.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}mapstory/css/getpage.css" rel="stylesheet" />
 {% endblock %}
 
 {% block middle %}
 
-<div class="row banner">
-    <h1 style="font-size:3em;text-align:center">{{ getpage.title }}</h1>
-        <h3>{{ getpage.subtitle }}</h3>
-    <hr>
+<div class="row get-banner text-center">
+    <h1 style="font-size:3em;text-transform:uppercase">{{ getpage.title }}</h1>
+    <h5>{{ getpage.subtitle }}</h5>
 </div>
-                
+<div class="row get-shortcut text-center">
+    {% for entry in getpage.published_entries %}
+        <a style="text-transform:lowercase">{{entry.title}}</a>
+    {% endfor %}
+</div>
+             
 <div class="csection">
     {% for entry in getpage.published_entries %}
-    <div class="row get-panel">
-        <div class="col-lg-4 csection-photo">
-            {% link entry.main_link entry.title 600 400 %}
+    <div class="row get-panel bb">
+        <div class="col-lg-4" style="padding-left:0">
+            {% link entry.main_link entry.title 350 300 %}
         </div>
-        <div class="col-lg-8">
-            <h2 id="get-title">{{ entry.title }}</h2>
-            <h3 id="get-title">{{ entry.subtitle }}</h3>
-            <div class="get-text">
+        <div class="col-lg-8" style="padding-right:0">
+            <div class="get-header">
+                <h2 id="get-title">{{ entry.title }}</h2>
+                <h3 id="get-subtitle">{{ entry.subtitle }}</h3>
+            </div>
+            <div class="get-content bl">
                 {{ entry.html|safe }}
             </div>
-            <div class="row">
-                <div class="col-sm-offset-7">
-                    {% if entry.map %}
+            {% if entry.map %}
+            <div class="text-right bl bt get-links" style="background-color:#97d7ea">
                     <a href="{% url 'map_detail' entry.map %}">{{ entry.map.title }}</a>
-                    {% endif %}
-                    {% if entry.external_link %}
-                    <a href="{{ entry.external_link }}">More</a>
-                    {% endif %}
-                </div>
             </div>
+            {% endif %}
+            {% if entry.external_link %}
+            <div class="text-right bl bt get-links">
+                <a href="{{ entry.external_link }}">More</a>
+            </div>
+            {% endif %}
         </div>
     </div>
     {% endfor %}
