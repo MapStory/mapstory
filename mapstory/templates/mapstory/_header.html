@@ -6,16 +6,23 @@
         </div>
         <div class="navbar-collapse collapse pull-right">
             <ul class="nav navbar-nav">
-                <li id="nav_layers" class="navbar-menu">
+                <li class="navbar-menu">
                     <a href="{% url "search" %}">{% trans "Explore" %}</a>
                 </li>
-                <li id="nav_maps" class="navbar-menu">
+                <li class="navbar-menu">
                     <a href="{% url "map-new2" %}">{% trans "Create" %}</a>
                 </li>
-                <li id="nav_documents" class="navbar-menu">
-                    <a href="#" class='todo'>{% trans "How To" %}</a>
+                <li class="navbar-menu">
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">{% trans 'How To' %}</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'getpage' 'started' %}">Get Started</a></li>
+                            <li><a href="{% url 'getpage' 'skill' %}">Get Skills</a></li>
+                            <li><a href="{% url 'getpage' 'involved' %}">Get Involved</a></li>
+                        </ul>
+                    </div>
                 </li>
-                <li id="nav_groups" class="navbar-menu">
+                <li class="navbar-menu">
                     <a href="{% url "diary" %}">{% trans "Diary" %}</a>
                 </li>
             </ul>
