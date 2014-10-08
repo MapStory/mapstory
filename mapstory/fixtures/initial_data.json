@@ -1,10 +1,34 @@
 [
-  {
-    "model": "sites.site", 
-    "pk": 1, 
-    "fields": {
-      "domain": "mapstory.org", 
-      "name": "MapStory"
+    {
+        "model": "sites.site",
+        "pk": 1,
+        "fields": {
+            "domain": "mapstory.org",
+            "name": "MapStory"
+        }
+    }, {
+        "pk": 1,
+        "model": "mapstory.getpage",
+        "fields": {
+            "subtitle": "",
+            "name": "skills",
+            "title": "Get Skills"
+        }
+    }, {
+        "pk": 2,
+        "model": "mapstory.getpage",
+        "fields": {
+            "subtitle": "",
+            "name": "started",
+            "title": "Get Started"
+        }
+    }, {
+        "pk": 3,
+        "model": "mapstory.getpage",
+        "fields": {
+            "subtitle": "",
+            "name": "involved",
+            "title": "Get Involved"
+        }
     }
-  }
 ]
