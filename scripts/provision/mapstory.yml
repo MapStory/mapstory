@@ -39,6 +39,10 @@
   shell: source ~/.virtualenvs/mapstory/bin/activate && paver setup chdir={{ mapstory_geonode }}
   tags: [setup]
 
+- name: geogig global config
+  copy: src=files/geogigconfig dest=~/.geogigconfig
+  tags: [setup]
+
 - name: geonode static
   shell: paver static chdir={{ top_project }}/geonode
   tags: [update]
@@ -48,9 +52,14 @@
   notify: restart django
   tags: [update]
 
-- name: mapstory secret key
+- name: generate mapstory secret key
   shell: python -c 'import random;print "".join(random.sample("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)",50))'
   register: secret_key
+  tags: [settings]
+
+- name: write secret key
+  template: src=files/local_key.py dest={{ mapstory_geonode }}/mapstory/settings/local_key.py
+  notify: restart django
   tags: [settings]
 
 - name: mapstory settings
