@@ -57,6 +57,10 @@ class ContentMixin(models.Model):
 class NewsItem(ContentMixin ):
     title = models.CharField(max_length=64)
 
+    @property
+    def publication_time(self):
+        return self.date
+
 
 class DiaryEntry(ContentMixin):
     title = models.CharField(max_length=32)

@@ -14,6 +14,7 @@ from mapstory.models import GetPage
 from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
 
+import datetime
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -21,7 +22,8 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)
         ctx['sponsors'] = get_sponsors()
-        ctx['news_items'] = NewsItem.objects.all()[:3]
+        news_items = NewsItem.objects.filter(date__lte=datetime.datetime.now())
+        ctx['news_items'] = news_items[:3]
         return ctx
 
 

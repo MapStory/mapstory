@@ -8,6 +8,12 @@ from mapstory.models import GetPage
 from mapstory.models import GetPageContent
 
 
+def content_html(obj):
+    return obj.html()
+content_html.allow_tags = True
+content_html.short_description = 'Content'
+
+
 class GetPageAdmin(admin.ModelAdmin):
     model = GetPage
     list_display = 'name', 'title', 'subtitle'
@@ -44,8 +50,19 @@ class SponsorAdmin(admin.ModelAdmin):
     list_display_links = 'image_tag',
 
 
+class NewsItemForm(forms.ModelForm):
+    date = forms.DateTimeField(
+        help_text='News will appear after this time',
+        label='Publication Time',
+        widget=admin.widgets.AdminSplitDateTime
+    )
+
+
 class NewsItemAdmin(admin.ModelAdmin):
     model = NewsItem
+    list_display = 'title', 'publication_time', content_html
+    exclude = 'publish',
+    form = NewsItemForm
 
 
 class DiaryEntryAdmin(admin.ModelAdmin):
