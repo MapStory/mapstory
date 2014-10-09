@@ -1,0 +1,24 @@
+<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/hopscotch/0.2.0/js/hopscotch.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/editor_tour.js"></script>
+<script type="text/javascript">
+    $("#start-tour").on('click', function() {
+       $("#tour-screen").hide();
+       hopscotch.startTour(editor_tour);
+    });
+</script>
+<div id="tour-screen">
+    <div id="tour-content">
+        <div class="row">
+            <div class="col-md-offset-3 col-md-2">
+                Content
+            </div>
+            <div class="col-md-2">
+                Goes
+            </div>
+            <div class="col-md-2">
+                Here
+            </div>
+        </div>
+        <button id="start-tour" class="btn">Take a Tour</button>
+    </div>
+</div>
