@@ -1,0 +1,34 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+{% load url from future %}
+
+{% block title %} {% trans "Search" %} - {{ block.super }} {% endblock %}
+
+{% block body_class %}search{% endblock %}
+
+{% block body_outer %}
+  <div class="col-md-12">
+    <h2 class="page-title">{% trans "Search" %} <span ng-bind="text_query"></span></h2>
+  </div>
+  {% with include_type_filter='true' %}
+  {% with header='Type' %}
+  {% with filter='type__in' %}
+  {% include "search/_search_content.html" %}
+  {% endwith %}
+  {% endwith %}
+  {% endwith %}
+{% endblock %}
+
+{% block extra_script %}
+  <script type="text/javascript">
+    {% if HAYSTACK_SEARCH %}
+    SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}'
+    {% else %}
+    SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'
+    {% endif %}
+  </script>
+  {% with include_spatial='true' %}
+  {% include 'search/search_scripts.html' %}
+  {% endwith %}
+{% endblock extra_script %}
