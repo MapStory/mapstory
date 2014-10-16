@@ -14,6 +14,8 @@ from mapstory.models import GetPage
 from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
 
+from geonode.base.models import Region
+
 import datetime
 
 class IndexView(TemplateView):
@@ -91,6 +93,14 @@ class GetPageView(DetailView):
     template_name = 'mapstory/getpage.html'
     model = GetPage
     slug_field = 'name'
+
+
+class SearchView(TemplateView):
+    template_name='search/searchn.html'
+    def get_context_data(self, **kwargs):
+        context = super(TemplateView, self).get_context_data(**kwargs)
+        context['regions'] = Region.objects.filter(level=1)
+        return context
 
 
 def test_view(req, template):

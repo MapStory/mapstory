@@ -1,0 +1,50 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+{% load url from future %}
+
+{% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
+
+{% block body_class %}search{% endblock %}
+
+{% block extra_head %}
+<link href="{{ STATIC_URL }}mapstory/css/search.css" rel="stylesheet" />
+{% endblock %}
+
+{% block body_outer %}
+<div class="col-lg-3">
+    {% include 'search/_whats_hot.html' %}
+    {% include 'search/_refine.html' %}
+</div>
+<div class="col-lg-9">
+    <nav class="filter">
+        <div class="input-group">
+            <input name="text_search_input" id="text_search_input" ng-model="text_query" type="text"
+                   placeholder="Explore events, places, periods and storytellers" class="form-control">
+            <span class="input-group-btn">
+                <button class="btn btn-primary" type="submit" id="text_search_btn"><i class="fa fa-search"></i></button>
+            </span>
+        </div>
+    </nav>
+    {% include 'search/_sort_filters.html' %}
+    <div id="search-results" class="clearfix">
+        <ul>
+        {% include 'search/_result.html' %}
+        </ul>
+    </div>
+    {% include 'search/_pagination.html' %}
+</div>
+{% endblock %}
+
+{% block extra_script %}
+  <script type="text/javascript">
+    {% if HAYSTACK_SEARCH %}
+    SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}'
+    {% else %}
+    SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'
+    {% endif %}
+  </script>
+  {% with include_spatial='true' %}
+  {% include 'search/search_scripts.html' %}
+  {% endwith %}
+{% endblock extra_script %}

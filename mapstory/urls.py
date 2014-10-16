@@ -11,6 +11,7 @@ from mapstory.views import DiaryListView
 from mapstory.views import DiaryCreateView
 from mapstory.views import DiaryUpdateView
 from mapstory.views import GetPageView
+from mapstory.views import SearchView
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view()),
@@ -26,6 +27,7 @@ urlpatterns = patterns('',
     url(r'^diary/write$', login_required(DiaryCreateView.as_view()), name='diary-create'),
     url(r'^diary/write/(?P<pk>\d+)$', login_required(DiaryUpdateView.as_view()), name='diary-update'),
     url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
+    url(r'^searchn/$', SearchView.as_view(), name='search'),
     url(r'^storylayerpage$', TemplateView.as_view(template_name='mapstory/storylayerpage.html'), name='storylayerpage'),
     url(r'^mapstorypage$', TemplateView.as_view(template_name='mapstory/mapstorypage.html'), name='mapstorypage'),
 ) + urlpatterns
