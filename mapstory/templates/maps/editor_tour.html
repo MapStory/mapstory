@@ -1,3 +1,10 @@
+{% block extra_head %}
+    <link href="{{ STATIC_URL }}mapstory/css/base.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}mapstory/css/tour.css" rel="stylesheet" />
+{% endblock %}
+
+{% load mapstory_tags %}
+
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/hopscotch/0.2.0/js/hopscotch.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/editor_tour.js"></script>
 <script type="text/javascript">
@@ -7,18 +14,41 @@
     });
 </script>
 <div id="tour-screen">
-    <div id="tour-content">
-        <div class="row">
-            <div class="col-md-offset-3 col-md-2">
-                Content
-            </div>
-            <div class="col-md-2">
-                Goes
-            </div>
-            <div class="col-md-2">
-                Here
+    
+    <div id="tour-content" style="padding-bottom:20px">
+        <div class="container">
+        <div class="row" id="tour-header">
+            <div class="col-sm-12">
+                <h1 class="text-center" style="padding-bottom: 10px"><strong>Welcome to StoryBoard</strong></h1>
+                <h3>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</h3>
             </div>
         </div>
-        <button id="start-tour" class="btn">Take a Tour</button>
+         <div class="row">
+            <div class="col-sm-3">
+                <img class="hopscotch-icon" src="{% remote_content 'static_img/StoryLayers.png' %}">
+                <h4><strong>StoryLayers</strong> Upload your shapefiles. Edit and update your data. Apply styles and map elements.</h4>
+            </div>
+             <div class="col-sm-3">
+                <img class="hopscotch-icon" src="{% remote_content 'static_img/StoryBoxes.png' %}">
+                <h4><strong>StoryBoxes</strong> Organize your story chapters. Manage slide transitions. Configure playback settings.</h4>
+            </div>
+             <div class="col-sm-3">
+                <img class="hopscotch-icon" src="{% remote_content 'static_img/StoryPins.png' %}">
+                <h4><strong>StoryPins</strong> Add photos, video clips and audio files to your annotations.</h4>
+            </div>
+             <div class="col-sm-3">
+                <img class="hopscotch-icon" src="{% remote_content 'static_img/StoryPreview.png' %}">
+                <h4><strong>StoryPreview</strong> Finishing touches before you tell your story to the world.</h4>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm-6">
+                <a href="#" id="start-tour"><h3>Take a Tour ></h3></a>
+            </div>
+            <div class="col-sm-6">
+                <a href="#"><h3>Skip for now</h3></a>
+            </div>
+        </div>
     </div>
 </div>
