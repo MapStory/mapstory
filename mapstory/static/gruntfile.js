@@ -101,7 +101,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-subgrunt');
   grunt.loadNpmTasks('grunt-concurrent');
 
-  grunt.registerTask('watchall', ['concurrent:watch']);
+  grunt.registerTask('watchall', ['less:development', 'concurrent:watch']);
 
   // test
   grunt.registerTask('test', ['jshint']);
