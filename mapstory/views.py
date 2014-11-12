@@ -9,6 +9,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 
+from geonode.people.models import Profile
+
 from mapstory.models import get_sponsors
 from mapstory.models import GetPage
 from mapstory.models import NewsItem
@@ -101,6 +103,16 @@ class SearchView(TemplateView):
         context = super(TemplateView, self).get_context_data(**kwargs)
         context['regions'] = Region.objects.filter(level=1)
         return context
+
+
+class ProfileDetail(DetailView):
+    template_name = 'people/profile_detail.html'
+    slug_field = 'username'
+    model = Profile
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProfileDetail, self).get_context_data(**kwargs)
+        return ctx
 
 
 def test_view(req, template):

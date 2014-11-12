@@ -11,7 +11,9 @@ from mapstory.views import DiaryListView
 from mapstory.views import DiaryCreateView
 from mapstory.views import DiaryUpdateView
 from mapstory.views import GetPageView
+from mapstory.views import ProfileDetail
 from mapstory.views import SearchView
+
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view()),
@@ -21,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^maps/(?P<mapid>\d+)/view2$',
         'geonode.maps.views.map_view', {'template': 'maps/mapstory_map_view.html'},
         name='map-view2'),
+    url(r"^people/profile/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
     url(r'^tours/editor_tour$', TemplateView.as_view(template_name='maps/editor_tour.html'), name='editor_tour'),
     url(r'^diary$', DiaryListView.as_view(), name='diary'),
     url(r'^diary/(?P<pk>\d+)$', DiaryDetailView.as_view(), name='diary-detail'),
