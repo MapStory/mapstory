@@ -12,17 +12,17 @@
 {% endblock %}
 
 {% block body_outer %}
-<div class="col-lg-3">
-    {% include 'search/_whats_hot.html' %}
-    {% include 'search/_refine.html' %}
-</div>
-<div class="col-lg-9">
-    <nav class="filter">
-        <div class="input-group">
+    <div class="col-lg-3">
+        {% include 'search/_whats_hot.html' %}
+        {% include 'search/_refine.html' %}
+    </div>
+    <div class="col-lg-9" style="border-left:1px solid darkgray">
+        <nav class="filter">
+            <div class="input-group search-bar">
             <input name="text_search_input" id="text_search_input" ng-model="text_query" type="text"
-                   placeholder="Explore events, places, periods and storytellers" class="form-control">
+                class="form-control">
             <span class="input-group-btn">
-                <button class="btn btn-primary" type="submit" id="text_search_btn"><i class="fa fa-search"></i></button>
+                <button class="btn btn-primary" type="submit" id="text_search_btn"><i class="fa fa-search"></i> Search</button>
             </span>
         </div>
     </nav>
