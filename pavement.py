@@ -46,10 +46,20 @@ def _paste(bind):
 
 
 @task
+def geonode_static():
+    '''geonode static task not ideal'''
+    with pushd('../geonode/geonode/static'):
+        sh('npm install')
+        sh('bower update')
+        sh('grunt copy')
+
+
+@task
+@needs('geonode_static')
 def static():
     with pushd('mapstory/static'):
         sh('npm install')
-        sh('bower install')
+        sh('bower update')
         sh('grunt less')
 
 

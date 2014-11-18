@@ -43,10 +43,6 @@
   copy: src=files/geogigconfig dest=~/.geogigconfig
   tags: [setup]
 
-- name: geonode static
-  shell: paver static chdir={{ top_project }}/geonode
-  tags: [update]
-
 - name: compile python
   shell: '{{ venv }}/bin/python -m compileall -f {{ top_project }}/geonode -f {{ mapstory_geonode }}'
   notify: restart django
