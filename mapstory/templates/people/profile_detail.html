@@ -8,92 +8,258 @@
 
 {% block body_class %}people explore{% endblock %}
 
+{% block extra_head %}
+<link href="{{ STATIC_URL }}mapstory/css/profile.css" rel="stylesheet" />
+{% endblock %}
+
 {% block body %}
-<div class="row">
-  <div class="col-md-12">
-    <h2 class="page-title">{{ profile.name_long }}</h2>
-  </div>
-  <div class="col-md-2">
-    {% avatar profile 140 %}
-  </div>
-  <div class="col-md-6">
-    <dl class="dl-horizontal profile-details">
-     {% if profile.position %}
-     <dt><i class="fa fa-user"></i></dt>
-     <dd>{{ profile.position }}</dd>
-     {% endif %}
-     {% if profile.organization %}
-     <dt><i class="fa fa-building"></i></dt>
-     <dd>{{ profile.organization }}</dd>
-     {% endif %}
-     {% if user.is_authenticated %}
-        {% if profile.location %}
-        <dt><i class="fa fa-map-marker"></i></dt>
-        <dd>{{ profile.location }}</dd>
-        {% endif %}
-        {% if profile.voice %}
-        <dt><i class="fa fa-phone"></i></dt>
-        <dd><a href="tel:{{ profile.voice }}">{{ profile.voice }}</a></dd>
-        {% endif %}
-        {% if profile.fax %}
-        <dt><i class="fa fa-print"></i></dt>
-        <dd>{{ profile.fax }}</dd>
-        {% endif %}
-        {% if profile.email %}
-        <dt><i class="fa fa-envelope-o"></i></dt>
-        <dd>
-          <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>
-        </dd>
-        {% endif %}
-        {% endif %}
-        {% if profile.keyword_list %}
-        <dt><i class="fa fa-tag"></i></dt>
-        <dd>
-          {% for keyword in profile.keyword_list %}
-            {{ keyword }}
-          {% endfor %}
-        </dd>
-        {% endif %}
-        {% if object.email %}
-        <dt><i class="fa fa-envelope-o"></i></dt>
-        <dd>
-          <a href="mailto:{{ object.email }}">{{ object.email }}</a>
-        </dd>
-        {% endif %}
-      </dl>
-  </div>
+<article id="profile-banner">
+    <div class="row">
+        <div class="col-sm-2">
+            {% avatar profile 140 %}
+        </div>
+        <div class="col-sm-8">
+            <div class="profile-title">{{ profile.name_long }}</div>
+            <div class="profile-subtitle">
+                {% if profile.position %}
+                <span>{{ profile.position }}, </span>
+                {% endif %}
+                {% if profile.organization %}
+                <span>{{ profile.organization }}</span>
+                {% endif %}
+            </div>
+            <div class="profile-subtitle">
+                {% if profile.location %}
+                <span>{{ profile.location }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</article>
 
-  <div class="col-md-4">
-    {% if user == profile %}
-      <ul class="list-group">
-        <li class="list-group-item"><a href="{% url "profile_edit" user.username %}">{% trans "Edit profile" %}</a></li>
-        <li class="list-group-item"><a href="{% url "account_password" %}">{% trans "Change password" %}</a></li>
-        <li class="list-group-item"><a href="{% url "layer_upload" %}">{% trans "Upload new layers" %}</a></li>
-        <li class="list-group-item"><a href="{% url "new_map" %}">{% trans "Create a new map" %}</a></li>
-        {% if_has_tag actor_url %}
-        <li class="list-group-item"><a href="{% actor_url profile %}">{% trans "My Activities" %}</a></li>
-        {% endif_has_tag %}
-      </ul>
-      {% if_has_tag if_relationship %}
-        {% include "relationships/_manage_connections.html" %}
-      {% endif_has_tag %}
-    {% else %}
-      <ul class="list-group">
-        <li class="list-group-item"><a href="{% actor_url profile %}">{% trans "User Activities" %}</a></li>
-      </ul>
-      {% if_has_tag if_relationship %}
-        {% include "relationships/_profile_follow.html" %}
-      {% endif_has_tag %}
-    {% endif %}
+<article>
+    <div class="row">
+        <div class="col-sm-2">
 
-    {% if_has_tag if_relationship %}
-      {% include "relationships/_list_connections.html" %}
-    {% endif_has_tag %}
-  </div>
-</div>
+            <!-- notifications -->
+            <div class="sidebar-header"><h3>user actions</h3></div>
+            {% if user == profile %}
+            <div class="sidebar-content">
+                <a href="{% url "profile_edit" user.username %}">{% trans "edit profile" %}</a>
+            </div>
+            <div class="sidebar-content">
+                <a href="{% url "account_password" %}">{% trans "change password" %}</a>
+            </div>
+            <div class="sidebar-content">
+                <a href="{% url "layer_upload" %}">{% trans "upload new layers" %}</a>
+            </div>
+            <div class="sidebar-content">
+                <a href="{% url "new_map" %}">{% trans "create a new map" %}</a>
+            </div>
+            {% if_has_tag actor_url %}
+            <div class="sidebar-content">
+                <a href="{% actor_url profile %}">{% trans "my activities" %}</a>
+            </div>
+            {% endif_has_tag %}
+            {% if_has_tag if_relationship %}
+            <div class="sidebar-content">
+                {% include "relationships/_manage_connections.html" %}
+            </div>
+            {% endif_has_tag %}
+            {% else %}<a href="{% actor_url profile %}">{% trans "user activities" %}</a>
+            {% if_has_tag if_relationship %}
+            {% include "relationships/_profile_follow.html" %}
+            {% endif_has_tag %}
+            {% endif %}
+            {% if_has_tag if_relationship %}
+            {% include "relationships/_list_connections.html" %}
+            {% endif_has_tag %}
+
+            <!-- notifications -->
+            {% if user == profile %}
+            <div class="sidebar-header"><h3>notifications</h3></div>
+            <div class="sidebar-content">
+                sample notification 1
+            </div>
+            <div class="sidebar-content">
+                sample notification 2
+            </div>
+            {% endif %}
+
+            <!-- user actions -->
+            {% if user == profile %}
+            <div class="sidebar-header"><h3>recent activities</h3></div>
+            <div class="sidebar-content">
+                sample activity 1
+            </div>
+            <div class="sidebar-content">
+                sample activity 2
+            </div>
+            {% endif %}
+
+
+            <!-- contact profile -->
+            <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
+            {% if profile.email %}
+            <div class="sidebar-content">
+                <a href="mailto:{{ profile.email }}"><i class="fa fa-envelope-o"></i>email {{ profile.first_name|default_if_none:profile.username }}</a>
+            </div>
+            {% endif %}
+            {% if profile.email %}
+            <div class="sidebar-content">
+                <a href="mailto:{{ profile.email }}"><i class="fa fa-facebook"></i>facebook</a>
+            </div>
+            {% endif %}
+            {% if profile.email %}
+            <div class="sidebar-content">
+                <a href="mailto:{{ profile.email }}"><i class="fa fa-twitter"></i>twitter</a>
+            </div>
+            {% endif %}
+
+            <!-- tags and interests -->
+            {% if profile.keyword_list %}
+            <div class="sidebar-header"><h3>tags & interests </h3></div>
+            {% for keyword in profile.keyword_list %}
+            <div class="label label-tags">{{ keyword }}</div>
+            {% endfor %}
+            {% endif %}
+
+            <!-- what is this part?
+            {% if object.email %}
+                <dt><i class="fa fa-envelope-o"></i></dt>
+                <dd>
+                    <a href="mailto:{{ object.email }}">{{ object.email }}</a>
+                </dd>
+            {% endif %}
+
+            -->
+        </div>
+
+        <div class="col-sm-10" style="border-left: 1px solid gainsboro">
+            <div class="tabbable-panel">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs ">
+                        <li class="active">
+                            <a href="#mapstories_list" data-toggle="tab">
+                                <div class="counter">70</div>
+                                MapStories </a>
+                        </li>
+                        <li>
+                            <a href="#storylayers_list" data-toggle="tab">
+                                <div class="counter">70</div>
+                                StoryLayers </a>
+                        </li>
+                        {% if user == profile %}
+                        <li>
+                            <a href="#messages_list" data-toggle="tab">
+                                <div class="counter">70</div>
+                                Messages </a>
+                        </li>
+                        {% endif %}
+                        <li>
+                            <a href="#user_activities" data-toggle="tab">
+                                <div class="counter">70</div>
+                                User Activities </a>
+                        </li>
+                        {% if user == profile %}
+                        <li>
+                            <a href="#newsfeed" data-toggle="tab">
+                                <div class="counter">70</div>
+                                News Feed </a>
+                        </li>
+                        {% endif %}
+                        <li>
+                            <a href="#diary_entries" data-toggle="tab">
+                                <div class="counter">70</div>
+                                Diary Entries </a>
+                        </li>
+                        <li>
+                            <a href="#geobadges_list" data-toggle="tab">
+                                <div class="counter">70</div>
+                                Geobadges </a>
+                        </li>
+                        <li>
+                            <a href="#favorites_list" data-toggle="tab">
+                                <div class="counter">70</div>
+                                Favorites </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="mapstories_list">
+                            <!--Geonode Contents
+                            <div class="col-md-12">
+                                {% include "people/_profile_filters.html" %}
+                            </div> 
+                            <div class="col-md-12">
+                                {% include "search/_sort_filters.html" %}
+                            </div> 
+                            <div class="col-md-12">
+                                {% include 'search/_pagination.html' %}
+                            </div> 
+                            <div class="col-md-12">
+                                {% include 'base/_resourcebase_snippet.html' %}
+                            </div>
+                            -->
+                            <div class="no-content">
+                                <h2>No MapStories.</h2>
+                                <h4>Share your first MapStory now.</h4>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="storylayers_list">
+                            <div class="no-content">
+                                <h2>No StoryLayers.</h2>
+                                <h4>Upload your first StoryLayer now.</h4>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="messages_list">
+                            <div class="no-content">
+                                <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
+                                <h4>Compose a new message now.</h4>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="user_activities">
+                            <div class="no-content">
+                                <h2>No activities.</h2>
+                                <h4>Explore MapStory now.</h4>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="newsfeed">
+                            <div class="no-content">
+                                <h2>No updates.</h2>
+                                <h4>Explore MapStory now.</h4>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="diary_entries">
+                            <div class="no-content">
+                                <h2>No entries.</h2>
+                                <h4>Write your first diary entry now.</h4>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="geobadges_list">
+                            <div class="no-content">
+                                <h2>No GeoBadges.</h2>
+                                <h4>Write your first diary entry now.</h4>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="favorites_list">
+                            <div class="no-content">
+                                <h2>No favorites.</h2>
+                                <h4>Explore MapStory now.</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!--  WHAT IS THIS PART?!?
 
 {% if user.is_authenticated %}
-
 <div class="col-md-8">
   <h3>Groups</h3>
   {% if user == profile %}
@@ -134,25 +300,12 @@
 </div>
 {% endif %}
 
+WHAT IS THIS PART?!-->
 
-<div class="col-md-12">
-  <h3>{% trans "Resources" %}</h3>
-  <div class="col-md-12">
-  {% include "people/_profile_filters.html" %}
-  </div> 
-  <div class="col-md-12">
-  {% include "search/_sort_filters.html" %}
-  </div> 
-  <div class="col-md-12">
-    {% include 'search/_pagination.html' %}
-  </div> 
-</div>
 
-  <div class="col-md-12">
-  {% include 'base/_resourcebase_snippet.html' %}
-  </div>
 
-  {% include "_bulk_permissions_form.html" %}
+
+{% include "_bulk_permissions_form.html" %}
 {% endblock %}
 
 {% block extra_script %}
@@ -166,7 +319,7 @@
           SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}?owner__username={{profile.username}}';
       {% endif %}
   </script>
-  {% include 'search/search_scripts.html' %}
+{% include 'search/search_scripts.html' %}
 {% endblock %}
 
 
