@@ -95,5 +95,13 @@ class GetPageContent(ContentMixin):
         ordering = ['order']
 
 
+class Leader(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    content = models.TextField()
+
+    def html(self):
+        return textile.textile(self.content)
+
+
 def get_sponsors():
     return Sponsor.objects.filter(order__gte=0)

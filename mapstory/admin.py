@@ -6,6 +6,7 @@ from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
 from mapstory.models import GetPage
 from mapstory.models import GetPageContent
+from mapstory.models import Leader
 
 
 def content_html(obj):
@@ -71,8 +72,14 @@ class DiaryEntryAdmin(admin.ModelAdmin):
     list_editable = 'publish',
 
 
+class LeaderAdmin(admin.ModelAdmin):
+    model = Leader
+    list_display = 'user',
+
+
 admin.site.register(GetPage, GetPageAdmin)
 admin.site.register(GetPageContent, GetPageContentAdmin)
 admin.site.register(Sponsor, SponsorAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
 admin.site.register(DiaryEntry, DiaryEntryAdmin)
+admin.site.register(Leader, LeaderAdmin)
