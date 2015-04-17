@@ -13,6 +13,7 @@ Prerequisites:
 * bower
 * python-2.7
 * python-paste
+* python-pastescript
 * virtualenv OR virtualenvwrapper
 
 Repositories
@@ -36,6 +37,8 @@ Follow installation instructions in GeoNode for the relevant operating system.
 Make virtualenv for mapstory, activate it, change directory to `mapstory-geonode` and run:
 
     pip install -r requirements.txt
+    
+*NOTE*: while it is safer (to avoid conflicts with other packages and keep dependencies isolated) to create your virtualenv using the default mode of ignoring site-packages, this may result in more requirements being installed by pip. It is possible to use the virtualenv flag `--system-site-packages` if you run into issues.
 
 Many paver tasks are reused from GeoNode. They should be run in the `mapstory-geonode` directory to work properly.
 
