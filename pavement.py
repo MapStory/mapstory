@@ -1,5 +1,10 @@
+import os
 import subprocess
 import sys
+
+# set this ahead of time as geonode settings will import it's celery app which
+# in turn uses setdefault to modify to geonode.settings causing subtle problems
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mapstory.settings'
 
 # reuse targets from geonode
 sys.path.append("../geonode")
