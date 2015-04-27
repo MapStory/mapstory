@@ -103,7 +103,9 @@ REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/mapstory-assets'
 
 DATABASE_PASSWORD = None
 
-LOCAL_CONTENT = True
+# Where to load mapstory-assets from. If True, use /static/assets
+# otherwise use REMOTE_CONTENT_URL
+LOCAL_CONTENT = False
 
 GEOGIT_DATASTORE_NAME = 'geogit'
 
