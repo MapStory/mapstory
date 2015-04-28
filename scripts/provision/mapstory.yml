@@ -65,7 +65,7 @@
 
 - name: syncdb
   # would use django_manage but no way to avoid initial data?
-  shell: . {{ venv_activate }} && python manage.py syncdb --no-initial-data chdir={{ mapstory_geonode }}
+  shell: . {{ venv_activate }} && python manage.py syncdb --noinput --no-initial-data chdir={{ mapstory_geonode }}
   tags: [update, syncdb]
 
 - name: load initial data
