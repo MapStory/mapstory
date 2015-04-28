@@ -2,17 +2,33 @@
 
 .slice {
     padding-top: 75px;
-    padding:bottom: 75px;
+    padding-bottom: 75px;
 }
 
 #homesplash {
     padding: 0;
+    div {
+        background-position: 0 -300px;
+        background-size: 101% auto; // there is a slight white mark on the right
+        height: 300px;
+    }
 }
 
 #welcome {
     padding: 10px 0 50px;
     background-color: #e37236; 
     color: white;
+    .links {
+        text-align:center;
+        padding-top:30px;
+        padding-bottom:5px;
+        > div {
+            border-right:1px solid #BD5E1B;
+        }
+        div:last-child {
+            border: none;
+        }
+    }
 }
 
 #getstarted {

@@ -21,7 +21,7 @@
 {% block middle %}
 
     <section class="slice" id="homesplash">
-        <img src="{% remote_content 'static_img/africa.gif' %}" width="100%" height="300px">
+        <div style="background-image: url({% remote_content 'static_img/africa.gif' %});"></div>
     </section>
     
     <section class="slice" id="welcome">
@@ -37,36 +37,34 @@
                     <span class="input-group-addon" style="background-color:chocolate;color:white;border:1px solid white"><i class="icon-magnifier"></i></span>
                </div>
             </div>
-            <div class="row" style="padding-top:30px;padding-bottom:5px;">
-                <div style="text-align:center">
-                    <span class="col-sm-3" style="border-right:1px solid #BD5E1B">
-                        <h3>
-                            <a href="#">
-                                Sign up now
-                            </a>
-                        </h3>
-                    </span>
-                    <span class="col-sm-3" style="border-right:1px solid #BD5E1B">
-                        <h3>
-                            <a href="#">
-                                Upload StoryLayers
-                            </a>
-                        </h3>
-                    </span>
-                    <span class="col-sm-3" style="border-right:1px solid #BD5E1B">
-                        <h3>
-                            <a href="#">
-                                Create MapStories
-                            </a>
-                        </h3>
-                    </span>
-                    <span class="col-sm-3">
-                        <h3>
-                            <a href="#">
-                                Learn more
-                            </a>
-                        </h3>
-                    </span>
+            <div class="row links">
+                <div class="col-sm-3">
+                    <h3>
+                        <a href="{% url 'account_signup' %}">
+                            Sign up now
+                        </a>
+                    </h3>
+                </div>
+                <div class="col-sm-3">
+                    <h3>
+                        <a href="{% url 'layer_upload' %}">
+                            Upload StoryLayers
+                        </a>
+                    </h3>
+                </div>
+                <div class="col-sm-3">
+                    <h3>
+                        <a href="{% url 'new_map' %}">
+                            Create MapStories
+                        </a>
+                    </h3>
+                </div>
+                <div class="col-sm-3">
+                    <h3>
+                        <a href="#">
+                            Learn more
+                        </a>
+                    </h3>
                 </div>
             </div>
         </div>
@@ -82,38 +80,38 @@
                 </div>
                 </div>
                 <div class="col-sm-8">
-                    <div class="row" style="padding:20px">
+                    <div class="row text-center" style="padding:20px">
                         <div class="col-sm-3 photobox">
                             <img class="rdphoto" src="{% remote_content 'static_img/stud.png' %}">
-                            <h5 class="text-center">Students</h5>
+                            <h5>Students</h5>
                         </div>
                         <div class="col-sm-3 photobox">
                             <img class="rdphoto" src="{% remote_content 'static_img/educ.png' %}">
-                            <h5 class="text-center">Educators</h5>
+                            <h5>Educators</h5>
                         </div>
                         <div class="col-sm-3 photobox">
                             <img class="rdphoto" src="{% remote_content 'static_img/libr.png' %}">
-                            <h5 class="text-center">Librarians</h5>
+                            <h5>Librarians</h5>
                         </div>
                         <div class="col-sm-3 photobox">
                             <img class="rdphoto" src="{% remote_content 'static_img/rese.png' %}">
-                            <h5 class="text-center">Researchers</h5>
+                            <h5>Researchers</h5>
                         </div>
                         <div class="col-sm-3 photobox">
                             <img class="rdphoto" src="{% remote_content 'static_img/busi.png' %}">
-                            <h5 class="text-center">Businesspeople</h5>
+                            <h5>Businesspeople</h5>
                         </div>
                         <div class="col-sm-3 photobox">
                             <img class="rdphoto" src="{% remote_content 'static_img/huma.png' %}">
-                            <h5 class="text-center">Humanitarians</h5>
+                            <h5>Humanitarians</h5>
                         </div>
                         <div class="col-sm-3 photobox">
                             <img class="rdphoto" src="{% remote_content 'static_img/poli.png' %}">
-                            <h5 class="text-center">Policymakers</h5>
+                            <h5>Policymakers</h5>
                         </div>
                         <div class="col-sm-3 photobox">
                             <img class="rdphoto" src="{% remote_content 'static_img/jour.png' %}">
-                            <h5 class="text-center">Journalists</h5>
+                            <h5>Journalists</h5>
                         </div>
                     </div>
                 </div>
@@ -231,6 +229,8 @@
                     <h3><strong>{{ item.title }}</strong> <small class="pull-right">{{ item.date }}</small></h3>
                     <hr>
                     {{ item.html|safe  }}
+                    {% empty %}
+                    <p>No News Items. Add <a href="{% url 'admin:mapstory_newsitem_add' %}">some</a>
                     {% endfor %}
                 </div>
             </div>
@@ -253,6 +253,8 @@
                 <div class="col-sm-2">
                     <img class="rdphoto" src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
                 </div>
+                {% empty %}
+                <p>No Sponsors. Add <a href="{% url 'admin:mapstory_sponsor_add' %}">some</a>
                 {% endfor %}
             </div>
         </div>
