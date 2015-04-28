@@ -105,6 +105,8 @@ DATABASE_PASSWORD = None
 
 # Where to load mapstory-assets from. If True, use /static/assets
 # otherwise use REMOTE_CONTENT_URL
+# To use local, ensure that the mapstory-assets repository is checked out in
+# this project's parent (i.e. ../mapstory-assets)
 LOCAL_CONTENT = False
 
 GEOGIT_DATASTORE_NAME = 'geogit'
