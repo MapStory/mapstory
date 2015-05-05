@@ -71,7 +71,8 @@ class DiaryEntry(ContentMixin):
 
 
 class GetPage(models.Model):
-    name = models.SlugField(max_length=32, unique=True)
+    name = models.SlugField(max_length=32, unique=True,
+                            help_text='Do NOT include the "get" prefix')
     title = models.CharField(max_length=32)
     subtitle = models.CharField(max_length=32, blank=True)
 
