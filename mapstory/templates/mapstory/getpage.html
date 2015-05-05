@@ -29,9 +29,9 @@
             <div id="get-content">
                 {{ entry.html|safe }}
             </div>
-            {% if entry.map %}
+            {% if entry.example_map %}
             <div class="text-right bt get-links" style="background-color:#97d7ea">
-                    <a href="{% url 'map_detail' entry.map %}">{{ entry.map.title }}</a>
+                <a href="{% url 'map_detail' entry.example_map %}">{{ entry.example_map.title }}</a>
             </div>
             {% endif %}
             {% if entry.external_link %}
