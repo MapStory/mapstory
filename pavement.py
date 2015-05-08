@@ -79,6 +79,7 @@ def collect_static():
 ])
 @task
 def deploy_dev():
+    '''deploy to dev'''
     tags = options.get('tags','update')
     cmd = 'ansible-playbook -i inventory-dev.ini --vault-password-file .vaultpass --ask-sudo-pass main.yml -t %s' % tags
     with pushd('scripts/provision'):
