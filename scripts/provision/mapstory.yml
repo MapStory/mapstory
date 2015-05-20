@@ -24,7 +24,7 @@
   tags: [update]
 
 - name: mapstory update
-  shell: git pull && git submodule update --init --recursive chdir={{ top_project }}
+  shell: git pull && git submodule sync && git submodule update --init --recursive chdir={{ top_project }}
   tags: [update]
 
 - name: setup-virtual-env
