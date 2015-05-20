@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import patterns
 from django.conf.urls import url
+from django.conf.urls import include
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
@@ -35,8 +36,8 @@ urlpatterns = patterns('',
     url(r'^storylayerpage$', TemplateView.as_view(template_name='mapstory/storylayerpage.html'), name='storylayerpage'),
     url(r'^mapstorypage$', TemplateView.as_view(template_name='mapstory/mapstorypage.html'), name='mapstorypage'),
     url(r'^about/leadership$', LeaderListView.as_view(template_name='mapstory/leaders.html'), name='about-leaders'),
+    url(r'^icons/', include('icon_commons.urls')),
 ) + urlpatterns
-
 
 if settings.DEBUG:
     urlpatterns = urlpatterns + patterns('',

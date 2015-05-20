@@ -67,7 +67,8 @@ DATABASES = {
 INSTALLED_APPS += (
     'mapstory',
     'django.contrib.webdesign',
-    'geonode.contrib.geogig'
+    'geonode.contrib.geogig',
+    'icon_commons'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS += (
