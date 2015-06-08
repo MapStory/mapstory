@@ -1,0 +1,29 @@
+{% verbatim %}
+<li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4">
+    <div>
+        <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}"/></a>
+        <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
+        <h4><span class="owner">{{ item.owner.username}}</span></h4>
+        <h4>{{ item.category.gn_description}}</h4>
+        <h4><a href="{{ item.detail_url}}#info"><i class="fa fa-calendar-o"></i>{{ item.date|date:'d MMM y' }}</a></h4>
+        <h4><span class="card-info"><a href="{{ item.detail_url}}"><i class="fa fa-eye"></i>{{ item.popular_count}}</a></span>
+        <span class="card-info"><a href="{{ item.detail_url}}#share"><i class="fa fa-share"></i>{{ item.share_count}}</a></span>
+        <span class="card-info"><a href="{{ item.detail_url}}#rate"><i class="fa fa-star"></i>{{ item.rating}}</a></h4></span>
+        <span class="card-info"><a href="{{ item.detail_url}}#rate"><i class="fa fa-heart"></i></a></span>
+        <span class="card-info"><a href="{{ item.detail_url}}#rate"><i class="fa fa-edit"></i></a></span>
+        <span class="card-info"><a href="{{ item.detail_url}}#rate"><i class="fa fa-share-alt"></i></a></span>
+        <h5 class="abstract">{{ item.abstract|limitTo:250 }}<a href="#"> <i>...read more</i></a></h5>
+        <div class="btn-toolbar">
+            <a ng-if="item.detail_url.indexOf('/layers/') > -1"
+               href="{% endverbatim %}{% url "new_map" %}?layer={% verbatim %}{{ item.detail_url.substring(8)}}">
+               <i class="fa fa-map-marker"></i>Create a Map</a>
+            {% endverbatim %}
+            
+            {% if request.user.is_authenticated %}
+                <button class="btn btn-primary btn-xs" ng-click="feature_select($event)">Select</button>
+            {% endif %}
+            {% verbatim %}
+        </div>
+    </div>
+</li>
+{% endverbatim %}
