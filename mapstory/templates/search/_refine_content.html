@@ -107,31 +107,40 @@
         </div>
     </div>
 </div>
-
-<div class="panel-group" id="accordion3">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title clearfix">
-                <a data-toggle="collapse" data-parent="#accordion3" href="#keyword-tab">
-                    <span class="pull-left"><i class="icon-graph"></i> Keywords</span>
-                    <span class="pull-right"></span>
-                </a>
-            </h3>
-        </div>
-        <div id="keyword-tab" class="panel-collapse collapse in">
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-sm-11 col-sm-offset-1">
-                        <ul id="keywords">
-                        {% verbatim %}
-                          <li ng-repeat="keyword in keywords">
-                            <a data-value="{{ keyword.slug }}" data-filter="keywords__slug__in" ng-click="multiple_choice_listener($event)" class="{{keyword.active}}">{{ keyword.name }}
-                              <span class="badge pull-right">{{ keyword.count }}</span>
-                            </a>
-                          </li>
-                        {% endverbatim %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title clearfix">
+            <a data-toggle="collapse" data-parent="#accordion2" href="#keyword-tab">
+                <span class="pull-left"><i class="fa fa-line-chart"></i> Keywords</span>
+                <span class="pull-right"></span>
+            </a>
+        </h3>
+    </div>
+    <div id="keyword-tab" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-11 col-sm-offset-1">
+                    <ul id="keywords" ng-init="search_keywords=[]">
+                    {% verbatim %}
+                        <nav class="filter">
+                            <div class="input-group search-bar">
+                                <input name="keyword_search_input" id="keyword_search_input" ng-model="keyword_query" type="text" 
+                                    class="form-control">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit" id="keyword_search_btn" ng-click="add_search('keywords__slug__in', keyword_query, search_keywords)"><i class="fa fa-plus">Add</i></button>
+                                </span>
+                            </div>
+                        </nav>
+                        <ul>
+                            <li ng-repeat="search in search_keywords">
+                                {{ search }}
+                                <span class="input-group-btn pull-right">
+                                    <button class="btn btn-primary" type="submit" ng-click="remove_search('keywords__slug__in', search, search_keywords)"><i class="fa fa-times"></i></button>
+                                </span>
+                            </li>
                         </ul>
-                    </div>
+                    {% endverbatim %}
+                    </ul>
                 </div>
             </div>
         </div>

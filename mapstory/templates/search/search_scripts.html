@@ -26,6 +26,7 @@
   CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
   AUTOCOMPLETE_URL_RESOURCEBASE = '{% url "autocomplete_light_autocomplete" "ResourceBaseAutocomplete" %}';
   AUTOCOMPLETE_URL_REGION = '{% url "autocomplete_light_autocomplete" "RegionAutocomplete" %}';
+  AUTOCOMPLETE_URL_KEYWORD = '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}';
 
   var module = angular.module('search', ['geonode_main_search']);
   module.constant('Configs', {
