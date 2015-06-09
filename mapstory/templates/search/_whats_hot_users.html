@@ -1,4 +1,7 @@
-<h3><a href="#"><i class="fa fa-star"></i> Editor's Pick </a></h3>
-<h3><a href="#"><i class="fa fa-upload"></i> Recently Added </a></h3>
-<h3><a href="#"><i class="fa fa-thumbs-up"></i> Top Rated</a></h3>
-<h3><a href="#"><i class="fa fa-play"></i> Most Viewed</a></h3>
+<h3><i class="fa fa-fire"></i> What's Hot</h3>
+<!-- TODO: Adding 'featured' users. Currently it's giving the featured maps/layers -->
+<ul><h3><li><a href="" ng-click="change_api('featured');"><i class="fa fa-star"></i> Editor's Picks</a></li></h3>
+<h3><li><a href="" ng-click="set_query('order_by', '-date_joined');"><i class="fa fa-plus"></i> Recently Joined</a></li></h3>
+<h3><li><a href="" ng-click="set_query('city', most_popular_location);"><i class="fa fa-location-arrow"></i> Most Popular Location: {% verbatim %} {{ most_popular_location }} {% endverbatim %}</a></li></h3>
+<h3><li><a href="" ng-click="set_query('interest_list', most_popular_interest);"><b>#</b> Most Popular Interest: {% verbatim %} #{{ most_popular_interest }} {% endverbatim %}</a></h3></li>
+<h3><li><a href="" ng-click="change_api('profiles'); set_query('order_by', '-layers_count')"><i class="fa fa-group"></i> Most Active Users</a></h3></li></ul>
