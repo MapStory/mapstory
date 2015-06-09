@@ -42,27 +42,42 @@
         <div id="regions" class="panel-collapse collapse">
             <div class="panel-body">
                 <div class="row">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#extentmap" data-toggle="tab">Map</a></li>
-                        <li><a href="#regionlist" data-toggle="tab">List</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="extentmap">
-                            <div class="control-group leaflet_map">
-                                <leaflet center="map_center" defaults="defaults" layers="layers">
-                                </leaflet>
-                            </div>
+                    Click, Drag and Zoom on the Map to filter results
+                    <div class="control-group leaflet_map">
+                        <leaflet center="map_center" defaults="defaults" layers="layers">
+                        </leaflet>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <button class="btn btn-primary" type="submit" ng-click="delete_query('extent')">Clear Map</button>
                         </div>
-                        <div class="tab-pane" id="regionlist">
-                            <div class="row">
-                                <div class="col-sm-10 col-sm-offset-1">
-                                    {% for region in regions %}
-                                    <input type="checkbox"/>
-                                    <span>{{ region.name }}</span>
-                                    <hr>
-                                    {% endfor %}
-                                </div>
-                            </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <ul id="categories" class="nav" ng-init="search_regions=[]">
+                                {% verbatim %}
+                                Or search by country or continent
+                                <nav class="filter">
+                                    <div class="input-group search-bar">
+                                        <input name="region_search_input" id="region_search_input" ng-model="region_query" type="text" 
+                                            class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="submit" id="region_search_btn" ng-click="add_search('regions__name__in', region_query, search_regions)"><i class="fa fa-plus">Add</i></button>
+                                        </span>
+                                    </div>
+                                </nav>
+                                <ul>
+                                    <li ng-repeat="search in search_regions">
+                                        {{ search }}
+                                        <span class="input-group-btn pull-right">
+                                            <button class="btn btn-primary" type="submit" ng-click="remove_search('regions__name__in', search, search_regions)"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </li>
+                                </ul>
+                                {% endverbatim %}
+                            </ul>
                         </div>
                     </div>
                 </div>
