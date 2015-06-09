@@ -17,9 +17,9 @@
                     <div class="col-sm-12">
                         <ul id="categories" class="nav">
                             {% verbatim %}
+                            <!-- NOTE: We want to change these categories to appeal to the layman; currently they're geo-expert terms -->
                             <li ng-repeat="category in categories">
-                                <a data-value="{{ category.identifier}}" data-filter="category__identifier__in"
-                                   ng-click="multiple_choice_listener($event)" class="{{category.active}}">{{ category.gn_description}}
+                                <a ng-init="toggle=true" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle; active=category.id" ng-class="{active: (!toggle && (active == category.id))}">{{ category.gn_description}}
                                     <span class="badge pull-right">{{ category.count}}</span>
                                 </a>
                             </li>
