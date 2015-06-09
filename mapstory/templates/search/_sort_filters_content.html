@@ -1,9 +1,11 @@
 {% load i18n %}
 
+<ul>Type: <a href="" ng-click="add_single_query('type__in', 'all')">All</a> / <a href="" ng-click="add_single_query('type__in', 'map')">MapStories</a> / <a href="" ng-click="add_single_query('type__in', 'layer')">StoryLayers</a></ul>
 <ul class="nav nav-tabs filter" id="sort">
-  <li><a data-value="-date" data-filter="order_by" class="selected" ng-click="single_choice_listener($event)">{% trans "Most recent" %}</a></li>
-  <li><a data-value="date" data-filter="order_by" ng-click="single_choice_listener($event)">{% trans "Less recent" %}</a></li>
-  <li><a data-value="title" data-filter="order_by" ng-click="single_choice_listener($event)"><i class="fa fa-sort-alpha-asc"></i> {% trans "Name A-Z" %}</a></li>
-  <li><a data-value="-title" data-filter="order_by" ng-click="single_choice_listener($event)"><i class="fa fa-sort-alpha-desc"></i> {% trans "Name Z-A" %}</a></li>
-  <li><a data-value="-popular_count" data-filter="order_by" ng-click="single_choice_listener($event)">{% trans "Rating" %}</a></a></li>
+  <li><a ng-click="add_single_query('order_by', '-date'); selected='most_recent'" ng-class="{selected: selected == 'most_recent'}">{% trans "Most recent" %}</a></li>
+  <li><a ng-click="add_single_query('order_by', 'date'); selected='less_recent'" ng-class="{selected: selected == 'less_recent'}">{% trans "Less recent" %}</a></li>
+  <li><a ng-click="add_single_query('order_by', 'title'); selected='alpha'" ng-class="{selected: selected == 'alpha'}"><i class="fa fa-sort-alpha-asc"></i> {% trans "Name A-Z" %}</a></li>
+  <li><a ng-click="add_single_query('order_by', '-title'); selected='reverse_alpha'" ng-class="{selected: selected == 'reverse_alpha'}"><i class="fa fa-sort-alpha-desc"></i> {% trans "Name Z-A" %}</a></li>
+  <li><a ng-click="add_single_query('order_by', '-rating'); selected='rating'" ng-class="{selected: selected == 'rating'}">{% trans "Rating" %}</a></li>
+  <li><a ng-click="add_single_query('order_by', '-popular_count'); selected='views'" ng-class="{selected: selected == 'views'}">{% trans "Views" %}</a></li>
 </ul>
