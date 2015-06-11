@@ -1,0 +1,10 @@
+{% load i18n %}
+<ul>Type: <a href="" ng-click="set_query('limit', 100); change_api('profiles');">Storytellers</a> / <a href="" ng-click="set_query('limit', 100); change_api('groups');">Organizations</a></ul>
+<ul class="nav nav-tabs filter" id="sort" ng-if="get_url() == '/api/profiles/'">
+  <li><a ng-click="add_single_query('order_by', 'first_name'); selected='alpha'" ng-class="{selected: selected == 'alpha'}"><i class="fa fa-sort-alpha-asc"></i> {% trans "Name A-Z" %}</a></li>
+  <li><a ng-click="add_single_query('order_by', '-first_name'); selected='reverse_alpha'" ng-class="{selected: selected == 'reverse_alpha'}"><i class="fa fa-sort-alpha-desc"></i> {% trans "Name Z-A" %}</a></li>
+</ul>
+<ul class="nav nav-tabs filter" id="sort" ng-if="get_url() == '/api/groups/'">
+  <li><a ng-click="add_single_query('order_by', 'title'); selected='alpha'" ng-class="{selected: selected == 'alpha'}"><i class="fa fa-sort-alpha-asc"></i> {% trans "Name A-Z" %}</a></li>
+  <li><a ng-click="add_single_query('order_by', '-title'); selected='reverse_alpha'" ng-class="{selected: selected == 'reverse_alpha'}"><i class="fa fa-sort-alpha-desc"></i> {% trans "Name Z-A" %}</a></li>
+</ul>
