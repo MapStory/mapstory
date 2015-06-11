@@ -42,7 +42,10 @@ class Sponsor(models.Model):
 
 
 class ContentMixin(models.Model):
-    content = models.TextField()
+    content = models.TextField(
+        help_text="use <a href=%s target='_'>textile</a> for the content" %
+        'http://redcloth.org/hobix.com/textile/'
+    )
     date = models.DateTimeField(default=datetime.now)
     publish = models.BooleanField(default=False)
 
@@ -71,7 +74,8 @@ class DiaryEntry(ContentMixin):
 
 
 class GetPage(models.Model):
-    name = models.SlugField(max_length=32, unique=True)
+    name = models.SlugField(max_length=32, unique=True,
+                            help_text='Do NOT include the "get" prefix')
     title = models.CharField(max_length=32)
     subtitle = models.CharField(max_length=32, blank=True)
 
@@ -93,6 +97,14 @@ class GetPageContent(ContentMixin):
 
     class Meta:
         ordering = ['order']
+
+
+class Leader(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    content = models.TextField()
+
+    def html(self):
+        return textile.textile(self.content)
 
 
 def get_sponsors():

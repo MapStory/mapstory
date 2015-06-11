@@ -4,7 +4,7 @@ mapstory_branch: mapstory-v2
 top_project: /srv/git/mapstory
 mapstory_geonode: '{{ top_project }}/mapstory-geonode'
 gspass: geoserverer
-media_root: /var/lib/mapstory/media
+media_root: /var/lib/mapstory/media/
 django_su_pass: admin
 nginx_server_name: 192.168.56.151
 fixtures: '../geonode/geonode/base/fixtures/initial_data.json mapstory/fixtures/initial_data.json'

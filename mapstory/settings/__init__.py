@@ -67,7 +67,8 @@ DATABASES = {
 INSTALLED_APPS += (
     'mapstory',
     'django.contrib.webdesign',
-    'geonode.contrib.geogit'
+    'geonode.contrib.geogig',
+    'icon_commons'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS += (
@@ -103,7 +104,11 @@ REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/mapstory-assets'
 
 DATABASE_PASSWORD = None
 
-LOCAL_CONTENT = True
+# Where to load mapstory-assets from. If True, use /static/assets
+# otherwise use REMOTE_CONTENT_URL
+# To use local, ensure that the mapstory-assets repository is checked out in
+# this project's parent (i.e. ../mapstory-assets)
+LOCAL_CONTENT = False
 
 GEOGIT_DATASTORE_NAME = 'geogit'
 

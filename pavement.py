@@ -1,5 +1,10 @@
+import os
 import subprocess
 import sys
+
+# set this ahead of time as geonode settings will import it's celery app which
+# in turn uses setdefault to modify to geonode.settings causing subtle problems
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mapstory.settings'
 
 # reuse targets from geonode
 sys.path.append("../geonode")
@@ -50,7 +55,7 @@ def geonode_static():
     '''geonode static task not ideal'''
     with pushd('../geonode/geonode/static'):
         sh('npm install')
-        sh('bower update')
+        sh('bower install')
         sh('grunt copy')
 
 
@@ -59,7 +64,7 @@ def geonode_static():
 def static():
     with pushd('mapstory/static'):
         sh('npm install')
-        sh('bower update')
+        sh('bower install')
         sh('grunt less')
 
 
@@ -74,6 +79,7 @@ def collect_static():
 ])
 @task
 def deploy_dev():
+    '''deploy to dev'''
     tags = options.get('tags','update')
     cmd = 'ansible-playbook -i inventory-dev.ini --vault-password-file .vaultpass --ask-sudo-pass main.yml -t %s' % tags
     with pushd('scripts/provision'):

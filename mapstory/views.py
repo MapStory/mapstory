@@ -15,6 +15,7 @@ from mapstory.models import get_sponsors
 from mapstory.models import GetPage
 from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
+from mapstory.models import Leader
 
 from geonode.base.models import Region
 
@@ -113,6 +114,11 @@ class ProfileDetail(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(ProfileDetail, self).get_context_data(**kwargs)
         return ctx
+
+
+class LeaderListView(ListView):
+    context_object_name = 'leaders'
+    model = Leader
 
 
 def test_view(req, template):

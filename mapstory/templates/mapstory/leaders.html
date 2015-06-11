@@ -1,0 +1,22 @@
+{% extends "site_base.html" %}
+
+{% load avatar_tags %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block middle %}
+
+<div class="container" id="diary-banner">
+	<div class="row text-center" >
+        <h1>MapStory Leadership</h1>
+    </div>
+</div>
+<div class="container">
+    {% for leader in leaders %}
+    <div>{{ leader.user.name_long }}</div>
+    <p>{{ leader.html|safe }}</p>
+    {% avatar leader.user 140 %}
+    {% endfor %}
+</div>
+{% endblock %}

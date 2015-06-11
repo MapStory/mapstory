@@ -24,7 +24,7 @@
   tags: [update]
 
 - name: mapstory update
-  shell: git pull && git submodule update --init --recursive chdir={{ top_project }}
+  shell: git pull && git submodule sync && git submodule update --init --recursive chdir={{ top_project }}
   tags: [update]
 
 - name: setup-virtual-env
@@ -38,6 +38,10 @@
 - name: initial setup
   shell: source ~/.virtualenvs/mapstory/bin/activate && paver setup chdir={{ mapstory_geonode }}
   tags: [setup]
+
+- name: configure media root
+  file: path={{ media_root }} owner=www-data group=www-data mode=0775 state=directory
+  tags: [setup, media]
 
 - name: geogig global config
   copy: src=files/geogigconfig dest=~/.geogigconfig
@@ -65,7 +69,7 @@
 
 - name: syncdb
   # would use django_manage but no way to avoid initial data?
-  shell: . {{ venv_activate }} && python manage.py syncdb --no-initial-data chdir={{ mapstory_geonode }}
+  shell: . {{ venv_activate }} && python manage.py syncdb --noinput --no-initial-data chdir={{ mapstory_geonode }}
   tags: [update, syncdb]
 
 - name: load initial data
