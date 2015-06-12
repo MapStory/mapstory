@@ -5,42 +5,64 @@
 {% block body_class %}getpage{% endblock %}
 
 {% block extra_head %}
-    <link href="{{ STATIC_URL }}mapstory/css/getpage.css" rel="stylesheet" />
+<link href="{{ STATIC_URL }}mapstory/css/getpage.css" rel="stylesheet"/>
 {% endblock %}
 
 {% block middle %}
 
-<article id="get-banner" class="text-right">
-    <h1 style="font-size: 5em">{{ getpage.title }}</h1>
-    <h5 style="font-size: 2em">{{ getpage.subtitle }}</h5>
-</article>
-             
-<article>
-    {% for entry in getpage.published_entries %}
-    <div class="row" id="get-panel">
-        <div class="col-lg-4" style="padding-left:0">
-            {% link entry.main_link entry.title 400 300 %}
+
+<div class="row" style="text-align:center;padding:50px 0 10px 0">
+    <h1 style="font-size:3em;text-align:center">{{ getpage.title }}</h1>
+
+    <h3>{{ getpage.subtitle }} </h3>
+    <hr>
+</div>
+
+
+{% for entry in getpage.published_entries %}
+<section class="slice" id="students">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-5">
+                <video width="380" height="320" controls>
+                    <source src="images/theme-pics/lake.mp4" type="video/mp4">
+                </video>
+
+                {# link entry.main_link entry.title 400 300 #}
+            </div>
+            <div class="col-sm-7">
+                <blockquote class="bigTitle" style="text-align:left;font-weight:200">{{ entry.title }}<br/></blockquote>
+                <div>
+                    <h2 style="font-size:14px;text-align:left;">
+                        {{ entry.subtitle }} </h2>
+
+                        {{ entry.html|safe }}
+
+                    <hr style="margin-top:15px;margin-bottom:5px">
+                    <h3 class="pull-right">
+
+                        {% if entry.example_map %}
+
+                            <a href="{% url 'map_detail' entry.example_map %}">{{ entry.example_map.title }}</a> |
+
+                        {% endif %}
+
+                        {% if entry.external_link %}
+
+                            <a href="{{ entry.external_link }}">More</a>
+
+                        {% endif %}
+
+                    </h3>
+                </div>
+            </div>
         </div>
-        <div class="col-lg-8" style="padding-right:0">
-            <div id="get-header">
-                <h2 id="get-title">{{ entry.title }}</h2>
-                <h3 id="get-subtitle">{{ entry.subtitle }}</h3>
-            </div>
-            <div id="get-content">
-                {{ entry.html|safe }}
-            </div>
-            {% if entry.example_map %}
-            <div class="text-right bt get-links" style="background-color:#97d7ea">
-                <a href="{% url 'map_detail' entry.example_map %}">{{ entry.example_map.title }}</a>
-            </div>
-            {% endif %}
-            {% if entry.external_link %}
-            <div class="text-right bt get-links">
-                <a href="{{ entry.external_link }}">More</a>
-            </div>
-            {% endif %}
-        </div>
+        <br/>
     </div>
-    {% endfor %}
-</article>
+</section>
+<hr>
+{% endfor %}
+
+
 {% endblock %}

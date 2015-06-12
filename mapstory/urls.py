@@ -37,6 +37,9 @@ urlpatterns = patterns('',
     url(r'^mapstorypage$', TemplateView.as_view(template_name='mapstory/mapstorypage.html'), name='mapstorypage'),
     url(r'^about/leadership$', LeaderListView.as_view(template_name='mapstory/leaders.html'), name='about-leaders'),
     url(r'^icons/', include('icon_commons.urls')),
+
+    url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
+
 ) + urlpatterns
 
 if settings.DEBUG:

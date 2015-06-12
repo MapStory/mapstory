@@ -13,7 +13,68 @@
 {% endblock %}
 
 {% block body %}
-<article id="profile-banner">
+        <div id="paralaxSlice1" data-stellar-background-ratio="0.5" style="background-position: 50% 25px;">
+<div class="maskParent">
+    <div class="paralaxMask"></div>
+<div class="paralaxText container" style="text-align:left;padding-bottom:0">
+								<div class="row">
+									<div class="col-sm-1">
+										  <img class="img-circle" src="{% avatar_url profile 75 %}" width="75" height="75" style="margin-top:55px;margin-bottom:0px"/>
+
+									</div>
+									<div class="col-sm-6">
+										<div style="padding:60px 0px 0px 10px;">
+											<h1 style="font-size:3em">{{ profile.name_long }}</h1>
+											<h1 style="font-size:1.1em;">
+										    {% if profile.position %}
+                                                <span>{{ profile.position }}, </span>
+                                            {% endif %}
+                                            {% if profile.organization %}
+                                                <span>{{ profile.organization }}</span>
+                                            {% endif %}
+
+                                            {% if profile.location %}
+                                                <span>{{ profile.location }}</span>
+                                            {% endif %}
+                                            </h1>
+										</div>
+									</div>
+									<div class="col-sm-5">
+										<div class="row" style="padding:80px 0px 10px 10px;">
+
+                                       {% if user == profile %}
+
+                                        <div class="col-sm-4">
+										<a class="btn btn-sm btn-block" href="{% url "profile_edit" user.username %}" style="font-size:0.9em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
+											edit my profile
+										</a>
+										</div>
+										<div class="col-sm-4">
+										<a class="btn btn-sm btn-block" href="{% url "new_map" %}" style="font-size:0.9em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
+											create a mapstory
+										</a>
+										</div>
+										<div class="col-sm-4">
+										<a class="btn btn-sm btn-block" href="{% url "layer_upload" %}" style="font-size:0.9em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
+											upload storylayer
+										</a>
+										</div>
+
+                                         {% else %}
+
+										<div class="col-sm-4 col-sm-offset-8">
+										<a class="btn btn-sm btn-block" style="font-size:1em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
+											+ follow
+										</a>
+									    </div>
+
+                                         {% endif %}
+								</div>
+									</div>
+							</div>
+						</div>
+</div>
+<!--article id="profile-banner">
     <div class="row">
         <div class="col-sm-2">
             {% avatar profile 140 %}
@@ -35,10 +96,10 @@
             </div>
         </div>
     </div>
-</article>
+</article-->
 
-<article>
-    <div class="row">
+<article class="slice">
+    <div class="container">
         <div class="col-sm-2">
 
             <!-- notifications -->
@@ -141,46 +202,42 @@
                     <ul class="nav nav-tabs ">
                         <li class="active">
                             <a href="#mapstories_list" data-toggle="tab">
-                                <div class="counter">70</div>
+                                <div class="counter"><span ng-bind="total_counts"></span></div>
                                 MapStories </a>
                         </li>
                         <li>
                             <a href="#storylayers_list" data-toggle="tab">
-                                <div class="counter">70</div>
+                                <div class="counter">{{ layers | length }}</div>
                                 StoryLayers </a>
                         </li>
                         {% if user == profile %}
                         <li>
                             <a href="#messages_list" data-toggle="tab">
-                                <div class="counter">70</div>
+                                <div class="counter">{{ threads | length }}</div>
                                 Messages </a>
                         </li>
                         {% endif %}
                         <li>
                             <a href="#user_activities" data-toggle="tab">
-                                <div class="counter">70</div>
+                                <div class="counter">0</div>
                                 User Activities </a>
                         </li>
                         {% if user == profile %}
                         <li>
                             <a href="#newsfeed" data-toggle="tab">
-                                <div class="counter">70</div>
+                                <div class="counter">0</div>
                                 News Feed </a>
                         </li>
                         {% endif %}
                         <li>
                             <a href="#diary_entries" data-toggle="tab">
-                                <div class="counter">70</div>
+                                <div class="counter">0</div>
                                 Diary Entries </a>
                         </li>
-                        <li>
-                            <a href="#geobadges_list" data-toggle="tab">
-                                <div class="counter">70</div>
-                                Geobadges </a>
-                        </li>
+
                         <li>
                             <a href="#favorites_list" data-toggle="tab">
-                                <div class="counter">70</div>
+                                <div class="counter">0</div>
                                 Favorites </a>
                         </li>
                     </ul>
@@ -195,15 +252,15 @@
                             </div> 
                             <div class="col-md-12">
                                 {% include 'search/_pagination.html' %}
-                            </div> 
-                            <div class="col-md-12">
+                            </div-->
+                            <div style="max-height:600px;overflow-y:scroll;overflow-x:hidden" class="col-md-12">
                                 {% include 'base/_resourcebase_snippet.html' %}
                             </div>
-                            -->
-                            <div class="no-content">
+                            <!---->
+                            <!--div class="no-content">
                                 <h2>No MapStories.</h2>
                                 <h4>Share your first MapStory now.</h4>
-                            </div>
+                            </div-->
                         </div>
                         <div class="tab-pane" id="storylayers_list">
                             <div class="no-content">
@@ -212,6 +269,9 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="messages_list">
+
+                             {% include 'user_messages/_message_snippet.html' %}
+
                             <div class="no-content">
                                 <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
                                 <h4>Compose a new message now.</h4>
@@ -235,12 +295,7 @@
                                 <h4>Write your first diary entry now.</h4>
                             </div>
                         </div>
-                        <div class="tab-pane" id="geobadges_list">
-                            <div class="no-content">
-                                <h2>No GeoBadges.</h2>
-                                <h4>Write your first diary entry now.</h4>
-                            </div>
-                        </div>
+
                         <div class="tab-pane" id="favorites_list">
                             <div class="no-content">
                                 <h2>No favorites.</h2>
@@ -256,7 +311,7 @@
 
 
 
-
+{% comment %}
 <!--  WHAT IS THIS PART?!?
 
 {% if user.is_authenticated %}
@@ -302,7 +357,8 @@
 
 WHAT IS THIS PART?!-->
 
-
+        {% endcomment %}
+</div>
 
 
 {% include "_bulk_permissions_form.html" %}

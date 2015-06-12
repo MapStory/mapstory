@@ -1,0 +1,159 @@
+.icon-commons-search .icon-list li,
+.pin-editor-form .form-group > *:first-child,
+.pin-editor-form .form-group > *:last-child {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .icon-commons-search .icon-list li {
+    float: left;
+  }
+  .icon-commons-search .icon-list li {
+    width: 16.66666667%;
+  }
+}
+@media (min-width: 992px) {
+  .pin-editor-form .form-group > *:first-child,
+  .pin-editor-form .form-group > *:last-child {
+    float: left;
+  }
+  .pin-editor-form .form-group > *:first-child {
+    width: 16.66666667%;
+  }
+  .pin-editor-form .form-group > *:last-child {
+    width: 83.33333333%;
+  }
+}
+.style-editor-item button {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+.style-editor-item button {
+  color: #ffffff;
+  background-color: #428bca;
+  border-color: #357ebd;
+}
+.style-editor-item button,
+.style-editor-item .controls input {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+.style-editor-item button,
+.style-editor-item .controls input {
+  padding: 1px 5px;
+}
+.style-editor-item .controls > * {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+.icon-commons-search .icon-list li.active {
+  background-color: #5bc0de;
+}
+.style-editor-item {
+  border-bottom: 1px solid #999999;
+}
+.style-editor-item .controls {
+  padding-bottom: .5em;
+}
+.style-editor-item .controls > * {
+  /* with minified html, spacing that normally appears with newlines is gone */
+  margin-right: .5em;
+}
+.style-editor-item .btn.active {
+  color: orange;
+}
+.style-editor-item .symbol-icon {
+  height: 1.5em;
+  vertical-align: middle;
+}
+.style-editor-item table .dropdown-menu {
+  left: auto;
+  top: auto;
+}
+.modal-dialog.modal-lg {
+  width: 50%;
+}
+.icon-commons-search .icon-list {
+  height: 384px;
+  overflow-y: auto;
+}
+.icon-commons-search .icon-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+.icon-commons-search .icon-list li {
+  float: left;
+  height: 128px;
+  padding: 0;
+  margin: .5em;
+}
+.icon-commons-search .icon-list li.active {
+  border: 1px solid activeborder;
+}
+.icon-commons-search .icon-list img {
+  max-height: 128px;
+  width: 128px;
+}
+.color-select .colorpicker.dropdown {
+  display: block !important;
+  position: static !important;
+}
+.color-select .colorpicker .dropdown-menu {
+  display: block !important;
+  position: static !important;
+  float: none;
+}
+.color-select .close-colorpicker {
+  display: none;
+}
+.color-square {
+  display: block;
+  float: left;
+  width: 1em;
+  height: 1em;
+  margin-right: 1px;
+}
+.color-picker {
+  border-radius: 2px;
+  border: 1px solid white;
+  margin-right: 5px;
+}
+.scrollable-combo {
+  height: auto;
+  overflow-x: hidden;
+}
+.label-attribute {
+  max-height: 85px;
+}
+.rotation-attribute {
+  max-height: 210px;
+}
+.font-family {
+  max-height: 55px;
+}
+.classify-attribute {
+  max-height: 215px;
+}
+.nopad {
+  padding: 0;
+}
