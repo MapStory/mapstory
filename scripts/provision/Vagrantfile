@@ -38,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Enable if config.vm.define is not defined above or is not set to a name found in the inventory file.
 
-    #ansible.limit = "mapstory"
+    ansible.limit = "mapstory"
 
     #ansible.verbose = "vvv"
 

@@ -38,6 +38,8 @@
 - name: initial setup
   shell: source ~/.virtualenvs/mapstory/bin/activate && paver setup chdir={{ mapstory_geonode }}
   tags: [setup]
+  args:
+     executable: /bin/bash
 
 - name: configure media root
   file: path={{ media_root }} owner=www-data group=www-data mode=0775 state=directory
