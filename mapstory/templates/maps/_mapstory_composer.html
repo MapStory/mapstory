@@ -1,0 +1,235 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html ng-app="composer">
+    <head>
+        <title>Story Composer</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="ol.css" type="text/css">
+        <link rel="stylesheet" href="{{STATIC_URL}}/bower_components/bootstrap/dist/css/bootstrap.min.css" type="text/css">
+        <link rel="stylesheet" href="{{STATIC_URL}}/node_modules/vis/dist/vis.min.css" type="text/css"/>
+        <link rel="stylesheet" href="{{STATIC_URL}}/bower_components/nouislider/distribute/jquery.nouislider.min.css" type="text/css">
+        <link rel="stylesheet" href="{{STATIC_URL}}/dist/story-tools-edit.css" type="text/css">
+        <link rel="stylesheet" href="{{STATIC_URL}}/bower_components/angular-bootstrap-colorpicker/css/colorpicker.css" type="text/css">
+
+        <script src="{{STATIC_URL}}/bower_components/angular/angular.min.js" ></script>
+        <script src="{{STATIC_URL}}/bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="{{STATIC_URL}}/bower_components/nouislider/distribute/jquery.nouislider.min.js" type="text/javascript"></script>
+        <script src="{{STATIC_URL}}/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+        <script src="{{STATIC_URL}}/bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
+        <script src="{{STATIC_URL}}/ol-debug.js" ></script>
+        <script src="{{STATIC_URL}}/dist/story-tools-core-tpls.js"></script>
+        <script src="{{STATIC_URL}}/dist/story-tools-edit-tpls.js"></script>
+        <script src="{{STATIC_URL}}/dist/story-tools-core.js"></script>
+        <script src="{{STATIC_URL}}/dist/story-tools-edit.js"></script>
+        <script src="{{STATIC_URL}}/dist/story-tools-core-ng.js"></script>
+        <script src="{{STATIC_URL}}/dist/story-tools-edit-ng.js"></script>
+        <script src="{{STATIC_URL}}/dist/ows.js"></script>
+        <script src="{{STATIC_URL}}/dist/story-tools-mapstory.js"></script>
+        <script  src="{{STATIC_URL}}/composer.js"></script>
+
+        <style type="text/css">
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #container {
+                display: table;
+                height: 100%;
+                width: 100%;
+            }
+
+            #main {
+                display: table-row;
+                width:100%;
+                height: 100%;
+            }
+
+            #header, #footer {
+                display: table-row;
+            }
+            #content {
+                display: table;
+                width:100%;
+                height: 100%;
+                overflow: auto;
+                position: relative;
+            }
+            #middle{
+                display: table-cell;
+            }
+            .side {
+                display: table-cell;
+                vertical-align: middle;
+                float: none;
+            }
+            .floating {
+                left: 0;
+                position: absolute;
+                z-index: 500;
+                padding: 1em;
+            }
+            .floating-below * {
+                z-index: 400;
+            }
+            #map {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+            }
+            .ol-zoom {
+                right: .5em;
+                left: auto;
+            }
+            .ol-attribution {
+                top: 4.5em;
+                bottom: auto;
+            }
+            #time-controls-panel {
+                padding: 0;
+                bottom: 0;
+                width: 100%;
+            }
+            #time-controls-panel > div {
+                padding: 1px 16px;
+                background:white;
+            }
+            #time-controls-panel2 {
+                padding: 1px 16px;
+            }
+            #pins-editor .panel-body {
+                max-height: 400px;
+                overflow: auto;
+            }
+            .todo {
+                color: white;
+                background: red;
+            }
+            .todo p {
+                margin: 1em;
+                background: white;
+                color: black;
+            }
+            input.ng-invalid {
+                border-color: red;
+            }
+            div.ng-invalid {
+                color: red;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body ng-controller="composerController as composer">
+        <div id="container" ng-init="selected = {layers:true}">
+            <div id="header" class="navbar navbar-default">
+                <ul class="nav navbar-nav nav-pills" id="tl-nav">
+                    <li ng-class="selected.layers && 'active'"><a ng-click="selected = {layers:true}">Layers</a></li>
+                    <li ng-class="selected.style && 'active'"><a ng-click="selected = {style:true}">Style</a></li>
+                    <li ng-class="selected.boxes && 'active'"><a ng-click="selected = {boxes:true}">Boxes</a></li>
+                    <li ng-class="selected.pins && 'active'"><a ng-click="selected = {pins:true}">Pins</a></li>
+                    <li ng-class="selected.preview && 'active'"><a ng-click="selected = {preview:true}">Preview</a></li>
+                    <li ng-class="selected.debug && 'active'"><a ng-click="selected = {debug:true}">Debug</a></li>
+                </ul>
+                <ul class="nav navbar-nav nav-pills navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            Map <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a ng-click="newMap()">New</a></li>
+                            <li><a ng-click="showLoadMapDialog()">Load</a></li>
+                            <li><a ng-click="saveMap()">Save</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div id="main">
+                <div id="content">
+                    <div id="middle">
+                        <div id="map"></div>
+                    </div>
+                    <div ng-show="selected.layers" class="floating col-lg-4">
+                        <div class="panel" id="add-layers">
+                            <div class="panel-heading">Add Layers</div>
+                            <div class="panel-body">
+                                <add-layers map="map"></add-layers>
+                            </div>
+                        </div>
+                        <div class="panel" id="layer-list">
+                            <div class="panel-heading">Layers</div>
+                            <div class="panel-body">
+                                <layer-list map="map"></layer-list>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="selected.style" class="floating col-lg-4 ng-hide">
+                        <accordion close-others="true">
+                            <accordion-group heading="{{layer.get('name')}}" ng-repeat="layer in mapManager.storyMap.getStoryLayers().getArray()" is-open="accordianOpen" ng-init="accordianOpen = $first">
+                                <!-- to reduce watchers, add ng-if=accordianOpen -->
+                                <style-editor class="minheight" layer="layer" on-change="styleChanged"></style-editor>
+                            </accordion-group>
+                        </accordion>
+                    </div>
+                    <div ng-if="selected.boxes" class="floating col-lg-8 col-lg-offset-2" boxes-editor>
+                        <div class="panel">
+                            <div class="panel-heading">StoryBoxes</div>
+                            <div class="panel-body">
+                                <box-chooser></box-chooser>
+                                <box-editor></box-editor>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- @todo style-editor-item class used for convenience -->
+                    <div id="pins-editor" ng-if="selected.pins" class="floating col-lg-6 style-editor-item" pins-editor pins-overlay="mapManager.storyMap.overlay">
+                        <accordion close-others="false" ng-init="open={chooser:true,editor:false}">
+                            <accordion-group heading="StoryPins" is-open="open.chooser">
+                                <button>Bulk Upload</button>
+                                <button ng-click="pinsCtrl.editStoryPin(); open.editor=true">Add StoryPin</button>
+                                <pin-chooser pin-selected="open.editor=true"></pin-chooser>
+                            </accordion-group>
+                            <accordion-group is-open="open.editor">
+                                <accordion-heading><div ng-bind="pinsCtrl.isEditing() ? 'Edit StoryPin ' + pinsCtrl.currentPin.title : 'Add StoryPin'"></div></accordion-heading>
+                                <div pin-editor>
+                                    <pin-editor-form></pin-editor-form>
+                                    <button ng-disabled="!pinCtrl.isFormValid()" ng-click="pinsCtrl.saveStoryPin()">Save</button>
+                                </div>
+                            </accordion-group>
+                        </accordion>
+                    </div>
+                    <!--<div id="time-controls-panel" ng-show="true||selected.preview||selected.pins" class="floating floating-below ng-hide">
+                    </div>-->
+                    <div ng-show="selected.preview" class="floating ng-hide col-lg-4">
+                        <div class="panel">
+                            <div class="panel-heading">Playback Options</div>
+                            <div class="panel-body">
+                                <st-playback-settings playback-options="playbackOptions" time-controls="timeControlsManager.timeControls"></st-playback-settings>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="selected.debug" class="floating ng-hide col-lg-8" style="max-height: 75%; overflow: auto; background:white">
+                        <div class="panel">
+                            <div ng-repeat="lyr in mapManager.storyMap.getStoryLayers().getArray()">
+                                <h4>ID: {{ lyr.get('id') }}</h4>
+                                <pre>title = {{ lyr.get('title') | json }}</pre>
+                                <pre>times = {{ lyr.get('times') | json }}</pre>
+                                <pre>layerInfo = {{ layerProperties(lyr)|json }}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="footer" class='floating-below' ng-show="timeControlsManager.timeControls">
+                <div id="time-controls-panel2">
+                    <div id="slider"></div>
+                    <div class="navbar" style="margin:5px 0 0; min-height: auto" ng-controller="tileProgressController">
+                        <st-playback-controls class="pull-left" time-controls="timeControlsManager.timeControls"></st-playback-controls>
+                        <progressbar animate="false" style="width: 15%; margin:6px 0; font-size:14px" class="navbar-nav navbar-right" value="tilesLoadedProgress"><b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad" style="color:black"></b></progressbar>
+                    </div>
+                    <div id="timeline"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

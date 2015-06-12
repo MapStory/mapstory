@@ -1,9 +1,0 @@
-{% load i18n %}
-
-<ul class="nav nav-tabs filter" id="sort">
-  <li><a data-value="-date" data-filter="order_by" class="selected" ng-click="single_choice_listener($event)">{% trans "Most recent" %}</a></li>
-  <li><a data-value="date" data-filter="order_by" ng-click="single_choice_listener($event)">{% trans "Less recent" %}</a></li>
-  <li><a data-value="title" data-filter="order_by" ng-click="single_choice_listener($event)"><i class="fa fa-sort-alpha-asc"></i> {% trans "Name A-Z" %}</a></li>
-  <li><a data-value="-title" data-filter="order_by" ng-click="single_choice_listener($event)"><i class="fa fa-sort-alpha-desc"></i> {% trans "Name Z-A" %}</a></li>
-  <li><a data-value="-popular_count" data-filter="order_by" ng-click="single_choice_listener($event)">{% trans "Rating" %}</a></a></li>
-</ul>

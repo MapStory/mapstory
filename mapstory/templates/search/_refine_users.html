@@ -1,0 +1,27 @@
+{% load i18n %}
+<hr>
+<h3><i class="fa fa-filter"></i> Refine Search</h3>
+<div class="panel-group" id="accordion2">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title clearfix">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#category-tab">
+                    <span class="pull-left">Location</span>
+                    <span class="pull-right"></span>
+                </a>
+            </div>
+        </div>
+        <!-- TODO: autocomplete goes here -->
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title clearfix">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#regions" ng-controller="leaflet_hack" ng-click="showMap()">
+                    <span class="pull-left">Interests</span>
+                    <span class="pull-right"></span>
+                </a>
+            </div>
+        </div>
+        <!-- TODO: autocomplete goes here -->
+    </div>
+</div>

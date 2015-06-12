@@ -1,4 +1,38 @@
-<footer class="color4" style="width:100%;padding:20px 30px">
+<footer class="color4" style="padding:20px 10px;width:100%;">
+    <section id="mainFooter">
+        <div class="container" id="footer">
+            <div class="row">
+                <div class="col-sm-9">
+                    <div class="footerWidget">
+                        <strong> MapStory</strong> is the atlas of change that everyone can edit. We are a community, not a company, that envisions a world where everyone's wisdom can be tapped, peer reviewed, organized and shared so that we all can dramatically improve our understanding of the rich past, complex present and uncertain future we share as living beings on planet Earth.
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div>
+                        <button class="btn btn-sm btn-block btn-default">
+                            <a href="{% url 'donate' %}">Help MapStory grow.<br> Make a donation.</a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <br>
+    <section>
+        <div class="container">
+            <hr style="margin:10px 0 10px 0">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p><small>By using this site, you agree to the License, Terms of Use and Privacy Policy. MapStory® is a registered trademark of the MapStory Foundation, Inc., a non-profit organization.</small></p>
+                    <p><small>About the MapStory Foundation | Blog | Contact | Developers | Mobile View | Press | Disclaimers | Values | wiki.MapStory.org</small></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</footer>
+
+
+<!--footer class="color4" style="width:100%;padding:20px 30px">
     <section>
     <div id="footer">
         <div class="row">
@@ -9,9 +43,11 @@
                 <h5>About | Blog | Contact | Disclaimers | Tools | Merchandise | Wiki</h5>
             </div>
             <div class="col-lg-3 text-center">
-                <a href="donate.html"><h2>Help MapStory.<br/>Make a donation.</h2></a>
+                <button class="btn btn-sm btn-block btn-default">
+                    <a href="{% url 'donate' %}">Help MapStory grow.<br> Make a donation.</a>
+                </button>
             </div>
         </div>
     </div>
     </section>
-</footer>
+</footer-->

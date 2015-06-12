@@ -1,0 +1,148 @@
+{% load i18n %}
+<hr>
+<h3><i class="fa fa-filter"></i> Refine Search</h3>
+<div class="panel-group" id="accordion2">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title clearfix">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#category-tab">
+                    <span class="pull-left">Topics</span>
+                    <span class="pull-right"></span>
+                </a>
+            </div>
+        </div>
+        <nav id="category-tab" class="panel-collapse collapse filter">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul id="categories" class="nav">
+                            {% verbatim %}
+                            <!-- NOTE: We want to change these categories to appeal to the layman; currently they're geo-expert terms -->
+                            <li ng-repeat="category in categories">
+                                <a ng-init="toggle=true" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle; active=category.id" ng-class="{active: (!toggle && (active == category.id))}">{{ category.gn_description}}
+                                    <span class="badge pull-right">{{ category.count}}</span>
+                                </a>
+                            </li>
+                            {% endverbatim %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title clearfix">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#regions" ng-controller="leaflet_hack" ng-click="showMap()">
+                    <span class="pull-left">Places</span>
+                    <span class="pull-right"></span>
+                </a>
+            </div>
+        </div>
+        <div id="regions" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="row">
+                    Click, Drag and Zoom on the Map to filter results
+                    <div class="control-group leaflet_map">
+                        <leaflet center="map_center" defaults="defaults" layers="layers">
+                        </leaflet>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <button class="btn btn-primary" type="submit" ng-click="delete_query('extent')">Clear Map</button>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <ul id="categories" class="nav" ng-init="search_regions=[]">
+                                {% verbatim %}
+                                Or search by country or continent
+                                <nav class="filter">
+                                    <div class="input-group search-bar">
+                                        <input name="region_search_input" id="region_search_input" ng-model="region_query" type="text" 
+                                            class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="submit" id="region_search_btn" ng-click="add_search('regions__name__in', region_query, search_regions)"><i class="fa fa-plus">Add</i></button>
+                                        </span>
+                                    </div>
+                                </nav>
+                                <ul>
+                                    <li ng-repeat="search in search_regions">
+                                        {{ search }}
+                                        <span class="input-group-btn pull-right">
+                                            <button class="btn btn-primary" type="submit" ng-click="remove_search('regions__name__in', search, search_regions)"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </li>
+                                </ul>
+                                {% endverbatim %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title clearfix">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#time">
+                    <span class="pull-left">Time periods</span>
+                </a>
+            </h3>
+        </div>
+        <div id="time" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <label>{% trans "Date begins after:" %}</label>
+                        <input class="form-control datepicker" value="yyyy-mm-dd" data-date-format="yyyy-mm-dd" type="text" placeholder="yyyy-mm-dd" ng-model="date_query.date__gte" />
+                        <hr>
+                        <label>{% trans "Date ends before:" %}</label>
+                        <input class="form-control datepicker" value="yyyy-mm-dd" data-date-format="yyyy-mm-dd" type="text" placeholder="yyyy-mm-dd" ng-model="date_query.date__lte" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title clearfix">
+            <a data-toggle="collapse" data-parent="#accordion2" href="#keyword-tab">
+                <span class="pull-left"><i class="fa fa-line-chart"></i> Keywords</span>
+                <span class="pull-right"></span>
+            </a>
+        </h3>
+    </div>
+    <div id="keyword-tab" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-11 col-sm-offset-1">
+                    <ul id="keywords" ng-init="search_keywords=[]">
+                    {% verbatim %}
+                        <nav class="filter">
+                            <div class="input-group search-bar">
+                                <input name="keyword_search_input" id="keyword_search_input" ng-model="keyword_query" type="text" 
+                                    class="form-control">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit" id="keyword_search_btn" ng-click="add_search('keywords__slug__in', keyword_query, search_keywords)"><i class="fa fa-plus">Add</i></button>
+                                </span>
+                            </div>
+                        </nav>
+                        <ul>
+                            <li ng-repeat="search in search_keywords">
+                                {{ search }}
+                                <span class="input-group-btn pull-right">
+                                    <button class="btn btn-primary" type="submit" ng-click="remove_search('keywords__slug__in', search, search_keywords)"><i class="fa fa-times"></i></button>
+                                </span>
+                            </li>
+                        </ul>
+                    {% endverbatim %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
