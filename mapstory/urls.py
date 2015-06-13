@@ -19,9 +19,20 @@ from mapstory.views import LeaderListView
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view()),
+
+    url(r'^maps/templates/add-layers.html$', TemplateView.as_view(template_name='mapstory/composer/add-layers.html'), name='composer-add-layers'),
+    url(r'^maps/templates/layer-list.html$', TemplateView.as_view(template_name='mapstory/composer/layer-list.html'), name='composer-layer-list'),
+    url(r'^maps/templates/load-map-dialog.html$', TemplateView.as_view(template_name='mapstory/composer/load-map-dialog.html'), name='composer-load-map'),
+
+
+    url(r'^maps/compose$',
+        'geonode.maps.views.new_map', {'template': 'maps/composer_map_view.html'},
+        name='story_create'),
+
     url(r'^maps/new2$',
         'geonode.maps.views.new_map', {'template': 'maps/mapstory_map_view.html'},
         name='map-new2'),
+
     url(r'^maps/(?P<mapid>\d+)/view2$',
         'geonode.maps.views.map_view', {'template': 'maps/mapstory_map_view.html'},
         name='map-view2'),
@@ -39,6 +50,8 @@ urlpatterns = patterns('',
     url(r'^icons/', include('icon_commons.urls')),
 
     url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
+
+
 
 ) + urlpatterns
 
