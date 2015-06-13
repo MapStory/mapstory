@@ -1,0 +1,16 @@
+{%verbatim%}
+<form role="form" ng-submit="addLayer(layerName, asVector)">
+    <div class="btn-group form-group">
+        <button ng-repeat='src in servers' type="button" ng-model="server.active" class="btn btn-default" btn-radio="src">{{ src.name }}</button>
+    </div>
+    <div class="form-group">
+        <label for="typename">Layer Name</label>
+        <input ng-model="layerName" type="text" class="form-control" id="typename" placeholder="Layer name in mapstory">
+    </div>
+    <div class="checkbox">
+        <label for="vector"><input ng-model="asVector" type="checkbox" id="vector">As vector</label>
+    </div>
+    <button type="submit" ng-disabled="!layerName" class="btn btn-primary">Add</button>
+    <span ng-if="loading">Loading...</span>
+</form>
+{% endverbatim%}

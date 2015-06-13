@@ -1,0 +1,21 @@
+{%verbatim%}
+<div>
+    <div class="modal-header">
+        <h3 class="modal-title">Load Map</h3>
+    </div>
+    <div class="modal-body">
+        <div>
+            <label for="msid">From MapStory</label>
+            <input id="msid" type="number" ng-model="choice.mapstoryMapId">
+        </div>
+        <select ng-model="choice.localMapId">
+            <option ng-click="null">Local Map</option>
+            <option ng-repeat="map in maps" ng-value="{{map.id}}">Map {{map.id}}</option>
+        </select>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="$close(choice)">OK</button>
+        <button class="btn btn-primary" ng-click="$dismiss()">Cancel</button>
+    </div>
+</div>
+{%endverbatim%}

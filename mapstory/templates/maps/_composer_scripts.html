@@ -1,18 +1,16 @@
 {% load staticfiles %}
 <!-- compiled JavaScript -->
 {% comment %}
-This list was initially compiled from the generated index.html in MapLoom and is
-currently maintained manually.
-angular and jquery were moved to the _map_view_common.html template
-@todo generate this from MapLoom
+    @todo generate this from StoryTools
 {% endcomment %}
 
-        <!--script src="{{STATIC_URL}}bower_components/angular/angular.min.js" ></script>
-        <script src="{{STATIC_URL}}bower_components/jquery/dist/jquery.min.js"></script-->
-        <script src="{{STATIC_URL}}bower_components/nouislider/distribute/jquery.nouislider.min.js" type="text/javascript"></script>
-        <script src="{{STATIC_URL}}bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-        <script src="{{STATIC_URL}}bower_components/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
-        <script src="{{STATIC_URL}}ol-debug.js" ></script>
+        <script src="{{STATIC_URL}}vendor/angular/angular.min.js" ></script>
+        <script src="{{STATIC_URL}}vendor/jquery/dist/jquery.min.js"></script>
+        <script src="{{STATIC_URL}}vendor/nouislider/distribute/jquery.nouislider.min.js" type="text/javascript"></script>
+        <script src="{{STATIC_URL}}vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+        <script src="{{STATIC_URL}}vendor/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
+
+        <script src="{{STATIC_URL}}mapstory/js/tools/ol-debug.js" ></script>
         <script src="{{STATIC_URL}}mapstory/js/tools/story-tools-core-tpls.js"></script>
         <script src="{{STATIC_URL}}mapstory/js/tools/story-tools-edit-tpls.js"></script>
         <script src="{{STATIC_URL}}mapstory/js/tools/story-tools-core.js"></script>
@@ -21,9 +19,8 @@ angular and jquery were moved to the _map_view_common.html template
         <script src="{{STATIC_URL}}mapstory/js/tools/story-tools-edit-ng.js"></script>
         <script src="{{STATIC_URL}}mapstory/js/tools/ows.js"></script>
         <script src="{{STATIC_URL}}mapstory/js/tools/story-tools-mapstory.js"></script>
-        <script  src="{{STATIC_URL}}composer.js"></script>
+        <script src="{{STATIC_URL}}mapstory/js/tools/composer.js"></script>
 
 {% comment %}
-dependencies introduced by mapstory work
+    dependencies introduced by mapstory work
 {% endcomment %}
-<script src="{{STATIC_URL}}vendor/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>

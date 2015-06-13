@@ -1,0 +1,18 @@
+{%verbatim%}
+<div class="row" ng-repeat="lyr in layers">
+    <div class="col-lg-8">{{lyr.get('title')}}</div>
+    <div class="col-lg-4">
+        <button class="pull-right btn btn-xs" ng-click="removeLayer(lyr)"><i class="glyphicon glyphicon-remove-circle"></i></button>
+        <button class="pull-right btn btn-xs" ng-click="modifyLayer(lyr)"><i class="glyphicon glyphicon-cog"></i></button>
+    </div>
+</div>
+<div data-dropdown style="position:relative">
+    <label>Background:</label>
+    <button type="button" class="dropdown-toggle btn">
+        {{baseLayer||'Select Base Layer'}}<span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu scrollable-combo {{css}}" role="menu">
+        <li ng-repeat="baseLayer in baseLayers" ng-click="onChange(baseLayer)">{{baseLayer.title}}</li>
+    </ul>
+</div>
+{%endverbatim%}
