@@ -1,12 +1,15 @@
 {% load staticfiles i18n %}{% verbatim %}
         <div id="container" ng-init="selected = {layers:true}">
             <div id="header" class="navbar navbar-default">
+                <div class="navbar-header col-md-2">
+                    <a class="navbar-brand" href="/">MapStory</a>
+                </div>
                 <ul class="nav navbar-nav nav-pills" id="tl-nav">
-                    <li ng-class="selected.layers && 'active'"><a ng-click="selected = {layers:true}">Layers</a></li>
+                    <li ng-class="selected.layers && 'active'"><a ng-click="selected = {layers:true}">StoryLayers</a></li>
                     <li ng-class="selected.style && 'active'"><a ng-click="selected = {style:true}">Style</a></li>
-                    <li ng-class="selected.boxes && 'active'"><a ng-click="selected = {boxes:true}">Boxes</a></li>
-                    <li ng-class="selected.pins && 'active'"><a ng-click="selected = {pins:true}">Pins</a></li>
-                    <li ng-class="selected.preview && 'active'"><a ng-click="selected = {preview:true}">Preview</a></li>
+                    <li ng-class="selected.boxes && 'active'"><a ng-click="selected = {boxes:true}">StoryBoxes</a></li>
+                    <li ng-class="selected.pins && 'active'"><a ng-click="selected = {pins:true}">StoryPins</a></li>
+                    <li ng-class="selected.preview && 'active'"><a ng-click="selected = {preview:true}">StoryPreview</a></li>
                     <li ng-class="selected.debug && 'active'"><a ng-click="selected = {debug:true}">Debug</a></li>
                 </ul>
                 <ul class="nav navbar-nav nav-pills navbar-right">

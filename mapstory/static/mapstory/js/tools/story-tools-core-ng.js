@@ -551,9 +551,8 @@
         defaultMap: function(storymap) {
           storymap.getMap().setView(new ol.View({center: [0,0], zoom: 3}));
           this.setBaseLayer(storymap, {
-            title: 'Satellite Imagery',
-            type: 'MapQuest',
-            layer: 'sat'
+            title: 'OpenStreetMap',
+            type: 'OSM'
           });
         },
         setBaseLayer: function(storymap, data) {
