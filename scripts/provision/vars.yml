@@ -7,6 +7,7 @@ gspass: geoserverer
 media_root: /var/lib/mapstory/media/
 django_su_pass: admin
 nginx_server_name: 192.168.56.151
+nginx_client_max_body_size: '150m'
 fixtures: '../geonode/geonode/base/fixtures/initial_data.json mapstory/fixtures/initial_data.json'
 
 # don't change these
