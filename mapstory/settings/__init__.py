@@ -67,7 +67,7 @@ DATABASES = {
 INSTALLED_APPS += (
     'mapstory',
     'django.contrib.webdesign',
-    'geonode.contrib.geogig',
+    'geonode.contrib.geogit',
     'icon_commons'
 )
 
@@ -94,7 +94,8 @@ OGC_SERVER = {
         'WPS_ENABLED' : True,
         # Set to name of database in DATABASES dictionary to enable
         'DATASTORE': '', #'datastore',
-        'TIMEOUT': 10  # number of seconds to allow for HTTP requests
+        'TIMEOUT': 10,  # number of seconds to allow for HTTP requests,
+        'GEOGIT_DATASTORE_DIR': '/var/lib/geoserver/data/geogit'
     }
 }
 
