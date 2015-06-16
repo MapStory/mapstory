@@ -45,10 +45,6 @@
   file: path={{ media_root }} owner=www-data group=www-data mode=0775 state=directory
   tags: [setup, media]
 
-- name: geogig global config
-  copy: src=files/geogigconfig dest=~/.geogigconfig
-  tags: [setup]
-
 - name: compile python
   shell: '{{ venv }}/bin/python -m compileall -f {{ top_project }}/geonode -f {{ mapstory_geonode }}'
   notify: restart django

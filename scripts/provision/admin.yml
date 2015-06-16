@@ -86,6 +86,10 @@
   file: path=/srv/git state=directory owner=mapstory group=www-data
   tags: [config, files]
 
+- name: create www-data home directory
+  file: path=/var/www state=directory mode=0775 owner=www-data group=www-data recurse=true
+  tags: [setup]
+
 - name: gunicorn-app
   copy: src=files/gunicorn-app.sh dest=/srv/scripts/gunicorn-app.sh mode=650 owner=mapstory group=www-data
   notify: [restart django]
@@ -144,6 +148,10 @@
   file: path=/var/lib/geoserver/data state=directory owner=www-data group=www-data mode=775 recurse=yes
   tags: [geoserver]
 
+- name: create geogit data directory
+  file: path=/var/lib/geoserver/data/geogit state=directory mode=0775 owner=www-data group=www-data
+  tags: [setup]
+
 - name: jetty app permissions
   file: path={{mapstory_geonode}}/scripts/misc/jetty-runner mode=650 owner=mapstory group=www-data
   tags: [geoserver]
@@ -152,3 +160,7 @@
   template: src=files/supervisor-jetty.conf dest=/etc/supervisor/conf.d
   notify: [reload supervisor, restart geoserver]
   tags: [config, geoserver]
+
+- name: geogig global config
+  copy: src=files/geogigconfig dest=/var/www/.geogitconfig
+  tags: [setup]
