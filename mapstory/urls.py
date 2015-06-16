@@ -15,6 +15,7 @@ from mapstory.views import GetPageView
 from mapstory.views import ProfileDetail
 from mapstory.views import SearchView
 from mapstory.views import LeaderListView
+from mapstory.views import proxy
 
 
 urlpatterns = patterns('',
@@ -50,7 +51,7 @@ urlpatterns = patterns('',
     url(r'^icons/', include('icon_commons.urls')),
 
     url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
-
+    url(r'^proxy/', proxy),
 
 
 ) + urlpatterns
