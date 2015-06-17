@@ -4,7 +4,7 @@ $(function() {
     if (!isMobile) {
         $(window).stellar({
             horizontalScrolling: false,
-            responsive: true/*,
+            responsive: true,/*,
              scrollProperty: 'scroll',
              parallaxElements: false,
              horizontalScrolling: false,

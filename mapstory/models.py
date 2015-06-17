@@ -5,6 +5,7 @@ from datetime import datetime
 from geonode.maps.models import Map
 import hashlib
 import textile
+from django.template.defaulttags import register
 
 
 def _stamp(data):
@@ -106,6 +107,19 @@ class Leader(models.Model):
     def html(self):
         return textile.textile(self.content)
 
+class ParallaxImage(models.Model):
+    name = models.CharField(max_length=64, blank=True)
+    image = models.ImageField(upload_to='parallax', max_length=255)
+
+    def __unicode__(self):
+        return self.image.url
+
+@register.filter
+def by_name(objects, name):
+    return objects.filter(name=name)[0]
+
+def get_images():
+    return ParallaxImage.objects.all()
 
 def get_sponsors():
     return Sponsor.objects.filter(order__gte=0)
