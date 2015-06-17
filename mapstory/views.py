@@ -1,5 +1,8 @@
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.http import HttpResponse
+from django.http.request import validate_host
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.generic import TemplateView
@@ -8,8 +11,9 @@ from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
-
+from django.utils.http import is_safe_url
 from geonode.people.models import Profile
+from httplib import HTTPConnection, HTTPSConnection
 
 from mapstory.models import get_sponsors
 from mapstory.models import get_images
@@ -19,8 +23,11 @@ from mapstory.models import DiaryEntry
 from mapstory.models import Leader
 
 from geonode.base.models import Region
+from geonode.geoserver.helpers import ogc_server_settings
+from urlparse import urlsplit
 
 import datetime
+
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -125,3 +132,64 @@ class LeaderListView(ListView):
 
 def test_view(req, template):
     return render_to_response('testing/%s.html' % template, RequestContext(req))
+
+
+def proxy(request):
+    PROXY_ALLOWED_HOSTS = getattr(settings, 'PROXY_ALLOWED_HOSTS', ())
+    hostname = (ogc_server_settings.hostname,) if ogc_server_settings else ()
+    PROXY_ALLOWED_HOSTS += hostname
+
+    if 'url' not in request.GET:
+        return HttpResponse("The proxy service requires a URL-encoded URL as a parameter.",
+                            status=400,
+                            content_type="text/plain"
+                            )
+
+    raw_url = request.GET['url']
+    url = urlsplit(raw_url)
+
+    locator = url.path
+    if url.query != "":
+        locator += '?' + url.query
+    if url.fragment != "":
+        locator += '#' + url.fragment
+
+    if not settings.DEBUG:
+        if not validate_host(url.hostname, PROXY_ALLOWED_HOSTS):
+            return HttpResponse("DEBUG is set to False but the host of the path provided "
+                                "to the proxy service is not in the "
+                                "PROXY_ALLOWED_HOSTS setting.",
+                                status=403,
+                                content_type="text/plain"
+                                )
+    headers = {}
+
+    if settings.SESSION_COOKIE_NAME in request.COOKIES and is_safe_url(url=raw_url, host=ogc_server_settings.netloc):
+        headers["Cookie"] = request.META["HTTP_COOKIE"]
+
+    if request.META.get('HTTP_AUTHORIZATION'):
+        headers['AUTHORIZATION'] = request.META.get('HTTP_AUTHORIZATION')
+
+    if request.method in ("POST", "PUT") and "CONTENT_TYPE" in request.META:
+        headers["Content-Type"] = request.META["CONTENT_TYPE"]
+
+    if request.META.get('HTTP_ACCEPT'):
+        headers['ACCEPT'] = request.META['HTTP_ACCEPT']
+
+    if url.scheme == 'https':
+        conn = HTTPSConnection(url.hostname, url.port)
+    else:
+        conn = HTTPConnection(url.hostname, url.port)
+
+    conn.request(request.method, locator, request.body, headers)
+    result = conn.getresponse()
+
+    response = HttpResponse(result.read(),
+                            status=result.status,
+                            content_type=result.getheader("Content-Type", "text/plain"),
+                            )
+
+    if result.getheader('www-authenticate'):
+        response['www-authenticate'] = "GeoNode"
+
+    return response
