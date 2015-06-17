@@ -12,6 +12,7 @@ from django.views.generic.list import ListView
 from geonode.people.models import Profile
 
 from mapstory.models import get_sponsors
+from mapstory.models import get_images
 from mapstory.models import GetPage
 from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
@@ -29,6 +30,7 @@ class IndexView(TemplateView):
         ctx['sponsors'] = get_sponsors()
         news_items = NewsItem.objects.filter(date__lte=datetime.datetime.now())
         ctx['news_items'] = news_items[:3]
+        ctx['images'] = get_images()
         return ctx
 
 

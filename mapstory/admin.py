@@ -7,6 +7,7 @@ from mapstory.models import DiaryEntry
 from mapstory.models import GetPage
 from mapstory.models import GetPageContent
 from mapstory.models import Leader
+from mapstory.models import ParallaxImage
 
 
 def content_html(obj):
@@ -76,6 +77,10 @@ class LeaderAdmin(admin.ModelAdmin):
     model = Leader
     list_display = 'user',
 
+class ParallaxImageAdmin(admin.ModelAdmin):
+    model = ParallaxImage
+    list_display = 'name',
+
 
 admin.site.register(GetPage, GetPageAdmin)
 admin.site.register(GetPageContent, GetPageContentAdmin)
@@ -83,3 +88,4 @@ admin.site.register(Sponsor, SponsorAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
 admin.site.register(DiaryEntry, DiaryEntryAdmin)
 admin.site.register(Leader, LeaderAdmin)
+admin.site.register(ParallaxImage, ParallaxImageAdmin)

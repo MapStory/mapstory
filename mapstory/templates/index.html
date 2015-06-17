@@ -13,15 +13,15 @@
 
 {% block extra_script %}
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/modernizr/modernizr.js"></script>
-<!--<script type="text/javascript" src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>-->
+<script type="text/javascript" src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/isotope/jquery.isotope.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/index.js"></script>
 {% endblock %}
 
 {% block middle %}
 
-    <section class="slice" id="homesplash">
-        <div style="background-image: url({% remote_content 'static_img/africa.gif' %});"></div>
+    <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
     </section>
     
     <section class="slice" id="welcome">
@@ -69,7 +69,7 @@
             </div>
         </div>
     </section>
-             
+      
     <section class="slice" id="getstarted">
         <div class="csection">
             <div class="row">
