@@ -35,7 +35,7 @@
                 <div class="input-group col-sm-6 col-sm-offset-3">
                     <!-- TODO: Need to make this functional -->
                     <input class="form-control " id="appendedInput" type="text" placeholder="Explore MapStories and StoryLayers" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
-                    <span class="input-group-addon" style="background-color:chocolate;color:white;border:1px solid white"><i class="icon-magnifier"></i></span>
+                    <span class="input-group-addon" style="background-color:chocolate;color:white;border:1px solid white"><i class="fa fa-search"></i></span>
                </div>
             </div>
             <div class="row links" style="padding-top:15px;padding-bottom:5px;">
@@ -104,16 +104,49 @@
     </section>
 
     <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
     </section>
 
     <section class="slice" id="getinvolved">
         <div class="container">
             <div class="row">
-                <div class="col-sm-6">
-                    <img class="img-responsive" src="{% remote_content 'static_img/world.png' %}" />
+                <div class="col-sm-8">
+                    <div class="row" style="padding:20px">
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/initiative.jpeg' %}">
+                            <h5 class="text-center">Host a Channel</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/share.jpg' %}">
+                            <h5 class="text-center">Launch an Initiative</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/launch.jpg' %}">
+                            <h5 class="text-center">Share your Skills</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/edit.jpg' %}">
+                            <h5 class="text-center">Become an Editor</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/chapter.jpg' %}">
+                            <h5 class="text-center">Found a Chapter</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/code.jpg' %}">
+                            <h5 class="text-center">Code for MapStory</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/initiative.jpeg' %}">
+                            <h5 class="text-center">Organize an Event or Training</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/edit.jpg' %}">
+                            <h5 class="text-center">Become a Sponsor</h5>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="csection-text">
                         <h1>Get Involved</h1>
                         <h3>Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.
@@ -125,7 +158,7 @@
     </section>
 
     <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax2' }});"></div>
     </section>
                 
     <section class="slice" id="getskills">
@@ -136,17 +169,17 @@
             <br/>
             <div class="row">
                 <div class="col-sm-4">
-                    <img class="rdphoto" src="{% remote_content 'static_img/ms101.png' %}">
+                    <img class="rdphoto" src="{% remote_content 'mockup_img/students.jpg' %}">
                     <h2>1. MapStory 101</h2>
                     <h5>Learn all the basic skills you need to start collecting data and creating MapStories of your own.</h5>
                 </div>
                 <div class="col-sm-4">
-                    <img class="rdphoto" src="{% remote_content 'static_img/wiki.png' %}">
+                    <img class="rdphoto" src="{% remote_content 'mockup_img/students.jpg' %}">
                     <h2>2. MapStory Wiki</h2>
                     <h5>Find and share more resources alongside the global MapStory community.</h5>
                 </div>
                 <div class="col-sm-4">
-                    <img class="rdphoto" src="{% remote_content 'static_img/cent.png' %}">
+                    <img class="rdphoto" src="{% remote_content 'mockup_img/students.jpg' %}">
                     <h2>3. Help Center</h2>
                     <h5>Ask questions, find answers, and help others.</h5>
                 </div>
@@ -155,7 +188,7 @@
     </section>
 
     <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
     </section>
                 
     <section class="slice" id="thinkers">
@@ -164,35 +197,35 @@
                 <div class="col-sm-8">
                     <div class="row" style="padding:20px">
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar1.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
                             <h5 class="text-center">Mafalda Hopkirk</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar2.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
                             <h5 class="text-center">Lee Jordan</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar1.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
                             <h5 class="text-center">Millicent Bullstrode</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar2.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
                             <h5 class="text-center">Penelope Clearwater</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar2.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
                             <h5 class="text-center">Nymphadora Tonks</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar1.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
                             <h5 class="text-center">Remus Lupin</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar2.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
                             <h5 class="text-center">Seamus Finnigan</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar1.png' %}">
+                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
                             <h5 class="text-center">Xenophilius Lovegood</h5>
                         </div>
                     </div>
@@ -207,7 +240,7 @@
     </section>
 
     <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
     </section>
 
     <section class="slice" id="news">
@@ -239,7 +272,7 @@
     </section>
 
     <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax2' }});"></div>
     </section>
 
     <section class="slice" id="sponsors">
@@ -263,7 +296,7 @@
     </section>
 
     <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
     </section>
 
 {% endblock %}

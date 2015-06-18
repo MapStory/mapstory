@@ -31,6 +31,8 @@ class IndexView(TemplateView):
         news_items = NewsItem.objects.filter(date__lte=datetime.datetime.now())
         ctx['news_items'] = news_items[:3]
         ctx['images'] = get_images()
+        # TODO: update this for sections
+        ctx['featured_items'] = None
         return ctx
 
 
