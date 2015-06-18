@@ -20,24 +20,25 @@
 
 {% block middle %}
 
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
+    <section id="topParallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }}); height: 600px;"></div>
     </section>
-    
+
     <section class="slice" id="welcome">
         <div class="container">
-            <div class="row">
+            <div class="row" style="padding-top:-10px;">
                 <div class="col-sm-12">
                     <h1 class="text-center">The atlas of change that everyone can edit.</h1>
                 </div>
             </div>
-            <div class="row" style="padding-top:20px">
+            <div class="row" style="padding-top: 5px;">
                 <div class="input-group col-sm-6 col-sm-offset-3">
-                    <input class="form-control " id="appendedInput" type="text" placeholder="Explore events, places, periods and storytellers" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
+                    <!-- TODO: Need to make this functional -->
+                    <input class="form-control " id="appendedInput" type="text" placeholder="Explore MapStories and StoryLayers" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
                     <span class="input-group-addon" style="background-color:chocolate;color:white;border:1px solid white"><i class="icon-magnifier"></i></span>
                </div>
             </div>
-            <div class="row links">
+            <div class="row links" style="padding-top:15px;padding-bottom:5px;">
                 <div class="col-sm-3">
                     <h3>
                         <a href="{% url 'account_signup' %}">
@@ -67,61 +68,51 @@
                     </h3>
                 </div>
             </div>
-        </div>
-    </section>
-      
-    <section class="slice" id="getstarted">
-        <div class="csection">
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="csection-text">
-                    <h1 class="text-right">Get Started</h1>
-                    <h3 class="text-right">Quickly share open data and create MapStories about how the world changes over space and time - on any subject, at any geographic scale, and into the past, present or future.</h3>
-                </div>
-                </div>
-                <div class="col-sm-8">
-                    <div class="row text-center" style="padding:20px">
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/stud.png' %}">
-                            <h5>Students</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/educ.png' %}">
-                            <h5>Educators</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/libr.png' %}">
-                            <h5>Librarians</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/rese.png' %}">
-                            <h5>Researchers</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/busi.png' %}">
-                            <h5>Businesspeople</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/huma.png' %}">
-                            <h5>Humanitarians</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/poli.png' %}">
-                            <h5>Policymakers</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/jour.png' %}">
-                            <h5>Journalists</h5>
-                        </div>
-                    </div>
+            <div class="row" style="padding-bottom:5px;">
+                <div class="localscroll" style="text-align:center">
+                    <!-- TODO: Link to mapstories is the section that doesn't exist yet -->
+                    <a href="#mapstories" class="btn btn-circle btn-sm btn-default" style="background-color:#BD5E1B;color:white;border:1px solid transparent;border-radius:25%">
+                    <i class="icon-down"></i></a>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- TODO: Implement the functionality of this section -->
+    <section class="slice" id="mapstories">
+        <div class="container">
+            <nav id="filter" class="col-md-12 text-center" style="text-align:center">
+                <ul class="nav nav-tabs" >
+                    <!-- Crisis, Geopolitics, Science & Industry, Human Settlement, Culture & Ideas, Nature & Environment, Health, Biology -->
+                    <li><a href="" class="btn btn-filter btn-sm">All MapStories</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm">Crisis</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm">Geopolitics</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm">Science & Industry</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm">Human Settlement</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm">Culture & Ideas</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm">Nature & Environment</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm">Health</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm">Biology</a></li>
+                </ul>
+            </nav>
+            <!-- depending on the button clicked, need to query for different categories (not yet implemented)
+                 Format:
+                 [ Image ]
+                 description
+                 read more (links to page for this data presumably) -->
+        </div>
+    </section>
+
+    <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
+    </section>
+
     <section class="slice" id="getinvolved">
         <div class="container">
             <div class="row">
+                <div class="col-sm-6">
+                    <img class="img-responsive" src="{% remote_content 'static_img/world.png' %}" />
+                </div>
                 <div class="col-sm-6">
                     <div class="csection-text">
                         <h1>Get Involved</h1>
@@ -129,11 +120,12 @@
                         </h3>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <img class="img-responsive" src="{% remote_content 'static_img/world.png' %}" />
-                </div>
             </div>
         </div>
+    </section>
+
+    <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
     </section>
                 
     <section class="slice" id="getskills">
@@ -146,30 +138,29 @@
                 <div class="col-sm-4">
                     <img class="rdphoto" src="{% remote_content 'static_img/ms101.png' %}">
                     <h2>1. MapStory 101</h2>
-                    <h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
+                    <h5>Learn all the basic skills you need to start collecting data and creating MapStories of your own.</h5>
                 </div>
                 <div class="col-sm-4">
                     <img class="rdphoto" src="{% remote_content 'static_img/wiki.png' %}">
                     <h2>2. MapStory Wiki</h2>
-                    <h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
+                    <h5>Find and share more resources alongside the global MapStory community.</h5>
                 </div>
                 <div class="col-sm-4">
                     <img class="rdphoto" src="{% remote_content 'static_img/cent.png' %}">
                     <h2>3. Help Center</h2>
-                    <h5>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</h5>
+                    <h5>Ask questions, find answers, and help others.</h5>
                 </div>
                 </div>
         </div>
+    </section>
+
+    <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
     </section>
                 
     <section class="slice" id="thinkers">
         <div class="container">
             <div class="row">
-            <div class="col-sm-4">
-                    <h1>Thinkers, Thoughts & Initiatives</h1>
-                    <h3>Human beings are the only animals who write down their thoughts – so far! Here’s what a few MapStorytellers have been thinking about lately. For more, go to <a href="userdiary.html">User Diaries.</a>
-                    </h3>
-                </div>
                 <div class="col-sm-8">
                     <div class="row" style="padding:20px">
                         <div class="col-sm-3 photobox">
@@ -206,18 +197,23 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-sm-4">
+                    <h1>Thinkers and Thoughts</h1>
+                    <h3>The latest insights from leading MapStorytellers. For more, visit the <a href="/diary">Community Journal</a>
+                    </h3>
+                </div>
             </div>
-                            
-                        </div>
+        </div>
+    </section>
+
+    <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
     </section>
 
     <section class="slice" id="news">
         <div class="csection">
             <div class="row">
-                <h1 class="text-center">In the News</h1>
-                <h3 class="text-center">
-                    We are making headlines all over the world.	
-                </h3>
+                <h1 class="text-center">MapStory projects making the news</h1>
             </div>
             <div class="row">
                 <div class="col-sm-4">
@@ -234,12 +230,18 @@
                     {% endfor %}
                 </div>
             </div>
+            <!-- TODO: What was this supposed to be?
             <div class="row">
                 <div class="qlink-right qlink-fb">[p_a_g_i_n_a_t_i_o_n l_i_n_k_s h_e_r_e]</div>
             </div>
+            -->
         </div>
     </section>
-  
+
+    <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
+    </section>
+
     <section class="slice" id="sponsors">
         <div class="container">
             <div class="row">
@@ -259,5 +261,9 @@
             </div>
         </div>
     </section>
-              
+
+    <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});"></div>
+    </section>
+
 {% endblock %}
