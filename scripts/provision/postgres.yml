@@ -20,3 +20,13 @@
   shell: psql -d mapstory_data -c "CREATE EXTENSION postgis"
   when: db_created|changed
   tags: ['db']
+
+- copy: src=files/geonode_authorize_layer.sql dest=/tmp
+  tags: ['db']
+
+- name: load geonode_authorize_layers
+  shell: psql -f /tmp/geonode_authorize_layer.sql -d mapstory
+  tags: ['db']
+
+- file: path=/tmp/geonode_authorize_layer.sql state=absent
+  tags: ['db']
