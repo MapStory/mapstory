@@ -116,7 +116,12 @@ class ParallaxImage(models.Model):
 
 @register.filter
 def by_name(objects, name):
-    return objects.filter(name=name)[0]
+    try:
+        value = objects.filter(name__iexact=name)[0]
+    except IndexError:
+        value = None
+
+    return value
 
 def get_images():
     return ParallaxImage.objects.all()
