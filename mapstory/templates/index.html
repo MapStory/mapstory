@@ -95,11 +95,18 @@
                     <li><a href="" class="btn btn-filter btn-sm">Biology</a></li>
                 </ul>
             </nav>
-            <!-- depending on the button clicked, need to query for different categories (not yet implemented)
-                 Format:
-                 [ Image ]
-                 description
-                 read more (links to page for this data presumably) -->
+            <div class="row">
+                <div class="col-sm-8">
+                    {% for item in featured_items %}
+                    <!-- TOOD: Add format as follows:
+                    [ Image ]
+                    description
+                    read more (links to page for this data presumably) -->
+                    {% empty %}
+                    <p>No Featured Items...</p>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </section>
 
@@ -113,35 +120,35 @@
                 <div class="col-sm-8">
                     <div class="row" style="padding:20px">
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/initiative.jpeg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/initiative.jpeg' %}">
                             <h5 class="text-center">Host a Channel</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/share.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/share.jpg' %}">
                             <h5 class="text-center">Launch an Initiative</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/launch.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/launch.jpg' %}">
                             <h5 class="text-center">Share your Skills</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/edit.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/edit.jpg' %}">
                             <h5 class="text-center">Become an Editor</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/chapter.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/chapter.jpg' %}">
                             <h5 class="text-center">Found a Chapter</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/code.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/code.jpg' %}">
                             <h5 class="text-center">Code for MapStory</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/initiative.jpeg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/initiative.jpeg' %}">
                             <h5 class="text-center">Organize an Event or Training</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/edit.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/edit.jpg' %}">
                             <h5 class="text-center">Become a Sponsor</h5>
                         </div>
                     </div>
@@ -169,17 +176,17 @@
             <br/>
             <div class="row">
                 <div class="col-sm-4">
-                    <img class="rdphoto" src="{% remote_content 'mockup_img/students.jpg' %}">
+                    <img class="rdphoto" src="{% remote_content 'static_img/students.jpg' %}">
                     <h2>1. MapStory 101</h2>
                     <h5>Learn all the basic skills you need to start collecting data and creating MapStories of your own.</h5>
                 </div>
                 <div class="col-sm-4">
-                    <img class="rdphoto" src="{% remote_content 'mockup_img/students.jpg' %}">
+                    <img class="rdphoto" src="{% remote_content 'static_img/students.jpg' %}">
                     <h2>2. MapStory Wiki</h2>
                     <h5>Find and share more resources alongside the global MapStory community.</h5>
                 </div>
                 <div class="col-sm-4">
-                    <img class="rdphoto" src="{% remote_content 'mockup_img/students.jpg' %}">
+                    <img class="rdphoto" src="{% remote_content 'static_img/students.jpg' %}">
                     <h2>3. Help Center</h2>
                     <h5>Ask questions, find answers, and help others.</h5>
                 </div>
@@ -197,35 +204,35 @@
                 <div class="col-sm-8">
                     <div class="row" style="padding:20px">
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
                             <h5 class="text-center">Mafalda Hopkirk</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
                             <h5 class="text-center">Lee Jordan</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
                             <h5 class="text-center">Millicent Bullstrode</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
                             <h5 class="text-center">Penelope Clearwater</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
                             <h5 class="text-center">Nymphadora Tonks</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
                             <h5 class="text-center">Remus Lupin</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
                             <h5 class="text-center">Seamus Finnigan</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'mockup_img/avatar.jpg' %}">
+                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
                             <h5 class="text-center">Xenophilius Lovegood</h5>
                         </div>
                     </div>
