@@ -114,15 +114,6 @@ class ParallaxImage(models.Model):
     def __unicode__(self):
         return self.image.url
 
-@register.filter
-def by_name(objects, name):
-    try:
-        value = objects.filter(name__iexact=name)[0]
-    except IndexError:
-        value = None
-
-    return value
-
 def get_images():
     return ParallaxImage.objects.all()
 

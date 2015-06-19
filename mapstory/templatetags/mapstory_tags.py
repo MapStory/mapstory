@@ -13,3 +13,7 @@ def remote_content(path):
 def link(href, name, width=None, height=None, css_class=None):
     return Link(href, name).render(width, height, css_class)
 
+
+@register.filter
+def by_name(objects, name):
+    return objects.filter(name__iexact=name).first()
