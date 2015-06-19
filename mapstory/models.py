@@ -67,7 +67,7 @@ class NewsItem(ContentMixin ):
 
 
 class DiaryEntry(ContentMixin):
-    title = models.CharField(max_length=32)
+    title = models.CharField(max_length=255)
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
 
     def get_absolute_url(self):
