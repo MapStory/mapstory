@@ -1,3 +1,4 @@
+from account.views import SignupView
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -14,17 +15,17 @@ from django.views.generic.list import ListView
 from django.utils.http import is_safe_url
 from geonode.people.models import Profile
 from httplib import HTTPConnection, HTTPSConnection
-
 from mapstory.models import get_sponsors
 from mapstory.models import get_images
 from mapstory.models import GetPage
 from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
 from mapstory.models import Leader
-
 from geonode.base.models import Region
 from geonode.geoserver.helpers import ogc_server_settings
 from urlparse import urlsplit
+
+from .forms import MapStorySignupForm
 
 import datetime
 
@@ -195,3 +196,19 @@ def proxy(request):
         response['www-authenticate'] = "GeoNode"
 
     return response
+
+
+class MapStorySignup(SignupView):
+    """
+    Extends the SignupView to include the user's first and last name.
+    """
+    form_class = MapStorySignupForm
+
+    def create_account(self, form):
+        """
+        Save the users first and last name.
+        """
+        self.created_user.first_name = form.cleaned_data['firstname']
+        self.created_user.last_name = form.cleaned_data['lastname']
+        self.created_user.save()
+        return super(MapStorySignup, self).create_account(form)

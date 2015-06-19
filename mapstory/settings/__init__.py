@@ -102,6 +102,7 @@ OGC_SERVER = {
 DEBUG_STATIC = True
 
 REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/mapstory-assets'
+REGISTRATION_OPEN = True
 
 DATABASE_PASSWORD = None
 

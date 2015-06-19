@@ -40,8 +40,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <hr class="col-sm-11">
-                            <div class="form-actions form-actions-padding-sm">
+                            <div class="form-actions form-actions-padding-sm login-form-connect-account">
                                 <h3>Connect your account</h3>
                                  <div class="row text-center" style="padding:10px 10px">
                                     <button class="btn btn-social bg-fb">facebook</button>
@@ -57,50 +56,45 @@
                             <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </h3>
                         <hr>
-                        <form class="form form-horizontal" method="post" action="#" accept-charset="UTF-8">
+                        <form method="post" action="{% url 'account_signup' %}" accept-charset="UTF-8">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label class="col-sm-offset-1 col-md-2 control-label label-font-sm" for="inputText1">Name</label>
-                                <div class="col-md-4">
-                                    <input class="form-control" id="inputText1" placeholder="First" type="text">
-                                </div>
-                                <div class="col-md-5">
-                                    <input class="form-control" id="inputText1" placeholder="Last" type="text">
-                                </div>
+                                <label class="control-label label-font-sm" for="id_username">Username</label>
+                                    <input class="form-control" name="username" id="id_username" placeholder="username" type="text">
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-offset-1 col-md-2 control-label label-font-sm" for="inputText1">Email</label>
-                                <div class="col-md-9">
-                                    <input class="form-control" id="inputText1" placeholder="@email.com" type="text">
-                                </div>
+                                <label class="control-label label-font-sm" for="id_firstname">First Name</label>
+                                <input class="form-control" id="id_firstname" name="firstname" placeholder="First" type="text">
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-offset-1 col-md-2 control-label label-font-sm" for="inputPassword4">Password</label>
-                                <div class="col-md-9">
-                                    <input class="form-control" id="inputPassword4" placeholder="(minimum of 8 characters)" type="password" value="Top secret!">
-                                </div>
+                                <label class="control-label label-font-sm" for="id_lastname">Last Name</label>
+                                <input class="form-control" id="id_lastname" name="lastname" placeholder="Last" type="text">
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-offset-1 col-md-2 control-label label-font-sm" for="inputPassword4">Confirm Password</label>
-                                <div class="col-md-9">
-                                    <input class="form-control" id="inputPassword4" placeholder="(minimum of 8 characters)" type="password" value="Top secret!">
-                                </div>
+                                <label class="control-label label-font-sm" for="id_email">Email</label>
+                                <input class="form-control" id="id_email" name="email" placeholder="@email.com" type="text">
                             </div>
                             <div class="form-group">
-                                <div class="col-md-11 col-md-offset-1">
-                                    <div class="checkbox">
-                                        <h4>
-                                            <a href="#" style="font-weight:400">Signing up as an organization? Click here.</a>
-                                        </h4>
-                                        <h4>
-                                            <input type="checkbox" value="" checked>
-                                            Receive the monthly digest of cool projects and community updates.
-                                        </h4>
-                                        <h4>
-                                            <input type="checkbox" value="">
-                                            I agree with the <a href="#">Terms and Conditions</a>.
-                                        </h4>
-                                    </div>
+                                <label class="control-label label-font-sm" for="id_password">Password</label>
+                                <input class="form-control" id="id_password" name="password" placeholder="(minimum of 8 characters)" type="password">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label label-font-sm" for="password_confirm">Confirm Password</label>
+                                <input class="form-control" id="password_confirm" name="password_confirm" placeholder="(minimum of 8 characters)" type="password">
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox under-form-area">
+                                    <h4>
+                                        <a href="#" style="font-weight:400">Signing up as an organization? Click here.</a>
+                                    </h4>
+                                    <h4>
+                                        <input type="checkbox" value="" checked>
+                                        Receive the monthly digest of cool projects and community updates.
+                                    </h4>
+                                    <h4>
+                                        <input type="checkbox" value="">
+                                        I agree with the <a href="#">Terms and Conditions</a>.
+                                    </h4>
                                 </div>
                             </div>
                             <div class="form-actions form-actions-padding-sm">
