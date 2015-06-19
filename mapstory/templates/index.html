@@ -24,7 +24,7 @@
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }}); height: 600px;"></div>
     </section>
 
-    <section class="slice" id="welcome">
+    <section class="slice" id="welcome" style="margin-top:-250px;">
         <div class="container">
             <div class="row" style="padding-top:-10px;">
                 <div class="col-sm-12">
@@ -72,39 +72,95 @@
                 <div class="localscroll" style="text-align:center">
                     <!-- TODO: Link to mapstories is the section that doesn't exist yet -->
                     <a href="#mapstories" class="btn btn-circle btn-sm btn-default" style="background-color:#BD5E1B;color:white;border:1px solid transparent;border-radius:25%">
-                    <i class="icon-down"></i></a>
+                    <i class="icon-down" id="mapstories"></i></a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- TODO: Implement the functionality of this section -->
-    <section class="slice" id="mapstories">
+    <!-- TODO: Implement the functionality of this section: This requires the new categories to be implemented. -->
+    <section class="slice">
         <div class="container">
             <nav id="filter" class="col-md-12 text-center" style="text-align:center">
                 <ul class="nav nav-tabs" >
                     <!-- Crisis, Geopolitics, Science & Industry, Human Settlement, Culture & Ideas, Nature & Environment, Health, Biology -->
-                    <li><a href="" class="btn btn-filter btn-sm">All MapStories</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm">Crisis</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm">Geopolitics</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm">Science & Industry</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm">Human Settlement</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm">Culture & Ideas</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm">Nature & Environment</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm">Health</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm">Biology</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm sectionTab">All MapStories</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Crisis</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Geopolitics</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Science & Industry</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Human Settlement</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Culture & Ideas</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Nature & Environment</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Health</a></li>
+                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Biology</a></li>
                 </ul>
             </nav>
             <div class="row">
+                <!-- TODO: Might need to fix up formatting later -->
                 <div class="col-sm-8">
                     {% for item in featured_items %}
-                    <!-- TOOD: Add format as follows:
-                    [ Image ]
-                    description
-                    read more (links to page for this data presumably) -->
+                    <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}"/></a>
+                    <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
+                    <!-- TODO: What should read more do? -->
+                    <h5 class="abstract">{{ item.abstract }}<a href="#"> <i>...read more</i></a></h5>
+                    <h4><span class="owner">{{ item.owner.username}}</span></h4>
                     {% empty %}
                     <p>No Featured Items...</p>
                     {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
+    </section>
+
+    <section class="slice" id="getstarted">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="csection-text">
+                        <h1>Get Started</h1>
+                        <h3>Everything happens somewhere at sometime. And everyone knows something about what's happened in the world. MapStory turns data sitting on your desktop, in your brain, and within your networks and teams into an open educational resource that we all can learn from and use.
+                        </h3>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="row" style="padding:20px">
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/students.png' %}">
+                            <h5 class="text-center">Students</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/teachers.png' %}">
+                            <h5 class="text-center">Educators</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/humanitarians.png' %}">
+                            <h5 class="text-center">Humanitarians</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/business.png' %}">
+                            <h5 class="text-center">Businesspeople</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/librarians.png' %}">
+                            <h5 class="text-center">Librarians</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/researchers.png' %}">
+                            <h5 class="text-center">Researchers</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/policy.png' %}">
+                            <h5 class="text-center">Policy Makers</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <img class="rdphoto" src="{% remote_content 'static_img/journalist.png' %}">
+                            <h5 class="text-center">Journalists</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -282,6 +338,29 @@
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax2' }});"></div>
     </section>
 
+    <section class="slice" id="community">
+        <div class="container">
+            <div class="row">
+                <h1 class="text-center">Community Initiatives</h1>
+            </div>
+            <hr/>
+            <div class="row">
+                {% for community in communities %}
+                <div class="col-sm-2">
+                    <img class="rdphoto" src="{{ community.url }}" alt="{{ community.name }} - {{ community.description }}">
+                </div>
+                {% empty %}
+                <!-- TODO: Update this -->
+                <p>No communities...</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
+    </section>
+
     <section class="slice" id="sponsors">
         <div class="container">
             <div class="row">
@@ -302,8 +381,8 @@
         </div>
     </section>
 
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
+    <section class="parallax" style="margin-bottom:-40px;">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
     </section>
 
 {% endblock %}
