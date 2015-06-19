@@ -67,7 +67,7 @@ DATABASES = {
 INSTALLED_APPS += (
     'mapstory',
     'django.contrib.webdesign',
-    'geonode.contrib.geogit',
+    'geonode.contrib.geogig',
     'icon_commons'
 )
 
@@ -88,14 +88,14 @@ OGC_SERVER = {
         'MAPFISH_PRINT_ENABLED' : True,
         'PRINT_NG_ENABLED' : True,
         'GEONODE_SECURITY_ENABLED' : True,
-        'GEOGIT_ENABLED' : True,
+        'GEOGIG_ENABLED' : True,
         'WMST_ENABLED' : False,
         'BACKEND_WRITE_ENABLED': True,
         'WPS_ENABLED' : True,
         # Set to name of database in DATABASES dictionary to enable
         'DATASTORE': '', #'datastore',
         'TIMEOUT': 10,  # number of seconds to allow for HTTP requests,
-        'GEOGIT_DATASTORE_DIR': '/var/lib/geoserver/data/geogit'
+        'GEOGIG_DATASTORE_DIR': '/var/lib/geoserver/data/geogig'
     }
 }
 
@@ -111,8 +111,6 @@ DATABASE_PASSWORD = None
 # To use local, ensure that the mapstory-assets repository is checked out in
 # this project's parent (i.e. ../mapstory-assets)
 LOCAL_CONTENT = False
-
-GEOGIT_DATASTORE_NAME = 'geogit'
 
 if os.path.exists('mapstory/settings/local_settings.py'):
     exec open('mapstory/settings/local_settings.py') in globals()
@@ -259,10 +257,10 @@ if DATABASE_PASSWORD:
         'BACKEND': 'geonode.importer',
         'OPTIONS': {
             'TIME_ENABLED': True,
-            'GEOGIT_ENABLED': True,
+            'GEOGIG_ENABLED': True,
         }
     }
 
     USE_BIG_DATE = True
 
-    GEOGIT_DATASTORE_NAME = 'geogit'
+    GEOGIG_DATASTORE_NAME = 'geogig'
