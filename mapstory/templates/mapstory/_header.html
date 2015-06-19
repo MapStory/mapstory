@@ -25,9 +25,6 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right" id="navbar-avatar-login">
-                {% if not user.is_authenticated and REGISTRATION_OPEN %}
-                <li><a href="{% url "account_signup" %}">{% trans "Register" %}</a></li>
-                {% endif %}
                 <li class="dropdown">
                     {% if user.is_authenticated %}
                 <li class="user-avatar">
