@@ -158,35 +158,35 @@
                 <div class="col-sm-8">
                     <div class="row" style="padding:20px">
                         <div class="col-sm-3 photobox">
-                            <a href="/getstarted#Students"><img class="rdphoto" src="{% remote_content 'static_img/students.png' %}"></a>
+                            <a href="{% url 'getpage' 'started' %}#Students"><img class="rdphoto" src="{% remote_content 'static_img/students.png' %}"></a>
                             <h5 class="text-center">Students</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <a href="/getstarted#Educators"><img class="rdphoto" src="{% remote_content 'static_img/teachers.png' %}"></a>
+                            <a href="{% url 'getpage' 'started' %}#Educators"><img class="rdphoto" src="{% remote_content 'static_img/teachers.png' %}"></a>
                             <h5 class="text-center">Educators</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <a href="/getstarted#Humanitarians"><img class="rdphoto" src="{% remote_content 'static_img/humanitarians.png' %}"></a>
+                            <a href="{% url 'getpage' 'started' %}#Humanitarians"><img class="rdphoto" src="{% remote_content 'static_img/humanitarians.png' %}"></a>
                             <h5 class="text-center">Humanitarians</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <a href="/getstarted#Businesspeople"><img class="rdphoto" src="{% remote_content 'static_img/business.png' %}"></a>
+                            <a href="{% url 'getpage' 'started' %}#Businesspeople"><img class="rdphoto" src="{% remote_content 'static_img/business.png' %}"></a>
                             <h5 class="text-center">Businesspeople</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <a href="/getstarted#Librarians"><img class="rdphoto" src="{% remote_content 'static_img/librarians.png' %}"></a>
+                            <a href="{% url 'getpage' 'started' %}#Librarians"><img class="rdphoto" src="{% remote_content 'static_img/librarians.png' %}"></a>
                             <h5 class="text-center">Librarians</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <a href="/getstarted#Researchers"><img class="rdphoto" src="{% remote_content 'static_img/researchers.png' %}"></a>
+                            <a href="{% url 'getpage' 'started' %}#Researchers"><img class="rdphoto" src="{% remote_content 'static_img/researchers.png' %}"></a>
                             <h5 class="text-center">Researchers</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <a href="/getstarted#Policymakers"><img class="rdphoto" src="{% remote_content 'static_img/policy.png' %}"></a>
+                            <a href="{% url 'getpage' 'started' %}#Policymakers"><img class="rdphoto" src="{% remote_content 'static_img/policy.png' %}"></a>
                             <h5 class="text-center">Policy Makers</h5>
                         </div>
                         <div class="col-sm-3 photobox">
-                            <a href="/getstarted#Journalists"><img class="rdphoto" src="{% remote_content 'static_img/journalist.png' %}"></a>
+                            <a href="{% url 'getpage' 'started' %}#Journalists"><img class="rdphoto" src="{% remote_content 'static_img/journalist.png' %}"></a>
                             <h5 class="text-center">Journalists</h5>
                         </div>
                     </div>
@@ -262,7 +262,7 @@
             <div class="row">
                 <div class="col-sm-4">
                     <img class="rdphoto" src="{% remote_content 'static_img/101.png' %}">
-                    <a href="/getskills"><h2>1. MapStory 101</h2></a>
+                    <a href="{% url 'getpage' 'skills' %}"><h2>1. MapStory 101</h2></a>
                     <h5>Learn all the basic skills you need to start collecting data and creating MapStories of your own.</h5>
                 </div>
                 <div class="col-sm-4">
@@ -324,7 +324,7 @@
                 </div>
                 <div class="col-sm-4">
                     <h1>Thinkers and Thoughts</h1>
-                    <h3>The latest insights from leading MapStorytellers. For more, visit the <a href="/diary">Community Journal</a>
+                    <h3>The latest insights from leading MapStorytellers. For more, visit the <a href="{% url 'diary' %}">Community Journal</a>
                     </h3>
                 </div>
             </div>
@@ -394,7 +394,7 @@
         <div class="container">
             <div class="row">
                 <h1 class="text-center">Our Sponsors</h1>
-                <h3 class="text-center">Learning institutions like these drive innovation in the MapStory codebase, content and community. <a href="/donate">Join them.</a>
+                <h3 class="text-center">Learning institutions like these drive innovation in the MapStory codebase, content and community. <a href="{% url 'donate' %}">Join them.</a>
                 </h3>
             </div>
             <hr/>
