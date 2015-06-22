@@ -33,6 +33,7 @@
 {% endblock %}
 
 {% block extra_script %}
+{{ block.super }}
 <script>
 {# work-around django form output #}
 $("#entry-form .form-group.full input,textarea").addClass("form-control");

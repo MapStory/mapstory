@@ -12,10 +12,32 @@
 {% endblock %}
 
 {% block extra_script %}
+{{ block.super }}
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/modernizr/modernizr.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/isotope/jquery.isotope.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/index.js"></script>
+<script type="text/javascript">
+    /* Script for keywords autocomplete */
+    var homepage_autocomplete = $('#homepage_search').yourlabsAutocomplete({
+          url: '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}',
+          choiceSelector: 'span',
+          hideAfter: 200,
+          minimumCharacters: 1,
+          appendAutocomplete: $('#homepage_search'),
+          placeholder: gettext('Enter keyword here ...')
+    });
+    $('#homepage_search').bind('selectChoice', function(e, choice, homepage_autocomplete) {
+          if(choice[0].children[0] == undefined) {
+              $('#homepage_search').val(choice[0].innerHTML);
+              $scope.keyword_query = choice[0].innerHTML;
+          }
+    });
+    // Fix placeholder text for Home Page Search
+    $(function() {
+        $('#homepage_search').attr('placeholder','Explore MapStories and StoryLayers');
+    });
+</script>
 {% endblock %}
 
 {% block middle %}
@@ -33,9 +55,16 @@
             </div>
             <div class="row" style="padding-top: 5px;">
                 <div class="input-group col-sm-6 col-sm-offset-3">
-                    <!-- TODO: Need to make this functional -->
-                    <input class="form-control " id="appendedInput" type="text" placeholder="Explore MapStories and StoryLayers" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
-                    <span class="input-group-addon" style="background-color:chocolate;color:white;border:1px solid white"><i class="fa fa-search"></i></span>
+                    <form action="{% url "search" %}">
+                        {% if HAYSTACK_SEARCH %}
+                        <input class="form-control" id="homepage_search" type="text" name="q" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
+                        {% else %}
+                        <input class="form-control" id="homepage_search" type="text" name="keywords__slug__in" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
+                        {% endif %}
+                        <span class="input-group-btn">
+                          <button class="btn btn-primary" type="submit" style="background-color:chocolate;color:white;border:1px solid white"><i class="fa fa-search"></i></button>
+                        </span>
+                    </form>
                </div>
             </div>
             <div class="row links" style="padding-top:15px;padding-bottom:5px;">
