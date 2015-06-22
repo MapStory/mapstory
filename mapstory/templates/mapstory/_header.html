@@ -24,6 +24,20 @@
                     <a href="{% url "diary" %}">{% trans "Journal" %}</a>
                 </li>
             </ul>
+            <form class="nav navbar-nav navbar-form" id="search" action="{% url "search" %}" >
+                <div class="col-md-3" style="width:100%;">
+                  <div class="input-group">
+                    {% if HAYSTACK_SEARCH %}
+                    <input id="quicksearch" type="text" class="form-control" name="q">
+                    {% else %}
+                    <input id="quicksearch" type="text" class="form-control" name="keywords__slug__in">
+                    {% endif %}
+                    <span class="input-group-btn">
+                      <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                    </span>
+                  </div>
+                </div>
+            </form>
             <ul class="nav navbar-nav navbar-right" id="navbar-avatar-login">
                 <li class="dropdown">
                     {% if user.is_authenticated %}
