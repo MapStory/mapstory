@@ -130,14 +130,103 @@ MAP_BASELAYERS = [
         }
     },
     {
-        "source": {"ptype": "gxp_osmsource", "name": "OpenStreetMap"},
-        "type": "OpenLayers.Layer.OSM",
-        "name": "mapnik",
-        "title": "OpenStreetMap",
-        "args": ["OpenStreetMap"],
-        "visibility": True,
+        "source": {"ptype": "gx_olsource"},
+        "type":"OpenLayers.Layer",
+        "args":["No background"],
+        "visibility": False,
         "fixed": True,
         "group":"background"
+    },
+    {
+        "source": {"ptype":"gx_olsource"},
+        "type":"OpenLayers.Layer.OSM",
+        "args":["OpenStreetMap"],
+        'title': 'This is the title',
+        "visibility": False,
+        "fixed": True,
+        "group":"background"
+    },
+    {
+        "source": {"ptype":"gx_olsource"},
+        "type":"OpenLayers.Layer.OSM",
+        "args":["Humanitarian OpenStreetMap", [
+            "http://a.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
+            "http://b.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
+            "http://c.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png"
+          ], {"tileOptions": {"crossOriginKeyword": None}}
+        ],
+        'title': 'This is the title',
+        "visibility": False,
+        "fixed": True,
+        "group":"background"
+    },
+    {
+        "source": {"ptype":"gx_olsource"},
+        "type":"OpenLayers.Layer.WMS",
+        "group":"background",
+        "visibility": False,
+        "fixed": True,
+        "args":[
+            "Naked Earth",
+            "http://maps.opengeo.org/geowebcache/service/wms",
+            {
+                "layers":["Wayne"],
+                "format":"image/png",
+                "tiled": True,
+                "tilesOrigin":[-20037508.34, -20037508.34]
+            },
+            {"buffer":0}
+        ]
+    },
+    {
+        'source': {
+            'ptype': 'gxp_mapquestsource',
+            'hidden': True
+        },
+        'visibility': False,
+        'name': 'naip',
+        'title': 'Satellite Imagery',
+        'group': 'background',
+        'args': ['Satellite Imagery']
+    },
+    {
+        'source': {
+            'ptype': 'gxp_mapboxsource',
+            'hidden': True
+        },
+        'visibility': False,
+        'name': 'natural-earth-1',
+        'title': 'Natural Earth',
+        'group': 'background'
+    },
+    {
+        'source': {
+            'ptype': 'gxp_mapboxsource',
+            'hidden': True
+        },
+        'visibility': False,
+        'name': 'natural-earth-2',
+        'title': 'Natural Earth 2',
+        'group': 'background'
+    },
+    {
+        'source': {
+            'ptype': 'gxp_mapboxsource',
+            'hidden': True
+        },
+        'visibility': False,
+        'name': 'geography-class',
+        'title': 'Geography Class',
+        'group': 'background'
+    },
+    {
+        'source': {
+            'ptype': 'gxp_mapboxsource',
+            'hidden': True
+        },
+        'name': 'world-light',
+        'title': 'World Light',
+        'group': 'background'
     }
 ]
 

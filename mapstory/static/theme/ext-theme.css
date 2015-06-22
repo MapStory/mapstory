@@ -1,0 +1,38 @@
+/** Fixes for bootstrap interfering with ExtJs **/
+div.x-form-item label{
+	display:inline;
+}
+.x-fieldset legend {
+font-size: 13px;
+width: auto;
+border-bottom: none;
+}
+
+/** Mapstory theming on ExtJs components **/
+/* In-map Layer Manager */
+.olMap div.gxp-layermanager-tree .x-tree-node .x-tree-selected {
+    background-color: transparent;
+}
+.olMap div.gxp-layermanager-tree .x-tree-node .x-tree-selected.x-tree-node-over {
+    background-color: #EEE !important;
+}
+.olMap div.gxp-layermanager-tree .x-tree-node a span, .x-dd-drag-ghost a span {
+    /*color: #F46817;*/
+    color: orange;
+}
+.olMap div.gxp-layermanager-tree img.x-tree-elbow-minus,
+.olMap div.gxp-layermanager-tree img.x-tree-elbow-plus,
+.olMap div.gxp-layermanager-tree img.x-tree-elbow-end-minus,
+.olMap div.gxp-layermanager-tree img.x-tree-elbow-end-plus {
+    background-image: url("/static/mapstory/img/ext_arrows.gif");
+}
+.olMap div.gxp-layermanager-tree div.x-panel-body{
+    /* color: #F46817; */
+    color: orange;
+    background: transparent;
+}
+.olMap div.gxp-layermanager-tree {
+    padding: 5px;
+    background: rgba(11, 11, 11, 0.60);
+    border-radius: 8px;
+}
