@@ -401,7 +401,7 @@
             <div class="row">
                 {% for sponsor in sponsors %}
                 <div class="col-sm-2">
-                    <img class="rdphoto" src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
+                    <img src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
                 </div>
                 {% empty %}
                 <p>No Sponsors. Add <a href="{% url 'admin:mapstory_sponsor_add' %}">some</a>
