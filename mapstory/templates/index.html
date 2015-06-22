@@ -56,6 +56,7 @@
             <div class="row" style="padding-top: 5px;">
                 <div class="input-group col-sm-6 col-sm-offset-3">
                     <form action="{% url "search" %}">
+                        <div class="input-group">
                         {% if HAYSTACK_SEARCH %}
                         <input class="form-control" id="homepage_search" type="text" name="q" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
                         {% else %}
@@ -64,6 +65,7 @@
                         <span class="input-group-btn">
                           <button class="btn btn-primary" type="submit" style="background-color:chocolate;color:white;border:1px solid white"><i class="fa fa-search"></i></button>
                         </span>
+                        </div>
                     </form>
                </div>
             </div>
