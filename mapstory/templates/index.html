@@ -203,45 +203,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-8">
-                    <div class="row" style="padding:20px">
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/initiative.jpeg' %}">
-                            <h5 class="text-center">Host a Channel</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/share.jpg' %}">
-                            <h5 class="text-center">Launch an Initiative</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/launch.jpg' %}">
-                            <h5 class="text-center">Share your Skills</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/edit.jpg' %}">
-                            <h5 class="text-center">Become an Editor</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/chapter.jpg' %}">
-                            <h5 class="text-center">Found a Chapter</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/code.jpg' %}">
-                            <h5 class="text-center">Code for MapStory</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/initiative.jpeg' %}">
-                            <h5 class="text-center">Organize an Event or Training</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/edit.jpg' %}">
-                            <h5 class="text-center">Become a Sponsor</h5>
-                        </div>
-                    </div>
+                    <img class="img-responsive" src="{% remote_content 'static_img/get-involved.jpg' %}"/>
                 </div>
                 <div class="col-sm-4">
                     <div class="csection-text">
                         <h1>Get Involved</h1>
-                        <h3>Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.
+                        <h3><a href="{% url 'getpage' 'involved' %}">Join</a> with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.
                         </h3>
                     </div>
                 </div>
