@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from geonode.urls import urlpatterns
+from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstory.views import IndexView
 from mapstory.views import DiaryDetailView
 from mapstory.views import DiaryListView
@@ -31,7 +32,7 @@ urlpatterns = patterns('',
         name='story_create'),
 
     url(r'^maps/new2$',
-        'geonode.maps.views.new_map', {'template': 'maps/mapstory_map_view.html'},
+        'geonode.maps.views.new_map', {'template': 'maps/_map_view_maploom.html'},
         name='map-new2'),
 
     url(r'^maps/(?P<mapid>\d+)/view2$',
@@ -58,6 +59,8 @@ urlpatterns = patterns('',
 
 
 ) + urlpatterns
+
+urlpatterns += maploom_urls
 
 if settings.DEBUG:
     urlpatterns = urlpatterns + patterns('',

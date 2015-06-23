@@ -164,3 +164,6 @@
 - name: geogig global config
   copy: src=files/geogigconfig dest=/var/www/.geogitconfig
   tags: [setup]
+
+- file: path=/tmp/mapstory state=absent
+  tags: [setup]

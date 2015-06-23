@@ -9,3 +9,4 @@ textile
 # dev dependencies
 dj.paste
 PasteDeploy
+django-maploom==1.2.1
