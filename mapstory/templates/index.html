@@ -341,16 +341,19 @@
         <div class="container">
             <div class="row">
                 <h1 class="text-center">Community Initiatives</h1>
+                <h3 class="text-center">Our Community Initiative leads are taking on huge data collection tasks, like mapping the history of human settlement and country borders. Click on one below, and start contributing...
+                </h3>
             </div>
             <hr/>
             <div class="row">
                 {% for community in communities %}
                 <div class="col-sm-2">
-                    <img class="rdphoto" src="{{ community.url }}" alt="{{ community.name }} - {{ community.description }}">
+                    <a href="{{ community.link }}">
+                        <img class="rdphoto" src="{{ community.url }}" alt="{{ community.name }} - {{ community.description }}">
+                    </a>
                 </div>
                 {% empty %}
-                <!-- TODO: Update this -->
-                <p>No communities...</p>
+                <p>No Community Initiatives. Add <a href="{% url 'admin:mapstory_community_add' %}">some</a></p>
                 {% endfor %}
             </div>
         </div>
@@ -377,7 +380,7 @@
                     </a>
                 </div>
                 {% empty %}
-                <p>No Sponsors. Add <a href="{% url 'admin:mapstory_sponsor_add' %}">some</a>
+                <p>No Sponsors. Add <a href="{% url 'admin:mapstory_sponsor_add' %}">some</a></p>
                 {% endfor %}
             </div>
         </div>

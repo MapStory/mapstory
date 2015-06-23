@@ -21,6 +21,7 @@ from mapstory.models import GetPage
 from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
 from mapstory.models import Leader
+from mapstory.models import get_communities
 from geonode.base.models import Region
 from geonode.geoserver.helpers import ogc_server_settings
 from urlparse import urlsplit
@@ -36,6 +37,7 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)
         ctx['sponsors'] = get_sponsors()
+        ctx['communities'] = get_communities()
         news_items = NewsItem.objects.filter(date__lte=datetime.datetime.now())
         ctx['news_items'] = news_items[:3]
         ctx['images'] = get_images()
