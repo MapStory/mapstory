@@ -41,6 +41,9 @@ class IndexView(TemplateView):
         ctx['images'] = get_images()
         # TODO: update this for sections
         ctx['featured_items'] = None
+        # for now, limit to max of 8.
+        ctx['diary_entries'] = DiaryEntry.objects.filter(publish=True,show_on_main=True)[:8]
+        
         return ctx
 
 
