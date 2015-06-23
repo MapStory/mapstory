@@ -16,6 +16,7 @@
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/modernizr/modernizr.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/isotope/jquery.isotope.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/js/angular.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/index.js"></script>
 <script type="text/javascript">
     /* Script for keywords autocomplete */
@@ -37,11 +38,14 @@
     $(function() {
         $('#homepage_search').attr('placeholder','Explore MapStories and StoryLayers');
     });
+    HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
+    HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
+    CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
 </script>
 {% endblock %}
 
 {% block middle %}
-
+<div ng-app="homepage"><div ng-controller="search_controller">
     <section id="topParallax">
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }}); height: 600px;"></div>
     </section>
@@ -109,39 +113,36 @@
         </div>
     </section>
 
-    <!-- TODO: Implement the functionality of this section: This requires the new categories to be implemented. -->
+    <!-- TODO: New categories must be implemented or the button queries will just return nothing -->
+    {% verbatim %}
     <section class="slice">
         <div class="container">
-            <nav id="filter" class="col-md-12 text-center" style="text-align:center">
+            <nav id="filter" class="col-md-12 text-center" style="left: -20px;">
                 <ul class="nav nav-tabs" >
-                    <!-- Crisis, Geopolitics, Science & Industry, Human Settlement, Culture & Ideas, Nature & Environment, Health, Biology -->
-                    <li><a href="" class="btn btn-filter btn-sm sectionTab">All MapStories</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Crisis</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Geopolitics</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Science & Industry</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Human Settlement</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Culture & Ideas</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Nature & Environment</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Health</a></li>
-                    <li><a href="" class="btn btn-filter btn-sm sectionTab">Biology</a></li>
+                    <!-- NOTE: The specific category names for querying may need to be updated -->
+                    <li><a ng-click="query_category();" class="btn btn-filter btn-sm sectionTab">All MapStories</a></li>
+                    <li><a ng-click="query_category('crisis');" class="btn btn-filter btn-sm sectionTab">Crisis</a></li>
+                    <li><a ng-click="query_category('geopolitics');" class="btn btn-filter btn-sm sectionTab">Geopolitics</a></li>
+                    <li><a ng-click="query_category('science');" class="btn btn-filter btn-sm sectionTab">Science & Industry</a></li>
+                    <li><a ng-click="query_category('settlement');" class="btn btn-filter btn-sm sectionTab">Human Settlement</a></li>
+                    <li><a ng-click="query_category('culture');" class="btn btn-filter btn-sm sectionTab">Culture & Ideas</a></li>
+                    <li><a ng-click="query_category('environment');" class="btn btn-filter btn-sm sectionTab">Nature & Environment</a></li>
+                    <li><a ng-click="query_category('health');" class="btn btn-filter btn-sm sectionTab">Health</a></li>
+                    <li><a ng-click="query_category('biology');" class="btn btn-filter btn-sm sectionTab">Biology</a></li>
                 </ul>
             </nav>
             <div class="row">
-                <!-- TODO: Might need to fix up formatting later -->
-                <div class="col-sm-8">
-                    {% for item in featured_items %}
-                    <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}"/></a>
+                <div class="col-md-3" ng-repeat="item in results|limitTo:4" style="padding-top:10px; right: -5px;">
+                    <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
                     <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
-                    <!-- TODO: What should read more do? -->
-                    <h5 class="abstract">{{ item.abstract }}<a href="#"> <i>...read more</i></a></h5>
+                    <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></h5>
                     <h4><span class="owner">{{ item.owner.username}}</span></h4>
-                    {% empty %}
-                    <p>No Featured Items...</p>
-                    {% endfor %}
                 </div>
+                <p ng-hide="results.length">No Featured Items in this category ...</p>
             </div>
         </div>
     </section>
+    {% endverbatim %}
 
     <section class="parallax">
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
@@ -382,5 +383,5 @@
     <section class="parallax" style="margin-bottom:-40px;">
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
     </section>
-
+</div></div>
 {% endblock %}
