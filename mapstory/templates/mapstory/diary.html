@@ -50,7 +50,7 @@
                 <div class="col-lg-10 col-lg-offset-2  col-xs-12 blog-header">
                     <h5 class="blog-title">{{ entry.date }}</h5>
                     <h2 class="blog-title"><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h2>
-                    <h5 class="blog-title">{% avatar user 30 %} {{ entry.author }}</h5>
+                    <h5 class="blog-title">{% avatar entry.author 30 %} {{ entry.author }}</h5>
                 </div>
             </div>
             <div class="row">
