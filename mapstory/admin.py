@@ -2,6 +2,7 @@ from django.contrib import admin
 from django import forms
 
 from mapstory.models import Sponsor
+from mapstory.models import Community
 from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
 from mapstory.models import GetPage
@@ -51,6 +52,13 @@ class SponsorAdmin(admin.ModelAdmin):
     list_editable = 'name', 'link', 'icon', 'description', 'order'
     list_display_links = 'image_tag',
 
+class CommunityAdmin(admin.ModelAdmin):
+    model = Community
+    exclude = 'stamp',
+    list_display = 'name', 'link', 'icon', 'image_tag', 'description', 'order'
+    list_editable = 'name', 'link', 'icon', 'description', 'order'
+    list_display_links = 'image_tag',
+
 
 class NewsItemForm(forms.ModelForm):
     date = forms.DateTimeField(
@@ -85,6 +93,7 @@ class ParallaxImageAdmin(admin.ModelAdmin):
 admin.site.register(GetPage, GetPageAdmin)
 admin.site.register(GetPageContent, GetPageContentAdmin)
 admin.site.register(Sponsor, SponsorAdmin)
+admin.site.register(Community, CommunityAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
 admin.site.register(DiaryEntry, DiaryEntryAdmin)
 admin.site.register(Leader, LeaderAdmin)
