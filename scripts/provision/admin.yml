@@ -162,7 +162,7 @@
   tags: [config, geoserver]
 
 - name: geogig global config
-  copy: src=files/geogigconfig dest=/var/www/.geogitconfig
+  copy: src=files/geogigconfig dest=/var/www/.geogigconfig
   tags: [setup]
 
 - file: path=/tmp/mapstory state=absent
