@@ -374,9 +374,8 @@
             <div class="row">
                 {% for sponsor in sponsors %}
                 <div class="col-sm-2">
-                    {# if put quotes around the href value, two sets of quotes render, click fails. why no quotes here only? #}
-                    <a href={{ sponsor.link }}>
-                        <img src={{ sponsor.url }} alt="{{ sponsor.name }} - {{ sponsor.description }}">
+                    <a href="{{ sponsor.link }}">
+                        <img src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
                     </a>
                 </div>
                 {% empty %}
