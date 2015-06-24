@@ -50,7 +50,7 @@
 
                         {% if entry.external_link %}
 
-                            <a href="{{ entry.external_link }}">More</a>
+                            <a href="{{ entry.external_link }}">{{entry.external_link_title|default:"More"}}</a>
 
                         {% endif %}
 

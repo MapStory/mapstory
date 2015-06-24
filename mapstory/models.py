@@ -120,6 +120,7 @@ class GetPageContent(ContentMixin):
     example_map = models.ForeignKey(Map, null=True, blank=True)
     main_link = models.URLField(blank=False)
     external_link = models.URLField(blank=True)
+    external_link_title = models.CharField(max_length=64, blank=True, null=True)
     page = models.ForeignKey(GetPage, related_name='contents')
     order = models.IntegerField(blank=True, default=0)
 
