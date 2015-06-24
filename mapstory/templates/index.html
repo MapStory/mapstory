@@ -252,49 +252,19 @@
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
     </section>
 
-{% for item in diary_entries %}
-<!— item.title and item.author —>
-<!— {{ item.title }} {{ item.author }} —>
-{% endfor %}
-
-                
     <section class="slice" id="thinkers">
         <div class="container">
             <div class="row">
                 <div class="col-sm-8">
                     <div class="row" style="padding:20px">
+                        {% for item in diary_entries %}
                         <div class="col-sm-3 photobox">
                             <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
-                            <h5 class="text-center">Mafalda Hopkirk</h5>
+                            <a href="{% url "diary-detail" item.pk %}"><h5 class="text-center">{{ item.author }} / {{ item.title }}</h5>
                         </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
-                            <h5 class="text-center">Lee Jordan</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
-                            <h5 class="text-center">Millicent Bullstrode</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
-                            <h5 class="text-center">Penelope Clearwater</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
-                            <h5 class="text-center">Nymphadora Tonks</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
-                            <h5 class="text-center">Remus Lupin</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
-                            <h5 class="text-center">Seamus Finnigan</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
-                            <h5 class="text-center">Xenophilius Lovegood</h5>
-                        </div>
+                        {% empty %}
+                        <p>No Featured Thinkers and Thoughts...</p>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="col-sm-4">
