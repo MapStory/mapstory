@@ -1,0 +1,19 @@
+{% include "mapstory/ext_header.html" %}
+{% include "mapstory/app_header.html" %}
+{% include "mapstory/geo_header.html" %}
+
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}theme/ext-theme.css" media="screen" />
+<script type="text/javascript">
+var app;
+Ext.onReady(function() {
+{% autoescape off %}
+    GeoExt.Lang.set("{{ LANGUAGE_CODE }}");
+    var config = Ext.apply({{ config }}, {
+    portalConfig: {
+        renderTo: "embedded_map"
+    }
+    });
+app = new mapstory.Viewer(config);
+{% endautoescape %}
+});
+</script>
