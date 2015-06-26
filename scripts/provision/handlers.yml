@@ -7,17 +7,14 @@
   sudo_user: root
 
 - name: restart django
-  supervisorctl: name=gunicorn-django state=restarted
+  supervisorctl: name=gunicorn-django state=started
   sudo: yes
   sudo_user: root
   notify: check django running
 
 - name: restart geoserver
-  supervisorctl: name=geoserver state=restarted
+  service: name=tomcat7 state=restarted
   sudo: yes
-  sudo_user: root
-  # need to ensure jetty runner is fetched before attempting this
-  ignore_errors: True
 
 - name: reload postgres
   service: name=postgresql state=reloaded
