@@ -14,11 +14,11 @@
 {% block body_outer %}
     {% include 'search/_header.html' %}
     <div ng-show="get_url() == '/api/base/' || get_url() == '/api/featured/'">
-        <div class="col-lg-3">
+        <div class="col-lg-3" style="border-right:1px solid darkgray">
             {% include 'search/_whats_hot_content.html' %}
             {% include 'search/_refine_content.html' %}
         </div>
-        <div class="col-lg-9" style="border-left:1px solid darkgray">
+        <div class="col-lg-9">
             <nav class="filter">
                 <div class="input-group search-bar">
                 <input name="text_search_input" id="text_search_input" ng-model="text_query" type="text"
@@ -38,11 +38,11 @@
         </div>
     </div>
     <div ng-show="get_url() == '/api/profiles/' || get_url() == '/api/groups/'">
-        <div class="col-lg-3">
+        <div class="col-lg-3" style="border-right:1px solid darkgray">
             {% include 'search/_whats_hot_users.html' %}
             {% include 'search/_refine_users.html' %}
         </div>
-        <div class="col-lg-9" style="border-left:1px solid darkgray">
+        <div class="col-lg-9">
             <nav class="filter">
                 <div class="input-group search-bar">
                 <input name="text_search_input" id="text_search_input" ng-model="text_query" type="text"
