@@ -20,7 +20,7 @@
                             <!-- NOTE: We want to change these categories to appeal to the layman; currently they're geo-expert terms -->
                             <li ng-repeat="category in categories">
                                 <a ng-init="toggle=true" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle; active=category.id" ng-class="{active: (!toggle && (active == category.id))}">{{ category.gn_description}}
-                                    <span class="badge pull-right">{{ category.count}}</span>
+                                    <span ng-show="!toggle" class="pull-right"><i class="fa fa-check"></i></span>
                                 </a>
                             </li>
                             {% endverbatim %}
