@@ -48,8 +48,7 @@
     - python-support
     - python-urlgrabber
     - python-virtualenv
-# we'll use jetty instead
-#    - tomcat7
+    - tomcat7
     - transifex-client
     - unzip
     - virtualenvwrapper
@@ -100,6 +99,9 @@
   notify: [reload supervisor, restart django]
   tags: [config, gunicorn]
 
+- name: supervisor-jetty
+  file: path=/etc/supervisor/conf.d/supervisor-jetty.conf state=absent
+
 - name: nginx-conf
   template: src=files/nginx.conf dest=/etc/nginx/sites-available/mapstory
   notify: restart nginx
@@ -128,12 +130,32 @@
   file: path=/var/lib/geoserver/geoserver state=directory
   tags: [geoserver]
 
+- name: geogig global config
+  copy: src=files/geogigconfig dest=/usr/share/tomcat7/.geogigconfig mode=0775 owner=tomcat7 group=tomcat7
+  tags: [setup]
+
 - name: fetch geoserver
-  shell: wget -SN http://echobase.boundlessgeo.com/~ischneider/mapstory-assets/geoserver.war chdir=/home/mapstory
+  shell: wget -SN https://s3.amazonaws.com/garnertb-share/geoserver.war chdir=/home/mapstory
   tags: [geoserver]
 
-- name: unpack geoserver
-  shell: "unzip -o /home/mapstory/geoserver.war META-INF/* WEB-INF/* index.html -d /var/lib/geoserver/geoserver"
+- name: db client settings
+  template: src=files/geoserver.xml dest=/etc/tomcat7/Catalina/localhost/geoserver.xml mode=0700 owner=tomcat7 group=tomcat7
+  tags: [geoserver]
+
+- name: copy geoserver.war to tomcat webapps
+  shell: cp /home/mapstory/geoserver.war /var/lib/tomcat7/webapps/geoserver.war
+  notify: restart geoserver
+  tags: [geoserver]
+
+- name: restart geoserver
+  service: name=tomcat7 state=restarted
+
+- name: copy geoserver web.xml
+  template: src=files/web.xml dest=/var/lib/tomcat7/webapps/geoserver/WEB-INF/web.xml owner=tomcat7 group=tomcat7
+  tags: [geoserver]
+
+- name: geogig global config
+  copy: src=files/geogigconfig dest=/var/lib/geoserver/geoserver/.geogigconfig mode=0775 owner=www-data group=www-data
   tags: [geoserver]
 
 - name: unpack geoserver datadir
@@ -149,18 +171,8 @@
   tags: [geoserver]
 
 - name: create geogit data directory
-  file: path=/var/lib/geoserver/data/geogit state=directory mode=0775 owner=www-data group=www-data
+  file: path=/var/lib/geoserver/data/geogig state=directory mode=0775 owner=www-data group=www-data
   tags: [setup]
 
-- name: jetty app permissions
-  file: path={{mapstory_geonode}}/scripts/misc/jetty-runner mode=650 owner=mapstory group=www-data
-  tags: [geoserver]
-
-- name: supervisor-jetty
-  template: src=files/supervisor-jetty.conf dest=/etc/supervisor/conf.d
-  notify: [reload supervisor, restart geoserver]
-  tags: [config, geoserver]
-
-- name: geogig global config
-  copy: src=files/geogigconfig dest=/var/www/.geogitconfig
+- file: path=/tmp/mapstory state=absent
   tags: [setup]

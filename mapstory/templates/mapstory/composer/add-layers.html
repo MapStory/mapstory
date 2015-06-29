@@ -1,16 +1,70 @@
 {%verbatim%}
 <form role="form" ng-submit="addLayer(layerName, asVector)">
-    <div class="btn-group form-group">
-        <button ng-repeat='src in servers' type="button" ng-model="server.active" class="btn btn-default" btn-radio="src">{{ src.name }}</button>
+    <div class="row">
+        <div class="col-sm-12">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#NewSearch" data-toggle="tab" style="padding:10px"><i class="text-primary glyphicon glyphicon-search"></i>&nbsp;Add existing</a></li>
+                <li class=""><a href="#NewUpload" data-toggle="tab" style="padding:10px"><i class="text-primary glyphicon glyphicon-upload"></i>&nbps; Upload new</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="NewSearch" style="max-height:450px; overflow-y:scroll; overflow-x:hidden">
+                    <div class="col-sm-12" style="padding:10px">
+                        <div class="box">
+
+                            <div class="input-group">
+                                <input ng-model="layerName" type="text" class="form-control" id="typename" placeholder="Find storylayers...">
+                                <span class="input-group-addon"> <button type="submit" ng-disabled="!layerName" class="btn-search"><i class="glyphicon glyphicon-search"></i></button></span>
+                            </div>
+
+
+                            <div class="checkbox">
+                                <label for="vector"><input ng-model="asVector" type="checkbox" id="vector">As vector</label>
+                            </div>
+
+                            <span ng-if="loading">Loading...</span>
+
+                            <br>
+                             <button ng-repeat='src in servers' type="button" ng-model="server.active" class="btn btn-server btn-default" btn-radio="src">
+                                 <div class="box-content box-statistic">
+                                    <h3 class="title text-primary">{{ src.name }}</h3>
+                                    <small>{{ src.absolutePath }}</small>
+                                    <div class="text-primary icon-star align-right"></div>
+                                </div>
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="NewUpload">
+                    <div class="col-sm-12" style="padding:10px">
+                        <div class="box">
+                            <a data-toggle="modal" href="#UploadCSVModal">
+                                <div class="box-content box-statistic">
+                                    <h3 class="title text-primary">Upload CSV</h3>
+                                    <small>Excel, tabular or text-based files</small>
+                                    <div class="text-primary icon-list-ol align-right"></div>
+                                </div>
+                            </a>
+                            <a data-toggle="modal" href="#UploadSHPModal">
+                                <div class="box-content box-statistic">
+                                    <h3 class="title text-primary">Upload Shapefile</h3>
+                                    <small>GIS files</small>
+                                    <div class="text-primary icon-trello align-right"></div>
+                                </div>
+                            </a>
+                            <a href="http://wiki.mapstory.org/wiki/Get_Skills">
+                                <div class="box-content box-statistic">
+                                    <h3 class="title text-primary">Upload User Guide</h3>
+                                    <small>User manual</small>
+                                    <div class="text-primary icon-info-sign align-right"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="typename">Layer Name</label>
-        <input ng-model="layerName" type="text" class="form-control" id="typename" placeholder="Layer name in mapstory">
-    </div>
-    <div class="checkbox">
-        <label for="vector"><input ng-model="asVector" type="checkbox" id="vector">As vector</label>
-    </div>
-    <button type="submit" ng-disabled="!layerName" class="btn btn-primary">Add</button>
-    <span ng-if="loading">Loading...</span>
+
 </form>
 {% endverbatim%}

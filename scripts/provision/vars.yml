@@ -3,6 +3,9 @@ pgpass: foobar
 mapstory_branch: mapstory-v2
 top_project: /srv/git/mapstory
 mapstory_geonode: '{{ top_project }}/mapstory-geonode'
+geoserver_data: /var/lib/geoserver/data
+geoserver_proxy_url: ''
+geoserver_enable_gzip: false
 gspass: geoserverer
 media_root: /var/lib/mapstory/media/
 django_su_pass: admin

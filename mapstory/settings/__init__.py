@@ -67,8 +67,9 @@ DATABASES = {
 INSTALLED_APPS += (
     'mapstory',
     'django.contrib.webdesign',
-    'geonode.contrib.geogit',
-    'icon_commons'
+    'geonode.contrib.geogig',
+    'icon_commons',
+    'maploom'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS += (
@@ -88,14 +89,14 @@ OGC_SERVER = {
         'MAPFISH_PRINT_ENABLED' : True,
         'PRINT_NG_ENABLED' : True,
         'GEONODE_SECURITY_ENABLED' : True,
-        'GEOGIT_ENABLED' : True,
+        'GEOGIG_ENABLED' : True,
         'WMST_ENABLED' : False,
         'BACKEND_WRITE_ENABLED': True,
         'WPS_ENABLED' : True,
         # Set to name of database in DATABASES dictionary to enable
         'DATASTORE': '', #'datastore',
         'TIMEOUT': 10,  # number of seconds to allow for HTTP requests,
-        'GEOGIT_DATASTORE_DIR': '/var/lib/geoserver/data/geogit'
+        'GEOGIG_DATASTORE_DIR': '/var/lib/geoserver/data/geogig'
     }
 }
 
@@ -111,8 +112,6 @@ DATABASE_PASSWORD = None
 # To use local, ensure that the mapstory-assets repository is checked out in
 # this project's parent (i.e. ../mapstory-assets)
 LOCAL_CONTENT = False
-
-GEOGIT_DATASTORE_NAME = 'geogit'
 
 if os.path.exists('mapstory/settings/local_settings.py'):
     exec open('mapstory/settings/local_settings.py') in globals()
@@ -130,14 +129,103 @@ MAP_BASELAYERS = [
         }
     },
     {
-        "source": {"ptype": "gxp_osmsource", "name": "OpenStreetMap"},
-        "type": "OpenLayers.Layer.OSM",
-        "name": "mapnik",
-        "title": "OpenStreetMap",
-        "args": ["OpenStreetMap"],
-        "visibility": True,
+        "source": {"ptype": "gx_olsource"},
+        "type":"OpenLayers.Layer",
+        "args":["No background"],
+        "visibility": False,
         "fixed": True,
         "group":"background"
+    },
+    {
+        "source": {"ptype":"gx_olsource"},
+        "type":"OpenLayers.Layer.OSM",
+        "args":["OpenStreetMap"],
+        'title': 'This is the title',
+        "visibility": False,
+        "fixed": True,
+        "group":"background"
+    },
+    {
+        "source": {"ptype":"gx_olsource"},
+        "type":"OpenLayers.Layer.OSM",
+        "args":["Humanitarian OpenStreetMap", [
+            "http://a.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
+            "http://b.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
+            "http://c.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png"
+          ], {"tileOptions": {"crossOriginKeyword": None}}
+        ],
+        'title': 'This is the title',
+        "visibility": False,
+        "fixed": True,
+        "group":"background"
+    },
+    {
+        "source": {"ptype":"gx_olsource"},
+        "type":"OpenLayers.Layer.WMS",
+        "group":"background",
+        "visibility": False,
+        "fixed": True,
+        "args":[
+            "Naked Earth",
+            "http://maps.opengeo.org/geowebcache/service/wms",
+            {
+                "layers":["Wayne"],
+                "format":"image/png",
+                "tiled": True,
+                "tilesOrigin":[-20037508.34, -20037508.34]
+            },
+            {"buffer":0}
+        ]
+    },
+    {
+        'source': {
+            'ptype': 'gxp_mapquestsource',
+            'hidden': True
+        },
+        'visibility': False,
+        'name': 'naip',
+        'title': 'Satellite Imagery',
+        'group': 'background',
+        'args': ['Satellite Imagery']
+    },
+    {
+        'source': {
+            'ptype': 'gxp_mapboxsource',
+            'hidden': True
+        },
+        'visibility': False,
+        'name': 'natural-earth-1',
+        'title': 'Natural Earth',
+        'group': 'background'
+    },
+    {
+        'source': {
+            'ptype': 'gxp_mapboxsource',
+            'hidden': True
+        },
+        'visibility': False,
+        'name': 'natural-earth-2',
+        'title': 'Natural Earth 2',
+        'group': 'background'
+    },
+    {
+        'source': {
+            'ptype': 'gxp_mapboxsource',
+            'hidden': True
+        },
+        'visibility': False,
+        'name': 'geography-class',
+        'title': 'Geography Class',
+        'group': 'background'
+    },
+    {
+        'source': {
+            'ptype': 'gxp_mapboxsource',
+            'hidden': True
+        },
+        'name': 'world-light',
+        'title': 'World Light',
+        'group': 'background'
     }
 ]
 
@@ -170,10 +258,10 @@ if DATABASE_PASSWORD:
         'BACKEND': 'geonode.importer',
         'OPTIONS': {
             'TIME_ENABLED': True,
-            'GEOGIT_ENABLED': True,
+            'GEOGIG_ENABLED': True,
         }
     }
 
     USE_BIG_DATE = True
 
-    GEOGIT_DATASTORE_NAME = 'geogit'
+    GEOGIG_DATASTORE_NAME = 'geogig'

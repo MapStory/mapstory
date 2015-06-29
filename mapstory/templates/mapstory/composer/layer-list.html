@@ -1,18 +1,128 @@
 {%verbatim%}
-<div class="row" ng-repeat="lyr in layers">
-    <div class="col-lg-8">{{lyr.get('title')}}</div>
-    <div class="col-lg-4">
-        <button class="pull-right btn btn-xs" ng-click="removeLayer(lyr)"><i class="glyphicon glyphicon-remove-circle"></i></button>
-        <button class="pull-right btn btn-xs" ng-click="modifyLayer(lyr)"><i class="glyphicon glyphicon-cog"></i></button>
-    </div>
-</div>
-<div data-dropdown style="position:relative">
-    <label>Background:</label>
-    <button type="button" class="dropdown-toggle btn">
-        {{baseLayer||'Select Base Layer'}}<span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu scrollable-combo {{css}}" role="menu">
-        <li ng-repeat="baseLayer in baseLayers" ng-click="onChange(baseLayer)">{{baseLayer.title}}</li>
-    </ul>
-</div>
+
+<accordion close-others="true">
+
+    <accordion-group is-open="status.open">
+        <accordion-heading>
+            Add a StoryLayer <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+        </accordion-heading>
+        <add-layers map="map"></add-layers>
+    </accordion-group>
+
+    <accordion-group ng-repeat="layer in layers" is-open="accordianOpen" ng-init="accordianOpen = $first">
+        <accordion-heading>
+            {{layer.get('name')}}
+            <div class="pull-right">
+                <button type="button" data-toggle="button" ng-click="removeLayer(layer)" class="btn btn-xs btn-default">
+                    <i class="glyphicon glyphicon-eye-open"></i>
+                </button>
+                <button type="button" data-toggle="button" class="btn btn-xs btn-default active">
+                   Edit data
+                </button>
+            </div>
+        </accordion-heading>
+        <!-- to reduce watchers, add ng-if=accordianOpen>
+        <style-editor class="minheight" layer="layer" on-change="styleChanged"></style-editor-->
+
+        <div class="row layer-ctrls">
+            <div class="col-sm-12" style="padding:10px">
+                <div>
+                    <div class="col-sm-4">
+                        <div class="box-quick-link muted-background">
+                            <a href="#">
+                                <div class="header">
+                                    <div class="glyphicon glyphicon-plus">
+
+                                    </div>
+                                </div>
+                                <div class="content">Add feature</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="box-quick-link muted-background"><a href="#">
+                            <div class="header">
+                                <div class="glyphicon glyphicon-tasks"></div>
+                            </div>
+                            <div class=content>View table</div>
+                        </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="box-quick-link muted-background"><a href="#" >
+                            <div class="header">
+                                <div class="glyphicon glyphicon-calendar"></div>
+                            </div>
+                            <div class=content>Time info</div>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="col-sm-4">
+                        <div class="box-quick-link muted-background"><a href="#">
+                            <div class="header">
+                                <div class="glyphicon glyphicon-pencil"></div>
+                            </div>
+                            <div class=content>Edit Style</div>
+                        </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="box-quick-link muted-background"><a href="#">
+                            <div class="header">
+                                <div class="glyphicon glyphicon-time"></div>
+                            </div>
+                            <div class=content>Show History</div>
+                        </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="box-quick-link muted-background"><a href="#">
+                            <div class="header">
+                                <div class="glyphicon glyphicon-tag"></div>
+                            </div>
+                            <div class=content>Edit Metadata</div>
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="col-sm-4">
+                        <div class="box-quick-link muted-background">
+                            <a href="#">
+                                <div class="header">
+                                    <div class="glyphicon glyphicon-comment"></div>
+                                </div>
+                                <div class=content>Edit Attrib</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="box-quick-link blue-background">
+                            <a href="#">
+                                <div class="header">
+                                    <div class="glyphicon glyphicon-download"></div>
+                                </div>
+                                <div class="content">Download</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="box-quick-link red-background">
+                            <a href="#" ng-click="removeLayer(layer)">
+                                <div class="header">
+                                    <div class="glyphicon glyphicon-trash"></div>
+                                </div>
+                                <div class="content">Delete Layer</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </accordion-group>
+
+</accordion>
 {%endverbatim%}
