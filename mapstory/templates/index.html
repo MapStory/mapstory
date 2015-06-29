@@ -5,6 +5,7 @@
 {% load base_tags %}
 {% load mapstory_tags %}
 {% load cache %}
+{% load avatar_tags %}
 
 {% block extra_head %}
 <!--<link href="{{ STATIC_URL }}vendor/isotope/css/style.css" rel="stylesheet" />-->
@@ -259,8 +260,14 @@
                     <div class="row" style="padding:20px">
                         {% for item in diary_entries %}
                         <div class="col-sm-3 photobox">
-                            <img class="rdphoto" src="{% remote_content 'static_img/avatar.jpg' %}">
-                            <a href="{% url "diary-detail" item.pk %}"><h5 class="text-center">{{ item.author }} / {{ item.title }}</h5>
+                            <a href="{% url "diary-detail" item.pk %}">
+                                <img class="img-circle" src="{% avatar_url item.author 150 %}" width="150" height="150"/>
+                                <h5 class="text-center">
+                                    {{ item.title|truncatechars:25 }}
+                                    <br/>
+                                    {% include "people/_profile_name_display.html" with profile=item.author only %}
+                                </h5>
+                            </a>
                         </div>
                         {% empty %}
                         <p>No Featured Thinkers and Thoughts...</p>
