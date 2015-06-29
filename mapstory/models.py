@@ -6,7 +6,7 @@ from geonode.maps.models import Map
 import hashlib
 import textile
 from django.template.defaulttags import register
-
+import os
 
 def _stamp(data):
     s = hashlib.sha1()
@@ -123,6 +123,12 @@ class GetPageContent(ContentMixin):
     external_link_title = models.CharField(max_length=64, blank=True, null=True)
     page = models.ForeignKey(GetPage, related_name='contents')
     order = models.IntegerField(blank=True, default=0)
+    video = models.FileField(upload_to='getpage', blank=True)
+    video_embed_link = models.URLField(blank=True)
+
+    def extension(self):
+        name, extension = os.path.splitext(self.video.name)
+        return extension[1:]
 
     class Meta:
         ordering = ['order']
