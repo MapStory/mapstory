@@ -1,6 +1,14 @@
 {%verbatim%}
 
 <accordion close-others="true">
+
+    <accordion-group is-open="status.open">
+        <accordion-heading>
+            Add a StoryLayer <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+        </accordion-heading>
+        <add-layers map="map"></add-layers>
+    </accordion-group>
+
     <accordion-group ng-repeat="layer in layers" is-open="accordianOpen" ng-init="accordianOpen = $first">
         <accordion-heading>
             {{layer.get('name')}}
@@ -9,7 +17,7 @@
                     <i class="glyphicon glyphicon-eye-open"></i>
                 </button>
                 <button type="button" data-toggle="button" class="btn btn-xs btn-default active">
-                    <i class="glyphicon glyphicon-pencil"></i>
+                   Edit data
                 </button>
             </div>
         </accordion-heading>
@@ -114,13 +122,6 @@
             </div>
         </div>
 
-    </accordion-group>
-
-    <accordion-group is-open="status.open">
-        <accordion-heading>
-            New StoryLayer <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-        </accordion-heading>
-        <add-layers map="map"></add-layers>
     </accordion-group>
 
 </accordion>
