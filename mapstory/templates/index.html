@@ -264,7 +264,7 @@
                             <a href="{% url "diary-detail" item.pk %}">
                                 <img class="img-circle" src="{% avatar_url item.author 150 %}" width="150" height="150"/>
                                 <h5 class="text-center">
-                                    {{ item.title|truncatechars:25 }}
+                                    <strong>{{ item.title|truncatechars:48 }}</strong>
                                     <br/>
                                     {% include "people/_profile_name_display.html" with profile=item.author only %}
                                 </h5>
