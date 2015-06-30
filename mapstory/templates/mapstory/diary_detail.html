@@ -11,7 +11,13 @@
 <div class="container" id="diary-banner">
     <div class="row text-left">
         <h1>{{ entry.title }}</h1>
-        <h3>{% avatar user 30 %} {{ entry.author }} on {{ entry.date }}</h3>
+        <h3>
+            <a href="{% url "profile_detail" entry.author %}">
+                {% avatar entry.author 30 %}
+                {% include "people/_profile_name_display.html" with profile=entry.author only %}
+            </a>
+            on {{ entry.date }}
+        </h3>
     </div>
 </div>
 

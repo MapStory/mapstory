@@ -41,6 +41,9 @@ class IndexView(TemplateView):
         news_items = NewsItem.objects.filter(date__lte=datetime.datetime.now())
         ctx['news_items'] = news_items[:3]
         ctx['images'] = get_images()
+        # for now, limit to max of 8.
+        ctx['diary_entries'] = DiaryEntry.objects.filter(publish=True,show_on_main=True)[:8]
+
         return ctx
 
 
