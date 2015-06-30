@@ -16,14 +16,23 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <ul id="categories" class="nav">
+                            {% comment MapStory categories not implemented yet - comment out GeoNode categories and show MapStory placeholders(same set as main page). %}
                             {% verbatim %}
-                            <!-- NOTE: We want to change these categories to appeal to the layman; currently they're geo-expert terms -->
                             <li ng-repeat="category in categories">
                                 <a ng-init="toggle=true" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle; active=category.id" ng-class="{active: (!toggle && (active == category.id))}">{{ category.gn_description}}
                                     <span ng-show="!toggle" class="pull-right"><i class="fa fa-check"></i></span>
-                                </a>
+                                </a>                                
                             </li>
                             {% endverbatim %}
+                            {% endcomment %}
+                            <li><a>Crisis</a></li>
+                            <li><a>Geopolitics</a></li>
+                            <li><a>Science & Industry</a></li>
+                            <li><a>Human Settlement</a></li>
+                            <li><a>Culture & Ideas</a></li>
+                            <li><a>Nature & Environment</a></li>
+                            <li><a>Health</a></li>
+                            <li><a>Biography</span></a></li>                       
                         </ul>
                     </div>
                 </div>
