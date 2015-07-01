@@ -9,4 +9,4 @@ textile
 # dev dependencies
 dj.paste
 PasteDeploy
-django-maploom==1.2.1
+https://github.com/MapStory/django-maploom/archive/mapstory.zip
