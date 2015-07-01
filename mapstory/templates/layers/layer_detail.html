@@ -22,17 +22,6 @@
 {% block body_class %}layers{% endblock %}
 
 {% block body_outer %}
-<!--
-      <article id="rate" class="tab-pane">
-        {% if request.user.is_authenticated %}
-        <h4>{% trans "Rate this layer" %}</h4>
-        {% user_rating request.user resource "layer" as user_layer_rating %}
-        <div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
-        {% endif %}        
-      </article>
--->
-
-
         <!-- dashboard -->
         <section class="slice" id="dashboard">
           <div class="container">
@@ -170,6 +159,15 @@
                       <i class="fa fa-star-o"></i>
                       <i class="fa fa-star-o"></i>
                       <i class="fa fa-star-o"></i>
+                      <!--
+      <article id="rate" class="tab-pane">
+        {% if request.user.is_authenticated %}
+        <h4>{% trans "Rate this layer" %}</h4>
+        {% user_rating request.user resource "layer" as user_layer_rating %}
+        <div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
+        {% endif %}        
+      </article>
+-->
                     </h3>
                   </div>
                   <div class="col-sm-3" style="border-left:1px solid gainsboro">
