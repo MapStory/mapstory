@@ -224,8 +224,8 @@
                         </li>
                         <li>
                             <a href="#diary_entries" data-toggle="tab">
-                                <div class="counter">0</div>
-                                Diary Entries </a>
+                                <div class="counter">{{diary_entries.count}}</div>
+                                Diary Entr{{diary_entries|pluralize:"y,ies"}} </a>
                         </li>
 
                         <li>
@@ -277,10 +277,29 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="diary_entries">
+                            {% if not diary_entries %}
                             <div class="no-content">
                                 <h2>No entries.</h2>
                                 <h4>Write your first diary entry now.</h4>
                             </div>
+                            {% else %}
+                                {% for entry in diary_entries %}
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="row">
+                                                <div class="col-lg-12  col-xs-12">
+                                                    <h3><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h3>
+                                                    <h6>{{ entry.date }}</h6>
+                                                    <div>
+                                                    {{ entry.html|safe }}
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                         <div class="tab-pane" id="favorites_list">
                             <div class="no-content">

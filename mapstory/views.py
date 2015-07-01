@@ -128,6 +128,7 @@ class ProfileDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ProfileDetail, self).get_context_data(**kwargs)
+        ctx['diary_entries'] = DiaryEntry.objects.filter(author=self.object).order_by('-date')
         return ctx
 
 
