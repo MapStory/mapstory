@@ -129,7 +129,7 @@ MAP_BASELAYERS = [
         }
     },
     {
-        "source": {"ptype": "gx_olsource"},
+        "source": {"ptype": "gxp_olsource"},
         "type":"OpenLayers.Layer",
         "args":["No background"],
         "visibility": False,
@@ -137,7 +137,7 @@ MAP_BASELAYERS = [
         "group":"background"
     },
     {
-        "source": {"ptype":"gx_olsource"},
+        "source": {"ptype":"gxp_olsource"},
         "type":"OpenLayers.Layer.OSM",
         "args":["OpenStreetMap"],
         'title': 'This is the title',
@@ -146,7 +146,7 @@ MAP_BASELAYERS = [
         "group":"background"
     },
     {
-        "source": {"ptype":"gx_olsource"},
+        "source": {"ptype":"gxp_olsource"},
         "type":"OpenLayers.Layer.OSM",
         "args":["Humanitarian OpenStreetMap", [
             "http://a.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
@@ -160,7 +160,7 @@ MAP_BASELAYERS = [
         "group":"background"
     },
     {
-        "source": {"ptype":"gx_olsource"},
+        "source": {"ptype":"gxp_olsource"},
         "type":"OpenLayers.Layer.WMS",
         "group":"background",
         "visibility": False,
