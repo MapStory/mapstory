@@ -1,0 +1,95 @@
+{%verbatim%}
+<div ng-controller="geonode_search_controller">
+
+
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="$dismiss()">x</button>
+        <h4 class="modal-title">Explore StoryLayers</h4>
+	</div>
+
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#Results" data-toggle="tab">Search Results</a></li>
+                    <li><a href="#Explore" data-toggle="tab">Explore</a></li>
+                    <li><a href="#Common" data-toggle="tab">Common</a></li>
+                    <li><a href="#Favorites" data-toggle="tab">Favorites</a></li>
+                    <li><a href="#Uploads" data-toggle="tab">My Uploads</a></li>
+                </ul>
+            </div>
+            <div class="tab-content" style="min-height:270px;">
+                <div class="tab-pane active" id="Results">
+
+
+                    {%endverbatim%}
+                    <div ng-show="get_url() == '/api/base/' || get_url() == '/api/featured/'">
+                        <div class="col-lg-12">
+                            <!--nav class="filter">
+                                <div class="input-group search-bar">
+                                    <input name="text_search_input" id="text_search_input" ng-model="text_query" type="text"
+                                           class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="submit" id="text_search_btn"><i class="fa fa-search"></i> Search</button>
+                                    </span>
+                                </div>
+                            </nav-->
+
+                            <div class="clearfix search-results" style="padding-top:15px; max-height:300px; min-height:280px; overflow-y:scroll; overflow-x:hidden">
+
+                                    {% include 'search/_result_content_min.html' %}
+
+                            </div>
+                            {% include 'search/_pagination.html' %}
+                        </div>
+                    </div>
+
+                    {%verbatim%}
+
+                </div>
+
+                <div class="tab-pane" id="Explore">
+
+                    <div class="no-content">
+                         <h2>No Results.</h2>
+                         <h4>Explore MapStory now.</h4>
+                    </div>
+
+                </div>
+                <div class="tab-pane" id="Common">
+
+                   <div class="no-content">
+                         <h2>No Results.</h2>
+                         <h4>Explore MapStory now.</h4>
+                    </div>
+
+                </div>
+                <div class="tab-pane" id="Favorites">
+
+                    <div class="no-content">
+                         <h2>No Results.</h2>
+                         <h4>Explore MapStory now.</h4>
+                    </div>
+
+                </div>
+                <div class="tab-pane" id="Uploads">
+
+
+                    <div class="no-content">
+                         <h2>No Results.</h2>
+                         <h4>Explore MapStory now.</h4>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+	</div>
+
+    <div class="modal-footer">
+         <button class="btn btn-default" ng-click="$dismiss()">Close</button>
+         <button class="btn btn-primary" ng-click="$close(choice)">Use Selected</button>
+    </div>
+
+</div>
+{%endverbatim%}

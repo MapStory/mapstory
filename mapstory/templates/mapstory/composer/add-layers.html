@@ -4,7 +4,7 @@
         <div class="col-sm-12">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#NewSearch" data-toggle="tab" style="padding:10px"><i class="text-primary glyphicon glyphicon-search"></i>&nbsp;Add existing</a></li>
-                <li class=""><a href="#NewUpload" data-toggle="tab" style="padding:10px"><i class="text-primary glyphicon glyphicon-upload"></i>&nbps; Upload new</a></li>
+                <li class=""><a href="#NewUpload" data-toggle="tab" style="padding:10px"><i class="text-primary glyphicon glyphicon-upload"></i>&nbsp; Upload new</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="NewSearch" style="max-height:450px; overflow-y:scroll; overflow-x:hidden">
@@ -13,13 +13,14 @@
 
                             <div class="input-group">
                                 <input ng-model="layerName" type="text" class="form-control" id="typename" placeholder="Find storylayers...">
-                                <span class="input-group-addon"> <button type="submit" ng-disabled="!layerName" class="btn-search"><i class="glyphicon glyphicon-search"></i></button></span>
+                                <span class="input-group-addon"> <!--button type="submit" ng-disabled="!layerName" class="btn-search"><i class="glyphicon glyphicon-search"></i></button--><a ng-click="showLoadSearchDialog()" ng-disabled="!layerName" style="cursor: pointer;">Search <i class="glyphicon glyphicon-search"></i></a></span>
                             </div>
 
+                            <p>Note: Click the search button to see the explorer modal.</p>
 
-                            <div class="checkbox">
+                            <!--div class="checkbox">
                                 <label for="vector"><input ng-model="asVector" type="checkbox" id="vector">As vector</label>
-                            </div>
+                            </div-->
 
                             <span ng-if="loading">Loading...</span>
 

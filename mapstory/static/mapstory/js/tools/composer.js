@@ -10,8 +10,13 @@
         'storytools.edit.pins',
         'storytools.core.ogc',
         'colorpicker.module',
+        'geonode_main_search',
         'ui.bootstrap'
     ]);
+
+    module.constant('Configs', {
+            url: SEARCH_URL
+          });
 
     module.run(function() {
         // install a watchers debug loop
@@ -44,16 +49,26 @@
 
     var servers = [
         {
-            name: 'mapstory',
+            name: 'Explore All',
             path: '/geoserver/',
-            absolutePath: 'http://mapstory.org/geoserver/',
-            canStyleWMS: false,
+            absolutePath: 'http://mapstory.beta.boundlessgeo.com/geoserver/',
+            canStyleWMS: true,
             timeEndpoint: function(name) {
                 return '/maps/time_info.json?layer=' + name;
             }
         },
         {
-            name: 'local',
+            name: 'Common',
+            path: '/geoserver/',
+            canStyleWMS: true
+        },
+        {
+            name: 'My Favorites',
+            path: '/geoserver/',
+            canStyleWMS: true
+        },
+        {
+            name: 'My Uploads',
             path: '/geoserver/',
             canStyleWMS: true
         }
@@ -115,14 +130,14 @@
             stAnnotationsStore.saveAnnotations(this.storyMap.get('id'), StoryPinLayerManager.storyPins);
         };
         $rootScope.$on('$locationChangeSuccess', function() {
-            var path = $location.path();
+            /*var path = $location.path();
             if (path === '/new') {
-                self.loadMap();
-            } else if (path.indexOf('/local') === 0) {
+               */ self.loadMap();
+            /*} else if (path.indexOf('/local') === 0) {
                 self.loadMap({id: /\d+/.exec(path)});
             } else {
                 self.loadMap({url: path});
-            }
+            }*/
         });
         this.addLayer = function(name, asVector, server, fitExtent, styleName, title) {
             if (fitExtent === undefined) {
@@ -201,7 +216,7 @@
         return $injector.instantiate(MapManager);
     });
 
-    module.directive('addLayers', function($modal, $log, MapManager) {
+    module.directive('addLayers', function($modal, $log, MapManager, loadSearchDialog) {
         return {
             restrict: 'E',
             scope: {
@@ -213,6 +228,21 @@
                     active: servers[0]
                 };
                 scope.servers = servers;
+
+                scope.showLoadSearchDialog = function() {
+                    var promise = loadSearchDialog.show();
+                    promise.then(function(results) {
+
+                        if (results) {
+
+                            angular.forEach(results, function(layerName) {
+                                       MapManager.addLayer(layerName,false, servers[0]);
+                            });
+                        }
+                    });
+                };
+
+
                 scope.addLayer = function() {
                     scope.loading = true;
                     MapManager.addLayer(this.layerName, this.asVector, scope.server.active).then(function() {
@@ -235,6 +265,7 @@
             }
         };
     });
+
     module.directive('layerList', function(stStoryMapBaseBuilder, stEditableStoryMapBuilder, MapManager) {
         return {
             restrict: 'E',
@@ -312,6 +343,47 @@
             show: show
         };
     });
+
+    module.service('loadSearchDialog', function($modal, $rootScope, stMapConfigStore) {
+        function show() {
+            var scope = $rootScope.$new(true);
+
+            scope.choices = [];
+
+            scope.result_select = function($event, layer){
+                var element = $($event.target);
+
+                var box = $(element.parents('.box')[0]);
+
+                if (box.hasClass('resource_selected')){
+                    var index = scope.choices.indexOf(layer.title);
+
+                    if (index > -1) {
+                        scope.choices.splice(index, 1);
+                    }
+
+                    element.html('Select');
+                    box.removeClass('resource_selected');
+                }
+                else{
+                    scope.choices.push(layer.title);
+                    element.html('Deselect');
+                    box.addClass('resource_selected');
+                }
+            };
+
+            return $modal.open({
+                templateUrl: 'templates/load-search-dialog.html',
+                scope: scope
+            }).result.then(function() {
+                return scope.choices;
+            });
+        }
+        return {
+            show: show
+        };
+    });
+
     module.controller('tileProgressController', function($scope) {
         $scope.tilesToLoad = 0;
         $scope.tilesLoadedProgress = 0;
@@ -334,7 +406,7 @@
     });
 
     module.controller('composerController', function($scope, $injector, MapManager, TimeControlsManager,
-        styleUpdater, loadMapDialog, $location) {
+        styleUpdater, loadMapDialog, loadSearchDialog, $location) {
 
         $scope.mapManager = MapManager;
         $scope.timeControlsManager = $injector.instantiate(TimeControlsManager);
@@ -359,6 +431,18 @@
                     $location.path('/maps/' + result.mapstoryMapId + "/data/");
                 } else if (result.localMapId) {
                     $location.path('/local/' + result.localMapId);
+                }
+            });
+        };
+        $scope.showLoadSearchDialog = function() {
+            var promise = loadSearchDialog.show();
+            promise.then(function(results) {
+
+                if (results) {
+
+                    angular.forEach(results, function(layerName) {
+                               MapManager.addLayer(layerName,false, servers[0]);
+                    });
                 }
             });
         };

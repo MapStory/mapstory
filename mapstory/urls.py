@@ -25,6 +25,7 @@ urlpatterns = patterns('',
     url(r'^maps/templates/add-layers.html$', TemplateView.as_view(template_name='mapstory/composer/add-layers.html'), name='composer-add-layers'),
     url(r'^maps/templates/layer-list.html$', TemplateView.as_view(template_name='mapstory/composer/layer-list.html'), name='composer-layer-list'),
     url(r'^maps/templates/load-map-dialog.html$', TemplateView.as_view(template_name='mapstory/composer/load-map-dialog.html'), name='composer-load-map'),
+    url(r'^maps/templates/load-search-dialog.html$', TemplateView.as_view(template_name='mapstory/composer/load-search-dialog.html'), name='composer-load-search'),
 
 
     url(r'^maps/compose$',
@@ -43,12 +44,15 @@ urlpatterns = patterns('',
         name='map-viewer'),
     url(r"^people/profile/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
     url(r'^tours/editor_tour$', TemplateView.as_view(template_name='maps/editor_tour.html'), name='editor_tour'),
+
     url(r'^journal$', DiaryListView.as_view(), name='diary'),
     url(r'^journal/(?P<pk>\d+)$', DiaryDetailView.as_view(), name='diary-detail'),
     url(r'^journal/write$', login_required(DiaryCreateView.as_view()), name='diary-create'),
     url(r'^journal/write/(?P<pk>\d+)$', login_required(DiaryUpdateView.as_view()), name='diary-update'),
+
     url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
     url(r'^search/$', SearchView.as_view(), name='search'),
+
     url(r'^storylayerpage$', TemplateView.as_view(template_name='mapstory/storylayerpage.html'), name='storylayerpage'),
     url(r'^mapstorypage$', TemplateView.as_view(template_name='mapstory/mapstorypage.html'), name='mapstorypage'),
     url(r'^about/leadership$', LeaderListView.as_view(template_name='mapstory/leaders.html'), name='about-leaders'),
