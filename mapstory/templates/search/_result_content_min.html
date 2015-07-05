@@ -2,15 +2,15 @@
 
 <div ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4">
     <div class="box">
-        <div class="box-content box-statistic">
+        <div class="box-content box-statistic" style="min-height:200px;">
             <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}"/></a>
-            <h4 class="title text-primary"><a href="{{ item.detail_url}}">{{ item.title}}</a></h4>
+            <span class="title text-primary"><a href="{{ item.detail_url}}">{{ item.title|limitTo:25 }}</a></span>
             <p>{{ item.owner__username}}</p>
             <div class="btn-toolbar">
 {% endverbatim %}
 
             {% if request.user.is_authenticated %}
-                <button class="btn btn-primary btn-xs" ng-click="result_select($event, item)">Select</button>
+                <button class="btn btn-primary btn-xs" style="width:100%;" ng-click="result_select($event, item)">Select</button>
             {% endif %}
 {% verbatim %}
             </div>
