@@ -56,24 +56,6 @@
         <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
     {% block extra_script %}{% endblock extra_script %}
 
-    <script type="text/javascript">
-        var autocomplete = $('#search_input').yourlabsAutocomplete({
-            url: '{% url "autocomplete_light_autocomplete" "ResourceBaseAutocomplete" %}',
-            choiceSelector: 'span',
-            hideAfter: 200,
-            minimumCharacters: 1,
-            placeholder: 'Type your search here ...',
-            appendAutocomplete: $('#search_input')
-        });
-
-        $('#search_input').bind('selectChoice', function(e, choice, autocomplete) {
-            if(choice[0].children[0] == undefined) {
-                $('#search_input').val(choice[0].innerHTML);
-                $('#search').submit();
-            }
-        });
-    </script>
-
          <script type="text/javascript">
 
 
@@ -91,7 +73,6 @@
         </script>
 
         <script src="{{ STATIC_URL }}geonode/js/search/search.js"></script>
-
 
 {% comment %}
     dependencies introduced by mapstory work

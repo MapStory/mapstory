@@ -1,5 +1,5 @@
 {%verbatim%}
-<form role="form" ng-submit="addLayer(layerName, asVector)">
+<form role="form" ng-submit="addLayer(layerName, asVector)" ng-controller="geonode_search_controller">
     <div class="row">
         <div class="col-sm-12">
             <ul class="nav nav-tabs">
@@ -11,12 +11,13 @@
                     <div class="col-sm-12" style="padding:10px">
                         <div class="box">
 
-                            <div class="input-group">
-                                <input ng-model="layerName" type="text" class="form-control" id="typename" placeholder="Find storylayers...">
-                                <span class="input-group-addon"> <!--button type="submit" ng-disabled="!layerName" class="btn-search"><i class="glyphicon glyphicon-search"></i></button--><a ng-click="showLoadSearchDialog()" ng-disabled="!layerName" style="cursor: pointer;">Search <i class="glyphicon glyphicon-search"></i></a></span>
-                            </div>
 
-                            <p>Note: Click the search button to see the explorer modal.</p>
+                            <div class="input-group search-bar" >
+                                <input name="text_search_input" id="text_search_input" ng-model="layerName" type="text" class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" ng-disabled="!layerName" type="submit" id="text_search_btn"><i class="glyphicon glyphicon-search"></i> Search</button>
+                                    </span>
+                            </div>
 
                             <!--div class="checkbox">
                                 <label for="vector"><input ng-model="asVector" type="checkbox" id="vector">As vector</label>
@@ -24,14 +25,37 @@
 
                             <span ng-if="loading">Loading...</span>
 
-                            <br>
-                             <button ng-repeat='src in servers' type="button" ng-model="server.active" class="btn btn-server btn-default" btn-radio="src">
-                                 <div class="box-content box-statistic">
-                                    <h3 class="title text-primary">{{ src.name }}</h3>
-                                    <small>{{ src.absolutePath }}</small>
-                                    <div class="text-primary icon-star align-right"></div>
+
+                            <a ng-click="showLoadSearchDialog()">
+                                <div class="box-content box-statistic">
+                                    <div class="title text-primary"><i class="glyphicon glyphicon-th"></i>Explore All</div>
+                                    <small>1200 Storylayers</small>
+
                                 </div>
-                            </button>
+                            </a>
+                            <a ng-click="showLoadSearchDialog()">
+                                <div class="box-content box-statistic">
+                                    <div class="title text-primary"><i class="glyphicon glyphicon-star"></i>Common StoryLayers</div>
+                                    <small>0 Storylayers</small>
+
+                                </div>
+                            </a>
+                            <a ng-click="showLoadSearchDialog()">
+                                <div class="box-content box-statistic">
+                                    <div class="title text-primary"><i class="glyphicon glyphicon-heart"></i>My Favorites</div>
+                                    <small>0 Favorites</small>
+
+                                </div>
+                            </a>
+                                <a ng-click="showLoadSearchDialog()">
+                                <div class="box-content box-statistic">
+                                    <div class="title text-primary"><i class="glyphicon glyphicon-upload"></i>My Uploads</div>
+                                    <small>0 Uploads</small>
+
+                                </div>
+                            </a>
+
+
 
                         </div>
                     </div>
