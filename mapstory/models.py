@@ -128,6 +128,8 @@ class GetPageContent(ContentMixin):
     video_embed_link = models.URLField(blank=True)
 
     def extension(self):
+        if self.video.name is None:
+            return 'mp4'
         name, extension = os.path.splitext(self.video.name)
         return extension[1:]
 
