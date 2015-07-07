@@ -353,10 +353,20 @@
             scope.result_select = function($event, layer){
                 var element = $($event.target);
 
+                //TODO: would prefer to call layer.name but arg is base_resourcebase
+                //instead need to parse the name from the url
+
+                var layerName = decodeURIComponent(layer.detail_url);
+
+                if(layerName.indexOf('/layers/') > -1){
+                    layerName = layerName.replace("/layers/","");
+                }
+
+
                 var box = $(element.parents('.box')[0]);
 
                 if (box.hasClass('resource_selected')){
-                    var index = scope.choices.indexOf(layer.title);
+                    var index = scope.choices.indexOf(layerName);
 
                     if (index > -1) {
                         scope.choices.splice(index, 1);
@@ -366,7 +376,7 @@
                     box.removeClass('resource_selected');
                 }
                 else{
-                    scope.choices.push(layer.title);
+                    scope.choices.push(layerName);
                     element.html('Deselect');
                     box.addClass('resource_selected');
                 }
