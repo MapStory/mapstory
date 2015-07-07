@@ -123,6 +123,10 @@ MAP_BASELAYERS = [
     {
         "source": {
             "ptype": "gxp_wmscsource",
+            # Setting lazy=True will prevent MapLoom from making a getCapabilities request until
+            # the user tries to add a layer.
+            # See https://github.com/ROGUE-JCTD/MapLoom/commit/d7ea83d17b4e17150f02a0c9e94a79c3592297c2.
+            "lazy": True,
             "url": OGC_SERVER['default']['PUBLIC_LOCATION'] + "wms",
             "restUrl": "/gs/rest",
             "name": "local geoserver"
