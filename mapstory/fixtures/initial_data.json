@@ -30,5 +30,69 @@
             "name": "involved",
             "title": "Get Involved"
         }
+    },
+    {
+        "pk": 13, 
+        "model": "base.topiccategory", 
+        "fields": {
+            "gn_description": "Crisis",
+            "identifier": "crisis"
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "base.topiccategory", 
+        "fields": {
+            "gn_description": "Geopolitics",
+            "identifier": "geopolitics"
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "base.topiccategory", 
+        "fields": {
+            "gn_description": "Science & Industry",
+            "identifier": "scienceIndustry"
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "base.topiccategory", 
+        "fields": {
+            "gn_description": "Human Settlement",
+            "identifier": "humanSettlement"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "base.topiccategory", 
+        "fields": {
+            "gn_description": "Culture & Ideas",
+            "identifier": "cultureIdeas"
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "base.topiccategory", 
+        "fields": {
+            "gn_description": "Nature & Environment",
+            "identifier": "natureEnvironment"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "base.topiccategory", 
+        "fields": {
+            "gn_description": "Health",
+            "identifier": "health"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "base.topiccategory", 
+        "fields": {
+            "gn_description": "Biography",
+            "identifier": "biography"
+        }
     }
 ]
