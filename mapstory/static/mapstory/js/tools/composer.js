@@ -363,6 +363,23 @@
         };
     });
 
+
+    module.service('loadNewMapDialog', function($modal, $rootScope, stMapConfigStore) {
+        function show() {
+            var scope = $rootScope.$new(true);
+            scope.choice = {};
+            return $modal.open({
+                templateUrl: 'templates/load-new-map-dialog.html',
+                scope: scope
+            }).result.then(function() {
+                return scope.choice;
+            });
+        }
+        return {
+            show: show
+        };
+    });
+
     module.service('loadSearchDialog', function($modal, $rootScope, stMapConfigStore) {
         function show() {
             var scope = $rootScope.$new(true);
@@ -435,7 +452,7 @@
     });
 
     module.controller('composerController', function($scope, $injector, MapManager, TimeControlsManager,
-        styleUpdater, loadMapDialog, loadSearchDialog, $location) {
+        styleUpdater, loadMapDialog, loadNewMapDialog, loadSearchDialog, $location) {
 
         $scope.mapManager = MapManager;
         $scope.timeControlsManager = $injector.instantiate(TimeControlsManager);
@@ -448,8 +465,20 @@
             MapManager.saveMap();
         };
         $scope.newMap = function() {
-            $location.path('/new');
+           // $location.path('/new');
+
+
+            var promise = loadNewMapDialog.show();
+            promise.then(function(result) {
+                if (result.title) {
+
+                    console.log(result.title);
+                } else{
+                    console.log(result);
+                }
+            });
         };
+
         $scope.styleChanged = function(layer) {
             styleUpdater.updateStyle(layer);
         };
