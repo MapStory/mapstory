@@ -14,9 +14,16 @@
         'ui.bootstrap'
     ]);
 
+    module.config(['$httpProvider', function($httpProvider) {
+        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    }]);
+
+
     module.constant('Configs', {
-            url: SEARCH_URL
-          });
+            url: SEARCH_URL,
+            disableQuerySync: true
+    });
 
     module.run(function() {
         // install a watchers debug loop
@@ -126,18 +133,30 @@
         };
         this.saveMap = function() {
             var config = this.storyMap.getState();
+
+            var mapLoad = $http.post("new/data", config).success(function(data) {
+                    stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, data);
+
+                }).error(function(data, status) {
+                    if (status === 401) {
+                        window.console.warn('Not authorized to see map ' + mapId);
+                        stStoryMapBaseBuilder.defaultMap(self.storyMap);
+                    }
+                });
+
+
             stMapConfigStore.saveConfig(config);
             stAnnotationsStore.saveAnnotations(this.storyMap.get('id'), StoryPinLayerManager.storyPins);
         };
         $rootScope.$on('$locationChangeSuccess', function() {
-            /*var path = $location.path();
+            var path = $location.path();
             if (path === '/new') {
-               */ self.loadMap();
-            /*} else if (path.indexOf('/local') === 0) {
+                self.loadMap();
+            } else if (path.indexOf('/local') === 0) {
                 self.loadMap({id: /\d+/.exec(path)});
             } else {
                 self.loadMap({url: path});
-            }*/
+            }
         });
         this.addLayer = function(name, asVector, server, fitExtent, styleName, title) {
             if (fitExtent === undefined) {

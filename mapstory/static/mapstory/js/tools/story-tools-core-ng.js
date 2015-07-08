@@ -196,6 +196,7 @@
         zoom: this.map_.getView().getZoom(),
         layers: []
       };
+      config['about'] = {'title': "Sample", 'abstract': "Sample"};
       var mapId = this.get('id');
       if (mapId >= 0) {
         config.id = mapId;
