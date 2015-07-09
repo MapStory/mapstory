@@ -40,12 +40,17 @@
                       <h2 style="font-size:1.5em">{{ resource.owner.first_name }} {{ resource.owner.last_name }}</h2>
                       <hr style="margin:5px">
                       <h2 style="font-size:1.2em;color:gainsboro">
+                        <!-- TODO: Add Mapstory messaging functionality, has this been implemented? -->
                         <span style="color:orange">message</span> |
-                        <span style="color:deepskyblue">twitter</span> |
-                        <span style="color:dodgerblue">facebook</span> |
-                        <span style="color:red">pinterest</span> |
-                        <span style="color:green">google</span>
-                       </h2>
+                        {% for social_link in social_links %}
+                        {% ifequal social_link "twitter" %}
+                          <a href="{{ social_link.url }}"><span style="color:deepskyblue">twitter</span></a> |
+                        {% endifequal %}
+                        {% ifequal social_link "facebook" %}
+                          <a href="{{ social_link.url }}"><span style="color:dodgerblue">facebook</span></a>
+                        {% endifequal %}
+                        {% endfor %}
+                      </h2>
                   </div>
                 </div>
                 <hr>
@@ -56,77 +61,6 @@
                         {% include "_comments.html" %}
                       {% endwith %}
                     </article>
-                    <!--
-                    <h2>comments <span class="pull-right"> 1,234 comments</span></h2>
-                      <div class="col-sm-12">
-                      <div class="form-group">
-                        <textarea name="comment" class="form-control" id="comments" cols="3" rows="3" placeholder="Add a comment"></textarea>
-                      </div>
-                      <a class="btn btn-xs pull-right" title="" href="#" target="blank">
-                        <span style="font-size:1.2em">Submit comment</span>
-                      </a>
-                      </div>
-                      <hr>
-                      <div class="col-sm-12">
-                    <div style="max-height:200px; overflow-y:scroll; overflow-x:hidden">
-                          <div class="col-sm-12">
-                            <div class="row boxFeature">
-                              <div class="col-xs-2">
-                                <img class="img-circle" src="images/avatar.jpg" width="70"/> 
-                              </div>
-                              <div class="col-xs-10">
-                                <h3>Robin Scherbatsky</h3>
-                                <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm-12">
-                            <div class="row boxFeature">
-                              <div class="col-xs-2">
-                                <img class="img-circle" src="images/avatar.jpg" width="70"/> 
-                              </div>
-                              <div class="col-xs-10">
-                                <h3>Barney Stinson</h3>
-                                <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm-12">
-                            <div class="row boxFeature">
-                              <div class="col-xs-2">
-                                <img class="img-circle" src="images/avatar.jpg" width="70"/> 
-                              </div>
-                              <div class="col-xs-10">
-                                <h3>Ted Mosby</h3>
-                                <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm-12">
-                            <div class="row boxFeature">
-                              <div class="col-xs-2">
-                                <img class="img-circle" src="images/avatar.jpg" width="70"/> 
-                              </div>
-                              <div class="col-xs-10">
-                                <h3>Lily Aldrin</h3>
-                                <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm-12">
-                            <div class="row boxFeature">
-                              <div class="col-xs-2">
-                                <img class="img-circle" src="images/avatar.jpg" width="70"/> 
-                              </div>
-                              <div class="col-xs-10">
-                                <h3>Marshall Erikssen</h3>
-                                <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    -->
                   </div>
                 </div>
               </div>
@@ -140,7 +74,7 @@
                 <hr style="margin-top:10px;margin-bottom:10px">
                 <div class="row">
                   <div class="col-sm-9">
-                    <h3 style="margin-top:0px;margin-bottom:5px;">Region: {{ resource.region_name_list.0 }} {% if resource.region_name_list|length > 1 %} and {{ resource.region_name_list|length|add:"-1" }} more...{% endif %}</h3>
+                    <h3 style="margin-top:0px;margin-bottom:5px;">Region: {{ resource.region_name_list.0 }} <!-- This inequality isn't working for some reason --> {% if resource.region_name_list|length > 1 %} and {{ resource.region_name_list|length|add:"-1" }} more...{% else %} {% endif %}</h3>
                     <h3 style="margin-top:0px;margin-bottom:5px;">Topic: {{ resource.category }}</h3>
                     <h3 style="margin-top:0px;margin-bottom:5px;">Tags:</h3>
                     <!-- NOTE: This has some formatting issues; needs to wrap around to a second line nicely -->
@@ -150,16 +84,86 @@
                     {% if resource.keyword_list|length > 5 %}
                       <span class="label label-default">{{ resource.keyword_list|length|add:"-5" }} more</span>
                     {% endif %}
-                    <span class="label label-default">+ <span contenteditable="true">add</span></span>
+                    <!-- Make this into a modal that spawns and lets us add a tag
+                    Name of the tag to add:
+                    ...that's it I guess
+                     -->
+                    <a href="#form_add_tag" data-toggle="modal"><span class="label label-default">+ <span contenteditable="true">add</span></span></a>
+                    <!-- Modal for adding a tag (WIP) -->
+                    {% comment %}
+                    <!--
+                    {% comment_form resource as form %}
+                    <div id="form_add_tag" class="modal-fade" tabindex="-1" role="dialog">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title">{% trans 'Add Tag' %}</h4>
+                          </div> -->
+                          <!-- TODO: Need to figure out how to add a keyword this way... what should action be?-->
+                          <!--
+                          <form action="{% comment_target resource %}" method="POST" id="form_post_tag">
+                            <div class="modal-body">
+                                {% csrf_token %}
+                                {{ form|as_bootstrap }}
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                                <button id="tag_submit_btn" class="btn btn-primary">{% trans 'Add Tag' %}</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div> -->
+                    
+                    <!--
+                    {% comment_form resource as form %}
+                    <div id="form_add_tag" class="modal fade" tabindex="-1" role="dialog">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                              <h4 class="modal-title">{% trans 'Add Comment' %}</h4>
+                            </div>
+                            <form action="{% comment_target resource %}" method="POST" id="form_post_comment">
+                              <div class="modal-body">
+                                  {% csrf_token %}
+                                  {{ form|as_bootstrap }}
+                              </div>
+                              <div class="modal-footer">
+                                  <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                                  <button id="comment_submit_btn" class="btn btn-primary">{% trans 'Submit Comment' %}</button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                    </div>
+                  -->
+                    {% endcomment %}
+
                     <hr style="margin-top:15px;margin-bottom:10px">
                     <h3 style="margin-top:0px;margin-bottom:5px;">
+                      <article id="rate" class="tab-pane">
+                        {% if request.user.is_authenticated %}
+                        <h4>{% trans "Rate this layer" %}</h4>
+                        {% user_rating request.user resource "layer" as user_layer_rating %}
+                        <div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}" style="width: 100% !important;"></div>
+                        {% endif %}        
+                      </article>
+                      
+                      <!--
                       Rate:
                       <i class="fa fa-star-o"></i>
                       <i class="fa fa-star-o"></i>
                       <i class="fa fa-star-o"></i>
                       <i class="fa fa-star-o"></i>
                       <i class="fa fa-star-o"></i>
+                    -->
                       <!--
+                      Need to figure out how this is implemented...
+                      Looks like an assignment tag probably but the name isn't found any
+                      Looks like it uses jquery.raty.js but we want to change the styling of the stars
+                      Looks like you can specify staroff and staron, but 
       <article id="rate" class="tab-pane">
         {% if request.user.is_authenticated %}
         <h4>{% trans "Rate this layer" %}</h4>
@@ -185,12 +189,14 @@
                   <hr style="margin:5px">
                   <div style="text-align:right">
                     <a title="" href="#" target="blank">
+                      <!-- TODO: Need to check if this user has already favorited this storylayer; toggle between adding/removing -->
                       <span style="font-size:1.3em;color:gainsboro">favorite</span>
                     </a>
                   </div>
                   <hr style="margin:5px">
                   <div style="text-align:right">
                     <a title="" href="#" target="blank">
+                      <!-- TODO: Need to hook up functionality for flagging; presumably a modal spawns? -->
                       <span style="font-size:1.3em;color:gainsboro">flag</span>
                     </a>
                   </div>
