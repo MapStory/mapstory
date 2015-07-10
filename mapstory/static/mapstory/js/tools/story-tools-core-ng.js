@@ -80,6 +80,8 @@
     function StoryMap(data) {
       ol.Object.call(this, data);
       this.map_ = new ol.Map({target: data.target});
+      this.title = "Default Mapstory";
+      this.abstract = "No Information Supplied.";
       this.overlay = new ol.FeatureOverlay({
         map: this.map_,
         style: defaultStyle
@@ -99,6 +101,18 @@
 
     StoryMap.prototype = Object.create(ol.Object.prototype);
     StoryMap.prototype.constructor = StoryMap;
+
+    StoryMap.prototype.setMetadata = function(data) {
+
+        if(data.hasOwnProperty('title')){
+            this.title = data.title;
+        }
+        
+
+        if(data.hasOwnProperty('abstract')){
+            this.abstract = data.abstract;
+        }
+    };
 
     StoryMap.prototype.setBaseLayer = function(baseLayer) {
       this.set('baselayer', baseLayer);
@@ -196,7 +210,7 @@
         zoom: this.map_.getView().getZoom(),
         layers: []
       };
-      config['about'] = {'title': "Sample", 'abstract': "Sample"};
+      config['about'] = {'title': this.title, 'abstract': this.abstract };
       var mapId = this.get('id');
       if (mapId >= 0) {
         config.id = mapId;
@@ -427,10 +441,11 @@
                 url: 'http://{a-c}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
               })
             });
-          } else if (data.type === 'OSM') {
+          } else if (data.type === 'OSM' || data.type === 'OpenLayers.Layer.OSM') {
             return new ol.layer.Tile({
               state: data,
               title: data.title,
+              name: data.title,
               group: 'background',
               source: new ol.source.OSM()
             });
@@ -476,7 +491,7 @@
               tileUrlFunction: tileUrlFunction
             }));
             return layer;
-          } else if (data.type === 'WMS') {
+          } else if (data.type === 'WMS' || data.type === 'OpenLayers.Layer.WMS') {
             return new ol.layer.Tile({
                 group: "background",
                 source: new ol.source.TileWMS({
@@ -553,7 +568,9 @@
           storymap.getMap().setView(new ol.View({center: [0,0], zoom: 3}));
           this.setBaseLayer(storymap, {
             title: 'OpenStreetMap',
-            type: 'OSM'
+            type: 'OSM',
+            name: 'OpenStreetMap',
+            source: {"id": "1", "ptype": "gx_olsource"} //TODO: replace? only needed for backwards capability with geonode gxp support
           });
         },
         setBaseLayer: function(storymap, data) {
@@ -707,6 +724,8 @@
                     s.the_geom = format.writeGeometry(s.the_geom);
                 }
             });
+
+
             localStorage.setItem(path(mapid), angular.toJson(annotations));
         }
         return {
@@ -724,6 +743,8 @@
                 set(saved);
             },
             saveAnnotations: function(mapid, annotations) {
+
+
                 var saved = get();
                 var maxId = 0;
                 saved.forEach(function(s) {

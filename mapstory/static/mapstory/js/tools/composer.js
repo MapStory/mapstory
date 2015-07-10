@@ -135,7 +135,20 @@
             var config = this.storyMap.getState();
 
             var mapLoad = $http.post("new/data", config).success(function(data) {
-                    stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, data);
+                stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, config);
+
+
+                var annotations = new ol.format.GeoJSON().writeFeatures(StoryPinLayerManager.storyPins,
++                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'});
+
+                var response = $http.post('/maps/' + data.id + '/annotations', annotations).success(function(data) {
+
+                }).error(function(data, status) {
+                        if (status === 401) {
+                            window.console.warn('Not authorized to see map ' + mapId);
+                            stStoryMapBaseBuilder.defaultMap(self.storyMap);
+                        }
+                    });
 
                 }).error(function(data, status) {
                     if (status === 401) {
@@ -144,9 +157,8 @@
                     }
                 });
 
-
-            stMapConfigStore.saveConfig(config);
-            stAnnotationsStore.saveAnnotations(this.storyMap.get('id'), StoryPinLayerManager.storyPins);
+            //stMapConfigStore.saveConfig(config);
+            //stAnnotationsStore.saveAnnotations(this.storyMap.get('id'), StoryPinLayerManager.storyPins);
         };
         $rootScope.$on('$locationChangeSuccess', function() {
             var path = $location.path();
@@ -467,15 +479,9 @@
         $scope.newMap = function() {
            // $location.path('/new');
 
-
             var promise = loadNewMapDialog.show();
-            promise.then(function(result) {
-                if (result.title) {
-
-                    console.log(result.title);
-                } else{
-                    console.log(result);
-                }
+            promise.then(function(config) {
+                    MapManager.storyMap.setMetadata(config);
             });
         };
 
