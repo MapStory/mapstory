@@ -6,6 +6,8 @@
 {% load url from future %}
 {% load base_tags %}
 {% load guardian_tags %}
+{% load friendly_loader %}
+{% friendly_load avatar_tags %}
 
 {% block title %}{{ resource.title|default:resource.typename }} — {{ block.super }}{% endblock %}
 
@@ -34,7 +36,7 @@
                 <br>
                 <div class="row">
                   <div class="col-sm-2">
-                    <a href="{{ resource.owner.profile_detail_url}}"><img class="thumb img-responsive img-circle" src="{{ resource.owner.avatar_100}}"/></a>
+                    <a href="{% url "profile_detail" resource.owner.username %}"><img class="thumb img-responsive img-circle" src="{% avatar_url resource.owner %}"/></a>
                   </div>
                   <div class="col-sm-10">
                       <h2 style="font-size:1.5em">{{ resource.owner.first_name }} {{ resource.owner.last_name }}</h2>
@@ -74,8 +76,13 @@
                 <hr style="margin-top:10px;margin-bottom:10px">
                 <div class="row">
                   <div class="col-sm-9">
+                    {% if resource.region_name_list|length > 0 %}
                     <h3 style="margin-top:0px;margin-bottom:5px;">Region: {{ resource.region_name_list.0 }} <!-- This inequality isn't working for some reason --> {% if resource.region_name_list|length > 1 %} and {{ resource.region_name_list|length|add:"-1" }} more...{% else %} {% endif %}</h3>
+                    {% endif %}
+                    {% ifequal resource.category None %}
+                    {% else %}
                     <h3 style="margin-top:0px;margin-bottom:5px;">Topic: {{ resource.category }}</h3>
+                    {% endifequal %}
                     <h3 style="margin-top:0px;margin-bottom:5px;">Tags:</h3>
                     <!-- NOTE: This has some formatting issues; needs to wrap around to a second line nicely -->
                     {% for keyword in resource.keyword_list|slice:"5" %}
@@ -143,13 +150,12 @@
 
                     <hr style="margin-top:15px;margin-bottom:10px">
                     <h3 style="margin-top:0px;margin-bottom:5px;">
-                      <article id="rate" class="tab-pane">
-                        {% if request.user.is_authenticated %}
-                        <h4>{% trans "Rate this layer" %}</h4>
-                        {% user_rating request.user resource "layer" as user_layer_rating %}
-                        <div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}" style="width: 100% !important;"></div>
-                        {% endif %}        
-                      </article>
+                      Rate:
+                      <i class="fa fa-star-o"></i>
+                      <i class="fa fa-star-o"></i>
+                      <i class="fa fa-star-o"></i>
+                      <i class="fa fa-star-o"></i>
+                      <i class="fa fa-star-o"></i>
                       
                       <!--
                       Rate:
@@ -163,7 +169,8 @@
                       Need to figure out how this is implemented...
                       Looks like an assignment tag probably but the name isn't found any
                       Looks like it uses jquery.raty.js but we want to change the styling of the stars
-                      Looks like you can specify staroff and staron, but 
+                      Looks like you can specify staroff and staron
+                      It appears this may be from a later version of Geonode?
       <article id="rate" class="tab-pane">
         {% if request.user.is_authenticated %}
         <h4>{% trans "Rate this layer" %}</h4>
@@ -177,13 +184,16 @@
                   <div class="col-sm-3" style="border-left:1px solid gainsboro">
                   <div style="text-align:right">
                     <a href="{% url "new_map" %}?layer={{resource.service_typename}}" >
-                      <span style="font-size:1.3em;color:gainsboro">use</span>
+                      <span style="font-size:1.3em;color:gainsboro">compose</span>
+                      <br>
+                      <span style="font-size:1.3em;color:gainsboro">mapstory</span>
                     </a>
                   </div>
                   <hr style="margin:5px">
                   <div style="text-align:right">
                     <a title="" href="#" target="blank">
-                      <span style="font-size:1.3em;color:gainsboro"><a href='{% url "map-new2" %}?layer={{resource.service_typename}}'>edit</a></span>
+                      <a href='{% url "map-new2" %}?layer={{resource.service_typename}}'><span style="font-size:1.3em;color:gainsboro">edit</span></a>
+                      <!-- <span style="font-size:1.3em;color:gainsboro">edit</span> -->
                     </a>
                   </div>
                   <hr style="margin:5px">
