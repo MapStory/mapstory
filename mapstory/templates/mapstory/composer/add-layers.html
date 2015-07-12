@@ -1,5 +1,5 @@
 {%verbatim%}
-<form role="form" ng-submit="addLayer(layerName, asVector)" ng-controller="geonode_search_controller">
+<div ng-controller="geonode_search_controller">
     <div class="row">
         <div class="col-sm-12">
             <ul class="nav nav-tabs">
@@ -13,9 +13,9 @@
 
 
                             <div class="input-group search-bar" >
-                                <input name="text_search_input" id="text_search_input" ng-model="layerName" type="text" class="form-control">
+                                <input name="text_search_input2" id="text_search_input2" placeholder="Search for StoryLayers ..." ng-model="layerName" type="text" class="form-control search-input">
                                     <span class="input-group-btn">
-                                        <button class="btn btn-primary" ng-disabled="!layerName" type="submit" id="text_search_btn"><i class="glyphicon glyphicon-search"></i> Search</button>
+                                        <button id="layers_seach_btn" class="btn btn-primary search-btn" ng-disabled="!layerName" ng-click="showLoadSearchDialog(layerName)"><i class="glyphicon glyphicon-search"></i> Search</button>
                                     </span>
                             </div>
 
@@ -29,7 +29,7 @@
                             <a ng-click="showLoadSearchDialog()">
                                 <div class="box-content box-statistic">
                                     <div class="title text-primary"><i class="glyphicon glyphicon-th"></i>Explore All</div>
-                                    <small>1200 Storylayers</small>
+                                    <small><span ng-bind="total_counts"></span> Storylayers</small>
 
                                 </div>
                             </a>
@@ -91,5 +91,5 @@
         </div>
     </div>
 
-</form>
+</div>
 {% endverbatim%}

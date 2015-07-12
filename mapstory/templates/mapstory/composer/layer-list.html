@@ -11,7 +11,7 @@
 
     <accordion-group ng-repeat="layer in layers" is-open="accordianOpen" ng-init="accordianOpen = $first">
         <accordion-heading>
-            {{layer.get('name')}}
+            {{layer.get('title')}}
             <div class="pull-right">
                 <button type="button" data-toggle="button" ng-click="removeLayer(layer)" class="btn btn-xs btn-default">
                     <i class="glyphicon glyphicon-eye-open"></i>
@@ -26,38 +26,7 @@
 
         <div class="row layer-ctrls">
             <div class="col-sm-12" style="padding:10px">
-                <div>
-                    <div class="col-sm-4">
-                        <div class="box-quick-link muted-background">
-                            <a href="#">
-                                <div class="header">
-                                    <div class="glyphicon glyphicon-plus">
 
-                                    </div>
-                                </div>
-                                <div class="content">Add feature</div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="box-quick-link muted-background"><a href="#">
-                            <div class="header">
-                                <div class="glyphicon glyphicon-tasks"></div>
-                            </div>
-                            <div class=content>View table</div>
-                        </a>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="box-quick-link muted-background"><a href="#" >
-                            <div class="header">
-                                <div class="glyphicon glyphicon-calendar"></div>
-                            </div>
-                            <div class=content>Time info</div>
-                        </a>
-                        </div>
-                    </div>
-                </div>
                 <div>
                     <div class="col-sm-4">
                         <div class="box-quick-link muted-background"><a href="#">
@@ -69,11 +38,11 @@
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <div class="box-quick-link muted-background"><a href="#">
+                        <div class="box-quick-link muted-background"><a href="#" >
                             <div class="header">
-                                <div class="glyphicon glyphicon-time"></div>
+                                <div class="glyphicon glyphicon-calendar"></div>
                             </div>
-                            <div class=content>Show History</div>
+                            <div class=content>Time info</div>
                         </a>
                         </div>
                     </div>

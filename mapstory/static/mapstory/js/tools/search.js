@@ -167,6 +167,7 @@
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
     $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
+    $scope.query['type__in'] = 'layer';
 
 
     //Get data from apis and make them available to the page
@@ -562,7 +563,7 @@
           hideAfter: 200,
           minimumCharacters: 1,
           appendAutocomplete: $('#text_search_input'),
-          placeholder: gettext('Enter your text here ...')
+          placeholder: gettext('Search for StoryLayers ...')
     });
     $('#text_search_input').bind('selectChoice', function(e, choice, text_autocomplete) {
           if(choice[0].children[0] == undefined) {
@@ -582,11 +583,19 @@
           }
     });
 
-    $('#text_search_btn').click(function(){
+
+
+    $('.search-btn').click(function(){
+
+       var search_term = $(this).closest("div.search-bar").find(".search-input").val();
+
         if (HAYSTACK_SEARCH)
-            $scope.query['q'] = $('#text_search_input').val();
+            $scope.query['q'] = search_term;
         else
-            $scope.query['title__icontains'] = $('#text_search_input').val();
+            $scope.query['title__icontains'] = search_term;
+
+
+        $scope.query['type__in'] = 'layer'
         query_api($scope.query);
     });
 
