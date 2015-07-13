@@ -575,7 +575,7 @@
       return {
         modifyStoryMap: function(storymap, data) {
           storymap.clear();
-          var mapConfig = (data.tools !== undefined) ? storytools.mapstory.MapConfigTransformer.MapConfigTransformer(data): data;
+          var mapConfig = storytools.mapstory.MapConfigTransformer.MapConfigTransformer(data);
           if (mapConfig.id >= 0) {
             storymap.set('id', mapConfig.id);
           }
@@ -617,7 +617,7 @@
         },
         modifyStoryMap: function(storymap, data) {
           storymap.clear();
-          var mapConfig = data.tools ? storytools.mapstory.MapConfigTransformer.MapConfigTransformer(data): data;
+          var mapConfig = storytools.mapstory.MapConfigTransformer.MapConfigTransformer(data);
           if (mapConfig.id >= 0) {
             storymap.set('id', mapConfig.id);
           }
