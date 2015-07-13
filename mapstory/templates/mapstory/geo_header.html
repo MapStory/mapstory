@@ -3,12 +3,7 @@
 
 
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}geoexplorer/externals/openlayers/theme/default/style.css"/>
-<link type="text/css" rel="stylesheet" href="{{ STATIC_URL}}timeline/timeline_js/timeline-bundle.css">
-<link type="text/css" rel="stylesheet" href="{{ STATIC_URL}}timeline/timeline_ajax/styles/graphics.css">
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}geoexplorer/externals/geoext/resources/css/geoext-all.css"/>
-<link rel="stylesheet" href="{{ STATIC_URL}}geoexplorer/externals/gxp/src/theme/all.css"/>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}theme/temporal_controls.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}mapstory/geoexplorer/theme/app/geoexplorer.css"/>
+
 
 
 <script type="text/javascript" src="//www.youtube.com/iframe_api"></script>
@@ -26,9 +21,15 @@
 <script type="text/javascript">
     Timeline.DateTime = SimileAjax.DateTime;
 </script>
+<link type="text/css" rel="stylesheet" href="{{ STATIC_URL}}timeline/timeline_js/timeline-bundle.css">
+<link type="text/css" rel="stylesheet" href="{{ STATIC_URL}}timeline/timeline_ajax/styles/graphics.css">
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}geoexplorer/externals/geoext/resources/css/geoext-all.css"/>
+<link rel="stylesheet" href="{{ STATIC_URL}}geoexplorer/externals/gxp/src/theme/all.css"/>
 <script src="{{ STATIC_URL}}mapstory/script/MapStory.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}mapstory/geoexplorer/theme/app/geoexplorer.css"/>
 <!--[if IE]><link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}geonode/theme/app/ie.css"/><![endif]-->
 <script src="{{ STATIC_URL}}mapstory/geoexplorer/script/GeoExplorer.js"></script>
 <script type="text/javascript">
 OpenLayers.ImgPath = "{{ STATIC_URL}}geonode/externals/openlayers/img/";
 </script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}theme/temporal_controls.css" media="screen" />

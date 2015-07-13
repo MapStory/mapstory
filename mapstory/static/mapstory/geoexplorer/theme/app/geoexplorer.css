@@ -13,11 +13,11 @@
     background-position: 0px 3px !important;
 }
 .x-btn .ms-icon-timeline-white {
-    background-image: url("/static/geoexplorer/theme/app/img/ClockV4_White.png");
+    background-image: url("/static/mapstory/geoexplorer/theme/app/img/ClockV4_White.png");
     background-position: 0px 3px !important;
 }
 .x-btn-over .ms-icon-timeline-white {
-    background-image: url("/static/geoexplorer/theme/app/img/ClockV4_Orange.png");
+    background-image: url("/static/mapstory/geoexplorer/theme/app/img/ClockV4_Orange.png");
     background-position: 0px 3px !important;
 }
 .gxp-timeslider-tip {
