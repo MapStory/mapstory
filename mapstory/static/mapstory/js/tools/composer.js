@@ -345,6 +345,9 @@
                 MapManager.storyMap.getStoryLayers().on('change:length', function() {
                     scope.layers = MapManager.storyMap.getStoryLayers().getArray();
                 });
+                scope.toggleVisibleLayer = function(lyr) {
+                    MapManager.storyMap.toggleStoryLayer(lyr);
+                };
                 scope.removeLayer = function(lyr) {
                     MapManager.storyMap.removeStoryLayer(lyr);
                 };
@@ -498,18 +501,7 @@
                 }
             });
         };
-        $scope.showLoadSearchDialog = function() {
-            var promise = loadSearchDialog.show();
-            promise.then(function(results) {
 
-                if (results) {
-
-                    angular.forEach(results, function(layerName) {
-                               MapManager.addLayer(layerName,false, servers[0]);
-                    });
-                }
-            });
-        };
         // strip features from properties to avoid circular dependencies in debug
         $scope.layerProperties = function(lyr) {
             var props = lyr.getProperties();

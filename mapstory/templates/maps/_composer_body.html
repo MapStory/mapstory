@@ -69,7 +69,7 @@
                                 <accordion-heading><div ng-bind="pinsCtrl.isEditing() ? 'Edit StoryPin ' + pinsCtrl.currentPin.title : 'Add StoryPin'"></div></accordion-heading>
                                 <div pin-editor>
                                     <pin-editor-form></pin-editor-form>
-                                    <button ng-disabled="!pinCtrl.isFormValid()" ng-click="pinsCtrl.saveStoryPin()">Save</button>
+                                    <button class="btn btn-block" ng-disabled="!pinCtrl.isFormValid()" ng-click="pinsCtrl.saveStoryPin()">Save</button>
                                 </div>
                             </accordion-group>
                         </accordion>

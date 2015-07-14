@@ -15,7 +15,8 @@
             return saved;
         }
         function set(mapConfig) {
-            localStorage.setItem(path(mapConfig.id), angular.toJson(mapConfig));
+            console.log(mapConfig);
+            //localStorage.setItem(path(mapConfig.id), angular.toJson(mapConfig));
         }
         function list() {
             var maps = [];
@@ -82,6 +83,7 @@
       this.map_ = new ol.Map({target: data.target});
       this.title = "Default Mapstory";
       this.abstract = "No Information Supplied.";
+
       this.overlay = new ol.FeatureOverlay({
         map: this.map_,
         style: defaultStyle
@@ -96,22 +98,22 @@
           style: defaultStyle
         })
       });
-      this.map_.addLayer(this.storyPinsLayer.getLayer());
+      this.addStoryPinsLayer();
     }
 
     StoryMap.prototype = Object.create(ol.Object.prototype);
     StoryMap.prototype.constructor = StoryMap;
 
-    StoryMap.prototype.setMetadata = function(data) {
+    StoryMap.prototype.addStoryPinsLayer = function() {
+      this.map_.addLayer(this.storyPinsLayer.getLayer());
+    };
 
-        if(data.hasOwnProperty('title')){
-            this.title = data.title;
-        }
-        
+    StoryMap.prototype.setStoryTitle = function(storyTitle) {
+       this.title =  storyTitle;
+    };
 
-        if(data.hasOwnProperty('abstract')){
-            this.abstract = data.abstract;
-        }
+    StoryMap.prototype.setStoryAbstract = function(storyAbstract) {
+       this.abstract =  storyAbstract;
     };
 
     StoryMap.prototype.setBaseLayer = function(baseLayer) {
@@ -125,10 +127,17 @@
     };
 
     StoryMap.prototype.addStoryLayer = function(storyLayer) {
+      storyLayer.storyMap_ = this;
       this.storyLayers_.push(storyLayer);
       // keep pins layer on top
+      var idx = this.map_.getLayers().getLength(), me = this;
+      this.map_.getLayers().forEach(function(sl) {
+        if (sl === me.storyPinsLayer) {
+            idx -= 1;
+        }
+      });
       this.map_.getLayers().insertAt(
-        this.map_.getLayers().getLength()-1,
+        idx,
         storyLayer.getLayer()
       );
     };
@@ -144,6 +153,7 @@
     StoryMap.prototype.clear = function() {
       this.map_.getLayers().clear();
       this.storyLayers_.clear();
+      this.addStoryPinsLayer();
     };
 
     StoryMap.prototype.animateCenterAndZoom = function(center, zoom) {
@@ -210,14 +220,16 @@
         zoom: this.map_.getView().getZoom(),
         layers: []
       };
-      config['about'] = {'title': this.title, 'abstract': this.abstract };
+
+      config.about = {'title': this.title, 'abstract': this.abstract};
+
       var mapId = this.get('id');
       if (mapId >= 0) {
         config.id = mapId;
       }
       var baseLayer = this.get('baselayer');
       if (baseLayer) {
-        var baseLayerState = this.get('baselayer').get('state');
+        var baseLayerState = baseLayer;
         baseLayerState.group = 'background';
         baseLayerState.visibility = true;
         config.map.layers.push(baseLayerState);
@@ -233,6 +245,12 @@
       this.map_.removeLayer(storyLayer.getLayer());
     };
 
+    EditableStoryMap.prototype.toggleStoryLayer = function(storyLayer) {
+      var layer = storyLayer.getLayer();
+      storyLayer.set('visibility', !layer.getVisible());
+      layer.setVisible(!layer.getVisible());
+    };
+
     function StoryLayer(data) {
       if (data.times && storytools.core.time.utils.isRangeLike(data.times)) {
         data.times = new storytools.core.time.utils.Interval(data.times);
@@ -240,7 +258,13 @@
       ol.Object.call(this, data);
       var layer;
       if (this.get('type') === 'VECTOR') {
-        layer = new ol.layer.Vector();
+        layer = new ol.layer.Vector({source: new ol.source.Vector()});
+      } else if (this.get('type') === 'HEATMAP') {
+        layer = new ol.layer.Heatmap({
+          radius: data.style.radius,
+          opacity: data.style.opacity,
+          source: new ol.source.Vector()
+        });
       } else if (this.get('type') === 'WMS') {
         var config = {
           useOldAsInterimTiles: true
@@ -258,6 +282,10 @@
 
     StoryLayer.prototype = Object.create(ol.Object.prototype);
     StoryLayer.prototype.constructor = StoryLayer;
+
+    StoryLayer.prototype.getStoryMap = function() {
+      return this.storyMap_;
+    };
 
     StoryLayer.prototype.setWMSSource = function() {
       var layer = this.getLayer();
@@ -298,14 +326,22 @@
     };
 
     StoryLayer.prototype.getState = function() {
-      return this.getProperties();
+      var state = this.getProperties();
+      delete state.features;
+      return state;
     };
 
     StoryLayer.prototype.getLayer = function() {
       return this.layer_;
     };
 
+
     StoryLayer.prototype.setLayer = function(layer) {
+      if (this.layer_ && this.storyMap_) {
+        var map = this.storyMap_.map_;
+        var idx = map.getLayers().getArray().indexOf(this.layer_);
+        map.getLayers().setAt(idx, layer);
+      }
       this.layer_ = layer;
     };
 
@@ -324,18 +360,49 @@
       return {
         loadCapabilities: function(storyLayer) {
           var request = 'GetCapabilities', service = 'WMS';
+          // always use the virtual service for GetCapabilities
+          var url = storyLayer.get('url');
+          if (url === '/geoserver/wms') {
+            var name = storyLayer.get('name');
+            var parts = name.split(':');
+            url = url.replace('/geoserver', '/geoserver/' + parts[0] + '/' + parts[1]);
+          }
           return $http({
             method: 'GET',
-            url: storyLayer.get('url'),
+            url: url,
             params: {
               'REQUEST': request,
               'SERVICE': service,
-              'VERSION': '1.3.0'
+              'VERSION': '1.1.1',
+              'TILED': true
             }
           }).success(function(data) {
-            var caps = new ol.format.WMSCapabilities().read(data);
-            storyLayer.set('latlonBBOX',
-                caps.Capability.Layer.Layer[0].EX_GeographicBoundingBox);
+            var context = new owsjs.Jsonix.Context([
+                owsjs.mappings.WMSC_1_1_1
+            ]);
+            var unmarshaller = context.createUnmarshaller();
+            var caps = unmarshaller.unmarshalString(data);
+            var layer = caps.value.capability.layer;
+            storyLayer.set('latlonBBOX', [
+              parseFloat(layer.latLonBoundingBox.minx),
+              parseFloat(layer.latLonBoundingBox.miny),
+              parseFloat(layer.latLonBoundingBox.maxx),
+              parseFloat(layer.latLonBoundingBox.maxy)
+            ]);
+            var tileSets = caps.value.capability.vendorSpecificCapabilities.tileSet;
+            for (var i=0, ii=tileSets.length; i<ii; ++i) {
+                if (tileSets[i].srs === 'EPSG:900913') {
+                    storyLayer.set('resolutions', tileSets[i].resolutions.split(' '));
+                    var bbox = tileSets[i].boundingBox;
+                    storyLayer.set('bbox', [
+                        parseFloat(bbox.minx),
+                        parseFloat(bbox.miny),
+                        parseFloat(bbox.maxx),
+                        parseFloat(bbox.maxy)
+                    ]);
+                    break;
+                }
+            }
             var found = storytools.core.time.maps.readCapabilitiesTimeDimensions(caps);
             var name = storyLayer.get('name');
             if (name in found) {
@@ -408,7 +475,6 @@
             }).success(function(response) {
               var layer = storyLayer.getLayer();
               var features = new ol.format.GeoJSON().readFeatures(response);
-              layer.setSource(new ol.source.Vector());
               storyLayer.set('features', features);
             });
         }
@@ -421,6 +487,7 @@
           if (data.type === 'MapQuest') {
             return new ol.layer.Tile({
               state: data,
+              name: data.title,
               title: data.title,
               group: 'background',
               source: new ol.source.MapQuest({layer: data.layer})
@@ -428,6 +495,7 @@
           } else if (data.type === 'HOT') {
             return new ol.layer.Tile({
               state: data,
+              name: data.title,
               title: data.title,
               group: 'background',
               source: new ol.source.OSM({
@@ -441,11 +509,11 @@
                 url: 'http://{a-c}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
               })
             });
-          } else if (data.type === 'OSM' || data.type === 'OpenLayers.Layer.OSM') {
+          } else if (data.type === 'OSM') {
             return new ol.layer.Tile({
               state: data,
-              title: data.title,
               name: data.title,
+              title: data.title,
               group: 'background',
               source: new ol.source.OSM()
             });
@@ -491,7 +559,7 @@
               tileUrlFunction: tileUrlFunction
             }));
             return layer;
-          } else if (data.type === 'WMS' || data.type === 'OpenLayers.Layer.WMS') {
+          } else if (data.type === 'WMS') {
             return new ol.layer.Tile({
                 group: "background",
                 source: new ol.source.TileWMS({
@@ -521,7 +589,7 @@
           if (needsDFT) {
             promises.push(stAnnotateLayer.describeFeatureType(layer));
           }
-          if (data.type === 'VECTOR' && !data.features) {
+          if ((data.type === 'VECTOR' || data.type === 'HEATMAP') && !data.features) {
             promises.push(stAnnotateLayer.getFeatures(layer, map));
           } else {
             promises.push(stAnnotateLayer.getStyleName(layer));
@@ -569,8 +637,8 @@
           this.setBaseLayer(storymap, {
             title: 'OpenStreetMap',
             type: 'OSM',
-            name: 'OpenStreetMap',
-            source: {"id": "1", "ptype": "gx_olsource"} //TODO: replace? only needed for backwards capability with geonode gxp support
+            layer: 'OSM',
+            name: 'OpenStreetMap'
           });
         },
         setBaseLayer: function(storymap, data) {
@@ -584,7 +652,7 @@
       return {
         modifyStoryMap: function(storymap, data) {
           storymap.clear();
-          var mapConfig = data.tools ? storytools.mapstory.MapConfigTransformer.MapConfigTransformer(data): data;
+          var mapConfig = storytools.mapstory.MapConfigTransformer.MapConfigTransformer(data);
           if (mapConfig.id >= 0) {
             storymap.set('id', mapConfig.id);
           }
@@ -611,22 +679,22 @@
 
     module.service('stEditableStoryMapBuilder', ["stStoryMapBaseBuilder", "stEditableLayerBuilder", function(stStoryMapBaseBuilder, stEditableLayerBuilder) {
       return {
-        modifyStoryLayer: function(storymap, storylayer) {
+        modifyStoryLayer: function(storylayer, newType) {
           var data = storylayer.getProperties();
+          var storymap = storylayer.getStoryMap();
+          data.type = newType ? newType : ((data.type === 'WMS') ? 'VECTOR' : 'WMS');
           if (data.type === 'WMS') {
-            data.type = 'VECTOR';
-          } else {
             delete data.features;
-            data.type = 'WMS';
           }
           stEditableLayerBuilder.buildEditableLayer(data, storymap.getMap()).then(function(sl) {
-            storymap.removeStoryLayer(storylayer);
-            storymap.addStoryLayer(sl);
+            // sequence is important here, first change layer, then the type.
+            storylayer.setLayer(sl.getLayer());
+            storylayer.set('type', sl.get('type'));
           });
         },
         modifyStoryMap: function(storymap, data) {
           storymap.clear();
-          var mapConfig = data.tools ? storytools.mapstory.MapConfigTransformer.MapConfigTransformer(data): data;
+          var mapConfig = storytools.mapstory.MapConfigTransformer.MapConfigTransformer(data);
           if (mapConfig.id >= 0) {
             storymap.set('id', mapConfig.id);
           }
@@ -649,115 +717,6 @@
           }));
         }
       };
-    }]);
-
-})();
-
-(function() {
-    'use strict';
-
-    var module = angular.module('storytools.core.pins', [
-    ]);
-
-    var pins = storytools.core.maps.pins;
-
-    function StoryPinLayerManager() {
-        this.storyPins = [];
-    }
-    StoryPinLayerManager.prototype.pinsChanged = function(pins, action) {
-        var i;
-        if (action == 'delete') {
-            for (i = 0; i < pins.length; i++) {
-                var pin = pins[i];
-                for (var j = 0, jj = this.storyPins.length; j < jj; j++) {
-                    if (this.storyPins[j].id == pin.id) {
-                        this.storyPins.splice(j, 1);
-                        break;
-                    }
-                }
-            }
-        } else if (action == 'add') {
-            for (i = 0; i < pins.length; i++) {
-                this.storyPins.push(pins[i]);
-            }
-        } else if (action == 'change') {
-            // provided edits could be used to optimize below
-        } else {
-            throw new Error('action? :' + action);
-        }
-        // @todo optimize by looking at changes
-        var times = this.storyPins.map(function(p) {
-            if (p.start_time > p.end_time) {
-                return storytools.core.utils.createRange(p.end_time, p.start_time);
-            } else {
-                return storytools.core.utils.createRange(p.start_time, p.end_time);
-            }
-        });
-        this.storyPinsLayer.set('times', times);
-        this.storyPinsLayer.set('features', this.storyPins);
-    };
-    StoryPinLayerManager.prototype.loadFromGeoJSON = function(geojson, projection) {
-        var loaded = pins.loadFromGeoJSON(geojson, projection);
-        this.pinsChanged(loaded, 'add', true);
-    };
-
-    module.service('StoryPinLayerManager', StoryPinLayerManager);
-
-    module.constant('StoryPin', pins.StoryPin);
-
-    // @todo naive implementation on local storage for now
-    module.service('stAnnotationsStore', ["StoryPin", function(StoryPin) {
-        function path(mapid) {
-            return '/maps/' + mapid + '/annotations';
-        }
-        function get(mapid) {
-            var saved = localStorage.getItem(path(mapid));
-            saved = (saved === null) ? [] : JSON.parse(saved);
-            saved.forEach(function(s) {
-                s.the_geom = format.readGeometry(s.the_geom);
-            });
-            return saved;
-        }
-        function set(mapid, annotations) {
-            annotations.forEach(function(s) {
-                if (s.the_geom && !angular.isString(s.the_geom)) {
-                    s.the_geom = format.writeGeometry(s.the_geom);
-                }
-            });
-
-
-            localStorage.setItem(path(mapid), angular.toJson(annotations));
-        }
-        return {
-            loadAnnotations: function(mapid, projection) {
-                return StoryPin.createStoryPins(get(mapid), projection);
-            },
-            deleteAnnotations: function(annotations) {
-                var saved = get();
-                var toDelete = annotations.map(function(d) {
-                    return d.id;
-                });
-                saved = saved.filter(function(s) {
-                    return toDelete.indexOf(s.id) < 0;
-                });
-                set(saved);
-            },
-            saveAnnotations: function(mapid, annotations) {
-
-
-                var saved = get();
-                var maxId = 0;
-                saved.forEach(function(s) {
-                    maxId = Math.max(maxId, s.id);
-                });
-                annotations.forEach(function(a) {
-                    if (typeof a.id == 'undefined') {
-                        a.id = ++maxId;
-                    }
-                });
-                set(mapid, annotations);
-            }
-        };
     }]);
 
 })();
@@ -1112,6 +1071,127 @@
 (function() {
     'use strict';
 
+    var module = angular.module('storytools.core.pins', [
+    ]);
+
+    var pins = storytools.core.maps.pins;
+
+    function StoryPinLayerManager() {
+        this.storyPins = [];
+    }
+    StoryPinLayerManager.prototype.pinsChanged = function(pins, action) {
+        var i;
+        if (action == 'delete') {
+            for (i = 0; i < pins.length; i++) {
+                var pin = pins[i];
+                for (var j = 0, jj = this.storyPins.length; j < jj; j++) {
+                    if (this.storyPins[j].id == pin.id) {
+                        this.storyPins.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+        } else if (action == 'add') {
+            for (i = 0; i < pins.length; i++) {
+                this.storyPins.push(pins[i]);
+            }
+        } else if (action == 'change') {
+            // provided edits could be used to optimize below
+        } else {
+            throw new Error('action? :' + action);
+        }
+        // @todo optimize by looking at changes
+        var times = this.storyPins.map(function(p) {
+            if (p.start_time > p.end_time) {
+                return storytools.core.utils.createRange(p.end_time, p.start_time);
+            } else {
+                return storytools.core.utils.createRange(p.start_time, p.end_time);
+            }
+        });
+        this.storyPinsLayer.set('times', times);
+        this.storyPinsLayer.set('features', this.storyPins);
+    };
+    StoryPinLayerManager.prototype.loadFromGeoJSON = function(geojson, projection) {
+        if (geojson && geojson.features) {
+            var loaded = pins.loadFromGeoJSON(geojson, projection);
+            this.pinsChanged(loaded, 'add', true);
+        }
+    };
+
+    module.service('StoryPinLayerManager', StoryPinLayerManager);
+
+    module.constant('StoryPin', pins.StoryPin);
+
+    // @todo naive implementation on local storage for now
+    module.service('stAnnotationsStore', ["StoryPinLayerManager", function(StoryPinLayerManager) {
+        function path(mapid) {
+            return '/maps/' + mapid + '/annotations';
+        }
+        function get(mapid) {
+            var saved = localStorage.getItem(path(mapid));
+            saved = (saved === null) ? [] : JSON.parse(saved);
+            // TODO is this still needed?
+            /*saved.forEach(function(s) {
+                s.the_geom = format.readGeometry(s.the_geom);
+            });*/
+            return saved;
+        }
+        function set(mapid, annotations) {
+            // TODO is this still needed?
+            /*annotations.forEach(function(s) {
+                if (s.the_geom && !angular.isString(s.the_geom)) {
+                    s.the_geom = format.writeGeometry(s.the_geom);
+                }
+            });*/
+            localStorage.setItem(path(mapid),
+                new ol.format.GeoJSON().writeFeatures(annotations,
+                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'})
+            );
+        }
+        return {
+            loadAnnotations: function(mapid, projection) {
+                return StoryPinLayerManager.loadFromGeoJSON(get(mapid), projection);
+            },
+            deleteAnnotations: function(annotations) {
+                var saved = get();
+                var toDelete = annotations.map(function(d) {
+                    return d.id;
+                });
+                saved = saved.filter(function(s) {
+                    return toDelete.indexOf(s.id) < 0;
+                });
+                set(saved);
+            },
+            saveAnnotations: function(mapid, annotations) {
+                var saved = get();
+                var maxId = 0;
+                saved.forEach(function(s) {
+                    maxId = Math.max(maxId, s.id);
+                });
+                var clones = [];
+                annotations.forEach(function(a) {
+                    if (typeof a.id == 'undefined') {
+                        a.id = ++maxId;
+                    }
+                    var clone = a.clone();
+                    if (a.get('start_time') !== undefined) {
+                        clone.set('start_time', a.get('start_time')/1000);
+                    }
+                    if (a.get('end_time') !== undefined) {
+                        clone.set('end_time', a.get('end_time')/1000);
+                    }
+                    clones.push(clone);
+                });
+                set(mapid, clones);
+            }
+        };
+    }]);
+
+})();
+
+(function() {
+    'use strict';
+
     /**
      * @namespace storytools.core.time.directives
      */
@@ -1383,4 +1463,117 @@
             computeTicks: computeTicks
         };
     });
+})();
+
+(function() {
+    'use strict';
+
+    var module = angular.module('storytools.core.boxes', [
+    ]);
+
+    var boxes = storytools.core.maps.boxes;
+
+    function StoryBoxLayerManager() {
+        this.storyBoxes = [];
+    }
+    StoryBoxLayerManager.prototype.boxesChanged = function(boxes, action) {
+        var i;
+        if (action == 'delete') {
+            for (i = 0; i < boxes.length; i++) {
+                var pin = boxes[i];
+                for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
+                    if (this.storyBoxes[j].id == pin.id) {
+                        this.storyBoxes.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+        } else if (action == 'add') {
+            for (i = 0; i < boxes.length; i++) {
+                this.storyBoxes.push(boxes[i]);
+            }
+        } else if (action == 'change') {
+            // provided edits could be used to optimize below
+        } else {
+            throw new Error('action? :' + action);
+        }
+        // @todo optimize by looking at changes
+        var times = this.storyBoxes.map(function(p) {
+            if (p.start_time > p.end_time) {
+                return storytools.core.utils.createRange(p.end_time, p.start_time);
+            } else {
+                return storytools.core.utils.createRange(p.start_time, p.end_time);
+            }
+        });
+        //this.storyBoxesLayer.set('times', times);
+        //this.storyBoxesLayer.set('features', this.storyBoxes);
+    };
+
+
+    StoryBoxLayerManager.prototype.load = function(boxList) {
+        if (boxList) {
+            this.boxesChanged(boxList, 'add', true);
+        }
+    };
+
+    module.service('StoryBoxLayerManager', StoryBoxLayerManager);
+
+    module.constant('StoryBox', boxes.Box);
+
+    // @todo naive implementation on local storage for now
+    module.service('stStoryBoxesStore', ["StoryBoxLayerManager", function(StoryBoxLayerManager) {
+        function path(mapid) {
+            return '/maps/' + mapid + '/boxes';
+        }
+        function get(mapid) {
+            var saved = localStorage.getItem(path(mapid));
+            saved = (saved === null) ? [] : JSON.parse(saved);
+
+            return saved;
+        }
+        function set(mapid, boxes) {
+
+            localStorage.setItem(path(mapid),angular.toJson(boxes));
+
+        }
+        return {
+            loadBoxes: function(mapid) {
+                return get(mapid);
+            },
+            deleteBoxes: function(boxes) {
+                var saved = get();
+                var toDelete = boxes.map(function(d) {
+                    return d.id;
+                });
+                saved = saved.filter(function(s) {
+                    return toDelete.indexOf(s.id) < 0;
+                });
+                set(saved);
+            },
+            saveBoxes: function(mapid, boxes) {
+                var saved = get();
+                var maxId = 0;
+                saved.forEach(function(s) {
+                    maxId = Math.max(maxId, s.id);
+                });
+                var clones = [];
+                boxes.forEach(function(a) {
+                    if (typeof a.id == 'undefined') {
+                        a.id = ++maxId;
+                    }
+                    var clone;
+                    angular.copy(a, clone);
+                    /*if (a.get('start_time') !== undefined) {
+                        clone.set('start_time', a.get('start_time')/1000);
+                    }
+                    if (a.get('end_time') !== undefined) {
+                        clone.set('end_time', a.get('end_time')/1000);
+                    }*/
+                    clones.push(a);
+                });
+                set(mapid, clones);
+            }
+        };
+    }]);
+
 })();

@@ -13,11 +13,11 @@
         <accordion-heading>
             {{layer.get('title')}}
             <div class="pull-right">
-                <button type="button" data-toggle="button" ng-click="removeLayer(layer)" class="btn btn-xs btn-default">
-                    <i class="glyphicon glyphicon-eye-open"></i>
+                <button type="button" data-toggle="button" ng-click="toggleVisibleLayer(layer); $event.stopPropagation();" class="btn btn-xs btn-default">
+                    <i class="glyphicon" ng-class="{'glyphicon-eye-open': layer.get('visibility'), 'glyphicon-eye-close': !layer.get('visibility')}"></i>
                 </button>
-                <button type="button" data-toggle="button" class="btn btn-xs btn-default active">
-                   Edit data
+                <button type="button" data-toggle="button" ng-click="removeLayer(layer); $event.stopPropagation();" class="btn btn-xs btn-default">
+                   <i class="glyphicon glyphicon-trash"></i>
                 </button>
             </div>
         </accordion-heading>
@@ -93,5 +93,19 @@
 
     </accordion-group>
 
+
+     <accordion-group>
+        <accordion-heading>
+            Basemap <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+        </accordion-heading>
+         <div class="form-group">
+    <label>Background:</label>
+    <button style="margin-bottom:5px;" class="btn btn-default form-control" ng-repeat="baseLayer in baseLayers" ng-click="onChange(baseLayer)">{{baseLayer.title}}</button>
+
+</div>
+    </accordion-group>
+
+
 </accordion>
+
 {%endverbatim%}
