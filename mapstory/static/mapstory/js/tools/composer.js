@@ -59,10 +59,7 @@
             name: 'Explore All',
             path: '/geoserver/',
             absolutePath: 'http://mapstory.beta.boundlessgeo.com/geoserver/',
-            canStyleWMS: true,
-            timeEndpoint: function(name) {
-                return '/maps/time_info.json?layer=' + name;
-            }
+            canStyleWMS: true
         },
         {
             name: 'Common',
