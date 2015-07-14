@@ -25,7 +25,7 @@ from mapstory.models import get_communities
 from geonode.base.models import Region
 from geonode.geoserver.helpers import ogc_server_settings
 from urlparse import urlsplit
-
+from user_messages.models import Thread
 from .forms import MapStorySignupForm
 
 import datetime
@@ -129,6 +129,9 @@ class ProfileDetail(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(ProfileDetail, self).get_context_data(**kwargs)
         ctx['diary_entries'] = DiaryEntry.objects.filter(author=self.object).order_by('-date')
+
+        ctx['threads_all'] = Thread.ordered(Thread.objects.inbox(self.request.user))
+        ctx['threads_unread'] = Thread.ordered(Thread.objects.unread(self.request.user))
         return ctx
 
 

@@ -213,7 +213,7 @@
                         {% if user == profile %}
                         <li>
                             <a href="#messages_list" data-toggle="tab">
-                                <div class="counter">{{ threads | length }}</div>
+                                <div class="counter">{{ inbox_count }}</div>
                                 Messages </a>
                         </li>
                         {% endif %}
@@ -263,12 +263,25 @@
                         </div>
                         <div class="tab-pane" id="messages_list">
 
-                             {% include 'user_messages/_message_snippet.html' %}
-
+                            {% if not inbox_count %}
                             <div class="no-content">
                                 <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
                                 <h4>Compose a new message now.</h4>
                             </div>
+                            {% else %}
+                            <div class="tab-content">
+                              <article id="inbox" class="tab-pane active">
+                                {% with threads_unread as threads %}
+                                    {% include "user_messages/_message_snippet.html" %}
+                                {% endwith %}
+                              </article>
+                              <article id="all" class="tab-pane">
+                                {% with threads_all as threads %}
+                                    {% include "user_messages/_message_snippet.html" %}
+                                {% endwith %}
+                              </article>
+                            </div>
+                            {% endif %}
                         </div>
                         <div class="tab-pane" id="user_activities">
                             <div class="no-content">

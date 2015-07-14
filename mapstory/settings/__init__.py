@@ -74,6 +74,7 @@ INSTALLED_APPS += (
 
 TEMPLATE_CONTEXT_PROCESSORS += (
     'mapstory.context_processors.context',
+    'user_messages.context_processors.user_messages'
 )
 
 OGC_SERVER = {
