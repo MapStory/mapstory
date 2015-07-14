@@ -133,11 +133,51 @@
                 </ul>
             </nav>
             <div class="row">
-                <div class="col-md-3" ng-repeat="item in results|limitTo:4" style="padding-top:10px; right: -5px;">
-                    <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
-                    <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
-                    <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></h5>
-                    <h4><span class="owner">{{ item.owner.username}}</span></h4>
+                <!-- if less than five elements -->
+                <div ng-if="results.length < 5">
+                    <div class="col-md-3" ng-repeat="item in results" style="padding-top:10px; right: -5px;">
+                        <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
+                        <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
+                        <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></h5>
+                        <h4><span class="owner">{{ item.owner.username}}</span></h4>
+                    </div>
+                </div>
+                <!-- if more than four elements, carousel display -->
+                <div ng-if="results.length > 4">
+                    <div class="col-md-3" ng-repeat="item in display" style="padding-top:10px; right: -5px">
+                        <div ng-if="$index == 0">
+                            <div class="row">
+                                <div class="col-md-2" style="padding-top: 30px; right:60px">
+                                    <h1 ng-click="slideLeft()" style="cursor: pointer;"><span><i class="fa fa-chevron-left"></i></span></h1>
+                                </div>
+                                <div class="col-md-10" style="right: 50px">
+                                    <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
+                                    <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
+                                    <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></h5>
+                                    <h4><span class="owner">{{ item.owner.username}}</span></h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div ng-if="$index == 1 || $index == 2">
+                            <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
+                            <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
+                            <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></h5>
+                            <h4><span class="owner">{{ item.owner.username}}</span></h4>
+                        </div>
+                        <div ng-if="$index == 3">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
+                                    <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
+                                    <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></h5>
+                                    <h4><span class="owner">{{ item.owner.username}}</span></h4>
+                                </div>
+                                <div class="col-md-2" style="padding-top: 30px">
+                                    <h1 ng-click="slideRight()" style="cursor: pointer;"><span><i class="fa fa-chevron-right"></i></span></h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <p ng-hide="results.length">No Featured Items in this category ...</p>
             </div>

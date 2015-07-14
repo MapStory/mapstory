@@ -52,6 +52,17 @@
                     }
                 });
             }
+
+            // Initialize carousel display
+            $scope.display = [];
+            $scope.indeces = [];
+            for (var i = 0; i < $scope.results.length; i++) {
+                $scope.display[i] = $scope.results[i];
+                $scope.indeces[i] = i;
+                if (i >= 3) {
+                    break;
+                }
+            }
           });
         };
         query_api($scope.query);
@@ -64,6 +75,28 @@
                 $scope.query['category__identifier__in'] = null;
             }
             query_api($scope.query);
+        }
+
+
+        // carousel
+        $scope.slideLeft = function() {
+            for (var i = 0; i < $scope.indeces.length; i++) {
+                $scope.indeces[i] = ($scope.indeces[i] + 1) % $scope.results.length;
+            }
+            $scope.updateDisplay();
+        }
+
+        $scope.slideRight = function() {
+            for (var i = 0; i < $scope.indeces.length; i++) {
+                $scope.indeces[i] = ($scope.indeces[i] - 1 + $scope.results.length) % $scope.results.length;
+            }
+            $scope.updateDisplay();
+        }
+
+        $scope.updateDisplay = function() {
+            for (var i = 0; i < $scope.indeces.length; i++) {
+                $scope.display[i] = $scope.results[$scope.indeces[i]];
+            }
         }
     });
 })();
