@@ -11,7 +11,8 @@
         'storytools.core.ogc',
         'colorpicker.module',
         'geonode_main_search',
-        'ui.bootstrap'
+        'ui.bootstrap',
+        "angular-sortable-view"
     ]);
 
     module.config(['$httpProvider', function($httpProvider) {
@@ -353,6 +354,20 @@
                 };
                 scope.onChange = function(baseLayer) {
                     stStoryMapBaseBuilder.setBaseLayer(MapManager.storyMap, baseLayer);
+                };
+
+                scope.onSort = function(item, partFrom, partTo, indexFrom, indexTo){
+                  console.log("Changed layer position of " + item.get('title')
+                      + " FROM " + indexFrom
+                      + " TO " + indexTo);
+
+                  partFrom.forEach(function(layer) {
+                      //console.log(layer.get('title'));
+                  });
+
+                  partTo.forEach(function(layer) {
+                      //console.log(layer.get('title'));
+                  });
                 };
             }
         };

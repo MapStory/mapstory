@@ -49,11 +49,18 @@
                         </accordion>
                     </div>
                     <div ng-if="selected.boxes" class="floating col-lg-8 col-lg-offset-2" boxes-editor>
+                          <div class="panel">
+                            <div class="panel-heading"><h4>StoryBox Editor</h4></div>
+                            <div class="panel-body">
+                                <button class="btn btn-primary pull-right" ng-click='boxesCtrl.newStoryBox()'>New StoryBox</button>
+                                <box-editor></box-editor>
+                            </div>
+                        </div>
+
                         <div class="panel">
-                            <div class="panel-heading">StoryBoxes</div>
+                            <div class="panel-heading"><h4>My StoryBoxes</h4></div>
                             <div class="panel-body">
                                 <box-chooser></box-chooser>
-                                <box-editor></box-editor>
                             </div>
                         </div>
                     </div>

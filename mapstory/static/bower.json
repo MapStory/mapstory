@@ -16,6 +16,7 @@
     "nouislider": "7.0.9",
     "jsonix": "highsource/jsonix#e285e82fb15fa3d62665a35eb728022936df1f4b",
     "ogc-schemas": "highsource/ogc-schemas#master",
-    "w3c-schemas": "highsource/w3c-schemas#master"
+    "w3c-schemas": "highsource/w3c-schemas#master",
+    "angular-sortable-view" : "0.0.13"
   }
 }

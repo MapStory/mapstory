@@ -724,119 +724,6 @@
 (function() {
     'use strict';
 
-    var module = angular.module('storytools.core.boxes', [
-    ]);
-
-    var boxes = storytools.core.maps.boxes;
-
-    function StoryBoxLayerManager() {
-        this.storyBoxes = [];
-    }
-    StoryBoxLayerManager.prototype.boxesChanged = function(boxes, action) {
-        var i;
-        if (action == 'delete') {
-            for (i = 0; i < boxes.length; i++) {
-                var pin = boxes[i];
-                for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
-                    if (this.storyBoxes[j].id == pin.id) {
-                        this.storyBoxes.splice(j, 1);
-                        break;
-                    }
-                }
-            }
-        } else if (action == 'add') {
-            for (i = 0; i < boxes.length; i++) {
-                this.storyBoxes.push(boxes[i]);
-            }
-        } else if (action == 'change') {
-            // provided edits could be used to optimize below
-        } else {
-            throw new Error('action? :' + action);
-        }
-        // @todo optimize by looking at changes
-        var times = this.storyBoxes.map(function(p) {
-            if (p.start_time > p.end_time) {
-                return storytools.core.utils.createRange(p.end_time, p.start_time);
-            } else {
-                return storytools.core.utils.createRange(p.start_time, p.end_time);
-            }
-        });
-        //this.storyBoxesLayer.set('times', times);
-        //this.storyBoxesLayer.set('features', this.storyBoxes);
-    };
-
-
-    StoryBoxLayerManager.prototype.load = function(boxList) {
-        if (boxList) {
-            this.boxesChanged(boxList, 'add', true);
-        }
-    };
-
-    module.service('StoryBoxLayerManager', StoryBoxLayerManager);
-
-    module.constant('StoryBox', boxes.Box);
-
-    // @todo naive implementation on local storage for now
-    module.service('stStoryBoxesStore', ["StoryBoxLayerManager", function(StoryBoxLayerManager) {
-        function path(mapid) {
-            return '/maps/' + mapid + '/boxes';
-        }
-        function get(mapid) {
-            var saved = localStorage.getItem(path(mapid));
-            saved = (saved === null) ? [] : JSON.parse(saved);
-
-            return saved;
-        }
-        function set(mapid, boxes) {
-
-            localStorage.setItem(path(mapid),angular.toJson(boxes));
-
-        }
-        return {
-            loadBoxes: function(mapid) {
-                return get(mapid);
-            },
-            deleteBoxes: function(boxes) {
-                var saved = get();
-                var toDelete = boxes.map(function(d) {
-                    return d.id;
-                });
-                saved = saved.filter(function(s) {
-                    return toDelete.indexOf(s.id) < 0;
-                });
-                set(saved);
-            },
-            saveBoxes: function(mapid, boxes) {
-                var saved = get();
-                var maxId = 0;
-                saved.forEach(function(s) {
-                    maxId = Math.max(maxId, s.id);
-                });
-                var clones = [];
-                boxes.forEach(function(a) {
-                    if (typeof a.id == 'undefined') {
-                        a.id = ++maxId;
-                    }
-                    var clone;
-                    angular.copy(a, clone);
-                    /*if (a.get('start_time') !== undefined) {
-                        clone.set('start_time', a.get('start_time')/1000);
-                    }
-                    if (a.get('end_time') !== undefined) {
-                        clone.set('end_time', a.get('end_time')/1000);
-                    }*/
-                    clones.push(a);
-                });
-                set(mapid, clones);
-            }
-        };
-    }]);
-
-})();
-
-(function() {
-    'use strict';
-
     var module = angular.module('storytools.core.pins', [
     ]);
 
@@ -1576,4 +1463,117 @@
             computeTicks: computeTicks
         };
     });
+})();
+
+(function() {
+    'use strict';
+
+    var module = angular.module('storytools.core.boxes', [
+    ]);
+
+    var boxes = storytools.core.maps.boxes;
+
+    function StoryBoxLayerManager() {
+        this.storyBoxes = [];
+    }
+    StoryBoxLayerManager.prototype.boxesChanged = function(boxes, action) {
+        var i;
+        if (action == 'delete') {
+            for (i = 0; i < boxes.length; i++) {
+                var pin = boxes[i];
+                for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
+                    if (this.storyBoxes[j].id == pin.id) {
+                        this.storyBoxes.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+        } else if (action == 'add') {
+            for (i = 0; i < boxes.length; i++) {
+                this.storyBoxes.push(boxes[i]);
+            }
+        } else if (action == 'change') {
+            // provided edits could be used to optimize below
+        } else {
+            throw new Error('action? :' + action);
+        }
+        // @todo optimize by looking at changes
+        var times = this.storyBoxes.map(function(p) {
+            if (p.start_time > p.end_time) {
+                return storytools.core.utils.createRange(p.end_time, p.start_time);
+            } else {
+                return storytools.core.utils.createRange(p.start_time, p.end_time);
+            }
+        });
+        //this.storyBoxesLayer.set('times', times);
+        //this.storyBoxesLayer.set('features', this.storyBoxes);
+    };
+
+
+    StoryBoxLayerManager.prototype.load = function(boxList) {
+        if (boxList) {
+            this.boxesChanged(boxList, 'add', true);
+        }
+    };
+
+    module.service('StoryBoxLayerManager', StoryBoxLayerManager);
+
+    module.constant('StoryBox', boxes.Box);
+
+    // @todo naive implementation on local storage for now
+    module.service('stStoryBoxesStore', ["StoryBoxLayerManager", function(StoryBoxLayerManager) {
+        function path(mapid) {
+            return '/maps/' + mapid + '/boxes';
+        }
+        function get(mapid) {
+            var saved = localStorage.getItem(path(mapid));
+            saved = (saved === null) ? [] : JSON.parse(saved);
+
+            return saved;
+        }
+        function set(mapid, boxes) {
+
+            localStorage.setItem(path(mapid),angular.toJson(boxes));
+
+        }
+        return {
+            loadBoxes: function(mapid) {
+                return get(mapid);
+            },
+            deleteBoxes: function(boxes) {
+                var saved = get();
+                var toDelete = boxes.map(function(d) {
+                    return d.id;
+                });
+                saved = saved.filter(function(s) {
+                    return toDelete.indexOf(s.id) < 0;
+                });
+                set(saved);
+            },
+            saveBoxes: function(mapid, boxes) {
+                var saved = get();
+                var maxId = 0;
+                saved.forEach(function(s) {
+                    maxId = Math.max(maxId, s.id);
+                });
+                var clones = [];
+                boxes.forEach(function(a) {
+                    if (typeof a.id == 'undefined') {
+                        a.id = ++maxId;
+                    }
+                    var clone;
+                    angular.copy(a, clone);
+                    /*if (a.get('start_time') !== undefined) {
+                        clone.set('start_time', a.get('start_time')/1000);
+                    }
+                    if (a.get('end_time') !== undefined) {
+                        clone.set('end_time', a.get('end_time')/1000);
+                    }*/
+                    clones.push(a);
+                });
+                set(mapid, clones);
+            }
+        };
+    }]);
+
 })();

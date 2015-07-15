@@ -1,6 +1,7 @@
 {%verbatim%}
 
-<accordion close-others="true">
+<accordion close-others="true" sv-root sv-part="layers" sv-on-sort="onSort($item, $partFrom, $partTo, $indexFrom, $indexTo)">
+
 
     <accordion-group is-open="status.open">
         <accordion-heading>
@@ -9,7 +10,7 @@
         <add-layers map="map"></add-layers>
     </accordion-group>
 
-    <accordion-group ng-repeat="layer in layers" is-open="accordianOpen" ng-init="accordianOpen = $first">
+      <accordion-group sv-element ng-repeat="layer in layers" is-open="accordianOpen" ng-init="accordianOpen = $first">
         <accordion-heading>
             {{layer.get('title')}}
             <div class="pull-right">
