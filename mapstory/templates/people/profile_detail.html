@@ -225,7 +225,7 @@
                         <li>
                             <a href="#diary_entries" data-toggle="tab">
                                 <div class="counter">{{diary_entries.count}}</div>
-                                Diary Entr{{diary_entries|pluralize:"y,ies"}} </a>
+                                Journal Entr{{diary_entries|pluralize:"y,ies"}} </a>
                         </li>
 
                         <li>
@@ -293,7 +293,7 @@
                             {% if not diary_entries %}
                             <div class="no-content">
                                 <h2>No entries.</h2>
-                                <h4>Write your first diary entry now.</h4>
+                                <h4>Write your first journal entry now.</h4>
                             </div>
                             {% else %}
                                 {% for entry in diary_entries %}
