@@ -10,6 +10,8 @@
 {% block extra_head %}
 <!--<link href="{{ STATIC_URL }}vendor/isotope/css/style.css" rel="stylesheet" />-->
 <link href="{{ STATIC_URL }}mapstory/css/index.css" rel="stylesheet" />
+<link href="{{ STATIC_URL }}vendor/slick-carousel/slick/slick.css" rel="stylesheet" />
+<link href="{{ STATIC_URL }}vendor/slick-carousel/slick/slick-theme.css" rel="stylesheet" />
 {% endblock %}
 
 {% block extra_script %}
@@ -18,6 +20,8 @@
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/isotope/jquery.isotope.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}lib/js/angular.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}vendor/slick-carousel/slick/slick.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}vendor/angular-slick/dist/slick.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/index.js"></script>
 <script type="text/javascript">
     /* Script for keywords autocomplete */
@@ -119,7 +123,7 @@
     <section class="slice">
         <div class="container">
             <nav id="filter" class="col-md-12 text-center" style="left: -20px;">
-                <ul class="nav nav-tabs" >
+                <ul class="nav nav-tabs" style="padding-left: 50px;">
                     <!-- NOTE: The specific category names for querying may need to be updated -->
                     <li><a ng-click="query_category();" class="btn btn-filter btn-sm sectionTab">All MapStories</a></li>
                     <li><a ng-click="query_category('crisis');" class="btn btn-filter btn-sm sectionTab">Crisis</a></li>
@@ -133,53 +137,22 @@
                 </ul>
             </nav>
             <div class="row">
-                <!-- if less than five elements -->
-                <div ng-if="results.length < 5">
-                    <div class="col-md-3" ng-repeat="item in results" style="padding-top:10px; right: -5px;">
+                <p ng-hide="results.length">No Featured Items in this category ...</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="slice">
+        <div class="container">
+            <div ng-if="results.length">
+                <slick infinite="true" slides-to-show="4" autoplay="true" init-onload="true" data="results">
+                    <div class="col-md-3" ng-repeat="item in results" style="right: -5px;">
                         <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
                         <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
                         <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></h5>
                         <h4><span class="owner">{{ item.owner.username}}</span></h4>
                     </div>
-                </div>
-                <!-- if more than four elements, carousel display -->
-                <div ng-if="results.length > 4">
-                    <div class="col-md-3" ng-repeat="item in display" style="padding-top:10px; right: -5px">
-                        <div ng-if="$index == 0">
-                            <div class="row">
-                                <div class="col-md-2" style="padding-top: 30px; right:60px">
-                                    <h1 ng-click="slideLeft()" style="cursor: pointer;"><span><i class="fa fa-chevron-left"></i></span></h1>
-                                </div>
-                                <div class="col-md-10" style="right: 50px">
-                                    <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
-                                    <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
-                                    <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></h5>
-                                    <h4><span class="owner">{{ item.owner.username}}</span></h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div ng-if="$index == 1 || $index == 2">
-                            <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
-                            <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
-                            <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></h5>
-                            <h4><span class="owner">{{ item.owner.username}}</span></h4>
-                        </div>
-                        <div ng-if="$index == 3">
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
-                                    <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
-                                    <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></h5>
-                                    <h4><span class="owner">{{ item.owner.username}}</span></h4>
-                                </div>
-                                <div class="col-md-2" style="padding-top: 30px">
-                                    <h1 ng-click="slideRight()" style="cursor: pointer;"><span><i class="fa fa-chevron-right"></i></span></h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <p ng-hide="results.length">No Featured Items in this category ...</p>
+                </slick>
             </div>
         </div>
     </section>
@@ -369,15 +342,17 @@
             </div>
             <hr/>
             <div class="row">
-                {% for community in communities %}
-                <div class="col-sm-2">
-                    <a href="{{ community.link }}">
-                        <img class="rdphoto" src="{{ community.url }}" alt="{{ community.name }} - {{ community.description }}">
-                    </a>
-                </div>
-                {% empty %}
-                <p>No Community Initiatives. Add <a href="{% url 'admin:mapstory_community_add' %}">some</a></p>
-                {% endfor %}
+                <slice infinite="true" slides-to-show="6" autoplay="true">
+                    {% for community in communities %}
+                    <div class="col-sm-2">
+                        <a href="{{ community.link }}">
+                            <img class="rdphoto" src="{{ community.url }}" alt="{{ community.name }} - {{ community.description }}">
+                        </a>
+                    </div>
+                    {% empty %}
+                    <p>No Community Initiatives. Add <a href="{% url 'admin:mapstory_community_add' %}">some</a></p>
+                    {% endfor %}
+                </slice>
             </div>
         </div>
     </section>
@@ -395,15 +370,17 @@
             </div>
             <hr/>
             <div class="row">
-                {% for sponsor in sponsors %}
-                <div class="col-sm-2">
-                    <a href="{{ sponsor.link }}">
-                        <img src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
-                    </a>
-                </div>
-                {% empty %}
-                <p>No Sponsors. Add <a href="{% url 'admin:mapstory_sponsor_add' %}">some</a></p>
-                {% endfor %}
+                <slice infinite="true" slides-to-show="6" autoplay="true">
+                    {% for sponsor in sponsors %}
+                    <div class="col-sm-2">
+                        <a href="{{ sponsor.link }}">
+                            <img src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
+                        </a>
+                    </div>
+                    {% empty %}
+                    <p>No Sponsors. Add <a href="{% url 'admin:mapstory_sponsor_add' %}">some</a></p>
+                    {% endfor %}
+                </slice>
             </div>
         </div>
     </section>

@@ -3,7 +3,7 @@
 // Note that most of this section is copied from search.js in geonode; it might be better to extract the logic into a
 // new service rather than recreate a nearly identical controller
 (function() {
-    var module = angular.module('homepage', [], function($locationProvider) {
+    var module = angular.module('homepage', ['slick'], function($locationProvider) {
       if (window.navigator.userAgent.indexOf("MSIE") == -1){
           $locationProvider.html5Mode({
             enabled: true,
