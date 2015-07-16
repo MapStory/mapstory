@@ -1,0 +1,193 @@
+<!-- dashboard -->
+<section class="slice" id="dashboard">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-7" style="padding-right:15px;">
+        <br>
+        <div id="embedded_map" class="mrg-btm">
+          <div id="preview_map"></div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-sm-2">
+            <a href="{% url "profile_detail" resource.owner.username %}"><img class="thumb img-responsive img-circle" src="{% avatar_url resource.owner %}"/></a>
+          </div>
+          <div class="col-sm-10">
+              <h2 style="font-size:1.5em">{{ resource.owner.first_name }} {{ resource.owner.last_name }}</h2>
+              <hr style="margin:5px">
+              <h2 style="font-size:1.2em;color:gainsboro">
+                <!-- TODO: Add Mapstory messaging functionality, has this been implemented? -->
+                <span style="color:orange">message</span> |
+                {% for social_link in social_links %}
+                {% ifequal social_link "twitter" %}
+                  <a href="{{ social_link.url }}"><span style="color:deepskyblue">twitter</span></a> |
+                {% endifequal %}
+                {% ifequal social_link "facebook" %}
+                  <a href="{{ social_link.url }}"><span style="color:dodgerblue">facebook</span></a>
+                {% endifequal %}
+                {% endfor %}
+              </h2>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-12">
+            <article id="comments" class="tab-pane">
+              {% with resource as obj %}
+                {% include "_comments.html" %}
+              {% endwith %}
+            </article>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-5" style="padding:15px">
+        <div class="row">
+          <div class="col-sm-12">
+            <!-- <h1 style="font-weight:100;padding-top:10px;">Lorem Ipsum Dolor</h1> -->
+            <h2 class="page-title" style="padding-top:10px;">{{ resource.title|default:resource.typename }}</h2>
+          </div>
+        </div>
+        <hr style="margin-top:10px;margin-bottom:10px">
+        <div class="row">
+          <div class="col-sm-9">
+            {% if resource.region_name_list|length > 0 %}
+            <h3 style="margin-top:0px;margin-bottom:5px;">Region: {{ resource.region_name_list.0 }} <!-- This inequality isn't working for some reason --> {% if resource.region_name_list|length > 1 %} and {{ resource.region_name_list|length|add:"-1" }} more...{% else %} {% endif %}</h3>
+            {% endif %}
+            {% ifequal resource.category None %}
+            {% else %}
+            <h3 style="margin-top:0px;margin-bottom:5px;">Topic: {{ resource.category }}</h3>
+            {% endifequal %}
+            <h3 style="margin-top:0px;margin-bottom:5px;">Tags:</h3>
+            <!-- NOTE: This has some formatting issues; needs to wrap around to a second line nicely -->
+            {% for keyword in resource.keyword_list|slice:"5" %}
+              <span class="label label-default">{{ keyword }}</span>
+            {% endfor %}
+            {% if resource.keyword_list|length > 5 %}
+              <span class="label label-default">{{ resource.keyword_list|length|add:"-5" }} more</span>
+            {% endif %}
+            <!-- Make this into a modal that spawns and lets us add a tag
+            Name of the tag to add:
+            ...that's it I guess
+             -->
+            <a href="#form_add_tag" data-toggle="modal"><span class="label label-default">+ <span contenteditable="true">add</span></span></a>
+            <!-- Modal for adding a tag (WIP) -->
+            {% comment %}
+            <!--
+            {% comment_form resource as form %}
+            <div id="form_add_tag" class="modal-fade" tabindex="-1" role="dialog">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">{% trans 'Add Tag' %}</h4>
+                  </div> -->
+                  <!-- TODO: Need to figure out how to add a keyword this way... what should action be?-->
+                  <!--
+                  <form action="{% comment_target resource %}" method="POST" id="form_post_tag">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        {{ form|as_bootstrap }}
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                        <button id="tag_submit_btn" class="btn btn-primary">{% trans 'Add Tag' %}</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div> -->
+            
+            <!--
+            {% comment_form resource as form %}
+            <div id="form_add_tag" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                      <h4 class="modal-title">{% trans 'Add Comment' %}</h4>
+                    </div>
+                    <form action="{% comment_target resource %}" method="POST" id="form_post_comment">
+                      <div class="modal-body">
+                          {% csrf_token %}
+                          {{ form|as_bootstrap }}
+                      </div>
+                      <div class="modal-footer">
+                          <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                          <button id="comment_submit_btn" class="btn btn-primary">{% trans 'Submit Comment' %}</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+          -->
+            {% endcomment %}
+
+            <hr style="margin-top:15px;margin-bottom:10px">
+            <h3 style="margin-top:0px;margin-bottom:5px;">
+              Rate:
+              <i class="fa fa-star-o"></i>
+              <i class="fa fa-star-o"></i>
+              <i class="fa fa-star-o"></i>
+              <i class="fa fa-star-o"></i>
+              <i class="fa fa-star-o"></i>
+              
+              <!--
+              Rate:
+              <i class="fa fa-star-o"></i>
+              <i class="fa fa-star-o"></i>
+              <i class="fa fa-star-o"></i>
+              <i class="fa fa-star-o"></i>
+              <i class="fa fa-star-o"></i>
+            -->
+              <!--
+              Need to figure out how this is implemented...
+              Looks like an assignment tag probably but the name isn't found any
+              Looks like it uses jquery.raty.js but we want to change the styling of the stars
+              Looks like you can specify staroff and staron
+              It appears this may be from a later version of Geonode?
+<article id="rate" class="tab-pane">
+{% if request.user.is_authenticated %}
+<h4>{% trans "Rate this layer" %}</h4>
+{% user_rating request.user resource "layer" as user_layer_rating %}
+<div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
+{% endif %}        
+</article>
+-->
+            </h3>
+          </div>
+          <div class="col-sm-3" style="border-left:1px solid gainsboro">
+          <div style="text-align:right">
+            <a href="{% url "new_map" %}?layer={{resource.service_typename}}" >
+              <span style="font-size:1.3em;color:gainsboro">compose</span>
+              <br>
+              <span style="font-size:1.3em;color:gainsboro">mapstory</span>
+            </a>
+          </div>
+          <hr style="margin:5px">
+          <div style="text-align:right">
+            <a title="" href="#" target="blank">
+              <a href='{% url "map-new2" %}?layer={{resource.service_typename}}'><span style="font-size:1.3em;color:gainsboro">edit</span></a>
+              <!-- <span style="font-size:1.3em;color:gainsboro">edit</span> -->
+            </a>
+          </div>
+          <hr style="margin:5px">
+          <div style="text-align:right">
+            <a title="" href="#" target="blank">
+              <!-- TODO: Need to check if this user has already favorited this storylayer; toggle between adding/removing -->
+              <span style="font-size:1.3em;color:gainsboro">favorite</span>
+            </a>
+          </div>
+          <hr style="margin:5px">
+          <div style="text-align:right">
+            <a title="" href="#" target="blank">
+              <!-- TODO: Need to hook up functionality for flagging; presumably a modal spawns? -->
+              <span style="font-size:1.3em;color:gainsboro">flag</span>
+            </a>
+          </div>
+        </div>
+        </div>
+        <hr style="margin-top:10px;margin-bottom:10px">
+      </div>
+    </div>
+  </div>
+</section>

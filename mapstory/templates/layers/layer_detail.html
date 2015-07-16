@@ -24,6 +24,9 @@
 {% block body_class %}layers{% endblock %}
 
 {% block body_outer %}
+{% comment %}
+{% include "detail_base.html" %}
+{% endcomment %}
         <!-- dashboard -->
         <section class="slice" id="dashboard">
           <div class="container">
@@ -213,224 +216,228 @@
                 </div>
                 </div>
                 <hr style="margin-top:10px;margin-bottom:10px">
-                
-                <div class="row">
-                  <div class="col-sm-12">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a href="#Summary" data-toggle="tab" style="font-size:0.8em;">Summary</a></li>
-                        <li><a href="#Metadata" data-toggle="tab" style="font-size:0.8em;">Meta</a></li>
-                        <li><a href="#Edits" data-toggle="tab" style="font-size:0.8em;">Edits</a></li>
-                        <li><a href="#Download" data-toggle="tab" style="font-size:0.8em;">Download</a></li>
-                        <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;">Related</a></li>
-                    </ul>
-                    <div class="tab-content">
-                      <div class="tab-pane active" id="Summary">
-                        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-                          {{ resource.abstract }}
-                        </div>
-                      </div>
-                      <div class="tab-pane" id="Metadata">
-                        <table class="table table-condensed table-hover">
-                          <tr>
-                            <td width="35%">Topic</td>
-                            <td width="65%">{{ resource.category }}</td>
-                          </tr>
-                          <tr>
-                            <td width="35%">Language</td>
-                            <!-- TODO: Change to human readable? Seems the language property may be abbreviated -->
-                            <td width="65%"><i class="flag flag-us"></i>{{ resource.language }}</td>
-                          </tr>
-                          <tr>
-                            <td width="35%">Data Source</td>
-                            <td width="65%">{{ resource.distribution_url }}</td>
-                          </tr> 
-                          <tr>
-                            <td width="35%">Data Quality Statement</td>
-                            <td width="65%">{{ resource.data_quality_statement }}</td>
-                          </tr>
-                          <tr>
-                            <td width="35%">Purpose</td>
-                            <td width="65%">{{ resource.purpose }}</td>
-                          </tr>   
-                        </table>
-                      </div>
-                      <div class="tab-pane" id="Edits">
-                        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-                          <table class="table table-condensed">
-                        <tr>
-                          <td>
-                            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Annie Butler</h2>
-                          </td>
-                          <td>
-                            <i class="flag flag-us"></i> 
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Victor Reed</h2>
-                          </td>
-                          <td>
-                            <i class="flag flag-ph"></i> 
-                          </td>
-                        </tr> 
-                        <tr>
-                          <td>
-                            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Charles Johnson</h2>
-                          </td>
-                          <td>
-                            <i class="flag flag-gb"></i> 
-                          </td>
-                        </tr> 
-                        <tr>
-                          <td>
-                            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Evelyn Baker</h2>
-                          </td>
-                          <td>
-                            <i class="flag flag-fr"></i> 
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Shawn Rivera</h2>
-                          </td>
-                          <td>
-                            <i class="flag flag-de"></i> 
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Adam Russell</h2>
-                          </td>
-                          <td>
-                            <i class="flag flag-at"></i> 
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Russell Lee</h2>
-                          </td>
-                          <td>
-                            <i class="flag flag-it"></i> 
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Joe Kelly</h2>
-                          </td>
-                          <td>
-                            <i class="flag flag-jp"></i> 
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Benjamin Wright</h2>
-                          </td>
-                          <td>
-                            <i class="flag flag-cn"></i> 
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Jimmy Washington</h2>
-                          </td>
-                          <td>
-                            <i class="flag flag-ca"></i> 
-                          </td>
-                        </tr>
-                      </table>
-                        </div>
-                      </div>
-                      <div class="tab-pane" id="Download">
-                        <div class="row">
-                          <div class="col-sm-4" style="padding:5px">
-                            <a class="btn btn-md btn-block" href="#" style="font-weight:100;background-color:white;color:red;border:1px solid red">CSV</a>
-                          </div>
-                          <div class="col-sm-4" style="padding:5px">
-                            <a class="btn btn-md btn-block" href="#" style="background-color:white;color:green;border:1px solid green">XLS</a>
-                          </div>
-                          <div class="col-sm-4" style="padding:5px">
-                            <a class="btn btn-md btn-block" href="#" style="background-color:white;color:blue;border:1px solid blue">SHP</a>
-                          </div>
-                          <div class="col-sm-4" style="padding:5px">
-                            <a class="btn btn-md btn-block" href="#" style="background-color:white;color:purple;border:1px solid purple">GML</a>
-                          </div>
-                          <div class="col-sm-4" style="padding:5px">
-                            <a class="btn btn-md btn-block" href="#" style="background-color:white;color:gold;border:1px solid gold">JSON</a>
-                          </div>
-                          <div class="col-sm-4" style="padding:5px">
-                            <a class="btn btn-md btn-block" href="#" style="background-color:white;color:orange;border:1px solid orange">SLD</a>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="tab-pane" id="Related">
-                        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-                          <div class="col-sm-12">
-                            <div class="row boxFeature">
-                              <div class="col-xs-3">
-                                <img src="images/portfolio/redlgpng.png" class="img-responsive"/>
-                              </div>
-                              <div class="col-xs-9">
-                                <h3>Media Title</h3>
-                                <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm-12">
-                            <div class="row boxFeature">
-                              <div class="col-xs-3">
-                                <img src="images/portfolio/yellowlgpng.png" class="img-responsive"/>
-                              </div>
-                              <div class="col-xs-9">
-                                <h3>Media Title</h3>
-                                <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm-12">
-                            <div class="row boxFeature">
-                              <div class="col-xs-3">
-                                <img src="images/portfolio/yellowlgpng.png" class="img-responsive"/>
-                              </div>
-                              <div class="col-xs-9">
-                                <h3>Media Title</h3>
-                                <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm-12">
-                            <div class="row boxFeature">
-                              <div class="col-xs-3">
-                                <img src="images/portfolio/yellowlgpng.png" class="img-responsive"/>
-                              </div>
-                              <div class="col-xs-9">
-                                <h3>Media Title</h3>
-                                <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-sm-12">
-                            <div class="row boxFeature">
-                              <div class="col-xs-3">
-                                <img src="images/portfolio/yellowlgpng.png" class="img-responsive"/>
-                              </div>
-                              <div class="col-xs-9">
-                                <h3>Media Title</h3>
-                                <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-                              </div>
-                            </div>
-                          </div>
-                    <a class="btn btn-sm btn-block" title="" href="#" target="blank">
-                      <span style="font-size:1.2em">load more storylayers</span>
-                    </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
         </section>
+
+<section class="slice">
+  <div class="container">                        
+    <div class="row">
+      <div class="col-sm-12">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#Summary" data-toggle="tab" style="font-size:0.8em;">Summary</a></li>
+            <li><a href="#Metadata" data-toggle="tab" style="font-size:0.8em;">Meta</a></li>
+            <li><a href="#Edits" data-toggle="tab" style="font-size:0.8em;">Edits</a></li>
+            <li><a href="#Download" data-toggle="tab" style="font-size:0.8em;">Download</a></li>
+            <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;">Related</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="Summary">
+            <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+              {{ resource.abstract }}
+            </div>
+          </div>
+          <div class="tab-pane" id="Metadata">
+            <table class="table table-condensed table-hover">
+              <tr>
+                <td width="35%">Topic</td>
+                <td width="65%">{{ resource.category }}</td>
+              </tr>
+              <tr>
+                <td width="35%">Language</td>
+                <!-- TODO: Change to human readable? Seems the language property may be abbreviated -->
+                <td width="65%"><i class="flag flag-us"></i>{{ resource.language }}</td>
+              </tr>
+              <tr>
+                <td width="35%">Data Source</td>
+                <td width="65%">{{ resource.distribution_url }}</td>
+              </tr> 
+              <tr>
+                <td width="35%">Data Quality Statement</td>
+                <td width="65%">{{ resource.data_quality_statement }}</td>
+              </tr>
+              <tr>
+                <td width="35%">Purpose</td>
+                <td width="65%">{{ resource.purpose }}</td>
+              </tr>   
+            </table>
+          </div>
+          <div class="tab-pane" id="Edits">
+            <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+              <table class="table table-condensed">
+            <tr>
+              <td>
+                <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Annie Butler</h2>
+              </td>
+              <td>
+                <i class="flag flag-us"></i> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Victor Reed</h2>
+              </td>
+              <td>
+                <i class="flag flag-ph"></i> 
+              </td>
+            </tr> 
+            <tr>
+              <td>
+                <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Charles Johnson</h2>
+              </td>
+              <td>
+                <i class="flag flag-gb"></i> 
+              </td>
+            </tr> 
+            <tr>
+              <td>
+                <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Evelyn Baker</h2>
+              </td>
+              <td>
+                <i class="flag flag-fr"></i> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Shawn Rivera</h2>
+              </td>
+              <td>
+                <i class="flag flag-de"></i> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Adam Russell</h2>
+              </td>
+              <td>
+                <i class="flag flag-at"></i> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Russell Lee</h2>
+              </td>
+              <td>
+                <i class="flag flag-it"></i> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Joe Kelly</h2>
+              </td>
+              <td>
+                <i class="flag flag-jp"></i> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Benjamin Wright</h2>
+              </td>
+              <td>
+                <i class="flag flag-cn"></i> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Jimmy Washington</h2>
+              </td>
+              <td>
+                <i class="flag flag-ca"></i> 
+              </td>
+            </tr>
+          </table>
+            </div>
+          </div>
+          <div class="tab-pane" id="Download">
+            <div class="row">
+              <div class="col-sm-4" style="padding:5px">
+                <a class="btn btn-md btn-block" href="#" style="font-weight:100;background-color:white;color:red;border:1px solid red">CSV</a>
+              </div>
+              <div class="col-sm-4" style="padding:5px">
+                <a class="btn btn-md btn-block" href="#" style="background-color:white;color:green;border:1px solid green">XLS</a>
+              </div>
+              <div class="col-sm-4" style="padding:5px">
+                <a class="btn btn-md btn-block" href="#" style="background-color:white;color:blue;border:1px solid blue">SHP</a>
+              </div>
+              <div class="col-sm-4" style="padding:5px">
+                <a class="btn btn-md btn-block" href="#" style="background-color:white;color:purple;border:1px solid purple">GML</a>
+              </div>
+              <div class="col-sm-4" style="padding:5px">
+                <a class="btn btn-md btn-block" href="#" style="background-color:white;color:gold;border:1px solid gold">JSON</a>
+              </div>
+              <div class="col-sm-4" style="padding:5px">
+                <a class="btn btn-md btn-block" href="#" style="background-color:white;color:orange;border:1px solid orange">SLD</a>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane" id="Related">
+            <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+              <div class="col-sm-12">
+                <div class="row boxFeature">
+                  <div class="col-xs-3">
+                    <img src="images/portfolio/redlgpng.png" class="img-responsive"/>
+                  </div>
+                  <div class="col-xs-9">
+                    <h3>Media Title</h3>
+                    <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="row boxFeature">
+                  <div class="col-xs-3">
+                    <img src="images/portfolio/yellowlgpng.png" class="img-responsive"/>
+                  </div>
+                  <div class="col-xs-9">
+                    <h3>Media Title</h3>
+                    <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="row boxFeature">
+                  <div class="col-xs-3">
+                    <img src="images/portfolio/yellowlgpng.png" class="img-responsive"/>
+                  </div>
+                  <div class="col-xs-9">
+                    <h3>Media Title</h3>
+                    <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="row boxFeature">
+                  <div class="col-xs-3">
+                    <img src="images/portfolio/yellowlgpng.png" class="img-responsive"/>
+                  </div>
+                  <div class="col-xs-9">
+                    <h3>Media Title</h3>
+                    <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="row boxFeature">
+                  <div class="col-xs-3">
+                    <img src="images/portfolio/yellowlgpng.png" class="img-responsive"/>
+                  </div>
+                  <div class="col-xs-9">
+                    <h3>Media Title</h3>
+                    <p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
+                  </div>
+                </div>
+              </div>
+        <a class="btn btn-sm btn-block" title="" href="#" target="blank">
+          <span style="font-size:1.2em">load more storylayers</span>
+        </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 {% endblock %}
 
