@@ -440,6 +440,8 @@ function create(options) {
             totalRange = options.data;
         }
         boxes = [{
+                title: 'Default Story Chapter',
+                description: 'No description.',
                 data: data,
                 range: totalRange,
                 speed: {
@@ -448,7 +450,7 @@ function create(options) {
                 }
             }];
     }
-
+    console.log(boxes);
     model = new models.TimeModel(options, boxes, annotations);
     slider = new timeslider.TimeSlider(options.timeSliderId || 'slider', model);
     timeline = new line.TimeLine(options.timeLineId || 'timeline', model);

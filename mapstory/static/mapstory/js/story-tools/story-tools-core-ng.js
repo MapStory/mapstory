@@ -64,6 +64,127 @@
 (function() {
     'use strict';
 
+    var module = angular.module('storytools.core.pins', [
+    ]);
+
+    var pins = storytools.core.maps.pins;
+
+    function StoryPinLayerManager() {
+        this.storyPins = [];
+    }
+    StoryPinLayerManager.prototype.pinsChanged = function(pins, action) {
+        var i;
+        if (action == 'delete') {
+            for (i = 0; i < pins.length; i++) {
+                var pin = pins[i];
+                for (var j = 0, jj = this.storyPins.length; j < jj; j++) {
+                    if (this.storyPins[j].id == pin.id) {
+                        this.storyPins.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+        } else if (action == 'add') {
+            for (i = 0; i < pins.length; i++) {
+                this.storyPins.push(pins[i]);
+            }
+        } else if (action == 'change') {
+            // provided edits could be used to optimize below
+        } else {
+            throw new Error('action? :' + action);
+        }
+        // @todo optimize by looking at changes
+        var times = this.storyPins.map(function(p) {
+            if (p.start_time > p.end_time) {
+                return storytools.core.utils.createRange(p.end_time, p.start_time);
+            } else {
+                return storytools.core.utils.createRange(p.start_time, p.end_time);
+            }
+        });
+        this.storyPinsLayer.set('times', times);
+        this.storyPinsLayer.set('features', this.storyPins);
+    };
+    StoryPinLayerManager.prototype.loadFromGeoJSON = function(geojson, projection) {
+        if (geojson && geojson.features) {
+            var loaded = pins.loadFromGeoJSON(geojson, projection);
+            this.pinsChanged(loaded, 'add', true);
+        }
+    };
+
+    module.service('StoryPinLayerManager', StoryPinLayerManager);
+
+    module.constant('StoryPin', pins.StoryPin);
+
+    // @todo naive implementation on local storage for now
+    module.service('stAnnotationsStore', ["StoryPinLayerManager", function(StoryPinLayerManager) {
+        function path(mapid) {
+            return '/maps/' + mapid + '/annotations';
+        }
+        function get(mapid) {
+            var saved = localStorage.getItem(path(mapid));
+            saved = (saved === null) ? [] : JSON.parse(saved);
+            // TODO is this still needed?
+            /*saved.forEach(function(s) {
+                s.the_geom = format.readGeometry(s.the_geom);
+            });*/
+            return saved;
+        }
+        function set(mapid, annotations) {
+            // TODO is this still needed?
+            /*annotations.forEach(function(s) {
+                if (s.the_geom && !angular.isString(s.the_geom)) {
+                    s.the_geom = format.writeGeometry(s.the_geom);
+                }
+            });*/
+            localStorage.setItem(path(mapid),
+                new ol.format.GeoJSON().writeFeatures(annotations,
+                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'})
+            );
+        }
+        return {
+            loadAnnotations: function(mapid, projection) {
+                return StoryPinLayerManager.loadFromGeoJSON(get(mapid), projection);
+            },
+            deleteAnnotations: function(annotations) {
+                var saved = get();
+                var toDelete = annotations.map(function(d) {
+                    return d.id;
+                });
+                saved = saved.filter(function(s) {
+                    return toDelete.indexOf(s.id) < 0;
+                });
+                set(saved);
+            },
+            saveAnnotations: function(mapid, annotations) {
+                var saved = get();
+                var maxId = 0;
+                saved.forEach(function(s) {
+                    maxId = Math.max(maxId, s.id);
+                });
+                var clones = [];
+                annotations.forEach(function(a) {
+                    if (typeof a.id == 'undefined') {
+                        a.id = ++maxId;
+                    }
+                    var clone = a.clone();
+                    if (a.get('start_time') !== undefined) {
+                        clone.set('start_time', a.get('start_time')/1000);
+                    }
+                    if (a.get('end_time') !== undefined) {
+                        clone.set('end_time', a.get('end_time')/1000);
+                    }
+                    clones.push(clone);
+                });
+                set(mapid, clones);
+            }
+        };
+    }]);
+
+})();
+
+(function() {
+    'use strict';
+
     var module = angular.module('storytools.core.ogc', [
     ]);
 
@@ -724,127 +845,6 @@
 (function() {
     'use strict';
 
-    var module = angular.module('storytools.core.pins', [
-    ]);
-
-    var pins = storytools.core.maps.pins;
-
-    function StoryPinLayerManager() {
-        this.storyPins = [];
-    }
-    StoryPinLayerManager.prototype.pinsChanged = function(pins, action) {
-        var i;
-        if (action == 'delete') {
-            for (i = 0; i < pins.length; i++) {
-                var pin = pins[i];
-                for (var j = 0, jj = this.storyPins.length; j < jj; j++) {
-                    if (this.storyPins[j].id == pin.id) {
-                        this.storyPins.splice(j, 1);
-                        break;
-                    }
-                }
-            }
-        } else if (action == 'add') {
-            for (i = 0; i < pins.length; i++) {
-                this.storyPins.push(pins[i]);
-            }
-        } else if (action == 'change') {
-            // provided edits could be used to optimize below
-        } else {
-            throw new Error('action? :' + action);
-        }
-        // @todo optimize by looking at changes
-        var times = this.storyPins.map(function(p) {
-            if (p.start_time > p.end_time) {
-                return storytools.core.utils.createRange(p.end_time, p.start_time);
-            } else {
-                return storytools.core.utils.createRange(p.start_time, p.end_time);
-            }
-        });
-        this.storyPinsLayer.set('times', times);
-        this.storyPinsLayer.set('features', this.storyPins);
-    };
-    StoryPinLayerManager.prototype.loadFromGeoJSON = function(geojson, projection) {
-        if (geojson && geojson.features) {
-            var loaded = pins.loadFromGeoJSON(geojson, projection);
-            this.pinsChanged(loaded, 'add', true);
-        }
-    };
-
-    module.service('StoryPinLayerManager', StoryPinLayerManager);
-
-    module.constant('StoryPin', pins.StoryPin);
-
-    // @todo naive implementation on local storage for now
-    module.service('stAnnotationsStore', ["StoryPinLayerManager", function(StoryPinLayerManager) {
-        function path(mapid) {
-            return '/maps/' + mapid + '/annotations';
-        }
-        function get(mapid) {
-            var saved = localStorage.getItem(path(mapid));
-            saved = (saved === null) ? [] : JSON.parse(saved);
-            // TODO is this still needed?
-            /*saved.forEach(function(s) {
-                s.the_geom = format.readGeometry(s.the_geom);
-            });*/
-            return saved;
-        }
-        function set(mapid, annotations) {
-            // TODO is this still needed?
-            /*annotations.forEach(function(s) {
-                if (s.the_geom && !angular.isString(s.the_geom)) {
-                    s.the_geom = format.writeGeometry(s.the_geom);
-                }
-            });*/
-            localStorage.setItem(path(mapid),
-                new ol.format.GeoJSON().writeFeatures(annotations,
-                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'})
-            );
-        }
-        return {
-            loadAnnotations: function(mapid, projection) {
-                return StoryPinLayerManager.loadFromGeoJSON(get(mapid), projection);
-            },
-            deleteAnnotations: function(annotations) {
-                var saved = get();
-                var toDelete = annotations.map(function(d) {
-                    return d.id;
-                });
-                saved = saved.filter(function(s) {
-                    return toDelete.indexOf(s.id) < 0;
-                });
-                set(saved);
-            },
-            saveAnnotations: function(mapid, annotations) {
-                var saved = get();
-                var maxId = 0;
-                saved.forEach(function(s) {
-                    maxId = Math.max(maxId, s.id);
-                });
-                var clones = [];
-                annotations.forEach(function(a) {
-                    if (typeof a.id == 'undefined') {
-                        a.id = ++maxId;
-                    }
-                    var clone = a.clone();
-                    if (a.get('start_time') !== undefined) {
-                        clone.set('start_time', a.get('start_time')/1000);
-                    }
-                    if (a.get('end_time') !== undefined) {
-                        clone.set('end_time', a.get('end_time')/1000);
-                    }
-                    clones.push(clone);
-                });
-                set(mapid, clones);
-            }
-        };
-    }]);
-
-})();
-
-(function() {
-    'use strict';
-
     angular.module('storytools.core.style', [
         'storytools.core.style.ol3StyleConverter',
         'storytools.core.style.svgIcon'
@@ -1399,7 +1399,7 @@
         });
     }
 
-    function TimeControlsManager($rootScope, StoryPinLayerManager, MapManager) {
+    function TimeControlsManager($rootScope, StoryPinLayerManager, StoryBoxLayerManager, MapManager) {
         this.timeControls = null;
         var timeControlsManager = this;
 
@@ -1416,8 +1416,10 @@
             var range = computeTicks(MapManager.storyMap);
             if (range.length) {
                 var annotations = StoryPinLayerManager.storyPins;
+                var boxes = StoryBoxLayerManager.storyBoxes;
                 timeControlsManager.timeControls = storytools.core.time.create({
                     annotations: annotations,
+                    boxes: boxes,
                     storyMap: MapManager.storyMap,
                     data: range,
                     mode: MapManager.storyMap.mode,
@@ -1441,6 +1443,7 @@
                 }
             });
         });
+
         var pinsLayer = MapManager.storyMap.storyPinsLayer;
         pinsLayer.on('change:features', function() {
             maybeCreateTimeControls(function() {
@@ -1468,10 +1471,11 @@
 (function() {
     'use strict';
 
-    var module = angular.module('storytools.core.boxes', [
+    var module = angular.module('storytools.core.boxes', ['storytools.core.time.services'
     ]);
 
     var boxes = storytools.core.maps.boxes;
+    var utils = storytools.core.time.utils;
 
     function StoryBoxLayerManager() {
         this.storyBoxes = [];
@@ -1521,13 +1525,13 @@
     module.constant('StoryBox', boxes.Box);
 
     // @todo naive implementation on local storage for now
-    module.service('stStoryBoxesStore', ["StoryBoxLayerManager", function(StoryBoxLayerManager) {
+    module.service('stStoryBoxesStore', ["StoryBoxLayerManager", "TimeMachine", function(StoryBoxLayerManager, TimeMachine) {
         function path(mapid) {
             return '/maps/' + mapid + '/boxes';
         }
         function get(mapid) {
             var saved = localStorage.getItem(path(mapid));
-            saved = (saved === null) ? [] : JSON.parse(saved);
+            saved = (saved === null) ? null : JSON.parse(saved);
 
             return saved;
         }
@@ -1537,8 +1541,43 @@
 
         }
         return {
-            loadBoxes: function(mapid) {
-                return get(mapid);
+            loadBoxes: function(mapid, storyMap) {
+
+                var boxes = get(mapid);
+
+                //var range = TimeMachine.computeTicks(storyMap);
+
+                return boxes;//(boxes === null)? this.createBoxes({'data' :range}) : boxes;
+            },
+            createBoxes: function(options){
+
+                var totalRange;
+
+                // make a default box if none provided
+                //if (typeof boxes == 'undefined' || boxes.length === 0) {
+                    var interval = 0, data = null;
+                    if (Array.isArray(options.data)) {
+                        data = options.data;
+                        totalRange = utils.computeRange(options.data);
+                    } else {
+                        interval = options.data.interval || utils.pickInterval(options.data);
+                        totalRange = options.data;
+                    }
+                    boxes = [{
+                        title: 'Default StoryBox Chapter',
+                        description: 'No description.',
+                        data: data,
+                        range: totalRange,
+                        speed: {
+                            interval: interval,
+                            seconds: 3
+                        }
+                    }];
+
+
+                return boxes;
+                //}
+
             },
             deleteBoxes: function(boxes) {
                 var saved = get();
