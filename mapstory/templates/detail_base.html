@@ -1,4 +1,13 @@
-<!-- dashboard -->
+{% load i18n %}
+{% load dialogos_tags %}
+{% load agon_ratings_tags %}
+{% load bootstrap_tags %}
+{% load url from future %}
+{% load base_tags %}
+{% load guardian_tags %}
+{% load friendly_loader %}
+{% friendly_load avatar_tags %}
+
 <section class="slice" id="dashboard">
   <div class="container">
     <div class="row">
@@ -43,8 +52,7 @@
       <div class="col-sm-5" style="padding:15px">
         <div class="row">
           <div class="col-sm-12">
-            <!-- <h1 style="font-weight:100;padding-top:10px;">Lorem Ipsum Dolor</h1> -->
-            <h2 class="page-title" style="padding-top:10px;">{{ resource.title|default:resource.typename }}</h2>
+            <h2 class="page-title" style="padding-top:10px;">{{ resource.title }}</h2>
           </div>
         </div>
         <hr style="margin-top:10px;margin-bottom:10px">
@@ -65,11 +73,9 @@
             {% if resource.keyword_list|length > 5 %}
               <span class="label label-default">{{ resource.keyword_list|length|add:"-5" }} more</span>
             {% endif %}
-            <!-- Make this into a modal that spawns and lets us add a tag
-            Name of the tag to add:
-            ...that's it I guess
-             -->
+            <!-- Temporarily removing add tags
             <a href="#form_add_tag" data-toggle="modal"><span class="label label-default">+ <span contenteditable="true">add</span></span></a>
+          -->
             <!-- Modal for adding a tag (WIP) -->
             {% comment %}
             <!--
@@ -124,13 +130,6 @@
 
             <hr style="margin-top:15px;margin-bottom:10px">
             <h3 style="margin-top:0px;margin-bottom:5px;">
-              Rate:
-              <i class="fa fa-star-o"></i>
-              <i class="fa fa-star-o"></i>
-              <i class="fa fa-star-o"></i>
-              <i class="fa fa-star-o"></i>
-              <i class="fa fa-star-o"></i>
-              
               <!--
               Rate:
               <i class="fa fa-star-o"></i>
@@ -138,53 +137,31 @@
               <i class="fa fa-star-o"></i>
               <i class="fa fa-star-o"></i>
               <i class="fa fa-star-o"></i>
-            -->
-              <!--
+
               Need to figure out how this is implemented...
               Looks like an assignment tag probably but the name isn't found any
               Looks like it uses jquery.raty.js but we want to change the styling of the stars
               Looks like you can specify staroff and staron
-              It appears this may be from a later version of Geonode?
-<article id="rate" class="tab-pane">
-{% if request.user.is_authenticated %}
-<h4>{% trans "Rate this layer" %}</h4>
-{% user_rating request.user resource "layer" as user_layer_rating %}
-<div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
-{% endif %}        
-</article>
--->
+              It appears this may be from a later version of Geonode? -->
+              <article id="rate" class="tab-pane">
+              {% if request.user.is_authenticated %}
+              <h4>{% trans "Rate this layer" %}</h4>
+              {% user_rating request.user resource "layer" as user_layer_rating %}
+              <div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
+              {% endif %}        
+              </article>
             </h3>
           </div>
-          <div class="col-sm-3" style="border-left:1px solid gainsboro">
-          <div style="text-align:right">
-            <a href="{% url "new_map" %}?layer={{resource.service_typename}}" >
-              <span style="font-size:1.3em;color:gainsboro">compose</span>
-              <br>
-              <span style="font-size:1.3em;color:gainsboro">mapstory</span>
-            </a>
-          </div>
-          <hr style="margin:5px">
-          <div style="text-align:right">
-            <a title="" href="#" target="blank">
-              <a href='{% url "map-new2" %}?layer={{resource.service_typename}}'><span style="font-size:1.3em;color:gainsboro">edit</span></a>
-              <!-- <span style="font-size:1.3em;color:gainsboro">edit</span> -->
-            </a>
-          </div>
-          <hr style="margin:5px">
-          <div style="text-align:right">
-            <a title="" href="#" target="blank">
-              <!-- TODO: Need to check if this user has already favorited this storylayer; toggle between adding/removing -->
-              <span style="font-size:1.3em;color:gainsboro">favorite</span>
-            </a>
-          </div>
-          <hr style="margin:5px">
-          <div style="text-align:right">
-            <a title="" href="#" target="blank">
-              <!-- TODO: Need to hook up functionality for flagging; presumably a modal spawns? -->
-              <span style="font-size:1.3em;color:gainsboro">flag</span>
-            </a>
-          </div>
-        </div>
+          {% ifequal page "layer" %}
+          {% include "layers/layer_functions.html" %}
+          {% include "layers/layer_data.html" %}
+          {% else %}
+            {% ifequal page "map" %}
+            {% include "maps/map_functions.html" %}
+            {% include "maps/map_data.html" %}
+            {% else %}
+            {% endifequal %}
+          {% endifequal %}
         </div>
         <hr style="margin-top:10px;margin-bottom:10px">
       </div>

@@ -1,0 +1,72 @@
+<div class="row">
+  <div class="col-sm-12">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#Summary" data-toggle="tab" style="font-size:0.8em;">Summary</a></li>
+        <li><a href="#Metadata" data-toggle="tab" style="font-size:0.8em;">Meta</a></li>
+        <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;" ng-click="query_category({{ resource.category }}, 'layer');">Related</a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active" id="Summary">
+        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+          {{ resource.abstract }}
+        </div>
+      </div>
+      <div class="tab-pane" id="Metadata">
+        <table class="table table-condensed table-hover">
+          <tr>
+            <td width="35%">Topic</td>
+            <td width="65%">{{ resource.category }}</td>
+          </tr>
+          <tr>
+            <td width="35%">Language</td>
+            <!-- TODO: Change to human readable? Seems the language property may be abbreviated -->
+            <td width="65%"><i class="flag flag-us"></i>{{ resource.language }}</td>
+          </tr>
+          <tr>
+            <td width="35%">Data Source</td>
+            <td width="65%">{{ resource.distribution_url }}</td>
+          </tr> 
+          <tr>
+            <td width="35%">Data Quality Statement</td>
+            <td width="65%">{{ resource.data_quality_statement }}</td>
+          </tr>
+          <tr>
+            <td width="35%">Purpose</td>
+            <td width="65%">{{ resource.purpose }}</td>
+          </tr>   
+        </table>
+      </div>
+      <div class="tab-pane" id="Related">
+        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+          <div ng-show="{{ resource.category }}">
+            {% verbatim %}
+            <div ng-hide="results.length">
+              <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+                No related layers found...
+              </div>
+            </div>
+            <div ng-show="results.length">
+              <div class="col-sm-12" ng-repeat="item in results">
+                <div class="row boxFeature">
+                  <div class="col-xs-3">
+                    <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
+                  </div>
+                  <div class="col-xs-9">
+                    <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
+                    <p>{{ item.abstract|limitTo:"250"  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endverbatim %}
+          </div>
+          <div ng-hide="{{ resource.category }}">
+            <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+              No related layers found...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
