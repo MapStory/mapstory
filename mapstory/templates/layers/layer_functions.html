@@ -1,0 +1,30 @@
+<div class="col-sm-3" style="border-left:1px solid gainsboro">
+  <div style="text-align:right">
+    <a href="{% url "new_map" %}?layer={{resource.service_typename}}" >
+      <span style="font-size:1.3em;color:gainsboro">compose</span>
+      <br>
+      <span style="font-size:1.3em;color:gainsboro">mapstory</span>
+    </a>
+  </div>
+  <hr style="margin:5px">
+  <div style="text-align:right">
+    <a title="" href="#" target="blank">
+      <a href='{% url "map-new2" %}?layer={{resource.service_typename}}'><span style="font-size:1.3em;color:gainsboro">edit</span></a>
+      <!-- <span style="font-size:1.3em;color:gainsboro">edit</span> -->
+    </a>
+  </div>
+  <hr style="margin:5px">
+  <div style="text-align:right">
+    <a title="" href="#" target="blank">
+      <!-- TODO: Need to check if this user has already favorited this storylayer; toggle between adding/removing -->
+      <span style="font-size:1.3em;color:gainsboro">favorite</span>
+    </a>
+  </div>
+  <hr style="margin:5px">
+  <div style="text-align:right">
+    <a title="" href="#" target="blank">
+      <!-- TODO: Need to hook up functionality for flagging; presumably a modal spawns? -->
+      <span style="font-size:1.3em;color:gainsboro">flag</span>
+    </a>
+  </div>
+</div>

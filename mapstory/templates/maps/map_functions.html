@@ -1,0 +1,23 @@
+<div class="col-sm-3" style="border-left:1px solid gainsboro">
+  <div style="text-align:right">
+    <a href="{% url "map_viewer" resource.id %}" >
+      <span style="font-size:1.3em;color:gainsboro">play</span>
+      <br>
+      <span style="font-size:1.3em;color:gainsboro">fullscreen</span>
+    </a>
+  </div>
+  <hr style="margin:5px">
+  <div style="text-align:right">
+    <a title="" href="#" target="blank">
+      <!-- TODO: Need to check if this user has already favorited this storylayer; toggle between adding/removing -->
+      <span style="font-size:1.3em;color:gainsboro">favorite</span>
+    </a>
+  </div>
+  <hr style="margin:5px">
+  <div style="text-align:right">
+    <a title="" href="#" target="blank">
+      <!-- TODO: Need to hook up functionality for flagging; presumably a modal spawns? -->
+      <span style="font-size:1.3em;color:gainsboro">flag</span>
+    </a>
+  </div>
+</div>

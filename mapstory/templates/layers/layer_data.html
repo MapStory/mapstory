@@ -1,0 +1,208 @@
+{% load i18n %}
+{% load dialogos_tags %}
+{% load agon_ratings_tags %}
+{% load bootstrap_tags %}
+{% load url from future %}
+{% load base_tags %}
+{% load guardian_tags %}
+<div ng-app="related"><div ng-controller="search_controller">
+<div class="row">
+  <div class="col-sm-12">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#Summary" data-toggle="tab" style="font-size:0.8em;">Summary</a></li>
+        <li><a href="#Metadata" data-toggle="tab" style="font-size:0.8em;">Meta</a></li>
+        <li><a href="#Edits" data-toggle="tab" style="font-size:0.8em;">Edits</a></li>
+        <li><a href="#Download" data-toggle="tab" style="font-size:0.8em;">Download</a></li>
+        <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;" ng-click="query_category({{ resource.category }}, 'layer');">Related</a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="tab-pane active" id="Summary">
+        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+          {{ resource.abstract }}
+        </div>
+      </div>
+      <div class="tab-pane" id="Metadata">
+        <table class="table table-condensed table-hover">
+          <tr>
+            <td width="35%">Topic</td>
+            <td width="65%">{{ resource.category }}</td>
+          </tr>
+          <tr>
+            <td width="35%">Language</td>
+            <!-- TODO: Change to human readable? Seems the language property may be abbreviated -->
+            <td width="65%"><i class="flag flag-us"></i>{{ resource.language }}</td>
+          </tr>
+          <tr>
+            <td width="35%">Data Source</td>
+            <td width="65%">{{ resource.distribution_url }}</td>
+          </tr> 
+          <tr>
+            <td width="35%">Data Quality Statement</td>
+            <td width="65%">{{ resource.data_quality_statement }}</td>
+          </tr>
+          <tr>
+            <td width="35%">Purpose</td>
+            <td width="65%">{{ resource.purpose }}</td>
+          </tr>   
+        </table>
+      </div>
+      <div class="tab-pane" id="Edits">
+        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+          <table class="table table-condensed">
+        <tr>
+          <td>
+            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Annie Butler</h2>
+          </td>
+          <td>
+            <i class="flag flag-us"></i> 
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Victor Reed</h2>
+          </td>
+          <td>
+            <i class="flag flag-ph"></i> 
+          </td>
+        </tr> 
+        <tr>
+          <td>
+            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Charles Johnson</h2>
+          </td>
+          <td>
+            <i class="flag flag-gb"></i> 
+          </td>
+        </tr> 
+        <tr>
+          <td>
+            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Evelyn Baker</h2>
+          </td>
+          <td>
+            <i class="flag flag-fr"></i> 
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Shawn Rivera</h2>
+          </td>
+          <td>
+            <i class="flag flag-de"></i> 
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Adam Russell</h2>
+          </td>
+          <td>
+            <i class="flag flag-at"></i> 
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Russell Lee</h2>
+          </td>
+          <td>
+            <i class="flag flag-it"></i> 
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Joe Kelly</h2>
+          </td>
+          <td>
+            <i class="flag flag-jp"></i> 
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Benjamin Wright</h2>
+          </td>
+          <td>
+            <i class="flag flag-cn"></i> 
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Jimmy Washington</h2>
+          </td>
+          <td>
+            <i class="flag flag-ca"></i> 
+          </td>
+        </tr>
+      </table>
+        </div>
+      </div>
+      <div class="tab-pane" id="Download">
+        <ul class="list-group">
+          {% if resource.storeType != "remoteStore" %}
+            {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
+            
+            <li class="list-group-item">
+            {% if links %}
+               <button class="btn btn-primary btn-md btn-block" data-toggle="modal" data-target="#download-layer">{% trans "Download Layer" %}</button>
+            {% else %}
+              {% if request.user.is_authenticated %}
+              <button class="btn btn-primary btn-md btn-block" id="request-download">{% trans "Request Download" %}</button>
+              {% endif %}
+            {% endif %}
+            </li>
+          {% endif %}
+        </ul>
+        <div class="modal fade" id="download-layer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">{% trans "Download Layer" %}</h4>
+              </div>
+              <div class="modal-body">
+                {% if links %}
+                <ul>
+                  {% for link in links %}
+                  <li><a href="{{ link.url }}">{% trans link.name %}</a></li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane" id="Related">
+        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+          <div ng-show="{{ resource.category }}">
+            {% verbatim %}
+            <div ng-hide="results.length">
+              <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+                No related layers found...
+              </div>
+            </div>
+            <div ng-show="results.length">
+              <div class="col-sm-12" ng-repeat="item in results">
+                <div class="row boxFeature">
+                  <div class="col-xs-3">
+                    <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
+                  </div>
+                  <div class="col-xs-9">
+                    <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
+                    <p>{{ item.abstract|limitTo:"250"  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endverbatim %}
+          </div>
+          <div ng-hide="{{ resource.category }}">
+            <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+              No related layers found...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div></div>
