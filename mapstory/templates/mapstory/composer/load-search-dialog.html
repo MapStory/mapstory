@@ -12,10 +12,10 @@
             <div class="col-md-12">
                 <ul class="nav nav-tabs">
 
-                    <li class="active"><a href="#Explore" data-toggle="tab">Explore All</a></li>
-                    <li><a href="#Common" data-toggle="tab">Common</a></li>
-                    <li><a href="#Favorites" data-toggle="tab">My Favorites</a></li>
-                    <li><a href="#Uploads" data-toggle="tab">My Uploads</a></li>
+                    <li class="active"><a ng-click="remove_query('owner__username__in');add_single_query('type__in', 'layer');" data-toggle="tab">Explore All</a></li>
+                    <li><a ng-click="add_single_query('type__in', 'layer');" data-toggle="tab">Common</a></li>
+                    <li><a ng-click="add_single_query('type__in', 'layer');" data-toggle="tab">My Favorites</a></li>
+                    <li><a ng-click="add_single_query('owner__username__in', '{%endverbatim%}{{ request.user.username}}{%verbatim%}');" data-toggle="tab">My Uploads</a></li>
                 </ul>
             </div>
             <div class="tab-content col-md-12" style="min-height:270px;">
@@ -45,33 +45,6 @@
                     </div>
 
                     {%verbatim%}
-
-                </div>
-
-
-                <div class="tab-pane" id="Common">
-
-                   <div class="no-content">
-                         <h2>No Results.</h2>
-                         <h4>Explore MapStory now.</h4>
-                    </div>
-
-                </div>
-                <div class="tab-pane" id="Favorites">
-
-                    <div class="no-content">
-                         <h2>No Results.</h2>
-                         <h4>Explore MapStory now.</h4>
-                    </div>
-
-                </div>
-                <div class="tab-pane" id="Uploads">
-
-
-                    <div class="no-content">
-                         <h2>No Results.</h2>
-                         <h4>Explore MapStory now.</h4>
-                    </div>
 
                 </div>
 
