@@ -122,9 +122,6 @@
             }
         </style>
 
-
-
-
 {% endblock %}
 
 {% block scripts %}
@@ -173,6 +170,12 @@ goog.object.extend( config, {{ config|safe }});
 </script>
         {% endcomment %}
 <script type="text/javascript">
+
+    var config = JSON.parse('{{ config|safe }}');
+
+
+
+
     if (window.location.search === '?tour') {
         $('<link/>').attr({
             rel : 'stylesheet', type: 'text/css', href: 'http://cdnjs.cloudflare.com/ajax/libs/hopscotch/0.2.0/css/hopscotch.min.css'

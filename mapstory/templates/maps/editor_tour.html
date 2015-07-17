@@ -11,6 +11,9 @@
        $("#tour-screen").hide();
        hopscotch.startTour(editor_tour);
     });
+    $("#start-composing").on('click', function() {
+       $("#tour-screen").hide();
+    });
 </script>
 <div id="tour-screen">
     
@@ -43,10 +46,10 @@
         <hr>
         <div class="row">
             <div class="col-sm-6">
-                <a href="#" id="start-tour"><h3>Take a Tour ></h3></a>
+                <a href="#" id="start-tour"><h3>Take a Tour</h3></a>
             </div>
             <div class="col-sm-6">
-                <a href="#"><h3>Skip for now</h3></a>
+                <a href="#" id="start-composing"><h3>Start Composing</h3></a>
             </div>
         </div>
     </div>

@@ -125,7 +125,12 @@
                     StoryPinLayerManager.loadFromGeoJSON(geojson, self.storyMap.getMap().getView().getProjection());
                 });
             } else {
-                stStoryMapBaseBuilder.defaultMap(this.storyMap);
+
+                if(window.config){
+                    stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, window.config);
+                }else{
+                    stStoryMapBaseBuilder.defaultMap(this.storyMap);
+                }
             }
             this.currentMapOptions = options;
         };
