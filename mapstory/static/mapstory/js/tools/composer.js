@@ -137,9 +137,35 @@
         this.saveMap = function() {
             var config = this.storyMap.getState();
 
-            var mapLoad = $http.post("new/data", config).success(function(data) {
-                stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, config);
+            var end_point = '/maps/new/data';
 
+
+            var cache = [];
+            var config_json = JSON.stringify(config, function(key, value) {
+                if (typeof value === 'object' && value !== null) {
+                    if (cache.indexOf(value) !== -1) {
+                        // Circular reference found, discard key
+                        return;
+                    }
+                    cache.push(value);
+                }
+                return value;
+            });
+            cache = null;
+
+
+            if(config.id != undefined && config.id != null && config.id > 0){
+
+                end_point = '/maps/' + config.id + '/data';
+
+
+                var mapLoad = $http.post(end_point,config_json);
+            }else{
+
+            var mapLoad = $http.post(end_point,config_json).success(function(data) {
+                //stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, config);
+
+                config.id = data.id;
 
                 var annotations = new ol.format.GeoJSON().writeFeatures(StoryPinLayerManager.storyPins,
 +                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'});
@@ -160,8 +186,9 @@
                     }
                 });
 
-            //stMapConfigStore.saveConfig(config);
-            //stAnnotationsStore.saveAnnotations(this.storyMap.get('id'), StoryPinLayerManager.storyPins);
+            stMapConfigStore.saveConfig(config_json);
+            stAnnotationsStore.saveAnnotations(this.storyMap.get('id'), StoryPinLayerManager.storyPins);
+            }
         };
         $rootScope.$on('$locationChangeSuccess', function() {
             var path = $location.path();
@@ -338,16 +365,29 @@
                     title: 'No background',
                     type: 'None'
                 }];
+
+
+
                 var baseLayer = MapManager.storyMap.get('baselayer');
                 if (baseLayer) {
                     scope.baseLayer = baseLayer.get('title');
                 }
+
+                scope.choice = {};
+
                 MapManager.storyMap.on('change:baselayer', function() {
                     scope.baseLayer = MapManager.storyMap.get('baselayer').get('title');
                 });
                 MapManager.storyMap.getStoryLayers().on('change:length', function() {
                     scope.layers = MapManager.storyMap.getStoryLayers().getArray();
                 });
+
+                scope.saveAboutInfo = function(about) {
+                     MapManager.storyMap.setStoryTitle(about.title);
+                     MapManager.storyMap.setStoryAbstract(about.abstract);
+                     MapManager.saveMap();
+                };
+
                 scope.toggleVisibleLayer = function(lyr) {
                     MapManager.storyMap.toggleStoryLayer(lyr);
                 };

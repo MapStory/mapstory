@@ -2,8 +2,26 @@
 
 <accordion close-others="true" sv-root sv-part="layers" sv-on-sort="onSort($item, $partFrom, $partTo, $indexFrom, $indexTo)">
 
+   <accordion-group is-open="status.open">
+        <accordion-heading>
+            Editing <span ng-bind="choice.title"></span> Mapstory <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+        </accordion-heading>
 
-    <accordion-group is-open="status.open">
+        <div class="input-group">
+            <label for="title">Title</label>
+            <input id="title" class="form-control" type="text" ng-model="choice.title"/>
+        </div>
+
+        <div class="input-group">
+            <label for="abstract">Abstract</label>
+            <textarea id="abstract" class="form-control" type="text" ng-model="choice.abstract"></textarea>
+        </div>
+       <div class="input-group">
+        <button class="btn btn-primary" ng-click="saveAboutInfo(choice);">Save</button>
+       </div>
+    </accordion-group>
+
+    <accordion-group>
         <accordion-heading>
             Add a StoryLayer <i id="layer-manager-panel" class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
         </accordion-heading>

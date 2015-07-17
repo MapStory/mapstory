@@ -12,10 +12,10 @@
             <div class="col-md-12">
                 <ul class="nav nav-tabs">
 
-                    <li class="active"><a ng-click="remove_query('owner__username__in');add_single_query('type__in', 'layer');" data-toggle="tab">Explore All</a></li>
-                    <li><a ng-click="add_single_query('type__in', 'layer');" data-toggle="tab">Common</a></li>
-                    <li><a ng-click="add_single_query('type__in', 'layer');" data-toggle="tab">My Favorites</a></li>
-                    <li><a ng-click="add_single_query('owner__username__in', '{%endverbatim%}{{ request.user.username}}{%verbatim%}');" data-toggle="tab">My Uploads</a></li>
+                    <li class="active"><a ng-click="remove_query('owner__username__in');add_single_query('type__in', 'layer');add_single_query('order_by','title');" data-toggle="tab">Explore All</a></li>
+                    <li><a ng-click="add_single_query('type__in', 'layer');add_single_query('order_by','-popular_count');" data-toggle="tab">Common</a></li>
+                    <li><a ng-click="add_single_query('type__in', 'layer');add_single_query('order_by','title');" data-toggle="tab">My Favorites</a></li>
+                    <li><a ng-click="add_single_query('order_by','title');add_single_query('owner__username__in', '{%endverbatim%}{{ request.user.username}}{%verbatim%}');" data-toggle="tab">My Uploads</a></li>
                 </ul>
             </div>
             <div class="tab-content col-md-12" style="min-height:270px;">
