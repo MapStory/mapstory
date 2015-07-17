@@ -2,7 +2,6 @@
   <div class="col-sm-12">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#Summary" data-toggle="tab" style="font-size:0.8em;">Summary</a></li>
-        <li><a href="#Metadata" data-toggle="tab" style="font-size:0.8em;">Meta</a></li>
         <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;" ng-click="query_category({{ resource.category }}, 'layer');">Related</a></li>
     </ul>
     <div class="tab-content">
@@ -10,31 +9,6 @@
         <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
           {{ resource.abstract }}
         </div>
-      </div>
-      <div class="tab-pane" id="Metadata">
-        <table class="table table-condensed table-hover">
-          <tr>
-            <td width="35%">Topic</td>
-            <td width="65%">{{ resource.category }}</td>
-          </tr>
-          <tr>
-            <td width="35%">Language</td>
-            <!-- TODO: Change to human readable? Seems the language property may be abbreviated -->
-            <td width="65%"><i class="flag flag-us"></i>{{ resource.language }}</td>
-          </tr>
-          <tr>
-            <td width="35%">Data Source</td>
-            <td width="65%">{{ resource.distribution_url }}</td>
-          </tr> 
-          <tr>
-            <td width="35%">Data Quality Statement</td>
-            <td width="65%">{{ resource.data_quality_statement }}</td>
-          </tr>
-          <tr>
-            <td width="35%">Purpose</td>
-            <td width="65%">{{ resource.purpose }}</td>
-          </tr>   
-        </table>
       </div>
       <div class="tab-pane" id="Related">
         <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
