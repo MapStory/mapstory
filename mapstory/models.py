@@ -42,12 +42,13 @@ class Sponsor(models.Model):
     image_tag.allow_tags = True
 
 class Community(models.Model):
-    name = models.SlugField(max_length=64, unique=True)
+    name = models.CharField(max_length=64)
     link = models.URLField(blank=False)
     icon = models.ImageField(blank=False, upload_to='communities')
     description = models.TextField(blank=True)
     order = models.IntegerField(blank=True, default=0)
     stamp = models.CharField(max_length=8, blank=True)
+    slug = models.SlugField(max_length=64, unique=True)
 
     def url(self):
         return self.icon.url + "?" + self.stamp

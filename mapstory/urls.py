@@ -40,7 +40,7 @@ urlpatterns = patterns('',
     url(r'^maps/(?P<mapid>\d+)/viewer$',
         'geonode.maps.views.map_view', {'template': 'maps/mapstory_map_viewer.html'},
         name='map-viewer'),
-    url(r"^people/profile/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
+    url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
     url(r'^tours/editor_tour$', TemplateView.as_view(template_name='maps/editor_tour.html'), name='editor_tour'),
 
     url(r'^journal$', DiaryListView.as_view(), name='diary'),
@@ -48,9 +48,9 @@ urlpatterns = patterns('',
     url(r'^journal/write$', login_required(DiaryCreateView.as_view()), name='diary-create'),
     url(r'^journal/write/(?P<pk>\d+)$', login_required(DiaryUpdateView.as_view()), name='diary-update'),
 
-    url(r'^community/(?P<slug>[^/]*)$', CommunityDetail.as_view(), name='community-detail'),
+    url(r'^initiative/(?P<slug>[^/]*)$', CommunityDetail.as_view(), name='community-detail'),
 
-    url(r'^group/(?P<slug>[^/]*)$', GroupDetail.as_view(), name='group_detail'),
+    url(r'^organization/(?P<slug>[^/]*)$', GroupDetail.as_view(), name='group_detail'),
 
     url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
     url(r'^search/$', SearchView.as_view(), name='search'),
