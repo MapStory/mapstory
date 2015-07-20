@@ -1,0 +1,87 @@
+// Upload page
+
+#drop-zone{
+  border: 1px solid #e3e3e3;
+  background-color: #f5f5f5;
+  padding: 19px;
+  margin-bottom: 20px;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.btn-gray {
+  background-color: #a9a9a9;
+  color: white;
+}
+
+.light-gray {
+  color: #999;
+}
+
+a {
+  color: #028baf;
+  cursor: pointer;
+}
+
+.upload-error {
+  color: #a94442;
+}
+
+.file-element {
+  margin-top: 50px;
+}
+
+.file-element:first-child {
+     margin-top: 0px;
+}
+
+.files-list {
+  margin-top: 15px;
+}
+
+#upload-navbar {
+
+  margin-bottom: 10px;
+
+  a {
+    color: darkgray;
+  }
+
+  &.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+  color: #46443b;
+  cursor: default;
+  background-color: #ffffff;
+  border: 0px;
+  border-bottom: 4px solid orange;
+}
+}
+
+.needs-files {
+  display: none;
+}
+
+.top-margin-20 {
+  margin-top: 20px;
+}
+
+.top-padding-10 {
+  padding-top: 10px;
+}

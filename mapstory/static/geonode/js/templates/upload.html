@@ -1,0 +1,72 @@
+<script type='text/html' id='errorTemplate'>
+  <li class='alert alert-error'>
+    <button class='close' data-dismiss='alert'>&times;</button>
+    <strong><%= title %></strong><p><%= message %></p>
+  </li>
+</script>
+
+<script type='text/html' id='infoTemplate'>
+  <div class='alert <%= level %>'><p><%= message %></p></div>
+</script>
+
+<script type='text/html' id='layerTemplate'>
+  <div class='file-element' id='<%= selector %>-element'>
+    <div class='row'>
+        <div clas="row">
+            <h3><%= index + 1 %>. <%= name %> <span class="light-gray">(<%= type %>)</span></h3>
+         </div>
+      <div class="row">
+          <div id="<%= name %>-files" class="files-list col-md-7 col-md-offset-4">
+            <!--<h3><%= name %> <span class="light-gray">(<%= type %>)</span> </h3>
+            <hr />-->
+            <ul class='files'></ul>
+            <ul class='errors'></ul>
+            <div id='status'></div>
+          </div>
+      </div>
+    </div>
+      <div class="row">
+          <hr/>
+        <div class="col-md-4">
+            <%= gettext('Story Layer Options') %>
+        </div>
+        <div id='<%= name %>-options' class='col-md-8'>
+        <% if (format !== 'raster') { %>
+            <div id='<%= name %>-vector-options'>
+                <% if (time) { %>
+                    <div class="checkbox">
+                        <input type='checkbox' id='<%= name %>-time' name='<%= name %>-time' checked/><label for="<%= name %>-time">&nbsp;<%= gettext('Configure Time')%></label>
+                    </div>
+                <% } %>
+                <% if (geogig) { %>
+                    <div class="checkbox">
+                        <input type='checkbox' id='<%= name %>:geogig_toggle' name='<%= name %>:geogig_toggle'/><label for="<%= name %>:geogig_toggle">&nbsp;<%= gettext('I want to enable StoryLayer editing.') %>  <a href="#"><%= gettext("What's this?") %></a></label>
+                    </div>
+                <% } %>
+
+            </div>
+        <% } %>
+            <div class="checkbox">
+                <input type='checkbox' id='is_private' name='is_private'/><label for="is_private">&nbsp;<%= gettext('Keep this layer private.') %></label>
+            </div>
+        </div>
+    </div>
+  </div>
+</script>
+
+
+<script type='text/html' id='progressTemplate'>
+  <div class='alert <%= alertLevel %>'>
+    <p><%= message %></p>
+  </div>
+</script>
+
+
+<script type='text/html' id='successTemplate'>
+
+  <div class='alert alert-success'>
+    <p>Your layer has been upload successfully</p>
+    a href="/data/geonode:<%= name %>" class='btn'>Layer page</a>
+  </div>
+
+</script>

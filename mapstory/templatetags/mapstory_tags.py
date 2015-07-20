@@ -1,7 +1,7 @@
 from django import template
 from django.conf import settings
 from mapstory.utils import Link
-
+import json
 register = template.Library()
 
 @register.simple_tag
@@ -17,3 +17,7 @@ def link(href, name, width=None, height=None, css_class=None):
 @register.filter
 def by_name(objects, name):
     return objects.filter(name__iexact=name).first()
+
+@register.filter
+def to_json(data):
+    return json.dumps(data)

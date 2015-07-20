@@ -1,0 +1,75 @@
+{% extends "upload/layer_upload_base.html" %}
+{% load i18n %}
+{% load bootstrap_tags %}
+
+{% block title %} {% trans "Upload Layer" %} - {{ block.super }} {% endblock %}
+
+
+{% block body_outer %}
+<div class="page-header">
+  <h2 class="page-title">{% trans "Edit Metadata" %}</h2>
+</div>
+{% with 'metadata' as active_tab %}
+    {% include 'upload/layer_wizard.html' %}
+{% endwith %}
+
+<div class="row">
+  <div class="col-md-8">
+    <form class="form-horizontal" action="{% url "layer_upload_metadata" layer.service_typename %}" method="POST">
+      {% if layer.metadata_uploaded %}
+    	<p class="bg-warning">{% blocktrans %}Note: this layer's orginal metadata was populated by importing a metadata XML file.
+          GeoNode's metadata import supports a subset of ISO, FGDC, and Dublin Core metadata elements.
+          Some of your original metadata may have been lost.{% endblocktrans %}</p>
+      {% endif %}
+
+      {% if layer_form.errors or category_form.errors %}
+    	  <p class="bg-danger">{% blocktrans %}Error updating metadata.  Please check the following fields: {% endblocktrans %}</p>
+        <ul class="bg-danger">
+          {% for field in layer_form %}
+            {% if field.errors %}
+            <li>{{ field.label }}</li>
+            {% endif %}
+          {% endfor %}
+          {% if category_form.errors %}
+            <li>{{ category_form.errors.as_ul }}</li>
+          {% endif %}
+          </ul>
+        {% endif %}
+
+
+        {% csrf_token %}
+        <div class="col-md-8 form-controls">
+          {{ layer_form|as_bootstrap }}
+
+          <fieldset id="category_form" class="form-group">
+          <label class="control-label required-field">{% trans "Category" %}</label>
+          {% autoescape off %}
+          <select class="form-control" name="category_choice_field">
+              {% for choice in category_form.category_choice_field.field.choices %}
+            <option  value="{{ choice.0 }}"
+              {% ifequal category_form.initial choice.0 %} selected {% endifequal %}>
+              {{ choice.1 }}
+            </option>
+              {% endfor %}
+          </select>
+          {% endautoescape %}
+        </fieldset>
+
+          <div class="form-actions form-group">
+            <input type="submit" class="btn btn-primary" value="{% trans "Update" %}"/>
+          </div>
+        </div>
+
+
+      </form>
+  </div>
+  <div class="col-md-4 well">
+      <h3>Help Text</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed faucibus turpis erat, ut malesuada libero facilisis eu. Proin enim orci, finibus id tristique sed, consequat rhoncus sapien. Vivamus in neque quis lorem ultrices laoreet. Suspendisse gravida maximus eros, dictum malesuada justo tempor et. Ut euismod tellus vel sem vestibulum hendrerit. Proin nec blandit sem. Ut ante ex, tempor vel nunc auctor, pharetra venenatis sapien. Proin et pulvinar nisl. Cras a enim enim. Ut quis mi sit amet tortor suscipit semper et quis nibh.</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+ {% include 'metadata_form_js.html' %}
+{% endblock %}

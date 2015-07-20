@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from geonode.urls import urlpatterns
+from mapstory.views import layer_metadata
 from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstory.views import IndexView
 from mapstory.views import DiaryDetailView
@@ -63,6 +64,7 @@ urlpatterns = patterns('',
     url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
     url(r'^proxy/', proxy),
     url(r'^favorite/', include('geonode.contrib.favorite.urls')),
+    url(r'^layers/(?P<layername>[^/]*)/upload/metadata$', layer_metadata, name="layer_upload_metadata", kwargs={'template':'upload/layer_upload_metadata.html'}),
 
 ) + urlpatterns
 

@@ -1,20 +1,29 @@
+import datetime
 from account.views import SignupView
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
+
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.http.request import validate_host
 from django.shortcuts import render_to_response
-from django.template import RequestContext
 from django.views.generic import TemplateView
 from django.views.generic.edit import ModelFormMixin
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
+from django.template import RequestContext
 from django.utils.http import is_safe_url
+from geonode.base.forms import CategoryForm
+from geonode.base.models import TopicCategory
+from geonode.layers.models import Layer
+from geonode.layers.views import _resolve_layer, _PERMISSION_MSG_METADATA
+from geonode.people.forms import ProfileForm
 from geonode.people.models import Profile
 from httplib import HTTPConnection, HTTPSConnection
+from mapstory.forms import UploadLayerForm
 from mapstory.models import get_sponsors
 from mapstory.models import get_images
 from mapstory.models import GetPage
@@ -30,8 +39,6 @@ from urlparse import urlsplit
 from user_messages.models import Thread
 from .forms import MapStorySignupForm
 from geonode.groups.models import GroupProfile
-
-import datetime
 
 
 class IndexView(TemplateView):
@@ -248,3 +255,105 @@ class MapStorySignup(SignupView):
         self.created_user.last_name = form.cleaned_data['lastname']
         self.created_user.save()
         return super(MapStorySignup, self).create_account(form)
+
+@login_required
+def layer_metadata(request, layername, template='upload/layer_upload_metadata.html'):
+    layer = _resolve_layer(
+        request,
+        layername,
+        'base.change_resourcebase_metadata',
+        _PERMISSION_MSG_METADATA)
+    topic_category = layer.category
+
+    poc = layer.poc or layer.owner
+    metadata_author = layer.metadata_author
+
+    if request.method == "POST":
+        layer_form = UploadLayerForm(request.POST, instance=layer, prefix="resource")
+        category_form = CategoryForm(
+            request.POST,
+            prefix="category_choice_field",
+            initial=int(
+                request.POST["category_choice_field"]) if "category_choice_field" in request.POST else None)
+    else:
+        layer_form = UploadLayerForm(instance=layer, prefix="resource")
+        category_form = CategoryForm(
+            prefix="category_choice_field",
+            initial=topic_category.id if topic_category else None)
+
+    if request.method == "POST" and layer_form.is_valid(
+    ) and category_form.is_valid():
+        new_poc = layer_form.cleaned_data['poc']
+        new_author = layer_form.cleaned_data['metadata_author']
+        new_keywords = layer_form.cleaned_data['keywords']
+
+        if new_poc is None:
+            if poc is None:
+                poc_form = ProfileForm(
+                    request.POST,
+                    prefix="poc",
+                    instance=poc)
+            else:
+                poc_form = ProfileForm(request.POST, prefix="poc")
+            if poc_form.has_changed and poc_form.is_valid():
+                new_poc = poc_form.save()
+
+        else:
+            if not isinstance(new_poc, Profile):
+                new_poc = Profile.objects.get(id=new_poc)
+
+        if new_author is None:
+            if metadata_author is None:
+                author_form = ProfileForm(request.POST, prefix="author",
+                                          instance=metadata_author)
+            else:
+                author_form = ProfileForm(request.POST, prefix="author")
+            if author_form.has_changed and author_form.is_valid():
+                new_author = author_form.save()
+
+        else:
+            if not isinstance(new_author, Profile):
+                new_author = Profile.objects.get(id=new_author)
+
+        new_category = TopicCategory.objects.get(
+            id=category_form.cleaned_data['category_choice_field'])
+
+        if new_poc is not None and new_author is not None:
+            new_keywords = layer_form.cleaned_data['keywords']
+            layer.keywords.clear()
+            layer.keywords.add(*new_keywords)
+            the_layer = layer_form.save()
+            the_layer.poc = new_poc
+            the_layer.metadata_author = new_author
+            Layer.objects.filter(id=the_layer.id).update(
+                category=new_category
+                )
+
+            return HttpResponseRedirect(
+                reverse(
+                    'layer_detail',
+                    args=(
+                        layer.service_typename,
+                    )))
+
+    if poc is None:
+        poc_form = ProfileForm(instance=poc, prefix="poc")
+    else:
+        layer_form.fields['poc'].initial = poc.id
+        poc_form = ProfileForm(prefix="poc")
+        poc_form.hidden = True
+
+    if metadata_author is None:
+        author_form = ProfileForm(instance=metadata_author, prefix="author")
+    else:
+        layer_form.fields['metadata_author'].initial = metadata_author.id
+        author_form = ProfileForm(prefix="author")
+        author_form.hidden = True
+
+    return render_to_response(template, RequestContext(request, {
+        "layer": layer,
+        "layer_form": layer_form,
+        "poc_form": poc_form,
+        "author_form": author_form,
+        "category_form": category_form,
+    }))
