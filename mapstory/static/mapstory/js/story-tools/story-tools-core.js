@@ -21,6 +21,7 @@ function Box(options) {
     this.allowPan = options.allowPan;
     this.allowZoom = options.allowZoom;
     this.speed = options.speed;  // interval, seconds
+    this.zoom = options.zoom || null;
     this._offset = 0;
 
     if (this.range === null) {
@@ -39,8 +40,16 @@ Box.prototype.getRange = function() {
     return this.range;
 };
 Box.prototype.getIndex = function(instant) {
-    return this.data ? utils.find(this.data, instant) :
+
+    var index = this.data ? utils.find(this.data, instant) :
         Math.floor(Math.min(this.range.width(), Math.max(0, instant - this.range.start)) / this.speed.interval);
+
+    console.log(this.range.width());
+    console.log(Math.max(0, instant - this.range.start));
+    console.log(this.speed.interval);
+    console.log(index);
+    return index;
+
 };
 Box.prototype.getDate = function(idx) {
     idx = idx - this._offset;
@@ -60,6 +69,7 @@ Box.prototype.setProperties = function(props){
     this.description = props.description;
     this.start_time = props.start_time;
     this.end_time = props.end_time;
+    this.center = props.center;
 
 };
 
@@ -100,6 +110,7 @@ exports.BoxModel = function(boxArray) {
     this.getRange = function() {
         return range;
     };
+
     this.getSteps = function() {
         return steps;
     };
@@ -117,7 +128,8 @@ exports.BoxModel = function(boxArray) {
             var box = boxes[i];
             var range = box.getRange();
             if (instant >= range.start && instant <= range.end) {
-                idx += box.getIndex(instant);
+                //why not just return the index of the box since we know it?
+                idx = i;//box.getIndex(instant);
                 break;
             } else {
                 idx += box.getSteps();
@@ -149,6 +161,7 @@ exports.findBox = findBox;
 exports.Box = Box;
 
 },{"./utils":9}],3:[function(require,module,exports){
+var moment = require('vis/node_modules/moment');
 var utils = require('./utils');
 var models = require('./models');
 var timeslider = require('./slider');
@@ -442,14 +455,15 @@ function create(options) {
         boxes = [{
                 title: 'Default Story Chapter',
                 description: 'No description.',
-                data: data,
-                range: totalRange,
+                data: null,
+                range: new utils.Range(-3311971200000,-2435197600000),//1069286400000},//totalRange,
                 speed: {
-                    interval: interval,
+                    interval: moment.duration(1, 'years').asMilliseconds(),
                     seconds: 3
                 }
-            }];
+        }];
     }
+
     console.log(boxes);
     model = new models.TimeModel(options, boxes, annotations);
     slider = new timeslider.TimeSlider(options.timeSliderId || 'slider', model);
@@ -464,7 +478,7 @@ exports.create = create;
 exports.maps = maps;
 exports.utils = utils;
 
-},{"./line":4,"./maps":5,"./models":6,"./slider":8,"./utils":9}],4:[function(require,module,exports){
+},{"./line":4,"./maps":5,"./models":6,"./slider":8,"./utils":9,"vis/node_modules/moment":36}],4:[function(require,module,exports){
 var Timeline = require('vis/lib/timeline/Timeline');
 var utils = require('./utils');
 
@@ -485,6 +499,7 @@ exports.TimeLine = function(id, model) {
     function init(model) {
         var elements = [], options;
         var range = model.getRange();
+        console.log("TL Range: " + range);
         if (range.isEmpty()) {
             range = utils.createRange(Date.now());
         }
@@ -762,7 +777,9 @@ exports.filterVectorLayer = filterVectorLayer;
 exports.MapController = function(options, timeControls) {
     var loadListener = null,
         tileStatusCallback = options.tileStatusCallback,
-        storyMap = options.storyMap;
+        storyMap = options.storyMap,
+        tc = timeControls,
+        boxes = options.boxes;
     function layerAdded(layer) {
         var source, image;
         var loaded = function(event) {
@@ -803,6 +820,8 @@ exports.MapController = function(options, timeControls) {
         return loadListener;
     }
     function updateLayers(range) {
+        console.log("Updating layers based on range: " + range);
+
         var storyLayers = storyMap.getStoryLayers();
         var time = new Date(range.start).toISOString();
         if (range.start != range.end) {
@@ -824,6 +843,28 @@ exports.MapController = function(options, timeControls) {
         if (storyLayers.getLength() > 1) {
             timeControls.defer(createLoadListener().deferred);
         }
+
+        var currentBox = boxes[tc.model.boxes.getIndex(range.start)];
+
+        var sbl = storyMap.storyBoxesLayer;
+        console.log("StoryBoxesLayer: " + sbl);
+
+        if(currentBox){
+            console.log(currentBox);
+            console.log(new Date(currentBox.range.start).toISOString());
+            console.log(new Date(currentBox.range.end).toISOString());
+           // if(range.start === -2335197600000){
+                var london = ol.proj.transform([-0.12755, 51.507222], 'EPSG:4326', 'EPSG:3857');
+            if(currentBox.center){
+                storyMap.animatePanAndBounce(currentBox.center);
+            }
+            //}else if(range.start === -1167588000000){
+               // var madrid = ol.proj.fromLonLat([-3.683333, 40.4]);
+              //  storyMap.animatePanAndBounce(madrid);
+
+            //}
+        }
+
     }
     var me = this;
     me.layers = {};
@@ -856,6 +897,7 @@ exports.TimeModel = function(options, boxes, annotations) {
     var events = new utils.Events(),
         boxModel = new BoxModel(boxes);
 
+    this.boxes = boxModel;
     this.annotations = annotations;
     this.fixed = false;
     this.mode = 'instant';
@@ -872,12 +914,13 @@ exports.TimeModel = function(options, boxes, annotations) {
         }
         // @todo is the best name for this
         if (opts.hasOwnProperty('data')) {
-            boxModel.setRange(opts.data);
+        //    boxModel.setRange(opts.data);
         }
     }
 
     init.call(this, options);
     this.getRange = function() {
+        console.log("getting boxModel range " + boxModel.getRange());
         return boxModel.getRange();
     };
     this.getTotalRange = function() {

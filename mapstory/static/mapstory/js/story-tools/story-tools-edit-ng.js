@@ -19,6 +19,21 @@
         this.deleteBox = function(box) {
             StoryBoxLayerManager.boxesChanged([box], 'delete');
         };
+
+        this.editBounds = function(box){
+
+
+            //if (minLon != null && minLat != null && maxLon != null && maxLat != null){
+                //var bottomLeft = ol.proj.transform([minLon, minLat], 'EPSG:4326', 'EPSG:3857');
+                //var topRight = ol.proj.transform([maxLon, maxLat], 'EPSG:4326', 'EPSG:3857');
+                //extent = new ol.extent.boundingExtent([bottomLeft,topRight]);
+                //map.getView().fitExtent(extent, map.getSize());
+            //}
+
+            console.log("editing the stuff ");
+        };
+
+
         this.acceptEdit = function() {
 
             var currentBox = this.currentBox;
@@ -157,22 +172,81 @@
         };
     });
 
-    module.directive('boxBoundsEditor', ["$timeout", function($timeout) {
+
+    module.directive('boxBoundsEditor', ["$timeout", "$log", function($timeout, $log) {
         return {
             restrict: 'E',
+            controller: 'boxEditorController',
+            controllerAs: 'boxCtrl',
             templateUrl: 'boxes/bounds-editor.html',
             link: function(scope, element, attrs) {
+
+                function coordinatesChanged() {
+                    if (scope.editBox.minlon && scope.editBox.minlat && scope.editBox.maxlon && scope.editBox.maxlat) {
+
+                         // Trasnform extent to EPSG:3857
+                        var extent = [scope.editBox.minlon, scope.editBox.minlat, scope.editBox.maxlon, scope.editBox.maxlat];
+                        extent = ol.extent.applyTransform(extent, ol.proj.getTransform("EPSG:4326", "EPSG:3857"));
+
+                        map.getView().fitExtent(extent, map.getSize());
+
+                        $log.debug("Center " + map.getView().getCenter());
+
+                    }
+
+                    if(scope.editBox.zoom){
+
+                        map.getView().setZoom(scope.editBox.zoom);
+                        $log.debug("The Zoom level is: " + scope.editBox.zoom);
+
+                    }
+                }
+
+
                 var el = element[0].querySelector('.box-bounds-map');
+
                 var map = new ol.Map({target: el});
-                map.setView(new ol.View({center: [0, 0], zoom: 3}));
+                map.setView(new ol.View({center: [0, 0], zoom: 4}));
                 map.addLayer(new ol.layer.Tile({
                     source: new ol.source.MapQuest({layer: 'osm'})
                 }));
+
                 scope.$watch('boxBoundsEditorSelected', function(n) {
                     if (n) {
+
+                        $log.debug("The current center of the map is: " + map.getView().getCenter());
+
+                        if(scope.storyBox.center){
+                            map.setView(new ol.View({center: scope.storyBox.center, zoom: 4}));
+                        }else{
+                            map.setView(new ol.View({center: [0, 0], zoom: 4}));
+                        }
+
+                        // Compute the current extent of the view given the map size
+                        var extent = map.getView().calculateExtent(map.getSize());
+
+                        // Transform the extent from EPSG:3857 to EPSG:4326
+                        extent = ol.extent.applyTransform(extent, ol.proj.getTransform("EPSG:3857", "EPSG:4326"));
+
+                        scope.editBox.minlon = extent[0];
+                        scope.editBox.minlat = extent[1];
+                        scope.editBox.maxlon = extent[2];
+                        scope.editBox.maxlat = extent[3];
+                        scope.editBox.zoom = map.getView().getZoom();
+
+                        //$log.debug("Zoom " + map.getView().getZoom());
+                        $log.debug("Projection Code: " + map.getView().getProjection().getCode());
+                        //$log.debug("Projection Code: " + map.getView().getProjection().getExtent());
+                        //$log.debug("Center " + map.getView().getCenter());
+                        //$log.debug("Resolution " + map.getView().getResolution());
+
+                        $log.debug("The Current Map Extent " + extent);
+
                         map.updateSize();
                     }
                 });
+
+                scope.$watch('editBox', coordinatesChanged, true);
             }
         };
     }]);
@@ -183,6 +257,8 @@
             restrict: 'E',
             templateUrl: 'boxes/contents-editor.html',
             link: function(scope, el, atts, ctrl) {
+
+                scope.currentTime = new Date().toISOString();
                 /*scope.point = {};
                 function coordinatesChanged() {
                     if (scope.point.latitude && scope.point.longitude) {
@@ -509,6 +585,7 @@
             restrict: 'A',
             require: 'ngModel',
             link: function(scope, elem, attrs, ngModelCtrl) {
+
                 ngModelCtrl.$formatters.push(function(modelValue) {
                     /*jshint eqnull:true */
                     var retval = modelValue != null ? new Date(modelValue).toISOString() : '';
@@ -524,7 +601,13 @@
                     if (scope.currentTime) {
                         ngModelCtrl.$modelValue = scope.currentTime;
                     } else {
-                        $log.error('no current time provided!');
+                        ngModelCtrl.$modelValue = new Date().toISOString();
+                        scope.$apply(function(){
+                            scope.currentTime = new Date().toISOString();
+                        });
+
+
+                        $log.warn('No current time provided!');
                     }
                 };
             }
