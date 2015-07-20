@@ -18,6 +18,8 @@ from mapstory.views import SearchView
 from mapstory.views import LeaderListView
 from mapstory.views import proxy
 from mapstory.views import MapStorySignup
+from mapstory.views import CommunityDetail
+from mapstory.views import GroupDetail
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view()),
@@ -45,6 +47,10 @@ urlpatterns = patterns('',
     url(r'^journal/(?P<pk>\d+)$', DiaryDetailView.as_view(), name='diary-detail'),
     url(r'^journal/write$', login_required(DiaryCreateView.as_view()), name='diary-create'),
     url(r'^journal/write/(?P<pk>\d+)$', login_required(DiaryUpdateView.as_view()), name='diary-update'),
+
+    url(r'^community/(?P<slug>[^/]*)$', CommunityDetail.as_view(), name='community-detail'),
+
+    url(r'^group/(?P<slug>[^/]*)$', GroupDetail.as_view(), name='group_detail'),
 
     url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
     url(r'^search/$', SearchView.as_view(), name='search'),

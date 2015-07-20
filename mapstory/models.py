@@ -42,7 +42,7 @@ class Sponsor(models.Model):
     image_tag.allow_tags = True
 
 class Community(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.SlugField(max_length=64, unique=True)
     link = models.URLField(blank=False)
     icon = models.ImageField(blank=False, upload_to='communities')
     description = models.TextField(blank=True)
