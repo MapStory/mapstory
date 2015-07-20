@@ -20,16 +20,7 @@
             StoryBoxLayerManager.boxesChanged([box], 'delete');
         };
 
-        this.editBounds = function(box){
-
-
-            //if (minLon != null && minLat != null && maxLon != null && maxLat != null){
-                //var bottomLeft = ol.proj.transform([minLon, minLat], 'EPSG:4326', 'EPSG:3857');
-                //var topRight = ol.proj.transform([maxLon, maxLat], 'EPSG:4326', 'EPSG:3857');
-                //extent = new ol.extent.boundingExtent([bottomLeft,topRight]);
-                //map.getView().fitExtent(extent, map.getSize());
-            //}
-
+        this.editBounds = function(){
             console.log("editing the stuff ");
         };
 
@@ -183,6 +174,8 @@
 
                 function coordinatesChanged() {
                     if (scope.editBox.minlon && scope.editBox.minlat && scope.editBox.maxlon && scope.editBox.maxlat) {
+
+                         $log.debug("Center Before " + map.getView().getCenter());
 
                          // Trasnform extent to EPSG:3857
                         var extent = [scope.editBox.minlon, scope.editBox.minlat, scope.editBox.maxlon, scope.editBox.maxlat];

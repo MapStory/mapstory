@@ -641,7 +641,8 @@
             var me = this;
             return $http({
               method: 'GET',
-              url: storyLayer.get('path') + 'rest/layers/' + storyLayer.get('id') + '.json'
+              /* Why do we need to use this endpoint?*/
+              url: '/gs/rest/layers/' + storyLayer.get('id') + '.json'
             }).success(function(response) {
               storyLayer.set('styleName', response.layer.defaultStyle.name);
             });

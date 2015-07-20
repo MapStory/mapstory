@@ -846,23 +846,14 @@ exports.MapController = function(options, timeControls) {
 
         var currentBox = boxes[tc.model.boxes.getIndex(range.start)];
 
-        var sbl = storyMap.storyBoxesLayer;
-        console.log("StoryBoxesLayer: " + sbl);
-
         if(currentBox){
             console.log(currentBox);
             console.log(new Date(currentBox.range.start).toISOString());
             console.log(new Date(currentBox.range.end).toISOString());
-           // if(range.start === -2335197600000){
-                var london = ol.proj.transform([-0.12755, 51.507222], 'EPSG:4326', 'EPSG:3857');
+
             if(currentBox.center){
                 storyMap.animatePanAndBounce(currentBox.center);
             }
-            //}else if(range.start === -1167588000000){
-               // var madrid = ol.proj.fromLonLat([-3.683333, 40.4]);
-              //  storyMap.animatePanAndBounce(madrid);
-
-            //}
         }
 
     }

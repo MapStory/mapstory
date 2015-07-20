@@ -136,6 +136,7 @@ exports.MapConfigTransformer = function(data) {
                 title: 'Chapter 1: ' + data.about.title,
                 description: 'This is Chapter 1 of ' + data.about.abstract,
                 data: null,
+                center: ol.proj.transform([-10071492.19492437, 47.983333], 'EPSG:4326', 'EPSG:3857'),
                 start_time: -3311971200000,
                 end_time: -2435197600000,
                 range: new storytools.core.time.utils.Range(-3311971200000,-2435197600000),//1069286400000},//totalRange,
