@@ -7,6 +7,8 @@ import hashlib
 import textile
 from django.template.defaulttags import register
 import os
+#from geonode.layers.models import MapLayer
+#from tastypie import fields
 
 def _stamp(data):
     s = hashlib.sha1()
@@ -49,6 +51,7 @@ class Community(models.Model):
     order = models.IntegerField(blank=True, default=0)
     stamp = models.CharField(max_length=8, blank=True)
     slug = models.SlugField(max_length=64, unique=True)
+    #layer = fields.ToManyField('geonode.layers.models.MapLayer', related_name='community_layers')
 
     def url(self):
         return self.icon.url + "?" + self.stamp

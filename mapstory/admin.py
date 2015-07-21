@@ -53,6 +53,7 @@ class SponsorAdmin(admin.ModelAdmin):
     list_display_links = 'image_tag',
 
 class CommunityAdmin(admin.ModelAdmin):
+    #inlines = [MapLayerInline, ]
     model = Community
     exclude = 'stamp',
     list_display = 'name', 'link', 'icon', 'image_tag', 'description', 'order'
