@@ -7,9 +7,10 @@ import hashlib
 import textile
 from django.template.defaulttags import register
 import os
-from tastypie import fields
 from django.template.defaultfilters import slugify
 from django.db.models import signals
+from geonode.people.models import Profile
+from geonode.layers.models import Layer
 
 def _stamp(data):
     s = hashlib.sha1()
@@ -44,43 +45,6 @@ class Sponsor(models.Model):
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
 
-class Community(models.Model):
-    name = models.CharField(max_length=64)
-    link = models.URLField(blank=False)
-    icon = models.ImageField(blank=False, upload_to='communities')
-    description = models.TextField(blank=True)
-    order = models.IntegerField(blank=True, default=0)
-    stamp = models.CharField(max_length=8, blank=True)
-    slug = models.SlugField(max_length=64, unique=True, blank=True)
-    #layer = models.ForeignKey(MapLayer, null=True, blank=True)
-    layer = fields.ToManyField(MapLayer, 'community_layers')
-    # Need also to have a list of users and to have journals
-    # leads = users
-    # journals = journals
-
-    def url(self):
-        return self.icon.url + "?" + self.stamp
-
-    def save(self, *args, **kwargs):
-        if self.icon.name:
-            self.stamp = _stamp(self.icon.read())
-        super(Community, self).save(*args, **kwargs)
-
-    def __unicode__(self):
-        return 'Community - %s' % self.name
-
-    class Meta:
-        ordering = ['order']
-
-    def image_tag(self):
-        return u'<img src="%s" />' % self.url()
-    image_tag.short_description = 'Image'
-    image_tag.allow_tags = True
-
-def name_post_save(instance, *args, **kwargs):
-    Community.objects.filter(name=instance.name).update(slug=(slugify(instance.name)))
-
-
 class ContentMixin(models.Model):
     content = models.TextField(
         help_text="use <a href=%s target='_'>textile</a> for the content" %
@@ -96,15 +60,6 @@ class ContentMixin(models.Model):
         abstract = True
         ordering = ['-date']
 
-
-class NewsItem(ContentMixin ):
-    title = models.CharField(max_length=64)
-
-    @property
-    def publication_time(self):
-        return self.date
-
-
 class DiaryEntry(ContentMixin):
     title = models.CharField(max_length=255)
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
@@ -112,6 +67,49 @@ class DiaryEntry(ContentMixin):
 
     def get_absolute_url(self):
         return reverse('diary-detail', args=[self.pk])
+
+class Community(models.Model):
+    name = models.CharField(max_length=64)
+    link = models.URLField(blank=False)
+    icon = models.ImageField(blank=False, upload_to='communities')
+    description = models.TextField(blank=True)
+    order = models.IntegerField(blank=True, default=0)
+    stamp = models.CharField(max_length=8, blank=True)
+    slug = models.SlugField(max_length=64, unique=True, blank=True)
+    layer = models.ManyToManyField(Layer, blank=True)
+    leads = models.ManyToManyField(Profile, blank=True)
+    journals = models.ForeignKey(DiaryEntry, null=True, blank=True)
+
+    def url(self):
+        return self.icon.url + "?" + self.stamp
+
+    def save(self, *args, **kwargs):
+        if self.icon.name:
+            self.stamp = _stamp(self.icon.read())
+        super(Community, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return 'Community - %s' % self.name
+
+    class Meta:
+        ordering = ['order']
+        verbose_name_plural = 'communities'
+
+    def image_tag(self):
+        return u'<img src="%s" />' % self.url()
+    image_tag.short_description = 'Image'
+    image_tag.allow_tags = True
+
+def name_post_save(instance, *args, **kwargs):
+    Community.objects.filter(name=instance.name).update(slug=(slugify(instance.name)))
+
+
+class NewsItem(ContentMixin ):
+    title = models.CharField(max_length=64)
+
+    @property
+    def publication_time(self):
+        return self.date
 
 
 class GetPage(models.Model):
