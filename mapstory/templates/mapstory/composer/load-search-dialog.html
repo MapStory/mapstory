@@ -12,7 +12,7 @@
             <div class="col-md-12">
                 <ul class="nav nav-tabs">
 
-                    <li class="active"><a ng-click="remove_query('owner__username__in');add_single_query('type__in', 'layer');add_single_query('order_by','title');" data-toggle="tab">Explore All</a></li>
+                    <li class="active"><a ng-click="remove_query('title__icontains');remove_query('owner__username__in');add_single_query('type__in', 'layer');add_single_query('order_by','title');" data-toggle="tab">Explore All</a></li>
                     <li><a ng-click="add_single_query('type__in', 'layer');add_single_query('order_by','-popular_count');" data-toggle="tab">Common</a></li>
                     <li><a ng-click="add_single_query('type__in', 'layer');add_single_query('order_by','title');" data-toggle="tab">My Favorites</a></li>
                     <li><a ng-click="add_single_query('order_by','title');add_single_query('owner__username__in', '{%endverbatim%}{{ request.user.username}}{%verbatim%}');" data-toggle="tab">My Uploads</a></li>
@@ -27,7 +27,7 @@
                         <div class="col-lg-12">
                             <nav class="filter">
                                 <div class="input-group search-bar" >
-                                <input name="text_search_input" id="text_search_input" placeholder="Search for StoryLayers ..." ng-model="layerName" type="text" class="form-control search-input">
+                                <input name="text_search_input_exp" id="text_search_input_exp" placeholder="Search for StoryLayers ..." ng-model="layerName" type="text" class="form-control search-input">
                                     <span class="input-group-btn">
                                         <button class="btn btn-primary search-btn" ng-disabled="!layerName" type="submit" id="text_search_btn"><i class="glyphicon glyphicon-search"></i> Search</button>
                                     </span>

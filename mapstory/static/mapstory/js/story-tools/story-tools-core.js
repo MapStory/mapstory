@@ -161,7 +161,6 @@ exports.findBox = findBox;
 exports.Box = Box;
 
 },{"./utils":9}],3:[function(require,module,exports){
-var moment = require('vis/node_modules/moment');
 var utils = require('./utils');
 var models = require('./models');
 var timeslider = require('./slider');
@@ -453,18 +452,17 @@ function create(options) {
             totalRange = options.data;
         }
         boxes = [{
-                title: 'Default Story Chapter',
-                description: 'No description.',
-                data: null,
-                range: new utils.Range(-3311971200000,-2435197600000),//1069286400000},//totalRange,
+                data: data,
+                range: totalRange,
                 speed: {
-                    interval: moment.duration(1, 'years').asMilliseconds(),
+                    interval: interval,
                     seconds: 3
                 }
-        }];
+            }];
     }
-
     console.log(boxes);
+
+
     model = new models.TimeModel(options, boxes, annotations);
     slider = new timeslider.TimeSlider(options.timeSliderId || 'slider', model);
     timeline = new line.TimeLine(options.timeLineId || 'timeline', model);
@@ -478,7 +476,7 @@ exports.create = create;
 exports.maps = maps;
 exports.utils = utils;
 
-},{"./line":4,"./maps":5,"./models":6,"./slider":8,"./utils":9,"vis/node_modules/moment":36}],4:[function(require,module,exports){
+},{"./line":4,"./maps":5,"./models":6,"./slider":8,"./utils":9}],4:[function(require,module,exports){
 var Timeline = require('vis/lib/timeline/Timeline');
 var utils = require('./utils');
 

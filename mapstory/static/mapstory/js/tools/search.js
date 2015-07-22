@@ -557,7 +557,7 @@
     /*
     * Text search management
     */
-    var text_autocomplete = $('#text_search_input').yourlabsAutocomplete({
+    /*var text_autocomplete = $('#text_search_input').yourlabsAutocomplete({
           url: AUTOCOMPLETE_URL_RESOURCEBASE,
           choiceSelector: 'span',
           hideAfter: 200,
@@ -582,7 +582,7 @@
                 $('#text_search_btn').click();
           }
     });
-
+    */
 
 
     $('.search-btn').click(function(){

@@ -175,23 +175,14 @@
                 function coordinatesChanged() {
                     if (scope.editBox.minlon && scope.editBox.minlat && scope.editBox.maxlon && scope.editBox.maxlat) {
 
-                         $log.debug("Center Before " + map.getView().getCenter());
-
-                         // Trasnform extent to EPSG:3857
                         var extent = [scope.editBox.minlon, scope.editBox.minlat, scope.editBox.maxlon, scope.editBox.maxlat];
                         extent = ol.extent.applyTransform(extent, ol.proj.getTransform("EPSG:4326", "EPSG:3857"));
 
                         map.getView().fitExtent(extent, map.getSize());
-
-                        $log.debug("Center " + map.getView().getCenter());
-
                     }
 
                     if(scope.editBox.zoom){
-
                         map.getView().setZoom(scope.editBox.zoom);
-                        $log.debug("The Zoom level is: " + scope.editBox.zoom);
-
                     }
                 }
 
@@ -204,10 +195,24 @@
                     source: new ol.source.MapQuest({layer: 'osm'})
                 }));
 
+                scope.updateCoordinates = function() {
+
+                    $log.debug("The current center of the map is: " + map.getView().getCenter());
+
+                    var extent = map.getView().calculateExtent(map.getSize());
+
+                    extent = ol.extent.applyTransform(extent, ol.proj.getTransform("EPSG:3857", "EPSG:4326"));
+
+                    scope.editBox.minlon = extent[0];
+                    scope.editBox.minlat = extent[1];
+                    scope.editBox.maxlon = extent[2];
+                    scope.editBox.maxlat = extent[3];
+                    scope.editBox.zoom = map.getView().getZoom();
+
+                };
+
                 scope.$watch('boxBoundsEditorSelected', function(n) {
                     if (n) {
-
-                        $log.debug("The current center of the map is: " + map.getView().getCenter());
 
                         if(scope.storyBox.center){
                             map.setView(new ol.View({center: scope.storyBox.center, zoom: 4}));
@@ -215,25 +220,7 @@
                             map.setView(new ol.View({center: [0, 0], zoom: 4}));
                         }
 
-                        // Compute the current extent of the view given the map size
-                        var extent = map.getView().calculateExtent(map.getSize());
-
-                        // Transform the extent from EPSG:3857 to EPSG:4326
-                        extent = ol.extent.applyTransform(extent, ol.proj.getTransform("EPSG:3857", "EPSG:4326"));
-
-                        scope.editBox.minlon = extent[0];
-                        scope.editBox.minlat = extent[1];
-                        scope.editBox.maxlon = extent[2];
-                        scope.editBox.maxlat = extent[3];
-                        scope.editBox.zoom = map.getView().getZoom();
-
-                        //$log.debug("Zoom " + map.getView().getZoom());
-                        $log.debug("Projection Code: " + map.getView().getProjection().getCode());
-                        //$log.debug("Projection Code: " + map.getView().getProjection().getExtent());
-                        //$log.debug("Center " + map.getView().getCenter());
-                        //$log.debug("Resolution " + map.getView().getResolution());
-
-                        $log.debug("The Current Map Extent " + extent);
+                        scope.updateCoordinates();
 
                         map.updateSize();
                     }
@@ -252,27 +239,12 @@
             link: function(scope, el, atts, ctrl) {
 
                 scope.currentTime = new Date().toISOString();
-                /*scope.point = {};
-                function coordinatesChanged() {
-                    if (scope.point.latitude && scope.point.longitude) {
-                        var geom = new ol.geom.Point([
-                            parseFloat(scope.point.longitude),
-                            parseFloat(scope.point.latitude)
-                        ]).transform('EPSG:4326', scope.map.map.getView().getProjection());
-                        // @todo finish this - the geometry is not updated here
-                    }
-                }
-                scope.showPointCoordinates = function() {
-                    return scope.pinsCtrl.activeDrawTool === 'Point';
-                };
-                */
+
                 scope.$watch('storyBox', function(neu, old) {
                     if (neu != old) {
                         el[0].querySelector('input[name=title]').focus();
                     }
                 });
-                /*
-                scope.$watch('point', coordinatesChanged, true);*/
             }
         };
     });
