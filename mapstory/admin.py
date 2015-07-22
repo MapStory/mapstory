@@ -10,7 +10,6 @@ from mapstory.models import GetPageContent
 from mapstory.models import Leader
 from mapstory.models import ParallaxImage
 
-
 def content_html(obj):
     return obj.html()
 content_html.allow_tags = True
