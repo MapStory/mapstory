@@ -6,9 +6,14 @@ LIVE_RELOAD = getattr(settings, 'LIVE_RELOAD', False)
 if LIVE_RELOAD is True:
     LIVE_RELOAD = 'localhost'
 
+_context = dict(
+    LIVE_RELOAD=LIVE_RELOAD,
+)
+
 
 def context(req):
     return dict(
         LIVE_RELOAD=LIVE_RELOAD,
+        AUTOCOMPLETE_QUICK_SEARCH=getattr(settings, 'AUTOCOMPLETE_QUICK_SEARCH', False),
         favorite_info=get_favorite_info(req),
     )

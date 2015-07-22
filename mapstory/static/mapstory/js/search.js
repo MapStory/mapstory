@@ -137,6 +137,7 @@
     }
 
     // Activate the type filters if in the url
+    /*
     if($location.search().hasOwnProperty('type__in')){
       var types = $location.search()['type__in'];
       if(types instanceof Array){
@@ -154,7 +155,7 @@
       $('body').find("[data-filter='order_by']").removeClass('selected');
       $('body').find("[data-filter='order_by'][data-value="+sort+"]").addClass('selected');
     }
-
+*/
   });
 
   /*
@@ -168,20 +169,49 @@
     $scope.query.offset = $scope.query.offset || 0;
     $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
 
+    $scope.search = function() {
+      $scope.query.limit = 100;
+      $scope.query.offset = 0;
+      return query_api($scope.query).then(function(result) {
+        return result;
+      });
+    };
+
+    $scope.showUserGroup = function() {
+        if ($location.search().hasOwnProperty('type__in')) {
+            var typeInParam = $location.search()['type__in'];
+            if (typeof(typeInParam) === "string") {
+                if (typeInParam === 'user' || typeInParam === 'group') {
+                    return true;
+                }
+            } else if (typeof(typeInParam) === "object") {
+                for(var i = 0; i < typeInParam.length; i++) {
+                  if(typeInParam[i] === 'user' || typeInParam[i] === 'group') {
+                      return true;
+                    }
+                };
+            }
+          }
+
+        return false;
+    };
 
     //Get data from apis and make them available to the page
     function query_api(data){
-      return $http.get(Configs.url, {params: data || {}}).success(function(data){
+      return $http.get('/api/base/search/', {params: data || {}}).success(function(data){
         $scope.results = data.objects;
         $scope.total_counts = data.meta.total_count;
         $scope.$root.query_data = data;
         if (HAYSTACK_SEARCH) {
           if ($location.search().hasOwnProperty('q')){
-            $scope.text_query = $location.search()['q'].replace(/\+/g," ");
+            $scope.text_query = $location.search()['q'].replace(/\W+/g," ");
+          }
+          if ($location.search().hasOwnProperty('type__in')){
+            $scope.type__in = $location.search()['type__in'].replace(/\W+/g," ");;
           }
         } else {
           if ($location.search().hasOwnProperty('title__icontains')){
-            $scope.text_query = $location.search()['title__icontains'].replace(/\+/g," ");
+            $scope.text_query = $location.search()['title__icontains'].replace(/\W+/g," ");
           }
         }
 
@@ -210,11 +240,11 @@
       return query_api($scope.query).then(function(result) {
         return result;
       });
-    }
+    };
 
     $scope.get_url = function() {
       return Configs.url;
-    }
+    };
 
     /*
     * Pagination 
@@ -583,13 +613,13 @@
           }
     });
 */
-    $('#text_search_btn').click(function(){
+    /*$('#text_search_btn').click(function(){
         if (HAYSTACK_SEARCH)
             $scope.query['q'] = $('#text_search_input').val();
         else
             $scope.query['title__icontains'] = $('#text_search_input').val();
         query_api($scope.query);
-    });
+    });*/
 
     /*
     * User search management

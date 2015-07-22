@@ -35,8 +35,6 @@ WSGI_APPLICATION = "mapstory.wsgi.application"
 
 STATICFILES_DIRS = [
     os.path.join(LOCAL_ROOT, "static"),
-    ("maploom/vendor", LOCAL_ROOT + "/../../MapLoom/vendor"),
-    ("maploom", LOCAL_ROOT + "/../../MapLoom/build"),
 ] + STATICFILES_DIRS
 
 STATIC_ROOT = os.path.join(LOCAL_ROOT, "static_root")
@@ -71,6 +69,7 @@ INSTALLED_APPS += (
     'icon_commons',
     'maploom',
     'geonode.contrib.favorite',
+    'haystack'
 )
 
 TEMPLATE_CONTEXT_PROCESSORS += (
@@ -108,6 +107,8 @@ REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/mapstory-assets'
 REGISTRATION_OPEN = True
 
 DATABASE_PASSWORD = None
+
+AUTOCOMPLETE_QUICK_SEARCH = False
 
 # Where to load mapstory-assets from. If True, use /static/assets
 # otherwise use REMOTE_CONTENT_URL

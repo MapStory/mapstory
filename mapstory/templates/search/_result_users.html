@@ -1,6 +1,6 @@
 {% verbatim %}
-<div ng-show="get_url() == '/api/profiles/'">
-    <li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4">
+<div ng-show="query.type__in==='user'">
+    <li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4" ng-if="item.type==='user'">
         <div>
             <a href="{{ item.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ item.avatar_100}}"/></a>
             <h3><a href="{{ item.profile_detail_url}}">{{ item.first_name }} {{ item.last_name }}</a></h3>
@@ -17,8 +17,8 @@
         </div>
     </li>
 </div>
-<div ng-show="get_url() == '/api/groups/'">
-    <li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4">
+<div ng-show="query.type__in==='group'">
+    <li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4" ng-if="item.type==='group'">
         <div>
             <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.logo}}"/></a>
             <h3><a href="{{ item.detail_url}}">{{ item.title }}</a></h3>

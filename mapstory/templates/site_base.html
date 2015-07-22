@@ -14,6 +14,7 @@
 {% block extra_script %}
 <script type="text/javascript">
 /* Script for keywords autocomplete */
+    {% if AUTOCOMPLETE_QUICK_SEARCH %}
     var quicksearch_autocomplete = $('#quicksearch').yourlabsAutocomplete({
           url: '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}',
           choiceSelector: 'span',
@@ -28,6 +29,7 @@
               $scope.keyword_query = choice[0].innerHTML;
           }
     });
+    {% endif %}
     // Fix placeholder text for Quick Search
     $(function() {
         $('#quicksearch').attr('placeholder','Quick Search');

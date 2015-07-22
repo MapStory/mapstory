@@ -10,3 +10,5 @@ textile
 dj.paste
 PasteDeploy
 https://github.com/MapStory/django-maploom/archive/mapstory.zip
+django-haystack==2.4.0
+elasticsearch==1.6.0

@@ -147,8 +147,13 @@
   notify: restart geoserver
   tags: [geoserver]
 
+- name: update geoserver perms
+  file: path=/var/lib/tomcat7/webapps/geoserver.war state=file owner=tomcat7 group=tomcat7
+
 - name: restart geoserver
   service: name=tomcat7 state=restarted
+
+- wait_for: path=/var/lib/tomcat7/webapps/geoserver/WEB-INF/
 
 - name: copy geoserver web.xml
   template: src=files/web.xml dest=/var/lib/tomcat7/webapps/geoserver/WEB-INF/web.xml owner=tomcat7 group=tomcat7
@@ -176,3 +181,62 @@
 
 - file: path=/tmp/mapstory state=absent
   tags: [setup]
+
+
+# install apt key
+- name: adding elasticsearch gpg key
+  apt_key: url=http://packages.elasticsearch.org/GPG-KEY-elasticsearch state=present
+  tags: [elasticsearch]
+
+# set dedicated repository
+- name: add elasticsearch repository
+  apt_repository: repo='deb http://packages.elasticsearch.org/elasticsearch/{{es_version}}/debian stable main' state=present
+  tags: [elasticsearch]
+
+# install java if requested
+- name: install java version from elasticsearch role
+  apt: name={{ es_java_version }} state=present update_cache=yes cache_valid_time=3600
+  when: es_install_java
+  tags: [elasticsearch]
+
+# install elasticsearch with dependancies
+- name: install elasticsearch
+  apt: name=elasticsearch state=present update_cache=yes cache_valid_time=3600
+  notify: init elasticsearch
+  tags: [elasticsearch]
+
+- name: set heap size
+  lineinfile: dest=/etc/default/elasticsearch regexp='^ES_HEAP_SIZE' line="ES_HEAP_SIZE={{ es_heap_size }}" state=present
+  tags: [elasticsearch]
+
+- name: update group gid
+  group: name=elasticsearch gid={{ es_gid }} state=present
+  when: es_gid
+  tags: [elasticsearch]
+
+- name: update user uid and gid
+  user: name=elasticsearch uid={{ es_uid }} group=elasticsearch state=present
+  when: es_uid
+  tags: [elasticsearch]
+
+# set limits.conf
+- name: limits.conf tuning
+  lineinfile: dest=/etc/security/limits.conf line="{{ item }}"
+  tags: elasticsearch
+  with_items:
+    - 'elasticsearch soft nofile 32000'
+    - 'elasticsearch hard nofile 32000'
+  tags: [elasticsearch]
+
+- name: only allow access from localhost
+  lineinfile: 'dest=/etc/elasticsearch/elasticsearch.yml regexp="^network.bind_host" line="network.bind_host: localhost" state=present'
+  tags: [elasticsearch]
+
+- name: disable dynamic scipts
+  lineinfile: 'dest=/etc/elasticsearch/elasticsearch.yml regexp="^script.disable_dynamic" line="script.disable_dynamic: true" state=present'
+  tags: [elasticsearch]
+
+- name: supervisor-elasticsearch
+  copy: src=files/supervisor-elasticsearch.conf dest=/etc/supervisor/conf.d
+  notify: [reload supervisor]
+  tags: [elasticsearch]

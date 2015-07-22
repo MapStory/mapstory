@@ -82,6 +82,11 @@
     chdir={{ mapstory_geonode }}
   tags: [superuser]
 
+#- name: reload_indexes
+#  # would use django_manage but no way to avoid initial data?
+#  shell: . {{ venv_activate }} && python manage.py rebuild_index chdir={{ mapstory_geonode }}
+#  tags: [setup]
+
 - name: init maploom
   command: paver build_maploom --init chdir=/srv/git/mapstory
   tags: [setup]
@@ -94,3 +99,8 @@
   # while we could use django_manage, this does a bit more
   shell: . {{ venv_activate }} && paver collect_static chdir={{ mapstory_geonode }}
   tags: [update]
+
+- name: reload indexes
+  shell: . {{ venv_activate }} && python manage.py rebuild_index --noinput chdir={{ mapstory_geonode }}
+  tags: [elasticsearch]
+  ignore_errors: True
