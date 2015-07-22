@@ -10,6 +10,8 @@ import os
 from tastypie import fields
 from django.template.defaultfilters import slugify
 from django.db.models import signals
+from geonode.people.models import Profile
+from geonode.layers.models import Layer
 
 def _stamp(data):
     s = hashlib.sha1()
@@ -44,6 +46,29 @@ class Sponsor(models.Model):
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
 
+class ContentMixin(models.Model):
+    content = models.TextField(
+        help_text="use <a href=%s target='_'>textile</a> for the content" %
+        'http://redcloth.org/hobix.com/textile/'
+    )
+    date = models.DateTimeField(default=datetime.now)
+    publish = models.BooleanField(default=False)
+
+    def html(self):
+        return textile.textile(self.content)
+
+    class Meta:
+        abstract = True
+        ordering = ['-date']
+
+class DiaryEntry(ContentMixin):
+    title = models.CharField(max_length=255)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL)
+    show_on_main = models.BooleanField(default=False)
+
+    def get_absolute_url(self):
+        return reverse('diary-detail', args=[self.pk])
+
 class Community(models.Model):
     name = models.CharField(max_length=64)
     link = models.URLField(blank=False)
@@ -52,11 +77,10 @@ class Community(models.Model):
     order = models.IntegerField(blank=True, default=0)
     stamp = models.CharField(max_length=8, blank=True)
     slug = models.SlugField(max_length=64, unique=True, blank=True)
-    #layer = models.ForeignKey(MapLayer, null=True, blank=True)
-    layer = fields.ToManyField(MapLayer, 'community_layers')
+    layer = models.ManyToManyField(Layer)
     # Need also to have a list of users and to have journals
-    # leads = users
-    # journals = journals
+    leads = models.ManyToManyField(Profile)
+    journals = models.ForeignKey(DiaryEntry)
 
     def url(self):
         return self.icon.url + "?" + self.stamp
@@ -81,37 +105,12 @@ def name_post_save(instance, *args, **kwargs):
     Community.objects.filter(name=instance.name).update(slug=(slugify(instance.name)))
 
 
-class ContentMixin(models.Model):
-    content = models.TextField(
-        help_text="use <a href=%s target='_'>textile</a> for the content" %
-        'http://redcloth.org/hobix.com/textile/'
-    )
-    date = models.DateTimeField(default=datetime.now)
-    publish = models.BooleanField(default=False)
-
-    def html(self):
-        return textile.textile(self.content)
-
-    class Meta:
-        abstract = True
-        ordering = ['-date']
-
-
 class NewsItem(ContentMixin ):
     title = models.CharField(max_length=64)
 
     @property
     def publication_time(self):
         return self.date
-
-
-class DiaryEntry(ContentMixin):
-    title = models.CharField(max_length=255)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL)
-    show_on_main = models.BooleanField(default=False)
-
-    def get_absolute_url(self):
-        return reverse('diary-detail', args=[self.pk])
 
 
 class GetPage(models.Model):
