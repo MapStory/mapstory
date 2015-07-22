@@ -10,6 +10,7 @@ from mapstory.models import GetPageContent
 from mapstory.models import Leader
 from mapstory.models import ParallaxImage
 
+from geonode.layers.models import Layer
 
 def content_html(obj):
     return obj.html()
@@ -52,7 +53,11 @@ class SponsorAdmin(admin.ModelAdmin):
     list_editable = 'name', 'link', 'icon', 'description', 'order'
     list_display_links = 'image_tag',
 
+class LayerInline(admin.TabularInline):
+    model = Community.layer.through
+
 class CommunityAdmin(admin.ModelAdmin):
+    #inlines = [LayerInline, ]
     model = Community
     exclude = 'stamp', 'slug'
     list_display = 'name', 'link', 'icon', 'image_tag', 'description', 'order'
