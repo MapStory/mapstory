@@ -54,7 +54,7 @@ class SponsorAdmin(admin.ModelAdmin):
 
 class CommunityAdmin(admin.ModelAdmin):
     model = Community
-    exclude = 'stamp',
+    exclude = 'stamp', 'slug'
     list_display = 'name', 'link', 'icon', 'image_tag', 'description', 'order'
     list_editable = 'name', 'link', 'icon', 'description', 'order'
     list_display_links = 'image_tag',

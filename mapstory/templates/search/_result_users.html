@@ -5,15 +5,15 @@
             <a href="{{ item.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ item.avatar_100}}"/></a>
             <h3><a href="{{ item.profile_detail_url}}">{{ item.first_name }} {{ item.last_name }}</a></h3>
             <!-- If both exist, comma separated... otherwise no comma separation -->
-            <h4 ng-show="item.position && item.organization">{{ item.position }}, {{ item.organization }}</h4>
-            <h4 ng-show="item.city && item.country">{{ item.city }}, {{ item.country }}</h4>
-            <h4 ng-hide="item.position && item.organization">{{ item.position }} {{ item.organization }}</h4>
-            <h4 ng-hide="item.city && item.country">{{ item.city }} {{ item.country }}</h4>
+            <h4 ng-show="item.position && item.organization"><i class="fa fa-briefcase"></i>{{ item.position }}, {{ item.organization }}</h4>
+            <h4 ng-show="item.city && item.country"><i class="fa fa-map-marker"></i>{{ item.city }}, {{ item.country }}</h4>
+            <h4 ng-hide="item.position && item.organization"><i class="fa fa-map-marker"></i>{{ item.position }} {{ item.organization }}</h4>
+            <h4 ng-hide="item.city && item.country"><i class="fa fa-map-marker"></i>{{ item.city }} {{ item.country }}</h4>
             <h4>{{ item.profile }}</h4>
 
             <span class="card-info"><a href="{{ item.profile_detail_url }}"><i class="fa fa-user"></i> view profile</a></span>
-            <!--span class="card-info"><a href="{{ item.detail_url}}"><i class="fa fa-share"></i> Share</a></span>
-            <span class="card-info"><a href="{{ item.detail_url}}"><i class="fa fa-star"></i> Follow</a-->
+            <!-- TODO: Hook in messaging functionality -->
+            <span class="card-info"><a><i class="fa fa-envelope"></i> message</a></span>
         </div>
     </li>
 </div>

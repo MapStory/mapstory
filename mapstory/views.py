@@ -21,12 +21,14 @@ from mapstory.models import GetPage
 from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
 from mapstory.models import Leader
+from mapstory.models import Community
 from mapstory.models import get_communities
 from geonode.base.models import Region
 from geonode.geoserver.helpers import ogc_server_settings
 from urlparse import urlsplit
 from user_messages.models import Thread
 from .forms import MapStorySignupForm
+from geonode.groups.models import GroupProfile
 
 import datetime
 
@@ -132,6 +134,30 @@ class ProfileDetail(DetailView):
 
         ctx['threads_all'] = Thread.ordered(Thread.objects.inbox(self.request.user))
         ctx['threads_unread'] = Thread.ordered(Thread.objects.unread(self.request.user))
+        return ctx  
+
+class CommunityDetail(DetailView):
+    # TODO: We need to differentiate between viewing as an outsider or logged in
+    template_name = 'mapstory/initiative_visit.html'
+    slug_field = 'slug'
+    model = Community
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CommunityDetail, self).get_context_data(**kwargs)
+        ctx['images'] = get_images()
+
+        return ctx
+
+class GroupDetail(DetailView):
+    # TODO: We need to differentiate between viewing as an outsider or logged in
+    template_name = 'groups/organization_visit.html'
+    slug_field = 'slug'
+    model = GroupProfile
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CommunityDetail, self).get_context_data(**kwargs)
+        ctx['images'] = get_images()
+        
         return ctx
 
 

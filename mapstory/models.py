@@ -2,11 +2,14 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
 from datetime import datetime
-from geonode.maps.models import Map
+from geonode.maps.models import Map, MapLayer
 import hashlib
 import textile
 from django.template.defaulttags import register
 import os
+from tastypie import fields
+from django.template.defaultfilters import slugify
+from django.db.models import signals
 
 def _stamp(data):
     s = hashlib.sha1()
@@ -48,6 +51,12 @@ class Community(models.Model):
     description = models.TextField(blank=True)
     order = models.IntegerField(blank=True, default=0)
     stamp = models.CharField(max_length=8, blank=True)
+    slug = models.SlugField(max_length=64, unique=True, blank=True)
+    #layer = models.ForeignKey(MapLayer, null=True, blank=True)
+    layer = fields.ToManyField(MapLayer, 'community_layers')
+    # Need also to have a list of users and to have journals
+    # leads = users
+    # journals = journals
 
     def url(self):
         return self.icon.url + "?" + self.stamp
@@ -67,6 +76,9 @@ class Community(models.Model):
         return u'<img src="%s" />' % self.url()
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
+
+def name_post_save(instance, *args, **kwargs):
+    Community.objects.filter(name=instance.name).update(slug=(slugify(instance.name)))
 
 
 class ContentMixin(models.Model):
@@ -159,3 +171,5 @@ def get_sponsors():
 
 def get_communities():
     return Community.objects.filter(order__gte=0)
+
+signals.post_save.connect(name_post_save, sender=Community)
