@@ -65,6 +65,9 @@ class DiaryEntry(ContentMixin):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
     show_on_main = models.BooleanField(default=False)
 
+    def __unicode__(self):
+        return u'%s' % (self.title)
+        
     def get_absolute_url(self):
         return reverse('diary-detail', args=[self.pk])
 
