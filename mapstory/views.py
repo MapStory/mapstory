@@ -139,14 +139,26 @@ class ProfileDetail(DetailView):
 class CommunityDetail(DetailView):
     # TODO: We need to differentiate between viewing as an outsider or logged in
     template_name = 'mapstory/initiative_visit.html'
-    slug_field = 'name'
+    slug_field = 'slug'
     model = Community
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CommunityDetail, self).get_context_data(**kwargs)
+        ctx['images'] = get_images()
+
+        return ctx
 
 class GroupDetail(DetailView):
     # TODO: We need to differentiate between viewing as an outsider or logged in
     template_name = 'groups/organization_visit.html'
     slug_field = 'slug'
     model = GroupProfile
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CommunityDetail, self).get_context_data(**kwargs)
+        ctx['images'] = get_images()
+        
+        return ctx
 
 
 class LeaderListView(ListView):
