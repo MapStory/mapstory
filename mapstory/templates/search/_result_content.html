@@ -1,36 +1,36 @@
 {% verbatim %}
 <li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4">
-    <div>
+    <!-- We want the entire tile card to have a set size -->
+    <div style="text-align: left; height: 500px;">
         <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}"/></a>
         <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
         <!-- Tell whether it is a MapStory or StoryLayer item -->
         <div ng-if="item.detail_url.indexOf('/maps/') > -1"><p><i>MapStory</p></i></div>
         <div ng-if="item.detail_url.indexOf('/layers/') > -1"><p><i>StoryLayer</p></i></div>
-        <h4><span class="owner"><i class="fa fa-user"></i>{{ item.owner.first_name }} {{ item.owner.last_name }}</span></h4>
-        <h4><span><i class="fa fa-flag-o"></i></span>{{ item.category.gn_description}}</h4>
+        <h4 ng-if="item.owner"><span class="owner"><i class="fa fa-user"></i>{{ item.owner.first_name }} {{ item.owner.last_name }}</span></h4>
+        <h4 ng-if="item.category"><span><i class="fa fa-flag-o"></i></span>{{ item.category.gn_description}}</h4>
         <!-- Views if MapStory, Edits if StoryLayer -->
         <h4 ng-if="item.detail_url.indexOf('/maps/') > -1"><a href="{{ item.detail_url}}"><i class="fa fa-eye"></i> {{ item.popular_count}} views</a></h4>
         <!-- TODO: Hook in the edits -->
         <h4 ng-if="item.detail_url.indexOf('/layers/') > -1"><a href="{{ item.detail_url}}"><i class="fa fa-pencil"></i> edits</a></h4>
         <h4><a href="{{ item.detail_url}}#rate"><i class="fa fa-star"></i> {{ item.rating}}</a></h4>
-        <!-- We want this to have a set size -->
-        <div style="height: 50px;"><h5 class="abstract">{{ item.abstract|limitTo:70 }}<a href="#"> <i>...read more</i></a></h5></div>
+        <div><h5 class="abstract">{{ item.abstract|limitTo:70 }}<a href="#"> <i>...read more</i></a></h5></div>
         <div class="btn-toolbar">
             <h4 ng-if="item.detail_url.indexOf('/maps/') > -1">
                 <!-- goes to the viewer -->
-                <a href="{% url "map_viewer" item.id %}"><button class="btn btn-primary btn-md"><i class="fa fa-play"></i> play</button></a>
+                <a href="{% url "map_viewer" item.id %}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> play</button></a>
                 <!-- TODO: Hook in favorites functionality -->
-                <button class="btn btn-primary btn-md"><i class="fa fa-heart-o"></i> favorite</button>
+                <button class="btn btn-primary btn-xs"><i class="fa fa-heart-o"></i> favorite</button>
                 <!-- TODO: Hook in share functionality -->
-                <button class="btn btn-primary btn-md"><i class="fa fa-share-alt"></i> share</button>
+                <button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> share</button>
             </h4>
             <h4 ng-if="item.detail_url.indexOf('/layers/') > -1">
                 <!-- goes to composer -->
-                <a href="{% endverbatim %}{% url "new_map" %}?layer={% verbatim %}{{ item.detail_url.substring(8)}}"><button class="btn btn-primary btn-md"><i class="fa fa-play"></i> use</button></a>
+                <a href="{% endverbatim %}{% url "new_map" %}?layer={% verbatim %}{{ item.detail_url.substring(8)}}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> use</button></a>
                 <!-- goes to layer edit -->
-                <a href='{% url "map-new2" %}?layer={{item.service_typename}}'><button class="btn btn-primary btn-md"><i class="fa fa-share-alt"></i> edit</button></a>
+                <a href='{% url "map-new2" %}?layer={{item.service_typename}}'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
                 <!-- TODO: Hook in favorites functionality -->
-                <button class="btn btn-primary btn-md"><i class="fa fa-heart-o"></i> favorite</button>
+                <button class="btn btn-primary btn-xs"><i class="fa fa-heart-o"></i> favorite</button>
             </h4>
         </div>
     </div>

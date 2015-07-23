@@ -9,6 +9,7 @@ from mapstory.models import GetPage
 from mapstory.models import GetPageContent
 from mapstory.models import Leader
 from mapstory.models import ParallaxImage
+from mapstory.models import Task
 
 def content_html(obj):
     return obj.html()
@@ -51,12 +52,16 @@ class SponsorAdmin(admin.ModelAdmin):
     list_editable = 'name', 'link', 'icon', 'description', 'order'
     list_display_links = 'image_tag',
 
+class TaskInline(admin.StackedInline):
+    model = Task
+
 class CommunityAdmin(admin.ModelAdmin):
+    inlines = [TaskInline, ]
     model = Community
     exclude = 'stamp', 'slug'
-    list_display = 'name', 'link', 'icon', 'image_tag', 'description', 'order'
-    list_editable = 'name', 'link', 'icon', 'description', 'order'
-    list_display_links = 'image_tag',
+    list_display = 'name', 'icon', 'image_tag', 'description', 'order'
+    list_editable = 'icon', 'description', 'order'
+    list_display_links = 'name', 'image_tag',
 
 
 class NewsItemForm(forms.ModelForm):
