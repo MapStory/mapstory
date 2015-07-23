@@ -67,13 +67,15 @@ class DiaryEntry(ContentMixin):
 
     def __unicode__(self):
         return u'%s' % (self.title)
-        
+
     def get_absolute_url(self):
         return reverse('diary-detail', args=[self.pk])
 
+    class Meta:
+        verbose_name_plural = 'DiaryEntries'
+
 class Community(models.Model):
     name = models.CharField(max_length=64)
-    link = models.URLField(blank=False)
     icon = models.ImageField(blank=False, upload_to='communities')
     description = models.TextField(blank=True)
     order = models.IntegerField(blank=True, default=0)
@@ -81,7 +83,7 @@ class Community(models.Model):
     slug = models.SlugField(max_length=64, unique=True, blank=True)
     layer = models.ManyToManyField(Layer, blank=True)
     leads = models.ManyToManyField(Profile, blank=True)
-    journals = models.ForeignKey(DiaryEntry, null=True, blank=True)
+    journals = models.ManyToManyField(DiaryEntry, blank=True)
 
     def url(self):
         return self.icon.url + "?" + self.stamp
@@ -103,6 +105,10 @@ class Community(models.Model):
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
 
+class Task(models.Model):
+    task = models.TextField(blank=True)
+    community = models.ForeignKey(Community, related_name='tasks')
+    
 def name_post_save(instance, *args, **kwargs):
     Community.objects.filter(name=instance.name).update(slug=(slugify(instance.name)))
 
