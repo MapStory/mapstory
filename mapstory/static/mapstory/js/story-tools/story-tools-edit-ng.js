@@ -20,11 +20,6 @@
             StoryBoxLayerManager.boxesChanged([box], 'delete');
         };
 
-        this.editBounds = function(){
-            console.log("editing the stuff ");
-        };
-
-
         this.acceptEdit = function() {
 
             var currentBox = this.currentBox;
@@ -198,7 +193,7 @@
                 scope.updateCoordinates = function() {
 
                     $log.debug("The current center of the map is: " + map.getView().getCenter());
-
+                    console.log(map.getView().getProjection().getCode());
                     var extent = map.getView().calculateExtent(map.getSize());
 
                     extent = ol.extent.applyTransform(extent, ol.proj.getTransform("EPSG:3857", "EPSG:4326"));
@@ -208,6 +203,8 @@
                     scope.editBox.maxlon = extent[2];
                     scope.editBox.maxlat = extent[3];
                     scope.editBox.zoom = map.getView().getZoom();
+                    //var center = map.getView().getCenter();
+                    //scope.editBox.center = ol.proj.transform(center, 'EPSG:3857', 'EPSG:900913');
 
                 };
 
@@ -550,7 +547,6 @@
             restrict: 'A',
             require: 'ngModel',
             link: function(scope, elem, attrs, ngModelCtrl) {
-
                 ngModelCtrl.$formatters.push(function(modelValue) {
                     /*jshint eqnull:true */
                     var retval = modelValue != null ? new Date(modelValue).toISOString() : '';
@@ -566,13 +562,7 @@
                     if (scope.currentTime) {
                         ngModelCtrl.$modelValue = scope.currentTime;
                     } else {
-                        ngModelCtrl.$modelValue = new Date().toISOString();
-                        scope.$apply(function(){
-                            scope.currentTime = new Date().toISOString();
-                        });
-
-
-                        $log.warn('No current time provided!');
+                        $log.error('no current time provided!');
                     }
                 };
             }

@@ -7,8 +7,10 @@ exports.utils = require('./time/utils');
 
 },{"./time/boxes":2,"./time/controls":3,"./time/maps":5,"./time/pins":7,"./time/utils":9}],2:[function(require,module,exports){
 var utils = require('./utils');
+var moment = require('vis/node_modules/moment');
 
 function Box(options) {
+    this.id = null;
     this.title = options.title || null;
     this.start_time = options.start_time || null;
     this.end_time = options.end_time || null;
@@ -20,18 +22,35 @@ function Box(options) {
     this.resolution = options.resolution || null;
     this.allowPan = options.allowPan;
     this.allowZoom = options.allowZoom;
-    this.speed = options.speed;  // interval, seconds
+    this.interval = options.interval || null;
+    this.intervalRate = options.intervalRate || null;
+    this.playback = options.playback || null;
+    this.playbackRate = options.playbackRate || null;
+    this.speed = options.speed || null;  // interval, seconds
     this.zoom = options.zoom || null;
     this._offset = 0;
 
-    if (this.range === null) {
+    if (this.range === null || this.range.start === null) {
         if(this.data !== null){
         this.range = utils.createRange(this.data[0], this.data[this.data.length-1]);
+        }else{
+            this.range = new storytools.core.time.utils.Range(this.start_time, this.end_time);
+
         }
-    }else{
-        // @todo possible divide by zero if speed.interval not set!
-    this._steps = this.data === null ? Math.floor(this.range.width() / this.speed.interval) + 1: this.data.length;
     }
+
+    if(this.speed === null && this.interval !== null){
+        this.speed = { interval: moment.duration(this.interval, this.intervalRate).asMilliseconds(),seconds: this.playback};
+
+                        // @todo possible divide by zero if speed.interval not set!
+    }
+
+
+    if(this.range !== null && this.speed !== null){
+      this._steps = this.data === null ? Math.floor(this.range.width() / this.speed.interval) + 1: this.data.length;
+
+    }
+
 }
 Box.prototype.getSteps = function() {
     return this._steps;
@@ -70,6 +89,19 @@ Box.prototype.setProperties = function(props){
     this.start_time = props.start_time;
     this.end_time = props.end_time;
     this.center = props.center;
+    this.zoom = props.zoom;
+
+    if(props.interval && props.intervalRate && props.playback){
+
+        this.interval = props.interval;
+        this.intervalRate = props.intervalRate;
+        this.playback = props.playback;
+        this.playbackRate = props.playbackRate;
+
+        this.speed = { interval: moment.duration(props.interval, props.intervalRate).asMilliseconds(),seconds: props.playback};
+    }
+
+
 
 };
 
@@ -160,7 +192,7 @@ exports.BoxModel = function(boxArray) {
 exports.findBox = findBox;
 exports.Box = Box;
 
-},{"./utils":9}],3:[function(require,module,exports){
+},{"./utils":9,"vis/node_modules/moment":36}],3:[function(require,module,exports){
 var utils = require('./utils');
 var models = require('./models');
 var timeslider = require('./slider');
@@ -460,8 +492,6 @@ function create(options) {
                 }
             }];
     }
-    console.log(boxes);
-
 
     model = new models.TimeModel(options, boxes, annotations);
     slider = new timeslider.TimeSlider(options.timeSliderId || 'slider', model);
@@ -497,7 +527,7 @@ exports.TimeLine = function(id, model) {
     function init(model) {
         var elements = [], options;
         var range = model.getRange();
-        console.log("TL Range: " + range);
+        console.log("Timeline Range: " + range);
         if (range.isEmpty()) {
             range = utils.createRange(Date.now());
         }
@@ -850,7 +880,7 @@ exports.MapController = function(options, timeControls) {
             console.log(new Date(currentBox.range.end).toISOString());
 
             if(currentBox.center){
-                storyMap.animatePanAndBounce(currentBox.center);
+                storyMap.animatePanAndBounce(currentBox.center, currentBox.zoom);
             }
         }
 
@@ -864,6 +894,8 @@ exports.MapController = function(options, timeControls) {
             me.layers[id] = true;
         }
     });
+
+
     storyMap.getStoryLayers().forEach(function(lyr) {
         var id = lyr.get('id');
         if (id !== undefined && me.layers[id] !== true) {
@@ -883,10 +915,9 @@ var BoxModel = require('./boxes').BoxModel;
  */
 exports.TimeModel = function(options, boxes, annotations) {
     
-    var events = new utils.Events(),
-        boxModel = new BoxModel(boxes);
+    var events = new utils.Events();
 
-    this.boxes = boxModel;
+    this.boxes = new BoxModel(boxes);
     this.annotations = annotations;
     this.fixed = false;
     this.mode = 'instant';
@@ -905,12 +936,16 @@ exports.TimeModel = function(options, boxes, annotations) {
         if (opts.hasOwnProperty('data')) {
         //    boxModel.setRange(opts.data);
         }
+
+        if (opts.hasOwnProperty('boxes')) {
+        this.boxes = new BoxModel(opts.boxes);
+        }
     }
 
     init.call(this, options);
     this.getRange = function() {
-        console.log("getting boxModel range " + boxModel.getRange());
-        return boxModel.getRange();
+        console.log("getting boxModel range " + this.boxes.getRange());
+        return this.boxes.getRange();
     };
     this.getTotalRange = function() {
         // @todo need to access layers and cached dimension data
@@ -919,13 +954,13 @@ exports.TimeModel = function(options, boxes, annotations) {
     };
     this.update = init;
     this.getSteps = function() {
-        return boxModel.getSteps();
+        return this.boxes.getSteps();
     };
     this.getIndex = function(instant) {
-        return boxModel.getIndex(instant);
+        return this.boxes.getIndex(instant);
     };
     this.getRangeAt = function(i, j) {
-        return boxModel.getRangeAt(i, j);
+        return this.boxes.getRangeAt(i, j);
     };
 };
 
