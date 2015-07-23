@@ -24,6 +24,7 @@ from mapstory.models import Leader
 from mapstory.models import Community
 from mapstory.models import get_communities
 from geonode.base.models import Region
+from geonode.contrib.favorite.models import Favorite
 from geonode.geoserver.helpers import ogc_server_settings
 from urlparse import urlsplit
 from user_messages.models import Thread
@@ -131,10 +132,12 @@ class ProfileDetail(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(ProfileDetail, self).get_context_data(**kwargs)
         ctx['diary_entries'] = DiaryEntry.objects.filter(author=self.object).order_by('-date')
-
+        ctx['favorites'] = Favorite.objects.filter(user=self.object).order_by('-created_on')
         ctx['threads_all'] = Thread.ordered(Thread.objects.inbox(self.request.user))
         ctx['threads_unread'] = Thread.ordered(Thread.objects.unread(self.request.user))
-        return ctx  
+
+        return ctx
+
 
 class CommunityDetail(DetailView):
     # TODO: We need to differentiate between viewing as an outsider or logged in

@@ -69,7 +69,8 @@ INSTALLED_APPS += (
     'django.contrib.webdesign',
     'geonode.contrib.geogig',
     'icon_commons',
-    'maploom'
+    'maploom',
+    'geonode.contrib.favorite',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS += (

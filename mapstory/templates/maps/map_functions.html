@@ -8,10 +8,7 @@
   </div>
   <hr style="margin:5px">
   <div style="text-align:right">
-    <a title="" href="#" target="blank">
-      <!-- TODO: Need to check if this user has already favorited this storylayer; toggle between adding/removing -->
-      <span style="font-size:1.3em;color:gainsboro">favorite</span>
-    </a>
+  {% include "favorite/_favorite.html" with span_style="font-size:1.3em;color:gainsboro" btn_style="font-size:1.3em;color:gainsboro;border:none;background:none" %}
   </div>
   <hr style="margin:5px">
   <div style="text-align:right">
@@ -21,3 +18,5 @@
     </a>
   </div>
 </div>
+
+{% include "favorite/_favorite_js.html" %}
