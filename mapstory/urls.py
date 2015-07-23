@@ -62,7 +62,7 @@ urlpatterns = patterns('',
 
     url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
     url(r'^proxy/', proxy),
-
+    url(r'^favorite/', include('geonode.contrib.favorite.urls')),
 
 ) + urlpatterns
 

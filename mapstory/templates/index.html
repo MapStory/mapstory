@@ -81,7 +81,7 @@
             <div class="row links" style="padding-top:15px;padding-bottom:5px;">
                 <div class="col-sm-3">
                     <h3>
-                        <a href="{% url 'account_signup' %}">
+                        <a href="#" data-toggle="modal" data-target="#loginModal">
                             Sign up now
                         </a>
                     </h3>
@@ -167,7 +167,7 @@
             <div class="row">
                 <div class="col-sm-4">
                     <div class="csection-text">
-                        <h1>Get Started</h1>
+                        <h1><a href="{% url 'getpage' 'started' %}">Get Started</a></h1>
                         <h3>MapStory is an open platform for organizing our knowledge about how the world changes over time and space. Click on a link to the right, and learn how you can start contributing observations of your own.
                         </h3>
                     </div>
@@ -224,8 +224,8 @@
                 </div>
                 <div class="col-sm-4">
                     <div class="csection-text">
-                        <h1>Get Involved</h1>
-                        <h3><a href="{% url 'getpage' 'involved' %}">Join</a> with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.
+                        <h1><a href="{% url 'getpage' 'involved' %}">Get Involved</a></h1>
+                        <h3>Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.
                         </h3>
                     </div>
                 </div>

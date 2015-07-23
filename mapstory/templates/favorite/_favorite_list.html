@@ -1,0 +1,22 @@
+{% load i18n %}
+
+{# list of user's current favorites #}
+<div class="twocol">
+    <table id="favoritesListId" class="table">
+        <thead>
+            <th>Item</th>
+            <th>Type</th>
+            <th>&nbsp;</th>
+        </thead>
+        {% for favorite in favorites %}
+        <tr>
+            <td><a href='{{ favorite.content_object.detail_url }}' >{{ favorite.content_object.title }}</a></td>
+            <td>{{ favorite.content_type }}</td>
+            <td><button data-url="{% url 'delete_favorite' favorite.pk %}" class="btn btn-primary delete-btn">{% trans "Delete from Favorites" %}</button></td>
+        </tr>
+        {% empty %}
+        <tr><td>No favorites</td></tr>
+        {% endfor %}
+    </table>
+</div>
+
