@@ -227,11 +227,11 @@
                                 <div class="counter">{{diary_entries.count}}</div>
                                 Journal Entr{{diary_entries|pluralize:"y,ies"}} </a>
                         </li>
-
                         <li>
-                            <a href="#favorites_list" data-toggle="tab">
-                                <div class="counter">0</div>
-                                Favorites </a>
+                            <a href="#favorite_list" data-toggle="tab">
+                                <div class="counter">{{ favorites.count }}</div>
+                                Favorite{{favorites|pluralize}}
+                            </a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -314,11 +314,8 @@
                                 {% endfor %}
                             {% endif %}
                         </div>
-                        <div class="tab-pane" id="favorites_list">
-                            <div class="no-content">
-                                <h2>No favorites.</h2>
-                                <h4>Explore MapStory now.</h4>
-                            </div>
+                        <div class="tab-pane" id="favorite_list">
+                            {% include "favorite/_favorite_list.html" %}
                         </div>
                     </div>
                 </div>
@@ -395,6 +392,7 @@ WHAT IS THIS PART?!-->
       {% endif %}
   </script>
 {% include 'search/search_scripts.html' %}
+{% include 'favorite/_favorite_list_js.html' %}
 {% endblock %}
 
 

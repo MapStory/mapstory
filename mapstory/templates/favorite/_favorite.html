@@ -1,0 +1,7 @@
+{% load i18n %}
+{{ style1 }}
+{% if user.is_authenticated %}
+<button id="favoriteLink" style="{{ btn_style }}">{% trans 'favorite' %}</button>
+{% else %}
+<span style="{{ span_style }}" title="{% trans 'Log in to favorite.' %}">{% trans 'favorite' %}</span>
+{% endif %}
