@@ -203,8 +203,8 @@
                     scope.editBox.maxlon = extent[2];
                     scope.editBox.maxlat = extent[3];
                     scope.editBox.zoom = map.getView().getZoom();
-                    //var center = map.getView().getCenter();
-                    //scope.editBox.center = ol.proj.transform(center, 'EPSG:3857', 'EPSG:900913');
+                    var center = map.getView().getCenter();
+                    scope.editBox.center = center;//ol.proj.transform(center, 'EPSG:3857', 'EPSG:4326');
 
                 };
 

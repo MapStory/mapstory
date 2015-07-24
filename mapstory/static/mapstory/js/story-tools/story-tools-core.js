@@ -880,6 +880,7 @@ exports.MapController = function(options, timeControls) {
             console.log(new Date(currentBox.range.end).toISOString());
 
             if(currentBox.center){
+                console.log("Storymap Projection: " + storyMap.getMap().getView().getProjection().getCode());
                 storyMap.animatePanAndBounce(currentBox.center, currentBox.zoom);
             }
         }

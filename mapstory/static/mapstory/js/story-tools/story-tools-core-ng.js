@@ -326,7 +326,6 @@
         var start = +new Date();
 
         var view = this.map_.getView();
-        console.log(view.getProjection().getCode());
 
         if(view.getCenter() != center){
 
