@@ -6,6 +6,9 @@
 {% load mapstory_tags %}
 {% load cache %}
 {% load avatar_tags %}
+
+{% block title %}{{ community.name }}{% endblock %}
+
 {% block body_outer %}
 				<!-- content -->
         <section class="parallax">
@@ -22,10 +25,6 @@
 									<div class="col-sm-6">
 										<div style="padding:60px 0px 0px 10px;">
 											<h1 style="font-size:3em">{{ community.name }}</h1>
-											<h1 style="font-size:1.1em;">
-                        <!-- TODO: What goes here?-->
-												Subtitle
-											</h1>
 										</div>
 									</div>
 									<div class="col-sm-5">
@@ -67,554 +66,105 @@
   									<li><a href="#blogs" data-toggle="tab">Journal<br/>Entries</a></li>
 								</ul>
 								<div class="tab-content">
+									<!-- TODO: Hook in favorites here -->
 									<div class="tab-pane" id="mapstories">
 										<div class="container">
-											<div class="row" style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-							<div class="col-sm-4">
-								<article class="col-sm-12"><!--SM-->
-													<section class="imgWrapper"> 
-														<img src="images/portfolio/europe1.jpg" class="img-responsive" alt="Ashleye template image news"> 
-													</section>
-													<section class="newsText color1">
-														<h3>MapStory Title</h3>
-														<h4 class="date">MapStory</h4>
-														<h4 class="date"><i class="icon-user"></i> John Applessed</h4>
-														<h4 class="date"><i class="icon-flag"></i> Wars and Conflicts</h4>
-														<h4 class="date"><i class="icon-eye"></i> 123 views</h4>
-														<h4 class="date"><i class="icon-star"></i> <i class="icon-star"></i> <i class="icon-star"></i> <i class="icon-star"></i> <i class="icon-star"></i></h4>
-														<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-														<div class="btn-toolbar" style="padding-top:10px">
-															<a class="btn btn-xs" >
-																<i class="icon-control-play"></i> play
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-heart"></i> favorite
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-share"></i> share
-															</a>
-														</div>
-													</section>
-												</article><br/>
-								<!--MD--> <article class="col-sm-12"> 
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/asia.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>MD MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne. Ipsum ignota scripserit sed ne, ne appareat intellegat liberavisse nec. Ea per impetus insolens mediocrem, nam et augue placerat, duis congue corpora te eos. Mel ei commodo alterum singulis, eu est quod interpretaris.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-								<!--SM--><article class="col-sm-12">
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/usa.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>SM MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne. Ipsum ignota scripserit sed ne.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-							</div>
-							<div class="col-sm-4">
-								<article class="col-sm-12"><!--SM-->
-													<section class="imgWrapper"> 
-														<img src="images/portfolio/europe1.jpg" class="img-responsive" alt="Ashleye template image news"> 
-													</section>
-													<section class="newsText color1">
-														<h3>StoryLayer Title</h3>
-														<h4 class="date">StoryLayer</h4>
-														<h4 class="date"><i class="icon-user"></i> John Applessed</h4>
-														<h4 class="date"><i class="icon-flag"></i> Wars and Conflicts</h4>
-														<h4 class="date"><i class="icon-pencil"></i> 123 edits</h4>
-														<h4 class="date"><i class="icon-star"></i> <i class="icon-star"></i> <i class="icon-star"></i> <i class="icon-star"></i> <i class="icon-star"></i></h4>
-														<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-														<div class="btn-toolbar" style="padding-top:10px">
-															<a class="btn btn-xs" >
-																<i class="icon-control-play"></i> use
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-pencil"></i> edit
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-heart"></i> favorite
-															</a>
-														</div>
-													</section>
-												</article><br/>
-								<!--LG--><article class="col-sm-12">
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/japan.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>LG MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne. Ipsum ignota scripserit sed ne. Ne appareat intellegat liberavisse nec. Ea per impetus insolens mediocrem, nam et augue placerat, duis congue corpora te eos. Mel ei commodo alterum singulis, eu est quod interpretaris. Ad case propriae elaboraret sea. Ex sit accusam forensibus cotidieque, wisi feugiat omittantur vel ex. Id legere aliquid reprehendunt his. Sea etiam movet putent ad, ad ludus doming eam.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-							</div>
-							<div class="col-sm-4">
-								<!--SM--><article class="col-sm-12">
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/usa.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>SM MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne. Ipsum ignota scripserit sed ne.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-								<!--XS--> <article class="col-sm-12"> 
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/europe1.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>XS MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-								<!--XS--> <article class="col-sm-12"> 
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/europe1.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>XS MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-								<!--XS--> <article class="col-sm-12"> 
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/europe1.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>XS MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-							</div>
-						</div>
+											
 										</div>
 									</div>
-									<div class="tab-pane" id="storylayers">
+									<!-- TODO: Hook in editing here? -->
+									<div class="tab-pane" id="tasks">
 										<div class="container">
-										    <div class="row" style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-							<div class="col-sm-4">
-								<article class="col-sm-12"><!--SM-->
-													<section class="imgWrapper"> 
-														<img src="images/portfolio/europe1.jpg" class="img-responsive" alt="Ashleye template image news"> 
-													</section>
-													<section class="newsText color1">
-														<h3>MapStory Title</h3>
-														<h4 class="date">MapStory</h4>
-														<h4 class="date"><i class="icon-user"></i> John Applessed</h4>
-														<h4 class="date"><i class="icon-flag"></i> Wars and Conflicts</h4>
-														<h4 class="date"><i class="icon-eye"></i> 123 views</h4>
-														<h4 class="date"><i class="icon-star"></i> <i class="icon-star"></i> <i class="icon-star"></i> <i class="icon-star"></i> <i class="icon-star"></i></h4>
-														<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-														<div class="btn-toolbar" style="padding-top:10px">
-															<a class="btn btn-xs" >
-																<i class="icon-control-play"></i> play
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-heart"></i> favorite
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-share"></i> share
-															</a>
-														</div>
-													</section>
-												</article><br/>
-								<!--MD--> <article class="col-sm-12"> 
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/asia.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>MD MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne. Ipsum ignota scripserit sed ne, ne appareat intellegat liberavisse nec. Ea per impetus insolens mediocrem, nam et augue placerat, duis congue corpora te eos. Mel ei commodo alterum singulis, eu est quod interpretaris.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-								<!--SM--><article class="col-sm-12">
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/usa.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>SM MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne. Ipsum ignota scripserit sed ne.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-							</div>
-							<div class="col-sm-4">
-								<article class="col-sm-12"><!--SM-->
-													<section class="imgWrapper"> 
-														<img src="images/portfolio/europe1.jpg" class="img-responsive" alt="Ashleye template image news"> 
-													</section>
-													<section class="newsText color1">
-														<h3>StoryLayer Title</h3>
-														<h4 class="date">StoryLayer</h4>
-														<h4 class="date"><i class="icon-user"></i> John Applessed</h4>
-														<h4 class="date"><i class="icon-flag"></i> Wars and Conflicts</h4>
-														<h4 class="date"><i class="icon-pencil"></i> 123 edits</h4>
-														<h4 class="date"><i class="icon-star"></i> <i class="icon-star"></i> <i class="icon-star"></i> <i class="icon-star"></i> <i class="icon-star"></i></h4>
-														<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-														<div class="btn-toolbar" style="padding-top:10px">
-															<a class="btn btn-xs" >
-																<i class="icon-control-play"></i> use
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-pencil"></i> edit
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-heart"></i> favorite
-															</a>
-														</div>
-													</section>
-												</article><br/>
-								<!--LG--><article class="col-sm-12">
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/japan.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>LG MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne. Ipsum ignota scripserit sed ne. Ne appareat intellegat liberavisse nec. Ea per impetus insolens mediocrem, nam et augue placerat, duis congue corpora te eos. Mel ei commodo alterum singulis, eu est quod interpretaris. Ad case propriae elaboraret sea. Ex sit accusam forensibus cotidieque, wisi feugiat omittantur vel ex. Id legere aliquid reprehendunt his. Sea etiam movet putent ad, ad ludus doming eam.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-							</div>
-							<div class="col-sm-4">
-								<!--SM--><article class="col-sm-12">
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/usa.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>SM MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne. Ipsum ignota scripserit sed ne.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-								<!--XS--> <article class="col-sm-12"> 
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/europe1.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>XS MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-								<!--XS--> <article class="col-sm-12"> 
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/europe1.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>XS MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-								<!--XS--> <article class="col-sm-12"> 
-									<section class="imgWrapper"> 
-										<img src="images/portfolio/europe1.jpg" class="img-responsive" alt="Ashleye template image news"> 
-									</section>
-									
-								<section class="newsText color1">
-									<h3>XS MapStory</h3>
-									<h4 class="date">by @mapstoryteller</h4>
-									<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-									<a href="#"><i class="icon-right-open-mini"></i>explore</a>
-								</section>
-								</article><br/>
-							</div>
-						</div>
-										</div>
-									</div>
-									<div class="tab-pane" id="blogs">
-										<div class="container">
-											<div class="row" style="margin-top:10px;border-bottom:1px solid gainsboro">
-												<div class="col-sm-12">
-													<h2>Maiestatis Deseruisse<p><small>01/01/2014</small></p></h2>
-													<h4>
-														Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne. Ipsum ignota scripserit sed ne. Ne appareat intellegat liberavisse nec. Ea per impetus insolens mediocrem, nam et augue placerat, duis congue corpora te eos. Mel ei commodo alterum singulis, eu est quod interpretaris. Ad case propriae elaboraret sea. Ex sit accusam forensibus cotidieque, wisi feugiat omittantur vel ex. Id legere aliquid reprehendunt his. Sea etiam movet putent ad, ad ludus doming eam.
-													</h4>
-												</div>
-											</div>
-											<div class="row" style="margin-top:10px;border-bottom:1px solid gainsboro">
-												<div class="col-sm-12">
-													<h2>Oratio Propriae Pertinacia<p><small>01/01/2014</small></p></h2>
-													<h4>
-														Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne. Ipsum ignota scripserit sed ne. Ne appareat intellegat liberavisse nec. Ea per impetus insolens mediocrem, nam et augue placerat, duis congue corpora te eos. Mel ei commodo alterum singulis, eu est quod interpretaris. Ad case propriae elaboraret sea. Ex sit accusam forensibus cotidieque, wisi feugiat omittantur vel ex. Id legere aliquid reprehendunt his. Sea etiam movet putent ad, ad ludus doming eam.
-													</h4>
-												</div>
-											</div>
-											<div class="row" style="margin-top:10px;border-bottom:1px solid gainsboro">
-												<div class="col-sm-12">
-													<h2>Feugait Suavitate<p><small>01/01/2014</small></p></h2>
-													<h4>
-														Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne. Ipsum ignota scripserit sed ne. Ne appareat intellegat liberavisse nec. Ea per impetus insolens mediocrem, nam et augue placerat, duis congue corpora te eos. Mel ei commodo alterum singulis, eu est quod interpretaris. Ad case propriae elaboraret sea. Ex sit accusam forensibus cotidieque, wisi feugiat omittantur vel ex. Id legere aliquid reprehendunt his. Sea etiam movet putent ad, ad ludus doming eam.
-													</h4>
-												</div>
-											</div>
-											<div class="row" style="margin-top:10px;border-bottom:1px solid gainsboro">
-												<div class="col-sm-12">
-													<h2>Vim Quod Recteque<p><small>01/01/2014</small></p></h2>
-													<h4>
-														Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne. Ipsum ignota scripserit sed ne. Ne appareat intellegat liberavisse nec. Ea per impetus insolens mediocrem, nam et augue placerat, duis congue corpora te eos. Mel ei commodo alterum singulis, eu est quod interpretaris. Ad case propriae elaboraret sea. Ex sit accusam forensibus cotidieque, wisi feugiat omittantur vel ex. Id legere aliquid reprehendunt his. Sea etiam movet putent ad, ad ludus doming eam.
-													</h4>
-												</div>
-											</div>
+											
 										</div>
 									</div>
 									<div class="tab-pane active" id="guidelines">
 									    {{ community.description }}
 									</div>
-									<div class="tab-pane" id="milestones">
-									    <ul>
-									        <li>Lists of milestones and progress</li>
-									        <li>Lists of tasks per milestone</li>
-									    </ul>
-									</div>
-									<div class="tab-pane" id="leads">   
-									    <div class="container">
-									        <div class="row" style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-											<div class="col-sm-4">
-												<article class="col-sm-12"><!--SM-->
-													<section class="color1 imgWrapper" style="text-align:center"> 
-														<img src="images/avatars/ava1.png" class="img-circle" alt="Ashleye template image news" width="100" height="100" style="margin:20px 0 10px 0"> 
-													</section>
-													<section class="newsText color1">
-														<h3>Mafalda Hopkirk</h3>
-														<h4 class="date"><i class="icon-briefcase"></i>Georgetown University</h4>
-														<h4 class="date"><i class="icon-pointer"></i> Washington, DC, United States</h4>
-														<div class="btn-toolbar">
-															<a class="btn btn-xs" >
-																<i class="icon-user"></i> view profile
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-envelope"></i> message
-															</a>
-														</div>
-													</section>
-												</article><br/>
-												<article class="col-sm-12"><!--MD-->
-													<section class="color1 imgWrapper" style="text-align:center"> 
-														<img src="images/avatars/ava3.png" class="img-circle" alt="Ashleye template image news" width="100" height="100" style="margin:20px 0 10px 0"> 
-													</section>
-													<section class="newsText color1">
-														<h3>Penelope Clearwater</h3>
-														<h4 class="date"><i class="icon-briefcase"></i> Educator, AppleSeed Foundation</h4>
-														<h4 class="date"><i class="icon-pointer"></i> Washington, DC, United States</h4>
-														<p>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</p>
-														<div class="btn-toolbar">
-															<a class="btn btn-xs" >
-																<i class="icon-user"></i> profile
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-user-follow"></i> follow
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-share"></i> share
-															</a>
-														</div>
-													</section>
-												</article><br/>
-												<article class="col-sm-12"><!--LG-->
-													<section class="color1 imgWrapper" style="text-align:center"> 
-														<img src="images/avatars/ava2.png" class="img-circle" alt="Ashleye template image news" width="100" height="100" style="margin:20px 0 10px 0"> 
-													</section>
-													<section class="newsText color1">
-														<h3>Lee Jordan</h3>
-														<h4 class="date"><i class="icon-briefcase"></i> Educator, AppleSeed Foundation</h4>
-														<h4 class="date"><i class="icon-pointer"></i> Washington, DC, United States</h4>
-														<p>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne.</p>
-														<div class="btn-toolbar">
-															<a class="btn btn-xs" >
-																<i class="icon-user"></i> profile
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-user-follow"></i> follow
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-share"></i> share
-															</a>
-														</div>
-													</section>
-												</article><br/>
-											</div>
-											<div class="col-sm-4">
-												<article class="col-sm-12"><!--MD-->
-													<section class="color1 imgWrapper" style="text-align:center"> 
-														<img src="images/avatars/ava3.png" class="img-circle" alt="Ashleye template image news" width="100" height="100" style="margin:20px 0 10px 0"> 
-													</section>
-													<section class="newsText color1">
-														<h3>Penelope Clearwater</h3>
-														<h4 class="date"><i class="icon-briefcase"></i> Educator, AppleSeed Foundation</h4>
-														<h4 class="date"><i class="icon-pointer"></i> Washington, DC, United States</h4>
-														<p>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</p>
-														<div class="btn-toolbar">
-															<a class="btn btn-xs" >
-																<i class="icon-user"></i> profile
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-user-follow"></i> follow
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-share"></i> share
-															</a>
-														</div>
-													</section>
-												</article><br/>
-												<article class="col-sm-12"><!--LG-->
-													<section class="color1 imgWrapper" style="text-align:center"> 
-														<img src="images/avatars/ava2.png" class="img-circle" alt="Ashleye template image news" width="100" height="100" style="margin:20px 0 10px 0"> 
-													</section>
-													<section class="newsText color1">
-														<h3>Lee Jordan</h3>
-														<h4 class="date"><i class="icon-briefcase"></i> Educator, AppleSeed Foundation</h4>
-														<h4 class="date"><i class="icon-pointer"></i> Washington, DC, United States</h4>
-														<p>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne.</p>
-														<div class="btn-toolbar">
-															<a class="btn btn-xs" >
-																<i class="icon-user"></i> profile
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-user-follow"></i> follow
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-share"></i> share
-															</a>
-														</div>
-													</section>
-												</article><br/>
-												<article class="col-sm-12"><!--SM-->
-													<section class="color1 imgWrapper" style="text-align:center"> 
-														<img src="images/avatars/ava1.png" class="img-circle" alt="Ashleye template image news" width="100" height="100" style="margin:20px 0 10px 0"> 
-													</section>
-													<section class="newsText color1">
-														<h3>Mafalda Hopkirk</h3>
-														<h4 class="date"><i class="icon-briefcase"></i> Educator, AppleSeed Foundation</h4>
-														<h4 class="date"><i class="icon-pointer"></i> Washington, DC, United States</h4>
-														<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-														<div class="btn-toolbar">
-															<a class="btn btn-xs" >
-																<i class="icon-user"></i> profile
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-user-follow"></i> follow
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-share"></i> share
-															</a>
-														</div>
-													</section>
-												</article><br/>
-											</div>
-											<div class="col-sm-4">
-												<article class="col-sm-12"><!--SM-->
-													<section class="color1 imgWrapper" style="text-align:center"> 
-														<img src="images/avatars/ava1.png" class="img-circle" alt="Ashleye template image news" width="100" height="100" style="margin:20px 0 10px 0"> 
-													</section>
-													<section class="newsText color1">
-														<h3>Mafalda Hopkirk</h3>
-														<h4 class="date"><i class="icon-briefcase"></i> Educator, AppleSeed Foundation</h4>
-														<h4 class="date"><i class="icon-pointer"></i> Washington, DC, United States</h4>
-														<p>Lorem ipsum dolor sit amet, modus utroque patrioque pro et, in zril maiorum voluptatibus nec.</p>
-														<div class="btn-toolbar">
-															<a class="btn btn-xs" >
-																<i class="icon-user"></i> profile
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-user-follow"></i> follow
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-share"></i> share
-															</a>
-														</div>
-													</section>
-												</article><br/>
-												<article class="col-sm-12"><!--LG-->
-													<section class="color1 imgWrapper" style="text-align:center"> 
-														<img src="images/avatars/ava2.png" class="img-circle" alt="Ashleye template image news" width="100" height="100" style="margin:20px 0 10px 0"> 
-													</section>
-													<section class="newsText color1">
-														<h3>Lee Jordan</h3>
-														<h4 class="date"><i class="icon-briefcase"></i> Educator, AppleSeed Foundation</h4>
-														<h4 class="date"><i class="icon-pointer"></i> Washington, DC, United States</h4>
-														<p>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri. Albucius officiis eu mel, meis ipsum summo ei his, dicit nostrud molestiae has ne.</p>
-														<div class="btn-toolbar">
-															<a class="btn btn-xs" >
-																<i class="icon-user"></i> profile
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-user-follow"></i> follow
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-share"></i> share
-															</a>
-														</div>
-													</section>
-												</article><br/>
-												<article class="col-sm-12"><!--MD-->
-													<section class="color1 imgWrapper" style="text-align:center"> 
-														<img src="images/avatars/ava3.png" class="img-circle" alt="Ashleye template image news" width="100" height="100" style="margin:20px 0 10px 0"> 
-													</section>
-													<section class="newsText color1">
-														<h3>Penelope Clearwater</h3>
-														<h4 class="date"><i class="icon-briefcase"></i> Educator, AppleSeed Foundation</h4>
-														<h4 class="date"><i class="icon-pointer"></i> Washington, DC, United States</h4>
-														<p>Lorem ipsum dolor sit amet modus utroque patrioque pro et, in zril maiorum voluptatibus nec. Ad augue qualisque mel, pri vidit ferri in. In idque concludaturque pri.</p>
-														<div class="btn-toolbar">
-															<a class="btn btn-xs" >
-																<i class="icon-user"></i> profile
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-user-follow"></i> follow
-															</a>
-															<a class="btn btn-xs">
-																<i class="icon-share"></i> share
-															</a>
-														</div>
-													</section>
-												</article><br/>
-											</div>
+									<div class="tab-pane" id="storylayers">
+										<div class="container">
+											{% for layer in community.layer.all %}
+												<div class="col-md-4" style="text-align: left; height: 500px; background: #F7F7F7;">
+													<a href="{{ layer.detail_url}}"><img class="thumb img-responsive" src="{{ layer.thumbnail_url}}"/></a>
+													<h3><a href="{{ layer.detail_url}}">{{ layer.title}}</a></h3>
+													<div><p><i>StoryLayer</p></i></div>
+													<h4><span class="owner"><i class="fa fa-user"></i>{{ layer.owner.first_name }} {{ layer.owner.last_name }}</span></h4>
+        									<h4><span><i class="fa fa-flag-o"></i></span>{{ layer.category.gn_description}}</h4>
+        									<!-- TODO: Hook in the edits -->
+        									<h4><a href="{{ layer.detail_url}}"><i class="fa fa-pencil"></i> edits</a></h4>
+        									<h4><a href="{{ layer.detail_url}}#rate"><i class="fa fa-star"></i> {{ layer.rating}}</a></h4>
+        									<div><h5 class="abstract"><a href="#">{{ layer.abstract|slice:"70" }}<i>...read more</i></a></h5></div>
+        									<div class="btn-toolbar">
+        										<h4>
+							                <!-- goes to composer -->
+							                <a href="{% url "new_map" %}?layer={{ layer.detail_url|slice:"8:" }}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> use</button></a>
+							                <!-- goes to layer edit -->
+							                <a href='{% url "map-new2" %}?layer={{layer.service_typename}}'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
+							                <!-- TODO: Hook in favorites functionality -->
+							                <button class="btn btn-primary btn-xs"><i class="fa fa-heart-o"></i> favorite</button>
+        										</h4>
+        									</div>
+												</div>
+											{% empty %}
+											There are no layers for this initiative.
+											{% endfor %}
 										</div>
-									    </div>
+									</div>
+									<div class="tab-pane" id="leads">
+										<div class="container">
+											{% for lead in community.leads.all %}
+								        <div class="col-md-4" style="text-align: left; background: #F7F7F7;">
+								            <a href="{{ lead.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ lead.avatar_100}}"/></a>
+								            <h3><a href="{{ lead.profile_detail_url}}">{{ lead.first_name }} {{ lead.last_name }}</a></h3>
+								            <!-- If both exist, comma separated... otherwise no comma separation -->
+								            <h4 ng-show="lead.position && lead.organization"><i class="fa fa-briefcase"></i>{{ lead.position }}, {{ lead.organization }}</h4>
+								            <h4 ng-show="lead.city && lead.country"><i class="fa fa-map-marker"></i>{{ lead.city }}, {{ lead.country }}</h4>
+								            <h4 ng-hide="lead.position && lead.organization"><i class="fa fa-map-marker"></i>{{ lead.position }} {{ lead.organization }}</h4>
+								            <h4 ng-hide="lead.city && lead.country"><i class="fa fa-map-marker"></i>{{ lead.city }} {{ lead.country }}</h4>
+								            <h4>{{ lead.profile }}</h4>
+
+								            <span class="card-info"><a href="{{ lead.profile_detail_url }}"><i class="fa fa-user"></i> view profile</a></span>
+								            <!-- TODO: Hook in messaging functionality -->
+								            <span class="card-info"><a><i class="fa fa-envelope"></i> message</a></span>
+								        </div>
+											{% empty %}
+											<p>There are no leads for this initiative.</p>
+											{% endfor %}
+										</div>
+									</div>
+									<div class="tab-pane" id="blogs">
+										<div class="container">
+											{% for entry in community.journals.all %}
+										    <div class="row blog-panel">
+										        <div class="col-sm-12">
+										            <div class="row">
+										                <div class="col-lg-10 col-lg-offset-2  col-xs-12 blog-header">
+										                    <h5 class="blog-title">{{ entry.date }}</h5>
+										                    <h2 class="blog-title"><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h2>
+										                    <h5 class="blog-title">{% avatar entry.author 30 %} {{ entry.author }}</h5>
+										                </div>
+										            </div>
+										            <div class="row">
+										                <div class="col-lg-2 col-xs-6 qlink-right">
+										                    <div class="qlink qlink-gen"><a href="#">comment</a></div>
+										                    <div class="qlink qlink-gen"><a href="#">favorite</a></div>
+										                    <div class="qlink qlink-fb"><a href="#">facebook</a></div>
+										                    <div class="qlink qlink-tw"><a href="#">twitter</a></div>
+										                    <div class="qlink qlink-dg"><a href="#">flag/report</a></div>
+										                </div>
+										                <div class="col-lg-10 col-xs-6 blog-content bl">
+										                    {{ entry.html|safe }}
+										                </div>
+										            </div>
+										        </div>
+										    </div>
+											{% empty %}
+											<p>There are no journals for this initiative.</p>
+											{% endfor %}
+										</div>
 									</div>
 								</div>
 							</div>
-							
-							
-							
 						</div>
 					</div>
 				</section>
