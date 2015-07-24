@@ -75,7 +75,7 @@ class DiaryEntry(ContentMixin):
         verbose_name_plural = 'DiaryEntries'
 
 class Community(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     icon = models.ImageField(blank=False, upload_to='communities')
     description = models.TextField(blank=True)
     order = models.IntegerField(blank=True, default=0)
