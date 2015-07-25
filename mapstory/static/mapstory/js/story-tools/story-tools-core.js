@@ -484,13 +484,15 @@ function create(options) {
             totalRange = options.data;
         }
         boxes = [{
-                data: data,
-                range: totalRange,
-                speed: {
-                    interval: interval,
-                    seconds: 3
-                }
-            }];
+            data: data,
+            range: totalRange,
+            speed: {
+                interval: interval,
+                seconds: 3
+            }
+        }];
+
+        options.boxes = boxes;
     }
 
     model = new models.TimeModel(options, boxes, annotations);
