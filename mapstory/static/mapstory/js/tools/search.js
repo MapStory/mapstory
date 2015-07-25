@@ -3,6 +3,28 @@
 (function(){
 
   var module = angular.module('geonode_main_search', [], function($locationProvider) {
+     // if (window.navigator.userAgent.indexOf("MSIE") == -1){
+       //   $locationProvider.html5Mode({
+         //   enabled: true,
+            //requireBase: false
+          //});
+
+          // make sure that angular doesn't intercept the page links
+          //angular.element("a").prop("target", "_self");
+      //}
+    });
+
+    // Used to set the class of the filters based on the url parameters
+/*    module.set_initial_filters_from_query = function (data, url_query, filter_param){
+        for(var i=0;i<data.length;i++){
+            if( url_query == data[i][filter_param] || url_query.indexOf(data[i][filter_param] ) != -1){
+                data[i].active = 'active';
+            }else{
+                data[i].active = '';
+            }
+        }
+        return data;
+    }*/
 
   // Load categories, keywords, and regions
   module.load_categories = function ($http, $rootScope, $location){
@@ -392,6 +414,57 @@
       }
     }
 
+
+    var location_promise = function() {
+      var highest = 1;
+      var popular = {};
+      // Query the users
+      Configs.url = '/api/profiles/';
+      $scope.query = {limit: 100, offset: 0};
+      return query_api($scope.query).then(function() {
+        var results = $scope.results;
+        results.forEach(function(element) {
+          if (popular[element.city] != null) {
+            popular[element.city]++;
+            if (highest < popular[element.city]) {
+              highest = popular[element.city];
+              $scope.most_popular_location = element.city;
+            }
+          } else {
+            if (element.city != "" && element.city != null) {
+              popular[element.city] = 1;
+              if (highest == 1) {
+                $scope.most_popular_location = element.city;
+              }
+            }
+          }
+        });
+        // Query the groups
+        Configs.url = '/api/groups/';
+        $scope.query = {limit: 100, offset: 0};
+        return query_api($scope.query).then(function() {
+          var results = $scope.results;
+          results.forEach(function(element) {
+            if (popular[element.city] != null) {
+              popular[element.city]++;
+              if (highest < popular[element.city]) {
+                highest = popular[element.city];
+                $scope.most_popular_location = element.city;
+              }
+            } else {
+              if (element.city != "" && element.city != null) {
+                popular[element.city] = 1;
+                if (highest == 1) {
+                  $scope.most_popular_location = element.city;
+                }
+              }
+            }
+          });
+          return results;
+        });
+      });
+    }
+
     // Need to use both the users and groups api
     var calculate_most_popular_location = function() {
       // Store the current api requests
@@ -406,6 +479,63 @@
       });
     }
 
+    var interest_promise = function() {
+      var highest = 1;
+      var popular = {};
+      // Query the users
+      Configs.url = '/api/profiles/';
+      $scope.query = {limit: 100, offset: 0};
+      return query_api($scope.query).then(function() {
+        var results = $scope.results;
+        results.forEach(function(element) {
+          if (element.interests != null) {
+            element.interests.forEach(function(interest) {
+              if (popular[interest] != null) {
+                popular[interest]++;
+                if (highest < popular[interest]) {
+                  highest = popular[interest]
+                  $scope.most_popular_interest = interest;
+                }
+              } else {
+                if (interest != "" && interest != null) {
+                  popular[interest] = 1;
+                  if (highest == 1) {
+                    $scope.most_popular_interest = interest;
+                  }
+                }
+              }
+            });
+          }
+        });
+        // Query the groups
+        Configs.url = '/api/groups/';
+        $scope.query = {limit: 100, offset: 0};
+        return query_api($scope.query).then(function() {
+          var results = $scope.results;
+          results.forEach(function(element) {
+            if (element.interests != null) {
+              element.interests.forEach(function(interest) {
+                if (popular[interest] != null) {
+                  popular[interest]++;
+                  if (highest < popular[interest]) {
+                    highest = popular[interest]
+                    $scope.most_popular_interest = interest;
+                  }
+                } else {
+                  if (interest != "" && interest != null) {
+                    popular[interest] = 1;
+                    if (highest == 1) {
+                      $scope.most_popular_interest = interest;
+                    }
+                  }
+                }
+              });
+            }
+          });
+          return results;
+        });
+      });
+    }
 
     var calculate_most_popular_interest = function() {
       // Store the current api requests
@@ -424,6 +554,36 @@
       calculate_most_popular_location();
     }
 
+    /*
+    * Text search management
+    */
+    /*var text_autocomplete = $('#text_search_input').yourlabsAutocomplete({
+          url: AUTOCOMPLETE_URL_RESOURCEBASE,
+          choiceSelector: 'span',
+          hideAfter: 200,
+          minimumCharacters: 1,
+          appendAutocomplete: $('#text_search_input'),
+          placeholder: gettext('Search for StoryLayers ...')
+    });
+    $('#text_search_input').bind('selectChoice', function(e, choice, text_autocomplete) {
+          if(choice[0].children[0] == undefined) {
+
+              var term = choice[0].innerHTML;
+
+              $('#text_search_input').val(term);
+
+              //ng-model is not updating when using jquery element.val()
+              //This will force update the scope to keep in sync
+
+               var model = $('#text_search_input').attr("ng-model");
+                $scope[model] = term;
+                $scope.$apply();
+
+                $('#text_search_btn').click();
+          }
+    });
+    */
+
 
     $('.search-btn').click(function(){
 
@@ -439,7 +599,42 @@
         query_api($scope.query);
     });
 
+    /*
+    * Region search management
+    */
+    var region_autocomplete = $('#region_search_input').yourlabsAutocomplete({
+          url: AUTOCOMPLETE_URL_REGION,
+          choiceSelector: 'span',
+          hideAfter: 200,
+          minimumCharacters: 1,
+          appendAutocomplete: $('#region_search_input'),
+          placeholder: gettext('Enter region here ...')
+    });
 
+    $('#region_search_input').bind('selectChoice', function(e, choice, region_autocomplete) {
+          if(choice[0].children[0] == undefined) {
+              $('#region_search_input').val(choice[0].innerHTML);
+              $scope.region_query = choice[0].innerHTML;
+          }
+    });
+
+    /*
+    * Keyword search management
+    */
+    var keyword_autocomplete = $('#keyword_search_input').yourlabsAutocomplete({
+          url: AUTOCOMPLETE_URL_KEYWORD,
+          choiceSelector: 'span',
+          hideAfter: 200,
+          minimumCharacters: 1,
+          appendAutocomplete: $('#keyword_search_input'),
+          placeholder: gettext('Enter keyword here ...')
+    });
+    $('#keyword_search_input').bind('selectChoice', function(e, choice, keyword_autocomplete) {
+          if(choice[0].children[0] == undefined) {
+              $('#keyword_search_input').val(choice[0].innerHTML);
+              $scope.keyword_query = choice[0].innerHTML;
+          }
+    });
 
     $scope.feature_select = function($event){
       var element = $($event.target);
@@ -489,5 +684,44 @@
 
     }, true);
 
+    /*
+    * Spatial search
+    */
+    if ($('.leaflet_map').length > 0) {
+      angular.extend($scope, {
+        layers: {
+          baselayers: {
+            stamen: {
+              name: 'Toner Lite',
+              type: 'xyz',
+              url: 'http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png',
+              layerOptions: {
+                subdomains: ['a', 'b', 'c'],
+                attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>',
+                continuousWorld: true
+              }
+            }
+          }
+        },
+        map_center: {
+          lat: 5.6,
+          lng: 3.9,
+          zoom: 1
+        },
+        defaults: {
+          zoomControl: false
+        }
+      });
+
+      var leafletData = $injector.get('leafletData'),
+          map = leafletData.getMap('filter-map');
+
+      map.then(function(map){
+        map.on('moveend', function(){
+          $scope.query['extent'] = map.getBounds().toBBoxString();
+          query_api($scope.query);
+        });
+      });
+    }
   });
 })();
