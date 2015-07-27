@@ -44,7 +44,7 @@ exports.MapConfigTransformer = function(data) {
                      layerConfig.title = layer.title;
                  } else if (layerConfig.type === 'WMS') {
                      var params;
-                     if (source.ptype === "gx_olsource") {
+                     if (source.ptype === "gx_olsource" && layer.args) {
                          params = layer.args[2] || {};
                          for (var key in params) {
                              if (params[key].constructor === Array) {
@@ -68,7 +68,11 @@ exports.MapConfigTransformer = function(data) {
                          layerConfig.name = layer.name;
                          layerConfig.title = layer.title;
                          // TODO not sure if this is the best place to do this?
-                         layerConfig.url = source.url.replace('http://mapstory.org/geoserver/', '/geoserver/');
+                         if(source.url){
+                            layerConfig.url = source.url.replace('http://mapstory.org/geoserver/', '/geoserver/');
+                         }else{
+                            layerConfig.url = '/geoserver/';
+                         }
                      }
                      layerConfig.params = params;
                      layerConfig.params.VERSION = '1.1.1';
@@ -103,8 +107,33 @@ exports.MapConfigTransformer = function(data) {
              projection: data.map.projection,
              zoom: data.map.zoom,
              layers: layers
-         }
+         },
+         about: data.about
      };
+};
+
+exports.MapToGXPConfigTransformer = function(config){
+
+    var gxp_config = angular.copy(config);
+
+    gxp_config.sources = {"1": {"ptype": "gx_olsource"},
+        "0": {"url": "/geoserver/wms", "lazy": true, "restUrl": "/gs/rest", "name": "local geoserver", "ptype": "gxp_wmscsource"},
+        "3": {"hidden": true, "ptype": "gxp_mapboxsource"},
+        "2": {"hidden": true, "ptype": "gxp_mapquestsource"}};
+
+    gxp_config.map.layers.forEach(function(layer, i) {
+
+        if(layer.type === 'WMS'){
+            layer.type = 'OpenLayers.Layer.WMS';
+            var key = 3 + i;
+            var source = {};
+            source[key] = {"url": layer.url, "lazy": true, "restUrl": "/gs/rest", "name": layer.name, "ptype": "gxp_wmscsource"};
+            $.extend( gxp_config.sources, source);
+            layer.source = key.toString();
+        }
+    });
+
+    return gxp_config;
 };
 
 },{}]},{},[1])(1)

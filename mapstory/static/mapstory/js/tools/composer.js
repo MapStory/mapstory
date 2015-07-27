@@ -93,8 +93,8 @@
         return server;
     }
 
-    function MapManager($http, $q, $rootScope, $location,
-        StoryPinLayerManager, stMapConfigStore, stAnnotationsStore, stEditableLayerBuilder, EditableStoryMap, stStoryMapBaseBuilder, stEditableStoryMapBuilder) {
+    function MapManager($log, $http, $q, $rootScope, $location,
+        StoryPinLayerManager, StoryBoxLayerManager, stMapConfigStore, stAnnotationsStore, stBoxesStore, stEditableLayerBuilder, EditableStoryMap, stStoryMapBaseBuilder, stEditableStoryMapBuilder) {
         this.storyMap = new EditableStoryMap({target: 'map'});
         window.storyMap = this.storyMap;
         var self = this;
@@ -106,6 +106,8 @@
                 stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, config);
                 var annotations = stAnnotationsStore.loadAnnotations(options.id);
                 StoryPinLayerManager.pinsChanged(annotations, 'add', true);
+                var boxes = stBoxesStore.loadBoxes(options.id);
+                StoryBoxLayerManager.boxesChanged(boxes, 'add', true);
             } else if (options.url) {
                 var mapLoad = $http.get(options.url).success(function(data) {
                     stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, data);
@@ -115,79 +117,80 @@
                         stStoryMapBaseBuilder.defaultMap(self.storyMap);
                     }
                 });
+
+                var boxesURL = options.url.replace('/data','/boxes');
+                if (boxesURL.slice(-1) === '/') {
+                    boxesURL = boxesURL.slice(0, -1);
+                }
+                var boxesLoad = $http.get(boxesURL);
+
                 var annotationsURL = options.url.replace('/data','/annotations');
                 if (annotationsURL.slice(-1) === '/') {
                     annotationsURL = annotationsURL.slice(0, -1);
                 }
                 var annotationsLoad = $http.get(annotationsURL);
-                $q.all([mapLoad, annotationsLoad]).then(function(values) {
-                    var geojson = values[1].data;
-                    StoryPinLayerManager.loadFromGeoJSON(geojson, self.storyMap.getMap().getView().getProjection());
+                $q.all([mapLoad, boxesLoad, annotationsLoad]).then(function(values) {
+                    var boxes_geojson = values[1].data;
+                    StoryBoxLayerManager.loadFromGeoJSON(boxes_geojson, self.storyMap.getMap().getView().getProjection());
+
+                    var pins_geojson = values[2].data;
+                    StoryPinLayerManager.loadFromGeoJSON(pins_geojson, self.storyMap.getMap().getView().getProjection());
                 });
             } else {
 
                 if(window.config){
                     stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, window.config);
                 }else{
-                    stStoryMapBaseBuilder.defaultMap(this.storyMap);
+                    stStoryMapBaseBuilder.defaultMap(self.storyMap);
                 }
             }
             this.currentMapOptions = options;
         };
+
         this.saveMap = function() {
+            var self = this;
             var config = this.storyMap.getState();
+            config.boxes = StoryBoxLayerManager.storyBoxes;
 
             var end_point = '/maps/new/data';
 
-
-            var cache = [];
-            var config_json = JSON.stringify(config, function(key, value) {
-                if (typeof value === 'object' && value !== null) {
-                    if (cache.indexOf(value) !== -1) {
-                        // Circular reference found, discard key
-                        return;
-                    }
-                    cache.push(value);
-                }
-                return value;
-            });
-            cache = null;
-
-
             if(config.id != undefined && config.id != null && config.id > 0){
-
                 end_point = '/maps/' + config.id + '/data';
-
-
-                var mapLoad = $http.post(end_point,config_json);
+                var mapLoad = $http.post(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config));
             }else{
 
-            var mapLoad = $http.post(end_point,config_json).success(function(data) {
-                //stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, config);
+                var mapLoad = $http.post(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config)).success(function(data) {
 
-                config.id = data.id;
+                    var mapId = data.id;
 
-                var annotations = new ol.format.GeoJSON().writeFeatures(StoryPinLayerManager.storyPins,
-+                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'});
+                    self.storyMap.set('id', mapId);
 
-                var response = $http.post('/maps/' + data.id + '/annotations', annotations).success(function(data) {
+                    stBoxesStore.saveBoxes(mapId, StoryBoxLayerManager.storyBoxes)
+                        .success(function(data) { $log.debug("StoryBoxes Saved: " + data);  }).error(function(data, status) {
+                            if (status === 401) {
+
+                            }
+                        });
+
+                    stAnnotationsStore.saveAnnotations(mapId, StoryPinLayerManager.storyPins)
+                        .success(function(data) { $log.debug("StoryPins Saved: " + data);  }).error(function(data, status) {
+                            if (status === 401) {
+                                window.console.warn('Not authorized to see map ' + mapId);
+                                stStoryMapBaseBuilder.defaultMap(self.storyMap);
+                            }
+                        });
 
                 }).error(function(data, status) {
                         if (status === 401) {
                             window.console.warn('Not authorized to see map ' + mapId);
                             stStoryMapBaseBuilder.defaultMap(self.storyMap);
                         }
+                        else if(status === 500){
+                            window.console.warn('Unable to save map.');
+                        }
                     });
 
-                }).error(function(data, status) {
-                    if (status === 401) {
-                        window.console.warn('Not authorized to see map ' + mapId);
-                        stStoryMapBaseBuilder.defaultMap(self.storyMap);
-                    }
-                });
-
-            stMapConfigStore.saveConfig(config_json);
-            stAnnotationsStore.saveAnnotations(this.storyMap.get('id'), StoryPinLayerManager.storyPins);
+                //stMapConfigStore.saveConfig(config_json);
             }
         };
         $rootScope.$on('$locationChangeSuccess', function() {
@@ -373,7 +376,8 @@
                     scope.baseLayer = baseLayer.get('title');
                 }
 
-                scope.choice = {};
+                scope.choice = {"title": MapManager.storyMap.getStoryTitle(), "abstract": MapManager.storyMap.getStoryAbstract()};
+
 
                 MapManager.storyMap.on('change:baselayer', function() {
                     scope.baseLayer = MapManager.storyMap.get('baselayer').get('title');

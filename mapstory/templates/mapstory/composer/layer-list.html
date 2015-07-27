@@ -4,7 +4,7 @@
 
    <accordion-group is-open="status.open">
         <accordion-heading>
-            Editing <span ng-bind="choice.title"></span> Mapstory <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            <span ng-bind="choice.title"></span> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
         </accordion-heading>
 
         <div class="input-group">
@@ -17,6 +17,7 @@
             <textarea id="abstract" class="form-control" type="text" ng-model="choice.abstract"></textarea>
         </div>
        <div class="input-group">
+        <span ng-if="loading">Saving...</span>
         <button class="btn btn-primary" ng-click="saveAboutInfo(choice);">Save</button>
        </div>
     </accordion-group>

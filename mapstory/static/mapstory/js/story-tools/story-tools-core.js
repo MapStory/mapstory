@@ -6,11 +6,14 @@ exports.maps.boxes = require('./time/boxes');
 exports.utils = require('./time/utils');
 
 },{"./time/boxes":2,"./time/controls":3,"./time/maps":5,"./time/pins":7,"./time/utils":9}],2:[function(require,module,exports){
-var utils = require('./utils');
+
 var moment = require('vis/node_modules/moment');
+var utils = require('./utils');
+var format = new ol.format.GeoJSON();
+
 
 function Box(options) {
-    this.id = null;
+    this.id = options.id || null;
     this.title = options.title || null;
     this.start_time = options.start_time || null;
     this.end_time = options.end_time || null;
@@ -191,6 +194,7 @@ exports.BoxModel = function(boxArray) {
 
 exports.findBox = findBox;
 exports.Box = Box;
+
 
 },{"./utils":9,"vis/node_modules/moment":36}],3:[function(require,module,exports){
 var utils = require('./utils');

@@ -3,21 +3,22 @@
 
     var module = angular.module('storytools.edit.boxes.controllers', []);
 
-    module.controller('boxesEditorController', ["$scope", "$timeout", "StoryBox", "StoryBoxLayerManager", "MapManager", function($scope, $timeout, StoryBox, StoryBoxLayerManager, MapManager) {
+    module.controller('boxesEditorController', ["$scope", "$timeout", "StoryBox", "StoryBoxLayerManager", function($scope, $timeout, StoryBox, StoryBoxLayerManager) {
         var lastVersion = null;
+        var ctrl = this;
 
         this.currentBox = {};
         this.editingBox = new StoryBox({});
         this.StoryBoxLayerManager = StoryBoxLayerManager;
+        this.deleteBox = function(box) {
+            StoryBoxLayerManager.boxesChanged([box], 'delete');
+        };
 
         this.newStoryBox = function() {
             this.editingBox = {
                 isNew : true
             };
             lastVersion = null;
-        };
-        this.deleteBox = function(box) {
-            StoryBoxLayerManager.boxesChanged([box], 'delete');
         };
 
         this.acceptEdit = function() {
@@ -46,7 +47,7 @@
         };
 
 
-         this.editStoryBox = function(box) {
+        this.editStoryBox = function(box) {
             reset();
             // currentBox is provided or a new object (see saveStoryBox)
             this.currentBox = new StoryBox(box);
@@ -57,7 +58,7 @@
                 //var extent = pin.getGeometry().getExtent();
                 //var center = ol.extent.getCenter(extent);
                 //getMap().getView().setCenter(center);
-                 this.editingBox = box;
+                this.editingBox = box;
             }
 
 
@@ -68,13 +69,14 @@
             return this.currentBox instanceof StoryBox;
         };
 
+
         function reset() {
             //TODO clear
         }
     }]);
 
     module.controller('boxEditorController', ["$scope", function($scope) {
-     $scope.$watch(function() {
+        $scope.$watch(function() {
             return $scope.boxesCtrl.editingBox;
         }, function(neu, old) {
             $scope.storyBox = neu;
@@ -88,14 +90,14 @@
                     valid = box.start_time <= box.end_time;
                 }
             }
-           //$scope.editBox.boxForm.$setValidity('range', valid);
+            $scope.boxForm.$setValidity('range', valid);
         }
-        $scope.$watch('boxesCtrl.editingCopy.start_time', check_range);
-        $scope.$watch('boxesCtrl.editingCopy.end_time', check_range);
+        //$scope.$watch('boxesCtrl.editingCopy.start_time', check_range);
+        //$scope.$watch('boxesCtrl.editingCopy.end_time', check_range);
 
 
         this.isFormValid = function() {
-            return $scope.boxesCtrl.boxForm.$valid;
+            return $scope.boxForm.$valid;
         };
         this.finish = function() {
             var result = $scope.storyBox;
@@ -108,8 +110,20 @@
 (function() {
     'use strict';
     var module = angular.module('storytools.edit.boxes.directives', [
-        'storytools.edit.boxes.controllers','storytools.core.boxes'
+        'storytools.core.boxes'
     ]);
+
+
+    module.directive('boxesEditor', function() {
+        return {
+            restrict: 'A',
+            controller: 'boxesEditorController',
+            controllerAs: 'boxesCtrl',
+            link: function(scope, element, attrs, ctrl) {
+
+            }
+        };
+    });
 
     module.directive('boxChooser', function() {
         return {
@@ -118,7 +132,7 @@
             templateUrl: 'boxes/box-chooser.html',
             link: function(scope, element, attrs, ctrl) {
 
-                    scope.editBox = function(box) {
+                    scope.storyBox = function(box) {
                     ctrl.editStoryBox(box);
                     scope.$eval(atts.boxSelected, scope.$parent);
                 };
@@ -126,38 +140,14 @@
         };
     });
 
-    module.directive('boxesEditor', function() {
-        return {
-            restrict: 'A',
-            controller: 'boxesEditorController',
-            controllerAs: 'boxesCtrl',
-            link: function(scope, element, attrs, ctrl) {
-                //var ctrl = scope.boxesCtrl;
-                //ctrl.overlay = scope.$eval(atts.boxesOverlay);
-                //if (ctrl.overlay === null) {
-                  //  throw Error('boxesEditor needs boxesOverlay attribute');
-                //}
-            }
-        };
-    });
-
     module.directive('boxEditor', function() {
         return {
-            restrict: 'E',
+            require: '^boxesEditor',
             controller: 'boxEditorController',
             controllerAs: 'boxCtrl',
-            require: '^boxesEditor',
-            templateUrl: 'boxes/box-editor.html',
-            link: function(scope, element, attrs, ctrl) {
-                scope.$watch(function() {
-                    return ctrl.editingBox;
-                }, function() {
-                    scope.editBox = ctrl.editingBox;
-                });
-            }
+            restrict: 'A'
         };
     });
-
 
     module.directive('boxBoundsEditor', ["$timeout", "$log", function($timeout, $log) {
         return {
@@ -168,16 +158,16 @@
             link: function(scope, element, attrs) {
 
                 function coordinatesChanged() {
-                    if (scope.editBox.minlon && scope.editBox.minlat && scope.editBox.maxlon && scope.editBox.maxlat) {
+                    if (scope.storyBox.minlon && scope.storyBox.minlat && scope.storyBox.maxlon && scope.storyBox.maxlat) {
 
-                        var extent = [scope.editBox.minlon, scope.editBox.minlat, scope.editBox.maxlon, scope.editBox.maxlat];
+                        var extent = [scope.storyBox.minlon, scope.storyBox.minlat, scope.storyBox.maxlon, scope.storyBox.maxlat];
                         extent = ol.extent.applyTransform(extent, ol.proj.getTransform("EPSG:4326", "EPSG:3857"));
 
                         map.getView().fitExtent(extent, map.getSize());
                     }
 
-                    if(scope.editBox.zoom){
-                        map.getView().setZoom(scope.editBox.zoom);
+                    if(scope.storyBox.zoom){
+                        map.getView().setZoom(scope.storyBox.zoom);
                     }
                 }
 
@@ -185,9 +175,7 @@
 
                 var map = new ol.Map({target: el});
                 map.setView(new ol.View({center: [0, 0], zoom: 4}));
-                map.addLayer(new ol.layer.Tile({
-                    source: new ol.source.MapQuest({layer: 'osm'})
-                }));
+                map.addLayer(new ol.layer.Tile({ source: new ol.source.MapQuest({layer: 'osm'}) }));
 
                 scope.updateCoordinates = function() {
 
@@ -197,15 +185,14 @@
 
                     extent = ol.extent.applyTransform(extent, ol.proj.getTransform("EPSG:3857", "EPSG:4326"));
 
-                    scope.editBox.minlon = extent[0];
-                    scope.editBox.minlat = extent[1];
-                    scope.editBox.maxlon = extent[2];
-                    scope.editBox.maxlat = extent[3];
-                    scope.editBox.zoom = map.getView().getZoom();
-                    var center = map.getView().getCenter();
-                    scope.editBox.center = center;
+                    scope.storyBox.minlon = extent[0];
+                    scope.storyBox.minlat = extent[1];
+                    scope.storyBox.maxlon = extent[2];
+                    scope.storyBox.maxlat = extent[3];
+                    scope.storyBox.zoom = map.getView().getZoom();
+                    scope.storyBox.center = map.getView().getCenter();
 
-                    setTimeout(function(){map.updateSize();}, 1);
+                    $timeout(function(){map.updateSize();}, 1);
 
                 };
 
@@ -222,28 +209,26 @@
                     }
                 });
 
-                scope.$watch('editBox', coordinatesChanged, true);
+                scope.$watch('storyBox', coordinatesChanged, true);
             }
         };
     }]);
 
-    module.directive('boxContentsEditor', function() {
+    module.directive('boxEditorForm', ["$timeout", "$log", function($timeout, $log) {
         return {
             require: '^boxEditor',
             restrict: 'E',
-            templateUrl: 'boxes/contents-editor.html',
-            link: function(scope, el, atts, ctrl) {
+            templateUrl: 'boxes/box-editor-form.html',
+            link: function(scope, element, atts, ctrl) {
 
-                scope.currentTime = new Date().toISOString();
-
-                scope.$watch('storyBox', function(neu, old) {
+             scope.$watch('storyBox', function(neu, old) {
                     if (neu != old) {
-                        el[0].querySelector('input[name=title]').focus();
+                        element[0].querySelector('input[name=title]').focus();
                     }
                 });
             }
         };
-    });
+    }]);
 
     module.directive('boxLayersEditor', function() {
         return {
