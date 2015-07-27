@@ -7,7 +7,7 @@
             <!-- If both exist, comma separated... otherwise no comma separation -->
             <h4 ng-show="item.position && item.organization"><i class="fa fa-briefcase"></i>{{ item.position }}, {{ item.organization }}</h4>
             <h4 ng-show="item.city && item.country"><i class="fa fa-map-marker"></i>{{ item.city }}, {{ item.country }}</h4>
-            <h4 ng-hide="item.position && item.organization"><i class="fa fa-map-marker"></i>{{ item.position }} {{ item.organization }}</h4>
+            <h4 ng-hide="item.position && item.organization"><i class="fa fa-briefcase"></i>{{ item.position }} {{ item.organization }}</h4>
             <h4 ng-hide="item.city && item.country"><i class="fa fa-map-marker"></i>{{ item.city }} {{ item.country }}</h4>
             <h4>{{ item.profile }}</h4>
 
