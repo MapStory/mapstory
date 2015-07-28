@@ -7,9 +7,14 @@
 {% load cache %}
 {% load avatar_tags %}
 
+{% block extra_head %}
+<link href="{{ STATIC_URL }}mapstory/css/search.css" rel="stylesheet" />
+{% endblock %}
+
 {% block title %}{{ community.name }}{% endblock %}
 
 {% block body_outer %}
+<div ng-app="paginate"><div ng-controller="paginate_controller">
 				<!-- content -->
         <section class="parallax">
           <!-- TODO: This doesn't look very good -->
@@ -72,68 +77,105 @@
 											
 										</div>
 									</div>
-									<!-- TODO: Hook in editing here? -->
 									<div class="tab-pane" id="tasks">
 										<div class="container">
-											
+											<ul>
+												{% for task in community.tasks.all %}
+													<li>
+													{{ task.task }}
+													</li>
+												{% empty %}
+												There are no tasks for this initiative.
+												{% endfor %}
+											</ul>
 										</div>
 									</div>
 									<div class="tab-pane active" id="guidelines">
 									    {{ community.description }}
 									</div>
 									<div class="tab-pane" id="storylayers">
-										<div class="container">
-											{% for layer in community.layer.all %}
-												<div class="col-md-4" style="text-align: left; height: 500px; background: #F7F7F7;">
-													<a href="{{ layer.detail_url}}"><img class="thumb img-responsive" src="{{ layer.thumbnail_url}}"/></a>
-													<h3><a href="{{ layer.detail_url}}">{{ layer.title}}</a></h3>
-													<div><p><i>StoryLayer</p></i></div>
-													<h4><span class="owner"><i class="fa fa-user"></i>{{ layer.owner.first_name }} {{ layer.owner.last_name }}</span></h4>
-        									<h4><span><i class="fa fa-flag-o"></i></span>{{ layer.category.gn_description}}</h4>
-        									<!-- TODO: Hook in the edits -->
-        									<h4><a href="{{ layer.detail_url}}"><i class="fa fa-pencil"></i> edits</a></h4>
-        									<h4><a href="{{ layer.detail_url}}#rate"><i class="fa fa-star"></i> {{ layer.rating}}</a></h4>
-        									<div><h5 class="abstract"><a href="#">{{ layer.abstract|slice:"70" }}<i>...read more</i></a></h5></div>
-        									<div class="btn-toolbar">
-        										<h4>
-							                <!-- goes to composer -->
-							                <a href="{% url "new_map" %}?layer={{ layer.detail_url|slice:"8:" }}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> use</button></a>
-							                <!-- goes to layer edit -->
-							                <a href='{% url "map-new2" %}?layer={{layer.service_typename}}'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
-							                <!-- TODO: Hook in favorites functionality -->
-							                <button class="btn btn-primary btn-xs"><i class="fa fa-heart-o"></i> favorite</button>
-        										</h4>
-        									</div>
-												</div>
-											{% empty %}
-											There are no layers for this initiative.
-											{% endfor %}
-										</div>
+										<div class="col-lg-12">
+											<div class="clearfix search-results">
+						            <ul>
+								          {% for layer in community.layer.all %}
+													<li class="col-md-4">
+														<div>
+															<a href="{{ layer.detail_url}}"><img class="thumb img-responsive" src="{{ layer.thumbnail_url}}"/></a>
+															<h3><a href="{{ layer.detail_url}}">{{ layer.title}}</a></h3>
+															<div><p><i>StoryLayer</p></i></div>
+															<h4><span class="owner"><i class="fa fa-user"></i>{{ layer.owner.first_name }} {{ layer.owner.last_name }}</span></h4>
+		        									<h4><span><i class="fa fa-flag-o"></i></span>{{ layer.category.gn_description}}</h4>
+		        									<!-- TODO: Hook in the edits -->
+		        									<h4><a href="{{ layer.detail_url}}"><i class="fa fa-pencil"></i> edits</a></h4>
+		        									<h4><a href="{{ layer.detail_url}}#rate"><i class="fa fa-star"></i> {{ layer.rating}}</a></h4>
+		        									<div><h5 class="abstract"><a href="#">{{ layer.abstract|slice:"70" }}<i>...read more</i></a></h5></div>
+		        									<div class="btn-toolbar">
+		        										<h4>
+									                <!-- goes to composer -->
+									                <a href="{% url "new_map" %}?layer={{ layer.detail_url|slice:"8:" }}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> use</button></a>
+									                <!-- goes to layer edit -->
+									                <a href='{% url "map-new2" %}?layer={{layer.service_typename}}'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
+									                <!-- TODO: Hook in favorites functionality -->
+									                <button class="btn btn-primary btn-xs"><i class="fa fa-heart-o"></i> favorite</button>
+		        										</h4>
+		        									</div>
+														</div>
+													</li>
+													{% empty %}
+													There are no layers for this initiative.
+													{% endfor %}
+						            </ul>
+							        </div>
+							        <span>Total: </span>
+											<span ng-bind="total_counts"></span>
+											<a href><strong ng-click="paginate_down()">&laquo;</strong></a>
+											<span>page </span>
+											<span ng-model="page" ng-bind="page"></span>
+											<span> of </span>
+											<span ng-bind="numpages"></span>
+											<a href><strong ng-click="paginate_up()">&raquo;</strong></a>
+							      </div>
 									</div>
 									<div class="tab-pane" id="leads">
-										<div class="container">
-											{% for lead in community.leads.all %}
-								        <div class="col-md-4" style="text-align: left; background: #F7F7F7;">
-								            <a href="{{ lead.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ lead.avatar_100}}"/></a>
-								            <h3><a href="{{ lead.profile_detail_url}}">{{ lead.first_name }} {{ lead.last_name }}</a></h3>
-								            <!-- If both exist, comma separated... otherwise no comma separation -->
-								            <h4 ng-show="lead.position && lead.organization"><i class="fa fa-briefcase"></i>{{ lead.position }}, {{ lead.organization }}</h4>
-								            <h4 ng-show="lead.city && lead.country"><i class="fa fa-map-marker"></i>{{ lead.city }}, {{ lead.country }}</h4>
-								            <h4 ng-hide="lead.position && lead.organization"><i class="fa fa-map-marker"></i>{{ lead.position }} {{ lead.organization }}</h4>
-								            <h4 ng-hide="lead.city && lead.country"><i class="fa fa-map-marker"></i>{{ lead.city }} {{ lead.country }}</h4>
-								            <h4>{{ lead.profile }}</h4>
+										<div class="col-lg-12">
+											<div class="clearfix search-results">
+						            <ul>
+													{% for lead in community.leads.all %}
+														<li class="col-md-4">
+											        <div style="text-align: left;">
+											            <a href="{{ lead.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ lead.avatar_100}}"/></a>
+											            <h3><a href="{{ lead.profile_detail_url}}">{{ lead.first_name }} {{ lead.last_name }}</a></h3>
+											            <!-- If both exist, comma separated... otherwise no comma separation -->
+											            {% if lead.position and lead.organization %}
+											            	<h4><i class="fa fa-briefcase"></i>{{ lead.position }}, {{ lead.organization }}</h4>
+											            {% else %}
+											            	{% if lead.position or lead.organization %}
+											            		<h4><i class="fa briefcase"></i>{{ lead.position }} {{ lead.organization }}</h4>
+											            	{% endif %}
+											            {% endif %}
+											            {% if lead.city and lead.country %}
+											            	<h4><i class="fa fa-map-marker"></i>{{ lead.city }}, {{ lead.country }}</h4>
+											            {% else %}
+											            	{% if lead.city or lead.country %}
+											            		<h4><i class="fa fa-map-marker"></i>{{ lead.city }} {{ lead.country }}</h4>
+											            	{% endif %}
+											            {% endif %}
+											            <h4>{{ lead.profile }}</h4>
 
-								            <span class="card-info"><a href="{{ lead.profile_detail_url }}"><i class="fa fa-user"></i> view profile</a></span>
-								            <!-- TODO: Hook in messaging functionality -->
-								            <span class="card-info"><a><i class="fa fa-envelope"></i> message</a></span>
-								        </div>
-											{% empty %}
-											<p>There are no leads for this initiative.</p>
-											{% endfor %}
+											            <a href="{{ lead.profile_detail_url }}"><button class="btn btn-primary btn-xs"><i class="fa fa-user"></i> view profile</button></a>
+											            <!-- TODO: Hook in messaging functionality -->
+											            <a><button class="btn btn-primary btn-xs"><i class="fa fa-envelope"></i> message</button></a>
+											        </div>
+											      </li>
+													{% empty %}
+													<p>There are no leads for this initiative.</p>
+													{% endfor %}
+												</ul>
+											</div>
 										</div>
 									</div>
 									<div class="tab-pane" id="blogs">
-										<div class="container">
+										<div class="col-lg-12">
 											{% for entry in community.journals.all %}
 										    <div class="row blog-panel">
 										        <div class="col-sm-12">
@@ -169,4 +211,8 @@
 					</div>
 				</section>
 				<!-- dashboard -->
+</div></div>
 {% endblock %}
+{% block extra_script %}
+<script src="{{ STATIC_URL }}mapstory/js/paginate.js"></script>
+{% endblock extra_script %}

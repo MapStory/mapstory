@@ -165,7 +165,7 @@ class GroupDetail(DetailView):
     model = GroupProfile
 
     def get_context_data(self, **kwargs):
-        ctx = super(CommunityDetail, self).get_context_data(**kwargs)
+        ctx = super(GroupDetail, self).get_context_data(**kwargs)
         ctx['images'] = get_images()
         
         return ctx
