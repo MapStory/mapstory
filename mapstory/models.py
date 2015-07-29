@@ -11,6 +11,9 @@ from django.template.defaultfilters import slugify
 from django.db.models import signals
 from geonode.people.models import Profile
 from geonode.layers.models import Layer
+from geonode.groups.models import GroupProfile
+from geonode.maps.models import Map
+from guardian.shortcuts import get_objects_for_user
 
 def _stamp(data):
     s = hashlib.sha1()
@@ -178,5 +181,21 @@ def get_sponsors():
 
 def get_communities():
     return Community.objects.filter(order__gte=0)
+
+def get_group_layers(gProfile):
+    users = gProfile.group.user_set.all()
+    layers = []
+    for user in users:
+        layers.append(get_objects_for_user(user, 'base.view_resourcebase').instance_of(Layer))
+
+    return [item for sublist in layers for item in sublist]
+
+def get_group_maps(gProfile):
+    users = gProfile.group.user_set.all()
+    maps = []
+    for user in users:
+        maps.append(get_objects_for_user(user, 'base.view_resourcebase').instance_of(Map))
+
+    return [item for sublist in maps for item in sublist]
 
 signals.post_save.connect(name_post_save, sender=Community)

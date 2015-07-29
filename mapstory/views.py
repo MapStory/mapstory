@@ -26,6 +26,8 @@ from httplib import HTTPConnection, HTTPSConnection
 from mapstory.forms import UploadLayerForm
 from mapstory.models import get_sponsors
 from mapstory.models import get_images
+from mapstory.models import get_group_layers
+from mapstory.models import get_group_maps
 from mapstory.models import GetPage
 from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
@@ -167,6 +169,8 @@ class GroupDetail(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(GroupDetail, self).get_context_data(**kwargs)
         ctx['images'] = get_images()
+        ctx['layers'] = get_group_layers(ctx['groupprofile'])
+        ctx['maps'] = get_group_maps(ctx['groupprofile'])
         
         return ctx
 

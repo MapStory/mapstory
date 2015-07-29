@@ -11,6 +11,22 @@
   shell: ssh-keyscan -H github.com > ~/.ssh/known_hosts
   tags: [config]
 
+- name: mapstory checkout
+  git: repo=git://github.com/MapStory/mapstory.git dest={{ top_project }}
+  tags: [git]
+
+- name: mapstory branch
+  command: git checkout {{ mapstory_branch }} chdir={{ top_project }}
+  tags: [git]
+
+- name: clean modified geonode content to prevent submodule update fail
+  command: git checkout -- . chdir={{ top_project }}/geonode
+  tags: [update]
+
+- name: mapstory update
+  shell: git pull && git submodule sync && git submodule update --init --recursive chdir={{ top_project }}
+  tags: [update]
+
 - name: setup-virtual-env
   script: files/setup.sh &> /tmp/setup-project.out
   tags: [setup]
