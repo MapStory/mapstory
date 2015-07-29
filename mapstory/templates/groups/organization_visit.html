@@ -23,8 +23,9 @@
 							<div class="paralaxText container" style="text-align:left;padding-bottom:0">
 								<div class="row">
 									<div class="col-sm-1">
+										{% if groupprofile.logo %}
 										<img class="img-rounded" src="{{ groupprofile.logo.url }}" width="75" height="75" style="margin-top:55px;margin-bottom:0px"/>
-										
+										{% endif %}
 									</div>
 									<div class="col-sm-6">
 										<div style="padding:60px 0px 0px 10px;">
@@ -56,16 +57,19 @@
 								<h3>
 									<span style="color:orange">send message</span>
 								</h3>
-								<hr style="margin:5px">
+								<!--
+								<hr style="margin:5px"> -->
 								<!-- TODO: Hook in social links when this is changed to a regular user, and make it only appear if they exist -->
+								<!--
 								<h3>
-									<!-- <span style="color:dodgerblue">facebook.com/</span> -->
+									<span style="color:dodgerblue">facebook.com/</span>
 								</h3>
 								<hr style="margin:5px">
 								<h3>
-									<!-- <span style="color:deepskyblue">twitter @</span> -->
+									<span style="color:deepskyblue">twitter @</span>
 								</h3>
 								<hr style="margin:5px">
+								-->
 								<h3>Interests</h3>
 									{% for interest in groupprofile.interests.all %}
 										<span class="label label-default">{{ interest }}</span>
@@ -93,12 +97,12 @@
 											<div class="clearfix search-results">
 						            <ul>
 						            	<!-- TODO: Figure out how to filter by mapstory -->
-								          {% for layer in groupprofile.resources %}
+								          {% for layer in maps %}
 													<li class="col-md-4">
-														<div>
+														<div style="text-align: left;">
 															<a href="{{ layer.detail_url}}"><img class="thumb img-responsive" src="{{ layer.thumbnail_url}}"/></a>
 															<h3><a href="{{ layer.detail_url}}">{{ layer.title}}</a></h3>
-															<div><p><i>StoryLayer</p></i></div>
+															<div><p><i>MapStory</p></i></div>
 															<h4><span class="owner"><i class="fa fa-user"></i>{{ layer.owner.first_name }} {{ layer.owner.last_name }}</span></h4>
 		        									<h4><span><i class="fa fa-flag-o"></i></span>{{ layer.category.gn_description}}</h4>
 		        									<!-- TODO: Hook in the edits -->
@@ -137,9 +141,9 @@
 											<div class="clearfix search-results">
 						            <ul>
 						            	<!-- TODO: Figure out how to filter by storylayer -->
-								          {% for layer in groupprofile.resources %}
+								          {% for layer in layers %}
 													<li class="col-md-4">
-														<div>
+														<div style="text-align: left;">
 															<a href="{{ layer.detail_url}}"><img class="thumb img-responsive" src="{{ layer.thumbnail_url}}"/></a>
 															<h3><a href="{{ layer.detail_url}}">{{ layer.title}}</a></h3>
 															<div><p><i>StoryLayer</p></i></div>
