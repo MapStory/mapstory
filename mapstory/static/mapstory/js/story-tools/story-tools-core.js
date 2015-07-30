@@ -878,7 +878,7 @@ exports.MapController = function(options, timeControls) {
             timeControls.defer(createLoadListener().deferred);
         }
 
-        var currentBox = boxes[tc.model.boxes.getIndex(range.start)];
+        var currentBox = boxes[tc.model.boxes.getIndex(range.end)];
 
         if(currentBox){
             console.log(currentBox);

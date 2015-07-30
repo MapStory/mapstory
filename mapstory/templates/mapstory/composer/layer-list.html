@@ -2,25 +2,14 @@
 
 <accordion close-others="true" sv-root sv-part="layers" sv-on-sort="onSort($item, $partFrom, $partTo, $indexFrom, $indexTo)">
 
-   <accordion-group is-open="status.open">
+
+       <accordion-group is-open="status.open">
         <accordion-heading>
-            <span ng-bind="choice.title"></span> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            <span>About</span> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
         </accordion-heading>
-
-        <div class="input-group">
-            <label for="title">Title</label>
-            <input id="title" class="form-control" type="text" ng-model="choice.title"/>
-        </div>
-
-        <div class="input-group">
-            <label for="abstract">Abstract</label>
-            <textarea id="abstract" class="form-control" type="text" ng-model="choice.abstract"></textarea>
-        </div>
-       <div class="input-group">
-        <span ng-if="loading">Saving...</span>
-        <button class="btn btn-primary" ng-click="saveAboutInfo(choice);">Save</button>
-       </div>
+    <story-about-info></story-about-info>
     </accordion-group>
+
 
     <accordion-group>
         <accordion-heading>

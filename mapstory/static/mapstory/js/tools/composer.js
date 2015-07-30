@@ -148,6 +148,8 @@
         };
 
         this.saveMap = function() {
+
+            var deferred = $q.defer();
             var self = this;
             var config = this.storyMap.getState();
             config.boxes = StoryBoxLayerManager.storyBoxes;
@@ -180,6 +182,10 @@
                             }
                         });
 
+
+
+
+
                 }).error(function(data, status) {
                         if (status === 401) {
                             window.console.warn('Not authorized to see map ' + mapId);
@@ -192,6 +198,9 @@
 
                 //stMapConfigStore.saveConfig(config_json);
             }
+
+            return deferred.promise;
+
         };
         $rootScope.$on('$locationChangeSuccess', function() {
             var path = $location.path();
@@ -278,6 +287,32 @@
 
     module.service('MapManager', function($injector) {
         return $injector.instantiate(MapManager);
+    });
+
+    module.directive('storyAboutInfo', function($modal, $timeout, $log, MapManager) {
+        return {
+            restrict: 'E',
+            scope: {
+                map: "="
+            },
+            templateUrl: 'templates/story-about-info.html',
+            link: function(scope, el, atts) {
+
+                scope.choice = {"title": MapManager.storyMap.getStoryTitle(), "abstract": MapManager.storyMap.getStoryAbstract()};
+
+                scope.saveMap = function(about) {
+                    scope.loading = true;
+
+                    //$timeout(function(){scope.$parent.status.open = false;scope.loading = false;}, 3000);
+
+                     MapManager.storyMap.setStoryTitle(about.title);
+                     MapManager.storyMap.setStoryAbstract(about.abstract);
+                     MapManager.saveMap();
+                     scope.$parent.status.open = false;
+                     scope.loading = false;
+                };
+            }
+        };
     });
 
     module.directive('addLayers', function($modal, $log, MapManager, loadSearchDialog) {
@@ -376,21 +411,12 @@
                     scope.baseLayer = baseLayer.get('title');
                 }
 
-                scope.choice = {"title": MapManager.storyMap.getStoryTitle(), "abstract": MapManager.storyMap.getStoryAbstract()};
-
-
                 MapManager.storyMap.on('change:baselayer', function() {
                     scope.baseLayer = MapManager.storyMap.get('baselayer').get('title');
                 });
                 MapManager.storyMap.getStoryLayers().on('change:length', function() {
                     scope.layers = MapManager.storyMap.getStoryLayers().getArray();
                 });
-
-                scope.saveAboutInfo = function(about) {
-                     MapManager.storyMap.setStoryTitle(about.title);
-                     MapManager.storyMap.setStoryAbstract(about.abstract);
-                     MapManager.saveMap();
-                };
 
                 scope.toggleVisibleLayer = function(lyr) {
                     MapManager.storyMap.toggleStoryLayer(lyr);
