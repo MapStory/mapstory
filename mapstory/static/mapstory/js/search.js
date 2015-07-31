@@ -177,6 +177,26 @@
       });
     };
 
+    // Here we want to grab the number of layers and number of maps
+    // query={q: query.q}; query.type__in='map'; search();
+    $scope.calculate_layers = function() {
+      $scope.query.type__in = 'layer';
+      $scope.search().then(function(result) {
+        $scope.total_layers = $scope.total_counts;
+        $scope.query.type__in = null;
+      });
+    };
+
+    $scope.calculate_maps = function() {
+      $scope.query.type__in = 'map';
+      $scope.search().then(function(result) {
+        $scope.total_maps = $scope.total_counts;
+        $scope.query.type__in = null;
+      });
+    };
+    $scope.calculate_layers();
+    $scope.calculate_maps();
+
     $scope.showUserGroup = function() {
         if ($location.search().hasOwnProperty('type__in')) {
             var typeInParam = $location.search()['type__in'];
