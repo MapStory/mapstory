@@ -1,5 +1,6 @@
 {% extends "people/profile_base.html" %}
 {% load static %}
+{% load activity_tags social_tags i18n %}
 {% load friendly_loader %}
 {% friendly_load i18n avatar_tags relationship_tags activity_tags %}
 {% load pagination_tags %}
@@ -10,6 +11,7 @@
 
 {% block extra_head %}
 <link href="{{ STATIC_URL }}mapstory/css/profile.css" rel="stylesheet" />
+<link href="{{ STATIC_URL }}mapstory/css/search.css" rel="stylesheet" />
 {% endblock %}
 
 {% block body %}
@@ -117,11 +119,6 @@
             <div class="sidebar-content">
                 <a href="{% url "new_map" %}">{% trans "create a mapstory" %}</a>
             </div>
-            {% if_has_tag actor_url %}
-            <div class="sidebar-content">
-                <a href="{% actor_url profile %}">{% trans "my activities" %}</a>
-            </div>
-            {% endif_has_tag %}
             {% if_has_tag if_relationship %}
             <div class="sidebar-content">
                 {% include "relationships/_manage_connections.html" %}
@@ -136,45 +133,25 @@
             {% include "relationships/_list_connections.html" %}
             {% endif_has_tag %}
 
-            <!-- notifications -->
-            {% if user == profile %}
-            <div class="sidebar-header"><h3>notifications</h3></div>
-            <div class="sidebar-content">
-                sample notification 1
-            </div>
-            <div class="sidebar-content">
-                sample notification 2
-            </div>
-            {% endif %}
-
-            <!-- user actions -->
-            {% if user == profile %}
-            <div class="sidebar-header"><h3>recent activities</h3></div>
-            <div class="sidebar-content">
-                sample activity 1
-            </div>
-            <div class="sidebar-content">
-                sample activity 2
-            </div>
-            {% endif %}
-
-
             <!-- contact profile -->
-            <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
-            {% if profile.email %}
-            <div class="sidebar-content">
-                <a href="mailto:{{ profile.email }}"><i class="fa fa-envelope-o"></i>email {{ profile.first_name|default_if_none:profile.username }}</a>
-            </div>
-            {% endif %}
-            {% if profile.email %}
-            <div class="sidebar-content">
-                <a href="mailto:{{ profile.email }}"><i class="fa fa-facebook"></i>facebook</a>
-            </div>
-            {% endif %}
-            {% if profile.email %}
-            <div class="sidebar-content">
-                <a href="mailto:{{ profile.email }}"><i class="fa fa-twitter"></i>twitter</a>
-            </div>
+            {% if user == profile %}
+            {% else %}
+                <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
+                {% if profile.email %}
+                <div class="sidebar-content">
+                    <a href="mailto:{{ profile.email }}"><i class="fa fa-envelope-o"></i>email {{ profile.first_name|default_if_none:profile.username }}</a>
+                </div>
+                {% endif %}
+                {% if profile.email %}
+                <div class="sidebar-content">
+                    <a href="mailto:{{ profile.email }}"><i class="fa fa-facebook"></i>facebook</a>
+                </div>
+                {% endif %}
+                {% if profile.email %}
+                <div class="sidebar-content">
+                    <a href="mailto:{{ profile.email }}"><i class="fa fa-twitter"></i>twitter</a>
+                </div>
+                {% endif %}
             {% endif %}
 
             <!-- tags and interests -->
@@ -201,13 +178,13 @@
                 <div class="tabbable-line">
                     <ul class="nav nav-tabs ">
                         <li class="active">
-                            <a href="#mapstories_list" data-toggle="tab">
-                                <div class="counter"><span ng-bind="total_counts"></span></div>
+                            <a href="#mapstories_list" data-toggle="tab" ng-click="query={q: query.q}; query.type__in='map'; search();">
+                                <div class="counter"><span ng-bind="total_maps"></span></div>
                                 MapStories </a>
                         </li>
                         <li>
-                            <a href="#storylayers_list" data-toggle="tab">
-                                <div class="counter">{{ layers | length }}</div>
+                            <a href="#storylayers_list" data-toggle="tab" ng-click="query={q: query.q}; query.type__in='layer'; search();">
+                                <div class="counter"><span ng-bind="total_layers"></span></div>
                                 StoryLayers </a>
                         </li>
                         {% if user == profile %}
@@ -219,7 +196,7 @@
                         {% endif %}
                         <li>
                             <a href="#user_activities" data-toggle="tab">
-                                <div class="counter">0</div>
+                                <div class="counter">{{ action_list.count }}</div>
                                 Activity Feed </a>
                         </li>
                         <li>
@@ -236,29 +213,25 @@
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="mapstories_list">
-                            <!--Geonode Contents
-                            <div class="col-md-12">
-                                {% include "people/_profile_filters.html" %}
-                            </div> 
-                            <div class="col-md-12">
-                                {% include "search/_sort_filters.html" %}
-                            </div> 
-                            <div class="col-md-12">
-                                {% include 'search/_pagination.html' %}
-                            </div-->
-                            <div style="max-height:600px;overflow-y:scroll;overflow-x:hidden" class="col-md-12">
-                                {% include 'base/_resourcebase_snippet.html' %}
-                            </div>
-                            <!---->
-                            <!--div class="no-content">
+                            <div class="no-content" ng-if="results == null">
                                 <h2>No MapStories.</h2>
-                                <h4>Share your first MapStory now.</h4>
-                            </div-->
+                                <h4>Create your first MapStory now.</h4>
+                            </div>
+                            <div class="clearfix search-results">
+                                <ul>
+                                    {% include 'search/_result_content.html' %}
+                                </ul>
+                            </div>
                         </div>
                         <div class="tab-pane" id="storylayers_list">
-                            <div class="no-content">
+                            <div class="no-content" ng-if="results == null">
                                 <h2>No StoryLayers.</h2>
                                 <h4>Upload your first StoryLayer now.</h4>
+                            </div>
+                            <div class="clearfix search-results">
+                                <ul>
+                                    {% include 'search/_result_content.html' %}
+                                </ul>
                             </div>
                         </div>
                         <div class="tab-pane" id="messages_list">
@@ -284,9 +257,20 @@
                             {% endif %}
                         </div>
                         <div class="tab-pane" id="user_activities">
+                            {% if action_list.count == 0 %}
                             <div class="no-content">
                                 <h2>No activities.</h2>
                                 <h4>Explore MapStory now.</h4>
+                            </div>
+                            {% endif %}
+                            <div class="row">
+                              <div class="col-md-12">
+                                <ul class="no-style-list">
+                                  {% for action in action_list %}
+                                  {% activity_item action %}
+                                  {% endfor %}
+                                </ul>
+                              </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="diary_entries">

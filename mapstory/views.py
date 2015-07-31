@@ -42,6 +42,12 @@ from user_messages.models import Thread
 from .forms import MapStorySignupForm
 from geonode.groups.models import GroupProfile
 
+from actstream.models import Action
+from actstream.models import actor_stream
+
+
+
+
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -134,9 +140,9 @@ class SearchView(TemplateView):
 
 
 class ProfileDetail(DetailView):
+    model = Profile
     template_name = 'people/profile_detail.html'
     slug_field = 'username'
-    model = Profile
 
     def get_context_data(self, **kwargs):
         ctx = super(ProfileDetail, self).get_context_data(**kwargs)
@@ -144,9 +150,9 @@ class ProfileDetail(DetailView):
         ctx['favorites'] = Favorite.objects.filter(user=self.object).order_by('-created_on')
         ctx['threads_all'] = Thread.ordered(Thread.objects.inbox(self.request.user))
         ctx['threads_unread'] = Thread.ordered(Thread.objects.unread(self.request.user))
+        ctx['action_list'] = actor_stream(ctx['profile'])
 
         return ctx
-
 
 class CommunityDetail(DetailView):
     # TODO: We need to differentiate between viewing as an outsider or logged in
