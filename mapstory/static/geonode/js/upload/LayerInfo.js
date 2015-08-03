@@ -149,12 +149,6 @@ define(function (require, exports) {
 
         if (geogig_enabled) {
             geogig = $('#' + this.main.name.slice(0, -4) + '\\:geogig_toggle').is(':checked');
-            if (geogig) {
-                geogig_store = $('#' + this.main.name.slice(0, -4) + '\\:geogig_store').val();
-                form_data.append('geogig_store', geogig_store);
-            } else {
-                form_data.append('geogig_store', "");
-            }
             form_data.append('geogig', geogig);
         }
         if (time_enabled) {
