@@ -367,3 +367,14 @@ def layer_metadata(request, layername, template='upload/layer_upload_metadata.ht
         "author_form": author_form,
         "category_form": category_form,
     }))
+
+
+@login_required
+def new_map_json(request):
+    from geonode.maps.views import new_map_json
+    return new_map_json(request)
+
+@login_required
+def new_map(request):
+    from geonode.maps.views import new_map
+    return new_map(request)
