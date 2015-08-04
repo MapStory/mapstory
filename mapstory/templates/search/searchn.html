@@ -22,7 +22,7 @@
             <nav class="filter">
                 <div class="input-group search-bar">
                 <input name="text_search_input" id="text_search_input" ng-model="query.q" type="text"
-                    class="form-control">
+                    class="form-control" ng-enter="search()">
                 <span class="input-group-btn">
                     <button class="btn btn-primary" ng-click="search()" ng-class="{'disabled': !query.q}" type="submit" id="text_search_btn"><i class="fa fa-search"></i> Search</button>
                 </span>

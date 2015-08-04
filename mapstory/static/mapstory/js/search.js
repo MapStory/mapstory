@@ -14,6 +14,20 @@
       }
     });
 
+    module.directive('ngEnter', function () {
+        return function (scope, element, attrs) {
+            element.bind("keydown keypress", function (event) {
+                if(event.which === 13) {
+                    scope.$apply(function (){
+                        scope.$eval(attrs.ngEnter);
+                    });
+
+                    event.preventDefault();
+                }
+            });
+        };
+    });
+
     // Used to set the class of the filters based on the url parameters
     module.set_initial_filters_from_query = function (data, url_query, filter_param){
         for(var i=0;i<data.length;i++){
