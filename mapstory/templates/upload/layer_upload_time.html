@@ -49,10 +49,11 @@
         <div ng-show="time.type === 'simple' || time.type == 'startEnd'">
            <h3>Configure <span ng-if="time.type == 'startEnd'">the start </span>time in your StoryLayer</h3>
            <div class="radio">
-               <label for="time-attribute-select">
-                    <input id="time-attribute-select" type="radio" ng-model="time.attributeType" value="timeAttribute">
+               <label for="time-attribute-select" ng-if="time_attributes.length > 0">
+                    <input id="time-attribute-select" type="radio" ng-model="time.attributeType"  value="timeAttribute">
                      My StoryLayer already has a time attribute.
-               </label><br/>
+               <br/>
+               </label>
 
                <div ng-show="time.attributeType === 'timeAttribute'" class="row">
                    <div class="col-md-4">
@@ -65,10 +66,11 @@
                     </div>
                </div>
 
-               <label>
+               <label ng-if="text_attributes.length > 0">
                     <input type="radio" ng-model="time.attributeType" value="textAttribute">
                      My StoryLayer has a text attribute that I want to convert to time.
-               </label><br/>
+               <br/>
+               </label>
 
                <div ng-show="time.attributeType === 'textAttribute'" class="row">
                   <div class="col-md-4">
@@ -107,14 +109,15 @@
         <div ng-show="time.type == 'startEnd'">
            <h3>Configure the end time in your StoryLayer</h3>
            <div class="radio">
-               <label>
+               <label ng-if="time_attributes.length > 0">
                     <input type="radio" ng-model="time.endAttributeType" value="timeAttribute">
                      My StoryLayer already has a time attribute.
-               </label><br/>
+               <br/>
+               </label>
 
                <div ng-show="time.endAttributeType === 'timeAttribute'" class="row">
                    <div class="col-md-4">
-                    <label>
+                    <label >
                         Select the attribute:
                         <select ng-model="time.end_time_attribute" class="form-control" name="end_time_attribute">
                           <option  value="{[time_attribute[0]]}" ng-if="time_attribute[0]!==''" ng-repeat="time_attribute in time_attributes">{[time_attribute[1]]}</option>
@@ -123,10 +126,11 @@
                     </div>
                </div>
 
-               <label>
+               <label  ng-if="text_attributes.length > 0">
                     <input type="radio" ng-model="time.endAttributeType" value="textAttribute">
                      My StoryLayer has a text attribute that I want to convert to time.
-               </label><br/>
+                <br/>
+               </label>
 
                <div ng-show="time.endAttributeType === 'textAttribute'" class="row">
                   <div class="col-md-4">
@@ -138,7 +142,7 @@
                     </label>
                     <label>
                         Date format (optional):
-                        <input ng-model="time.end_text_attribute_format" type="text" class="form-control" placeholder="yyyy-mm-dd" name="end_ext_attribute_format">
+                        <input ng-model="time.end_attribute_format" type="text" class="form-control" placeholder="yyyy-mm-dd" name="end_attribute_format">
                     </label>
                   </div>
                </div>
@@ -171,7 +175,7 @@
               </label><br/>
               <label>
                 <input type="radio" ng-model="time.presentation_strategy" value="DISCRETE_INTERVAL" name="presentation_strategy">
-                Intervals defined by the resolution
+                As data collected at regular intervals. (e.g., every 8 hours, every 2 months)
               </label>
                 <div ng-show="time.presentation_strategy === 'DISCRETE_INTERVAL'">
                   <form class="form-inline">
@@ -191,7 +195,7 @@
                    </form>
                 </div>
               <br/>
-              <label>
+              <label ng-if="false">
                 <input type="radio" ng-model="time.presentation_strategy" value="CONTINUOUS_INTERVAL" name="presentation_strategy">
                 Continuous Intervals for data that is frequently updated, resolution describes the frequency of updates
                   </label>

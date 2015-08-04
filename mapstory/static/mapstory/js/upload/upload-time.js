@@ -43,6 +43,9 @@
                     }).
                 error(function(data, status, headers, config) {
                     $scope.submitInProgress = false;
+                    if (data.errors != null) {
+                        $scope.errors = data.errors;
+                    }
               });
           }
 
@@ -74,7 +77,7 @@
               }).
               error(function(data, status, headers, config) {
                 $scope.submitInProgress = false;
-                if (data.errors !== null) {
+                if (data.errors != null) {
                     $scope.errors = data.errors;
                 }
 
