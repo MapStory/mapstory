@@ -124,7 +124,7 @@ def runserver():
         with prefix(env.activate):
             run('python manage.py runserver')
 
-    sudo('supervisorctl start statebook:gunicorn')
+    sudo('supervisorctl start gunicorn-django')
 
 
 
