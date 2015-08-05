@@ -34,6 +34,10 @@ urlpatterns = patterns('',
 
     url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
 
+
+    url(r'^maps/new$', 'mapstory.views.new_map', name="new_map"),
+    url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
+
     url(r'^maps/new2$',
         'geonode.maps.views.new_map', {'template': 'maps/_map_view_maploom.html'},
         name='map-new2'),
