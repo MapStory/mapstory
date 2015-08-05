@@ -6,65 +6,137 @@ exports.maps.boxes = require('./time/boxes');
 exports.utils = require('./time/utils');
 
 },{"./time/boxes":2,"./time/controls":3,"./time/maps":5,"./time/pins":7,"./time/utils":9}],2:[function(require,module,exports){
-
 var moment = require('vis/node_modules/moment');
 var utils = require('./utils');
 var format = new ol.format.GeoJSON();
 
+var Box = function(data, projection) {
+    ol.Feature.call(this, data);
+    if (data) {
 
-function Box(options) {
-    this.id = options.id || null;
-    this.title = options.title || null;
-    this.start_time = options.start_time || null;
-    this.end_time = options.end_time || null;
-    this.description = options.description || null;
-    this.range = options.range || null;
-    this.data = options.data || null;
-    this.layerIds = options.layerIds || null;
-    this.center = options.center || null; // ol.Coordinate
-    this.resolution = options.resolution || null;
-    this.allowPan = options.allowPan;
-    this.allowZoom = options.allowZoom;
-    this.interval = options.interval || null;
-    this.intervalRate = options.intervalRate || null;
-    this.playback = options.playback || null;
-    this.playbackRate = options.playbackRate || null;
-    this.speed = options.speed || null;  // interval, seconds
-    this.zoom = options.zoom || null;
-    this._offset = 0;
+        if (this.range === null || this.range.start === null) {
+            if(this.data !== null){
+                this.range = utils.createRange(this.data[0], this.data[this.data.length-1]);
+            }else{
+                this.range = new storytools.core.time.utils.Range(this.start_time, this.end_time);
 
-    if (this.range === null || this.range.start === null) {
-        if(this.data !== null){
-        this.range = utils.createRange(this.data[0], this.data[this.data.length-1]);
-        }else{
-            this.range = new storytools.core.time.utils.Range(this.start_time, this.end_time);
+            }
+        }
+
+        if(this.speed === null && this.interval !== null){
+            this.speed = { interval: moment.duration(this.interval, this.intervalRate).asMilliseconds(),seconds: this.playback};
+        }
+
+
+        if(this.range !== null && this.speed !== null){
+            this._steps = this.data === null ? Math.floor(this.range.width() / this.speed.interval) + 1: this.data.length;
 
         }
+
+        this.setId(data.id);
     }
+};
+Box.prototype = Object.create(ol.Feature.prototype);
+Box.prototype.constructor = Box;
+['id','title', 'start_time','end_time','description','range','data',
+    'layerIds','center','resolution','allowPan','allowZoom','interval',
+    'intervalRate','playback','playbackRate','speed','zoom','_offset'].forEach(function(prop) {
+    Object.defineProperty(Box.prototype, prop, {
+        get: function() {
+            var val = this.get(prop);
+            return typeof val === 'undefined' ? null : val;
+        },
+        set: function(val) {
+            this.set(prop, val);
+        }
+    });
+});
 
-    if(this.speed === null && this.interval !== null){
-        this.speed = { interval: moment.duration(this.interval, this.intervalRate).asMilliseconds(),seconds: this.playback};
-
-                        // @todo possible divide by zero if speed.interval not set!
+function getTime(props, prop) {
+    var val = props[prop];
+    if (typeof val != 'undefined') {
+        return val *= 1000;
     }
-
-
-    if(this.range !== null && this.speed !== null){
-      this._steps = this.data === null ? Math.floor(this.range.width() / this.speed.interval) + 1: this.data.length;
-
-    }
-
+    return null;
 }
+
+/**
+ * Load Box from geojson, reprojecting from 4326 to the provided
+ * projection.
+ * @param {Object} geojson
+ * @param {String} projection
+ * @returns array of Box features
+ */
+exports.loadFromGeoJSON = function(geojson, projection) {
+    if (projection) {
+        projection = ol.proj.get(projection);
+    }
+    return geojson.features.map(function(f) {
+        var props = f.properties;
+        //props.the_geom = f.geometry;
+        props.id = f.id;
+        props.start_time = getTime(props, 'start_time');
+        props.end_time = getTime(props, 'end_time');
+        props.description = f.description;
+        props.title = f.title;
+        return new Box(props, projection);
+    });
+};
+
+//
+//function Box(options) {
+//    this.id = options.id || null;
+//    this.title = options.title || null;
+//    this.start_time = options.start_time || null;
+//    this.end_time = options.end_time || null;
+//    this.description = options.description || null;
+//    this.range = options.range || null;
+//    this.data = options.data || null;
+//    this.layerIds = options.layerIds || null;
+//    this.center = options.center || null; // ol.Coordinate
+//    this.resolution = options.resolution || null;
+//    this.allowPan = options.allowPan;
+//    this.allowZoom = options.allowZoom;
+//    this.interval = options.interval || null;
+//    this.intervalRate = options.intervalRate || null;
+//    this.playback = options.playback || null;
+//    this.playbackRate = options.playbackRate || null;
+//    this.speed = options.speed || null;  // interval, seconds
+//    this.zoom = options.zoom || null;
+//    this._offset = 0;
+//
+//    if (this.range === null || this.range.start === null) {
+//        if(this.data !== null){
+//        this.range = utils.createRange(this.data[0], this.data[this.data.length-1]);
+//        }else{
+//            this.range = new storytools.core.time.utils.Range(this.start_time, this.end_time);
+//
+//        }
+//    }
+//
+//    if(this.speed === null && this.interval !== null){
+//        this.speed = { interval: moment.duration(this.interval, this.intervalRate).asMilliseconds(),seconds: this.playback};
+//
+//                        // @todo possible divide by zero if speed.interval not set!
+//    }
+//
+//
+//    if(this.range !== null && this.speed !== null){
+//      this._steps = this.data === null ? Math.floor(this.range.width() / this.speed.interval) + 1: this.data.length;
+//
+//    }
+//
+//}
+
 Box.prototype.getSteps = function() {
     return this._steps;
 };
-Box.prototype.getRange = function() {
-    return this.range;
-};
-Box.prototype.getIndex = function(instant) {
 
+Box.prototype.getIndex = function(instant) {
+   // return this.data ? utils.find(this.data, instant) :
+     //   Math.floor(Math.min(this.range.width(), Math.max(0, instant - this.range.start)) / this.speed.interval);
     var index = this.data ? utils.find(this.data, instant) :
-        Math.floor(Math.min(this.range.width(), Math.max(0, instant - this.range.start)) / this.speed.interval);
+        Math.floor(Math.min(this.get('range').width(), Math.max(0, instant - this.get('range').start)) / this.get('speed').interval);
 
     console.log(this.range.width());
     console.log(Math.max(0, instant - this.range.start));
@@ -72,40 +144,11 @@ Box.prototype.getIndex = function(instant) {
     console.log(index);
     return index;
 
+
 };
 Box.prototype.getDate = function(idx) {
     idx = idx - this._offset;
-    return this.data ? this.data[idx] : this.range.start + (idx * this.speed.interval);
-};
-
-Box.prototype.getProperties = function(){
-
-    return {'title': this.title, 'description': this.description};
-
-};
-
-
-Box.prototype.setProperties = function(props){
-
-    this.title = props.title;
-    this.description = props.description;
-    this.start_time = props.start_time;
-    this.end_time = props.end_time;
-    this.center = props.center;
-    this.zoom = props.zoom;
-
-    if(props.interval && props.intervalRate && props.playback){
-
-        this.interval = props.interval;
-        this.intervalRate = props.intervalRate;
-        this.playback = props.playback;
-        this.playbackRate = props.playbackRate;
-
-        this.speed = { interval: moment.duration(props.interval, props.intervalRate).asMilliseconds(),seconds: props.playback};
-    }
-
-
-
+    return this.data ? this.data[idx] : this.get('range').start + (idx * this.get('speed').interval);
 };
 
 function findBox(boxes, idx) {
@@ -133,19 +176,20 @@ exports.BoxModel = function(boxArray) {
     function updateBoxes(neu) {
         var offset = 0;
         boxes = neu.map(function(b) {
-            var box = new Box(b);
+            var box = angular.copy(b);
             box._offset = offset;
             offset += box.getSteps();
             return box;
         });
-        range = utils.computeRange(boxes, 'range');
+        range = utils.computeRange(boxes, function(object) {
+            return object.get('range');
+        });
         steps = offset;
     }
     updateBoxes(boxArray);
     this.getRange = function() {
         return range;
     };
-
     this.getSteps = function() {
         return steps;
     };
@@ -156,15 +200,17 @@ exports.BoxModel = function(boxArray) {
     };
     this.getIndex = function(instant) {
         var idx = 0, i;
-        if (instant < boxes[0].getRange().start) {
+        if (instant < boxes[0].get('range').start) {
             return 0;
         }
         for (i = 0; i < boxes.length; i++) {
             var box = boxes[i];
-            var range = box.getRange();
+            var range = box.get('range');
             if (instant >= range.start && instant <= range.end) {
+                //idx += box.getIndex(instant);
                 //why not just return the index of the box since we know it?
                 idx = i;//box.getIndex(instant);
+
                 break;
             } else {
                 idx += box.getSteps();
@@ -194,7 +240,6 @@ exports.BoxModel = function(boxArray) {
 
 exports.findBox = findBox;
 exports.Box = Box;
-
 
 },{"./utils":9,"vis/node_modules/moment":36}],3:[function(require,module,exports){
 var utils = require('./utils');
@@ -488,15 +533,16 @@ function create(options) {
             totalRange = options.data;
         }
         boxes = [{
-            data: data,
-            range: totalRange,
-            speed: {
-                interval: interval,
-                seconds: 3
-            }
-        }];
-
+                data: data,
+                range: totalRange,
+                speed: {
+                    interval: interval,
+                    seconds: 3
+                }
+            }];
+        //May cause issues down below
         options.boxes = boxes;
+
     }
 
     model = new models.TimeModel(options, boxes, annotations);
@@ -533,7 +579,6 @@ exports.TimeLine = function(id, model) {
     function init(model) {
         var elements = [], options;
         var range = model.getRange();
-        console.log("Timeline Range: " + range);
         if (range.isEmpty()) {
             range = utils.createRange(Date.now());
         }
@@ -757,6 +802,26 @@ function filterVectorLayer(storyLayer, range) {
     layer.getSource().addFeatures(features);
 }
 
+function filterVectorBoxLayer(storyLayer, range) {
+    var timeAttr = storyLayer.get('timeAttribute'), l_features = storyLayer.get('features');
+    if (timeAttr === undefined || l_features === undefined) {
+        return;
+    }
+    range = utils.createRange(range);
+    // loop over all original features and filter them
+    var features = [];
+    var layer = storyLayer.getLayer();
+    visitAllLayerFeatureTimes(storyLayer, function(f,r) {
+        if (range.intersects(r)) {
+            features.push(f);
+        }
+    });
+
+    return features;
+    //layer.getSource().clear(true);
+    //layer.getSource().addFeatures(features);
+}
+
 /**
  * Call the provided visitor function on the specified features using the
  * configuration provided in the layer. The visitor function will be called
@@ -807,6 +872,7 @@ exports.computeVectorRange = function(storyLayer, features) {
 };
 
 exports.filterVectorLayer = filterVectorLayer;
+exports.filterVectorBoxLayer = filterVectorBoxLayer;
 
 exports.MapController = function(options, timeControls) {
     var loadListener = null,
@@ -814,6 +880,7 @@ exports.MapController = function(options, timeControls) {
         storyMap = options.storyMap,
         tc = timeControls,
         boxes = options.boxes;
+
     function layerAdded(layer) {
         var source, image;
         var loaded = function(event) {
@@ -855,7 +922,6 @@ exports.MapController = function(options, timeControls) {
     }
     function updateLayers(range) {
         console.log("Updating layers based on range: " + range);
-
         var storyLayers = storyMap.getStoryLayers();
         var time = new Date(range.start).toISOString();
         if (range.start != range.end) {
@@ -878,19 +944,19 @@ exports.MapController = function(options, timeControls) {
             timeControls.defer(createLoadListener().deferred);
         }
 
-        var currentBox = boxes[tc.model.boxes.getIndex(range.end)];
+        var currentBoxes = filterVectorBoxLayer(storyMap.storyBoxesLayer, range);
 
-        if(currentBox){
-            console.log(currentBox);
-            console.log(new Date(currentBox.range.start).toISOString());
-            console.log(new Date(currentBox.range.end).toISOString());
+        if(currentBoxes){
+            var currentBox = currentBoxes[0];
+            console.log(currentBox.getProperties());
+            console.log(new Date(currentBox.get('range').start).toISOString());
+            console.log(new Date(currentBox.get('range').end).toISOString());
 
-            if(currentBox.center){
+            if(currentBox.get('center')){
                 console.log("Storymap Projection: " + storyMap.getMap().getView().getProjection().getCode());
-                storyMap.animatePanAndBounce(currentBox.center, currentBox.zoom);
+                storyMap.animateCenterAndZoom(currentBox.get('center'), currentBox.get('zoom'));
             }
         }
-
     }
     var me = this;
     me.layers = {};
@@ -901,8 +967,6 @@ exports.MapController = function(options, timeControls) {
             me.layers[id] = true;
         }
     });
-
-
     storyMap.getStoryLayers().forEach(function(lyr) {
         var id = lyr.get('id');
         if (id !== undefined && me.layers[id] !== true) {
@@ -922,9 +986,9 @@ var BoxModel = require('./boxes').BoxModel;
  */
 exports.TimeModel = function(options, boxes, annotations) {
     
-    var events = new utils.Events();
+    var events = new utils.Events(),
+        boxModel = new BoxModel(boxes);
 
-    this.boxes = new BoxModel(boxes);
     this.annotations = annotations;
     this.fixed = false;
     this.mode = 'instant';
@@ -941,33 +1005,36 @@ exports.TimeModel = function(options, boxes, annotations) {
         }
         // @todo is the best name for this
         if (opts.hasOwnProperty('data')) {
-        //    boxModel.setRange(opts.data);
+            //boxModel.setRange(opts.data);
         }
 
         if (opts.hasOwnProperty('boxes')) {
-        this.boxes = new BoxModel(opts.boxes);
+            this.boxModel = new BoxModel(opts.boxes);
         }
+
     }
 
     init.call(this, options);
     this.getRange = function() {
-        console.log("getting boxModel range " + this.boxes.getRange());
-        return this.boxes.getRange();
+        console.log("Getting boxModel range " + this.boxModel.getRange());
+        return this.boxModel.getRange();
     };
     this.getTotalRange = function() {
         // @todo need to access layers and cached dimension data
         //       and consider annotations?
-        throw Error('not implemented');
+        //throw Error('not implemented');
+
+        console.log("TotalRange()");
     };
     this.update = init;
     this.getSteps = function() {
-        return this.boxes.getSteps();
+        return this.boxModel.getSteps();
     };
     this.getIndex = function(instant) {
-        return this.boxes.getIndex(instant);
+        return this.boxModel.getIndex(instant);
     };
     this.getRangeAt = function(i, j) {
-        return this.boxes.getRangeAt(i, j);
+        return this.boxModel.getRangeAt(i, j);
     };
 };
 

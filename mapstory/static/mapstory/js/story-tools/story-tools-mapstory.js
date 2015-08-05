@@ -73,6 +73,7 @@ exports.MapConfigTransformer = function(data) {
                          }else{
                             layerConfig.url = '/geoserver/';
                          }
+
                      }
                      layerConfig.params = params;
                      layerConfig.params.VERSION = '1.1.1';
@@ -109,6 +110,7 @@ exports.MapConfigTransformer = function(data) {
              layers: layers
          },
          about: data.about
+
      };
 };
 
@@ -135,6 +137,7 @@ exports.MapToGXPConfigTransformer = function(config){
 
     return gxp_config;
 };
+
 
 },{}]},{},[1])(1)
 });

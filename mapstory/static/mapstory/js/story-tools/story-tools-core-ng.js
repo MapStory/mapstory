@@ -80,18 +80,15 @@
     function StoryMap(data) {
         ol.Object.call(this, data);
         this.map_ = new ol.Map({target: data.target});
-        this.title = "Default Mapstory";
-        this.abstract = "No Information Supplied.";
-
         this.overlay = new ol.FeatureOverlay({
             map: this.map_,
             style: defaultStyle
         });
+        this.title = "Default Mapstory";
+        this.abstract = "No Information Supplied.";
+
         this.storyLayers_ = new ol.Collection();
         this.animationDuration_ = data.animationDuration || 500;
-
-        this.storyBoxes_ = new ol.Collection();
-
         this.storyBoxesLayer = new StoryLayer({
             timeAttribute: 'start_time',
             endTimeAttribute: 'end_time',
@@ -100,8 +97,6 @@
                 style: defaultStyle
             })
         });
-
-
         this.storyPinsLayer = new StoryLayer({
             timeAttribute: 'start_time',
             endTimeAttribute: 'end_time',
@@ -110,33 +105,41 @@
                 style: defaultStyle
             })
         });
+        this.addStoryBoxesLayer();
         this.addStoryPinsLayer();
     }
 
     StoryMap.prototype = Object.create(ol.Object.prototype);
     StoryMap.prototype.constructor = StoryMap;
 
+    StoryMap.prototype.addStoryBoxesLayer = function() {
+        this.map_.addLayer(this.storyBoxesLayer.getLayer());
+    };
+
     StoryMap.prototype.addStoryPinsLayer = function() {
         this.map_.addLayer(this.storyPinsLayer.getLayer());
     };
 
     StoryMap.prototype.setStoryTitle = function(storyTitle) {
-        this.title =  storyTitle;
-    };
-
-    StoryMap.prototype.getStoryTitle = function() {
-        return this.title;
+       this.title =  storyTitle;
     };
 
     StoryMap.prototype.setStoryAbstract = function(storyAbstract) {
-        this.abstract =  storyAbstract;
+       this.abstract =  storyAbstract;
+    };
+
+
+    StoryMap.prototype.getStoryTitle = function() {
+       return this.title;
     };
 
     StoryMap.prototype.getStoryAbstract = function() {
-        return this.abstract;
+       return this.abstract;
     };
 
+
     StoryMap.prototype.setBaseLayer = function(baseLayer) {
+        var self = this;
         this.set('baselayer', baseLayer);
         this.map_.getLayers().forEach(function(lyr) {
             if (lyr.get('group') === 'background') {
@@ -144,6 +147,8 @@
             }
         }, this);
         this.map_.getLayers().insertAt(0, this.get('baselayer'));
+        setTimeout(function(){self.map_.updateSize();}, 1);
+
     };
 
     StoryMap.prototype.addStoryLayer = function(storyLayer) {
@@ -162,18 +167,8 @@
         );
     };
 
-
-    StoryMap.prototype.addStoryBox = function(storyBox) {
-        this.storyBoxes_.push(storyBox);
-    };
-
     StoryMap.prototype.getStoryLayers = function() {
         return this.storyLayers_;
-    };
-
-
-    StoryMap.prototype.getStoryBoxes = function() {
-        return this.storyBoxes_;
     };
 
     StoryMap.prototype.getMap = function() {
@@ -183,52 +178,20 @@
     StoryMap.prototype.clear = function() {
         this.map_.getLayers().clear();
         this.storyLayers_.clear();
-        this.storyBoxes_.clear();
         this.addStoryPinsLayer();
-    };
-
-    StoryMap.prototype.animatePanAndBounce = function(center, zoom){
-
-        var duration = 2000;
-        var start = +new Date();
-
-        var view = this.map_.getView();
-
-        if(view.getCenter() != center){
-
-            var pan = ol.animation.pan({
-                duration: this.animationDuration_,
-                source: view.getCenter(),
-                start: start
-            });
-
-
-            var bounce = ol.animation.bounce({
-                duration: duration,
-                resolution: 4 * view.getResolution(),
-                start: start
-            });
-
-            this.map_.beforeRender(pan, bounce);
-
-            view.setCenter(center);
-            view.setZoom(zoom);
-        }
     };
 
     StoryMap.prototype.animateCenterAndZoom = function(center, zoom) {
         var view = this.map_.getView();
-        var pan = ol.animation.pan({
+        this.map_.beforeRender(ol.animation.pan({
             duration: this.animationDuration_,
             source: view.getCenter()
-        });
-        var ol_zoom = ol.animation.zoom({
+        }));
+        view.setCenter(center);
+        this.map_.beforeRender(ol.animation.zoom({
             resolution: view.getResolution(),
             duration: this.animationDuration_
-        });
-        this.map_.beforeRender(pan, ol_zoom);
-
-        view.setCenter(center);
+        }));
         view.setZoom(zoom);
     };
 
@@ -296,30 +259,7 @@
             var baseLayerState = baseLayer;
             baseLayerState.group = 'background';
             baseLayerState.visibility = true;
-            var props = baseLayerState.getProperties();
-            delete props.source;
-
-            //For Compatability with Geonode 2.4
-            if(props.state.type === 'MapBox'){
-                props.source = '3';
-            }else if(props.state.type === 'OSM'){
-                props.source = '1';
-                props.type = 'OpenLayers.Layer.OSM';
-            }else if(props.state.type === 'HOT'){
-                props.source = '1';
-                props.type = 'OpenLayers.Layer.OSM';
-            }else if(props.state.type === 'MapQuest'){
-                props.source = '2';
-            }else if(props.state.type === 'WMS'){
-                props.source = '1';
-                props.type = 'OpenLayers.Layer.WMS';
-            }
-
-            if(props.state && props.state.name){
-                props.name = props.state.name;
-            }
-
-            config.map.layers.push(props);
+            config.map.layers.push(baseLayerState);
         }
         this.storyLayers_.forEach(function(storyLayer) {
             config.map.layers.push(storyLayer.getState());
@@ -333,9 +273,9 @@
     };
 
     EditableStoryMap.prototype.toggleStoryLayer = function(storyLayer) {
-        var layer = storyLayer.getLayer();
-        storyLayer.set('visibility', !layer.getVisible());
-        layer.setVisible(!layer.getVisible());
+      var layer = storyLayer.getLayer();
+      storyLayer.set('visibility', !layer.getVisible());
+      layer.setVisible(!layer.getVisible());
     };
 
     function StoryLayer(data) {
@@ -422,7 +362,6 @@
         return this.layer_;
     };
 
-
     StoryLayer.prototype.setLayer = function(layer) {
         if (this.layer_ && this.storyMap_) {
             var map = this.storyMap_.map_;
@@ -500,7 +439,7 @@
             describeFeatureType: function(storyLayer) {
                 var me = this;
                 var request = 'DescribeFeatureType', service = 'WFS';
-                var id = storyLayer.get('id') || '';
+                var id = storyLayer.get('id') || storyLayer.get('name') || 'unknown';
                 return $http({
                     method: 'GET',
                     url: storyLayer.get('url'),
@@ -543,8 +482,9 @@
                     var me = this;
                     return $http({
                         method: 'GET',
-                        /* Why do we need to use this endpoint?*/
+                        // Why do we need to use this endpoint? If not admin /geoserver/rest/layers fails 404
                         url: '/gs/rest/layers/' + storyLayer.get('id') + '.json'
+                        //url: storyLayer.get('path') + 'rest/layers/' + storyLayer.get('id') + '.json'
                     }).success(function(response) {
                             storyLayer.set('styleName', response.layer.defaultStyle.name);
                         });
@@ -728,9 +668,6 @@
                     layer: 'OSM',
                     name: 'OpenStreetMap'
                 });
-
-                setTimeout(function(){storymap.getMap().updateSize();}, 1);
-
             },
             setBaseLayer: function(storymap, data) {
                 var baseLayer = stBaseLayerBuilder.buildLayer(data);
@@ -739,7 +676,7 @@
         };
     }]);
 
-    module.service('stStoryMapBuilder', ["stLayerBuilder", "stStoryMapBaseBuilder", "StoryBoxLayerManager", function(stLayerBuilder, stStoryMapBaseBuilder, StoryBoxLayerManager) {
+    module.service('stStoryMapBuilder', ["stLayerBuilder", "stStoryMapBaseBuilder", function(stLayerBuilder, stStoryMapBaseBuilder) {
         return {
             modifyStoryMap: function(storymap, data) {
                 storymap.clear();
@@ -759,20 +696,18 @@
                         });
                     }
                 }
-
-
                 storymap.getMap().setView(new ol.View({
                     center: mapConfig.map.center,
                     zoom: mapConfig.map.zoom,
                     projection: mapConfig.map.projection
                 }));
 
-                setTimeout(function(){storymap.getMap().updateSize();}, 1);
+                storymap.getMap().updateSize();
             }
         };
     }]);
 
-    module.service('stEditableStoryMapBuilder', ["stStoryMapBaseBuilder", "stEditableLayerBuilder", "StoryBoxLayerManager", function(stStoryMapBaseBuilder, stEditableLayerBuilder, StoryBoxLayerManager) {
+    module.service('stEditableStoryMapBuilder', ["stStoryMapBaseBuilder", "stEditableLayerBuilder", function(stStoryMapBaseBuilder, stEditableLayerBuilder) {
         return {
             modifyStoryLayer: function(storylayer, newType) {
                 var data = storylayer.getProperties();
@@ -805,14 +740,11 @@
                         });
                     }
                 }
-
                 storymap.getMap().setView(new ol.View({
                     center: mapConfig.map.center,
                     zoom: mapConfig.map.zoom,
                     projection: mapConfig.map.projection
                 }));
-
-                setTimeout(function(){storymap.getMap().updateSize();}, 1);
             }
         };
     }]);
@@ -873,8 +805,8 @@
 
     module.constant('StoryPin', pins.StoryPin);
 
-
-    module.service('stAnnotationsStore', ['$http', function($http, StoryPinLayerManager) {
+    // @todo naive implementation on local storage for now
+    module.service('stAnnotationsStore', ["StoryPinLayerManager", function(StoryPinLayerManager) {
         function path(mapid) {
             return '/maps/' + mapid + '/annotations';
         }
@@ -914,7 +846,11 @@
                 set(saved);
             },
             saveAnnotations: function(mapid, annotations) {
-
+                var saved = get();
+                var maxId = 0;
+                saved.forEach(function(s) {
+                    maxId = Math.max(maxId, s.id);
+                });
                 var clones = [];
                 annotations.forEach(function(a) {
                     if (typeof a.id == 'undefined') {
@@ -929,12 +865,7 @@
                     }
                     clones.push(clone);
                 });
-
-                var annotations_geojson = new ol.format.GeoJSON().writeFeatures(clones,
-                        +                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'});
-
-
-                return $http.post(path(mapid), annotations_geojson);
+                set(mapid, clones);
             }
         };
     }]);
@@ -1430,6 +1361,7 @@
                 return times != null;
             });
             layersWithTime.push(storyMap.storyPinsLayer);
+            layersWithTime.push(storyMap.storyBoxesLayer);
         }
         var ticks = {};
         var totalRange = null;
@@ -1504,6 +1436,7 @@
 
         function maybeCreateTimeControls(update) {
             $log.debug("Creating TimeControls with boxes: " + StoryBoxLayerManager.storyBoxes);
+
             if (timeControlsManager.timeControls !== null) {
                 if (update) {
                     var values = update();
@@ -1544,7 +1477,7 @@
             });
         });
 
-
+        var boxesLayer = MapManager.storyMap.storyBoxesLayer;
         var pinsLayer = MapManager.storyMap.storyPinsLayer;
         pinsLayer.on('change:features', function() {
             maybeCreateTimeControls(function() {
@@ -1553,11 +1486,26 @@
                     return {
                         annotations: pinsLayer.get("features"),
                         data: range,
-                        boxes: StoryBoxLayerManager.storyBoxes
+                        boxes: boxesLayer.get("features")
+
                     };
                 }
             });
         });
+
+        boxesLayer.on('change:features', function() {
+            maybeCreateTimeControls(function() {
+                var range = computeTicks(MapManager.storyMap);
+                if (range.length) {
+                    return {
+                        annotations: pinsLayer.get("features"),
+                        data: range,
+                        boxes: boxesLayer.get("features")
+                    };
+                }
+            });
+        });
+
         maybeCreateTimeControls();
     }
 
@@ -1585,9 +1533,9 @@
         var i;
         if (action == 'delete') {
             for (i = 0; i < boxes.length; i++) {
-                var pin = boxes[i];
+                var box = boxes[i];
                 for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
-                    if (this.storyBoxes[j].id == pin.id) {
+                    if (this.storyBoxes[j].id == box.id) {
                         this.storyBoxes.splice(j, 1);
                         break;
                     }
@@ -1614,10 +1562,10 @@
 
 
         console.log("Box times: " + times);
-        this.storyBoxesLayer = this.storyBoxes;
+        //this.storyBoxesLayer = this.storyBoxes;
 
-        //this.storyBoxesLayer.set('times', times);
-        //this.storyBoxesLayer.set('features', this.storyBoxes);
+        this.storyBoxesLayer.set('times', times);
+        this.storyBoxesLayer.set('features', this.storyBoxes);
     };
 
 
@@ -1630,14 +1578,16 @@
 
     StoryBoxLayerManager.prototype.loadFromGeoJSON = function(geojson, projection) {
         if (geojson && geojson.features) {
-            var loaded = [];
-
-            geojson.features.forEach(function(a) {
-                //a.properties['id'] = a.id;
-                loaded.push(new boxes.Box(a.properties));
-            });
-
+            var loaded = boxes.loadFromGeoJSON(geojson, projection);
             this.boxesChanged(loaded, 'add', true);
+            //var loaded = [];
+
+            //geojson.features.forEach(function(a) {
+                //a.properties['id'] = a.id;
+              //  loaded.push(new boxes.Box(a.properties));
+            //});
+
+            //this.boxesChanged(loaded, 'add', true);
         }
     };
 
@@ -1651,7 +1601,7 @@
             return '/maps/' + mapid + '/boxes';
         }
         function get(mapid) {
-            var saved = localStorage.getItem(path(mapid));
+            var saved = $http.get(path(mapid));//localStorage.getItem(path(mapid));
             saved = (saved === null) ? null : JSON.parse(saved);
 
             return saved;
@@ -1663,12 +1613,13 @@
         }
         return {
             loadBoxes: function(mapid, storyMap) {
+                return StoryBoxLayerManager.loadFromGeoJSON(get(mapid), projection);
 
-                var boxes = get(mapid);
+                //var boxes = get(mapid);
 
-                var range = TimeMachine.computeTicks(storyMap);
+                //var range = TimeMachine.computeTicks(storyMap);
 
-                return (boxes === null)? this.createBoxes({'data' :range}) : boxes;
+                //return (boxes === null)? this.createBoxes({'data' :range}) : boxes;
             },
             createBoxes: function(options){
 
@@ -1743,3 +1694,4 @@
     }]);
 
 })();
+

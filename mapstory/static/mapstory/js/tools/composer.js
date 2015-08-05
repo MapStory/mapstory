@@ -7,6 +7,7 @@
         'storytools.core.mapstory',
         'storytools.edit.style',
         'storytools.edit.boxes',
+        'storytools.core.boxes',
         'storytools.edit.pins',
         'storytools.core.ogc',
         'colorpicker.module',
@@ -99,6 +100,7 @@
         window.storyMap = this.storyMap;
         var self = this;
         StoryPinLayerManager.storyPinsLayer = this.storyMap.storyPinsLayer;
+        StoryBoxLayerManager.storyBoxesLayer = this.storyMap.storyBoxesLayer;
         this.loadMap = function(options) {
             options = options || {};
             if (options.id) {
