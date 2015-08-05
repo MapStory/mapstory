@@ -370,9 +370,9 @@ WHAT IS THIS PART?!-->
   {% endif %}
   <script type="text/javascript">
       {% if HAYSTACK_SEARCH %}
-          SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}?owner__username={{profile.username}}'
+          SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}?owner__username__in={{profile.username}}';
       {% else %}
-          SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}?owner__username={{profile.username}}';
+          SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}?owner__username__in={{profile.username}}';
       {% endif %}
   </script>
 {% include 'search/search_scripts.html' %}
