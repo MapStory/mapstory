@@ -13,7 +13,7 @@
 
 
   .controller('mapstory.upload.time', function($scope, $http, $window) {
-          $scope.time = {type: 'notime', 'presentation_strategy': 'LIST'};
+          $scope.time = {type: 'simple', 'presentation_strategy': 'LIST'};
           $scope.time_attributes = $window.time_attributes;
           $scope.year_attributes = $window.year_attributes;
           $scope.text_attributes = $window.text_attributes;
@@ -25,9 +25,12 @@
                   'presentation_strategy':$scope.time['presentation_strategy']};
           }
 
-          $scope.$watch('time.type', function() {
-              reset();
-          });
+          $scope.resetEndDates = function() {
+              delete $scope.time['end_time_attribute'];
+              delete $scope.time['endAttributeType'];
+              delete $scope.time['end_attribute_format'];
+              delete $scope.time['end_year_attribute'];
+          };
 
           function makeRequest(data) {
 
@@ -53,14 +56,30 @@
               var cleaned = angular.copy(data, {});
               if (cleaned.attributeType === 'timeAttribute') {
                   delete cleaned.text_attribute;
-                  delete cleaned.number_attribute;
+                  delete cleaned.text_attribute_format;
+                  delete cleaned.year_attribute;
               } else if (cleaned.attributeType === 'textAttribute') {
                   delete cleaned.time_attribute;
-                  delete cleaned.number_attribute;
+                  delete cleaned.year_attribute;
               } else if (cleaned.attributeType === 'numberAttribute') {
                   delete cleaned.time_attribute;
                   delete cleaned.text_attribute;
+                  delete cleaned.text_attribute_format;
               }
+
+              if (cleaned.endAttributeType === 'timeAttribute') {
+                  delete cleaned.end_text_attribute;
+                  delete cleaned.end_text_attribute_format;
+                  delete cleaned.end_year_attribute;
+              } else if (cleaned.endAttributeType === 'textAttribute') {
+                  delete cleaned.end_time_attribute;
+                  delete cleaned.end_year_attribute;
+              } else if (cleaned.endAttributeType === 'numberAttribute') {
+                  delete cleaned.end_time_attribute;
+                  delete cleaned.end_text_attribute;
+                  delete cleaned.end_text_attribute_format;
+              }
+
               return cleaned;
           };
 

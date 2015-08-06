@@ -27,22 +27,45 @@
   <h2> {% trans "Editing details for " %} {{ layer_name }} </h2>
   <div class="row">
   <div class="col-md-8">
-      <div class="radio">
-      <div class="top-padding-10">
-          <label>
-            <input type="radio" ng-model="time.type" value="notime">
-            My StoryLayer has no time attribute.
-          </label>
-      </div>
-      <label class="top-padding-10">
+      <div class="radio" style="padding: 10px">
+      <!--<label class="top-padding-10">
         <input type="radio" ng-model="time.type" value="simple">
         My StoryLayer has a simple time attribute.
       </label><br/>
       <label class="top-padding-10">
         <input type="radio" ng-model="time.type" value="startEnd">
         My StoryLayer has start and end dates.
-      </label>
+      </label><br/>-->
+
+       <form>
+            <div class="top-padding-10">Was the data collected at regular intervals? (e.g., every 8 hours, every 2 months)</div>
+          <label class="radio-inline" style="display: inline-block">
+            <input type="radio" ng-model="time.presentation_strategy" value="DISCRETE_INTERVAL" name="presentation_strategy_yes">Yes
+          </label>
+          <label class="radio-inline" style="display: inline-block">
+            <input type="radio" ng-model="time.presentation_strategy" value="LIST" name="presentation_strategy_no">No
+          </label>
+      </form>
+
+        <div ng-show="time.presentation_strategy === 'DISCRETE_INTERVAL'" class="top-padding-10" style="margin-left: 10px;">
+          <form class="form-inline">
+              <label for="id_precision_step" class="pull-left">
+                Resolution of time attribute:
+            </label>
+          <div class="form-group">
+              </div>
+              <div class="form-group pull-left">
+                <input ng-model="time.precision_value" size="3" type="text" class="form-control col-md-1">
+              </div>
+              <div class="form-group col-md-2">
+                <select ng-model="time.precision_step" class="form-control" name="id_precision_step" id="id_precision_step">
+                  <option value="{[precision]}" ng-repeat="precision in ['years', 'months', 'days', 'hours', 'minutes', 'seconds']">{[precision]}</option>
+                </select>
+              </div>
+           </form>
+        </div>
       </div>
+
 
       <hr/>
 
@@ -80,7 +103,7 @@
                           <option value="{[text_attribute[0]]}" ng-if="text_attribute[0]!==''" ng-repeat="text_attribute in text_attributes">{[text_attribute[1]]}</option>
                         </select>
                     </label>
-                    <label>
+                    <label ng-if="time.text_attribute">
                         Date format (optional):
                         <input ng-model="time.text_attribute_format" type="text" class="form-control" placeholder="yyyy-mm-dd" name="text_attribute_format">
                     </label>
@@ -104,6 +127,18 @@
                </div>
            </div>
        </div>
+
+
+      <form>
+          <h3 class="top-padding-10">End Date/Time</h3>
+            <div>Does this data have an end date/time attribute?</div>
+          <label class="radio-inline" style="display: inline-block">
+            <input type="radio" ng-model="time.type" value="startEnd" name="startEndYes">Yes
+          </label>
+          <label class="radio-inline" style="display: inline-block">
+            <input type="radio" ng-model="time.type" value="simple" name="startEndYes" ng-click="resetEndDates()">No
+          </label>
+      </form>
 
 
         <div ng-show="time.type == 'startEnd'">
@@ -140,9 +175,9 @@
                           <option value="{[text_attribute[0]]}" ng-if="text_attribute[0]!==''" ng-repeat="text_attribute in text_attributes">{[text_attribute[1]]}</option>
                         </select>
                     </label>
-                    <label>
+                    <label ng-show="time.end_text_attribute" class="top-padding-10">
                         Date format (optional):
-                        <input ng-model="time.end_attribute_format" type="text" class="form-control" placeholder="yyyy-mm-dd" name="end_attribute_format">
+                        <input ng-model="time.end_text_attribute_format" type="text" class="form-control" placeholder="yyyy-mm-dd" name="end_text_attribute_format">
                     </label>
                   </div>
                </div>
@@ -166,7 +201,7 @@
        </div>
 
 
-       <div ng-show="time.type !== 'notime'">
+       <div ng-show="false">
        <h3>How should time be presented in your StoryLayer?</h3>
            <div class="radio">
               <label>
@@ -221,13 +256,13 @@
           </div>
 
 
-    <div id="upload-errors" ng-show="errors.length > 0" class="alert alert-danger">
+    <div id="upload-errors" ng-show="errors.length > 0" class="alert alert-danger top-padding-10">
         Oh no!  The following errors occurred during your upload:
         <ul>
             <li ng-repeat="error in errors" >{[ error ]}</li>
         </ul>
     </div>
-    <button id='next' class="btn btn-default" ng-click="submit()" ng-disabled="submitInProgress" value="{% trans 'Next' %}"> Next
+    <button id='next' class="btn btn-default" ng-click="submit()" ng-disabled="submitInProgress" value="{% trans 'Next' %}" style="margin-top:10px"> Next
         <i ng-show="submitInProgress" id="next-spinner" class="fa fa-spinner fa-spin"></i>
     </button>
   </form>
