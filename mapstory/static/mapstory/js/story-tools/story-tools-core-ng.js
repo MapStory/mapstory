@@ -1435,7 +1435,8 @@
         var timeControlsManager = this;
 
         function maybeCreateTimeControls(update) {
-            $log.debug("Creating TimeControls with boxes: " + StoryBoxLayerManager.storyBoxes);
+            $log.debug("Creating TimeControls with boxes: ");
+            $log.debug(StoryBoxLayerManager.storyBoxes);
 
             if (timeControlsManager.timeControls !== null) {
                 if (update) {
@@ -1542,12 +1543,35 @@
                 }
             }
         } else if (action == 'add') {
+
+            var maxId = 0;
+            this.storyBoxes.forEach(function(b) {
+                maxId = Math.max(maxId, b.id);
+            });
+
             for (i = 0; i < boxes.length; i++) {
-                this.storyBoxes.push(boxes[i]);
+
+                var box = boxes[i];
+
+                if (typeof box.id == 'undefined' || box.id == null) {
+                        box.id = ++maxId;
+                }
+
+                this.storyBoxes.push(box);
             }
         } else if (action == 'change') {
             // provided edits could be used to optimize below
-            console.log(boxes);
+            for (i = 0; i < boxes.length; i++) {
+                var box = boxes[i];
+                for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
+                    if (this.storyBoxes[j].id == box.id) {
+                        this.storyBoxes[j]= box;
+                        break;
+                    }
+                }
+                  console.log(boxes[i]);
+            }
+
         } else {
             throw new Error('action? :' + action);
         }

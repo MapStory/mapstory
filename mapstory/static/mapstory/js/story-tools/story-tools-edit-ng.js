@@ -21,10 +21,6 @@
         };
 
 
-        function getMap() {
-            return MapManager.storyMap.getMap();
-        }
-
         function getFeatures() {
             return MapManager.storyMap.overlay.getFeatures();
         }
@@ -100,6 +96,10 @@
         };
 
 
+        this.getMap = function () {
+            return MapManager.storyMap.getMap();
+        };
+
         function reset() {
            lastVersion = null;
            //this.editingBox = null;
@@ -167,7 +167,6 @@
             controller: 'boxesEditorController',
             controllerAs: 'boxesCtrl',
             link: function(scope, element, attrs, ctrl) {
-
             }
         };
     });
@@ -219,20 +218,38 @@
                 map.setView(new ol.View({center: [0, 0], zoom: 3}));
                 map.addLayer(new ol.layer.Tile({source: new ol.source.MapQuest({layer: 'osm'})}));
 
-                scope.updateCoordinates = function() {
+                function getCoordinates(objMap){
 
-                    $log.debug("The current center of the map is: " + map.getView().getCenter());
+                    var extent, zoom, center;
 
-                    var extent = map.getView().calculateExtent(map.getSize());
-
+                    extent = objMap.getView().calculateExtent(objMap.getSize());
+                    //Make sure projection is correct
                     extent = ol.extent.applyTransform(extent, ol.proj.getTransform("EPSG:3857", "EPSG:4326"));
+                    zoom = objMap.getView().getZoom();
+                    center = objMap.getView().getCenter();
 
-                    scope.storyBox.minlon = extent[0];
-                    scope.storyBox.minlat = extent[1];
-                    scope.storyBox.maxlon = extent[2];
-                    scope.storyBox.maxlat = extent[3];
-                    scope.storyBox.zoom = map.getView().getZoom();
-                    scope.storyBox.center = map.getView().getCenter();
+                    return {extent: extent, zoom: zoom, center: center};
+
+                }
+
+                scope.updateCoordinates = function(fromBigMap) {
+
+                    var bounds;
+
+                    if(fromBigMap){
+                        bounds = getCoordinates(scope.boxesCtrl.getMap());
+                        $log.debug("The current bounds of the big map are: " + JSON.stringify(bounds));
+                    }else{
+                        bounds = getCoordinates(map);
+                        $log.debug("The current bounds of the small map are: " + JSON.stringify(bounds));
+                    }
+
+                    scope.storyBox.minlon = bounds.extent[0];
+                    scope.storyBox.minlat = bounds.extent[1];
+                    scope.storyBox.maxlon = bounds.extent[2];
+                    scope.storyBox.maxlat = bounds.extent[3];
+                    scope.storyBox.zoom = bounds.zoom;
+                    scope.storyBox.center = bounds.center;
 
                     $timeout(function(){map.updateSize();}, 1);
 
@@ -268,10 +285,14 @@
             restrict: 'E',
             templateUrl: 'boxes/contents-editor.html',
             link: function(scope, element, atts, ctrl) {
-
+             scope.currentTime = new Date();
              scope.$watch('storyBox.title', function(neu, old) {
                     if (neu != old) {
-                        element[0].querySelector('input[name=title]').focus();
+                        var el = element[0].querySelector('input[name=title]');
+
+                        if(el){
+                            el.focus();
+                        }
                     }
                 });
             }
@@ -592,8 +613,8 @@
                     return valid ? parsed : null;
                 });
                 scope.setFromCurrentTime = function() {
-                    if (scope.currentTime) {
-                        ngModelCtrl.$modelValue = scope.currentTime;
+                    if (scope.$parent.currentTime) {
+                        ngModelCtrl.$modelValue = scope.$parent.currentTime;
                     } else {
                         $log.error('no current time provided!');
                     }

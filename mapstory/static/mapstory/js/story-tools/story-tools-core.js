@@ -33,6 +33,7 @@ var Box = function(data, projection) {
 
         }
 
+        this._offset = 0;
         this.setId(data.id);
     }
 };
@@ -129,7 +130,7 @@ exports.loadFromGeoJSON = function(geojson, projection) {
 //}
 
 Box.prototype.getSteps = function() {
-    return this._steps;
+    return this._steps || this.get('_steps');
 };
 
 Box.prototype.getIndex = function(instant) {
@@ -138,9 +139,9 @@ Box.prototype.getIndex = function(instant) {
     var index = this.data ? utils.find(this.data, instant) :
         Math.floor(Math.min(this.get('range').width(), Math.max(0, instant - this.get('range').start)) / this.get('speed').interval);
 
-    console.log(this.range.width());
-    console.log(Math.max(0, instant - this.range.start));
-    console.log(this.speed.interval);
+    console.log(this.get('range').width());
+    console.log(Math.max(0, instant - this.get('range').start));
+    console.log(this.get('speed').interval);
     console.log(index);
     return index;
 
@@ -176,7 +177,7 @@ exports.BoxModel = function(boxArray) {
     function updateBoxes(neu) {
         var offset = 0;
         boxes = neu.map(function(b) {
-            var box = angular.copy(b);
+            var box = (b instanceof Box)?angular.copy(b): angular.copy(new Box(b));
             box._offset = offset;
             offset += box.getSteps();
             return box;
@@ -1203,6 +1204,11 @@ exports.TimeSlider = function(id, model) {
     function getSliderRangeInternal() {
         var range = slider.val();
         if (! Array.isArray(range)) {
+
+            if(range == ""){
+                range = 0.00;
+            }
+
             range = parseInt(range, 10);
             range = [model.mode === 'cumulative' ? 0 : range, range];
         } else {
