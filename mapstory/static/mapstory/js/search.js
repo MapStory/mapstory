@@ -265,6 +265,12 @@
     };
     query_api($scope.query);
 
+    $scope.query_category = function(category, type) {
+      $scope.query.type__in = type;
+      $scope.query.category__identifier__in = category;
+      $scope.search();
+    };
+
     $scope.change_api = function(api_endpoint) {
       Configs.url = "/api/" + api_endpoint + "/";
       $scope.query.limit = 100;
