@@ -84,11 +84,17 @@
     {% if GEONODE_SECURITY_ENABLED %}
     {% include "_permissions_form_js.html" %}
     {% endif %}
-    <script type="text/javascript" src="{{ STATIC_URL }}lib/js/angular.js"></script>
     <script type="text/javascript">
       HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
       HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
       CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
+      {% if HAYSTACK_SEARCH %}
+          SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}';
+      {% else %}
+          SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}';
+      {% endif %}
     </script>
-    <script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/detail.js"></script>
+  {% with include_spatial='true' %}
+  {% include 'search/search_scripts.html' %}
+  {% endwith %}
 {% endblock extra_script %}

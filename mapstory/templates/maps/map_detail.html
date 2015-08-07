@@ -134,11 +134,17 @@ body.ms-fullscreen .gxp-annotations-tip {
     $('#edit-map').modal('toggle');
   });
 </script>
-<script type="text/javascript" src="{{ STATIC_URL }}lib/js/angular.js"></script>
 <script type="text/javascript">
   HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
   HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
   CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
-</script>
-<script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/detail.js"></script>
+  {% if HAYSTACK_SEARCH %}
+      SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}';
+  {% else %}
+      SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}';
+  {% endif %}
+  </script>
+{% with include_spatial='true' %}
+{% include 'search/search_scripts.html' %}
+{% endwith %}
 {% endblock %}
