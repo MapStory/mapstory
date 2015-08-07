@@ -28,8 +28,7 @@
           </tr>
           <tr>
             <td width="35%">Language</td>
-            <!-- TODO: Change to human readable? Seems the language property may be abbreviated -->
-            <td width="65%"><i class="flag flag-us"></i>{{ resource.language_title }}</td>
+            <td width="65%"><i class="flag flag-us"></i>{% if resource.language_title %}{{ resource.language_title }}{% else %}{{ resource.language }}{% endif %}</td>
           </tr>
           <tr>
             <td width="35%">Data Source</td>
