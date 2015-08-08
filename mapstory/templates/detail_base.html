@@ -52,7 +52,14 @@
       <div class="col-sm-5" style="padding:15px">
         <div class="row">
           <div class="col-sm-12">
-            <h2 class="page-title" style="padding-top:10px;">{{ resource.title }}</h2>
+            {% ifequal page "layer" %}
+            <h4 style="text-decoration: underline">StoryLayer</h5>
+            {% else %}
+              {% ifequal page "map" %}
+              <h4 style="text-decoration: underline">MapStory</h5>
+              {% endifequal %}
+            {% endifequal %}
+            <h2 class="page-title">{{ resource.title }}</h2>
           </div>
         </div>
         <hr style="margin-top:10px;margin-bottom:10px">
@@ -73,60 +80,25 @@
             {% if resource.keyword_list|length > 5 %}
               <span class="label label-default">{{ resource.keyword_list|length|add:"-5" }} more</span>
             {% endif %}
-            <!-- Temporarily removing add tags
-            <a href="#form_add_tag" data-toggle="modal"><span class="label label-default">+ <span contenteditable="true">add</span></span></a>
-          -->
-            <!-- Modal for adding a tag (WIP) -->
-            {% comment %}
-            <!--
-            {% comment_form resource as form %}
-            <div id="form_add_tag" class="modal-fade" tabindex="-1" role="dialog">
+            <!-- Need to make custom form for tags -->
+            <a href="#addTag" role="button" data-toggle="modal" style="hover: cursor;"><span class="label label-default">+ add</span></a>
+            <div id="addTag" class="modal fade" tabindex="-1" role="dialog">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title">{% trans 'Add Tag' %}</h4>
-                  </div> -->
-                  <!-- TODO: Need to figure out how to add a keyword this way... what should action be?-->
-                  <!--
-                  <form action="{% comment_target resource %}" method="POST" id="form_post_tag">
-                    <div class="modal-body">
-                        {% csrf_token %}
-                        {{ form|as_bootstrap }}
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
-                        <button id="tag_submit_btn" class="btn btn-primary">{% trans 'Add Tag' %}</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div> -->
-            
-            <!--
-            {% comment_form resource as form %}
-            <div id="form_add_tag" class="modal fade" tabindex="-1" role="dialog">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                      <h4 class="modal-title">{% trans 'Add Comment' %}</h4>
-                    </div>
-                    <form action="{% comment_target resource %}" method="POST" id="form_post_comment">
-                      <div class="modal-body">
-                          {% csrf_token %}
-                          {{ form|as_bootstrap }}
-                      </div>
-                      <div class="modal-footer">
-                          <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
-                          <button id="comment_submit_btn" class="btn btn-primary">{% trans 'Submit Comment' %}</button>
-                      </div>
-                    </form>
+                      <h4 class="modal-title">{% trans 'Add Tag' %}</h4>
+                  </div>
+                  <div class="modal-body">
+                      <p>Add some keywords, separated by commas: </p>
+                  </div>
+                  <div class="modal-footer">
+                      <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                      <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">{% trans "Add Tags" %}</button>
                   </div>
                 </div>
+              </div>
             </div>
-          -->
-            {% endcomment %}
 
             <hr style="margin-top:15px;margin-bottom:10px">
             <h3 style="margin-top:0px;margin-bottom:5px;">
