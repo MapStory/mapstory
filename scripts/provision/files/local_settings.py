@@ -24,6 +24,7 @@ HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 MAPSTORY_APPS = (
 
  'mapstory.apps.boxes',
+ 'mapstory.apps.flag', # - temporarily using this instead of the flag app for django because they need to use AUTH_USER_MODEL
 
 )
 
