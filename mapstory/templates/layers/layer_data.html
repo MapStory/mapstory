@@ -27,8 +27,16 @@
             <td width="65%">{{ resource.category }}</td>
           </tr>
           <tr>
+            <td width="35%">Time Range</td>
+            {% if resource.temporal_extent_start and resource.temporal_extent_end %}
+            <td width="65%">{{ resource.temporal_extent_start }} - {{ resource.temporal_extent_end }}</td>
+            {% else %}
+            <td width="65%">No time information.</td>
+            {% endif %}
+          </tr>
+          <tr>
             <td width="35%">Language</td>
-            <td width="65%"><i class="flag flag-us"></i>{% if resource.language_title %}{{ resource.language_title }}{% else %}{{ resource.language }}{% endif %}</td>
+            <td width="65%"><i class="flag flag-us"></i>{{ resource.language }}</td>
           </tr>
           <tr>
             <td width="35%">Data Source</td>
