@@ -60,6 +60,7 @@ def update(branch='master'):
     with cd('/srv/git/mapstory/geonode'):
         sudo('git pull mapstory/geonode {0}'.format(branch), user='mapstory')
     with cd('/srv/git/mapstory/mapstory-geonode'):
+        sudo('git reset --hard', user='mapstory')
         sudo('git pull', user='mapstory')
 
 

@@ -214,7 +214,7 @@
 
                 var el = element[0].querySelector('.box-bounds-map');
 
-                var map = new ol.Map({target: el});
+                var map = new ol.Map({target: el, pixelRatio: 1});
                 map.setView(new ol.View({center: [0, 0], zoom: 3}));
                 map.addLayer(new ol.layer.Tile({source: new ol.source.MapQuest({layer: 'osm'})}));
 
