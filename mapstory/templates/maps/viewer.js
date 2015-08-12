@@ -44,14 +44,37 @@
     });
 
     function MapManager($http, $q, $log, $rootScope, $location,
-        stMapConfigStore, StoryMap, stStoryMapBuilder, stStoryMapBaseBuilder) {
+        StoryPinLayerManager, StoryBoxLayerManager, stMapConfigStore, StoryMap, stStoryMapBuilder, stStoryMapBaseBuilder) {
         this.storyMap = new StoryMap({target: 'map'});
         var self = this;
+        StoryPinLayerManager.storyPinsLayer = this.storyMap.storyPinsLayer;
+        StoryBoxLayerManager.storyBoxesLayer = this.storyMap.storyBoxesLayer;
         this.loadMap = function(options) {
             options = options || {};
             if (options.id) {
                 //var config = stMapConfigStore.loadConfig(options.id);
                 stStoryMapBuilder.modifyStoryMap(self.storyMap, options);
+
+                 var boxesURL = "/maps/" + options.id + "/boxes";//options.url.replace('/data','/boxes');
+                if (boxesURL.slice(-1) === '/') {
+                    boxesURL = boxesURL.slice(0, -1);
+                }
+                var boxesLoad = $http.get(boxesURL);
+
+                var annotationsURL = "/maps/" + options.id + "/annotations";//options.url.replace('/data','/annotations');
+                if (annotationsURL.slice(-1) === '/') {
+                    annotationsURL = annotationsURL.slice(0, -1);
+                }
+                var annotationsLoad = $http.get(annotationsURL);
+                $q.all([mapLoad, boxesLoad, annotationsLoad]).then(function(values) {
+                    var boxes_geojson = values[1].data;
+                    StoryBoxLayerManager.loadFromGeoJSON(boxes_geojson, self.storyMap.getMap().getView().getProjection());
+
+                    var pins_geojson = values[2].data;
+                    StoryPinLayerManager.loadFromGeoJSON(pins_geojson, self.storyMap.getMap().getView().getProjection());
+                });
+
+
             } else if (options.url) {
                 var mapLoad = $http.get(options.url).success(function(data) {
                     stStoryMapBuilder.modifyStoryMap(self.storyMap, data);
@@ -61,6 +84,27 @@
                         stStoryMapBaseBuilder.defaultMap(self.storyMap);
                     }
                 });
+
+                var boxesURL = options.url.replace('/data','/boxes');
+                if (boxesURL.slice(-1) === '/') {
+                    boxesURL = boxesURL.slice(0, -1);
+                }
+                var boxesLoad = $http.get(boxesURL);
+
+                var annotationsURL = options.url.replace('/data','/annotations');
+                if (annotationsURL.slice(-1) === '/') {
+                    annotationsURL = annotationsURL.slice(0, -1);
+                }
+                var annotationsLoad = $http.get(annotationsURL);
+                $q.all([mapLoad, boxesLoad, annotationsLoad]).then(function(values) {
+                    var boxes_geojson = values[1].data;
+                    StoryBoxLayerManager.loadFromGeoJSON(boxes_geojson, self.storyMap.getMap().getView().getProjection());
+
+                    var pins_geojson = values[2].data;
+                    StoryPinLayerManager.loadFromGeoJSON(pins_geojson, self.storyMap.getMap().getView().getProjection());
+                });
+
+
             } else {
                 stStoryMapBaseBuilder.defaultMap(this.storyMap);
             }

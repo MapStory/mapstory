@@ -1,269 +1,6 @@
 (function() {
     'use strict';
 
-    var module = angular.module('storytools.core.boxes', ['storytools.core.time.services']);
-
-    var boxes = storytools.core.maps.boxes;
-    var utils = storytools.core.time.utils;
-
-    function StoryBoxLayerManager() {
-        this.storyBoxes = [];
-    }
-    StoryBoxLayerManager.prototype.boxesChanged = function(boxes, action) {
-        var i;
-        if (action == 'delete') {
-            for (i = 0; i < boxes.length; i++) {
-                var box = boxes[i];
-                for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
-                    if (this.storyBoxes[j].id == box.id) {
-                        this.storyBoxes.splice(j, 1);
-                        break;
-                    }
-                }
-            }
-        } else if (action == 'add') {
-
-            var maxId = 0;
-            this.storyBoxes.forEach(function(b) {
-                maxId = Math.max(maxId, b.id);
-            });
-
-            for (i = 0; i < boxes.length; i++) {
-
-                var box = boxes[i];
-
-                if (typeof box.id == 'undefined' || box.id == null) {
-                        box.id = ++maxId;
-                }
-
-                this.storyBoxes.push(box);
-            }
-        } else if (action == 'change') {
-            // provided edits could be used to optimize below
-            for (i = 0; i < boxes.length; i++) {
-                var box = boxes[i];
-                for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
-                    if (this.storyBoxes[j].id == box.id) {
-                        this.storyBoxes[j]= box;
-                        break;
-                    }
-                }
-                  console.log(boxes[i]);
-            }
-
-        } else {
-            throw new Error('action? :' + action);
-        }
-        // @todo optimize by looking at changes
-        var times = this.storyBoxes.map(function(p) {
-            if (p.start_time > p.end_time) {
-                return storytools.core.utils.createRange(p.end_time, p.start_time);
-            } else {
-                return storytools.core.utils.createRange(p.start_time, p.end_time);
-            }
-        });
-
-
-        console.log("Box times: " + times);
-        //this.storyBoxesLayer = this.storyBoxes;
-
-        this.storyBoxesLayer.set('times', times);
-        this.storyBoxesLayer.set('features', this.storyBoxes);
-    };
-
-
-    StoryBoxLayerManager.prototype.load = function(boxList) {
-        if (boxList) {
-            this.boxesChanged(boxList, 'add', true);
-        }
-    };
-
-
-    StoryBoxLayerManager.prototype.loadFromGeoJSON = function(geojson, projection) {
-        if (geojson && geojson.features) {
-            var loaded = boxes.loadFromGeoJSON(geojson, projection);
-            this.boxesChanged(loaded, 'add', true);
-            //var loaded = [];
-
-            //geojson.features.forEach(function(a) {
-                //a.properties['id'] = a.id;
-              //  loaded.push(new boxes.Box(a.properties));
-            //});
-
-            //this.boxesChanged(loaded, 'add', true);
-        }
-    };
-
-    module.service('StoryBoxLayerManager', StoryBoxLayerManager);
-
-    module.constant('StoryBox', boxes.Box);
-
-
-    module.service('stBoxesStore', ['$http', function($http, StoryBoxLayerManager, TimeMachine) {
-        function path(mapid) {
-            return '/maps/' + mapid + '/boxes';
-        }
-        function get(mapid) {
-            var saved = $http.get(path(mapid));//localStorage.getItem(path(mapid));
-            saved = (saved === null) ? null : JSON.parse(saved);
-
-            return saved;
-        }
-        function set(mapid, boxes) {
-
-            localStorage.setItem(path(mapid),angular.toJson(boxes));
-
-        }
-        return {
-            loadBoxes: function(mapid, storyMap) {
-                return StoryBoxLayerManager.loadFromGeoJSON(get(mapid), projection);
-
-                //var boxes = get(mapid);
-
-                //var range = TimeMachine.computeTicks(storyMap);
-
-                //return (boxes === null)? this.createBoxes({'data' :range}) : boxes;
-            },
-            createBoxes: function(options){
-
-                var totalRange;
-
-                // make a default box if none provided
-                //if (typeof boxes == 'undefined' || boxes.length === 0) {
-                    var interval = 0, data = null;
-                    if (Array.isArray(options.data)) {
-                        data = options.data;
-                        totalRange = utils.computeRange(options.data);
-                    } else {
-                        interval = options.data.interval || utils.pickInterval(options.data);
-                        totalRange = options.data;
-                    }
-                    boxes = [{
-                        title: 'Default StoryBox Chapter',
-                        description: 'No description.',
-                        data: data,
-                        range: totalRange,
-                        speed: {
-                            interval: interval,
-                            seconds: 3
-                        }
-                    }];
-
-
-                return boxes;
-                //}
-
-            },
-            deleteBoxes: function(boxes) {
-                var saved = get();
-                var toDelete = boxes.map(function(d) {
-                    return d.id;
-                });
-                saved = saved.filter(function(s) {
-                    return toDelete.indexOf(s.id) < 0;
-                });
-                set(saved);
-            },
-            saveBoxes: function(mapid, boxes) {
-
-                var clones = [];
-                boxes.forEach(function(a) {
-                    if (typeof a.id == 'undefined') {
-                        a.id = ++maxId;
-                    }
-                    var clone = a;
-                    if (a.start_time !== undefined) {
-                        clone.start_time = a.start_time;// /1000;
-                    }
-                    if (a.end_time !== undefined) {
-                        clone.end_time = a.end_time;// /1000;
-                    }
-
-                    var item = angular.toJson(clone);
-
-                    clones.push({"properties" : JSON.parse(item)});
-                });
-
-
-                //var boxes_geojson = new ol.format.GeoJSON().writeFeatures(clones,
-                //        +                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'});
-
-
-                var boxes_geojson = { "type" : "FeatureCollection", "features": clones };
-
-                return $http.post(path(mapid), boxes_geojson);
-            }
-        };
-    }]);
-
-})();
-
-
-(function() {
-    'use strict';
-
-    var module = angular.module('storytools.core.mapstory', [
-    ]);
-
-    // @todo naive implementation on local storage for now
-    module.service('stMapConfigStore', function() {
-        function path(mapid) {
-            return '/maps/' + mapid;
-        }
-        function get(mapid) {
-            var saved = localStorage.getItem(path(mapid));
-            saved = (saved === null) ? {} : angular.fromJson(saved);
-            return saved;
-        }
-        function set(mapConfig) {
-            localStorage.setItem(path(mapConfig.id), angular.toJson(mapConfig));
-        }
-        function list() {
-            var maps = [];
-            var pattern = new RegExp('/maps/(\\d+)$');
-            Object.getOwnPropertyNames(localStorage).forEach(function(key) {
-                var match = pattern.exec(key);
-                if (match) {
-                    // name/title eventually
-                    maps.push({
-                        id: match[1]
-                    });
-                }
-            });
-            return maps;
-        }
-        function nextId() {
-            var lastId = 0;
-            var existing = list().map(function(m) {
-                return m.id;
-            });
-            existing.sort();
-            if (existing.length) {
-                lastId = parseInt(existing[existing.length - 1]);
-            }
-            return lastId + 1;
-        }
-        return {
-            listMaps: function() {
-                return list();
-            },
-            loadConfig: function(mapid) {
-                return get(mapid);
-            },
-            saveConfig: function(mapConfig) {
-                if (!angular.isDefined(mapConfig.id)) {
-                    mapConfig.id = nextId();
-                }
-                set(mapConfig);
-            }
-        };
-    });
-
-})();
-
-(function() {
-    'use strict';
-
     var module = angular.module('storytools.core.ogc', [
     ]);
 
@@ -889,6 +626,13 @@
                     var layerConfig = mapConfig.map.layers[i];
                     if (layerConfig.group === 'background' && layerConfig.visibility === true) {
                         stStoryMapBaseBuilder.setBaseLayer(storymap, layerConfig);
+                    }else if(layerConfig.group === undefined && layerConfig.id === undefined
+                        && layerConfig.title === undefined && layerConfig.name == undefined){
+
+                          console.log("WARNING: Something is wrong with this layer.");
+                          console.log(layerConfig);
+
+
                     } else {
                         /*jshint loopfunc: true */
                         stLayerBuilder.buildLayer(layerConfig, storymap.getMap()).then(function(sl) {
@@ -949,6 +693,68 @@
             }
         };
     }]);
+
+})();
+
+(function() {
+    'use strict';
+
+    var module = angular.module('storytools.core.mapstory', [
+    ]);
+
+    // @todo naive implementation on local storage for now
+    module.service('stMapConfigStore', function() {
+        function path(mapid) {
+            return '/maps/' + mapid;
+        }
+        function get(mapid) {
+            var saved = localStorage.getItem(path(mapid));
+            saved = (saved === null) ? {} : angular.fromJson(saved);
+            return saved;
+        }
+        function set(mapConfig) {
+            localStorage.setItem(path(mapConfig.id), angular.toJson(mapConfig));
+        }
+        function list() {
+            var maps = [];
+            var pattern = new RegExp('/maps/(\\d+)$');
+            Object.getOwnPropertyNames(localStorage).forEach(function(key) {
+                var match = pattern.exec(key);
+                if (match) {
+                    // name/title eventually
+                    maps.push({
+                        id: match[1]
+                    });
+                }
+            });
+            return maps;
+        }
+        function nextId() {
+            var lastId = 0;
+            var existing = list().map(function(m) {
+                return m.id;
+            });
+            existing.sort();
+            if (existing.length) {
+                lastId = parseInt(existing[existing.length - 1]);
+            }
+            return lastId + 1;
+        }
+        return {
+            listMaps: function() {
+                return list();
+            },
+            loadConfig: function(mapid) {
+                return get(mapid);
+            },
+            saveConfig: function(mapConfig) {
+                if (!angular.isDefined(mapConfig.id)) {
+                    mapConfig.id = nextId();
+                }
+                set(mapConfig);
+            }
+        };
+    });
 
 })();
 
@@ -1719,3 +1525,204 @@
         };
     });
 })();
+
+(function() {
+    'use strict';
+
+    var module = angular.module('storytools.core.boxes', ['storytools.core.time.services']);
+
+    var boxes = storytools.core.maps.boxes;
+    var utils = storytools.core.time.utils;
+
+    function StoryBoxLayerManager() {
+        this.storyBoxes = [];
+    }
+    StoryBoxLayerManager.prototype.boxesChanged = function(boxes, action) {
+        var i;
+        if (action == 'delete') {
+            for (i = 0; i < boxes.length; i++) {
+                var box = boxes[i];
+                for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
+                    if (this.storyBoxes[j].id == box.id) {
+                        this.storyBoxes.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+        } else if (action == 'add') {
+
+            var maxId = 0;
+            this.storyBoxes.forEach(function(b) {
+                maxId = Math.max(maxId, b.id);
+            });
+
+            for (i = 0; i < boxes.length; i++) {
+
+                var box = boxes[i];
+
+                if (typeof box.id == 'undefined' || box.id == null) {
+                        box.id = ++maxId;
+                }
+
+                this.storyBoxes.push(box);
+            }
+        } else if (action == 'change') {
+            // provided edits could be used to optimize below
+            for (i = 0; i < boxes.length; i++) {
+                var box = boxes[i];
+                for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
+                    if (this.storyBoxes[j].id == box.id) {
+                        this.storyBoxes[j]= box;
+                        break;
+                    }
+                }
+                  console.log(boxes[i]);
+            }
+
+        } else {
+            throw new Error('action? :' + action);
+        }
+        // @todo optimize by looking at changes
+        var times = this.storyBoxes.map(function(p) {
+            if (p.start_time > p.end_time) {
+                return storytools.core.utils.createRange(p.end_time, p.start_time);
+            } else {
+                return storytools.core.utils.createRange(p.start_time, p.end_time);
+            }
+        });
+
+
+        console.log("Box times: " + times);
+        //this.storyBoxesLayer = this.storyBoxes;
+
+        this.storyBoxesLayer.set('times', times);
+        this.storyBoxesLayer.set('features', this.storyBoxes);
+    };
+
+
+    StoryBoxLayerManager.prototype.load = function(boxList) {
+        if (boxList) {
+            this.boxesChanged(boxList, 'add', true);
+        }
+    };
+
+
+    StoryBoxLayerManager.prototype.loadFromGeoJSON = function(geojson, projection) {
+        if (geojson && geojson.features) {
+            var loaded = boxes.loadFromGeoJSON(geojson, projection);
+            this.boxesChanged(loaded, 'add', true);
+            //var loaded = [];
+
+            //geojson.features.forEach(function(a) {
+                //a.properties['id'] = a.id;
+              //  loaded.push(new boxes.Box(a.properties));
+            //});
+
+            //this.boxesChanged(loaded, 'add', true);
+        }
+    };
+
+    module.service('StoryBoxLayerManager', StoryBoxLayerManager);
+
+    module.constant('StoryBox', boxes.Box);
+
+
+    module.service('stBoxesStore', ['$http', function($http, StoryBoxLayerManager, TimeMachine) {
+        function path(mapid) {
+            return '/maps/' + mapid + '/boxes';
+        }
+        function get(mapid) {
+            var saved = $http.get(path(mapid));//localStorage.getItem(path(mapid));
+            saved = (saved === null) ? null : JSON.parse(saved);
+
+            return saved;
+        }
+        function set(mapid, boxes) {
+
+            localStorage.setItem(path(mapid),angular.toJson(boxes));
+
+        }
+        return {
+            loadBoxes: function(mapid, storyMap) {
+                return StoryBoxLayerManager.loadFromGeoJSON(get(mapid), projection);
+
+                //var boxes = get(mapid);
+
+                //var range = TimeMachine.computeTicks(storyMap);
+
+                //return (boxes === null)? this.createBoxes({'data' :range}) : boxes;
+            },
+            createBoxes: function(options){
+
+                var totalRange;
+
+                // make a default box if none provided
+                //if (typeof boxes == 'undefined' || boxes.length === 0) {
+                    var interval = 0, data = null;
+                    if (Array.isArray(options.data)) {
+                        data = options.data;
+                        totalRange = utils.computeRange(options.data);
+                    } else {
+                        interval = options.data.interval || utils.pickInterval(options.data);
+                        totalRange = options.data;
+                    }
+                    boxes = [{
+                        title: 'Default StoryBox Chapter',
+                        description: 'No description.',
+                        data: data,
+                        range: totalRange,
+                        speed: {
+                            interval: interval,
+                            seconds: 3
+                        }
+                    }];
+
+
+                return boxes;
+                //}
+
+            },
+            deleteBoxes: function(boxes) {
+                var saved = get();
+                var toDelete = boxes.map(function(d) {
+                    return d.id;
+                });
+                saved = saved.filter(function(s) {
+                    return toDelete.indexOf(s.id) < 0;
+                });
+                set(saved);
+            },
+            saveBoxes: function(mapid, boxes) {
+
+                var clones = [];
+                boxes.forEach(function(a) {
+                    if (typeof a.id == 'undefined') {
+                        a.id = ++maxId;
+                    }
+                    var clone = a;
+                    if (a.start_time !== undefined) {
+                        clone.start_time = a.start_time;// /1000;
+                    }
+                    if (a.end_time !== undefined) {
+                        clone.end_time = a.end_time;// /1000;
+                    }
+
+                    var item = angular.toJson(clone);
+
+                    clones.push({"properties" : JSON.parse(item)});
+                });
+
+
+                //var boxes_geojson = new ol.format.GeoJSON().writeFeatures(clones,
+                //        +                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'});
+
+
+                var boxes_geojson = { "type" : "FeatureCollection", "features": clones };
+
+                return $http.post(path(mapid), boxes_geojson);
+            }
+        };
+    }]);
+
+})();
+
