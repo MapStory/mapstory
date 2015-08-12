@@ -7,6 +7,7 @@
         'storytools.core.time',
         'storytools.core.mapstory',
         'storytools.core.pins',
+        'storytools.core.boxes',
         'storytools.core.ogc',
         'ui.bootstrap'
     ]);
