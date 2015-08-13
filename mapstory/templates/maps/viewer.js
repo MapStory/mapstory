@@ -164,8 +164,11 @@
         });
     });
 
-    module.controller('viewerController', function($scope, $injector, TimeControlsManager) {
+    module.controller('viewerController', function($scope, $injector, MapManager, TimeControlsManager) {
         $scope.timeControlsManager = $injector.instantiate(TimeControlsManager);
+        $scope.mapManager = MapManager;
+        $scope.storyTitle = MapManager.storyMap.getStoryTitle();
+        $scope.storyAuthor = MapManager.storyMap.getStoryTitle();
         $scope.playbackOptions = {
             mode: 'instant',
             fixed: false

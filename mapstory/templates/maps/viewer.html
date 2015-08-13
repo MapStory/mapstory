@@ -40,9 +40,13 @@
         height: 100%;
     }
 
+    .noUi-handle{
+        background-color: black;
+    }
+
     #footer {
         display: table-row;
-        background-color: white;
+        background-color: #ccc;
     }
     #content {
         display: table;
@@ -67,19 +71,45 @@
     .ol-zoom {
         right: .5em;
         left: auto;
+        top:3.5em;
     }
     .ol-attribution {
-        top: 4.5em;
+        top: 7.5em;
         bottom: auto;
     }
     #time-controls-panel2 {
         padding: 1px 16px;
     }
+
+    #storyHeader{
+        height: 54px;
+        color: white;
+        padding: 8px;
+        width: 100%;
+        position: absolute;
+        top: 61px;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+    }
+
+    #storyTitle{
+        font-weight: 600;
+
+    }
+
+    #storyAuthor{
+        font-size: small;
+    }
+
 </style>
 <div ng-app="viewer" ng-controller="viewerController as viewer"id="container">
     <div id="main">
         <div id="content">
             <div id="middle">
+                <div id="storyHeader">
+                    <div id="storyTitle" ng-bind="storyTitle"></div>
+                    <div id="storyAuthor" ng-bind="storyAuthor"></div>
+                </div>
                 <div id="map"></div>
             </div>
         </div>

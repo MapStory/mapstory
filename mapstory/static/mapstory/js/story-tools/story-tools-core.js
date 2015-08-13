@@ -1205,7 +1205,7 @@ exports.TimeSlider = function(id, model) {
         var range = slider.val();
         if (! Array.isArray(range)) {
 
-            if(range == ""){
+            if(range === ""){
                 range = 0.00;
             }
 
