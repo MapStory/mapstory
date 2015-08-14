@@ -259,6 +259,7 @@
         });
         this.title = "Default Mapstory";
         this.abstract = "No Information Supplied.";
+        this.owner = "Unknown";
 
         this.storyLayers_ = new ol.Collection();
         this.animationDuration_ = data.animationDuration || 500;
@@ -301,6 +302,14 @@
        this.abstract =  storyAbstract;
     };
 
+    StoryMap.prototype.setStoryOwner = function(storyOwner) {
+       this.owner =  storyOwner;
+    };
+
+
+    StoryMap.prototype.getStoryOwner = function() {
+       return this.owner;
+    };
 
     StoryMap.prototype.getStoryTitle = function() {
        return this.title;
@@ -856,6 +865,9 @@
                 var mapConfig = storytools.mapstory.MapConfigTransformer.MapConfigTransformer(data);
                 if (mapConfig.id >= 0) {
                     storymap.set('id', mapConfig.id);
+                    storymap.setStoryTitle(mapConfig.about.title);
+                    storymap.setStoryAbstract(mapConfig.about.abstract);
+                    storymap.setStoryOwner(mapConfig.about.owner);
                 }
                 for (var i = 0, ii = mapConfig.map.layers.length; i < ii; ++i) {
                     var layerConfig = mapConfig.map.layers[i];

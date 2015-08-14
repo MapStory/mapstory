@@ -88,7 +88,7 @@
         width: 100%;
         position: absolute;
         top: 61px;
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(11, 11, 11, 0.6);
         z-index: 9999;
     }
 
@@ -101,14 +101,28 @@
         font-size: small;
     }
 
+
+    #time-controls-panel2{
+        background: rgba(11, 11, 11, 0.6);
+    }
+
+    #timeline{
+        background-color: #ccc;
+    }
+
+    #slider{
+        width:50%;
+        float:right;
+    }
+
 </style>
 <div ng-app="viewer" ng-controller="viewerController as viewer"id="container">
     <div id="main">
         <div id="content">
             <div id="middle">
                 <div id="storyHeader">
-                    <div id="storyTitle" ng-bind="storyTitle"></div>
-                    <div id="storyAuthor" ng-bind="storyAuthor"></div>
+                    <div id="storyTitle" ng-bind="mapManager.storyMap.getStoryTitle()"></div>
+                    <div id="storyAuthor" ng-bind="mapManager.storyMap.getStoryOwner()"></div>
                 </div>
                 <div id="map"></div>
             </div>
@@ -116,12 +130,13 @@
     </div>
     <div id="footer" class='floating-below' ng-show="timeControlsManager.timeControls">
         <div id="time-controls-panel2">
-            <div id="slider"></div>
+
             <div class="navbar" style="margin:5px 0 0; min-height: auto" ng-controller="tileProgressController">
                 <st-playback-controls class="pull-left" time-controls="timeControlsManager.timeControls"></st-playback-controls>
-                <progressbar animate="false" style="width: 15%; margin:6px 0; font-size:14px" class="navbar-nav navbar-right" value="tilesLoadedProgress"><b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad" style="color:black"></b></progressbar>
+                <div id="slider"></div>
+                <progressbar ng-show="false" animate="false" style="width: 15%; margin:6px 0; font-size:14px" class="navbar-nav navbar-right" value="tilesLoadedProgress"><b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad" style="color:black"></b></progressbar>
             </div>
-            <div id="timeline"></div>
+            <div id="timeline" ng-show="false"></div>
         </div>
     </div>
 </div>
