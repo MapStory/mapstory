@@ -154,7 +154,7 @@
             var deferred = $q.defer();
             var self = this;
             var config = this.storyMap.getState();
-            config.boxes = StoryBoxLayerManager.storyBoxes;
+            //config.boxes = StoryBoxLayerManager.storyBoxes;
 
             var end_point = '/maps/new/data';
 
@@ -336,8 +336,8 @@
 
                         if (results) {
 
-                            angular.forEach(results, function(layerName) {
-                                       MapManager.addLayer(layerName,false, servers[0]);
+                            angular.forEach(results, function(layer) {
+                                       MapManager.addLayer(layer.typename,false, servers[0], true, '', layer.title);
                             });
                         }
                     });
@@ -493,20 +493,17 @@
             scope.result_select = function($event, layer){
                 var element = $($event.target);
 
-                //TODO: would prefer to call layer.name but arg is base_resourcebase
-                //instead need to parse the name from the url
+                //var layerName = decodeURIComponent(layer.detail_url);
 
-                var layerName = decodeURIComponent(layer.detail_url);
-
-                if(layerName.indexOf('/layers/') > -1){
-                    layerName = layerName.replace("/layers/","");
-                }
+                //if(layerName.indexOf('/layers/') > -1){
+                  //  layerName = layerName.replace("/layers/","");
+                //}
 
 
                 var box = $(element.parents('.box')[0]);
 
                 if (box.hasClass('resource_selected')){
-                    var index = scope.choices.indexOf(layerName);
+                    var index = scope.choices.indexOf(layer);
 
                     if (index > -1) {
                         scope.choices.splice(index, 1);
@@ -516,7 +513,7 @@
                     box.removeClass('resource_selected');
                 }
                 else{
-                    scope.choices.push(layerName);
+                    scope.choices.push(layer);
                     element.html('Deselect');
                     box.addClass('resource_selected');
                 }
@@ -569,8 +566,6 @@
             MapManager.saveMap();
         };
         $scope.newMap = function() {
-           // $location.path('/new');
-
             var promise = loadNewMapDialog.show();
             promise.then(function(config) {
                     MapManager.storyMap.setMetadata(config);
