@@ -42,9 +42,10 @@ class FlagInstance(models.Model):
     when_added = models.DateTimeField(default=datetime.now)
     when_recalled = models.DateTimeField(null=True)  # if recalled at all
     comment = models.TextField()  # comment by the flagger
+    flag_type = models.CharField(max_length=32, blank=True, null=True)
 
 
-def add_flag(flagger, content_type, object_id, content_creator, comment, status=None):
+def add_flag(flagger, content_type, object_id, content_creator, comment, status=None, flag_type=None):
 
     # check if it's already been flagged
     defaults = dict(creator=content_creator)
@@ -65,7 +66,8 @@ def add_flag(flagger, content_type, object_id, content_creator, comment, status=
     flag_instance = FlagInstance(
         flagged_content=flagged_content,
         user=flagger,
-        comment=comment
+        comment=comment,
+        flag_type=flag_type
     )
     flag_instance.save()
 

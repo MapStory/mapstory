@@ -73,6 +73,8 @@ urlpatterns = patterns('',
     url(r'^favorite/', include('geonode.contrib.favorite.urls')),
     url(r'^layers/(?P<layername>[^/]*)/upload/metadata$', layer_metadata, name="layer_upload_metadata", kwargs={'template':'upload/layer_upload_metadata.html'}),
 
+    url(r"^flag/", include('mapstory.apps.flag.urls')),
+
 ) + urlpatterns
 
 urlpatterns += maploom_urls

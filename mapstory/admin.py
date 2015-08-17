@@ -11,6 +11,8 @@ from mapstory.models import Leader
 from mapstory.models import ParallaxImage
 from mapstory.models import Task
 
+from mapstory.apps.flag import admin as flag_admin
+
 def content_html(obj):
     return obj.html()
 content_html.allow_tags = True
@@ -93,6 +95,10 @@ class ParallaxImageAdmin(admin.ModelAdmin):
     model = ParallaxImage
     list_display = 'name',
 
+flag_admin.register_group_to_flag_types(
+    ('dev_moderator', 'broken'),
+    ('content_moderator', 'inappropriate')
+)
 
 admin.site.register(GetPage, GetPageAdmin)
 admin.site.register(GetPageContent, GetPageContentAdmin)
