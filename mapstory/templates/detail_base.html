@@ -80,7 +80,6 @@
             {% if resource.keyword_list|length > 5 %}
               <span class="label label-default">{{ resource.keyword_list|length|add:"-5" }} more</span>
             {% endif %}
-            <!-- Need to make custom form for tags -->
             <a href="#addTag" role="button" data-toggle="modal" style="hover: cursor;"><span class="label label-default">+ add</span></a>
             <div id="addTag" class="modal fade" tabindex="-1" role="dialog">
               <div class="modal-dialog">
@@ -89,13 +88,16 @@
                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                       <h4 class="modal-title">{% trans 'Add Tag' %}</h4>
                   </div>
-                  <div class="modal-body">
-                      <p>Add some keywords, separated by commas: </p>
-                  </div>
-                  <div class="modal-footer">
-                      <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
-                      <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">{% trans "Add Tags" %}</button>
-                  </div>
+                  <form name="keywords_form" method="POST" id="form_post_tag" action="{{ resource.detail_url }}">
+                    <div class="modal-body">
+                      {% csrf_token %}
+                      {{ keywords_form|as_bootstrap }}
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                        <button class="btn btn-primary" aria-hidden="true" id="tag_submit_btn" type="submit">{% trans "Add Tags" %}</button>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
