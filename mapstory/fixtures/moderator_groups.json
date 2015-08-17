@@ -1,0 +1,49 @@
+[{
+        "pk": 1,
+        "model": "auth.group",
+        "fields": {
+            "name": "dev_moderator",
+            "permissions": [
+                [
+                    "add_flaginstance",
+                    "flag",
+                    "flaginstance"
+                ],
+                [
+                    "change_flaginstance",
+                    "flag",
+                    "flaginstance"
+                ],
+                [
+                    "delete_flaginstance",
+                    "flag",
+                    "flaginstance"
+                ]
+            ]
+        }
+    },
+    {
+        "pk": 2,
+        "model": "auth.group",
+        "fields": {
+            "name": "content_moderator",
+            "permissions": [
+                [
+                    "add_flaginstance",
+                    "flag",
+                    "flaginstance"
+                ],
+                [
+                    "change_flaginstance",
+                    "flag",
+                    "flaginstance"
+                ],
+                [
+                    "delete_flaginstance",
+                    "flag",
+                    "flaginstance"
+                ]
+            ]
+        }
+    }
+]

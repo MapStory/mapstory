@@ -1,3 +1,6 @@
+{% load i18n %}
+{% load mapstory_tags %}
+{% load flag_tags %}
 <div class="col-sm-3" style="border-left:1px solid gainsboro">
   <div style="text-align:right">
     <a href="{% url "new_map" %}?layer={{resource.service_typename}}" >
@@ -19,10 +22,43 @@
   </div>
   <hr style="margin:5px">
   <div style="text-align:right">
-    <a title="" href="#" target="blank">
-      <!-- TODO: Need to hook up functionality for flagging; presumably a modal spawns? -->
+    <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">
       <span style="font-size:1.3em;color:gainsboro">flag</span>
     </a>
+    <div id="flag" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h4 class="modal-title">{% trans 'Flag Content' %}</h4>
+          </div>
+          <div class="modal-body">
+            <p>What's wrong?</p>
+            <ul>
+                <li>
+                    <input type='radio' name='flag_type' value="broken" id='id_broken'><label for='id_broken'>Broken</label>
+                </li>
+                <li>
+                    <input type='radio' name='flag_type' value="inappropriate" id='id_inappropriate'><label for='id_inappropriate'>Inappropriate</label>
+                </li>
+                <li>
+                    <input type='radio' name='flag_type' value="missing_metadata" id='id_missing_metadata'><label for='id_missing_metadata'>Missing metadata</label>
+                </li>
+                <li>
+                    <input type='radio' name='flag_type' value="violates_terms" id='id_violates_terms'><label for='id_violates_terms'>Violates terms</label>
+                </li>
+                <li>
+                    <input type='radio' name='flag_type' value="other" id='id_other'><label for='id_other'>Other issue</label>
+                </li>
+            </ul>
+            {% flag resource 'owner' %}
+          </div>
+          <div class="modal-footer">
+              <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

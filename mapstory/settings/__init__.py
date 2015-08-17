@@ -69,7 +69,8 @@ INSTALLED_APPS += (
     'icon_commons',
     'maploom',
     'geonode.contrib.favorite',
-    'haystack'
+    'haystack',
+    'mailer',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS += (
