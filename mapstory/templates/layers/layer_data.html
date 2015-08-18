@@ -36,7 +36,7 @@
           </tr>
           <tr>
             <td width="35%">Language</td>
-            <td width="65%"><i class="flag flag-us"></i>{{ resource.language }}</td>
+            <td width="65%"><i class="flag flag-us"></i>{% if resource.language %}{{ resource.language_title }}{% else %}No language information.{% endif %}</td>
           </tr>
           <tr>
             <td width="35%">Data Source</td>
