@@ -54,88 +54,15 @@
       </div>
       <div class="tab-pane" id="Edits">
         <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-          <table class="table table-condensed">
-        <tr>
-          <td>
-            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Annie Butler</h2>
-          </td>
-          <td>
-            <i class="flag flag-us"></i> 
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Victor Reed</h2>
-          </td>
-          <td>
-            <i class="flag flag-ph"></i> 
-          </td>
-        </tr> 
-        <tr>
-          <td>
-            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Charles Johnson</h2>
-          </td>
-          <td>
-            <i class="flag flag-gb"></i> 
-          </td>
-        </tr> 
-        <tr>
-          <td>
-            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Evelyn Baker</h2>
-          </td>
-          <td>
-            <i class="flag flag-fr"></i> 
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Shawn Rivera</h2>
-          </td>
-          <td>
-            <i class="flag flag-de"></i> 
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Adam Russell</h2>
-          </td>
-          <td>
-            <i class="flag flag-at"></i> 
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Russell Lee</h2>
-          </td>
-          <td>
-            <i class="flag flag-it"></i> 
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Joe Kelly</h2>
-          </td>
-          <td>
-            <i class="flag flag-jp"></i> 
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Benjamin Wright</h2>
-          </td>
-          <td>
-            <i class="flag flag-cn"></i> 
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <h2 style="margin:0px"><img class="img-circle" src="images/avatar.jpg" width="30"> Jimmy Washington</h2>
-          </td>
-          <td>
-            <i class="flag flag-ca"></i> 
-          </td>
-        </tr>
-      </table>
+          {% if GEOGIG_ENABLED and resource.link_set.geogig %}
+            {% with "_geogig_layer_detail.html" as geogig_template %}
+            <article id="geogig" class="tab-pane">
+              {% with resource as obj %}
+                {% include geogig_template %}
+              {% endwith %}
+            </article>
+            {% endwith %}
+          {% endif %}
         </div>
       </div>
       <div class="tab-pane" id="Download">
