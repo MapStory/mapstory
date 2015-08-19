@@ -78,8 +78,6 @@ exports.loadFromGeoJSON = function(geojson, projection) {
         props.id = f.id;
         props.start_time = getTime(props, 'start_time');
         props.end_time = getTime(props, 'end_time');
-        props.description = f.description;
-        props.title = f.title;
         return new Box(props, projection);
     });
 };
@@ -152,6 +150,14 @@ Box.prototype.getDate = function(idx) {
     return this.data ? this.data[idx] : this.get('range').start + (idx * this.get('speed').interval);
 };
 
+Box.prototype.getBox = function(instant){
+
+        var index = this.data ? utils.find(this.data, instant) :
+        Math.floor(Math.min(this.get('range').width(), Math.max(0, instant - this.get('range').start)) / this.get('speed').interval);
+
+        return this.data[index];
+};
+
 function findBox(boxes, idx) {
     var i, ii;
     var box;
@@ -198,6 +204,26 @@ exports.BoxModel = function(boxArray) {
         var start = findBox(boxes, s);
         var end = findBox(boxes, e);
         return utils.createRange(start.getDate(s), end.getDate(e));
+    };
+    this.getBox = function(instant) {
+        var idx = 0, i;
+        if (instant < boxes[0].get('range').start) {
+            return 0;
+        }
+        for (i = 0; i < boxes.length; i++) {
+            var box = boxes[i];
+            var range = box.get('range');
+            if (instant >= range.start && instant <= range.end) {
+                //idx += box.getIndex(instant);
+                //why not just return the index of the box since we know it?
+                idx = i;//box.getIndex(instant);
+
+                break;
+            } else {
+                idx += box.getSteps();
+            }
+        }
+        return boxes[idx];
     };
     this.getIndex = function(instant) {
         var idx = 0, i;
@@ -405,6 +431,11 @@ function TimeController(model, slider, timeline, controls) {
     this.getCurrentRange = function() {
         return slider.getRange();
     };
+
+    this.getCurrentBox = function(){
+      return model.getBox(slider.getRange().start);
+    };
+
     this.update = function(options) {
         model.update(options);
         slider.update(model);
@@ -592,7 +623,7 @@ exports.TimeLine = function(id, model) {
                 id: ann.id,
                 start: start,
                 end: end,
-                content: ann.content || ann.title,
+                content: ann.title,//ann.content || ann.title,
                 title: ann.title,
                 type: type
             };
@@ -1033,6 +1064,9 @@ exports.TimeModel = function(options, boxes, annotations) {
     };
     this.getIndex = function(instant) {
         return this.boxModel.getIndex(instant);
+    };
+    this.getBox = function(instant) {
+        return this.boxModel.getBox(instant);
     };
     this.getRangeAt = function(i, j) {
         return this.boxModel.getRangeAt(i, j);

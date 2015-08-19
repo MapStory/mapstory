@@ -86,7 +86,7 @@
                           <accordion close-others="true">
                             <accordion-group ng-repeat="layer in mapManager.storyMap.getStoryLayers().getArray()" is-open="accordianOpen" ng-init="accordianOpen = $first">
                                   <accordion-heading>
-                                        {{layer.get('name')}}
+                                        {{layer.get('title')}}
 
                                   </accordion-heading>
                                 <!-- to reduce watchers, add ng-if=accordianOpen -->

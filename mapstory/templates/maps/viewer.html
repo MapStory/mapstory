@@ -22,109 +22,213 @@
 {% include 'maps/viewer.js' %}
 <script src="http://localhost:35729/livereload.js"></script>
 <style type="text/css">
-    html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
 
-    #container {
-        display: table;
-        height: 100%;
-        width: 100%;
-    }
+/* TODO: Move to css file*/
 
-    #main {
-        display: table-row;
-        width:100%;
-        height: 100%;
-    }
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
 
-    .noUi-handle{
-        background-color: black;
-    }
+#container {
+    display: table;
+    height: 100%;
+    width: 100%;
+}
 
-    .no-border{
-        border: none;
-    }
+.panel-heading a:after {
+    font-family:'FontAwesome';
+    content:"\f107";
+    float: right;
+    color: grey;
+}
+.panel-heading a.collapsed:after {
+    content:"\f105";
+}
 
-    #footer {
-        display: table-row;
-        background-color: #ccc;
-    }
-    #content {
-        display: table;
-        width:100%;
-        height: 100%;
-        overflow: auto;
-        position: relative;
-    }
-    #middle{
-        display: table-cell;
-    }
-    .floating-below * {
-        z-index: 400;
-    }
+.panel-group{
 
-    .step{
+    margin:0px;
+}
 
-        font-weight: 600;
-        color:white;
-    }
+#main {
+    display: table-row;
+    width:100%;
+    height: 100%;
+}
 
-    #map {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        /* Note: Padding may need adjusting */
-        padding-top: 60px;
-    }
-    .ol-zoom {
-        right: .5em;
-        left: auto;
-        top:3.5em;
-    }
-    .ol-attribution {
-        top: 7.5em;
-        bottom: auto;
-    }
-    #time-controls-panel2 {
-        padding: 1px 16px;
-    }
+.noUi-handle{
+    background-color: black;
+}
 
-    #storyHeader{
-        height: 54px;
-        color: white;
-        padding: 8px;
-        width: 100%;
-        position: absolute;
-        top: 61px;
-        background: rgba(11, 11, 11, 0.6);
-        z-index: 9999;
-    }
+.no-border{
+    border: none;
+}
 
-    #storyTitle{
-        font-weight: 600;
+.popover{
 
-    }
+    min-width: 250px;
+}
 
-    #storyAuthor{
-        font-size: small;
-    }
+#footer {
+    display: table-row;
+    background-color: #ccc;
+    position: absolute;
+    bottom:0px;
+    width:100%;
+}
+#content {
+    display: table;
+    width:100%;
+    height: 100%;
+    overflow: auto;
+    position: relative;
+}
+#middle{
+    display: table-cell;
+}
+.floating-below * {
+    z-index: 400;
+}
+
+.step{
+
+    font-weight: 600;
+    color:white;
+}
+
+.popover-content{
+
+    font-size: 12px;
+}
+
+.popover-title{
+
+    font-weight: 600;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    /* Note: Padding may need adjusting */
+    padding-top: 60px;
+}
+.ol-zoom {
+    right: .5em;
+    left: auto;
+    top:3.5em;
+}
+.ol-attribution {
+    top: 7.5em;
+    bottom: auto;
+}
+#time-controls-panel2 {
+    padding: 1px 16px;
+}
+
+#storyHeader{
+    height: 54px;
+    color: white;
+    padding: 8px;
+    width: 100%;
+    position: absolute;
+    top: 61px;
+    background: rgba(11, 11, 11, 0.6);
+    z-index: 9999;
+}
+
+#storyTitle{
+    font-weight: 600;
+
+}
+
+#storyAuthor{
+    font-size: small;
+}
 
 
-    #time-controls-panel2{
-        background: rgba(11, 11, 11, 0.6);
-    }
+#time-controls-panel2{
+    background: rgba(11, 11, 11, 0.6);
+}
 
-    #timeline{
-        background-color: #ccc;
-    }
+#timeline{
+    background-color: #ccc;
+}
 
-    #slider{
-        width:50%;
-        float:right;
-    }
+#slider{
+    width:50%;
+    float:right;
+}
+
+#marker {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #088;
+    border-radius: 10px;
+    background-color: #0FF;
+    opacity: 0.5;
+}
+#vienna {
+    text-decoration: none;
+    color: white;
+    font-size: 11pt;
+    font-weight: bold;
+    text-shadow: black 0.1em 0.1em 0.2em;
+}
+
+.popover{
+    background: rgba(11, 11, 11, 0.6);
+    color:white;
+}
+
+.popover-title{
+
+    background: none;
+    border:none;
+
+}
+.popover.bottom>.arrow:after{
+
+    border-bottom-color:rgba(11, 11, 11, 0.6);
+
+}
+.popover.top>.arrow:after{
+
+    border-top-color:rgba(11, 11, 11, 0.6);
+
+}
+.popover-content {
+    min-width: 180px;
+}
+
+#currentBox{
+    padding: 20px;
+    width:400px;
+    overflow: hidden;
+    height:300px;
+    border:1px solid black;
+    color:white;
+    background: rgba(11, 11, 11, 0.6);
+    top:-310px;
+    left:10px;
+    position: absolute;
+}
+
+#currentBox p{
+
+    font-size:15px;
+
+}
+
+
+#currentBox h3{
+
+    text-align: center;
+    font-weight: 600;
+}
+
 
 </style>
 <div ng-app="viewer" ng-controller="viewerController as viewer"id="container">
@@ -139,9 +243,25 @@
             </div>
         </div>
     </div>
-    <div id="footer" class='floating-below' ng-show="timeControlsManager.timeControls">
-        <div id="time-controls-panel2">
 
+    <div id="footer" class='floating-below' ng-show="timeControlsManager.timeControls">
+        <div class="panel-group" id="curentBox">
+            <div class="panel panel-default" id="story-box-accordion">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a id="story-box-title" data-toggle="collapse" data-target="#collapseOne" class="collapsed">
+                        </a>
+                    </h4>
+
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse" style="height: 0px;">
+                    <div id="story-box-description" class="panel-body"></div>
+                </div>
+            </div>
+
+
+        </div>
+        <div id="time-controls-panel2">
             <div class="navbar" style="margin:5px 0 0; min-height: auto" ng-controller="tileProgressController">
                 <st-playback-controls class="pull-left" time-controls="timeControlsManager.timeControls"></st-playback-controls>
                 <div id="slider"></div>
@@ -150,4 +270,7 @@
             <div id="timeline" style="display: none;"></div>
         </div>
     </div>
+</div>
+<div style="display: none;">
+  <div id="popup"></div>
 </div>

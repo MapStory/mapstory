@@ -71,7 +71,7 @@
                     StoryBoxLayerManager.loadFromGeoJSON(boxes_geojson, self.storyMap.getMap().getView().getProjection());
 
                     var pins_geojson = values[2].data;
-                    StoryPinLayerManager.loadFromGeoJSON(pins_geojson, self.storyMap.getMap().getView().getProjection());
+                    StoryPinLayerManager.loadFromGeoJSON(pins_geojson, 'EPSG:4326');
                 });
 
 
@@ -101,7 +101,7 @@
                     StoryBoxLayerManager.loadFromGeoJSON(boxes_geojson, self.storyMap.getMap().getView().getProjection());
 
                     var pins_geojson = values[2].data;
-                    StoryPinLayerManager.loadFromGeoJSON(pins_geojson, self.storyMap.getMap().getView().getProjection());
+                    StoryPinLayerManager.loadFromGeoJSON(pins_geojson, 'EPSG:4326');
                 });
 
 
@@ -110,6 +110,41 @@
             }
             this.currentMapOptions = options;
             // @todo how to make on top?
+
+
+
+            var element = document.getElementById('popup');
+
+            var popup = new ol.Overlay({
+                element: element,
+                positioning: 'bottom-center',
+                stopEvent: false
+                });
+            self.storyMap.getMap().addOverlay(popup);
+
+            // display popup on click
+            self.storyMap.getMap().on('click', function(evt) {
+                var feature = self.storyMap.getMap().forEachFeatureAtPixel(evt.pixel,
+                function(feature, layer) {
+                return feature;
+                });
+            if (feature) {
+                var geometry = feature.getGeometry();
+                var coord = geometry.getCoordinates();
+                $(element).popover('destroy');
+                popup.setPosition(coord);
+                $(element).popover({
+                'placement': 'right',
+                'html': true,
+                'title': feature.get('title'),
+                'content': feature.get('content')
+                });
+            $(element).popover('show');
+            } else {
+                $(element).popover('destroy');
+                }
+            });
+
         };
         /*
         $rootScope.$on('$locationChangeSuccess', function() {
