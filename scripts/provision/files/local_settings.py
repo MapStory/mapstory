@@ -18,7 +18,7 @@ HAYSTACK_CONNECTIONS = {
        },
    }
 SKIP_PERMS_FILTER = True
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.signals.RealtimeSignalProcessor'
 
 
 MAPSTORY_APPS = (
