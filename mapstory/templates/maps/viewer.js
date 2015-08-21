@@ -101,7 +101,7 @@
                     StoryBoxLayerManager.loadFromGeoJSON(boxes_geojson, self.storyMap.getMap().getView().getProjection());
 
                     var pins_geojson = values[2].data;
-                    StoryPinLayerManager.loadFromGeoJSON(pins_geojson, 'EPSG:4326');
+                    StoryPinLayerManager.loadFromGeoJSON(pins_geojson, self.storyMap.getMap().getView().getProjection());
                 });
 
 

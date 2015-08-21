@@ -3,7 +3,7 @@ exports.MapConfigTransformer = require('./MapConfigTransformer');
 
 },{"./MapConfigTransformer":2}],2:[function(require,module,exports){
 exports.MapConfigTransformer = function(data) {
-    var layers = [], i, ii, mode = 'instant';
+    var layers = [], i, ii, mode = 'cumulative';
     // look for playback mode in tools
     if (data.tools) {
         for (i=0, ii=data.tools.length; i<ii; ++i) {
@@ -92,6 +92,8 @@ exports.MapConfigTransformer = function(data) {
                              }
                              layerConfig.resolutions = layer.capability.tileSets[0].resolutions;
                          }
+                     }else if(layer.times){
+                         layerConfig.times = layer.times;
                      }
                  }
                  layers.push(layerConfig);
@@ -124,7 +126,7 @@ exports.MapToGXPConfigTransformer = function(config){
         "2": {"hidden": true, "ptype": "gxp_mapquestsource"}};
 
     gxp_config.map.layers.forEach(function(layer, i) {
-
+        //What to do if VECTOR?
         if(layer.type === 'WMS'){
             layer.type = 'OpenLayers.Layer.WMS';
             var key = 3 + i;

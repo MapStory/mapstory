@@ -87,6 +87,7 @@
         this.title = "Default Mapstory";
         this.abstract = "No Information Supplied.";
         this.owner = "";
+        this.mode = "instant";
 
         this.storyLayers_ = new ol.Collection();
         this.animationDuration_ = data.animationDuration || 500;
@@ -123,6 +124,11 @@
 
     StoryMap.prototype.setStoryOwner = function(storyOwner) {
        this.owner =  storyOwner;
+    };
+
+
+    StoryMap.prototype.setMode = function(playbackMode) {
+       this.mode =  playbackMode;
     };
 
     StoryMap.prototype.getStoryOwner = function() {
@@ -265,10 +271,34 @@
         }
         var baseLayer = this.get('baselayer');
         if (baseLayer) {
-            var baseLayerState = baseLayer;
+                       var baseLayerState = baseLayer;
             baseLayerState.group = 'background';
             baseLayerState.visibility = true;
-            config.map.layers.push(baseLayerState);
+            var props = baseLayerState.getProperties();
+            delete props.source;
+
+            //For Compatability with Geonode 2.4
+            if(props.state.type === 'MapBox'){
+                props.source = '3';
+            }else if(props.state.type === 'OSM'){
+                props.source = '1';
+                props.type = 'OpenLayers.Layer.OSM';
+            }else if(props.state.type === 'HOT'){
+                props.source = '1';
+                props.type = 'OpenLayers.Layer.OSM';
+            }else if(props.state.type === 'MapQuest'){
+                props.source = '2';
+            }else if(props.state.type === 'WMS'){
+                props.source = '1';
+                props.type = 'OpenLayers.Layer.WMS';
+            }
+
+            if(props.state && props.state.name){
+                props.name = props.state.name;
+            }
+
+            config.map.layers.push(props);
+
         }
         this.storyLayers_.forEach(function(storyLayer) {
             config.map.layers.push(storyLayer.getState());
@@ -695,6 +725,7 @@
                     storymap.setStoryTitle(mapConfig.about.title);
                     storymap.setStoryAbstract(mapConfig.about.abstract);
                     storymap.setStoryOwner(mapConfig.about.owner);
+                    storymap.setMode(mapConfig.playbackMode);
                 }
                 for (var i = 0, ii = mapConfig.map.layers.length; i < ii; ++i) {
                     var layerConfig = mapConfig.map.layers[i];
@@ -869,7 +900,7 @@
     module.constant('StoryBox', boxes.Box);
 
 
-    module.service('stBoxesStore', ['$http', function($http, StoryBoxLayerManager) {
+    module.service('stBoxesStore', ['$http', 'StoryBoxLayerManager', function($http, StoryBoxLayerManager) {
         function path(mapid) {
             return '/maps/' + mapid + '/boxes';
         }
@@ -879,8 +910,8 @@
             return saved;
         }
         function set(mapid, boxes) {
-            $http.post(path(mapid), boxes);
-            //localStorage.setItem(path(mapid),angular.toJson(boxes));
+            return $http.post(path(mapid),   new ol.format.GeoJSON().writeFeatures(boxes,
+                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'}));
         }
         return {
             loadBoxes: function(mapid, storyMap) {
@@ -930,6 +961,25 @@
                     if (typeof a.id == 'undefined') {
                         a.id = ++maxId;
                     }
+                    var clone = a.clone();
+                    if (a.get('start_time') !== undefined) {
+                        clone.set('start_time', a.get('start_time')/1000);
+                    }
+                    if (a.get('end_time') !== undefined) {
+                        clone.set('end_time', a.get('end_time')/1000);
+                    }
+                    clones.push(clone);
+                });
+                return set(mapid, clones);
+            }
+
+
+
+              /*  var clones = [];
+                boxes.forEach(function(a) {
+                    if (typeof a.id == 'undefined') {
+                        a.id = ++maxId;
+                    }
                     var clone = a;
                     if (a.start_time !== undefined) {
                         clone.start_time = a.start_time/1000;
@@ -944,7 +994,7 @@
                 });
 
                 return set(mapid, { "type" : "FeatureCollection", "features": clones });
-            }
+            }*/
         };
     }]);
 
@@ -1006,30 +1056,19 @@
     module.constant('StoryPin', pins.StoryPin);
 
     // @todo naive implementation on local storage for now
-    module.service('stAnnotationsStore', ["StoryPinLayerManager", function(StoryPinLayerManager) {
+    module.service('stAnnotationsStore', ['$http',"StoryPinLayerManager", function($http, StoryPinLayerManager) {
         function path(mapid) {
             return '/maps/' + mapid + '/annotations';
         }
         function get(mapid) {
             var saved = localStorage.getItem(path(mapid));
             saved = (saved === null) ? [] : JSON.parse(saved);
-            // TODO is this still needed?
-            /*saved.forEach(function(s) {
-                s.the_geom = format.readGeometry(s.the_geom);
-            });*/
+
             return saved;
         }
         function set(mapid, annotations) {
-            // TODO is this still needed?
-            /*annotations.forEach(function(s) {
-                if (s.the_geom && !angular.isString(s.the_geom)) {
-                    s.the_geom = format.writeGeometry(s.the_geom);
-                }
-            });*/
-            localStorage.setItem(path(mapid),
-                new ol.format.GeoJSON().writeFeatures(annotations,
-                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'})
-            );
+            return $http.post(path(mapid),   new ol.format.GeoJSON().writeFeatures(annotations,
+                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'}));
         }
         return {
             loadAnnotations: function(mapid, projection) {
