@@ -12,13 +12,13 @@ SKIP_PERMS_FILTER = False
 HAYSTACK_FACET_COUNTS = False
 HAYSTACK_CONNECTIONS = {
    'default': {
-       'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+       'ENGINE': 'mapstory.search.elasticsearch_backend.MapStoryElasticsearchSearchEngine',
        'URL': 'http://127.0.0.1:9200/',
        'INDEX_NAME': 'geonode',
        },
    }
 SKIP_PERMS_FILTER = True
-HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.signals.RealtimeSignalProcessor'
+HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
 
 
 MAPSTORY_APPS = (

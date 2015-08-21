@@ -65,12 +65,6 @@ class BaseSignalProcessor(object):
 
         for using in using_backends:
             try:
-
-                # if this signal receives a polymorphic model, return the real class/instance
-                if isinstance(instance, PolymorphicModel):
-                    sender = instance.get_real_instance_class()
-                    instance = instance.get_real_instance()
-
                 index = self.connections[using].get_unified_index().get_index(sender)
                 index.remove_object(instance, using=using)
             except NotHandled:
