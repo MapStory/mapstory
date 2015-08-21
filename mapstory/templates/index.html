@@ -24,25 +24,7 @@
 <script type="text/javascript" src="{{ STATIC_URL }}vendor/angular-slick/dist/slick.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/index.js"></script>
 <script type="text/javascript">
-    /* Script for keywords autocomplete */
-    var homepage_autocomplete = $('#homepage_search').yourlabsAutocomplete({
-          url: '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}',
-          choiceSelector: 'span',
-          hideAfter: 200,
-          minimumCharacters: 1,
-          appendAutocomplete: $('#homepage_search'),
-          placeholder: gettext('Enter keyword here ...')
-    });
-    $('#homepage_search').bind('selectChoice', function(e, choice, homepage_autocomplete) {
-          if(choice[0].children[0] == undefined) {
-              $('#homepage_search').val(choice[0].innerHTML);
-              $scope.keyword_query = choice[0].innerHTML;
-          }
-    });
     // Fix placeholder text for Home Page Search
-    $(function() {
-        $('#homepage_search').attr('placeholder','Explore MapStories and StoryLayers');
-    });
     HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
     HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
     CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
@@ -67,9 +49,9 @@
                     <form action="{% url "search" %}">
                         <div class="input-group">
                         {% if HAYSTACK_SEARCH %}
-                        <input class="form-control" id="homepage_search" type="text" name="q" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
+                        <input class="form-control" id="homepage_search" type="text" name="q" style="color:chocolate;background-color:whitesmoke;border:1px solid white" placeholder="Explore MapStories and StoryLayers">
                         {% else %}
-                        <input class="form-control" id="homepage_search" type="text" name="keywords__slug__in" style="color:chocolate;background-color:whitesmoke;border:1px solid white">
+                        <input class="form-control" id="homepage_search" type="text" name="keywords__slug__in" style="color:chocolate;background-color:whitesmoke;border:1px solid white" placeholder="Explore MapStories and StoryLayers">
                         {% endif %}
                         <span class="input-group-btn">
                           <button class="btn btn-primary" type="submit" style="background-color:chocolate;color:white;border:1px solid white"><i class="fa fa-search"></i></button>
