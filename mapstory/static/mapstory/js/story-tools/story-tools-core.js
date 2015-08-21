@@ -433,7 +433,7 @@ function TimeController(model, slider, timeline, controls) {
     };
 
     this.getCurrentBox = function(){
-      return model.getBox(slider.getRange().start);
+      return model.getBox(slider.getRange().end);
     };
 
     this.update = function(options) {
