@@ -979,7 +979,8 @@ exports.MapController = function(options, timeControls) {
         var currentBoxes = filterVectorBoxLayer(storyMap.storyBoxesLayer, range);
 
         if(currentBoxes){
-            var currentBox = currentBoxes[0];
+            var latest = currentBoxes.length - 1;
+            var currentBox = currentBoxes[latest];
             console.log(currentBox.getProperties());
             console.log(new Date(currentBox.get('range').start).toISOString());
             console.log(new Date(currentBox.get('range').end).toISOString());
