@@ -1360,6 +1360,9 @@
                     var values = update();
                     if (values) {
                         timeControlsManager.timeControls.update(values);
+                    }else{
+                        //Reset
+                        timeControlsManager.timeControls.reset();
                     }
                 }
                 return;

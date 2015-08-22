@@ -286,6 +286,7 @@ function TimeController(model, slider, timeline, controls) {
     this.slider = slider;
     this.timeline = timeline;
     this.loop = false;
+    this.timeEnabled = true;
 
     var self = this,
         currentTimelineWindow = getTimelineWindow(),
@@ -436,10 +437,17 @@ function TimeController(model, slider, timeline, controls) {
       return model.getBox(slider.getRange().end);
     };
 
+
+    this.reset = function(){
+      this.update([]);
+      this.timeEnabled = false;
+    };
+
     this.update = function(options) {
         model.update(options);
         slider.update(model);
         timeline.update(model);
+        this.timeEnabled = true;
         window.setTimeout(publishRangeChange, 0);
     };
     this.start = function() {

@@ -154,13 +154,12 @@
             var deferred = $q.defer();
             var self = this;
             var config = this.storyMap.getState();
-            //config.boxes = StoryBoxLayerManager.storyBoxes;
 
             var end_point = '/maps/new/data';
 
             if(config.id != undefined && config.id != null && config.id > 0){
                 end_point = '/maps/' + config.id + '/data';
-                var mapLoad = $http.post(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config));
+                var mapLoad = $http.put(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config));
             }else{
 
                 var mapLoad = $http.post(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config)).success(function(data) {
@@ -197,8 +196,6 @@
                             window.console.warn('Unable to save map.');
                         }
                     });
-
-                //stMapConfigStore.saveConfig(config_json);
             }
 
             return deferred.promise;
@@ -304,8 +301,6 @@
 
                 scope.saveMap = function(about) {
                     scope.loading = true;
-
-                    //$timeout(function(){scope.$parent.status.open = false;scope.loading = false;}, 3000);
 
                      MapManager.storyMap.setStoryTitle(about.title);
                      MapManager.storyMap.setStoryAbstract(about.abstract);
