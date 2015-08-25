@@ -288,6 +288,23 @@
         return $injector.instantiate(MapManager);
     });
 
+
+    module.directive('ngReallyClick', [function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                element.bind('click', function($event) {
+                    var message = attrs.ngReallyMessage;
+                    if (message && confirm(message)) {
+                        scope.$apply(attrs.ngReallyClick);
+                    }
+
+                    $event.stopPropagation();
+                });
+            }
+        }
+    }]);
+
     module.directive('storyAboutInfo', function($modal, $timeout, $log, MapManager) {
         return {
             restrict: 'E',
@@ -412,7 +429,7 @@
                     scope.baseLayer = MapManager.storyMap.get('baselayer').get('title');
                 });
                 MapManager.storyMap.getStoryLayers().on('change:length', function() {
-                    scope.layers = MapManager.storyMap.getStoryLayers().getArray();
+                    scope.layers = MapManager.storyMap.getStoryLayers().getArray().reverse();
                 });
 
                 scope.toggleVisibleLayer = function(lyr) {
@@ -428,10 +445,12 @@
                     stStoryMapBaseBuilder.setBaseLayer(MapManager.storyMap, baseLayer);
                 };
 
-                scope.onSort = function(item, partFrom, partTo, indexFrom, indexTo){
-                  console.log("Changed layer position of " + item.get('title')
+                scope.onSort = function(lyr, partFrom, partTo, indexFrom, indexTo){
+                  console.log("Changed layer position of " + lyr.get('title')
                       + " FROM " + indexFrom
                       + " TO " + indexTo);
+
+                  MapManager.storyMap.reorderStoryLayer(indexTo, lyr);
 
                   partFrom.forEach(function(layer) {
                       //console.log(layer.get('title'));
@@ -487,13 +506,6 @@
 
             scope.result_select = function($event, layer){
                 var element = $($event.target);
-
-                //var layerName = decodeURIComponent(layer.detail_url);
-
-                //if(layerName.indexOf('/layers/') > -1){
-                  //  layerName = layerName.replace("/layers/","");
-                //}
-
 
                 var box = $(element.parents('.box')[0]);
 

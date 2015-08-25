@@ -126,17 +126,16 @@
        this.owner =  storyOwner;
     };
 
-
-    StoryMap.prototype.setMode = function(playbackMode) {
-       this.mode =  playbackMode;
-    };
-
     StoryMap.prototype.getStoryOwner = function() {
        return this.owner;
     };
 
     StoryMap.prototype.setStoryTitle = function(storyTitle) {
        this.title =  storyTitle;
+    };
+
+    StoryMap.prototype.setMode = function(playbackMode) {
+       this.mode =  playbackMode;
     };
 
     StoryMap.prototype.setStoryAbstract = function(storyAbstract) {
@@ -181,6 +180,31 @@
             storyLayer.getLayer()
         );
     };
+
+
+    StoryMap.prototype.reorderStoryLayer = function(position, storyLayer) {
+        storyLayer.storyMap_ = this;
+        var offset = 1;
+        // keep pins layer on top
+        var idx = this.map_.getLayers().getLength() - position - offset;
+        var me = this;
+
+        this.map_.getLayers().forEach(function(sl) {
+            if (sl === me.storyPinsLayer) {
+                idx -= 1;
+            }
+
+            console.log(" " + sl.get('title'));
+        });
+
+        this.map_.removeLayer(storyLayer.getLayer());
+
+        this.map_.getLayers().insertAt(
+            idx,
+            storyLayer.getLayer()
+        );
+    };
+
 
     StoryMap.prototype.getStoryLayers = function() {
         return this.storyLayers_;
@@ -335,6 +359,7 @@
             var config = {
                 useOldAsInterimTiles: true
             };
+            jQuery.extend(config, data);
             if (this.get('singleTile') === true) {
                 layer = new ol.layer.Image(config);
             } else {
@@ -517,7 +542,8 @@
                     });
             },
             getStyleName: function(storyLayer) {
-                if (storyLayer.get('canStyleWMS')) {
+                //Disabling for now.
+                //if (storyLayer.get('canStyleWMS')) {
                     var me = this;
                     return $http({
                         method: 'GET',
@@ -527,9 +553,9 @@
                     }).success(function(response) {
                             storyLayer.set('styleName', response.layer.defaultStyle.name);
                         });
-                } else {
-                    return $q.when('');
-                }
+                //} else {
+                //    return $q.when('');
+                //}
             },
             getFeatures: function(storyLayer, map) {
                 var name = storyLayer.get('id');
@@ -812,198 +838,6 @@
 (function() {
     'use strict';
 
-    var module = angular.module('storytools.core.boxes', ['storytools.core.time.services']);
-
-    var boxes = storytools.core.maps.boxes;
-    var utils = storytools.core.time.utils;
-
-    function StoryBoxLayerManager() {
-        this.storyBoxes = [];
-    }
-    StoryBoxLayerManager.prototype.boxesChanged = function(boxes, action) {
-        var i;
-        var box;
-
-        if (action == 'delete') {
-            for (i = 0; i < boxes.length; i++) {
-                box = boxes[i];
-                for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
-                    if (this.storyBoxes[j].id == box.id) {
-                        this.storyBoxes.splice(j, 1);
-                        break;
-                    }
-                }
-            }
-        } else if (action == 'add') {
-
-            var maxId = 0;
-            this.storyBoxes.forEach(function(b) {
-                maxId = Math.max(maxId, b.id);
-            });
-
-            for (i = 0; i < boxes.length; i++) {
-
-                box = boxes[i];
-
-                if (typeof box.id === 'undefined' || box.id === null) {
-                        box.id = ++maxId;
-                }
-
-                this.storyBoxes.push(box);
-            }
-        } else if (action == 'change') {
-            // provided edits could be used to optimize below
-            for (i = 0; i < boxes.length; i++) {
-                box = boxes[i];
-                for (var x = 0, xx = this.storyBoxes.length; x < xx; x++) {
-                    if (this.storyBoxes[x].id == box.id) {
-                        this.storyBoxes[x]= box;
-                        break;
-                    }
-                }
-                  console.log(boxes[i]);
-            }
-
-        } else {
-            throw new Error('action? :' + action);
-        }
-        // @todo optimize by looking at changes
-        var times = this.storyBoxes.map(function(p) {
-            if (p.start_time > p.end_time) {
-                return storytools.core.utils.createRange(p.end_time, p.start_time);
-            } else {
-                return storytools.core.utils.createRange(p.start_time, p.end_time);
-            }
-        });
-
-        this.storyBoxesLayer.set('times', times);
-        this.storyBoxesLayer.set('features', this.storyBoxes);
-    };
-
-
-    StoryBoxLayerManager.prototype.load = function(boxList) {
-        if (boxList) {
-            this.boxesChanged(boxList, 'add', true);
-        }
-    };
-
-
-    StoryBoxLayerManager.prototype.loadFromGeoJSON = function(geojson, projection) {
-        if (geojson && geojson.features) {
-            var loaded = boxes.loadFromGeoJSON(geojson, projection);
-            this.boxesChanged(loaded, 'add', true);
-        }
-    };
-
-    module.service('StoryBoxLayerManager', StoryBoxLayerManager);
-
-    module.constant('StoryBox', boxes.Box);
-
-
-    module.service('stBoxesStore', ['$http', 'StoryBoxLayerManager', function($http, StoryBoxLayerManager) {
-        function path(mapid) {
-            return '/maps/' + mapid + '/boxes';
-        }
-        function get(mapid) {
-            var saved = $http.get(path(mapid));
-            saved = (saved === null) ? null : JSON.parse(saved);
-            return saved;
-        }
-        function set(mapid, boxes) {
-            return $http.post(path(mapid),   new ol.format.GeoJSON().writeFeatures(boxes,
-                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'}));
-        }
-        return {
-            loadBoxes: function(mapid, storyMap) {
-                return StoryBoxLayerManager.loadFromGeoJSON(get(mapid), projection);
-            },
-            createBoxes: function(options){
-
-                var totalRange;
-
-                    var interval = 0, data = null;
-                    if (Array.isArray(options.data)) {
-                        data = options.data;
-                        totalRange = utils.computeRange(options.data);
-                    } else {
-                        interval = options.data.interval || utils.pickInterval(options.data);
-                        totalRange = options.data;
-                    }
-                    boxes = [{
-                        title: 'Default StoryBox Chapter',
-                        description: 'No description.',
-                        data: data,
-                        range: totalRange,
-                        speed: {
-                            interval: interval,
-                            seconds: 3
-                        }
-                    }];
-
-
-                return boxes;
-
-            },
-            deleteBoxes: function(boxes) {
-                var saved = get();
-                var toDelete = boxes.map(function(d) {
-                    return d.id;
-                });
-                saved = saved.filter(function(s) {
-                    return toDelete.indexOf(s.id) < 0;
-                });
-                set(saved);
-            },
-            saveBoxes: function(mapid, boxes) {
-
-                var clones = [];
-                boxes.forEach(function(a) {
-                    if (typeof a.id == 'undefined') {
-                        a.id = ++maxId;
-                    }
-                    var clone = a.clone();
-                    if (a.get('start_time') !== undefined) {
-                        clone.set('start_time', a.get('start_time')/1000);
-                    }
-                    if (a.get('end_time') !== undefined) {
-                        clone.set('end_time', a.get('end_time')/1000);
-                    }
-                    clones.push(clone);
-                });
-                return set(mapid, clones);
-            }
-
-
-
-              /*  var clones = [];
-                boxes.forEach(function(a) {
-                    if (typeof a.id == 'undefined') {
-                        a.id = ++maxId;
-                    }
-                    var clone = a;
-                    if (a.start_time !== undefined) {
-                        clone.start_time = a.start_time/1000;
-                    }
-                    if (a.end_time !== undefined) {
-                        clone.end_time = a.end_time/1000;
-                    }
-
-                    var item = angular.toJson(clone);
-
-                    clones.push({"properties" : JSON.parse(item)});
-                });
-
-                return set(mapid, { "type" : "FeatureCollection", "features": clones });
-            }*/
-        };
-    }]);
-
-})();
-
-
-(function() {
-    'use strict';
-
     var module = angular.module('storytools.core.pins', [
     ]);
 
@@ -1055,15 +889,17 @@
 
     module.constant('StoryPin', pins.StoryPin);
 
-    // @todo naive implementation on local storage for now
     module.service('stAnnotationsStore', ['$http',"StoryPinLayerManager", function($http, StoryPinLayerManager) {
-        function path(mapid) {
+       function path(mapid) {
             return '/maps/' + mapid + '/annotations';
         }
         function get(mapid) {
             var saved = localStorage.getItem(path(mapid));
             saved = (saved === null) ? [] : JSON.parse(saved);
-
+            // TODO is this still needed?
+            /*saved.forEach(function(s) {
+                s.the_geom = format.readGeometry(s.the_geom);
+            });*/
             return saved;
         }
         function set(mapid, annotations) {
@@ -1109,334 +945,6 @@
         };
     }]);
 
-})();
-
-(function() {
-    'use strict';
-
-    /**
-     * @namespace storytools.core.time.directives
-     */
-    var module = angular.module('storytools.core.time.directives', []);
-
-    /**
-     * @ngdoc directive
-     * @name stPlaybackControls
-     * @memberOf storytools.core.time.directives
-     * @description
-     * Directive that presents playback controls to manipulate the provided
-     * TimeController instance.
-     *
-     * @param {TimeController} time-controls attribute
-     */
-    module.directive('stPlaybackControls', function() {
-        return {
-            restrict: 'E',
-            templateUrl: 'time/playback-controls.html',
-            scope: {
-                timeControls: '='
-            },
-            link: function (scope, elem) {
-                scope.playText = "Start";
-                scope.loopText = "Enable Loop";
-                scope.loop = false;
-                scope.storyBoxText = "";
-                scope.showTimeLine = false;
-                scope.next = function () {
-                    scope.timeControls.next();
-                };
-                scope.prev = function () {
-                    scope.timeControls.prev();
-                };
-                scope.$watch('timeControls', function (neu, old) {
-                    if (neu !== old) {
-                        neu.on('stateChange', function () {
-                            var started = scope.timeControls.isStarted();
-                            scope.started = started;
-                            scope.playText = started ? "Stop" : "Start";
-                            scope.$apply();
-                        });
-                        neu.on('rangeChange', function (range) {
-                            var tc = scope.timeControls;
-                            var element = $('#story-box-title');
-                            element.empty();
-                            element.append(tc.getCurrentBox().get('title'));
-
-                            var el = $('#story-box-description');
-                            el.empty();
-                            el.append(tc.getCurrentBox().get('description'));
-
-                            scope.currentRange = range;
-                            scope.$apply();
-                        });
-                    }
-                });
-                scope.play = function () {
-                    var tc = scope.timeControls;
-
-                    var started = tc.isStarted();
-                    if (started) {
-                        tc.stop();
-                    } else {
-                        tc.start();
-                    }
-                };
-                scope.toggleLoop = function () {
-                    var tc = scope.timeControls;
-                    scope.loop = tc.loop = !tc.loop;
-                    scope.loopText = tc.loop ? 'Disable Loop' : 'Enable Loop';
-                };
-
-                scope.toggleTimeLine = function () {
-                    var tc = scope.timeControls;
-                    scope.showTimeLine = tc.showTimeLine = !tc.showTimeLine;
-                    var element = $('#timeline');
-
-                    if(tc.showTimeLine) {
-                        element.show( "slow" );
-
-                    } else {
-                        element.hide("slow");
-                    }
-                };
-            }
-        };
-    });
-
-    /**
-     * @ngdoc directive
-     * @name stPlaybackSettings
-     * @memberOf storytools.core.time.directives
-     * @description
-     * Directive that presents playback settings that manipulate the provided
-     * TimeController instance.
-     *
-     * @param {TimeController} time-controls attribute
-     * @param {object} playbackOptions (will go away)
-     */
-    module.directive('stPlaybackSettings', function () {
-        return {
-            restrict: 'E',
-            templateUrl: 'time/playback-settings.html',
-            scope: {
-                timeControls: '=',
-                // @todo remove once timeControls properly exposes access to this
-                playbackOptions: '='
-            },
-            link: function (scope, elem) {
-                scope.optionsChanged = function () {
-                    if (scope.timeControls) {
-                        scope.timeControls.update(scope.playbackOptions);
-                    }
-                };
-            }
-        };
-    });
-})();
-(function() {
-    'use strict';
-
-    var module = angular.module('storytools.core.time', [
-        'storytools.core.time.directives',
-        'storytools.core.time.services',
-        'storytools.core.templates'
-    ]);
-
-    module.filter('isodate', function() {
-        // @todo should support optional precision specifier (as unit?)
-        return function(input) {
-            return input !== null && angular.isDefined(input)  ?
-                angular.isNumber(input) ? new Date(input).toISOString():
-                    Date.parse(input).toISOString():
-                    '';
-        };
-    });
-
-})();
-(function() {
-    'use strict';
-
-    var module = angular.module('storytools.core.time.services', []);
-
-    var stutils = storytools.core.time.utils;
-
-    /**
-     * Compute a sorted, unique array of ticks for the provided layers. The
-     * algorithm uses any provided instant or extent(start value used) list values
-     * and looks at the total range of all interval values creating a tick at the
-     * minimum interval for the total range. See the tests for examples.
-     * @param {array|ol.Map} layersWithTime
-     * @returns array of ticks
-     */
-    function computeTicks(layersWithTime) {
-        // allow a map to be passed in
-        if (!angular.isArray(layersWithTime)) {
-            var storyMap = layersWithTime;
-            layersWithTime = storyMap.getStoryLayers().getArray().filter(function(l) {
-                var times = l.get('times');
-                /*jshint eqnull:true */
-                return times != null;
-            });
-            layersWithTime.push(storyMap.storyPinsLayer);
-            layersWithTime.push(storyMap.storyBoxesLayer);
-        }
-        var ticks = {};
-        var totalRange = null;
-        var intervals = [];
-        function addTick(add) {
-            add = stutils.getTime(add);
-            if (add !== null && ! (add in ticks)) {
-                ticks[add] = 1;
-            }
-        }
-        layersWithTime.forEach(function(l) {
-            var times = l.get('times');
-            var range;
-            if (angular.isArray(times)) {
-                // an array of instants or extents
-                range = stutils.computeRange(times);
-                if (times.length) {
-                    if (stutils.isRangeLike(times[0])) {
-                        times.forEach(function(r) {
-                            addTick(r.start);
-                            if (totalRange === null) {
-                                totalRange = stutils.createRange(r);
-                            } else {
-                                totalRange.extend(r);
-                            }
-                        });
-                    } else {
-                        times.forEach(function(r) {
-                            addTick(r);
-                        });
-                    }
-                }
-                // add a tick at the end to ensure we get there
-                /*jshint eqnull:true */
-                if (range.end != null) {
-                    addTick(range.end);
-                }
-            } else if (times) {
-                // a interval (range+duration)
-                range = times;
-                intervals.push(times);
-            }
-            if (totalRange === null) {
-                // copy, will be modifying
-                totalRange = stutils.createRange(range);
-            } else {
-                totalRange.extend(range);
-            }
-        });
-        if (intervals.length) {
-            intervals.sort(function(a, b) {
-                return a.interval - b.interval;
-            });
-            var smallest = intervals[0];
-            var start = totalRange.start;
-            while (start <= totalRange.end) {
-                addTick(start);
-                start = smallest.offset(start);
-            }
-        }
-        ticks = Object.getOwnPropertyNames(ticks).map(function(t) {
-            return parseInt(t);
-        });
-        return ticks.sort(function(a, b) {
-            return a - b;
-        });
-    }
-
-    function TimeControlsManager($log, $rootScope, StoryPinLayerManager, StoryBoxLayerManager, MapManager) {
-        this.timeControls = null;
-        var timeControlsManager = this;
-
-        function maybeCreateTimeControls(update) {
-            $log.debug("Creating TimeControls with boxes: ");
-            $log.debug(StoryBoxLayerManager.storyBoxes);
-
-            if (timeControlsManager.timeControls !== null) {
-                if (update) {
-                    var values = update();
-                    if (values) {
-                        timeControlsManager.timeControls.update(values);
-                    }else{
-                        //Reset
-                        timeControlsManager.timeControls.reset();
-                    }
-                }
-                return;
-            }
-            var range = computeTicks(MapManager.storyMap);
-            if (range.length) {
-                var annotations = StoryPinLayerManager.storyPins;
-                var boxes = StoryBoxLayerManager.storyBoxes;
-                timeControlsManager.timeControls = storytools.core.time.create({
-                    annotations: annotations,
-                    boxes: boxes,
-                    storyMap: MapManager.storyMap,
-                    data: range,
-                    mode: MapManager.storyMap.mode,
-                    tileStatusCallback: function(remaining) {
-                        $rootScope.$broadcast('tilesLoaded', remaining);
-                    }
-                });
-                timeControlsManager.timeControls.on('rangeChange', function(range) {
-                    timeControlsManager.currentRange = range;
-                });
-            }
-        }
-
-        MapManager.storyMap.getStoryLayers().on('change:length', function() {
-            maybeCreateTimeControls(function() {
-                var range = computeTicks(MapManager.storyMap);
-                if (range.length) {
-                    return {
-                        data: range
-                    };
-                }
-            });
-        });
-
-        var boxesLayer = MapManager.storyMap.storyBoxesLayer;
-        var pinsLayer = MapManager.storyMap.storyPinsLayer;
-        pinsLayer.on('change:features', function() {
-            maybeCreateTimeControls(function() {
-                var range = computeTicks(MapManager.storyMap);
-                if (range.length) {
-                    return {
-                        annotations: pinsLayer.get("features"),
-                        data: range,
-                        boxes: boxesLayer.get("features")
-
-                    };
-                }
-            });
-        });
-
-        boxesLayer.on('change:features', function() {
-            maybeCreateTimeControls(function() {
-                var range = computeTicks(MapManager.storyMap);
-                if (range.length) {
-                    return {
-                        annotations: pinsLayer.get("features"),
-                        data: range,
-                        boxes: boxesLayer.get("features")
-                    };
-                }
-            });
-        });
-
-        maybeCreateTimeControls();
-    }
-
-    module.constant('TimeControlsManager', TimeControlsManager);
-
-    module.service('TimeMachine', function() {
-        return {
-            computeTicks: computeTicks
-        };
-    });
 })();
 
 (function() {
@@ -1785,3 +1293,498 @@
     }]);
 
 })();
+
+(function() {
+    'use strict';
+
+    /**
+     * @namespace storytools.core.time.directives
+     */
+    var module = angular.module('storytools.core.time.directives', []);
+
+    /**
+     * @ngdoc directive
+     * @name stPlaybackControls
+     * @memberOf storytools.core.time.directives
+     * @description
+     * Directive that presents playback controls to manipulate the provided
+     * TimeController instance.
+     *
+     * @param {TimeController} time-controls attribute
+     */
+    module.directive('stPlaybackControls', function() {
+        return {
+            restrict: 'E',
+            templateUrl: 'time/playback-controls.html',
+            scope: {
+                timeControls: '='
+            },
+            link: function (scope, elem) {
+                scope.playText = "Start";
+                scope.loopText = "Enable Loop";
+                scope.loop = false;
+                scope.storyBoxText = "";
+                scope.showTimeLine = false;
+                scope.next = function () {
+                    scope.timeControls.next();
+                };
+                scope.prev = function () {
+                    scope.timeControls.prev();
+                };
+                scope.$watch('timeControls', function (neu, old) {
+                    if (neu !== old) {
+                        neu.on('stateChange', function () {
+                            var started = scope.timeControls.isStarted();
+                            scope.started = started;
+                            scope.playText = started ? "Stop" : "Start";
+                            scope.$apply();
+                        });
+                        neu.on('rangeChange', function (range) {
+                            var tc = scope.timeControls;
+                            var element = $('#story-box-title');
+                            element.empty();
+                            element.append(tc.getCurrentBox().get('title'));
+
+                            var el = $('#story-box-description');
+                            el.empty();
+                            el.append(tc.getCurrentBox().get('description'));
+
+                            scope.currentRange = range;
+                            scope.$apply();
+                        });
+                    }
+                });
+                scope.play = function () {
+                    var tc = scope.timeControls;
+
+                    var started = tc.isStarted();
+                    if (started) {
+                        tc.stop();
+                    } else {
+                        tc.start();
+                    }
+                };
+                scope.toggleLoop = function () {
+                    var tc = scope.timeControls;
+                    scope.loop = tc.loop = !tc.loop;
+                    scope.loopText = tc.loop ? 'Disable Loop' : 'Enable Loop';
+                };
+
+                scope.toggleTimeLine = function () {
+                    var tc = scope.timeControls;
+                    scope.showTimeLine = tc.showTimeLine = !tc.showTimeLine;
+                    var element = $('#timeline');
+
+                    if(tc.showTimeLine) {
+                        element.show( "slow" );
+
+                    } else {
+                        element.hide("slow");
+                    }
+                };
+            }
+        };
+    });
+
+    /**
+     * @ngdoc directive
+     * @name stPlaybackSettings
+     * @memberOf storytools.core.time.directives
+     * @description
+     * Directive that presents playback settings that manipulate the provided
+     * TimeController instance.
+     *
+     * @param {TimeController} time-controls attribute
+     * @param {object} playbackOptions (will go away)
+     */
+    module.directive('stPlaybackSettings', function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'time/playback-settings.html',
+            scope: {
+                timeControls: '=',
+                // @todo remove once timeControls properly exposes access to this
+                playbackOptions: '='
+            },
+            link: function (scope, elem) {
+                scope.optionsChanged = function () {
+                    if (scope.timeControls) {
+                        scope.timeControls.update(scope.playbackOptions);
+                    }
+                };
+            }
+        };
+    });
+})();
+(function() {
+    'use strict';
+
+    var module = angular.module('storytools.core.time', [
+        'storytools.core.time.directives',
+        'storytools.core.time.services',
+        'storytools.core.templates'
+    ]);
+
+    module.filter('isodate', function() {
+        // @todo should support optional precision specifier (as unit?)
+        return function(input) {
+            return input !== null && angular.isDefined(input)  ?
+                angular.isNumber(input) ? new Date(input).toISOString():
+                    Date.parse(input).toISOString():
+                    '';
+        };
+    });
+
+})();
+(function() {
+    'use strict';
+
+    var module = angular.module('storytools.core.time.services', []);
+
+    var stutils = storytools.core.time.utils;
+
+    /**
+     * Compute a sorted, unique array of ticks for the provided layers. The
+     * algorithm uses any provided instant or extent(start value used) list values
+     * and looks at the total range of all interval values creating a tick at the
+     * minimum interval for the total range. See the tests for examples.
+     * @param {array|ol.Map} layersWithTime
+     * @returns array of ticks
+     */
+    function computeTicks(layersWithTime) {
+        // allow a map to be passed in
+        if (!angular.isArray(layersWithTime)) {
+            var storyMap = layersWithTime;
+            layersWithTime = storyMap.getStoryLayers().getArray().filter(function(l) {
+                var times = l.get('times');
+                /*jshint eqnull:true */
+                return times != null;
+            });
+            layersWithTime.push(storyMap.storyPinsLayer);
+            layersWithTime.push(storyMap.storyBoxesLayer);
+        }
+        var ticks = {};
+        var totalRange = null;
+        var intervals = [];
+        function addTick(add) {
+            add = stutils.getTime(add);
+            if (add !== null && ! (add in ticks)) {
+                ticks[add] = 1;
+            }
+        }
+        layersWithTime.forEach(function(l) {
+            var times = l.get('times');
+            var range;
+            if (angular.isArray(times)) {
+                // an array of instants or extents
+                range = stutils.computeRange(times);
+                if (times.length) {
+                    if (stutils.isRangeLike(times[0])) {
+                        times.forEach(function(r) {
+                            addTick(r.start);
+                            if (totalRange === null) {
+                                totalRange = stutils.createRange(r);
+                            } else {
+                                totalRange.extend(r);
+                            }
+                        });
+                    } else {
+                        times.forEach(function(r) {
+                            addTick(r);
+                        });
+                    }
+                }
+                // add a tick at the end to ensure we get there
+                /*jshint eqnull:true */
+                if (range.end != null) {
+                    addTick(range.end);
+                }
+            } else if (times) {
+                // a interval (range+duration)
+                range = times;
+                intervals.push(times);
+            }
+            if (totalRange === null) {
+                // copy, will be modifying
+                totalRange = stutils.createRange(range);
+            } else {
+                totalRange.extend(range);
+            }
+        });
+        if (intervals.length) {
+            intervals.sort(function(a, b) {
+                return a.interval - b.interval;
+            });
+            var smallest = intervals[0];
+            var start = totalRange.start;
+            while (start <= totalRange.end) {
+                addTick(start);
+                start = smallest.offset(start);
+            }
+        }
+        ticks = Object.getOwnPropertyNames(ticks).map(function(t) {
+            return parseInt(t);
+        });
+        return ticks.sort(function(a, b) {
+            return a - b;
+        });
+    }
+
+    function TimeControlsManager($log, $rootScope, StoryPinLayerManager, StoryBoxLayerManager, MapManager) {
+        this.timeControls = null;
+        var timeControlsManager = this;
+
+        function maybeCreateTimeControls(update) {
+            $log.debug("Creating TimeControls with boxes: ");
+            $log.debug(StoryBoxLayerManager.storyBoxes);
+
+            if (timeControlsManager.timeControls !== null) {
+                if (update) {
+                    var values = update();
+                    if (values) {
+                        timeControlsManager.timeControls.update(values);
+                    }else{
+                        timeControlsManager.timeControls.reset();
+                    }
+                }
+                return;
+            }
+            var range = computeTicks(MapManager.storyMap);
+            if (range.length) {
+                var annotations = StoryPinLayerManager.storyPins;
+                var boxes = StoryBoxLayerManager.storyBoxes;
+                timeControlsManager.timeControls = storytools.core.time.create({
+                    annotations: annotations,
+                    boxes: boxes,
+                    storyMap: MapManager.storyMap,
+                    data: range,
+                    mode: MapManager.storyMap.mode,
+                    tileStatusCallback: function(remaining) {
+                        $rootScope.$broadcast('tilesLoaded', remaining);
+                    }
+                });
+                timeControlsManager.timeControls.on('rangeChange', function(range) {
+                    timeControlsManager.currentRange = range;
+                });
+            }
+        }
+
+        MapManager.storyMap.getStoryLayers().on('change:length', function() {
+            maybeCreateTimeControls(function() {
+                var range = computeTicks(MapManager.storyMap);
+                if (range.length) {
+                    return {
+                        data: range
+                    };
+                }
+            });
+        });
+
+        var boxesLayer = MapManager.storyMap.storyBoxesLayer;
+        var pinsLayer = MapManager.storyMap.storyPinsLayer;
+        pinsLayer.on('change:features', function() {
+            maybeCreateTimeControls(function() {
+                var range = computeTicks(MapManager.storyMap);
+                if (range.length) {
+                    return {
+                        annotations: pinsLayer.get("features"),
+                        data: range,
+                        boxes: boxesLayer.get("features")
+
+                    };
+                }
+            });
+        });
+
+        boxesLayer.on('change:features', function() {
+            maybeCreateTimeControls(function() {
+                var range = computeTicks(MapManager.storyMap);
+                if (range.length) {
+                    return {
+                        annotations: pinsLayer.get("features"),
+                        data: range,
+                        boxes: boxesLayer.get("features")
+                    };
+                }
+            });
+        });
+
+        maybeCreateTimeControls();
+    }
+
+    module.constant('TimeControlsManager', TimeControlsManager);
+
+    module.service('TimeMachine', function() {
+        return {
+            computeTicks: computeTicks
+        };
+    });
+})();
+
+(function() {
+    'use strict';
+
+    var module = angular.module('storytools.core.boxes', ['storytools.core.time.services']);
+
+    var boxes = storytools.core.maps.boxes;
+    var utils = storytools.core.time.utils;
+
+    function StoryBoxLayerManager() {
+        this.storyBoxes = [];
+    }
+    StoryBoxLayerManager.prototype.boxesChanged = function(boxes, action) {
+        var i;
+        var box;
+
+        if (action == 'delete') {
+            for (i = 0; i < boxes.length; i++) {
+                box = boxes[i];
+                for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
+                    if (this.storyBoxes[j].id == box.id) {
+                        this.storyBoxes.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+        } else if (action == 'add') {
+
+            var maxId = 0;
+            this.storyBoxes.forEach(function(b) {
+                maxId = Math.max(maxId, b.id);
+            });
+
+            for (i = 0; i < boxes.length; i++) {
+
+                box = boxes[i];
+
+                if (typeof box.id === 'undefined' || box.id === null) {
+                        box.id = ++maxId;
+                }
+
+                this.storyBoxes.push(box);
+            }
+        } else if (action == 'change') {
+            // provided edits could be used to optimize below
+            for (i = 0; i < boxes.length; i++) {
+                box = boxes[i];
+                for (var x = 0, xx = this.storyBoxes.length; x < xx; x++) {
+                    if (this.storyBoxes[x].id == box.id) {
+                        this.storyBoxes[x]= box;
+                        break;
+                    }
+                }
+                  console.log(boxes[i]);
+            }
+
+        } else {
+            throw new Error('action? :' + action);
+        }
+        // @todo optimize by looking at changes
+        var times = this.storyBoxes.map(function(p) {
+            if (p.start_time > p.end_time) {
+                return storytools.core.utils.createRange(p.end_time, p.start_time);
+            } else {
+                return storytools.core.utils.createRange(p.start_time, p.end_time);
+            }
+        });
+
+        this.storyBoxesLayer.set('times', times);
+        this.storyBoxesLayer.set('features', this.storyBoxes);
+    };
+
+
+    StoryBoxLayerManager.prototype.load = function(boxList) {
+        if (boxList) {
+            this.boxesChanged(boxList, 'add', true);
+        }
+    };
+
+
+    StoryBoxLayerManager.prototype.loadFromGeoJSON = function(geojson, projection) {
+        if (geojson && geojson.features) {
+            var loaded = boxes.loadFromGeoJSON(geojson, projection);
+            this.boxesChanged(loaded, 'add', true);
+        }
+    };
+
+    module.service('StoryBoxLayerManager', StoryBoxLayerManager);
+
+    module.constant('StoryBox', boxes.Box);
+
+
+   module.service('stBoxesStore', ['$http', 'StoryBoxLayerManager', function($http, StoryBoxLayerManager) {
+        function path(mapid) {
+            return '/maps/' + mapid + '/boxes';
+        }
+        function get(mapid) {
+            var saved = $http.get(path(mapid));
+            saved = (saved === null) ? null : JSON.parse(saved);
+            return saved;
+        }
+        function set(mapid, boxes) {
+            return $http.post(path(mapid),   new ol.format.GeoJSON().writeFeatures(boxes,
+                {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'}));
+        }
+        return {
+            loadBoxes: function(mapid, storyMap) {
+                return StoryBoxLayerManager.loadFromGeoJSON(get(mapid), projection);
+            },
+            createBoxes: function(options){
+
+                var totalRange;
+
+                    var interval = 0, data = null;
+                    if (Array.isArray(options.data)) {
+                        data = options.data;
+                        totalRange = utils.computeRange(options.data);
+                    } else {
+                        interval = options.data.interval || utils.pickInterval(options.data);
+                        totalRange = options.data;
+                    }
+                    boxes = [{
+                        title: 'Default StoryBox Chapter',
+                        description: 'No description.',
+                        data: data,
+                        range: totalRange,
+                        speed: {
+                            interval: interval,
+                            seconds: 3
+                        }
+                    }];
+
+
+                return boxes;
+
+            },
+            deleteBoxes: function(boxes) {
+                var saved = get();
+                var toDelete = boxes.map(function(d) {
+                    return d.id;
+                });
+                saved = saved.filter(function(s) {
+                    return toDelete.indexOf(s.id) < 0;
+                });
+                set(saved);
+            },
+            saveBoxes: function(mapid, boxes) {
+                var clones = [];
+                boxes.forEach(function(a) {
+                    if (typeof a.id == 'undefined') {
+                        a.id = ++maxId;
+                    }
+                    var clone = a.clone();
+                    if (a.get('start_time') !== undefined) {
+                        clone.set('start_time', a.get('start_time')/1000);
+                    }
+                    if (a.get('end_time') !== undefined) {
+                        clone.set('end_time', a.get('end_time')/1000);
+                    }
+                    clones.push(clone);
+                });
+                return set(mapid, clones);
+            }
+        };
+    }]);
+
+})();
+

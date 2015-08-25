@@ -437,7 +437,6 @@ function TimeController(model, slider, timeline, controls) {
       return model.getBox(slider.getRange().end);
     };
 
-
     this.reset = function(){
       this.update([]);
       this.timeEnabled = false;
@@ -858,8 +857,6 @@ function filterVectorBoxLayer(storyLayer, range) {
     });
 
     return features;
-    //layer.getSource().clear(true);
-    //layer.getSource().addFeatures(features);
 }
 
 /**

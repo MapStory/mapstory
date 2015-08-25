@@ -585,19 +585,51 @@
     */
 
 
-    $('.search-btn').click(function(){
+  $('.search-btn').dblclick(function(e){
+      e.preventDefault();
+  });
 
-       var search_term = $(this).closest("div.search-bar").find(".search-input").val();
+  $('.search-input').keypress(function(e) {
+          if(e.which == 13) {
+              var search_term = $(this).val();
 
-        if (HAYSTACK_SEARCH)
-            $scope.query['q'] = search_term;
-        else
-            $scope.query['title__icontains'] = search_term;
+              if (HAYSTACK_SEARCH)
+                  $scope.query['q'] = search_term;
+              else
+                  $scope.query['title__icontains'] = search_term;
 
 
-        $scope.query['type__in'] = 'layer'
-        query_api($scope.query);
-    });
+              $scope.query['type__in'] = 'layer'
+              query_api($scope.query);
+
+              $(this).closest("div.search-bar").find(".search-btn").focus();
+              $(this).closest("div.search-bar").find(".search-btn").click();
+
+              e.stopPropagation();
+              e.preventDefault();
+
+          }
+      });
+
+
+      $('.search-btn').click(function(){
+
+          $(this).prop("disabled",true);
+
+          var search_term = $(this).closest("div.search-bar").find(".search-input").val();
+
+          if (HAYSTACK_SEARCH)
+              $scope.query['q'] = search_term;
+          else
+              $scope.query['title__icontains'] = search_term;
+
+
+          $scope.query['type__in'] = 'layer'
+          query_api($scope.query);
+
+
+          $(this).prop("disabled",false);
+      });
 
     /*
     * Region search management

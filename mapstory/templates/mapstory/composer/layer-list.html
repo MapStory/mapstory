@@ -25,7 +25,7 @@
                 <button type="button" data-toggle="button" ng-click="toggleVisibleLayer(layer); $event.stopPropagation();" class="btn btn-xs btn-default">
                     <i class="glyphicon" ng-class="{'glyphicon-eye-open': layer.get('visibility'), 'glyphicon-eye-close': !layer.get('visibility')}"></i>
                 </button>
-                <button type="button" data-toggle="button" ng-click="removeLayer(layer); $event.stopPropagation();" class="btn btn-xs btn-default">
+                <button type="button" data-toggle="button" ng-really-message="Are you sure you want to remove this layer?" ng-really-click="removeLayer(layer); $event.stopPropagation();" class="btn btn-xs btn-default">
                    <i class="glyphicon glyphicon-trash"></i>
                 </button>
             </div>
@@ -46,7 +46,7 @@
                         </a>
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <!--div class="col-sm-4">
                         <div class="box-quick-link muted-background"><a href="#" >
                             <div class="header">
                                 <div class="glyphicon glyphicon-calendar"></div>
@@ -54,7 +54,7 @@
                             <div class=content>Time info</div>
                         </a>
                         </div>
-                    </div>
+                    </div-->
                     <div class="col-sm-4">
                         <div class="box-quick-link muted-background"><a href="#">
                             <div class="header">
@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="col-sm-4">
+                    <!--div class="col-sm-4">
                         <div class="box-quick-link muted-background">
                             <a href="#">
                                 <div class="header">
@@ -75,7 +75,7 @@
                                 <div class=content>Edit Attrib</div>
                             </a>
                         </div>
-                    </div>
+                    </div-->
                     <div class="col-sm-4">
                         <div class="box-quick-link blue-background">
                             <a href="#">
@@ -86,16 +86,16 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-sm-4">
+                    <!--div class="col-sm-4">
                         <div class="box-quick-link red-background">
-                            <a href="#" ng-click="removeLayer(layer)">
+                            <a href="#" ng-really-message="Are you sure you want to remove this layer?" ng-really-click="removeLayer(layer); $event.stopPropagation();">
                                 <div class="header">
                                     <div class="glyphicon glyphicon-trash"></div>
                                 </div>
                                 <div class="content">Delete Layer</div>
                             </a>
                         </div>
-                    </div>
+                    </div-->
                 </div>
             </div>
         </div>
