@@ -49,13 +49,13 @@ from django.utils import simplejson as json
 from geonode.maps.models import Map, MapLayer
 from geonode.utils import GXPLayer
 from geonode.utils import GXPMap
-from mapstory.forms import KeywordsForm
+from mapstory.forms import KeywordsForm, MetadataForm
 from geonode.utils import resolve_object
 from geonode.security.views import _perms_info_json
 from geonode.documents.models import get_related_documents
 from geonode.utils import build_social_links
 from geonode.utils import default_map_config
-
+from django.db.models import F
 
 
 class IndexView(TemplateView):
@@ -448,14 +448,29 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     if request.method == "POST":
         keywords_form = KeywordsForm(request.POST, instance=layer)
+        metadata_form = MetadataForm(request.POST, instance=layer)
 
         if keywords_form.is_valid():
             new_keywords = keywords_form.cleaned_data['keywords']
             layer.keywords.clear()
             layer.keywords.add(*new_keywords)
+        if metadata_form.is_valid():
+            # update all the metadata
+            new_category = TopicCategory.objects.get(id=metadata_form.cleaned_data['category'])
+            Layer.objects.filter(id=the_layer.id).update(category=new_category)
+            new_language = metadata_form.cleaned_data['language']
+            new_distribution_url = metadata_form.cleaned_data['distribution_url']
+            new_data_quality_statement = metadata_form.cleaned_data['data_quality_statement']
+            new_purpose = metadata_form.cleaned_data['purpose']
+            layer.language = new_language
+            layer.distribution_url = new_distribution_url
+            layer.data_quality_statement = new_data_quality_statement
+            layer.purpose = new_purpose
+            layer.save()
             
     else:
         keywords_form = KeywordsForm(instance=layer)
+        metadata_form = MetadataForm(instance=layer)
 
     context_dict = {
         "resource": layer,
@@ -465,6 +480,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "is_layer": True,
         "wps_enabled": settings.OGC_SERVER['default']['WPS_ENABLED'],
         "keywords_form": keywords_form,
+        "metadata_form": metadata_form,
     }
 
     context_dict["viewer"] = json.dumps(

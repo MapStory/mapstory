@@ -97,3 +97,16 @@ class KeywordsForm(forms.ModelForm):
     class Meta:
         model = ResourceBase
         fields = ['keywords']
+
+# A form for just Metadata
+class MetadataForm(forms.ModelForm):
+
+    class Meta:
+        model = ResourceBase
+        fields = [
+            'category',
+            'language',
+            'distribution_url',
+            'data_quality_statement',
+            'purpose'
+        ]
