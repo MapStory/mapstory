@@ -1,16 +1,31 @@
 <form method="POST" action="{% url 'flag' %}">
     {% csrf_token %}
     <table>
-        <tr><td><textarea id="id_comment" rows="10" cols="40" name="comment"></textarea></td></tr>
         <tr>
             <td><input type="hidden" name="object_id" value="{{ object_id }}" />
                 <input type="hidden" name="content_type" value="{{ content_type }}" />
                 <input type="hidden" name="creator_field" value="{{ creator_field }}" />
-                {% if flag_type %}
-                <input type="hidden" name="flag_type" value="{{ flag_type }}" />
-                {% endif %}
+                <ul>
+                    <li>
+                        <input type='radio' name='flag_type' value="broken" id='id_broken'><label for='id_broken'>Broken</label>
+                    </li>
+                    <li>
+                        <input type='radio' name='flag_type' value="inappropriate" id='id_inappropriate'><label for='id_inappropriate'>Inappropriate</label>
+                    </li>
+                    <li>
+                        <input type='radio' name='flag_type' value="missing_metadata" id='id_missing_metadata'><label for='id_missing_metadata'>Missing metadata</label>
+                    </li>
+                    <li>
+                        <input type='radio' name='flag_type' value="violates_terms" id='id_violates_terms'><label for='id_violates_terms'>Violates terms</label>
+                    </li>
+                    <li>
+                        <input type='radio' name='flag_type' value="other" id='id_other'><label for='id_other'>Other issue</label>
+                    </li>
+                </ul>
                 <input type="hidden" name="next" value="{{ request.path }}" />
-                <input type="submit" value="Submit Flag" /></td>
+            </td>
         </tr>
+        <tr><td><textarea id="id_comment" rows="10" cols="40" name="comment"></textarea></td></tr>
+        <tr><td><input type="submit" value="Submit Flag" /></td></tr>
     </table>
 </form>

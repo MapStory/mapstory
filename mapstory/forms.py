@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from geonode.base.forms import ResourceBaseForm
 from geonode.layers.models import Layer
 from geonode.base.forms import Profile
+from geonode.base.models import ResourceBase
 
 class MapStorySignupForm(SignupForm):
     """
@@ -89,3 +90,23 @@ class UploadLayerForm(ResourceBaseForm):
         )
 
         widgets = autocomplete_light.get_widgets_dict(Layer)
+
+# A form for just keywords
+class KeywordsForm(forms.ModelForm):
+
+    class Meta:
+        model = ResourceBase
+        fields = ['keywords']
+
+# A form for just Metadata
+class MetadataForm(forms.ModelForm):
+
+    class Meta:
+        model = ResourceBase
+        fields = [
+            'category',
+            'language',
+            'distribution_url',
+            'data_quality_statement',
+            'purpose'
+        ]

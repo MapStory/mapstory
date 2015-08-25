@@ -21,6 +21,8 @@ from mapstory.views import proxy
 from mapstory.views import MapStorySignup
 from mapstory.views import CommunityDetail
 from mapstory.views import GroupDetail
+from mapstory.views import map_detail
+from mapstory.views import layer_detail
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view()),
@@ -74,6 +76,9 @@ urlpatterns = patterns('',
     url(r'^layers/(?P<layername>[^/]*)/upload/metadata$', layer_metadata, name="layer_upload_metadata", kwargs={'template':'upload/layer_upload_metadata.html'}),
 
     url(r"^flag/", include('mapstory.apps.flag.urls')),
+
+    url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
+    url(r'^maps/(?P<mapid>\d+)$', map_detail, name='map_detail'),
 
 ) + urlpatterns
 
