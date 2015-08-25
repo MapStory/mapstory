@@ -19,7 +19,7 @@ from django.utils.http import is_safe_url
 from geonode.base.forms import CategoryForm
 from geonode.base.models import TopicCategory
 from geonode.layers.models import Layer
-from geonode.layers.views import _resolve_layer, _PERMISSION_MSG_METADATA
+from geonode.layers.views import _resolve_layer, _PERMISSION_MSG_METADATA, _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW
 from geonode.people.forms import ProfileForm
 from geonode.people.models import Profile
 from httplib import HTTPConnection, HTTPSConnection
@@ -45,7 +45,16 @@ from geonode.groups.models import GroupProfile
 from actstream.models import Action
 from actstream.models import actor_stream
 
-
+from django.utils import simplejson as json
+from geonode.maps.models import Map, MapLayer
+from geonode.utils import GXPLayer
+from geonode.utils import GXPMap
+from mapstory.forms import KeywordsForm
+from geonode.utils import resolve_object
+from geonode.security.views import _perms_info_json
+from geonode.documents.models import get_related_documents
+from geonode.utils import build_social_links
+from geonode.utils import default_map_config
 
 
 
@@ -378,3 +387,166 @@ def new_map_json(request):
 def new_map(request):
     from geonode.maps.views import new_map
     return new_map(request)
+
+def layer_detail(request, layername, template='layers/layer_detail.html'):
+    layer = _resolve_layer(
+        request,
+        layername,
+        'base.view_resourcebase',
+        _PERMISSION_MSG_VIEW)
+    # assert False, str(layer_bbox)
+    config = layer.attribute_config()
+
+    # TODO (Mapstory): This has been commented out to force the client to make a getCapabilities request in order
+    # to pull in the time dimension data.  Ideally we would cache time data just like the srs and bbox data to prevent
+    # making the getCapabilities request.
+
+    # Add required parameters for GXP lazy-loading
+    #layer_bbox = layer.bbox
+    #bbox = [float(coord) for coord in list(layer_bbox[0:4])]
+    #srid = layer.srid
+
+    # Transform WGS84 to Mercator.
+    #config["srs"] = srid if srid != "EPSG:4326" else "EPSG:900913"
+    #config["bbox"] = llbbox_to_mercator([float(coord) for coord in bbox])
+
+    #config["title"] = layer.title
+    #config["queryable"] = True
+
+
+    if layer.storeType == "remoteStore":
+        service = layer.service
+        source_params = {
+            "ptype": service.ptype,
+            "remote": True,
+            "url": service.base_url,
+            "name": service.name}
+        maplayer = GXPLayer(
+            name=layer.typename,
+            ows_url=layer.ows_url,
+            layer_params=json.dumps(config),
+            source_params=json.dumps(source_params))
+    else:
+        maplayer = GXPLayer(
+            name=layer.name,
+            ows_url=layer.ows_url,
+            layer_params=json.dumps(config))
+
+    # Update count for popularity ranking,
+    # but do not includes admins or resource owners
+    if request.user != layer.owner and not request.user.is_superuser:
+        Layer.objects.filter(
+            id=layer.id).update(popular_count=F('popular_count') + 1)
+
+    # center/zoom don't matter; the viewer will center on the layer bounds
+    map_obj = GXPMap(projection="EPSG:900913")
+    NON_WMS_BASE_LAYERS = [
+        la for la in default_map_config()[1] if la.ows_url is None]
+
+    metadata = layer.link_set.metadata().filter(
+        name__in=settings.DOWNLOAD_FORMATS_METADATA)
+
+    if request.method == "POST":
+        keywords_form = KeywordsForm(request.POST, instance=layer)
+
+        if keywords_form.is_valid():
+            new_keywords = keywords_form.cleaned_data['keywords']
+            layer.keywords.clear()
+            layer.keywords.add(*new_keywords)
+            
+    else:
+        keywords_form = KeywordsForm(instance=layer)
+
+    context_dict = {
+        "resource": layer,
+        "permissions_json": _perms_info_json(layer),
+        "documents": get_related_documents(layer),
+        "metadata": metadata,
+        "is_layer": True,
+        "wps_enabled": settings.OGC_SERVER['default']['WPS_ENABLED'],
+        "keywords_form": keywords_form,
+    }
+
+    context_dict["viewer"] = json.dumps(
+        map_obj.viewer_json(request.user, * (NON_WMS_BASE_LAYERS + [maplayer])))
+    context_dict["preview"] = getattr(
+        settings,
+        'LAYER_PREVIEW_LIBRARY',
+        'leaflet')
+
+    if request.user.has_perm('download_resourcebase', layer.get_self_resource()):
+        if layer.storeType == 'dataStore':
+            links = layer.link_set.download().filter(
+                name__in=settings.DOWNLOAD_FORMATS_VECTOR)
+        else:
+            links = layer.link_set.download().filter(
+                name__in=settings.DOWNLOAD_FORMATS_RASTER)
+        context_dict["links"] = links
+
+    if settings.SOCIAL_ORIGINS:
+        context_dict["social_links"] = build_social_links(request, layer)
+
+    return render_to_response(template, RequestContext(request, context_dict))
+
+def _resolve_map(request, id, permission='base.change_resourcebase',
+                 msg=_PERMISSION_MSG_GENERIC, **kwargs):
+    '''
+    Resolve the Map by the provided typename and check the optional permission.
+    '''
+    if id.isdigit():
+        key = 'pk'
+    else:
+        key = 'urlsuffix'
+    return resolve_object(request, Map, {key: id}, permission=permission,
+                          permission_msg=msg, **kwargs)
+
+def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
+    '''
+    The view that show details of each map
+    '''
+
+    map_obj = _resolve_map(request, mapid, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
+
+    # Update count for popularity ranking,
+    # but do not includes admins or resource owners
+    if request.user != map_obj.owner and not request.user.is_superuser:
+        Map.objects.filter(id=map_obj.id).update(popular_count=F('popular_count') + 1)
+
+    if snapshot is None:
+        config = map_obj.viewer_json(request.user)
+    else:
+        config = snapshot_config(snapshot, map_obj, request.user)
+
+    config = json.dumps(config)
+    layers = MapLayer.objects.filter(map=map_obj.id)
+
+    if request.method == "POST":
+        keywords_form = KeywordsForm(request.POST, instance=map_obj)
+
+        if keywords_form.is_valid():
+            new_keywords = keywords_form.cleaned_data['keywords']
+            map_obj.keywords.clear()
+            map_obj.keywords.add(*new_keywords)
+            map_obj.save()
+            return HttpResponseRedirect(
+                reverse(
+                    'map_detail',
+                    args=(
+                        map_obj.id,
+                    )))
+    else:
+        keywords_form = KeywordsForm(instance=map_obj)
+
+    context_dict = {
+        'config': config,
+        'resource': map_obj,
+        'layers': layers,
+        'permissions_json': _perms_info_json(map_obj),
+        "documents": get_related_documents(map_obj),
+        "keywords_form": keywords_form,
+    }
+
+    if settings.SOCIAL_ORIGINS:
+        context_dict["social_links"] = build_social_links(request, map_obj)
+
+    return render_to_response(template, RequestContext(request, context_dict))
