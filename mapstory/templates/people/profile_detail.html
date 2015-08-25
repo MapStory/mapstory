@@ -15,6 +15,7 @@
 {% endblock %}
 
 {% block body %}
+<div ng-controller="profile_search_controller">
         <div id="paralaxSlice1" data-stellar-background-ratio="0.5" style="background-position: 50% 25px;">
 <div class="maskParent">
     <div class="paralaxMask"></div>
@@ -358,6 +359,7 @@ WHAT IS THIS PART?!-->
 
         {% endcomment %}
 </div>
+</div>
 
 
 {% include "_bulk_permissions_form.html" %}
@@ -368,14 +370,25 @@ WHAT IS THIS PART?!-->
   {% if GEONODE_SECURITY_ENABLED %}
     {% include "_permissions_form_js.html" %}
   {% endif %}
+<script src="{{ STATIC_URL }}lib/js/angular.js"></script>
+<script src="{{ STATIC_URL }}mapstory/js/profile.js"></script>
   <script type="text/javascript">
+    HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
+    HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
+    CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
       {% if HAYSTACK_SEARCH %}
           SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}?owner__username__in={{profile.username}}';
       {% else %}
           SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}?owner__username__in={{profile.username}}';
       {% endif %}
+      
+      var module = angular.module('search', ['profile_search']);
+      module.constant('Configs', {
+        url: SEARCH_URL
+      });
+      var deps = ['search'];
+      angular.bootstrap(document, deps);
   </script>
-{% include 'search/search_scripts.html' %}
 {% include 'favorite/_favorite_list_js.html' %}
 {% endblock %}
 
