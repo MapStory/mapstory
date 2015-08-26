@@ -95,12 +95,15 @@ urlpatterns = patterns('',
     url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
     url(r'^layers/(?P<layername>[^/]*)/replace$', layer_replace, name="layer_replace"),
     url(r'^layers/(?P<layername>[^/]*)/thumbnail$', layer_thumbnail, name='layer_thumbnail'),
-    url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
 
 ) + urlpatterns
 
 urlpatterns += maploom_urls
 urlpatterns += geonode_layers_urlpatterns
+layer_detail_patterns = patterns('',
+    url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
+    )
+urlpatterns += layer_detail_patterns
 
 if settings.DEBUG:
     urlpatterns = urlpatterns + patterns('',
