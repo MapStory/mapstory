@@ -24,6 +24,17 @@ from mapstory.views import GroupDetail
 from mapstory.views import map_detail
 from mapstory.views import layer_detail
 from geonode.layers.views import layer_remove, layer_replace, layer_thumbnail, layer_upload
+from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
+
+
+# -- Deprecated url routes for Geoserver authentication -- remove after GeoNode 2.1
+# -- Use /gs/acls, gs/resolve_user/, gs/download instead
+if 'geonode.geoserver' in settings.INSTALLED_APPS:
+    geonode_layers_urlpatterns = patterns('',
+                           url(r'^layers/acls/?$', layer_acls, name='layer_acls_dep'),
+                           url(r'^layers/resolve_user/?$', resolve_user, name='layer_resolve_user_dep'),
+                           url(r'^layers/download$', layer_batch_download, name='layer_batch_download_dep'),
+                           )
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view()),
@@ -80,15 +91,16 @@ urlpatterns = patterns('',
 
     url(r'^maps/(?P<mapid>\d+)$', map_detail, name='map_detail'),
     url(r'^layers/upload$', layer_upload, name='layer_upload'),
-    url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
     url(r'^layers/(?P<layername>[^/]*)/metadata$', layer_metadata, name="layer_metadata"),
     url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
     url(r'^layers/(?P<layername>[^/]*)/replace$', layer_replace, name="layer_replace"),
     url(r'^layers/(?P<layername>[^/]*)/thumbnail$', layer_thumbnail, name='layer_thumbnail'),
+    url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
 
 ) + urlpatterns
 
 urlpatterns += maploom_urls
+urlpatterns += geonode_layers_urlpatterns
 
 if settings.DEBUG:
     urlpatterns = urlpatterns + patterns('',
