@@ -23,6 +23,7 @@ from mapstory.views import CommunityDetail
 from mapstory.views import GroupDetail
 from mapstory.views import map_detail
 from mapstory.views import layer_detail
+from geonode.layers.views import layer_remove, layer_replace, layer_thumbnail, layer_upload
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view()),
@@ -77,8 +78,13 @@ urlpatterns = patterns('',
 
     url(r"^flag/", include('mapstory.apps.flag.urls')),
 
-    url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
     url(r'^maps/(?P<mapid>\d+)$', map_detail, name='map_detail'),
+    url(r'^layers/upload$', layer_upload, name='layer_upload'),
+    url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
+    url(r'^layers/(?P<layername>[^/]*)/metadata$', layer_metadata, name="layer_metadata"),
+    url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
+    url(r'^layers/(?P<layername>[^/]*)/replace$', layer_replace, name="layer_replace"),
+    url(r'^layers/(?P<layername>[^/]*)/thumbnail$', layer_thumbnail, name='layer_thumbnail'),
 
 ) + urlpatterns
 
