@@ -36,6 +36,10 @@ if 'geonode.geoserver' in settings.INSTALLED_APPS:
                            url(r'^layers/download$', layer_batch_download, name='layer_batch_download_dep'),
                            )
 
+layer_detail_patterns = patterns('',
+    url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
+    )
+
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view()),
     url(r"^account/signup/$", MapStorySignup.as_view(), name="account_signup"),
@@ -96,14 +100,9 @@ urlpatterns = patterns('',
     url(r'^layers/(?P<layername>[^/]*)/replace$', layer_replace, name="layer_replace"),
     url(r'^layers/(?P<layername>[^/]*)/thumbnail$', layer_thumbnail, name='layer_thumbnail'),
 
-) + urlpatterns
+) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 
 urlpatterns += maploom_urls
-urlpatterns += geonode_layers_urlpatterns
-layer_detail_patterns = patterns('',
-    url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
-    )
-urlpatterns += layer_detail_patterns
 
 if settings.DEBUG:
     urlpatterns = urlpatterns + patterns('',
