@@ -32,7 +32,7 @@
                 <!-- goes to composer -->
                 <a href="{% endverbatim %}{% url "new_map" %}?layer={% verbatim %}{{ item.detail_url.substring(8)}}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> use</button></a>
                 <!-- goes to layer edit -->
-                <a href='{% url "map-new2" %}?layer={{item.service_typename}}'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
+                <a href='{% url "map-edit" %}?layer={{item.service_typename}}'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
                 <!-- TODO: Hook in favorites functionality -->
                 <button class="btn btn-primary btn-xs"><i class="fa fa-heart-o"></i> favorite</button>
             </h4>

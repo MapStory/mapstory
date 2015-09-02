@@ -142,6 +142,19 @@
 
                 if(window.config){
                     stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, window.config);
+
+
+                    var boxesLoad = $http.get("/maps/" + window.config.id + "/boxes");
+                    var annotationsLoad = $http.get("/maps/" + window.config.id + "/annotations");
+
+                    $q.all([boxesLoad, annotationsLoad]).then(function(values) {
+                        var boxes_geojson = values[1].data;
+                        StoryBoxLayerManager.loadFromGeoJSON(boxes_geojson, self.storyMap.getMap().getView().getProjection());
+
+                        var pins_geojson = values[2].data;
+                        StoryPinLayerManager.loadFromGeoJSON(pins_geojson, self.storyMap.getMap().getView().getProjection());
+                    });
+
                 }else{
                     stStoryMapBaseBuilder.defaultMap(self.storyMap);
                 }
@@ -159,7 +172,24 @@
 
             if(config.id != undefined && config.id != null && config.id > 0){
                 end_point = '/maps/' + config.id + '/data';
-                var mapLoad = $http.put(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config));
+                var mapLoad = $http.put(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config)).success(function(data){
+
+                    stBoxesStore.saveBoxes(mapId, StoryBoxLayerManager.storyBoxes)
+                        .success(function(data) { $log.debug("StoryBoxes Saved: " + data);  }).error(function(data, status) {
+                            if (status === 401) {
+
+                            }
+                        });
+
+                    stAnnotationsStore.saveAnnotations(mapId, StoryPinLayerManager.storyPins)
+                        .success(function(data) { $log.debug("StoryPins Saved: " + data);  }).error(function(data, status) {
+                            if (status === 401) {
+                                window.console.warn('Not authorized to see map ' + mapId);
+                                stStoryMapBaseBuilder.defaultMap(self.storyMap);
+                            }
+                        });
+
+                });
             }else{
 
                 var mapLoad = $http.post(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config)).success(function(data) {
@@ -182,10 +212,6 @@
                                 stStoryMapBaseBuilder.defaultMap(self.storyMap);
                             }
                         });
-
-
-
-
 
                 }).error(function(data, status) {
                         if (status === 401) {
@@ -289,6 +315,29 @@
     });
 
 
+
+
+    module.directive('checkImage', function ($q) {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            attrs.$observe('ngSrc', function (ngSrc) {
+                var deferred = $q.defer();
+                var image = new Image();
+                image.onerror = function () {
+                    deferred.resolve(false);
+                    element.attr('src', '/static/mapstory/img/img_95x65.png'); // set default image
+                };
+                image.onload = function () {
+                    deferred.resolve(true);
+                };
+                image.src = ngSrc;
+                return deferred.promise;
+            });
+        }
+    };
+});
+
     module.directive('ngReallyClick', [function() {
         return {
             restrict: 'A',
@@ -311,7 +360,7 @@
             scope: {
                 map: "="
             },
-            templateUrl: 'templates/story-about-info.html',
+            templateUrl: '/maps/templates/story-about-info.html',
             link: function(scope, el, atts) {
 
                 scope.choice = {"title": MapManager.storyMap.getStoryTitle(), "abstract": MapManager.storyMap.getStoryAbstract()};
@@ -335,15 +384,15 @@
             scope: {
                 map: "="
             },
-            templateUrl: 'templates/add-layers.html',
+            templateUrl: '/maps/templates/add-layers.html',
             link: function(scope, el, atts) {
                 scope.server = {
                     active: servers[0]
                 };
                 scope.servers = servers;
 
-                scope.showLoadSearchDialog = function() {
-                    var promise = loadSearchDialog.show();
+                scope.showLoadSearchDialog = function(tab) {
+                    var promise = loadSearchDialog.show(tab);
                     promise.then(function(results) {
 
                         if (results) {
@@ -385,7 +434,7 @@
             scope: {
                 map: "="
             },
-            templateUrl: 'templates/layer-list.html',
+            templateUrl: '/maps/templates/layer-list.html',
             link: function(scope, el, atts) {
                 scope.baseLayers = [{
                     title: 'World Light',
@@ -470,7 +519,7 @@
             scope.maps = stMapConfigStore.listMaps();
             scope.choice = {};
             return $modal.open({
-                templateUrl: 'templates/load-map-dialog.html',
+                templateUrl: '/maps/templates/load-map-dialog.html',
                 scope: scope
             }).result.then(function() {
                 return scope.choice;
@@ -487,7 +536,7 @@
             var scope = $rootScope.$new(true);
             scope.choice = {};
             return $modal.open({
-                templateUrl: 'templates/load-new-map-dialog.html',
+                templateUrl: '/maps/templates/load-new-map-dialog.html',
                 scope: scope
             }).result.then(function() {
                 return scope.choice;
@@ -498,39 +547,39 @@
         };
     });
 
-    module.service('loadSearchDialog', function($modal, $rootScope, stMapConfigStore) {
-        function show() {
+    module.service('loadSearchDialog', function($modal, $rootScope) {
+        function show(tab) {
             var scope = $rootScope.$new(true);
 
-            scope.choices = [];
-
+            scope.selected_results = [];
+            scope.selected = tab;
             scope.result_select = function($event, layer){
                 var element = $($event.target);
 
                 var box = $(element.parents('.box')[0]);
 
                 if (box.hasClass('resource_selected')){
-                    var index = scope.choices.indexOf(layer);
+                    var index = scope.selected_results.indexOf(layer);
 
                     if (index > -1) {
-                        scope.choices.splice(index, 1);
+                        scope.selected_results.splice(index, 1);
                     }
 
                     element.html('Select');
                     box.removeClass('resource_selected');
                 }
                 else{
-                    scope.choices.push(layer);
+                    scope.selected_results.push(layer);
                     element.html('Deselect');
                     box.addClass('resource_selected');
                 }
             };
 
             return $modal.open({
-                templateUrl: 'templates/load-search-dialog.html',
+                templateUrl: '/maps/templates/load-search-dialog.html',
                 scope: scope
             }).result.then(function() {
-                return scope.choices;
+                return scope.selected_results;
             });
         }
         return {

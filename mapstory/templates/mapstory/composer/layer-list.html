@@ -38,7 +38,7 @@
 
                 <div>
                     <div class="col-sm-4">
-                        <div class="box-quick-link muted-background"><a href="#">
+                        <div class="box-quick-link muted-background"><a ng-click="selected = {style:true}">
                             <div class="header">
                                 <div class="glyphicon glyphicon-pencil"></div>
                             </div>
@@ -46,17 +46,8 @@
                         </a>
                         </div>
                     </div>
-                    <!--div class="col-sm-4">
-                        <div class="box-quick-link muted-background"><a href="#" >
-                            <div class="header">
-                                <div class="glyphicon glyphicon-calendar"></div>
-                            </div>
-                            <div class=content>Time info</div>
-                        </a>
-                        </div>
-                    </div-->
                     <div class="col-sm-4">
-                        <div class="box-quick-link muted-background"><a href="#">
+                        <div class="box-quick-link muted-background"><a href="/layers/{{layer.get('id')}}" target="_blank">
                             <div class="header">
                                 <div class="glyphicon glyphicon-tag"></div>
                             </div>
@@ -66,36 +57,16 @@
                     </div>
                 </div>
                 <div>
-                    <!--div class="col-sm-4">
+                    <div class="col-sm-4">
                         <div class="box-quick-link muted-background">
-                            <a href="#">
+                            <a href="/maps/edit?layer={{layer.get('id')}}" target="_blank">
                                 <div class="header">
                                     <div class="glyphicon glyphicon-comment"></div>
                                 </div>
                                 <div class=content>Edit Attrib</div>
                             </a>
                         </div>
-                    </div-->
-                    <div class="col-sm-4">
-                        <div class="box-quick-link blue-background">
-                            <a href="#">
-                                <div class="header">
-                                    <div class="glyphicon glyphicon-download"></div>
-                                </div>
-                                <div class="content">Download</div>
-                            </a>
-                        </div>
                     </div>
-                    <!--div class="col-sm-4">
-                        <div class="box-quick-link red-background">
-                            <a href="#" ng-really-message="Are you sure you want to remove this layer?" ng-really-click="removeLayer(layer); $event.stopPropagation();">
-                                <div class="header">
-                                    <div class="glyphicon glyphicon-trash"></div>
-                                </div>
-                                <div class="content">Delete Layer</div>
-                            </a>
-                        </div>
-                    </div-->
                 </div>
             </div>
         </div>

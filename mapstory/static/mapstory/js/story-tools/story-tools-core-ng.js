@@ -368,6 +368,9 @@
         } else {
             layer = data.layer;
         }
+
+        this.set('visibility', layer.getVisible());
+
         this.layer_ = layer;
     }
 
@@ -894,12 +897,9 @@
             return '/maps/' + mapid + '/annotations';
         }
         function get(mapid) {
-            var saved = localStorage.getItem(path(mapid));
+            var saved = $http.get(path(mapid));
+            //saved = (saved === null) ? null : JSON.parse(saved);
             saved = (saved === null) ? [] : JSON.parse(saved);
-            // TODO is this still needed?
-            /*saved.forEach(function(s) {
-                s.the_geom = format.readGeometry(s.the_geom);
-            });*/
             return saved;
         }
         function set(mapid, annotations) {

@@ -73,7 +73,6 @@ html, body {
 
 #footer {
     display: table-row;
-    background-color: #ccc;
     position: absolute;
     bottom:0px;
     width:100%;
@@ -157,6 +156,10 @@ html, body {
     background-color: #ccc;
 }
 
+#story-box-accordion{
+border-radius: 0px;
+}
+
 #slider{
     width:50%;
     float:right;
@@ -204,31 +207,8 @@ html, body {
 }
 
 #currentBox{
-    padding: 20px;
-    width:400px;
-    overflow: hidden;
-    height:300px;
-    border:1px solid black;
-    color:white;
-    background: rgba(11, 11, 11, 0.6);
-    top:-310px;
-    left:10px;
-    position: absolute;
+    width: 30%;
 }
-
-#currentBox p{
-
-    font-size:15px;
-
-}
-
-
-#currentBox h3{
-
-    text-align: center;
-    font-weight: 600;
-}
-
 
 </style>
 <div ng-app="viewer" ng-controller="viewerController as viewer"id="container">
@@ -245,7 +225,7 @@ html, body {
     </div>
 
     <div id="footer" class='floating-below' ng-show="timeControlsManager.timeControls">
-        <div class="panel-group" id="curentBox">
+        <div class="panel-group" id="currentBox">
             <div class="panel panel-default" id="story-box-accordion">
                 <div class="panel-heading">
                     <h4 class="panel-title">
@@ -263,14 +243,37 @@ html, body {
         </div>
         <div id="time-controls-panel2">
             <div class="navbar" style="margin:5px 0 0; min-height: auto" ng-controller="tileProgressController">
+                <button class="btn no-border" data-toggle="popover" tabindex="0" data-trigger="focus"><i class="fa fa-cog" style="font-size: 15px; color:white;"></i></button>
                 <st-playback-controls class="pull-left" time-controls="timeControlsManager.timeControls"></st-playback-controls>
                 <div id="slider"></div>
                 <progressbar ng-show="false" animate="false" style="width: 15%; margin:6px 0; font-size:14px" class="navbar-nav navbar-right" value="tilesLoadedProgress"><b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad" style="color:black"></b></progressbar>
             </div>
             <div id="timeline" style="display: none;"></div>
         </div>
+        <div id="layersList" style="display: none;">
+            {%verbatim%}
+            <div ng-repeat="layer in mapManager.storyMap.getStoryLayers().getArray()">
+                {{ layer.get('title') }}
+            </div>
+            {%endverbatim%}
+        </div>
     </div>
 </div>
 <div style="display: none;">
   <div id="popup"></div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover({
+            html : true,
+            content: function() {
+                return $('#layersList').html();
+            },
+            title: function() {
+                return "";
+            },
+            placement : 'top'
+        });
+    });
+</script>
+

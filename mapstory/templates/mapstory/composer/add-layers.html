@@ -25,28 +25,28 @@
                             <span ng-if="loading">Loading...</span>
 
 
-                            <a ng-click="showLoadSearchDialog()">
+                            <a ng-click="showLoadSearchDialog({explore:true})">
                                 <div class="box-content box-statistic">
                                     <div class="title text-primary"><i class="glyphicon glyphicon-th"></i>Explore All</div>
                                     <small><span ng-bind="total_counts"></span> Storylayers</small>
 
                                 </div>
                             </a>
-                            <a ng-click="showLoadSearchDialog()">
+                            <a ng-click="showLoadSearchDialog({common:true})">
                                 <div class="box-content box-statistic">
                                     <div class="title text-primary"><i class="glyphicon glyphicon-star"></i>Common StoryLayers</div>
                                     <small>0 Storylayers</small>
 
                                 </div>
                             </a>
-                            <a ng-click="showLoadSearchDialog()">
+                            <a ng-click="showLoadSearchDialog({favorites:true})">
                                 <div class="box-content box-statistic">
                                     <div class="title text-primary"><i class="glyphicon glyphicon-heart"></i>My Favorites</div>
                                     <small>0 Favorites</small>
 
                                 </div>
                             </a>
-                                <a ng-click="showLoadSearchDialog()">
+                                <a ng-click="showLoadSearchDialog({uploads:true})">
                                 <div class="box-content box-statistic">
                                     <div class="title text-primary"><i class="glyphicon glyphicon-upload"></i>My Uploads</div>
                                     <small>0 Uploads</small>
