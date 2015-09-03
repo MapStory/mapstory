@@ -456,8 +456,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             layer.keywords.add(*new_keywords)
         if metadata_form.is_valid():
             # update all the metadata
-            new_category = TopicCategory.objects.get(id=metadata_form.cleaned_data['category'])
-            Layer.objects.filter(id=the_layer.id).update(category=new_category)
+            new_category = TopicCategory.objects.get(id=metadata_form.cleaned_data['category'].id)
+            Layer.objects.filter(id=layer.id).update(category=new_category)
             new_language = metadata_form.cleaned_data['language']
             new_distribution_url = metadata_form.cleaned_data['distribution_url']
             new_data_quality_statement = metadata_form.cleaned_data['data_quality_statement']

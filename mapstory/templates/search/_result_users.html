@@ -5,15 +5,19 @@
             <a href="{{ item.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ item.avatar_100}}"/></a>
             <h3><a href="{{ item.profile_detail_url}}">{{ item.first_name }} {{ item.last_name }}</a></h3>
             <!-- If both exist, comma separated... otherwise no comma separation -->
-            <h4 ng-show="item.position && item.organization"><i class="fa fa-briefcase"></i>{{ item.position }}, {{ item.organization }}</h4>
-            <h4 ng-show="item.city && item.country"><i class="fa fa-map-marker"></i>{{ item.city }}, {{ item.country }}</h4>
-            <h4 ng-hide="item.position && item.organization"><i class="fa fa-briefcase"></i>{{ item.position }} {{ item.organization }}</h4>
-            <h4 ng-hide="item.city && item.country"><i class="fa fa-map-marker"></i>{{ item.city }} {{ item.country }}</h4>
+            <div ng-if="{{ item.position }} || {{ item.organization }}">
+                <h4 ng-show="item.position && item.organization"><i class="fa fa-briefcase"></i>{{ item.position }}, {{ item.organization }}</h4>
+                <h4 ng-hide="item.position && item.organization"><i class="fa fa-briefcase"></i>{{ item.position }} {{ item.organization }}</h4>
+            </div>
+            <div ng-if="{{ item.city }} || {{ item.country }}">
+                <h4 ng-show="item.city && item.country"><i class="fa fa-map-marker"></i>{{ item.city }}, {{ item.country }}</h4>
+                <h4 ng-hide="item.city && item.country"><i class="fa fa-map-marker"></i>{{ item.city }} {{ item.country }}</h4>
+            </div>
             <h4>{{ item.profile }}</h4>
 
-            <span class="card-info"><a href="{{ item.profile_detail_url }}"><i class="fa fa-user"></i> view profile</a></span>
-            <!-- TODO: Hook in messaging functionality -->
-            <span class="card-info"><a><i class="fa fa-envelope"></i> message</a></span>
+            <a href="{{ item.profile_detail_url }}"><button class="btn btn-primary btn-xs"><i class="fa fa-user"></i> view profile</button></a>
+            <!-- TODO: Hook in messaging functionality. When clicked, it should link to the "create message" page with the 'To:' field filled in with the user's name. To:item.username. Gotta figure out how this works. /messages/create/ -->
+            <a href="{% endverbatim %}{% url "message_create" %}{% verbatim %}"><button class="btn btn-primary btn-xs"><i class="fa fa-envelope"></i> message</button></a>
         </div>
     </li>
 </div>
@@ -27,9 +31,9 @@
             <h4 ng-show="item.city && item.country">{{ item.city }}, {{ item.country }}</h4>
             <h4 ng-hide="item.city && item.country">{{ item.city }} {{ item.country }}</h4>
             <h4>{{ item.description }}</h4>
-            <h4><span class="card-info"><a href="{{ item.detail_url}}"><i class="fa fa-home"></i> Organization</a></span>
-            <span class="card-info"><a href="{{ item.detail_url}}"><i class="fa fa-rss"></i> Subscribe</a></span>
-            <span class="card-info"><a href="{{ item.detail_url}}"><i class="fa fa-code-fork"></i> Share</a></h4>
+            <h4><a href="{{ item.detail_url}}"><button class="btn btn-primary btn-xs"><i class="fa fa-home"></i> Organization</a></button>
+            <a href="{{ item.detail_url}}"><button class="btn btn-primary btn-xs"><i class="fa fa-rss"></i> Subscribe</button></a>
+            <a href="{{ item.detail_url}}"><button class="btn btn-primary btn-xs"><i class="fa fa-code-fork"></i> Share</button></a></h4>
         </div>
     </li>
 </div>
