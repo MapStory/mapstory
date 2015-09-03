@@ -43,6 +43,19 @@
     });
   });
 
+  // add filter to decode uri
+  module.filter('decodeURIComponent', function() {
+    return window.decodeURIComponent;
+  });
+  // add filter to capitalize string
+  module.filter('capitalize', function() {
+    return function(input, scope) {
+      if (input!=null)
+      input = input.toLowerCase();
+      return input.substring(0,1).toUpperCase()+input.substring(1);
+    }
+  });
+
   var deps = ['search'];
   {% if include_spatial == 'true' %}
   deps.push('leaflet-directive');
