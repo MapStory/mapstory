@@ -148,10 +148,10 @@
                     var annotationsLoad = $http.get("/maps/" + window.config.id + "/annotations");
 
                     $q.all([boxesLoad, annotationsLoad]).then(function(values) {
-                        var boxes_geojson = values[1].data;
+                        var boxes_geojson = values[0].data;
                         StoryBoxLayerManager.loadFromGeoJSON(boxes_geojson, self.storyMap.getMap().getView().getProjection());
 
-                        var pins_geojson = values[2].data;
+                        var pins_geojson = values[1].data;
                         StoryPinLayerManager.loadFromGeoJSON(pins_geojson, self.storyMap.getMap().getView().getProjection());
                     });
 
@@ -173,6 +173,8 @@
             if(config.id != undefined && config.id != null && config.id > 0){
                 end_point = '/maps/' + config.id + '/data';
                 var mapLoad = $http.put(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config)).success(function(data){
+
+                    var mapId = data.id;
 
                     stBoxesStore.saveBoxes(mapId, StoryBoxLayerManager.storyBoxes)
                         .success(function(data) { $log.debug("StoryBoxes Saved: " + data);  }).error(function(data, status) {

@@ -921,16 +921,9 @@
                 set(saved);
             },
             saveAnnotations: function(mapid, annotations) {
-                var saved = get();
-                var maxId = 0;
-                saved.forEach(function(s) {
-                    maxId = Math.max(maxId, s.id);
-                });
                 var clones = [];
+
                 annotations.forEach(function(a) {
-                    if (typeof a.id == 'undefined') {
-                        a.id = ++maxId;
-                    }
                     var clone = a.clone();
                     if (a.get('start_time') !== undefined) {
                         clone.set('start_time', a.get('start_time')/1000);
@@ -940,7 +933,7 @@
                     }
                     clones.push(clone);
                 });
-                set(mapid, clones);
+                return set(mapid, clones);
             }
         };
     }]);
@@ -1769,9 +1762,6 @@
             saveBoxes: function(mapid, boxes) {
                 var clones = [];
                 boxes.forEach(function(a) {
-                    if (typeof a.id == 'undefined') {
-                        a.id = ++maxId;
-                    }
                     var clone = a.clone();
                     if (a.get('start_time') !== undefined) {
                         clone.set('start_time', a.get('start_time')/1000);
