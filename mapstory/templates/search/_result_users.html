@@ -2,21 +2,21 @@
 <div ng-show="query.type__in==='user'">
     <li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4" ng-if="item.type==='user'">
         <div style="text-align: left;">
-            <a href="{{ item.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ item.avatar_100}}"/></a>
+            <a href="{{ item.profile_detail_url}}"><img class="thumb img-responsive img-circle" src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100" ng-src="{{ item.avatar_100}}"/></a>
             <h3><a href="{{ item.profile_detail_url}}">{{ item.first_name }} {{ item.last_name }}</a></h3>
             <!-- If both exist, comma separated... otherwise no comma separation -->
-            <div ng-if="{{ item.position }} || {{ item.organization }}">
-                <h4 ng-show="item.position && item.organization"><i class="fa fa-briefcase"></i>{{ item.position }}, {{ item.organization }}</h4>
-                <h4 ng-hide="item.position && item.organization"><i class="fa fa-briefcase"></i>{{ item.position }} {{ item.organization }}</h4>
+            <div ng-if="item.position || item.organization">
+                <h4 ng-show="item.position && item.organization"><i class="fa fa-briefcase"></i> {{ item.position }}, {{ item.organization }}</h4>
+                <h4 ng-hide="item.position && item.organization"><i class="fa fa-briefcase"></i> {{ item.position }} {{ item.organization }}</h4>
             </div>
-            <div ng-if="{{ item.city }} || {{ item.country }}">
-                <h4 ng-show="item.city && item.country"><i class="fa fa-map-marker"></i>{{ item.city }}, {{ item.country }}</h4>
-                <h4 ng-hide="item.city && item.country"><i class="fa fa-map-marker"></i>{{ item.city }} {{ item.country }}</h4>
+            <div ng-if="item.city || item.country">
+                <h4 ng-show="item.city && item.country"><i class="fa fa-map-marker"></i> {{ item.city }}, {{ item.country }}</h4>
+                <h4 ng-hide="item.city && item.country"><i class="fa fa-map-marker"></i> {{ item.city }} {{ item.country }}</h4>
             </div>
             <h4>{{ item.profile }}</h4>
 
             <a href="{{ item.profile_detail_url }}"><button class="btn btn-primary btn-xs"><i class="fa fa-user"></i> view profile</button></a>
-            <!-- TODO: Hook in messaging functionality. When clicked, it should link to the "create message" page with the 'To:' field filled in with the user's name. To:item.username. Gotta figure out how this works. /messages/create/ -->
+            <!-- TODO: Currently only links to create a message, in the future so populate the "To:" field with the user we clicked - item.username -->
             <a href="{% endverbatim %}{% url "message_create" %}{% verbatim %}"><button class="btn btn-primary btn-xs"><i class="fa fa-envelope"></i> message</button></a>
         </div>
     </li>
