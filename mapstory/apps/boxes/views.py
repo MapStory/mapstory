@@ -154,9 +154,9 @@ def _write_boxes(data, get_props, id_collector, mapobj, overwrite, form_mode):
         props = get_props(r)
         props['map'] = mapobj.id
         box = None
-        id = r.get('id', None)
+        id = props.get('id', None)
         if id and not overwrite:
-            box = StoryBox.objects.get(map=mapobj, pk=id)
+            box, c = StoryBox.objects.get_or_create(map=mapobj, pk=id)
 
         # form expects everything in the props, copy geometry in
         if 'geometry' in r:

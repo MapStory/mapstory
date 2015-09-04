@@ -2,15 +2,6 @@
 
 <accordion close-others="true" sv-root sv-part="layers" sv-on-sort="onSort($item, $partFrom, $partTo, $indexFrom, $indexTo)">
 
-
-       <accordion-group is-open="status.open">
-        <accordion-heading>
-            <span>About</span> <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-        </accordion-heading>
-    <story-about-info></story-about-info>
-    </accordion-group>
-
-
     <accordion-group>
         <accordion-heading>
             Add a StoryLayer <i id="layer-manager-panel" class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>

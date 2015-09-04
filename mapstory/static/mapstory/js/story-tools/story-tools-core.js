@@ -986,9 +986,6 @@ exports.MapController = function(options, timeControls) {
         if(currentBoxes){
             var latest = currentBoxes.length - 1;
             var currentBox = currentBoxes[latest];
-            console.log(currentBox.getProperties());
-            console.log(new Date(currentBox.get('range').start).toISOString());
-            console.log(new Date(currentBox.get('range').end).toISOString());
 
             if(currentBox.get('center')){
                 console.log("Storymap Projection: " + storyMap.getMap().getView().getProjection().getCode());
@@ -1046,7 +1043,7 @@ exports.TimeModel = function(options, boxes, annotations) {
             //boxModel.setRange(opts.data);
         }
 
-        if (opts.hasOwnProperty('boxes')) {
+        if (opts.hasOwnProperty('boxes') && opts.boxes.length > 0) {
             this.boxModel = new BoxModel(opts.boxes);
         }
 

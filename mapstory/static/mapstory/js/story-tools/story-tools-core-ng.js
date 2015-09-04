@@ -897,10 +897,11 @@
             return '/maps/' + mapid + '/annotations';
         }
         function get(mapid) {
-            var saved = $http.get(path(mapid));
-            //saved = (saved === null) ? null : JSON.parse(saved);
-            saved = (saved === null) ? [] : JSON.parse(saved);
-            return saved;
+            var promise = $http.get(path(mapid)).then(function(response){
+                var saved = (response.data === null) ? null : JSON.parse(response.data);
+                return saved;
+            });
+            return promise;
         }
         function set(mapid, annotations) {
             return $http.post(path(mapid),   new ol.format.GeoJSON().writeFeatures(annotations,
@@ -1710,9 +1711,11 @@
             return '/maps/' + mapid + '/boxes';
         }
         function get(mapid) {
-            var saved = $http.get(path(mapid));
-            saved = (saved === null) ? null : JSON.parse(saved);
-            return saved;
+            var promise = $http.get(path(mapid)).then(function(response){
+                var saved = (response.data === null) ? null : JSON.parse(response.data);
+                return saved;
+            });
+            return promise;
         }
         function set(mapid, boxes) {
             return $http.post(path(mapid),   new ol.format.GeoJSON().writeFeatures(boxes,

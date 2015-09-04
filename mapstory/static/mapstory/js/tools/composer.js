@@ -373,7 +373,7 @@
                      MapManager.storyMap.setStoryTitle(about.title);
                      MapManager.storyMap.setStoryAbstract(about.abstract);
                      MapManager.saveMap();
-                     scope.$parent.status.open = false;
+                     //scope.$parent.status.open = false;
                      scope.loading = false;
                 };
             }
@@ -388,10 +388,8 @@
             },
             templateUrl: '/maps/templates/add-layers.html',
             link: function(scope, el, atts) {
-                scope.server = {
-                    active: servers[0]
-                };
-                scope.servers = servers;
+
+                scope.errors = [];
 
                 scope.showLoadSearchDialog = function(tab) {
                     var promise = loadSearchDialog.show(tab);
@@ -400,30 +398,44 @@
                         if (results) {
 
                             angular.forEach(results, function(layer) {
-                                       MapManager.addLayer(layer.typename,false, servers[0], true, '', layer.title);
+                                MapManager.addLayer(layer.typename,false, servers[0], true, '', layer.title).then(function() {
+                                    // pass
+                                }, function(problems) {
+                                    var msg = 'Something went wrong:';
+                                    if (problems[0].status == 404) {
+                                        msg = 'Cannot find the specified layer: ' + layer.title;
+                                    }
+                                    scope.errors.push(msg);
+                                    $log.warn(problems);
+                                }).finally(function() {
+                                        scope.loading = false;
+
+                                    });;
                             });
                         }
                     });
                 };
 
 
+                scope.closeAlert = function(index) {
+                    scope.errors.splice(index, 1);
+                };
+
+
                 scope.addLayer = function() {
                     scope.loading = true;
-                    MapManager.addLayer(this.layerName, this.asVector, scope.server.active).then(function() {
+                    MapManager.addLayer(this.layerName, this.asVector, servers[0]).then(function() {
                         // pass
                     }, function(problems) {
                         var msg = 'Something went wrong:';
                         if (problems[0].status == 404) {
-                            msg = 'Cannot find the specified layer:';
+                            msg = 'Cannot find the specified layer: ' + layer.title;
                         }
-                        msg += problems[0].data;
-                        $modal.open({
-                            template: msg
-                        });
+                        scope.errors.push(msg);
                         $log.warn(problems);
                     }).finally(function() {
-                        scope.loading = false;
-                    });
+                            scope.loading = false;
+                        });
                     scope.layerName = null;
                 };
             }

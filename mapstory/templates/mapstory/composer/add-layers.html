@@ -10,6 +10,7 @@
                     <div class="col-sm-12" style="padding:10px">
                         <div class="box">
 
+                            <alert ng-repeat="error in errors" type="danger" close="closeAlert($index)">{{error}}</alert>
 
                             <div class="input-group search-bar" >
                                 <input name="text_search_input2" id="text_search_input2" placeholder="Search for StoryLayers ..." ng-model="layerName" type="text" class="form-control search-input">
