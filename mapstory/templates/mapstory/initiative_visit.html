@@ -52,13 +52,7 @@
 						<div class="row" >
 							<div class="col-lg-3" style="padding-top:10px">
 								<h3>
-                  <!-- TODO: How do they join? -->
-									<span>join this initiative</span>
-								</h3>
-								<hr style="margin:5px">
-								<h3>
-                  <!-- TODO: How does share work? -->
-									<span>share this page</span>
+									<span>Help lead this initiative! Send a message to one of the current Initiative Leads</span>
 								</h3>
                         	</div>
                         	<div class="col-lg-9" style="border-left:1px solid darkgray">
@@ -99,7 +93,7 @@
 						            <ul>
 								          {% for layer in community.layer.all %}
 													<li class="col-md-4">
-														<div>
+														<div style="text-align: left; height: 500px;">
 															<a href="{{ layer.detail_url}}"><img class="thumb img-responsive" src="{{ layer.thumbnail_url}}"/></a>
 															<h3><a href="{{ layer.detail_url}}">{{ layer.title}}</a></h3>
 															<div><p><i>StoryLayer</p></i></div>
@@ -143,7 +137,7 @@
 													{% for lead in community.leads.all %}
 														<li class="col-md-4">
 											        <div style="text-align: left;">
-											            <a href="{{ lead.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ lead.avatar_100}}"/></a>
+											            <a href="{{ lead.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ lead.avatar_100}}" src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100"/></a>
 											            <h3><a href="{{ lead.profile_detail_url}}">{{ lead.first_name }} {{ lead.last_name }}</a></h3>
 											            <!-- If both exist, comma separated... otherwise no comma separation -->
 											            {% if lead.position and lead.organization %}
