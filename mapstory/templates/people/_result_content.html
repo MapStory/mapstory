@@ -1,5 +1,5 @@
 {% verbatim %}
-<li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4" ng-if="(item.type === 'layer' || item.type ==='map') && item.is_published">
+<li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4" ng-if="(item.type === 'layer' || item.type ==='map')">
     <!-- We want the entire tile card to have a set size -->
     <div style="text-align: left; height: 500px;">
         <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}"/></a>
@@ -11,8 +11,9 @@
             <i ng-if="item.type === 'layer'">StoryLayer</i>
           </p>
         </div>
-        <h4 ng-if="item.owner__first_name || item.owner__last_name"><span class="owner"><i class="fa fa-user"></i> {{ item.owner__first_name }} {{ item.owner__last_name }}</span></h4>
+        <h4 ng-if="item.owner__first_name && item.owner__last_name"><span class="owner"><i class="fa fa-user"></i>{{ item.owner__first_name }} {{ item.owner__last_name }}</span></h4>
         <h4 style="text-transform: capitalize;"><span><i class="fa fa-flag-o"></i></span> <span>{{ item.category }}</span><span ng-if="!item.category">Uncategorized</span></h4>
+
         <!-- Views if MapStory, Edits if StoryLayer -->
         <h4 ng-if="item.type === 'map'"><a href="{{ item.detail_url}}"><i class="fa fa-eye"></i> {{ item.popular_count}} views</a></h4>
         <!-- TODO: Hook in the edits -->
@@ -27,6 +28,7 @@
                 <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button>
                 <!-- TODO: Hook in share functionality -->
                 <button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> share</button>
+                <a class="btn btn-danger btn-xs" href="/maps/{{ item.id }}/remove">delete</a>
             </h4>
             <h4 ng-if="item.type === 'layer'">
                 <!-- goes to composer -->
@@ -35,6 +37,7 @@
                 <a href='/maps/edit?layer={{ item.detail_url.substring(8) | decodeURIComponent }}'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
                 <!-- TODO: Hook in favorites functionality -->
                 <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button>
+                <a class="btn btn-danger btn-xs" href="/layers/{{ item.detail_url.substring(8) | decodeURIComponent }}/remove">delete</a>
             </h4>
         </div>
     </div>

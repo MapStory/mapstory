@@ -108,5 +108,13 @@ class MetadataForm(forms.ModelForm):
             'language',
             'distribution_url',
             'data_quality_statement',
-            'purpose'
+            'purpose',
+            'is_published',
         ]
+
+# A form for just publishing status
+class PublishStatusForm(forms.ModelForm):
+
+    class Meta:
+        model = ResourceBase
+        fields = ['is_published']

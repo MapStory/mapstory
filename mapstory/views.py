@@ -49,13 +49,14 @@ from django.utils import simplejson as json
 from geonode.maps.models import Map, MapLayer
 from geonode.utils import GXPLayer
 from geonode.utils import GXPMap
-from mapstory.forms import KeywordsForm, MetadataForm
+from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm
 from geonode.utils import resolve_object
 from geonode.security.views import _perms_info_json
 from geonode.documents.models import get_related_documents
 from geonode.utils import build_social_links
 from geonode.utils import default_map_config
 from django.db.models import F
+from django.contrib.auth.models import Group
 
 
 class IndexView(TemplateView):
@@ -449,6 +450,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     if request.method == "POST":
         keywords_form = KeywordsForm(request.POST, instance=layer)
         metadata_form = MetadataForm(request.POST, instance=layer)
+        published_form = PublishStatusForm(request.POST, instance=layer)
 
         if keywords_form.is_valid():
             new_keywords = keywords_form.cleaned_data['keywords']
@@ -468,10 +470,16 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             layer.data_quality_statement = new_data_quality_statement
             layer.purpose = new_purpose
             layer.save()
+        if published_form.is_valid():
+            layer.is_published = published_form.cleaned_data['is_published']
+            layer.save()
             
     else:
         keywords_form = KeywordsForm(instance=layer)
         metadata_form = MetadataForm(instance=layer)
+        published_form = PublishStatusForm(instance=layer)
+
+    content_moderators = Group.objects.filter(name='content_moderator').first()
 
     context_dict = {
         "resource": layer,
@@ -482,6 +490,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "wps_enabled": settings.OGC_SERVER['default']['WPS_ENABLED'],
         "keywords_form": keywords_form,
         "metadata_form": metadata_form,
+        "published_form": published_form,
+        "content_moderators": content_moderators,
     }
 
     context_dict["viewer"] = json.dumps(
