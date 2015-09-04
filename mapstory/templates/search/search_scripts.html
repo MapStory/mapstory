@@ -43,11 +43,6 @@
     });
   });
 
-  // add filter to decode uri
-  module.filter('decodeURIComponent', function() {
-    return window.decodeURIComponent;
-  });
-
   var deps = ['search'];
   {% if include_spatial == 'true' %}
   deps.push('leaflet-directive');

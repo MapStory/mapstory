@@ -800,4 +800,10 @@
       });
     }
   });
+
+  // add filter to decode uri
+  module.filter('decodeURIComponent', function() {
+    return window.decodeURIComponent;
+  });
+  
 })();

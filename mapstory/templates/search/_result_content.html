@@ -11,9 +11,8 @@
             <i ng-if="item.type === 'layer'">StoryLayer</i>
           </p>
         </div>
-        <h4 ng-if="item.owner__first_name && item.owner__last_name"><span class="owner"><i class="fa fa-user"></i>{{ item.owner__first_name }} {{ item.owner__last_name }}</span></h4>
+        <h4 ng-if="item.owner__first_name || item.owner__last_name"><span class="owner"><i class="fa fa-user"></i> {{ item.owner__first_name }} {{ item.owner__last_name }}</span></h4>
         <h4 style="text-transform: capitalize;"><span><i class="fa fa-flag-o"></i></span> <span>{{ item.category }}</span><span ng-if="!item.category">Uncategorized</span></h4>
-
         <!-- Views if MapStory, Edits if StoryLayer -->
         <h4 ng-if="item.type === 'map'"><a href="{{ item.detail_url}}"><i class="fa fa-eye"></i> {{ item.popular_count}} views</a></h4>
         <!-- TODO: Hook in the edits -->
