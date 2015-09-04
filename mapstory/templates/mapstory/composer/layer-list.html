@@ -29,7 +29,7 @@
 
                 <div>
                     <div class="col-sm-4">
-                        <div class="box-quick-link muted-background"><a ng-click="selected = {style:true}">
+                        <div class="box-quick-link muted-background"><a ng-click="">
                             <div class="header">
                                 <div class="glyphicon glyphicon-pencil"></div>
                             </div>
@@ -67,7 +67,7 @@
 
      <accordion-group>
         <accordion-heading>
-            Basemap <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+            Basemap <i id="layer-manager-panel-basemap" class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
         </accordion-heading>
          <div class="form-group">
     <label>Background:</label>

@@ -9,11 +9,11 @@
             </div>
             <div class="navbar-collapse collapse pull-right">
                 <ul class="nav navbar-nav" id="tl-nav">
-                    <li class="navbar-menu" ng-class="selected.layers && 'active'"><a ng-click="selected = {layers:true}">StoryLayers</a></li>
-                    <li class="navbar-menu" ng-class="selected.style && 'active'"><a ng-click="selected = {style:true}">StoryStyles</a></li>
-                    <li class="navbar-menu" ng-class="selected.boxes && 'active'"><a ng-click="selected = {boxes:true}">StoryBoxes</a></li>
-                    <li class="navbar-menu" ng-class="selected.pins && 'active'"><a ng-click="selected = {pins:true}">StoryPins</a></li>
-                    <li class="navbar-menu" ng-class="selected.preview && 'active'"><a ng-click="selected = {preview:true}">StoryPreview</a></li>
+                    <li id="tl-nav-layers" class="navbar-menu" ng-class="selected.layers && 'active'"><a ng-click="selected = {layers:true}">StoryLayers</a></li>
+                    <li id="tl-nav-style" class="navbar-menu" ng-class="selected.style && 'active'"><a ng-click="selected = {style:true}">StoryStyles</a></li>
+                    <li id="tl-nav-boxes" class="navbar-menu" ng-class="selected.boxes && 'active'"><a ng-click="selected = {boxes:true}">StoryBoxes</a></li>
+                    <li id="tl-nav-pins" class="navbar-menu" ng-class="selected.pins && 'active'"><a ng-click="selected = {pins:true}">StoryPins</a></li>
+                    <li id="tl-nav-preview" class="navbar-menu" ng-class="selected.preview && 'active'"><a ng-click="selected = {preview:true}">StoryPreview</a></li>
                     <!--li ng-class="selected.debug && 'active'"><a ng-click="selected = {debug:true}">Debug</a></li-->
                     <li><div class="spacer"></div></li>
                 </ul>

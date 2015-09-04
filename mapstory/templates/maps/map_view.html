@@ -212,10 +212,7 @@ goog.object.extend( config, {{ config|safe }});
 
     var config = JSON.parse('{{ config|safe }}');
 
-
-
-
-    if (window.location.search === '?tour') {
+     if (window.location.search === '?tour' && $.cookie("do_not_show_tour") != "do_not_show") {
         $('<link/>').attr({
             rel : 'stylesheet', type: 'text/css', href: 'http://cdnjs.cloudflare.com/ajax/libs/hopscotch/0.2.0/css/hopscotch.min.css'
         }).appendTo('head');

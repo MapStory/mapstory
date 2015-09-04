@@ -6,6 +6,7 @@
 
 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/hopscotch/0.2.0/js/hopscotch.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/editor_tour.js"></script>
+<script src="{{ STATIC_URL }}vendor/jquery.cookie/jquery.cookie.js"></script>
 <script type="text/javascript">
     $("#start-tour").on('click', function() {
        $("#tour-screen").hide();
@@ -13,6 +14,7 @@
     });
     $("#start-composing").on('click', function() {
        $("#tour-screen").hide();
+       $.cookie('do_not_show_tour', 'do_not_show', { expires: 365 });
     });
 </script>
 <div id="tour-screen">

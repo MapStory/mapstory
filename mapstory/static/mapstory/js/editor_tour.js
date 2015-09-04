@@ -2,28 +2,40 @@ editor_tour = {
     id: "welcome_tour",
     steps: [
         {
-            target: "tl-nav",
+            target: "tl-nav-layers",
             placement: "bottom",
-            title: "This is the navigation menu",
-            content: "Use the links here to get around on our site!"
-        },
-       /* {
-            target: "search-panel",
-            placement: "right",
-            title: "Search for something",
-            content: "Not actually sure what this searches"
-        },*/
-        {
-            target: "layer-manager-panel",
-            placement: "bottom",
-            title: "Manage Layers",
-            content: "Add, remove or edit layers in the map"
+            title: "Add StoryLayers...",
+            content: "The first step in building your mapstory is to add your StoryLayers. You can use your own StoryLayers or explore ones shared by others."
         },
         {
-            target: $("a[href=#ms-toggle-preview]").get(0),
+            target: "layer-manager-panel-basemap",
             placement: "bottom",
-            title: "Press this",
-            content: "To do more stuff"
+            title: "Choose your Basemap...",
+            content: "Decide which basemap will form the background of your mapstory. MapStory.org supports a rang of open source basemaps from OpenStreetMap, MapBox, and others."
+        },
+        {
+            target: "tl-nav-style",
+            placement: "bottom",
+            title: "Style your StoryLayers...",
+            content: "Once you have your StoryLayers selected, give them styles so that your viewer takes the meaning from your mapstory that you're hoping to convey."
+        },
+        {
+            target: "tl-nav-boxes",
+            placement: "bottom",
+            title: "Add StoryBoxes...",
+            content: "Creating StoryBoxes lets you focus your mapstory at different zoom levels during different periods of time."
+        },
+        {
+            target: "tl-nav-pins",
+            placement: "bottom",
+            title: "Adding StoryPins...",
+            content: "StoryPins are narrative elements in your story that are separate from your StoryLayer data. For example, you might want to add text, video, or images at a specific point to give your viewer more information."
+        },
+        {
+            target: "tl-nav-preview",
+            placement: "bottom",
+            title: "Preview...",
+            content: "Before you publish your mapstory for the world to see, preview it to make sure its exactly how you want it to be!"
         }
     ]
 };

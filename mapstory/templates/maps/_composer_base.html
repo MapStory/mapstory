@@ -14,7 +14,7 @@
 
         <link rel="shortcut icon" href="{% static 'mapstory/img/favicon.ico' %}">
 
-        <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}mapstory/css/composer.css"/>
+
         <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}geonode/css/font-awesome.css"/>
         <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}geonode/css/base.css"/>
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}geonode/css/ext-compatibility.css"/>
@@ -32,6 +32,8 @@
         <!--script src="http://localhost:35729/livereload.js"></script-->
         {% endif %}
 
+        <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}mapstory/css/composer.css"/>
+
     </head>
 
     <body ng-controller="composerController as composer">
@@ -47,6 +49,7 @@
         }
 
     </style>
-
-
+<div style="display: none;">
+  <div id="popup"></div>
+</div>
 </html>

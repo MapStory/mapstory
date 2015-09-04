@@ -95,7 +95,7 @@
     }
 
     function MapManager($log, $http, $q, $rootScope, $location,
-        StoryPinLayerManager, StoryBoxLayerManager, stMapConfigStore, stAnnotationsStore, stBoxesStore, stEditableLayerBuilder, EditableStoryMap, stStoryMapBaseBuilder, stEditableStoryMapBuilder) {
+                        StoryPinLayerManager, StoryBoxLayerManager, stMapConfigStore, stAnnotationsStore, stBoxesStore, stEditableLayerBuilder, EditableStoryMap, stStoryMapBaseBuilder, stEditableStoryMapBuilder) {
         this.storyMap = new EditableStoryMap({target: 'map'});
         window.storyMap = this.storyMap;
         var self = this;
@@ -114,11 +114,11 @@
                 var mapLoad = $http.get(options.url).success(function(data) {
                     stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, data);
                 }).error(function(data, status) {
-                    if (status === 401) {
-                        window.console.warn('Not authorized to see map ' + mapId);
-                        stStoryMapBaseBuilder.defaultMap(self.storyMap);
-                    }
-                });
+                        if (status === 401) {
+                            window.console.warn('Not authorized to see map ' + mapId);
+                            stStoryMapBaseBuilder.defaultMap(self.storyMap);
+                        }
+                    });
 
                 var boxesURL = options.url.replace('/data','/boxes');
                 if (boxesURL.slice(-1) === '/') {
@@ -143,23 +143,58 @@
                 if(window.config){
                     stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, window.config);
 
+                    if(window.config.id > 0){
+                        var boxesLoad = $http.get("/maps/" + window.config.id + "/boxes");
+                        var annotationsLoad = $http.get("/maps/" + window.config.id + "/annotations");
 
-                    var boxesLoad = $http.get("/maps/" + window.config.id + "/boxes");
-                    var annotationsLoad = $http.get("/maps/" + window.config.id + "/annotations");
+                        $q.all([boxesLoad, annotationsLoad]).then(function(values) {
+                            var boxes_geojson = values[0].data;
+                            StoryBoxLayerManager.loadFromGeoJSON(boxes_geojson, self.storyMap.getMap().getView().getProjection());
 
-                    $q.all([boxesLoad, annotationsLoad]).then(function(values) {
-                        var boxes_geojson = values[0].data;
-                        StoryBoxLayerManager.loadFromGeoJSON(boxes_geojson, self.storyMap.getMap().getView().getProjection());
-
-                        var pins_geojson = values[1].data;
-                        StoryPinLayerManager.loadFromGeoJSON(pins_geojson, self.storyMap.getMap().getView().getProjection());
-                    });
+                            var pins_geojson = values[1].data;
+                            StoryPinLayerManager.loadFromGeoJSON(pins_geojson, self.storyMap.getMap().getView().getProjection());
+                        });
+                    }
 
                 }else{
                     stStoryMapBaseBuilder.defaultMap(self.storyMap);
                 }
             }
             this.currentMapOptions = options;
+
+
+            var element = document.getElementById('popup');
+
+            var popup = new ol.Overlay({
+                element: element,
+                positioning: 'bottom-center',
+                stopEvent: false
+            });
+            self.storyMap.getMap().addOverlay(popup);
+
+            // display popup on click
+            self.storyMap.getMap().on('click', function(evt) {
+                var feature = self.storyMap.getMap().forEachFeatureAtPixel(evt.pixel,
+                    function(feature, layer) {
+                        return feature;
+                    });
+                if (feature) {
+                    var geometry = feature.getGeometry();
+                    var coord = geometry.getCoordinates();
+                    $(element).popover('destroy');
+                    popup.setPosition(coord);
+                    $(element).popover({
+                        'placement': 'right',
+                        'html': true,
+                        'title': feature.get('title'),
+                        'content': feature.get('content')
+                    });
+                    $(element).popover('show');
+                } else {
+                    $(element).popover('destroy');
+                }
+            });
+
         };
 
         this.saveMap = function() {

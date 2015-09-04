@@ -987,7 +987,7 @@ exports.MapController = function(options, timeControls) {
             var latest = currentBoxes.length - 1;
             var currentBox = currentBoxes[latest];
 
-            if(currentBox.get('center')){
+            if(currentBox && currentBox.get('center')){
                 console.log("Storymap Projection: " + storyMap.getMap().getView().getProjection().getCode());
                 storyMap.animateCenterAndZoom(currentBox.get('center'), currentBox.get('zoom'));
             }
