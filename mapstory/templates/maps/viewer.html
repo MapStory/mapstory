@@ -27,7 +27,7 @@
         <div id="content">
             <div id="middle">
                 <div id="storyHeader">
-                <div id="storyTitle"><a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}/viewer"><span ng-bind="mapManager.storyMap.getStoryTitle()"></span></a></div>                    <div id="storyAuthor" ng-bind="mapManager.storyMap.getStoryOwner()"></div>
+                <div id="storyTitle">{%verbatim%}<a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}/viewer"><span ng-bind="mapManager.storyMap.getStoryTitle()"></span></a>{%endverbatim%}</div>                    <div id="storyAuthor" ng-bind="mapManager.storyMap.getStoryOwner()"></div>
                 </div>
                 <div class="stLegend"></div>
                 <div id="map"></div>
