@@ -9,6 +9,7 @@
         'storytools.core.pins',
         'storytools.core.boxes',
         'storytools.core.ogc',
+        'storytools.core.legend',
         'ui.bootstrap'
     ]);
 

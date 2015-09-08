@@ -5,11 +5,12 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}mapstory/vis/dist/vis.min.css" type="text/css"/>
 <link rel="stylesheet" href="{{ STATIC_URL }}vendor/nouislider/distribute/jquery.nouislider.min.css" type="text/css">
 
-<script src="{{ STATIC_URL }}mapstory/js/angular.js" ></script>
-<script src="{{ STATIC_URL }}mapstory/js/jquery.min.js"></script>
-<script src="{{ STATIC_URL }}mapstory/js/jquery.nouislider.min.js" type="text/javascript"></script>
-<script src="{{ STATIC_URL }}mapstory/js/ui-bootstrap-tpls.js"></script>
-<script src="{{ STATIC_URL }}mapstory/js/bootstrap-colorpicker-module.js"></script>
+<script src="{{STATIC_URL}}vendor/jquery/dist/jquery.min.js"></script>
+<script src="{{STATIC_URL}}vendor/angular/angular.js" ></script>
+
+<script src="{{STATIC_URL}}vendor/nouislider/distribute/jquery.nouislider.min.js" type="text/javascript"></script>
+<script src="{{STATIC_URL}}vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="{{STATIC_URL}}vendor/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
 
 <script src="{{STATIC_URL}}mapstory/js/story-tools/ol.js"></script>
 <script src="{{STATIC_URL}}mapstory/js/story-tools/story-tools-core-tpls.js"></script>
@@ -18,207 +19,17 @@
 <script src="{{STATIC_URL}}mapstory/js/story-tools/ows.min.js"></script>
 <script src="{{STATIC_URL}}mapstory/js/story-tools/story-tools-mapstory.js"></script>
 
-
 {% include 'maps/viewer.js' %}
 <script src="http://localhost:35729/livereload.js"></script>
-<style type="text/css">
-
-/* TODO: Move to css file*/
-
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-#container {
-    display: table;
-    height: 100%;
-    width: 100%;
-}
-
-.panel-heading a:after {
-    font-family:'FontAwesome';
-    content:"\f107";
-    float: right;
-    color: grey;
-}
-.panel-heading a.collapsed:after {
-    content:"\f105";
-}
-
-.panel-group{
-
-    margin:0px;
-}
-
-#main {
-    display: table-row;
-    width:100%;
-    height: 100%;
-}
-
-.noUi-handle{
-    background-color: black;
-}
-
-.no-border{
-    border: none;
-}
-
-.popover{
-
-    min-width: 250px;
-}
-
-#footer {
-    display: table-row;
-    position: absolute;
-    bottom:0px;
-    width:100%;
-}
-#content {
-    display: table;
-    width:100%;
-    height: 100%;
-    overflow: auto;
-    position: relative;
-}
-#middle{
-    display: table-cell;
-}
-.floating-below * {
-    z-index: 400;
-}
-
-.step{
-
-    font-weight: 600;
-    color:white;
-}
-
-.popover-content{
-
-    font-size: 12px;
-}
-
-.popover-title{
-
-    font-weight: 600;
-}
-
-#map {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    /* Note: Padding may need adjusting */
-    padding-top: 60px;
-}
-.ol-zoom {
-    right: .5em;
-    left: auto;
-    top:3.5em;
-}
-.ol-attribution {
-    top: 7.5em;
-    bottom: auto;
-}
-#time-controls-panel2 {
-    padding: 1px 16px;
-}
-
-#storyHeader{
-    height: 54px;
-    color: white;
-    padding: 8px;
-    width: 100%;
-    position: absolute;
-    top: 61px;
-    background: rgba(11, 11, 11, 0.6);
-    z-index: 9999;
-}
-
-#storyTitle{
-    font-weight: 600;
-
-}
-
-#storyAuthor{
-    font-size: small;
-}
-
-
-#time-controls-panel2{
-    background: rgba(11, 11, 11, 0.6);
-}
-
-#timeline{
-    background-color: #ccc;
-}
-
-#story-box-accordion{
-border-radius: 0px;
-}
-
-#slider{
-    width:50%;
-    float:right;
-}
-
-#marker {
-    width: 20px;
-    height: 20px;
-    border: 1px solid #088;
-    border-radius: 10px;
-    background-color: #0FF;
-    opacity: 0.5;
-}
-#vienna {
-    text-decoration: none;
-    color: white;
-    font-size: 11pt;
-    font-weight: bold;
-    text-shadow: black 0.1em 0.1em 0.2em;
-}
-
-.popover{
-    background: rgba(11, 11, 11, 0.6);
-    color:white;
-}
-
-.popover-title{
-
-    background: none;
-    border:none;
-
-}
-.popover.bottom>.arrow:after{
-
-    border-bottom-color:rgba(11, 11, 11, 0.6);
-
-}
-.popover.top>.arrow:after{
-
-    border-top-color:rgba(11, 11, 11, 0.6);
-
-}
-.popover-content {
-    min-width: 180px;
-}
-
-#currentBox{
-    width: 30%;
-}
-
-</style>
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}mapstory/css/viewer.css"/>
 <div ng-app="viewer" ng-controller="viewerController as viewer"id="container">
     <div id="main">
         <div id="content">
             <div id="middle">
                 <div id="storyHeader">
-                    <div id="storyTitle" ng-bind="mapManager.storyMap.getStoryTitle()"></div>
-                    <div id="storyAuthor" ng-bind="mapManager.storyMap.getStoryOwner()"></div>
+                <div id="storyTitle"><a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}/viewer"><span ng-bind="mapManager.storyMap.getStoryTitle()"></span></a></div>                    <div id="storyAuthor" ng-bind="mapManager.storyMap.getStoryOwner()"></div>
                 </div>
+                <div class="stLegend"></div>
                 <div id="map"></div>
             </div>
         </div>
@@ -238,18 +49,19 @@ border-radius: 0px;
                     <div id="story-box-description" class="panel-body"></div>
                 </div>
             </div>
-
-
         </div>
-        <div id="time-controls-panel2">
-            <div class="navbar" style="margin:5px 0 0; min-height: auto" ng-controller="tileProgressController">
-                <button class="btn no-border" data-toggle="popover" tabindex="0" data-trigger="focus"><i class="fa fa-cog" style="font-size: 15px; color:white;"></i></button>
-                <st-playback-controls class="pull-left" time-controls="timeControlsManager.timeControls"></st-playback-controls>
-                <div id="slider"></div>
-                <progressbar ng-show="false" animate="false" style="width: 15%; margin:6px 0; font-size:14px" class="navbar-nav navbar-right" value="tilesLoadedProgress"><b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad" style="color:black"></b></progressbar>
+
+        <div id="time-controls-panel">
+            <div class="navbar" ng-controller="tileProgressController">
+                <st-playback-controls class="container-full" time-controls="timeControlsManager.timeControls"></st-playback-controls>
+                <button class="btn no-border" data-toggle="popover" tabindex="0" data-trigger="focus"><i class="fa fa-dashboard"></i></button>
+                <progressbar ng-show="false" animate="false" style="width: 15%; margin:6px 0; font-size:14px" class="navbar-nav navbar-right" value="tilesLoadedProgress">
+                    <b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad" style="color:black"></b>
+                </progressbar>
             </div>
             <div id="timeline" style="display: none;"></div>
         </div>
+
         <div id="layersList" style="display: none;">
             {%verbatim%}
             <div ng-repeat="layer in mapManager.storyMap.getStoryLayers().getArray()">
@@ -260,7 +72,7 @@ border-radius: 0px;
     </div>
 </div>
 <div style="display: none;">
-  <div id="popup"></div>
+    <div id="popup"></div>
 </div>
 <script type="text/javascript">
     $(document).ready(function(){

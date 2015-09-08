@@ -9,7 +9,20 @@
         <label for="abstract">Abstract</label>
         <textarea id="abstract" class="form-control" type="text" ng-model="choice.abstract"></textarea>
     </div>
+    <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <input id="published" name="published" ng-model="choice.publish" type="checkbox">
+                </span>
+                <span class="form-control">
+                    <label>Publish MapStory</label>
+                    <!--p>Having this checked will allow the public to see this MapStory pulblished on the site. Being unchecked will keep this MapStory private until you are ready to publish.</p-->
+                </span>
+            </div>
+
+        </div>
+
     <div class="input-group">
-        <button ng-disabled="!choice.title" class="btn btn-primary"><span ng-if="loading">Saving...</span><span ng-if="loading != true">Save</span></button>
+        <button ng-disabled="!choice.title" class="btn btn-primary pull-right"><span ng-if="loading">Saving...</span><span ng-if="loading != true">Save</span></button>
     </div>
 </form>

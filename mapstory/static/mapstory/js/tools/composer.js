@@ -9,6 +9,7 @@
         'storytools.edit.boxes',
         'storytools.core.boxes',
         'storytools.edit.pins',
+        'storytools.core.legend',
         'storytools.core.ogc',
         'colorpicker.module',
         'geonode_main_search',
@@ -95,7 +96,7 @@
     }
 
     function MapManager($log, $http, $q, $rootScope, $location,
-                        StoryPinLayerManager, StoryBoxLayerManager, stMapConfigStore, stAnnotationsStore, stBoxesStore, stEditableLayerBuilder, EditableStoryMap, stStoryMapBaseBuilder, stEditableStoryMapBuilder) {
+                        StoryPinLayerManager, StoryBoxLayerManager, stMapConfigStore, stAnnotationService, stStoryBoxService, stEditableLayerBuilder, EditableStoryMap, stStoryMapBaseBuilder, stEditableStoryMapBuilder) {
         this.storyMap = new EditableStoryMap({target: 'map'});
         window.storyMap = this.storyMap;
         var self = this;
@@ -106,9 +107,9 @@
             if (options.id) {
                 var config = stMapConfigStore.loadConfig(options.id);
                 stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, config);
-                var annotations = stAnnotationsStore.loadAnnotations(options.id);
+                var annotations = stAnnotationService.loadAnnotations(options.id);
                 StoryPinLayerManager.pinsChanged(annotations, 'add', true);
-                var boxes = stBoxesStore.loadBoxes(options.id);
+                var boxes = stStoryBoxService.loadBoxes(options.id);
                 StoryBoxLayerManager.boxesChanged(boxes, 'add', true);
             } else if (options.url) {
                 var mapLoad = $http.get(options.url).success(function(data) {
@@ -211,20 +212,16 @@
 
                     var mapId = data.id;
 
-                    stBoxesStore.saveBoxes(mapId, StoryBoxLayerManager.storyBoxes)
-                        .success(function(data) { $log.debug("StoryBoxes Saved: " + data);  }).error(function(data, status) {
-                            if (status === 401) {
+                    stStoryBoxService.saveBoxes(mapId, StoryBoxLayerManager.storyBoxes)
+                        .then(function(data) { $log.debug("StoryBoxes Saved: ", data);  });
 
-                            }
-                        });
-
-                    stAnnotationsStore.saveAnnotations(mapId, StoryPinLayerManager.storyPins)
-                        .success(function(data) { $log.debug("StoryPins Saved: " + data);  }).error(function(data, status) {
+                    stAnnotationService.saveAnnotations(mapId, StoryPinLayerManager.storyPins)
+                        .then(function(data) { $log.debug("StoryPins Saved: ", data);  });/*.error(function(data, status) {
                             if (status === 401) {
                                 window.console.warn('Not authorized to see map ' + mapId);
                                 stStoryMapBaseBuilder.defaultMap(self.storyMap);
                             }
-                        });
+                        });*/
 
                 });
             }else{
@@ -235,20 +232,11 @@
 
                     self.storyMap.set('id', mapId);
 
-                    stBoxesStore.saveBoxes(mapId, StoryBoxLayerManager.storyBoxes)
-                        .success(function(data) { $log.debug("StoryBoxes Saved: " + data);  }).error(function(data, status) {
-                            if (status === 401) {
+                    stStoryBoxService.saveBoxes(mapId, StoryBoxLayerManager.storyBoxes)
+                        .then(function(data) { $log.debug("StoryBoxes Saved: ", data);  });
 
-                            }
-                        });
-
-                    stAnnotationsStore.saveAnnotations(mapId, StoryPinLayerManager.storyPins)
-                        .success(function(data) { $log.debug("StoryPins Saved: " + data);  }).error(function(data, status) {
-                            if (status === 401) {
-                                window.console.warn('Not authorized to see map ' + mapId);
-                                stStoryMapBaseBuilder.defaultMap(self.storyMap);
-                            }
-                        });
+                    stAnnotationService.saveAnnotations(mapId, StoryPinLayerManager.storyPins)
+                        .then(function(data) { $log.debug("StoryPins Saved: ", data); });
 
                 }).error(function(data, status) {
                         if (status === 401) {
@@ -403,8 +391,7 @@
                 scope.choice = {"title": MapManager.storyMap.getStoryTitle(), "abstract": MapManager.storyMap.getStoryAbstract()};
 
                 scope.saveMap = function(about) {
-                    scope.loading = true;
-
+                     scope.loading = true;
                      MapManager.storyMap.setStoryTitle(about.title);
                      MapManager.storyMap.setStoryAbstract(about.abstract);
                      MapManager.saveMap();

@@ -3,39 +3,17 @@
 
     var module = angular.module('storytools.edit.boxes.controllers', []);
 
-    module.controller('boxesEditorController', ["$scope", "$timeout", "StoryBox", "StoryBoxLayerManager", "MapManager", function($scope, $timeout, StoryBox, StoryBoxLayerManager, MapManager) {
-        /*
-
-        this.editStoryBox = function(box) {
-            reset();
-            // currentBox is provided or a new object (see saveStoryBox)
-            this.currentBox = box;
-            lastVersion = angular.copy(box);
-            this.editingCopy = new StoryBox(this.currentBox ? this.currentBox.getProperties() : {});
-            if (box) {
-                getFeatures().push(box);
-                //var extent = box.getGeometry().getExtent();
-                //var center = ol.extent.getCenter(extent);
-                //getMap().getView().setCenter(box.getCenter());
-            }
-        };
-
-
-        function getFeatures() {
-            return MapManager.storyMap.overlay.getFeatures();
-        }
-
-
-*/
-
+    module.controller('boxesEditorController', ["$scope", "$timeout", "StoryBox", "StoryBoxLayerManager", "stStoryBoxService", "MapManager", function($scope, $timeout, StoryBox, StoryBoxLayerManager, stStoryBoxService, MapManager) {
         var lastVersion = null;
-        var ctrl = this;
 
         this.currentBox = null;
         this.editingBox = new StoryBox();
         this.StoryBoxLayerManager = StoryBoxLayerManager;
+
         this.deleteStoryBox = function(box) {
-            StoryBoxLayerManager.boxesChanged([box], 'delete');
+            stStoryBoxService.deleteBoxes(MapManager.storyMap.get('id'), [box]).then(function(data) {
+                StoryBoxLayerManager.boxesChanged([box], 'delete');
+            });
         };
 
         this.newStoryBox = function() {
@@ -80,14 +58,8 @@
             this.editingBox = new StoryBox(this.currentBox ? this.currentBox.getProperties() : {});
 
             if (box) {
-                //getFeatures().push(pin);
-                //var extent = pin.getGeometry().getExtent();
-                //var center = ol.extent.getCenter(extent);
-                //getMap().getView().setCenter(center);
                 this.editingBox = box;
             }
-
-
 
         };
 

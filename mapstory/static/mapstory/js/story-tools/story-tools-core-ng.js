@@ -181,7 +181,6 @@
         );
     };
 
-
     StoryMap.prototype.reorderStoryLayer = function(position, storyLayer) {
         storyLayer.storyMap_ = this;
         var offset = 1;
@@ -204,7 +203,6 @@
             storyLayer.getLayer()
         );
     };
-
 
     StoryMap.prototype.getStoryLayers = function() {
         return this.storyLayers_;
@@ -892,20 +890,20 @@
 
     module.constant('StoryPin', pins.StoryPin);
 
-    module.service('stAnnotationsStore', ['$http',"StoryPinLayerManager", function($http, StoryPinLayerManager) {
+    module.service('stAnnotationsStore', ["StoryPinLayerManager", function(StoryPinLayerManager) {
        function path(mapid) {
             return '/maps/' + mapid + '/annotations';
         }
         function get(mapid) {
-            var promise = $http.get(path(mapid)).then(function(response){
-                var saved = (response.data === null) ? null : JSON.parse(response.data);
-                return saved;
-            });
-            return promise;
+            var saved = localStorage.getItem(path(mapid));
+            saved = (saved === null) ? [] : JSON.parse(saved);
+            return saved;
         }
         function set(mapid, annotations) {
-            return $http.post(path(mapid),   new ol.format.GeoJSON().writeFeatures(annotations,
-                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'}));
+            localStorage.setItem(path(mapid),
+                new ol.format.GeoJSON().writeFeatures(annotations,
+                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'})
+            );
         }
         return {
             loadAnnotations: function(mapid, projection) {
@@ -922,8 +920,52 @@
                 set(saved);
             },
             saveAnnotations: function(mapid, annotations) {
+               var saved = get();
+                var maxId = 0;
+                saved.forEach(function(s) {
+                    maxId = Math.max(maxId, s.id);
+                });
                 var clones = [];
+                annotations.forEach(function(a) {
+                    if (typeof a.id == 'undefined') {
+                        a.id = ++maxId;
+                    }
+                    var clone = a.clone();
+                    if (a.get('start_time') !== undefined) {
+                        clone.set('start_time', a.get('start_time')/1000);
+                    }
+                    if (a.get('end_time') !== undefined) {
+                        clone.set('end_time', a.get('end_time')/1000);
+                    }
+                    clones.push(clone);
+                });
+                set(mapid, clones);
+            }
+        };
+    }]);
 
+
+
+    module.service('stAnnotationService', ['$http',"StoryPinLayerManager", function($http, StoryPinLayerManager) {
+        function path(mapid) {
+            return '/maps/' + mapid + '/annotations';
+        }
+        return {
+            loadAnnotations: function(mapid, projection) {
+                return StoryPinLayerManager.loadFromGeoJSON(get(mapid), projection);
+            },
+            deleteAnnotations: function(mapid, annotations) {
+
+                var toDelete = annotations.map(function(d) {
+                    return d.id;
+                });
+
+                return $http.post(path(mapid), toDelete).success(function(data) {
+                    return "success";
+                });
+            },
+            saveAnnotations: function(mapid, annotations) {
+                var clones = [];
                 annotations.forEach(function(a) {
                     var clone = a.clone();
                     if (a.get('start_time') !== undefined) {
@@ -934,11 +976,13 @@
                     }
                     clones.push(clone);
                 });
-                return set(mapid, clones);
+                return $http.post(path(mapid),   new ol.format.GeoJSON().writeFeatures(clones,
+                        {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'})).success(function(data) {
+                        return "success";
+                    });
             }
         };
     }]);
-
 })();
 
 (function() {
@@ -1291,6 +1335,257 @@
 (function() {
     'use strict';
 
+    var module = angular.module('storytools.core.boxes', ['storytools.core.time.services']);
+
+    var boxes = storytools.core.maps.boxes;
+    var utils = storytools.core.time.utils;
+
+    function StoryBoxLayerManager() {
+        this.storyBoxes = [];
+    }
+    StoryBoxLayerManager.prototype.boxesChanged = function(boxes, action) {
+        var i;
+        var box;
+
+        if (action == 'delete') {
+            for (i = 0; i < boxes.length; i++) {
+                box = boxes[i];
+                for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
+                    if (this.storyBoxes[j].id == box.id) {
+                        this.storyBoxes.splice(j, 1);
+                        break;
+                    }
+                }
+            }
+        } else if (action == 'add') {
+
+            var maxId = 0;
+            this.storyBoxes.forEach(function(b) {
+                maxId = Math.max(maxId, b.id);
+            });
+
+            for (i = 0; i < boxes.length; i++) {
+
+                box = boxes[i];
+
+                if (typeof box.id === 'undefined' || box.id === null) {
+                        box.id = ++maxId;
+                }
+
+                this.storyBoxes.push(box);
+            }
+        } else if (action == 'change') {
+            // provided edits could be used to optimize below
+            for (i = 0; i < boxes.length; i++) {
+                box = boxes[i];
+                for (var x = 0, xx = this.storyBoxes.length; x < xx; x++) {
+                    if (this.storyBoxes[x].id == box.id) {
+                        this.storyBoxes[x]= box;
+                        break;
+                    }
+                }
+                  console.log(boxes[i]);
+            }
+
+        } else {
+            throw new Error('action? :' + action);
+        }
+        // @todo optimize by looking at changes
+        var times = this.storyBoxes.map(function(p) {
+            if (p.start_time > p.end_time) {
+                return storytools.core.utils.createRange(p.end_time, p.start_time);
+            } else {
+                return storytools.core.utils.createRange(p.start_time, p.end_time);
+            }
+        });
+
+        this.storyBoxesLayer.set('times', times);
+        this.storyBoxesLayer.set('features', this.storyBoxes);
+    };
+
+
+    StoryBoxLayerManager.prototype.load = function(boxList) {
+        if (boxList) {
+            this.boxesChanged(boxList, 'add', true);
+        }
+    };
+
+
+    StoryBoxLayerManager.prototype.loadFromGeoJSON = function(geojson, projection) {
+        if (geojson && geojson.features) {
+            var loaded = boxes.loadFromGeoJSON(geojson, projection);
+            this.boxesChanged(loaded, 'add', true);
+        }
+    };
+
+    module.service('StoryBoxLayerManager', StoryBoxLayerManager);
+
+    module.constant('StoryBox', boxes.Box);
+
+
+   module.service('stBoxesStore', ['StoryBoxLayerManager', function(StoryBoxLayerManager) {
+        function path(mapid) {
+            return '/maps/' + mapid + '/boxes';
+        }
+        function get(mapid) {
+            var saved = $http.get(path(mapid));
+            saved = (saved === null) ? null : JSON.parse(saved);
+            return saved;
+        }
+        function set(mapid, boxes) {
+            localStorage.setItem(path(mapid),
+                new ol.format.GeoJSON().writeFeatures(boxes,
+                    {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'})
+            );
+        }
+        return {
+            loadBoxes: function(mapid, storyMap) {
+                return StoryBoxLayerManager.loadFromGeoJSON(get(mapid), projection);
+            },
+            deleteBoxes: function(boxes) {
+                var saved = get();
+                var toDelete = boxes.map(function(d) {
+                    return d.id;
+                });
+                saved = saved.filter(function(s) {
+                    return toDelete.indexOf(s.id) < 0;
+                });
+                set(saved);
+            },
+            saveBoxes: function(mapid, boxes) {
+                var clones = [];
+                boxes.forEach(function(a) {
+                    if (typeof a.id == 'undefined') {
+                        a.id = ++maxId;
+                    }
+                    var clone = a.clone();
+                    if (a.get('start_time') !== undefined) {
+                        clone.set('start_time', a.get('start_time')/1000);
+                    }
+                    if (a.get('end_time') !== undefined) {
+                        clone.set('end_time', a.get('end_time')/1000);
+                    }
+                    clones.push(clone);
+                });
+                return set(mapid, clones);
+            }
+        };
+    }]);
+
+    module.service('stStoryBoxService', ['$http', 'StoryBoxLayerManager', function($http, StoryBoxLayerManager) {
+        function path(mapid) {
+            return '/maps/' + mapid + '/boxes';
+        }
+        return {
+            loadBoxes: function(mapid, storyMap) {
+                return StoryBoxLayerManager.loadFromGeoJSON(get(mapid), projection);
+            },
+            deleteBoxes: function(mapid, boxes) {
+                var toDelete = boxes.map(function(d) {
+                    return d.id;
+                });
+                return $http.post(path(mapid), JSON.stringify({'ids':toDelete})).success(function(data) {
+                    return "success";
+                });
+            },
+            saveBoxes: function(mapid, boxes) {
+                var clones = [];
+                boxes.forEach(function(a) {
+                    var clone = a.clone();
+                    if (a.get('start_time') !== undefined) {
+                        clone.set('start_time', a.get('start_time')/1000);
+                    }
+                    if (a.get('end_time') !== undefined) {
+                        clone.set('end_time', a.get('end_time')/1000);
+                    }
+                    clones.push(clone);
+                });
+                return $http.post(path(mapid), new ol.format.GeoJSON().writeFeatures(clones,
+                        {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'})).success(function(data) {
+                        return "success";
+                    });
+
+            }
+        };
+    }]);
+
+})();
+
+
+(function() {
+  var module = angular.module('storytools.core.legend.directives', []);
+
+  var legendOpen = false;
+
+  module.directive('stLegend',
+      ["$rootScope", "MapManager", function($rootScope, MapManager) {
+        return {
+          restrict: 'C',
+          replace: true,
+          templateUrl: 'legend/legend.html',
+          // The linking function will add behavior to the template
+          link: function(scope, element) {
+            scope.mapManager = MapManager;
+
+            var openLegend = function() {
+              angular.element('#legend-container')[0].style.visibility = 'visible';
+              angular.element('#legend-panel').collapse('show');
+              legendOpen = true;
+            };
+            var closeLegend = function() {
+              angular.element('#legend-panel').collapse('hide');
+              legendOpen = false;
+
+              //the timeout is so the transition will finish before hiding the div
+              setTimeout(function() {
+                angular.element('#legend-container')[0].style.visibility = 'hidden';
+              }, 350);
+            };
+
+            scope.toggleLegend = function() {
+              if (legendOpen === false) {
+                if (angular.element('.legend-item').length > 0) {
+                  openLegend();
+                }
+              } else {
+                closeLegend();
+              }
+            };
+
+            scope.getLegendUrl = function(layer) {
+              var url = null;
+              var server = '/geoserver/wms';
+              url = server + '?request=GetLegendGraphic&format=image%2Fpng&width=20&height=20&layer=' +
+                  layer.get('typeName') + '&transparent=true&legend_options=fontColor:0xFFFFFF;' +
+                  'fontAntiAliasing:true;fontSize:14;fontStyle:bold;';
+              return url;
+            };
+
+            scope.$on('layer-added', function() {
+              if (legendOpen === false) {
+                openLegend();
+              }
+            });
+
+            scope.$on('layerRemoved', function() {
+              //close the legend if the last layer is removed
+              if (legendOpen === true && angular.element('.legend-item').length == 1) {
+                closeLegend();
+              }
+            });
+          }
+        };
+      }]);
+}());
+(function() {
+  'use strict';
+   var module = angular.module('storytools.core.legend', [
+        'storytools.core.legend.directives'
+    ]);
+})();
+(function() {
+    'use strict';
+
     /**
      * @namespace storytools.core.time.directives
      */
@@ -1402,13 +1697,15 @@
             },
             link: function (scope, elem) {
                 scope.optionsChanged = function () {
-                    if (scope.timeControls) {
-                        scope.timeControls.update(scope.playbackOptions);
+                    var ctrl = scope.timeControls || scope.$parent.timeControls;
+                    if (ctrl) {
+                        ctrl.update(scope.playbackOptions);
                     }
                 };
             }
         };
     });
+
 })();
 (function() {
     'use strict';
@@ -1614,170 +1911,3 @@
         };
     });
 })();
-
-(function() {
-    'use strict';
-
-    var module = angular.module('storytools.core.boxes', ['storytools.core.time.services']);
-
-    var boxes = storytools.core.maps.boxes;
-    var utils = storytools.core.time.utils;
-
-    function StoryBoxLayerManager() {
-        this.storyBoxes = [];
-    }
-    StoryBoxLayerManager.prototype.boxesChanged = function(boxes, action) {
-        var i;
-        var box;
-
-        if (action == 'delete') {
-            for (i = 0; i < boxes.length; i++) {
-                box = boxes[i];
-                for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
-                    if (this.storyBoxes[j].id == box.id) {
-                        this.storyBoxes.splice(j, 1);
-                        break;
-                    }
-                }
-            }
-        } else if (action == 'add') {
-
-            var maxId = 0;
-            this.storyBoxes.forEach(function(b) {
-                maxId = Math.max(maxId, b.id);
-            });
-
-            for (i = 0; i < boxes.length; i++) {
-
-                box = boxes[i];
-
-                if (typeof box.id === 'undefined' || box.id === null) {
-                        box.id = ++maxId;
-                }
-
-                this.storyBoxes.push(box);
-            }
-        } else if (action == 'change') {
-            // provided edits could be used to optimize below
-            for (i = 0; i < boxes.length; i++) {
-                box = boxes[i];
-                for (var x = 0, xx = this.storyBoxes.length; x < xx; x++) {
-                    if (this.storyBoxes[x].id == box.id) {
-                        this.storyBoxes[x]= box;
-                        break;
-                    }
-                }
-                  console.log(boxes[i]);
-            }
-
-        } else {
-            throw new Error('action? :' + action);
-        }
-        // @todo optimize by looking at changes
-        var times = this.storyBoxes.map(function(p) {
-            if (p.start_time > p.end_time) {
-                return storytools.core.utils.createRange(p.end_time, p.start_time);
-            } else {
-                return storytools.core.utils.createRange(p.start_time, p.end_time);
-            }
-        });
-
-        this.storyBoxesLayer.set('times', times);
-        this.storyBoxesLayer.set('features', this.storyBoxes);
-    };
-
-
-    StoryBoxLayerManager.prototype.load = function(boxList) {
-        if (boxList) {
-            this.boxesChanged(boxList, 'add', true);
-        }
-    };
-
-
-    StoryBoxLayerManager.prototype.loadFromGeoJSON = function(geojson, projection) {
-        if (geojson && geojson.features) {
-            var loaded = boxes.loadFromGeoJSON(geojson, projection);
-            this.boxesChanged(loaded, 'add', true);
-        }
-    };
-
-    module.service('StoryBoxLayerManager', StoryBoxLayerManager);
-
-    module.constant('StoryBox', boxes.Box);
-
-
-   module.service('stBoxesStore', ['$http', 'StoryBoxLayerManager', function($http, StoryBoxLayerManager) {
-        function path(mapid) {
-            return '/maps/' + mapid + '/boxes';
-        }
-        function get(mapid) {
-            var promise = $http.get(path(mapid)).then(function(response){
-                var saved = (response.data === null) ? null : JSON.parse(response.data);
-                return saved;
-            });
-            return promise;
-        }
-        function set(mapid, boxes) {
-            return $http.post(path(mapid),   new ol.format.GeoJSON().writeFeatures(boxes,
-                {dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'}));
-        }
-        return {
-            loadBoxes: function(mapid, storyMap) {
-                return StoryBoxLayerManager.loadFromGeoJSON(get(mapid), projection);
-            },
-            createBoxes: function(options){
-
-                var totalRange;
-
-                    var interval = 0, data = null;
-                    if (Array.isArray(options.data)) {
-                        data = options.data;
-                        totalRange = utils.computeRange(options.data);
-                    } else {
-                        interval = options.data.interval || utils.pickInterval(options.data);
-                        totalRange = options.data;
-                    }
-                    boxes = [{
-                        title: 'Default StoryBox Chapter',
-                        description: 'No description.',
-                        data: data,
-                        range: totalRange,
-                        speed: {
-                            interval: interval,
-                            seconds: 3
-                        }
-                    }];
-
-
-                return boxes;
-
-            },
-            deleteBoxes: function(boxes) {
-                var saved = get();
-                var toDelete = boxes.map(function(d) {
-                    return d.id;
-                });
-                saved = saved.filter(function(s) {
-                    return toDelete.indexOf(s.id) < 0;
-                });
-                set(saved);
-            },
-            saveBoxes: function(mapid, boxes) {
-                var clones = [];
-                boxes.forEach(function(a) {
-                    var clone = a.clone();
-                    if (a.get('start_time') !== undefined) {
-                        clone.set('start_time', a.get('start_time')/1000);
-                    }
-                    if (a.get('end_time') !== undefined) {
-                        clone.set('end_time', a.get('end_time')/1000);
-                    }
-                    clones.push(clone);
-                });
-                return set(mapid, clones);
-            }
-        };
-    }]);
-
-})();
-

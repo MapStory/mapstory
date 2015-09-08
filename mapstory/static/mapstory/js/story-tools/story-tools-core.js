@@ -82,51 +82,6 @@ exports.loadFromGeoJSON = function(geojson, projection) {
     });
 };
 
-//
-//function Box(options) {
-//    this.id = options.id || null;
-//    this.title = options.title || null;
-//    this.start_time = options.start_time || null;
-//    this.end_time = options.end_time || null;
-//    this.description = options.description || null;
-//    this.range = options.range || null;
-//    this.data = options.data || null;
-//    this.layerIds = options.layerIds || null;
-//    this.center = options.center || null; // ol.Coordinate
-//    this.resolution = options.resolution || null;
-//    this.allowPan = options.allowPan;
-//    this.allowZoom = options.allowZoom;
-//    this.interval = options.interval || null;
-//    this.intervalRate = options.intervalRate || null;
-//    this.playback = options.playback || null;
-//    this.playbackRate = options.playbackRate || null;
-//    this.speed = options.speed || null;  // interval, seconds
-//    this.zoom = options.zoom || null;
-//    this._offset = 0;
-//
-//    if (this.range === null || this.range.start === null) {
-//        if(this.data !== null){
-//        this.range = utils.createRange(this.data[0], this.data[this.data.length-1]);
-//        }else{
-//            this.range = new storytools.core.time.utils.Range(this.start_time, this.end_time);
-//
-//        }
-//    }
-//
-//    if(this.speed === null && this.interval !== null){
-//        this.speed = { interval: moment.duration(this.interval, this.intervalRate).asMilliseconds(),seconds: this.playback};
-//
-//                        // @todo possible divide by zero if speed.interval not set!
-//    }
-//
-//
-//    if(this.range !== null && this.speed !== null){
-//      this._steps = this.data === null ? Math.floor(this.range.width() / this.speed.interval) + 1: this.data.length;
-//
-//    }
-//
-//}
-
 Box.prototype.getSteps = function() {
     return this._steps || this.get('_steps');
 };
@@ -136,15 +91,9 @@ Box.prototype.getIndex = function(instant) {
      //   Math.floor(Math.min(this.range.width(), Math.max(0, instant - this.range.start)) / this.speed.interval);
     var index = this.data ? utils.find(this.data, instant) :
         Math.floor(Math.min(this.get('range').width(), Math.max(0, instant - this.get('range').start)) / this.get('speed').interval);
-
-    console.log(this.get('range').width());
-    console.log(Math.max(0, instant - this.get('range').start));
-    console.log(this.get('speed').interval);
-    console.log(index);
     return index;
-
-
 };
+
 Box.prototype.getDate = function(idx) {
     idx = idx - this._offset;
     return this.data ? this.data[idx] : this.get('range').start + (idx * this.get('speed').interval);
@@ -248,17 +197,20 @@ exports.BoxModel = function(boxArray) {
     this.setRange = function(newRange) {
         if (boxes.length == 1) {
             // @todo support for range
-            if (utils.isRangeLike(newRange)) {
-                throw new Error('not supported yet');
-            }
-            boxes[0].data = newRange;
+            //if (utils.isRangeLike(newRange)) {
+              //  throw new Error('not supported yet');
+            //}
+
+             console.log('one story box to update range with!');
+
+            //boxes[0].data = newRange;
             // @todo must set here or constructor is dumb and doesn't recompute
-            boxes[0].range = utils.computeRange(newRange);
+            //boxes[0].range = utils.computeRange(newRange);
         } else {
             // @todo finish
             console.log('more than one story box to update range with!');
         }
-        updateBoxes(boxes);
+        //updateBoxes(boxes);
     };
     this.update = function(options) {
 
@@ -958,7 +910,6 @@ exports.MapController = function(options, timeControls) {
         return loadListener;
     }
     function updateLayers(range) {
-        console.log("Updating layers based on range: " + range);
         var storyLayers = storyMap.getStoryLayers();
         var time = new Date(range.start).toISOString();
         if (range.start != range.end) {
@@ -1040,7 +991,7 @@ exports.TimeModel = function(options, boxes, annotations) {
         }
         // @todo is the best name for this
         if (opts.hasOwnProperty('data')) {
-            //boxModel.setRange(opts.data);
+            //this.boxModel.setRange(opts.data);
         }
 
         if (opts.hasOwnProperty('boxes') && opts.boxes.length > 0) {
@@ -1051,7 +1002,6 @@ exports.TimeModel = function(options, boxes, annotations) {
 
     init.call(this, options);
     this.getRange = function() {
-        console.log("Getting boxModel range " + this.boxModel.getRange());
         return this.boxModel.getRange();
     };
     this.getTotalRange = function() {
