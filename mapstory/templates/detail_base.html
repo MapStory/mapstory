@@ -26,7 +26,7 @@
               <hr style="margin:5px">
               <h2 style="font-size:1.2em;color:gainsboro">
                 <!-- TODO: Add Mapstory messaging functionality, has this been implemented? -->
-                <span style="color:orange">message</span> |
+                <a href="{% url "message_create" %}"><span style="color:orange">message</span></a> |
                 {% for social_link in social_links %}
                 {% ifequal social_link "twitter" %}
                   <a href="{{ social_link.url }}"><span style="color:deepskyblue">twitter</span></a> |
