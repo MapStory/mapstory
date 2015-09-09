@@ -15,6 +15,7 @@ from mapstory.views import DiaryCreateView
 from mapstory.views import DiaryUpdateView
 from mapstory.views import GetPageView
 from mapstory.views import ProfileDetail
+from mapstory.views import profile_delete, profile_edit
 from mapstory.views import SearchView
 from mapstory.views import LeaderListView
 from mapstory.views import proxy
@@ -41,7 +42,7 @@ layer_detail_patterns = patterns('',
     )
 
 urlpatterns = patterns('',
-    url(r'^$', IndexView.as_view()),
+    url(r'^$', IndexView.as_view(), name="index_view"),
     url(r"^account/signup/$", MapStorySignup.as_view(), name="account_signup"),
     url(r'^maps/templates/story-about-info.html$', TemplateView.as_view(template_name='mapstory/composer/story-about-info.html'), name='composer-add-layers'),
     url(r'^maps/templates/add-layers.html$', TemplateView.as_view(template_name='mapstory/composer/add-layers.html'), name='composer-add-layers'),
@@ -67,6 +68,8 @@ urlpatterns = patterns('',
         'geonode.maps.views.map_view', {'template': 'maps/mapstory_map_viewer.html'},
         name='map-viewer'),
     url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
+    url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
+    url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
     url(r'^tours/editor_tour$', TemplateView.as_view(template_name='maps/editor_tour.html'), name='editor_tour'),
 
     url(r'^journal$', DiaryListView.as_view(), name='diary'),

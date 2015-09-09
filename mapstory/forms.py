@@ -118,3 +118,19 @@ class PublishStatusForm(forms.ModelForm):
     class Meta:
         model = ResourceBase
         fields = ['is_published']
+
+# A form for just deactivating profile
+class DeactivateProfileForm(forms.ModelForm):
+    is_active = forms.BooleanField(help_text=_("Uncheck the field and select confirm to deactivate your profile."), required=False)
+
+    class Meta:
+        model = Profile
+        fields = ['is_active']
+
+# A form for the fields we want the user to be able to edit
+class EditProfileForm(forms.ModelForm):
+    Volunteer_Technical_Community = forms.BooleanField(help_text=_("Join the Volunteer Technical Community"), required=False)
+
+    class Meta:
+        model = Profile
+        fields = ['first_name', 'last_name', 'interests', 'city', 'country', 'profile']

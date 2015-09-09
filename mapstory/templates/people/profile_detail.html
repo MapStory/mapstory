@@ -109,7 +109,10 @@
             <div class="sidebar-header"><h3>user actions</h3></div>
             {% if user == profile %}
             <div class="sidebar-content">
-                <a href="{% url "profile_edit" user.username %}">{% trans "edit profile" %}</a>
+                <a href="{% url "edit_profile" user.username %}">{% trans "edit profile" %}</a>
+            </div>
+            <div class="sidebar-content">
+                <a href="{% url "profile_delete" user.username %}">{% trans "delete profile" %}</a>
             </div>
             <div class="sidebar-content">
                 <a href="{% url "account_password" %}">{% trans "change password" %}</a>
