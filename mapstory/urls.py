@@ -76,7 +76,7 @@ urlpatterns = patterns('',
 
     url(r'^initiative/(?P<slug>[^/]*)$', CommunityDetail.as_view(), name='community-detail'),
 
-    url(r'^organization/(?P<slug>[^/]*)$', GroupDetail.as_view(), name='group_detail'),
+    url(r'^channels/(?P<slug>[^/]*)$', GroupDetail.as_view(), name='group_detail'),
 
     url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
     url(r'^search/$', SearchView.as_view(), name='search'),
