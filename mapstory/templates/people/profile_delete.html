@@ -1,0 +1,32 @@
+{% extends "people/profile_base.html" %}
+{% load i18n avatar_tags %}
+{% load bootstrap_tags %}
+
+{% block body_class %}explore people{% endblock %}
+
+{% block extra_head %}
+<link href="{{ STATIC_URL }}mapstory/css/profile.css" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+  
+  <div class="col-md-12">
+    <h2 class="page-title">{% trans "Delete Your Profile" %}</h2>
+  </div>
+  <div class="col-md-12">
+    <p>Profiles cannot be deleted from MapStory. You can, however, deactivate your profile to hide it from user search. If you would like all your content to be removed, it must be done manually.</p>
+
+    <p>If you would like to deactivate your profile, untick the box below. You will not be able to use your account once deactivated. To reactivate, please email an administrator.</p>
+
+    <form action="" method="post" class="form-horizontal">
+      <!-- <legend>{% trans "Edit Your Profile" %}</legend> -->
+      {% csrf_token %}
+      <div class="form-controls">
+        {{ form|as_bootstrap }}
+      </div>
+      <div class="form-actions">
+        <input type="submit" class="btn btn-primary" value="{% trans "Confirm deactivation" %}" />
+      </div>
+    </form>
+  </div>
+{% endblock %}

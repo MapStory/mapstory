@@ -8,6 +8,7 @@ from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http.request import validate_host
 from django.shortcuts import render_to_response
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from django.views.generic.edit import ModelFormMixin
 from django.views.generic.edit import CreateView
@@ -23,7 +24,7 @@ from geonode.layers.views import _resolve_layer, _PERMISSION_MSG_METADATA, _PERM
 from geonode.people.forms import ProfileForm
 from geonode.people.models import Profile
 from httplib import HTTPConnection, HTTPSConnection
-from mapstory.forms import UploadLayerForm
+from mapstory.forms import UploadLayerForm, DeactivateProfileForm, EditProfileForm
 from mapstory.models import get_sponsors
 from mapstory.models import get_images
 from mapstory.models import get_group_layers
@@ -57,6 +58,8 @@ from geonode.utils import build_social_links
 from geonode.utils import default_map_config
 from django.db.models import F
 from django.contrib.auth.models import Group
+from django.contrib import messages
+from django.contrib.auth import logout
 
 
 class IndexView(TemplateView):
@@ -163,6 +166,65 @@ class ProfileDetail(DetailView):
         ctx['action_list'] = actor_stream(ctx['profile'])
 
         return ctx
+
+@login_required
+def profile_edit(request, username=None):
+    if username is None:
+        try:
+            profile = request.user.profile
+        except Profile.DoesNotExist:
+            return redirect("profile_browse")
+    else:
+        profile = get_object_or_404(Profile, username=username)
+
+    if username == request.user.username:
+        if request.method == "POST":
+            form = EditProfileForm(request.POST, instance=profile)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Profile profile updated.")
+                return redirect(
+                    reverse(
+                        'profile_detail',
+                        args=[
+                            request.user.username]))
+        else:
+            form = EditProfileForm(instance=profile)
+
+        return render(request, "people/profile_edit.html", {
+            "form": form,
+        })
+    else:
+        return HttpResponseForbidden(
+            'You are not allowed to edit other users profile')
+
+@login_required
+def profile_delete(request, username=None):
+    if username is None:
+        try:
+            profile = request.user.profile
+        except Profile.DoesNotExist:
+            return redirect("profile_browse")
+    else:
+        profile = get_object_or_404(Profile, username=username)
+
+    if username == request.user.username:
+        if request.method == "POST":
+            form = DeactivateProfileForm(request.POST, instance=profile)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Profile has been deactivated.")
+                logout(request)
+                return redirect(reverse("index_view"))
+        else:
+            form = DeactivateProfileForm(instance=profile)
+
+        return render(request, "people/profile_delete.html", {
+            "form": form,
+        })
+    else:
+        return HttpResponseForbidden(
+            'You are not allowed to delete other users profile')
 
 class CommunityDetail(DetailView):
     # TODO: We need to differentiate between viewing as an outsider or logged in
