@@ -43,6 +43,8 @@
 										</div>
 									</div>
 									<div class="col-sm-5">
+                                        <!-- This shouldn't be here -->
+                                        <!-- 
 										<div class="row" style="padding:80px 0px 10px 10px;">
 
                                        {% if user == profile %}
@@ -72,7 +74,7 @@
 									    </div>
 
                                          {% endif %}
-								</div>
+								        </div> -->
 									</div>
 							</div>
 						</div>
@@ -104,6 +106,26 @@
 <article class="slice">
     <div class="container">
         <div class="col-sm-2">
+
+            <div class="sidebar-header"><h3>user info</h3></div>
+            {% if profile.profile %}
+            <div class="sidebar-content">{{ profile.profile }}</div>
+            {% endif %}
+            {% if profile.interest_list|length > 0 %}
+            <div class="sidebar-content"><h3>Interests</h3></div><br>
+                <!-- NOTE: This has some formatting issues; needs to wrap around to a second line nicely -->
+                {% for interest in profile.interest_list|slice:"10" %}
+                  <span class="label label-default">{{ interest }}</span>
+                {% endfor %}
+                {% if profile.interest_list|length > 10 %}
+                  <span class="label label-default">{{ profile.interest_list|length|add:"-10" }} more</span>
+                {% endif %}
+            {% endif %}
+            {% comment %}
+            {% if vtc %}
+            <div class="sidebar-content" style="font-weight: bold;">Volunteer Techincal Community Member</div>
+            {% endif %}
+            {% endcomment %}
 
             <!-- notifications -->
             <div class="sidebar-header"><h3>user actions</h3></div>

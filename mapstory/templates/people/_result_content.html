@@ -25,9 +25,9 @@
                 <!-- goes to the viewer -->
                 <a href="/maps/{{ item.id }}/viewer"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> play</button></a>
                 <!-- TODO: Hook in favorites functionality -->
-                <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button>
+                <!-- <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button> -->
                 <!-- TODO: Hook in share functionality -->
-                <button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> share</button>
+                <!-- <button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> share</button> -->
                 <a class="btn btn-danger btn-xs" href="/maps/{{ item.id }}/remove">delete</a>
             </h4>
             <h4 ng-if="item.type === 'layer'">
@@ -36,7 +36,7 @@
                 <!-- goes to layer edit -->
                 <a href='/maps/edit?layer={{ item.detail_url.substring(8) | decodeURIComponent }}'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
                 <!-- TODO: Hook in favorites functionality -->
-                <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button>
+                <!-- <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button> -->
                 <a class="btn btn-danger btn-xs" href="/layers/{{ item.detail_url.substring(8) | decodeURIComponent }}/remove">delete</a>
             </h4>
         </div>
