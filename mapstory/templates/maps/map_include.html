@@ -2,18 +2,35 @@
 {% include "mapstory/app_header.html" %}
 {% include "mapstory/geo_header.html" %}
 
-<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}theme/ext-theme.css" media="screen" />
+<!--link rel="stylesheet" type="text/css" href="{{STATIC_URL}}theme/ext-theme.css" media="screen" /-->
 <script type="text/javascript">
 var app;
 Ext.onReady(function() {
 {% autoescape off %}
-    GeoExt.Lang.set("{{ LANGUAGE_CODE }}");
-    var config = Ext.apply({{ config }}, {
-    portalConfig: {
-        renderTo: "embedded_map"
-    }
-    });
-app = new mapstory.Viewer(config);
+  //  GeoExt.Lang.set("{{ LANGUAGE_CODE }}");
+   // var config = Ext.apply({{ config }}, {
+    //portalConfig: {
+      //  renderTo: "embedded_map"
+    //}
+    //});
+//app = new mapstory.Viewer(config);
+
+//TODO: Need a better way to embed viewer
+
+    $('<iframe>', {
+   src: '/maps/{{ resource.id }}/viewer',
+   id:  'myFrame',
+   frameborder: 0,
+   style:'width: 650px; height: 450px;',
+   scrolling: 'no'
+   }).appendTo('#embedded_map');
+
 {% endautoescape %}
 });
 </script>
+
+
+
+
+
+

@@ -1,97 +1,97 @@
 /*TODO Organize styles to eliminate duplication*/
 
 html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 #container {
-    display: table;
-    height: 100%;
-    width: 100%;
+  display: table;
+  height: 100%;
+  width: 100%;
 }
 
 .panel-heading a:after {
-    font-family:'FontAwesome';
-    content:"\f107";
-    float: right;
-    color: grey;
+  font-family:'FontAwesome';
+  content:"\f107";
+  float: right;
+  color: grey;
 }
 .panel-heading a.collapsed:after {
-    content:"\f105";
+  content:"\f105";
 }
 #currentBox{
-    width: 30%;
+  width: 30%;
 }
 .panel-group{
 
-    margin:0px;
+  margin:0px;
 }
 
 #main {
-    display: table-row;
-    width:100%;
-    height: 100%;
+  display: table-row;
+  width:100%;
+  height: 100%;
 }
 #middle{
-    display: table-cell;
+  display: table-cell;
 }
 #footer {
-    display: table-row;
-    position: absolute;
-    bottom:0px;
-    width:100%;
+  display: table-row;
+  position: absolute;
+  bottom:0px;
+  width:100%;
 }
 #content {
-    display: table;
-    width:100%;
-    height: 100%;
-    overflow: auto;
-    position: relative;
+  display: table;
+  width:100%;
+  height: 100%;
+  overflow: auto;
+  position: relative;
 }
 
 .floating-below * {
-    z-index: 400;
+  z-index: 400;
 }
 
 .step{
 
-    font-weight: 600;
-    color:white;
+  font-weight: 600;
+  color:white;
 }
 
 #map {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    /* Note: Padding may need adjusting */
-    padding-top: 60px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  /* Note: Padding may need adjusting */
+  padding-top: 0px;
 }
 .ol-zoom {
-    right: .5em;
-    left: auto;
-    top:3.5em;
+  right: .5em;
+  left: auto;
+  top:3.5em;
 }
 .ol-attribution {
-    top: 7.5em;
-    bottom: auto;
+  top: 7.5em;
+  bottom: auto;
 }
 
 
 #storyHeader{
-    height: 54px;
-    color: white;
-    padding: 8px;
-    width: 100%;
-    position: absolute;
-    top: 61px;
-    background: rgba(11, 11, 11, 0.6);
-    z-index: 9999;
+  height: 54px;
+  color: white;
+  padding: 8px;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  background: rgba(11, 11, 11, 0.6);
+  z-index: 9999;
 }
 
 #storyTitle{
-    font-weight: 600;
+  font-weight: 600;
 
 }
 #storyTitle.a{
@@ -100,60 +100,60 @@ html, body {
   text-decoration: underline;
 }
 #storyAuthor{
-    font-size: small;
+  font-size: small;
 }
 
 
 #story-box-accordion{
-border-radius: 0px;
+  border-radius: 0px;
 }
 
 
 
 .popover{
-    background: rgba(11, 11, 11, 0.6);
-    color:white;
+  background: rgba(11, 11, 11, 0.6);
+  color:white;
 }
 
 .popover-title{
 
-    background: none;
-    border:none;
+  background: none;
+  border:none;
 
 }
 
 .popover-content{
 
-    font-size: 12px;
+  font-size: 12px;
 }
 
 
 .popover.bottom>.arrow:after{
 
-    border-bottom-color:rgba(11, 11, 11, 0.6);
+  border-bottom-color:rgba(11, 11, 11, 0.6);
 
 }
 .popover.top>.arrow:after{
 
-    border-top-color:rgba(11, 11, 11, 0.6);
+  border-top-color:rgba(11, 11, 11, 0.6);
 
 }
 .popover-content {
-    min-width: 180px;
+  min-width: 180px;
 }
 
 #currentBox{
-    width: 30%;
+  width: 30%;
 }
 
 
-    #slider{
-   width:50%;
-   margin:0px 10px 0px 10px;
-   display:inline-block;
- }
+#slider{
+  width:25%;
+  margin:0px 10px 0px 10px;
+  display:inline-block;
+}
 
- .noUi-handle{
+.noUi-handle{
   background-color: black;
   background-color: rgba(11, 11, 11, 1.6);
   border:0px;
@@ -161,22 +161,22 @@ border-radius: 0px;
 }
 
 .noUi-active {
-    box-shadow: inset 0 0 1px #FFF,inset 0 1px 7px #DDD,0 3px 6px -3px #BBB;
+  box-shadow: inset 0 0 1px #FFF,inset 0 1px 7px #DDD,0 3px 6px -3px #BBB;
 }
 
 .noUi-horizontal {
-    height: 10px;
+  height: 10px;
 }
 .noUi-handle:after, .noUi-handle:before {
   top:3px;
 }
 
 .noUi-horizontal .noUi-handle {
-    width: 34px;
-    height: 20px;
-    left: -17px;
-    top: -6px;
- }
+  width: 34px;
+  height: 20px;
+  left: -17px;
+  top: -6px;
+}
 
 
 #time-controls-panel{
@@ -201,7 +201,7 @@ st-playback-controls > button{
 }
 
 st-playback-controls > span{
-    color:white;
+  color:white;
 }
 
 .no-border{
@@ -249,11 +249,11 @@ st-playback-controls > span{
 
 .stLegend{
   display: inline-block;
-  top: 118px;
+  top: 60px;
   position: relative;
   z-index: 999;
   float: right;
-  right: 64px;
+  right: 50px;
 }
 
 #legend-btn-border {
