@@ -88,6 +88,7 @@ class DiaryListView(ListView):
 
     def get_context_data(self, **kwargs):
         ctx = super(DiaryListView, self).get_context_data(**kwargs)
+        ctx['images'] = get_images()
         user = self.request.user
         if user.is_authenticated():
             ctx['drafts'] = DiaryEntry.objects.filter(author=user, publish=False)
@@ -114,6 +115,11 @@ class DiaryDetailView(DiaryPermissionMixin, DetailView):
     model = DiaryEntry
     need_publish = True
     context_object_name = 'entry'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(DiaryDetailView, self).get_context_data(**kwargs)
+        ctx['images'] = get_images()
+        return ctx
 
 
 class DiaryEditMixin(object):
