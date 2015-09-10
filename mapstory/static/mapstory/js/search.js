@@ -212,6 +212,8 @@
 
     //Get data from apis and make them available to the page
     function query_api(data){
+      // This is probably not the correct way to do this long term, but works for now
+      data['is_published'] = true;
       return $http.get('/api/base/search/', {params: data || {}}).success(function(data){
         $scope.results = data.objects;
         $scope.total_counts = data.meta.total_count;
@@ -402,6 +404,7 @@
         query_entry = [value];
       }
       $scope.query[filter] = query_entry;
+      console.log($scope.query);
       query_api($scope.query);
     }
 
