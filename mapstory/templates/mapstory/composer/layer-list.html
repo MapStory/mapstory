@@ -29,12 +29,19 @@
 
                 <div>
                     <div class="col-sm-4">
-                        <div class="box-quick-link muted-background"><a ng-click="">
-                            <div class="header">
-                                <div class="glyphicon glyphicon-pencil"></div>
+                        <div class="time-panel box-quick-link" ng-class="{'blue-background':layer.get('times'), 'muted-background':!layer.get('times')}">
+                            <a title="{{layer.get('times')[0] |isodate}}" data-toggle="time-info" data-target="{{'#' + layer.get('name')}}-time" tabindex="0" data-trigger="focus">
+                                <div class="header">
+                                    <div class="glyphicon glyphicon-calendar"></div>
+                                </div>
+                                <div class=content>Time Info</div>
+                            </a>
+                        </div>
+
+                        <div id="{{layer.get('name')}}-time" style="display: none;">
+                            <div ng-repeat="time in layer.get('times')">
+                                {{ time |isodate }}
                             </div>
-                            <div class=content>Edit Style</div>
-                        </a>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -78,5 +85,4 @@
 
 
 </accordion>
-
 {%endverbatim%}

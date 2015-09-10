@@ -36,7 +36,7 @@
     </div>
 
     <div id="footer" class='floating-below' ng-show="timeControlsManager.timeControls">
-        <div class="panel-group" id="currentBox">
+        <div class="panel-group" id="currentBox" ng-show="timeControlsManager.timeControls.getCurrentBox().get('title')">
             <div class="panel panel-default" id="story-box-accordion">
                 <div class="panel-heading">
                     <h4 class="panel-title">

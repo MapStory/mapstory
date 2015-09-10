@@ -76,8 +76,8 @@
         <div id="content">
             <div id="middle">
                 <div id="storyHeader" class="floating" ng-show="selected.preview">
-                   <div id="storyTitle"><a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}/viewer"><span ng-bind="mapManager.storyMap.getStoryTitle()"></span></a></div>
-                   <div id="storyAuthor" ng-bind="mapManager.storyMap.getStoryOwner()"></div>
+                    <div id="storyTitle"><a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}/viewer"><span ng-bind="mapManager.storyMap.getStoryTitle()"></span></a></div>
+                    <div id="storyAuthor" ng-bind="mapManager.storyMap.getStoryOwner()"></div>
                 </div>
                 <div class="stLegend" ng-show="selected.preview"></div>
                 <div id="map"></div>
@@ -130,10 +130,15 @@
                         <accordion-heading>
                             About Your MapStory
                         </accordion-heading>
-                            <story-about-info></story-about-info>
+                        <story-about-info></story-about-info>
+                    </accordion-group>
+                    <accordion-group>
+                        <accordion-heading>
+                            Playback Options
+                        </accordion-heading>
+                        <st-playback-settings playback-options="playbackOptions" time-controls="timeControlsManager.timeControls"></st-playback-settings>
                     </accordion-group>
                 </accordion>
-
             </div>
             <div ng-show="selected.debug" class="floating ng-hide col-lg-8" style="max-height: 75%; overflow: auto; background:white">
                 <div class="panel">
