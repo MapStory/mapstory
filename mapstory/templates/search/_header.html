@@ -1,8 +1,8 @@
 <div class="row" style="border-bottom:1px solid darkgray">
 	<div class="row" style="margin:20px 0 30px">
 		<div class="input-group col-sm-6 col-sm-offset-3">
-			<span class="input-group-addon" style="font-size:1.3em;background-color:white;border:1px solid gainsboro; cursor:pointer" ng-click="query={q: query.q}; query.type_in=['map', 'layer']; search();"><a> <i class="fa fa-cubes"></i> Search for Content </a></span>
-			<span class="input-group-addon" style="font-size:1.3em;background-color:white;border:1px solid gainsboro; cursor:pointer" ng-click="query={q:query.q}; query.type__in='user'; search()"><a> <i class="fa fa-users"></i> Search for Storytellers </a></span>
+			<span class="input-group-addon" style="font-size:1.3em;background-color:white;border:1px solid gainsboro; cursor:pointer" ng-click="query={q: query.q}; query.type_in=['map', 'layer']; query.is_published=true; query.keywords__slug__in=null; search();"><a> <i class="fa fa-cubes"></i> Search for Content </a></span>
+			<span class="input-group-addon" style="font-size:1.3em;background-color:white;border:1px solid gainsboro; cursor:pointer" ng-click="query={q:query.q}; query.type__in='user'; query.is_published=null; query.keywords__slug__in=null; search()"><a> <i class="fa fa-users"></i> Search for Storytellers </a></span>
 		</div>
 	</div>
 </div>

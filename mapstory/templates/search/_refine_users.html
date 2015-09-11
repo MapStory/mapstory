@@ -5,23 +5,93 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title clearfix">
-                <a data-toggle="collapse" data-parent="#accordion2" href="#category-tab">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#location-tab">
                     <span class="pull-left">Location</span>
                     <span class="pull-right"></span>
                 </a>
             </div>
         </div>
-        <!-- TODO: autocomplete goes here -->
+        <!-- This is just using city for now -->
+        <div id="location-tab" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="row">
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <ul id="location" class="nav" ng-init="search_locations=[]">
+                                {% verbatim %}
+                                Filter users by their city
+                                <nav class="filter">
+                                    <div class="input-group search-bar">
+                                        <!-- TODO: autocomplete goes here -->
+                                        <input name="location_search_input" id="location_search_input" ng-model="query.city" type="text"
+                                            class="form-control" ng-enter="search()">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" ng-click="search()" ng-class="{'disabled': !query.city}" type="submit" id="location_search_btn"><i class="fa fa-search"></i> Search</button>
+                                        </span>
+                                        <!--
+                                        <input name="location_search_input" id="location_search_input" ng-model="location_query" type="text" 
+                                            class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="submit" id="location_search_btn" ng-click="add_search('city', location_query, search_locations)"><i class="fa fa-plus">Add</i></button>
+                                        </span>
+                                    -->
+                                    </div>
+                                </nav>
+                                <ul>
+                                    <li ng-repeat="search in search_locations">
+                                        {{ search }}
+                                        <span class="input-group-btn pull-right">
+                                            <button class="btn btn-primary" type="submit" ng-click="remove_search('city', search, search_locations)"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </li>
+                                </ul>
+                                {% endverbatim %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title clearfix">
-                <a data-toggle="collapse" data-parent="#accordion2" href="#regions" ng-controller="leaflet_hack" ng-click="showMap()">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#interest-tab">
                     <span class="pull-left">Interests</span>
                     <span class="pull-right"></span>
                 </a>
             </div>
         </div>
         <!-- TODO: autocomplete goes here -->
+        <div id="interest-tab" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-11 col-sm-offset-1">
+                        <ul id="interests" ng-init="search_interests=[]">
+                        {% verbatim %}
+                            <nav class="filter">
+                                <div class="input-group search-bar">
+                                    <input name="interest_search_input" id="interest_search_input" ng-model="interest_query" type="text" 
+                                        class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="submit" id="interest_search_btn" ng-click="add_search('keywords__slug__in', interest_query, search_interests)"><i class="fa fa-plus">Add</i></button>
+                                    </span>
+                                </div>
+                            </nav>
+                            <ul>
+                                <li ng-repeat="search in search_interests">
+                                    {{ search }}
+                                    <span class="input-group-btn pull-right">
+                                        <button class="btn btn-primary" type="submit" ng-click="remove_search('keywords__slug__in', search, search_interests)"><i class="fa fa-times"></i></button>
+                                    </span>
+                                </li>
+                            </ul>
+                        {% endverbatim %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

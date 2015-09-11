@@ -212,8 +212,6 @@
 
     //Get data from apis and make them available to the page
     function query_api(data){
-      // This is probably not the correct way to do this long term, but works for now
-      data['is_published'] = true;
       return $http.get('/api/base/search/', {params: data || {}}).success(function(data){
         $scope.results = data.objects;
         $scope.total_counts = data.meta.total_count;
@@ -247,6 +245,7 @@
         }
       });
     };
+    $scope.query['is_published'] = true;
     query_api($scope.query);
 
     $scope.query_category = function(category, type) {

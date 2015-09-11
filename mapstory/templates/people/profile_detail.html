@@ -111,9 +111,12 @@
             {% if profile.profile %}
             <div class="sidebar-content">{{ profile.profile }}</div>
             {% endif %}
+            <!-- Getting rid of this as it is replaced by the keywords field for profiles -->
+            {% comment %}
+            <!-- 
             {% if profile.interest_list|length > 0 %}
+            
             <div class="sidebar-content"><h3>Interests</h3></div><br>
-                <!-- NOTE: This has some formatting issues; needs to wrap around to a second line nicely -->
                 {% for interest in profile.interest_list|slice:"10" %}
                   <span class="label label-default">{{ interest }}</span>
                 {% endfor %}
@@ -121,11 +124,11 @@
                   <span class="label label-default">{{ profile.interest_list|length|add:"-10" }} more</span>
                 {% endif %}
             {% endif %}
-            {% comment %}
-            {% if vtc %}
-            <div class="sidebar-content" style="font-weight: bold;">Volunteer Techincal Community Member</div>
-            {% endif %}
+            -->
             {% endcomment %}
+            {% if user.Volunteer_Technical_Community %}
+            <div class="sidebar-content"><h5 style="font-weight: bold;">Volunteer Techincal Community Member</h5></div>
+            {% endif %}
 
             <!-- notifications -->
             <div class="sidebar-header"><h3>user actions</h3></div>

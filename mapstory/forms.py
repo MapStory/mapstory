@@ -6,6 +6,7 @@ from geonode.base.forms import ResourceBaseForm
 from geonode.layers.models import Layer
 from geonode.base.forms import Profile
 from geonode.base.models import ResourceBase
+import taggit
 
 class MapStorySignupForm(SignupForm):
     """
@@ -130,7 +131,11 @@ class DeactivateProfileForm(forms.ModelForm):
 # A form for the fields we want the user to be able to edit
 class EditProfileForm(forms.ModelForm):
     Volunteer_Technical_Community = forms.BooleanField(help_text=_("Join the Volunteer Technical Community"), required=False)
+    keywords = taggit.forms.TagField(
+        required=False,
+        label='interests',
+        help_text=_("A list of personal interests"))
 
     class Meta:
         model = Profile
-        fields = ['first_name', 'last_name', 'interests', 'city', 'country', 'profile']
+        fields = ['first_name', 'last_name', 'keywords', 'city', 'country', 'profile', 'Volunteer_Technical_Community']
