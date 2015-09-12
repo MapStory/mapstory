@@ -20,7 +20,7 @@
 
 
 {% for entry in getpage.published_entries %}
-<section class="slice" id="{{ entry.title }}">
+<section class="slice" id="{{ entry.title }}"  onLoad="javascript:window.scrollBy(0, -50); console.log('hi');">
     <div class="container">
         <div class="row">
 
@@ -69,4 +69,9 @@
 {% endfor %}
 
 
+{% endblock %}
+{% block extra_script %}
+<script type="text/javascript">
+window.onload = setTimeout(function() {window.scrollBy(0, -50);},100);
+</script>
 {% endblock %}
