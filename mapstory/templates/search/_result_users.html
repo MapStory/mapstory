@@ -16,8 +16,7 @@
             <h4>{{ item.profile }}</h4>
 
             <a href="{{ item.profile_detail_url }}"><button class="btn btn-primary btn-xs"><i class="fa fa-user"></i> view profile</button></a>
-            <!-- TODO: Currently only links to create a message, in the future so populate the "To:" field with the user we clicked - item.username -->
-            <a href="{% endverbatim %}{% url "message_create" %}{% verbatim %}"><button class="btn btn-primary btn-xs"><i class="fa fa-envelope"></i> message</button></a>
+            <a href="/messages/create/{{ item.id }}/"><button class="btn btn-primary btn-xs"><i class="fa fa-envelope"></i> message</button></a>
         </div>
     </li>
 </div>
