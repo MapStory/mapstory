@@ -102,29 +102,29 @@
               </div>
             </div>
 
-            <hr style="margin-top:15px;margin-bottom:10px">
-            <h3 style="margin-top:0px;margin-bottom:5px;">
-              <!--
-              Rate:
-              <i class="fa fa-star-o"></i>
-              <i class="fa fa-star-o"></i>
-              <i class="fa fa-star-o"></i>
-              <i class="fa fa-star-o"></i>
-              <i class="fa fa-star-o"></i>
+            <hr style="margin-top:15px;margin-bottom:0px">
+            <!--
+            Rate:
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
 
-              Need to figure out how this is implemented...
-              Looks like an assignment tag probably but the name isn't found any
-              Looks like it uses jquery.raty.js but we want to change the styling of the stars
-              Looks like you can specify staroff and staron
-              It appears this may be from a later version of Geonode? -->
-              <article id="rate" class="tab-pane">
-              {% if request.user.is_authenticated %}
-              <h4>{% trans "Rate this layer" %}</h4>
-              {% user_rating request.user resource "layer" as user_layer_rating %}
-              <div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
-              {% endif %}        
-              </article>
-            </h3>
+            Need to figure out how this is implemented...
+            Looks like an assignment tag probably but the name isn't found any
+            Looks like it uses jquery.raty.js but we want to change the styling of the stars
+            Looks like you can specify staroff and staron
+            It appears this may be from a later version of Geonode?
+            Gotta find out by looking in Sources tab what's going on here and see if we can change the star images that show up-->
+            <article id="rate" class="tab-pane">
+            {% if request.user.is_authenticated %}
+            <h3 style="margin-top:-15px;margin-bottom:0px">{% trans "Rate:" %}</h3>
+            {% user_rating request.user resource "layer" as user_layer_rating %}
+            <div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
+            {% endif %}        
+            </article>
+            <h3 style="margin-top:-15px;margin-bottom:10px">{% trans "Average:" %} {{ resource.rating }}/5</h3>
           </div>
           {% ifequal page "layer" %}
           {% include "layers/layer_functions.html" %}
