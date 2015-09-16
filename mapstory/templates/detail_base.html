@@ -36,7 +36,7 @@
                 {% endifequal %}
                 {% endfor %}
                 {% if resource.layers %}
-                <span style="color:green" onclick="toggle_visibility('share');">share</span> | <span style="color:#00CC99" onclick="toggle_visibility('embed');">embed</span>
+                <span style="color:green; hover: cursor;" onclick="toggle_visibility('share');">share</span> | <span style="color:#00CC99; hover: cursor;" onclick="toggle_visibility('embed');">embed</span>
                 {% endif %}
               </h2>
           </div>
@@ -46,7 +46,7 @@
             <!-- share -->
             <div style="display:none;" id="share">Share link: <textarea style="color:#00CC99; width:100%;">http://{{ request.get_host }}{% url 'geonode.maps.views.map_detail' resource.id %}</textarea></div>
             <!-- embed -->
-            <div style="display:none;" id="embed">Embed link: <textarea style="color:#00CC99; width:100%;"><iframe style="border: none;" height="400" width="600" src="http://{{ request.get_host }}{% url 'geonode.maps.views.map_viewer' resource.id %}"></iframe></textarea></div>
+            <div style="display:none;" id="embed">Embed link: <textarea style="color:#00CC99; width:100%;"><iframe style="border: none;" height="400" width="600" src="http://{{ request.get_host }}{% url 'geonode.maps.views.map_embed' resource.id %}"></iframe></textarea></div>
           </div>
         </div>
         <hr>
