@@ -1,4 +1,5 @@
 {% extends "site_base.html" %}
+{% load i18n %}
 {% load mapstory_tags %}
 {% load avatar_tags %}
 
@@ -80,8 +81,15 @@
             <div class="row">
                 <div class="col-lg-2 col-xs-6 qlink-right">
                 </div>
-                <div class="col-lg-10 col-xs-6 blog-content bl">
+                <div class="col-lg-8 col-xs-6 blog-content bl">
                     {{ entry.html|safe }}
+                </div>
+                <div class="col-lg-2 col-xs-6">
+                    {% ifequal entry.author request.user %}
+                        <a href="{% url 'diary-update' pk=entry.pk %}">
+                            <button class="btn btn-primary" aria-hidden="true" id="published_submit_btn" type="submit">{% trans "Edit" %}</button>
+                        </a>
+                    {% endifequal %}
                 </div>
             </div>
         </div>
