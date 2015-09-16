@@ -21,6 +21,11 @@ if (not FOUND) then
 	-- no layer
 	return 'nl';
 end if;
+
+if (user_name IS NULL or user_name = '') then
+        user_name = 'AnonymousUser';
+end if;
+
 if (user_name IS NOT NULL) then
 	SELECT INTO user * FROM "people_profile" WHERE "people_profile"."username" = user_name;
 	if (not FOUND) then
