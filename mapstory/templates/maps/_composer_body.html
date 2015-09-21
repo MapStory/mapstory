@@ -180,3 +180,22 @@
 </div>
 
 {% endverbatim %}
+<!-- save modal defined in story-about-info.html -->
+<div id="saveModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h4 class="modal-title">{% trans 'Map Saved' %}</h4>
+      </div>
+      <div class="modal-body">
+        {% verbatim %}
+        Congratulations! Your map has been saved. Take a look <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}/viewer">here!</a>
+        {% endverbatim %}
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
+      </div>
+    </div>
+  </div>
+</div>

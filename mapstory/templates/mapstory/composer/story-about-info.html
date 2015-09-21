@@ -21,8 +21,9 @@
             </div>
 
         </div>
-
+    Your map's thumbnail will be generated based on the view you are currently focused on. When you are ready, click Save.
     <div class="input-group">
-        <button ng-disabled="!choice.title" class="btn btn-primary pull-right"><span ng-if="loading">Saving...</span><span ng-if="loading != true">Save</span></button>
+        <button href="#saveModal" data-toggle="modal" ng-disabled="!choice.title" class="btn btn-primary pull-right"><span ng-if="loading">Saving...</span><span ng-if="loading != true">Save</span></button>
     </div>
 </form>
+
