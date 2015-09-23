@@ -205,10 +205,12 @@
             var config = this.storyMap.getState();
 
             var end_point = '/maps/new/data';
+            // This is our promise to load and save the map
+            var mapLoad;
 
             if(config.id != undefined && config.id != null && config.id > 0){
                 end_point = '/maps/' + config.id + '/data';
-                var mapLoad = $http.put(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config)).success(function(data){
+                mapLoad = $http.put(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config)).success(function(data){
 
                     var mapId = data.id;
 
@@ -226,7 +228,7 @@
                 });
             }else{
 
-                var mapLoad = $http.post(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config)).success(function(data) {
+                mapLoad = $http.post(end_point, storytools.mapstory.MapConfigTransformer.MapToGXPConfigTransformer(config)).success(function(data) {
 
                     var mapId = data.id;
 
@@ -249,7 +251,7 @@
                     });
             }
 
-            return deferred.promise;
+            return mapLoad;
 
         };
         $rootScope.$on('$locationChangeSuccess', function() {
@@ -401,9 +403,11 @@
                      scope.loading = true;
                      MapManager.storyMap.setStoryTitle(about.title);
                      MapManager.storyMap.setStoryAbstract(about.abstract);
-                     MapManager.saveMap();
+                     MapManager.saveMap().then(function(){
+                        scope.loading = false;
+                        $('#saveModal').modal('show');
+                     });
                      //scope.$parent.status.open = false;
-                     scope.loading = false;
                 };
             }
         };
