@@ -21,20 +21,30 @@
         $scope.query.offset = $scope.query.offset || 0;
         $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
 
+        $scope.search = function() {
+          $scope.query.limit = 100;
+          $scope.query.offset = 0;
+          return query_api($scope.query).then(function(result) {
+            return result;
+          });
+        };
 
         //Get data from apis and make them available to the page
         function query_api(data){
-          return $http.get('/api/featured/', {params: data || {}}).success(function(data){
+          return $http.get('/api/base/search/', {params: data || {}}).success(function(data){
             $scope.results = data.objects;
             $scope.total_counts = data.meta.total_count;
             $scope.$root.query_data = data;
             if (HAYSTACK_SEARCH) {
               if ($location.search().hasOwnProperty('q')){
-                $scope.text_query = $location.search()['q'].replace(/\+/g," ");
+                $scope.text_query = $location.search()['q'].replace(/\W+/g," ");
+              }
+              if ($location.search().hasOwnProperty('type__in')){
+                $scope.type__in = $location.search()['type__in'].replace(/\W+/g," ");;
               }
             } else {
               if ($location.search().hasOwnProperty('title__icontains')){
-                $scope.text_query = $location.search()['title__icontains'].replace(/\+/g," ");
+                $scope.text_query = $location.search()['title__icontains'].replace(/\W+/g," ");
               }
             }
 
@@ -65,18 +75,15 @@
             }
           });
         };
+        $scope.query['is_published'] = true;
+        $scope.query['featured'] = true;
         query_api($scope.query);
 
-        // Adds a query for this category
-        $scope.query_category = function(filter) {
-            if (filter) {
-                $scope.query['category__identifier__in'] = filter;
-            } else {
-                $scope.query['category__identifier__in'] = null;
-            }
-            query_api($scope.query);
-        }
-
+        $scope.query_category = function(category, type) {
+          $scope.query.type__in = type;
+          $scope.query.category__identifier__in = category;
+          $scope.search();
+        };
 
         // carousel
         $scope.slideLeft = function() {

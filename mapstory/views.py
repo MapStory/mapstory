@@ -617,7 +617,11 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
 
     if request.method == "POST":
         keywords_form = KeywordsForm(request.POST, instance=map_obj)
+        published_form = PublishStatusForm(request.POST, instance=map_obj)
 
+        if published_form.is_valid():
+            map_obj.is_published = published_form.cleaned_data['is_published']
+            map_obj.save()
         if keywords_form.is_valid():
             new_keywords = keywords_form.cleaned_data['keywords']
             map_obj.keywords.clear()
@@ -631,6 +635,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
                     )))
     else:
         keywords_form = KeywordsForm(instance=map_obj)
+        published_form = PublishStatusForm(instance=map_obj)
 
     context_dict = {
         'config': config,
@@ -639,6 +644,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         'permissions_json': _perms_info_json(map_obj),
         "documents": get_related_documents(map_obj),
         "keywords_form": keywords_form,
+        "published_form": published_form,
     }
 
     if settings.SOCIAL_ORIGINS:
