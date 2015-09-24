@@ -1,68 +1,6 @@
 (function() {
     'use strict';
 
-    var module = angular.module('storytools.core.mapstory', [
-    ]);
-
-    // @todo naive implementation on local storage for now
-    module.service('stMapConfigStore', function() {
-        function path(mapid) {
-            return '/maps/' + mapid;
-        }
-        function get(mapid) {
-            var saved = localStorage.getItem(path(mapid));
-            saved = (saved === null) ? {} : angular.fromJson(saved);
-            return saved;
-        }
-        function set(mapConfig) {
-            localStorage.setItem(path(mapConfig.id), angular.toJson(mapConfig));
-        }
-        function list() {
-            var maps = [];
-            var pattern = new RegExp('/maps/(\\d+)$');
-            Object.getOwnPropertyNames(localStorage).forEach(function(key) {
-                var match = pattern.exec(key);
-                if (match) {
-                    // name/title eventually
-                    maps.push({
-                        id: match[1]
-                    });
-                }
-            });
-            return maps;
-        }
-        function nextId() {
-            var lastId = 0;
-            var existing = list().map(function(m) {
-                return m.id;
-            });
-            existing.sort();
-            if (existing.length) {
-                lastId = parseInt(existing[existing.length - 1]);
-            }
-            return lastId + 1;
-        }
-        return {
-            listMaps: function() {
-                return list();
-            },
-            loadConfig: function(mapid) {
-                return get(mapid);
-            },
-            saveConfig: function(mapConfig) {
-                if (!angular.isDefined(mapConfig.id)) {
-                    mapConfig.id = nextId();
-                }
-                set(mapConfig);
-            }
-        };
-    });
-
-})();
-
-(function() {
-    'use strict';
-
     var module = angular.module('storytools.core.ogc', [
     ]);
 
@@ -833,6 +771,68 @@
             }
         };
     }]);
+
+})();
+
+(function() {
+    'use strict';
+
+    var module = angular.module('storytools.core.mapstory', [
+    ]);
+
+    // @todo naive implementation on local storage for now
+    module.service('stMapConfigStore', function() {
+        function path(mapid) {
+            return '/maps/' + mapid;
+        }
+        function get(mapid) {
+            var saved = localStorage.getItem(path(mapid));
+            saved = (saved === null) ? {} : angular.fromJson(saved);
+            return saved;
+        }
+        function set(mapConfig) {
+            localStorage.setItem(path(mapConfig.id), angular.toJson(mapConfig));
+        }
+        function list() {
+            var maps = [];
+            var pattern = new RegExp('/maps/(\\d+)$');
+            Object.getOwnPropertyNames(localStorage).forEach(function(key) {
+                var match = pattern.exec(key);
+                if (match) {
+                    // name/title eventually
+                    maps.push({
+                        id: match[1]
+                    });
+                }
+            });
+            return maps;
+        }
+        function nextId() {
+            var lastId = 0;
+            var existing = list().map(function(m) {
+                return m.id;
+            });
+            existing.sort();
+            if (existing.length) {
+                lastId = parseInt(existing[existing.length - 1]);
+            }
+            return lastId + 1;
+        }
+        return {
+            listMaps: function() {
+                return list();
+            },
+            loadConfig: function(mapid) {
+                return get(mapid);
+            },
+            saveConfig: function(mapConfig) {
+                if (!angular.isDefined(mapConfig.id)) {
+                    mapConfig.id = nextId();
+                }
+                set(mapConfig);
+            }
+        };
+    });
 
 })();
 
@@ -1680,7 +1680,7 @@
             for (i = 0; i < boxes.length; i++) {
                 box = boxes[i];
                 for (var j = 0, jj = this.storyBoxes.length; j < jj; j++) {
-                    if (this.storyBoxes[j].id == box.id) {
+                    if (this.storyBoxes[j]._id == box._id) {
                         this.storyBoxes.splice(j, 1);
                         break;
                     }
@@ -1688,17 +1688,17 @@
             }
         } else if (action == 'add') {
 
-            var maxId = 0;
+            var maxId = new Date().getTime();
             this.storyBoxes.forEach(function(b) {
-                maxId = Math.max(maxId, b.id);
+                maxId = Math.max(maxId, b._id);
             });
 
             for (i = 0; i < boxes.length; i++) {
 
                 box = boxes[i];
 
-                if (typeof box.id === 'undefined' || box.id === null) {
-                        box.id = ++maxId;
+                if (typeof box._id === 'undefined' || box._id === null) {
+                        box._id = ++maxId;
                 }
 
                 this.storyBoxes.push(box);
@@ -1708,12 +1708,11 @@
             for (i = 0; i < boxes.length; i++) {
                 box = boxes[i];
                 for (var x = 0, xx = this.storyBoxes.length; x < xx; x++) {
-                    if (this.storyBoxes[x].id == box.id) {
+                    if (this.storyBoxes[x]._id == box._id) {
                         this.storyBoxes[x]= box;
                         break;
                     }
                 }
-                  console.log(boxes[i]);
             }
 
         } else {
@@ -1727,7 +1726,7 @@
                 return storytools.core.utils.createRange(p.start_time, p.end_time);
             }
         });
-
+   
         this.storyBoxesLayer.set('times', times);
         this.storyBoxesLayer.set('features', this.storyBoxes);
     };
@@ -1813,9 +1812,9 @@
                 var toDelete = boxes.map(function(d) {
                     return d.id;
                 });
-                return $http.post(path(mapid), JSON.stringify({'ids':toDelete})).success(function(data) {
-                    return "success";
-                });
+                return $http.post(path(mapid), JSON.stringify({'ids':toDelete}));//.success(function(data) {
+                   // return "success";
+                //});
             },
             saveBoxes: function(mapid, boxes) {
                 var clones = [];

@@ -39,7 +39,7 @@ var Box = function(data, projection) {
 };
 Box.prototype = Object.create(ol.Feature.prototype);
 Box.prototype.constructor = Box;
-['id','title', 'start_time','end_time','description','range','data',
+['id','_id','title', 'start_time','end_time','description','range','data',
     'layerIds','center','resolution','allowPan','allowZoom','interval',
     'intervalRate','playback','playbackRate','speed','zoom','_offset'].forEach(function(prop) {
     Object.defineProperty(Box.prototype, prop, {
