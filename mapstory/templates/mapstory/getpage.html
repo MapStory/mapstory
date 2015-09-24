@@ -47,8 +47,7 @@
                     <h3 class="pull-right">
 
                         {% if entry.example_map %}
-
-                            <a href="{% url 'map_detail' entry.example_map %}">{{ entry.example_map.title }}</a> |
+                            <a href="{% url 'map_detail' entry.example_map.id %}">{{ entry.example_map.title }}</a> |
 
                         {% endif %}
 
