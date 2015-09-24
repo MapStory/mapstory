@@ -265,7 +265,7 @@
                                     </h5>
                                 </a>
                             </div>
-                        {% if forloop.counter|divisibleby:4 %}</div>{% endif %}
+                        {% if forloop.counter|divisibleby:4 or forloop.last %}</div>{% endif %}
                         {% empty %}
                         <p>No Featured Thinkers and Thoughts...</p>
                         {% endfor %}
