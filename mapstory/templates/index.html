@@ -253,22 +253,22 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-8">
-                    <div class="row" style="padding:20px">
                         {% for item in diary_entries %}
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url "diary-detail" item.pk %}">
-                                <img class="img-circle" src="{% avatar_url item.author 150 %}" width="150" height="150"/>
-                                <h5 class="text-center">
-                                    <strong>{{ item.title|truncatechars:48 }}</strong>
-                                    <br/>
-                                    {% include "people/_profile_name_display.html" with profile=item.author only %}
-                                </h5>
-                            </a>
-                        </div>
+                        {% if forloop.counter0|divisibleby:4 %}<div class="row" style="padding:20px">{% endif %}
+                            <div class="col-sm-3 photobox">
+                                <a href="{% url "diary-detail" item.pk %}">
+                                    <img class="img-circle" src="{% avatar_url item.author 150 %}" width="150" height="150"/>
+                                    <h5 class="text-center">
+                                        <strong>{{ item.title|truncatechars:48 }}</strong>
+                                        <br/>
+                                        {% include "people/_profile_name_display.html" with profile=item.author only %}
+                                    </h5>
+                                </a>
+                            </div>
+                        {% if forloop.counter|divisibleby:4 %}</div>{% endif %}
                         {% empty %}
                         <p>No Featured Thinkers and Thoughts...</p>
                         {% endfor %}
-                    </div>
                 </div>
                 <div class="col-sm-4">
                     <h1>Thinkers and Thoughts</h1>
