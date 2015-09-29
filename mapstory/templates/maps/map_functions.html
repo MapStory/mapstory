@@ -26,24 +26,6 @@
               <h4 class="modal-title">{% trans 'Flag Content' %}</h4>
           </div>
           <div class="modal-body">
-            <p>What's wrong?</p>
-            <ul>
-                <li>
-                    <input type='radio' name='flag_type' value="broken" id='id_broken'><label for='id_broken'>Broken</label>
-                </li>
-                <li>
-                    <input type='radio' name='flag_type' value="inappropriate" id='id_inappropriate'><label for='id_inappropriate'>Inappropriate</label>
-                </li>
-                <li>
-                    <input type='radio' name='flag_type' value="missing_metadata" id='id_missing_metadata'><label for='id_missing_metadata'>Missing metadata</label>
-                </li>
-                <li>
-                    <input type='radio' name='flag_type' value="violates_terms" id='id_violates_terms'><label for='id_violates_terms'>Violates terms</label>
-                </li>
-                <li>
-                    <input type='radio' name='flag_type' value="other" id='id_other'><label for='id_other'>Other issue</label>
-                </li>
-            </ul>
             {% flag resource 'owner' %}
           </div>
           <div class="modal-footer">
