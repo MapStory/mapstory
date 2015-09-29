@@ -20,7 +20,7 @@ from django.utils.http import is_safe_url
 from geonode.base.forms import CategoryForm
 from geonode.base.models import TopicCategory
 from geonode.layers.models import Layer
-from geonode.layers.views import _resolve_layer, _PERMISSION_MSG_METADATA, _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW
+from geonode.layers.views import _PERMISSION_MSG_METADATA, _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
 from geonode.people.forms import ProfileForm
 from geonode.people.models import Profile
 from httplib import HTTPConnection, HTTPSConnection
@@ -60,6 +60,8 @@ from django.db.models import F
 from django.contrib.auth.models import Group
 from django.contrib import messages
 from django.contrib.auth import logout
+from geonode.layers.views import _resolve_layer
+from geonode.tasks.deletion import delete_map, delete_layer
 
 
 class IndexView(TemplateView):
@@ -651,3 +653,45 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         context_dict["social_links"] = build_social_links(request, map_obj)
 
     return render_to_response(template, RequestContext(request, context_dict))
+
+@login_required
+def layer_remove(request, layername, template='layers/layer_remove.html'):
+    layer = _resolve_layer(
+        request,
+        layername,
+        'base.delete_resourcebase',
+        _PERMISSION_MSG_DELETE)
+
+    if (request.method == 'GET'):
+        return render_to_response(template, RequestContext(request, {
+            "layer": layer
+        }))
+    if (request.method == 'POST'):
+        try:
+            delete_layer.delay(object_id=layer.id)
+        except Exception as e:
+            message = '{0}: {1}.'.format(_('Unable to delete layer'), layer.typename)
+
+            if 'referenced by layer group' in getattr(e, 'message', ''):
+                message = _('This layer is a member of a layer group, you must remove the layer from the group '
+                            'before deleting.')
+
+            messages.error(request, message)
+            return render_to_response(template, RequestContext(request, {"layer": layer}))
+        return HttpResponseRedirect(reverse("index_view"))
+    else:
+        return HttpResponse("Not allowed", status=403)
+
+@login_required
+def map_remove(request, mapid, template='maps/map_remove.html'):
+    ''' Delete a map, and its constituent layers. '''
+    map_obj = _resolve_map(request, mapid, 'base.delete_resourcebase', _PERMISSION_MSG_VIEW)
+
+    if request.method == 'GET':
+        return render_to_response(template, RequestContext(request, {
+            "map": map_obj
+        }))
+
+    elif request.method == 'POST':
+        delete_map.delay(object_id=map_obj.id)
+        return HttpResponseRedirect(reverse("index_view"))
