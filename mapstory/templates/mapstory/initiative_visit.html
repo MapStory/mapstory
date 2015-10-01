@@ -13,12 +13,11 @@
 
 {% block title %}{{ community.name }}{% endblock %}
 
-{% block body_outer %}
+{% block middle %}
 <div ng-app="paginate"><div ng-controller="paginate_controller">
 				<!-- content -->
         <section class="parallax">
-          <!-- TODO: This doesn't look very good -->
-          <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});">
+          <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }}); background-size: 100%; background-position: 0% 20%;">
 						<div class="maskParent">
 							<div class="paralaxMask"></div>
 							<div class="paralaxText container" style="text-align:left;padding-bottom:0">
@@ -29,15 +28,15 @@
 									</div>
 									<div class="col-sm-6">
 										<div style="padding:60px 0px 0px 10px;">
-											<h1 style="font-size:3em">{{ community.name }}</h1>
+											<h1 style="font-size:3em; color: white;">{{ community.name }}</h1>
 										</div>
 									</div>
 									<div class="col-sm-5">
 										<div class="row"  style="padding:80px 0px 10px 10px;">
 										  <div class="col-sm-4 col-sm-offset-8">
-										<a class="btn btn-sm btn-block" style="font-size:1em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
-											join 
-										</a>
+											<a class="btn btn-sm btn-block" style="font-size:1em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
+												join 
+											</a>
 									   </div>
 								    </div>
 									</div>
