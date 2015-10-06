@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 # setup 2 databases for mapstory
 # mapstory for django and mapstory_data for geoserver

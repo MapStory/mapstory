@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+# if user is root, do not run the script
+if [[ $EUID -eq 0 ]]; then
+   echo "  This script should not be run as root. run as mapstory user instead" 1>&2
+   exit 1
+fi
+
+source /home/mapstory/.virtualenvs/mapstory/bin/activate
+
+./clean
+
+cd /srv/git/mapstory/mapstory-geonode/
+paver collect_static
+python manage.py collectstatic --noinput

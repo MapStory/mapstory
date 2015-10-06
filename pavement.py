@@ -49,8 +49,14 @@ def _paste(bind):
     except KeyboardInterrupt:
         pass
 
+@task
+def clean():
+    '''remove node and bower installed packages to ensure a clean build'''
+    with pushd('scripts/misc'):
+        sh('./clean')
 
 @task
+@needs('clean')
 def geonode_static():
     '''geonode static task not ideal'''
     with pushd('../geonode/geonode/static'):
