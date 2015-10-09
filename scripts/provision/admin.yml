@@ -71,6 +71,23 @@
       - supervisor
       - ipython
       - memcached
+      - unattended-upgrades
+  tags: [install]
+
+- name: activate unattended-upgrades
+  lineinfile: dest=/etc/apt/apt.conf.d/10periodic line='APT::Periodic::Unattended-Upgrade "1";'
+  tags: [install]
+
+- name: add auto upgrades
+  lineinfile: dest=/etc/apt/apt.conf.d/20auto-upgrades create=yes line='{{item}}'
+  tags: [install]
+  with_items:
+    - 'APT::Periodic::Update-Package-Lists "1";'
+    - 'APT::Periodic::Unattended-Upgrade "1";'
+
+- name: update security packages
+  command: unattended-upgrade
+  sudo: yes
   tags: [install]
 
 - name: mapstory user
