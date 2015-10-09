@@ -7,6 +7,10 @@
   apt_repository: repo='ppa:chris-lea/node.js' update_cache=yes
   tags: [install]
 
+- name: add stable nginx ppa
+  apt_repository: repo='ppa:nginx/stable' update_cache=yes
+  tags: [install]
+
 - name: install geonode deps
   apt: name={{item}} state=present
   with_items:
