@@ -3,9 +3,8 @@ from account.views import SignupView
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
-
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.http.request import validate_host
 from django.shortcuts import render_to_response
 from django.shortcuts import render, redirect, get_object_or_404
@@ -17,12 +16,14 @@ from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from django.template import RequestContext
 from django.utils.http import is_safe_url
+from django.utils.translation import ugettext as _
 from geonode.base.forms import CategoryForm
 from geonode.base.models import TopicCategory
 from geonode.layers.models import Layer
 from geonode.layers.views import _PERMISSION_MSG_METADATA, _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
 from geonode.people.forms import ProfileForm
 from geonode.people.models import Profile
+from geonode.maps.views import snapshot_config
 from httplib import HTTPConnection, HTTPSConnection
 from mapstory.forms import UploadLayerForm, DeactivateProfileForm, EditProfileForm
 from mapstory.models import get_sponsors
@@ -43,7 +44,6 @@ from user_messages.models import Thread
 from .forms import MapStorySignupForm
 from geonode.groups.models import GroupProfile
 
-from actstream.models import Action
 from actstream.models import actor_stream
 
 from django.utils import simplejson as json
