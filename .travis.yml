@@ -1,7 +1,13 @@
 language: python
 
+services:
+  - elasticsearch
+
 python:
   - "2.7"
+
+env:
+- DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
 
 virtualenv:
   system_site_packages: true

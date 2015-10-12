@@ -5,6 +5,7 @@ from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model, authenticate
+from django.contrib.staticfiles import finders
 from geonode.base.models import TopicCategory
 from geonode.base.populate_test_data import create_models
 from geonode.layers.models import Layer
@@ -27,7 +28,6 @@ class AdminClient(Client):
         Convenience method to login a non-admin.
         """
         return self.login(**{'username': username, 'password': password})
-
 
 class MapStoryTestMixin(TestCase):
 
@@ -190,9 +190,8 @@ class MapStoryTests(MapStoryTestMixin):
         c = Client()
         response = c.get(reverse('community-detail', args=['nope']))
         self.assertEqual(response.status_code, 404)
-
         icon = SimpleUploadedFile(name='test_image.png',
-                               content=open(os.path.join(settings.STATIC_ROOT, 'mapstory/img/img_95x65.png'), 'rb').read(),
+                               content=open(finders.find('mapstory/img/img_95x65.png'), 'rb').read(),
                                content_type='image/png')
 
         community = Community(name='testing', icon=icon)
