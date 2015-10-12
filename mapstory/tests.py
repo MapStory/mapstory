@@ -1,4 +1,5 @@
 import os
+from account.models import EmailConfirmation
 from django.test import TestCase, Client
 from django.conf import settings
 from django.core import mail
@@ -283,16 +284,22 @@ class MapStoryTests(MapStoryTestMixin):
 
         response = c.post(reverse('account_signup'), data=data, follow=True)
         self.assertEqual(response.status_code, 200)
-        #self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
 
-        user = response.context['user']
+        # make sure the custom subject template is being used
+        self.assertEqual(mail.outbox[0].subject, 'Account activation on MapStory')
+        conf = EmailConfirmation.objects.first()
+        self.assertTrue(conf.key in mail.outbox[0].body)
+
+        response = c.get(reverse('account_confirm_email', args=[conf.key]))
+        self.assertEqual(response.status_code, 200)
+
+        user = authenticate(**data)
+        self.assertTrue(user)
         self.assertEqual(user.username, data['username'])
         self.assertEqual(user.first_name, data['firstname'])
         self.assertEqual(user.last_name, data['lastname'])
         self.assertEqual(user.email, data['email'])
-
-        authenticated_user = authenticate(**data)
-        self.assertTrue(authenticated_user)
 
 #
 # class MapStoryTestsWorkFlowTests(MapStoryTestMixin):

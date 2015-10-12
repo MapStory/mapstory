@@ -1,0 +1,3 @@
+{{ user }}, activate your account on MapStory:
+
+{{ activate_url }}

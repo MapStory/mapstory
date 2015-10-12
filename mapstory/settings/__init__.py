@@ -111,6 +111,8 @@ DATABASE_PASSWORD = None
 
 AUTOCOMPLETE_QUICK_SEARCH = False
 
+ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
+ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
 # Where to load mapstory-assets from. If True, use /static/assets
 # otherwise use REMOTE_CONTENT_URL
 # To use local, ensure that the mapstory-assets repository is checked out in
