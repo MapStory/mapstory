@@ -1,0 +1,39 @@
+{% load mapstory_tags %}
+Welcome to the MapStory community!
+
+Hi, {% firstof user.first_name user.username %}!
+
+By creating an account, you've joined a community of global citizens working together to organize data and tell stories about how our world has changed, is changing, and might change over time. We come from different places and have different interests, but we are connected by our belief that knowledge is meant to be shared and can always be improved!
+
+Here's how you can get started:
+
+Learn
+
+MapStorytelling involves using open data, maps and your own reflection to illuminate change in place over time. It's something anyone can learn, and your peers are adding more resources all the time to help you along.
+
+Learn the basics:
+{% ext_url 'wiki' 'how_to' %}
+
+------------------
+
+Share What You Know
+
+There's three ways to share on MapStory. Just remember A, B, C. First, you can add new spatially and temporally enabled datasets, which we call StoryLayers. Second, you can build MapStories using StoryLayers and other narrative elements that you would like. Finally, you can curate content that appears on MapStory to improve its quality and accuracy.
+
+Start sharing on MapStory:
+http://mapstory.org/
+
+------------------
+
+Build the Community
+
+MapStory is a nonprofit open educational resource. We rely on users like you to launch new initiatives, develop new tools and raise funds to keep the project going. So, get involved and build the future of MapStory that you want to see!
+
+Get involved with the community:
+http://wiki.mapstory.org
+
+------------------
+
+
+Thanks for joining us, and happy MapStorytelling!
+The MapStory Team

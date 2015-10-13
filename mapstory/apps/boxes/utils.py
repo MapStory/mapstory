@@ -19,6 +19,7 @@ for i in xrange(len(timeparts)):
 del dateparts, timeparts
 _epoch = datetime.datetime.utcfromtimestamp(0)
 
+_patterns = set(_patterns)
 
 def datetime_to_seconds(dt):
     delta = dt - _epoch

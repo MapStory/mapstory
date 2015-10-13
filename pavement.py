@@ -66,6 +66,10 @@ def geonode_static():
 
 
 @task
+def run_tests():
+    sh('python manage.py test mapstory.tests')
+
+@task
 @needs('geonode_static')
 def static():
     with pushd('mapstory/static'):

@@ -2,6 +2,8 @@
 mapstory-geonode
 ================
 
+[![Build Status](https://travis-ci.org/MapStory/mapstory-geonode.svg)](https://travis-ci.org/MapStory/mapstory-geonode)
+
 **PROVISIONAL MANUAL SETUP INSTRUCTIONS**
 
 Assuming Ubuntu 14.04

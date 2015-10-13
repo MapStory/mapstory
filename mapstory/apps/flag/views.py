@@ -1,5 +1,5 @@
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed
 from django.shortcuts import get_object_or_404
 
 from django.contrib.auth.decorators import login_required
@@ -12,7 +12,9 @@ from mapstory.apps.flag.models import add_flag
 
 @login_required
 def flag(request):
-    
+    if request.method != 'POST':
+        return HttpResponseNotAllowed('Only POST requests are supported.')
+
     content_type = request.POST.get("content_type")
     object_id = request.POST.get("object_id")
     creator_field = request.POST.get("creator_field")
