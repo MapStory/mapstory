@@ -25,5 +25,5 @@ install:
 script:
   - python manage.py test
 
-#notifications:
-#  slack: geonode-sprint:oQylJRkU9feZ8JruGi6czWwe
+notifications:
+  slack: mapstory:E2W57xKNNOKDDqRmtQHNUlBK
