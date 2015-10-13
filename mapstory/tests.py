@@ -30,6 +30,7 @@ class AdminClient(Client):
         """
         return self.login(**{'username': username, 'password': password})
 
+
 class MapStoryTestMixin(TestCase):
 
     def assertLoginRequired(self, response):
