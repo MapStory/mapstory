@@ -21,7 +21,7 @@ Prerequisites:
 Repositories
 ------------
 
-The full build lives in a 'meta-project' at https://github.com/MapStory/mapstory/tree/mapstory-v2. This is used for stability as the upstream dependent projects are pegged to specific versions. While MapStory has forks of upstream projects, the goal is to support temporary efforts that are intended for eventual merging into the respective projects. The forks' will be updated as needed.
+The full build lives in a 'meta-project' at https://github.com/MapStory/mapstory/tree/master. This is used for stability as the upstream dependent projects are pegged to specific versions. While MapStory has forks of upstream projects, the goal is to support temporary efforts that are intended for eventual merging into the respective projects. The forks will be updated as needed.
 
 For a local developer build, clone the following repositories as siblings of each other:
 * https://github.com/MapStory/MapLoom

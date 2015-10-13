@@ -1,6 +1,6 @@
 ---
 pgpass: foobar
-mapstory_branch: mapstory-v2
+mapstory_branch: master
 top_project: /srv/git/mapstory
 mapstory_geonode: '{{ top_project }}/mapstory-geonode'
 geoserver_data: /var/lib/geoserver/data
