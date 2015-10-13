@@ -16,4 +16,5 @@ def context(req):
         LIVE_RELOAD=LIVE_RELOAD,
         AUTOCOMPLETE_QUICK_SEARCH=getattr(settings, 'AUTOCOMPLETE_QUICK_SEARCH', False),
         favorite_info=get_favorite_info(req),
+        GOOGLE_ANALYTICS=getattr(settings, 'GOOGLE_ANALYTICS', None)
     )

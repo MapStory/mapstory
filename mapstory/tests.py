@@ -1,6 +1,7 @@
 import os
 from account.models import EmailConfirmation
 from django.test import TestCase, Client
+from django.test.utils import override_settings
 from django.conf import settings
 from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -30,12 +31,14 @@ class AdminClient(Client):
         """
         return self.login(**{'username': username, 'password': password})
 
-
 class MapStoryTestMixin(TestCase):
 
     def assertLoginRequired(self, response):
         self.assertEqual(response.status_code, 302)
         self.assertTrue('login' in response.url)
+
+    def assertHasGoogleAnalytics(self, response):
+        self.assertTrue('mapstory/google_analytics.html' in [t.name for t in response.templates])
 
     def create_user(self, username, password, **kwargs):
         """
@@ -67,6 +70,17 @@ class MapStoryTests(MapStoryTestMixin):
         c = Client()
         response = c.get(reverse('index_view'))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
+
+    @override_settings(GOOGLE_ANALYTICS='testing')
+    def test_google_analytics(self):
+        """
+        Tests the Google Analytics context processor and template.
+        """
+        c = Client()
+        response = c.get(reverse('index_view'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue("_gaq.push(['_setAccount', 'testing']);" in response.content)
 
     def test_search_renders(self):
         """
@@ -76,6 +90,7 @@ class MapStoryTests(MapStoryTestMixin):
         c = Client()
         response = c.get(reverse('search'))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
     def test_journal_renders(self):
         """
@@ -85,6 +100,7 @@ class MapStoryTests(MapStoryTestMixin):
         c = AdminClient()
         response = c.get(reverse('diary'))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
         response = c.get(reverse('diary-create'))
         self.assertLoginRequired(response)
@@ -92,6 +108,7 @@ class MapStoryTests(MapStoryTestMixin):
         c.login_as_non_admin()
         response = c.get(reverse('diary-create'))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
         response = c.get(reverse('diary-detail', args=[1]))
         self.assertEqual(response.status_code, 404)
@@ -99,6 +116,7 @@ class MapStoryTests(MapStoryTestMixin):
         data = {'title': 'testing a new journal', 'content': 'This is test content'}
         response = c.post(reverse('diary-create'), data=data, follow=True)
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
         journal = DiaryEntry.objects.get(title=data['title'])
         self.assertEqual(journal.author, response.context['user'])
@@ -126,6 +144,7 @@ class MapStoryTests(MapStoryTestMixin):
         c = Client()
         response = c.get(reverse('account_signup'))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
     def test_new_map_renders(self):
         """
@@ -139,6 +158,7 @@ class MapStoryTests(MapStoryTestMixin):
         c.login_as_admin()
         response = c.get(reverse('new_map'))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
     def test_new_map_json_renders(self):
         """
@@ -163,6 +183,7 @@ class MapStoryTests(MapStoryTestMixin):
 
         response = c.get(reverse('profile_detail', args=['admin']))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
         # make sure user cannot delete if not logged in
         response = c.get(reverse('profile_delete', args=['admin']))
@@ -176,6 +197,7 @@ class MapStoryTests(MapStoryTestMixin):
         c.login_as_admin()
         response = c.get(reverse('profile_delete', args=['admin']))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
     def test_editor_tour_renders(self):
         """
@@ -200,6 +222,7 @@ class MapStoryTests(MapStoryTestMixin):
         community.save()
         response = c.get(reverse('community-detail', kwargs=dict(slug='testing')))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
     def test_about_leaders_page_renders(self):
         """
@@ -208,6 +231,7 @@ class MapStoryTests(MapStoryTestMixin):
         c = Client()
         response = c.get(reverse('about-leaders'))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
     def test_donate_renders(self):
         """
@@ -216,6 +240,7 @@ class MapStoryTests(MapStoryTestMixin):
         c = Client()
         response = c.get(reverse('donate'))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
     def test_layer_upload_renders(self):
         """
@@ -228,6 +253,7 @@ class MapStoryTests(MapStoryTestMixin):
         c.login_as_non_admin()
         response = c.get(reverse('layer_upload'))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
     def test_get_started_renders(self):
         """
@@ -236,6 +262,7 @@ class MapStoryTests(MapStoryTestMixin):
         c = Client()
         response = c.get(reverse('getpage', args=['started']))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
     def test_get_involved_renders(self):
         """
@@ -244,6 +271,7 @@ class MapStoryTests(MapStoryTestMixin):
         c = Client()
         response = c.get(reverse('getpage', args=['involved']))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
     def test_get_skills_renders(self):
         """
@@ -252,6 +280,7 @@ class MapStoryTests(MapStoryTestMixin):
         c = Client()
         response = c.get(reverse('getpage', args=['skills']))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
     def test_sign_in_renders(self):
         """
@@ -260,6 +289,7 @@ class MapStoryTests(MapStoryTestMixin):
         c = Client()
         response = c.get(reverse('account_login'))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
         response = c.post(reverse('account_login'), data={'username': self.non_admin_username,
                                                           'password': self.non_admin_password})
@@ -286,6 +316,7 @@ class MapStoryTests(MapStoryTestMixin):
         response = c.post(reverse('account_signup'), data=data, follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(mail.outbox), 1)
+        self.assertHasGoogleAnalytics(response)
 
         # make sure the custom subject template is being used
         self.assertEqual(mail.outbox[0].subject, 'Account activation on MapStory')
@@ -294,6 +325,7 @@ class MapStoryTests(MapStoryTestMixin):
 
         response = c.get(reverse('account_confirm_email', args=[conf.key]))
         self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
 
         user = authenticate(**data)
         self.assertTrue(user)

@@ -4,6 +4,7 @@
 
 {% block head %}
 <link rel="shortcut icon" href="{% static 'mapstory/img/favicon.ico' %}">
+{% include "mapstory/google_analytics.html" %}
 {{ block.super }}
 {% if LIVE_RELOAD %}
 {% comment %}Using 35730 for mapstory css to not conflict with maploom grunt{% endcomment %}
