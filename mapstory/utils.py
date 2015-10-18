@@ -2,6 +2,7 @@ import os
 import re
 from django.contrib.staticfiles.templatetags import staticfiles
 
+
 class Link(object):
 
     def __init__(self, href, name=None):
