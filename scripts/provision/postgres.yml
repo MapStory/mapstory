@@ -21,6 +21,11 @@
   when: db_created|changed
   tags: ['db']
 
+- name: load postgis
+  shell: psql -d mapstory_data -c "GRANT ALL PRIVILEGES on spatial_ref_sys TO mapstory;"
+  when: db_created|changed
+  tags: ['db']
+
 - copy: src=files/geonode_authorize_layer.sql dest=/tmp
   tags: ['db']
 
@@ -30,3 +35,4 @@
 
 - file: path=/tmp/geonode_authorize_layer.sql state=absent
   tags: ['db']
+

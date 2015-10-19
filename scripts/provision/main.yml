@@ -30,3 +30,11 @@
     - include: mapstory.yml
   handlers:
     - include: handlers.yml
+
+- hosts: mapstory
+  sudo: yes
+  vars_files:
+    - vars.yml
+    - [ '{{ vars }}', vars.yml ]
+  roles:
+    - celery

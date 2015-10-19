@@ -1,0 +1,24 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block extra_script %}
+{{ block.super }}
+{% endblock %}
+
+{% block body_outer %}
+
+<div class="page-header">
+  <h2 class="page-title">{% trans "Create a Layer from Upload" %}</h2>
+</div>
+
+<div>
+  <div class="row" style="margin:20px 0 30px">
+      {{object.id}} - {{object.uploadfile_set.first}}
+  </div>
+</div>
+
+
+{% endblock %}

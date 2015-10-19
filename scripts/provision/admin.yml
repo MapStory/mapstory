@@ -156,6 +156,10 @@
   file: path={{ media_root }} state=directory owner=www-data group=www-data mode=775 recurse=yes
   tags: [nginx]
 
+- name: django uploads
+  file: path={{ uploads_root }} state=directory owner=www-data group=www-data mode=775 recurse=yes
+  tags: [nginx]
+
 - name: make geoserver dirs
   file: path=/var/lib/geoserver/geoserver state=directory
   tags: [geoserver]
@@ -332,3 +336,18 @@
 - name: Ensure that the RabbitMQ service is running
   service: name=rabbitmq-server state=started enabled=yes
   tags: [rabbitmq]
+
+- name: download gdal
+  git: repo=https://github.com/OSGeo/gdal.git dest=/srv/gdal update=no
+
+- name: build gdal
+  shell: '{{item}}'
+  args:
+    chdir: /srv/gdal/gdal
+  with_items:
+    - ./configure --with-python
+    - make
+    - make install
+    - ldconfig
+  tags: packages
+
