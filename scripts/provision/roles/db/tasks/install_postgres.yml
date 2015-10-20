@@ -1,0 +1,33 @@
+---
+
+- name: Install PostgreSQL
+  apt: name={{ item }} update_cache={{ update_apt_cache }} state=installed
+  with_items:
+    - postgresql-{{postgresql_version}}
+    - postgresql-contrib
+    - python-psycopg2
+  tags: packages
+
+- name: Ensure the PostgreSQL service is running
+  service: name=postgresql state=started enabled=yes
+
+- name: Configure the PostgreSQL APT key
+  apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
+
+- name: Configure the PostgreSQL APT repositories
+  apt_repository: repo="deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release}}-pgdg main"
+                  state=present
+
+- name: Install PostGIS
+  apt: pkg={{ item }} state=present
+  with_items:
+    - postgresql-{{ postgresql_version }}-postgis-{{ postgis_version }}={{ postgis_package_version }}
+
+- copy: src=roles/db/files/pg_hba.conf dest=/etc/postgresql/{{postgresql_version}}/main/
+  when: setup_dblink is defined and setup_dblink
+  tags: ['db']
+
+- copy: src=roles/db/files/postgresql.conf dest=/etc/postgresql/{{postgresql_version}}/main
+  when: setup_dblink is defined and setup_dblink
+  tags: ['db']
+  notify: restart postgresql

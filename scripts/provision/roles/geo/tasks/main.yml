@@ -1,0 +1,66 @@
+---
+
+- name: Install Geoserver Dependencies
+  apt: name={{item}} state=present
+  with_items:
+    - tomcat7
+    # needed if we're not pulling in tomcat
+    #- openjdk-7-jre
+  tags: [install]
+
+- name: make geoserver dirs
+  file: path=/var/lib/geoserver/geoserver state=directory
+  tags: [geoserver]
+
+- name: geogig global config
+  copy: src=roles/geo/files/geogigconfig dest=/usr/share/tomcat7/.geogigconfig mode=0775 owner=tomcat7 group=tomcat7
+  tags: [setup]
+
+- file: path=/tmp/mapstory state=directory
+  tags: [setup]
+
+- name: fetch geoserver
+  shell: wget -SN https://s3.amazonaws.com/garnertb-share/geoserver.war chdir=/tmp/mapstory
+  tags: [geoserver]
+
+- name: db client settings
+  template: src=roles/geo/files/geoserver.xml dest=/etc/tomcat7/Catalina/localhost/geoserver.xml mode=0700 owner=tomcat7 group=tomcat7
+  tags: [geoserver]
+
+- name: copy geoserver.war to tomcat webapps
+  shell: cp /tmp/mapstory/geoserver.war /var/lib/tomcat7/webapps/geoserver.war
+  notify: restart geoserver
+  tags: [geoserver]
+
+- name: update geoserver perms
+  file: path=/var/lib/tomcat7/webapps/geoserver.war state=file owner=tomcat7 group=tomcat7
+  notify: restart geoserver
+
+- wait_for: path=/var/lib/tomcat7/webapps/geoserver/WEB-INF/
+
+- name: copy geoserver web.xml
+  template: src=roles/geo/files/web.xml dest=/var/lib/tomcat7/webapps/geoserver/WEB-INF/web.xml owner=tomcat7 group=tomcat7
+  tags: [geoserver]
+
+- name: geogig global config
+  copy: src=roles/geo/files/geogigconfig dest=/var/lib/geoserver/geoserver/.geogigconfig mode=0775 owner=www-data group=www-data
+  tags: [geoserver]
+
+- name: unpack geoserver datadir
+  shell: "[ ! -e /var/lib/geoserver/data ] && unzip /tmp/mapstory/geoserver.war data/* -d /var/lib/geoserver/ || exit 0"
+  tags: [geoserver]
+
+- name: set geoserver password
+  lineinfile: dest=/var/lib/geoserver/data/security/usergroup/default/users.xml regexp='(.*)crypt1:.*("/>)$' line='\1plain:{{gspass}}\2' backrefs=yes
+  tags: [geoserver]
+
+- name: geoserver datadir permissions
+  file: path=/var/lib/geoserver/data state=directory owner=www-data group=www-data mode=775 recurse=yes
+  tags: [geoserver]
+
+- name: create geogit data directory
+  file: path=/var/lib/geoserver/data/geogig state=directory mode=0775 owner=www-data group=www-data
+  tags: [setup]
+
+- file: path=/tmp/mapstory state=absent
+  tags: [setup]

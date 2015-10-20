@@ -14,13 +14,6 @@
   ignore_errors: True
 
 
-- name: restart geoserver
-  service: name=tomcat7 state=restarted
-  sudo: yes
-
-- name: reload postgres
-  service: name=postgresql state=reloaded
-
 - name: check django running
   uri: url=http://localhost
 

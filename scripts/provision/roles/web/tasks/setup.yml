@@ -15,7 +15,6 @@
   apt: name={{item}} state=present
   with_items:
 # these were copied from geonode installation instructions
-    - build-essential
     - gcc
     - gdal-bin
     - gettext
@@ -29,8 +28,6 @@
     - libxslt1-dev
     - nodejs
     - patch
-    - postgresql-9.3
-    - postgresql-9.3-postgis-2.1
     - python-bs4
     - python-dev
     - python-django
@@ -52,11 +49,8 @@
     - python-support
     - python-urlgrabber
     - python-virtualenv
-    - tomcat7
     - transifex-client
-    - unzip
     - virtualenvwrapper
-    - zip
   tags: [install]
 
 - name: install node tools
@@ -69,8 +63,6 @@
       - python-pastescript
       - virtualenvwrapper
       - gunicorn
-      # needed since we're not pulling in tomcat
-      - openjdk-7-jre
       - nginx
       - supervisor
       - ipython
@@ -155,63 +147,6 @@
 - name: django media root
   file: path={{ media_root }} state=directory owner=www-data group=www-data mode=775 recurse=yes
   tags: [nginx]
-
-- name: make geoserver dirs
-  file: path=/var/lib/geoserver/geoserver state=directory
-  tags: [geoserver]
-
-- name: geogig global config
-  copy: src=files/geogigconfig dest=/usr/share/tomcat7/.geogigconfig mode=0775 owner=tomcat7 group=tomcat7
-  tags: [setup]
-
-- name: fetch geoserver
-  shell: wget -SN https://s3.amazonaws.com/garnertb-share/geoserver.war chdir=/home/mapstory
-  tags: [geoserver]
-
-- name: db client settings
-  template: src=files/geoserver.xml dest=/etc/tomcat7/Catalina/localhost/geoserver.xml mode=0700 owner=tomcat7 group=tomcat7
-  tags: [geoserver]
-
-- name: copy geoserver.war to tomcat webapps
-  shell: cp /home/mapstory/geoserver.war /var/lib/tomcat7/webapps/geoserver.war
-  notify: restart geoserver
-  tags: [geoserver]
-
-- name: update geoserver perms
-  file: path=/var/lib/tomcat7/webapps/geoserver.war state=file owner=tomcat7 group=tomcat7
-
-- name: restart geoserver
-  service: name=tomcat7 state=restarted
-
-- wait_for: path=/var/lib/tomcat7/webapps/geoserver/WEB-INF/
-
-- name: copy geoserver web.xml
-  template: src=files/web.xml dest=/var/lib/tomcat7/webapps/geoserver/WEB-INF/web.xml owner=tomcat7 group=tomcat7
-  tags: [geoserver]
-
-- name: geogig global config
-  copy: src=files/geogigconfig dest=/var/lib/geoserver/geoserver/.geogigconfig mode=0775 owner=www-data group=www-data
-  tags: [geoserver]
-
-- name: unpack geoserver datadir
-  shell: "[ ! -e /var/lib/geoserver/data ] && unzip /home/mapstory/geoserver.war data/* -d /var/lib/geoserver/ || exit 0"
-  tags: [geoserver]
-
-- name: set geoserver password
-  lineinfile: dest=/var/lib/geoserver/data/security/usergroup/default/users.xml regexp='(.*)crypt1:.*("/>)$' line='\1plain:{{gspass}}\2' backrefs=yes
-  tags: [geoserver]
-
-- name: geoserver datadir permissions
-  file: path=/var/lib/geoserver/data state=directory owner=www-data group=www-data mode=775 recurse=yes
-  tags: [geoserver]
-
-- name: create geogit data directory
-  file: path=/var/lib/geoserver/data/geogig state=directory mode=0775 owner=www-data group=www-data
-  tags: [setup]
-
-- file: path=/tmp/mapstory state=absent
-  tags: [setup]
-
 
 # install apt key
 - name: adding elasticsearch gpg key

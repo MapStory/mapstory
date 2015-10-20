@@ -5,48 +5,65 @@
 
 - name: remove github.com from known host
   shell: ssh-keygen -R github.com
+  sudo_user: mapstory
+  when: setup_git_repo is defined and setup_git_repo
   tags: [config]
 
 - name: ensure github.com in known host
   shell: ssh-keyscan -H github.com > ~/.ssh/known_hosts
+  sudo_user: mapstory
+  when: setup_git_repo is defined and setup_git_repo
   tags: [config]
 
 - name: mapstory checkout
   git: repo=git://github.com/MapStory/mapstory.git dest={{ top_project }}
+  sudo_user: mapstory
+  when: setup_git_repo is defined and setup_git_repo
   tags: [git]
 
 - name: mapstory branch
   command: git checkout {{ mapstory_branch }} chdir={{ top_project }}
+  sudo_user: mapstory
+  when: setup_git_repo is defined and setup_git_repo
   tags: [git]
 
 - name: clean modified geonode content to prevent submodule update fail
   command: git checkout -- . chdir={{ top_project }}/geonode
+  sudo_user: mapstory
+  when: setup_git_repo is defined and setup_git_repo
   tags: [update]
 
 - name: mapstory update
   shell: git pull && git submodule sync && git submodule update --init --recursive chdir={{ top_project }}
+  sudo_user: mapstory
+  when: setup_git_repo is defined and setup_git_repo
   tags: [update]
 
 - name: setup-virtual-env
   script: files/setup.sh &> /tmp/setup-project.out
+  sudo_user: mapstory
   tags: [setup]
 
 - name: pip install
   shell: ~/.virtualenvs/mapstory/bin/pip install -r requirements.txt chdir={{ mapstory_geonode }}
+  sudo_user: mapstory
   tags: [update]
 
 - name: initial setup
   shell: source ~/.virtualenvs/mapstory/bin/activate && paver setup chdir={{ mapstory_geonode }}
+  sudo_user: mapstory
   tags: [setup]
   args:
      executable: /bin/bash
 
 - name: configure media root
   file: path={{ media_root }} owner=www-data group=www-data mode=0775 state=directory
+  sudo_user: mapstory
   tags: [setup, media]
 
 - name: compile python
   shell: '{{ venv }}/bin/python -m compileall -f {{ top_project }}/geonode -f {{ mapstory_geonode }}'
+  sudo_user: mapstory
   notify: restart django
   tags: [update]
 
@@ -57,24 +74,29 @@
 
 - name: write secret key
   template: src=files/local_key.py dest={{ mapstory_geonode }}/mapstory/settings/local_key.py
+  sudo_user: mapstory
   notify: restart django
   tags: [settings]
 
 - name: mapstory settings
   template: src=files/local_settings.py dest={{ mapstory_geonode }}/mapstory/settings/local_settings.py
+  sudo_user: mapstory
   notify: restart django
   tags: [settings]
 
 - name: syncdb
   # would use django_manage but no way to avoid initial data?
   shell: . {{ venv_activate }} && python manage.py syncdb --noinput --no-initial-data chdir={{ mapstory_geonode }}
+  sudo_user: mapstory
   tags: [update, syncdb]
 
 - name: load initial data
   django_manage: app_path={{ mapstory_geonode }} virtualenv={{ venv }} fixtures='{{ fixtures }}' command=loaddata
+  sudo_user: mapstory
   tags: [initial_data]
 
 - name: create or update django super user
+  sudo_user: mapstory
   shell: >
     PYTHONPATH=. DJANGO_SETTINGS_MODULE=mapstory.settings
     {{ venv }}/bin/python -c
@@ -82,25 +104,14 @@
     chdir={{ mapstory_geonode }}
   tags: [superuser]
 
-#- name: reload_indexes
-#  # would use django_manage but no way to avoid initial data?
-#  shell: . {{ venv_activate }} && python manage.py rebuild_index chdir={{ mapstory_geonode }}
-#  tags: [setup]
-
-- name: init maploom
-  command: paver build_maploom --init chdir=/srv/git/mapstory
-  tags: [setup]
-
-- name: update maploom
-  command: paver build_maploom chdir=/srv/git/mapstory
-  tags: [update]
-
 - name: collect-static
   # while we could use django_manage, this does a bit more
   shell: . {{ venv_activate }} && paver collect_static chdir={{ mapstory_geonode }}
+  sudo_user: mapstory
   tags: [update]
 
 - name: reload indexes
   shell: . {{ venv_activate }} && python manage.py rebuild_index --noinput chdir={{ mapstory_geonode }}
+  sudo_user: mapstory
   tags: [elasticsearch]
   ignore_errors: True

@@ -1,0 +1,7 @@
+---
+
+- include: setup.yml
+  tags: web
+
+- include: mapstory.yml
+  tags: web
