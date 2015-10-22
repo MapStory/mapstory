@@ -119,6 +119,5 @@ if settings.LOCAL_CONTENT:
 
 if settings.ENABLE_SOCIAL_LOGIN:
     urlpatterns += patterns('',
-        url(r'', include('social_auth.urls')),
         url(r'^oauth2/', include('provider.oauth2.urls', namespace = 'oauth2')),
     )
