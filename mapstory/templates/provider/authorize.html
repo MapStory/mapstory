@@ -2,10 +2,12 @@
 {% load staticfiles %}
 {% load scope %}
 
+{% block extra_head %}
+<link href="{{ STATIC_URL }}mapstory/css/app.css" rel="stylesheet" />
+{% endblock %}
 {% block header %}
 {% include 'mapstory/_header.html'  with hide_menu=True %}
-    <div class="oauth-body">
-        <div>
+        <div class="oauth-body">
             <h2>Login with MapStory</h2>
             {% if not error %}
             <p>{{ client.name }} would like to access the following information:</p>
@@ -33,7 +35,6 @@
             Sorry, an error occurred:<br>{{ error_description }}
         </div>
         {% endif %}
-    </div>
     </div>
 {% endblock%}
 
