@@ -4,6 +4,9 @@
         <div class="navbar-header col-md-2">
             <a class="navbar-brand" href="{% url "home" %}">MapStory</a>
         </div>
+
+        {% if not hide_menu %}
+
         <div class="navbar-collapse collapse pull-right">
             <ul class="nav navbar-nav">
                 <li class="navbar-menu">
@@ -90,6 +93,13 @@
                 </li>
             </ul>
         </div><!--/.nav-collapse -->
+
+        {% endif %}
     </div>
 </div>
+
+{% if not hide_menu %}
+
 {% include 'mapstory/_login_register.html' %}
+
+{% endif %}
