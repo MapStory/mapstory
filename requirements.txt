@@ -13,3 +13,4 @@ https://github.com/MapStory/django-maploom/archive/mapstory.zip
 django-haystack==2.4.0
 elasticsearch==1.6.0
 django-slack==4.1.0
+django-oauth2-provider

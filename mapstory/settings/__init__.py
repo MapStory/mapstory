@@ -72,6 +72,8 @@ INSTALLED_APPS += (
     'haystack',
     'mailer',
     'django_slack',
+    'provider',
+    'provider.oauth2',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS += (
@@ -109,6 +111,7 @@ REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/mapstory-assets'
 REGISTRATION_OPEN = True
 
 DATABASE_PASSWORD = None
+DATABASE_HOST = 'localhost'
 
 AUTOCOMPLETE_QUICK_SEARCH = False
 
@@ -119,7 +122,7 @@ ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
 # To use local, ensure that the mapstory-assets repository is checked out in
 # this project's parent (i.e. ../mapstory-assets)
 LOCAL_CONTENT = False
-
+ENABLE_SOCIAL_LOGIN = False
 if os.path.exists('mapstory/settings/local_settings.py'):
     exec open('mapstory/settings/local_settings.py') in globals()
 
@@ -250,7 +253,7 @@ if DATABASE_PASSWORD:
             'NAME': 'mapstory',
             'USER': 'mapstory',
             'PASSWORD': DATABASE_PASSWORD,
-            'HOST' : 'localhost',
+            'HOST' : DATABASE_HOST,
             'PORT' : '5432',
         },
         'datastore' : {
@@ -258,7 +261,7 @@ if DATABASE_PASSWORD:
             'NAME': 'mapstory_data',
             'USER' : 'mapstory',
             'PASSWORD' : DATABASE_PASSWORD,
-            'HOST' : 'localhost',
+            'HOST' : DATABASE_HOST,
             'PORT' : '5432',
         }
     }
