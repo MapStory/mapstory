@@ -73,6 +73,7 @@ INSTALLED_APPS += (
     'mailer',
     'django_slack',
     'provider',
+    'social_auth',
     'provider.oauth2',
 )
 
