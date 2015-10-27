@@ -13,6 +13,8 @@ from geonode.base.populate_test_data import create_models
 from geonode.layers.models import Layer
 from geonode.layers.populate_layers_data import create_layer_data
 from mapstory.models import Community, DiaryEntry
+from geonode.people.models import Profile
+import json
 
 User = get_user_model()
 
@@ -333,6 +335,37 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(user.first_name, data['firstname'])
         self.assertEqual(user.last_name, data['lastname'])
         self.assertEqual(user.email, data['email'])
+
+class Oauth2ProviderTest(TestCase):
+
+    fixtures = ['test_user_data.json']
+
+    c = Client()
+
+    def setUp(self):
+        from provider.oauth2.models import AccessToken, Client
+        self.bobby = Profile.objects.get(username='bobby')
+        self.admin = Profile.objects.get(username='robert')
+        self.client = Client.objects.create(client_type = 1)
+        self.token = AccessToken.objects.create(user=self.bobby, client=self.client)
+
+    def test_account_verify_error(self):
+        url = reverse('account_verify')
+        resp = self.c.get(url)
+        self.assertEqual(resp.status_code, 403)
+        resp = self.c.get(url, {'access_token': self.token.token[1:]})
+        self.assertEqual(resp.status_code, 403)
+
+    def test_account_verify_token(self):
+        url = reverse('account_verify')
+        resp = self.c.get(url, {'access_token': self.token.token})
+        account = json.loads(resp.content)
+        self.assertEqual(int(account['id']), self.bobby.id)
+
+        url = reverse('account_verify')
+        resp = self.c.get(url, HTTP_AUTHORIZATION='Bearer ' + self.token.token)
+        account = json.loads(resp.content)
+        self.assertEqual(int(account['id']), self.bobby.id)
 
 #
 # class MapStoryTestsWorkFlowTests(MapStoryTestMixin):

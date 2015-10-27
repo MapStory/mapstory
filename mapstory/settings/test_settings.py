@@ -15,6 +15,7 @@ HAYSTACK_CONNECTIONS = {
 SKIP_PERMS_FILTER = True
 HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
 
+ENABLE_SOCIAL_LOGIN = True
 
 MAPSTORY_APPS = (
 
