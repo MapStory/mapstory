@@ -39,6 +39,22 @@
                                         <button class="btn btn-md bg-ms btn-block">Sign in to MapStory</button>
                                     </div>
                                 </div>
+                                   <div class="row">
+                                   </div>
+
+                                {% if ENABLE_SOCIAL_LOGIN %}
+
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <a href="{% url 'socialauth_begin' 'facebook' %}"><img src="{{ STATIC_URL }}mapstory/img/login_fb.png" border=0></a>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <a href="{% url 'socialauth_begin' 'google-oauth2' %}"><img src="{{ STATIC_URL }}mapstory/img/login_goog.png" border=0></a>
+                                    </div>
+                                </div>
+
+                                {% endif %}
+
                             </div>
                             <!--
                             <div class="form-actions form-actions-padding-sm login-form-connect-account text-center">
@@ -60,7 +76,7 @@
                             {% csrf_token %}
                             <div class="form-group">
                                 <label class="control-label label-font-sm" for="id_username">Username</label>
-                                    <input class="form-control" name="username" id="id_username" placeholder="username" type="text">
+                                <input class="form-control" name="username" id="id_username" placeholder="username" type="text">
                             </div>
                             <div class="form-group">
                                 <label class="control-label label-font-sm" for="id_firstname">First Name</label>
@@ -100,7 +116,7 @@
                             <div class="form-actions form-actions-padding-sm">
                                 <div class="row">
                                     <div class="col-sm-offset-2 col-sm-9">
-                                         <button id="join-mapstory-button" class="btn btn-md bg-ms btn-block">Join MapStory</button>
+                                        <button id="join-mapstory-button" class="btn btn-md bg-ms btn-block">Join MapStory</button>
                                     </div>
                                 </div>
                             </div>

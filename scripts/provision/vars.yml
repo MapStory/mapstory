@@ -1,5 +1,6 @@
 ---
 pgpass: foobar
+database_host: localhost
 mapstory_branch: master
 top_project: /srv/git/mapstory
 mapstory_geonode: '{{ top_project }}/mapstory-geonode'
@@ -33,22 +34,44 @@ es_gid:
 # Manage service
 es_manage_service: False
 
+# Social Authentication
+enable_social_login: False
 
-TWITTER_CONSUMER_KEY:
-TWITTER_CONSUMER_SECRET:
+twitter_consumer_key:
+twitter_consumer_secret:
 
-FACEBOOK_APP_ID:
-FACEBOOK_API_SECRET:
+facebook_app_id:
+facebook_api_secret:
+
+google_oauth2_client_id:
+google_oauth2_client_secret:
 
 
-GOOGLE_OAUTH2_CLIENT_ID:
-GOOGLE_OAUTH2_CLIENT_SECRET:
+# User Registration
 
+registration_open: True
+account_open_signup: True
+account_email_confirmation_required:
+account_activation_days: 0
+default_from_email:
 
-REGISTRATION_OPEN:
-ACCOUNT_OPEN_SIGNUP:
-ACCOUNT_EMAIL_CONFIRMATION_REQUIRED:
-ACCOUNT_ACTIVATION_DAYS:
-DEFAULT_FROM_EMAIL:
+# Google Analytics
 
-GOOGLE_ANALYTICS:
+google_analytics:
+
+# Email Settings
+
+email_host:
+email_host_user:
+email_host_password:
+email_port:
+email_use_tls:
+email_backend: 'mailer.backend.DbBackend'
+
+# Slack Settings
+
+slack_backend: 'django_slack.backends.RequestsBackend'
+slack_token:
+slack_channel:
+slack_icon_emoji:
+slack_username:

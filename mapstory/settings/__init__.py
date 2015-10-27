@@ -72,9 +72,6 @@ INSTALLED_APPS += (
     'haystack',
     'mailer',
     'django_slack',
-    'provider',
-    'social_auth',
-    'provider.oauth2',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS += (
@@ -126,6 +123,33 @@ LOCAL_CONTENT = False
 ENABLE_SOCIAL_LOGIN = False
 if os.path.exists('mapstory/settings/local_settings.py'):
     exec open('mapstory/settings/local_settings.py') in globals()
+
+if ENABLE_SOCIAL_LOGIN:
+
+    SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/profiles/edit/'
+
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'social_auth',
+        'provider',
+        'provider.oauth2',
+    )
+    AUTHENTICATION_BACKENDS = (
+        'social_auth.backends.twitter.TwitterBackend',
+        'social_auth.backends.facebook.FacebookBackend',
+        'social_auth.backends.google.GoogleOAuth2Backend',
+    ) + AUTHENTICATION_BACKENDS
+
+    SOCIAL_AUTH_PIPELINE = (
+        'social_auth.backends.pipeline.social.social_auth_user',
+        'social_auth.backends.pipeline.associate.associate_by_email',
+        'social_auth.backends.pipeline.user.get_username',
+        'social_auth.backends.pipeline.user.create_user',
+        'social_auth.backends.pipeline.social.associate_user',
+        'social_auth.backends.pipeline.user.update_user_details',
+        #'mapstory.social_signals.get_user_avatar',
+        #'mapstory.social_signals.audit_user',
+    )
+
 
 #@todo remove this hack once maploom can deal with other config
 # have to put this after local_settings or any adjustments to OGC_SERVER will
