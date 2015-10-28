@@ -15,10 +15,13 @@ HAYSTACK_CONNECTIONS = {
 SKIP_PERMS_FILTER = True
 HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
 
+ENABLE_SOCIAL_LOGIN = True
 
 MAPSTORY_APPS = (
 
  'mapstory.apps.boxes',
+ 'provider',
+ 'provider.oauth2',
  'mapstory.apps.flag', # - temporarily using this instead of the flag app for django because they need to use AUTH_USER_MODEL
 
 )
