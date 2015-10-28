@@ -74,4 +74,12 @@ SLACK_ICON_EMOJI = '{{ slack_icon_emoji }}'
 SLACK_USERNAME = '{{ slack_username }}'
 
 
+# AWS S3 Settings
+
+USE_AWS_S3 = {{ use_aws_s3 }}
+
+AWS_STORAGE_BUCKET_NAME = '{{ aws_storage_bucket_name }}'
+AWS_ACCESS_KEY_ID = '{{ aws_access_key_id }}'
+AWS_SECRET_ACCESS_KEY = '{{ aws_secret_access_key }}'
+
 INSTALLED_APPS += MAPSTORY_APPS
