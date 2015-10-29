@@ -1,9 +1,24 @@
 ---
 
+project_name: mapstory
+
+application_name: mapstory
+application_user: mapstory
+
 git_repo: mapstory-geonode
 
-project_name: mapstory
-application_name: mapstory
+mapstory_branch: mapstory
+
+top_project: /srv/git/{{ project_name }}
+project_path: '{{ top_project }}/{{ git_repo }}'
+
+
+
+# don't change these
+venv: ~/.virtualenvs/{{ project_name }}
+venv_activate: '{{ venv }}/bin/activate'
+
+update_apt_cache: yes
 
 postgresql_version: "9.3"
 postgis_version: "2.1"

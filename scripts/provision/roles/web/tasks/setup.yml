@@ -95,16 +95,16 @@
     - libssl-doc
   tags: [install]
 
-- name: mapstory user
-  user: name=mapstory groups=www-data
+- name: created application user
+  user: name={{ application_user }} groups=www-data
   tags: [config, user]
 
 - name: srv layout
-  file: path=/srv/scripts state=directory owner=mapstory group=www-data
+  file: path=/srv/scripts state=directory owner={{ application_user }} group=www-data
   tags: [config, files]
 
 - name: git layout
-  file: path=/srv/git state=directory owner=mapstory group=www-data
+  file: path=/srv/git state=directory owner={{ application_user }} group=www-data
   tags: [config, files]
 
 - name: create www-data home directory
@@ -112,12 +112,12 @@
   tags: [setup]
 
 - name: gunicorn-app
-  copy: src=files/gunicorn-app.sh dest=/srv/scripts/gunicorn-app.sh mode=650 owner=mapstory group=www-data
-  notify: [restart django]
+  copy: src=roles/web/files/gunicorn-app.sh dest=/srv/scripts/gunicorn-app.sh mode=650 owner={{ application_user }} group=www-data
+  notify: restart django
   tags: [config, files, gunicorn]
 
 - name: supervisor-gunicorn
-  copy: src=files/supervisor-gunicorn-django.conf dest=/etc/supervisor/conf.d
+  copy: src=roles/web/files/supervisor-gunicorn-django.conf dest=/etc/supervisor/conf.d
   notify: [reload supervisor, restart django]
   tags: [config, gunicorn]
 
@@ -125,7 +125,7 @@
   file: path=/etc/supervisor/conf.d/supervisor-jetty.conf state=absent
 
 - name: nginx-conf
-  template: src=files/nginx.conf dest=/etc/nginx/sites-available/mapstory
+  template: src=roles/web/files/nginx.conf dest=/etc/nginx/sites-available/{{ application_name }}
   notify: restart nginx
   tags: [config, nginx]
 
@@ -134,8 +134,8 @@
   notify: restart nginx
   tags: [config, nginx]
 
-- name: nginx-enable-mapstory
-  file: src=/etc/nginx/sites-available/mapstory dest=/etc/nginx/sites-enabled/mapstory state=link
+- name: nginx-enable
+  file: src=/etc/nginx/sites-available/{{ application_name }} dest=/etc/nginx/sites-enabled/{{ application_name }} state=link
   notify: restart nginx
   tags: [config, nginx]
 
@@ -202,6 +202,12 @@
   tags: [elasticsearch]
 
 - name: supervisor-elasticsearch
-  copy: src=files/supervisor-elasticsearch.conf dest=/etc/supervisor/conf.d
-  notify: [reload supervisor]
+  copy: src=roles/web/files/supervisor-elasticsearch.conf dest=/etc/supervisor/conf.d
+  notify: reload supervisor
+  tags: [elasticsearch]
+
+- name: reload supervisor
+  shell: /usr/bin/supervisorctl reread && /usr/bin/supervisorctl update
+  sudo: yes
+  sudo_user: root
   tags: [elasticsearch]

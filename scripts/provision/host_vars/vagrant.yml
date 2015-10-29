@@ -3,20 +3,18 @@
 # Git settings.
 setup_git_repo: no
 sym_link_repo: yes
-project_source: '/{{ application_name }}'
-
 
 # Database settings.
 db_user: "{{ application_name }}"
 db_name: "{{ application_name }}"
-db_password: password
-
-pgpass: foobar
+db_password: foobar
+db_host: localhost
 
 setup_dblink: yes
 
 # Nginx settings.
 nginx_server_name: "{{ inventory_hostname }}"
+nginx_client_max_body_size: '500m'
 ssl_src_dir: ssl_self_signed
 ssl_dest_dir: /etc/ssl
 ssl_key_password: password
@@ -30,42 +28,25 @@ ssl_key_password: password
 
 # Application settings.
 
+media_root: /var/lib/mapstory/media/
+django_su_pass: admin
+
 mapstory_dbs:
   mapstory:
-    db_password: 'password'
+    db_password: '{{ db_password }}'
     db_owner: 'mapstory'
     db_encoding: 'UTF-8'
     db_lc_collate: 'en_US.UTF-8'
     db_lc_ctype: 'en_US.UTF-8'
     db_template: 'template0'
   mapstory_data:
-    db_password: 'password'
+    db_password: '{{ db_password }}'
     db_owner: 'mapstory'
     db_encoding: 'UTF-8'
     db_lc_collate: 'en_US.UTF-8'
     db_lc_ctype: 'en_US.UTF-8'
     db_template: 'template0'
 
-
-
-pgpass: Vbj62Tw3gN5B2cP
-mapstory_branch: mapstory
-top_project: /srv/git/mapstory
-mapstory_geonode: '{{ top_project }}/mapstory-geonode'
-geoserver_data: /var/lib/geoserver/data
-geoserver_proxy_url: ''
-geoserver_enable_gzip: false
-gspass: geoserver
-media_root: /var/lib/mapstory/media/
-django_su_pass: admin
-nginx_server_name: 192.168.56.151
-nginx_client_max_body_size: '500m'
-fixtures: '../geonode/geonode/base/fixtures/initial_data.json mapstory/fixtures/initial_data.json'
-update_apt_cache: yes
-
-# don't change these
-venv: ~/.virtualenvs/mapstory
-venv_activate: '{{ venv }}/bin/activate'
 
 # Elasticsearch version from debian repository
 es_version: 1.6
@@ -81,3 +62,55 @@ es_gid:
 
 # Manage service
 es_manage_service: False
+
+# Social Authentication
+enable_social_login: False
+
+twitter_consumer_key:
+twitter_consumer_secret:
+
+facebook_app_id:
+facebook_api_secret:
+
+google_oauth2_client_id:
+google_oauth2_client_secret:
+
+
+# User Registration
+
+registration_open: True
+account_open_signup: True
+account_email_confirmation_required:
+account_activation_days: 0
+default_from_email:
+
+# Google Analytics
+
+google_analytics:
+
+# Email Settings
+
+email_host:
+email_host_user:
+email_host_password:
+email_port:
+email_use_tls:
+email_backend: 'mailer.backend.DbBackend'
+
+# Slack Settings
+
+slack_backend: 'django_slack.backends.RequestsBackend'
+slack_token:
+slack_channel:
+slack_icon_emoji:
+slack_username:
+
+# Geoserver Settings
+
+geoserver_data: /var/lib/geoserver/data
+geoserver_proxy_url: ''
+geoserver_enable_gzip: false
+geoserver_password: geoserver
+
+
+fixtures: '../geonode/geonode/base/fixtures/initial_data.json mapstory/fixtures/initial_data.json'

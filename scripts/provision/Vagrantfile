@@ -16,6 +16,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Enable if you want to use the git repo from your host machine.
   #config.vm.synced_folder "../../../", "/srv/git/mapstory", mount_options: ["dmode=777,fmode=777"]
+  config.vm.synced_folder "../../../geonode.git", "/srv/git/mapstory/geonode", mount_options: ["dmode=777,fmode=777"]
+  config.vm.synced_folder "../../../mapstory-geonode.git", "/srv/git/mapstory/mapstory-geonode", mount_options: ["dmode=777,fmode=777"]
+  #config.vm.synced_folder "../../../story-tools.git", "/srv/git/story-tools", mount_options: ["dmode=777,fmode=777"]
 
   if Vagrant.has_plugin?("vagrant-cachier")
     config.cache.scope = :box

@@ -51,7 +51,7 @@
   tags: [geoserver]
 
 - name: set geoserver password
-  lineinfile: dest=/var/lib/geoserver/data/security/usergroup/default/users.xml regexp='(.*)crypt1:.*("/>)$' line='\1plain:{{gspass}}\2' backrefs=yes
+  lineinfile: dest=/var/lib/geoserver/data/security/usergroup/default/users.xml regexp='(.*)crypt1:.*("/>)$' line='\1plain:{{geoserver_password}}\2' backrefs=yes
   tags: [geoserver]
 
 - name: geoserver datadir permissions

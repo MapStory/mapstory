@@ -43,7 +43,7 @@ def beta():
 
     env.user = 'ubuntu'
     env.hosts = ['mapstory.beta.boundlessgeo.com']
-    env.key_filename = '~/.ssh/mapstory-beta.pem'
+    env.key_filename = '~/.ssh/mapstory-v2.pem'
     env.config = 'beta'
 
 
@@ -181,5 +181,18 @@ def tail(logfile='gunicorn-django', count=30):
     """
 
     run('tail -n {0} -f /var/log/{1}.log'.format(count, logfile))
+
+def test():
+
+    """
+
+    Synchronize the database models
+
+    """
+
+    with cd('/srv/git/mapstory/mapstory-geonode'):
+        with prefix(env.activate):
+            sudo('python manage.py test mapstory.tests --settings=mapstory.settings.test_settings', user='mapstory')
+
 
 
