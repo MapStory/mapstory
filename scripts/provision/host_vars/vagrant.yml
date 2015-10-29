@@ -19,6 +19,7 @@ ssl_src_dir: ssl_self_signed
 ssl_dest_dir: /etc/ssl
 ssl_key_password: password
 
+allowed_hosts: ['{{ inventory_hostname }}','localhost']
 
 # RabbitMQ settings.
 
