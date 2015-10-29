@@ -45,13 +45,14 @@ layer_detail_patterns = patterns('',
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view(), name="index_view"),
     url(r"^account/signup/$", MapStorySignup.as_view(), name="account_signup"),
+    url(r'^accounts/verify/$', 'mapstory.views.account_verify',  name='account_verify'),
+
     url(r'^maps/templates/story-about-info.html$', TemplateView.as_view(template_name='mapstory/composer/story-about-info.html'), name='composer-add-layers'),
     url(r'^maps/templates/add-layers.html$', TemplateView.as_view(template_name='mapstory/composer/add-layers.html'), name='composer-add-layers'),
     url(r'^maps/templates/layer-list.html$', TemplateView.as_view(template_name='mapstory/composer/layer-list.html'), name='composer-layer-list'),
     url(r'^maps/templates/load-map-dialog.html$', TemplateView.as_view(template_name='mapstory/composer/load-map-dialog.html'), name='composer-load-map'),
     url(r'^maps/templates/load-search-dialog.html$', TemplateView.as_view(template_name='mapstory/composer/load-search-dialog.html'), name='composer-load-search'),
     url(r'^maps/templates/load-new-map-dialog.html$', TemplateView.as_view(template_name='mapstory/composer/load-new-map-dialog.html'), name='composer-load-new-map'),
-
     url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
 
 
@@ -114,7 +115,11 @@ if settings.DEBUG:
         url(r'^testing/(?P<template>.*)$', 'mapstory.views.test_view'),
     )
 
-
 if settings.LOCAL_CONTENT:
     urlpatterns = static(settings.STATIC_URL + "assets", document_root=settings.LOCAL_ROOT + "/../../mapstory-assets", show_indexes=True) + urlpatterns
 
+if settings.ENABLE_SOCIAL_LOGIN:
+    urlpatterns += patterns('',
+        url(r'', include('social_auth.urls')),
+        url(r'^oauth2/', include('provider.oauth2.urls', namespace = 'oauth2')),
+    )

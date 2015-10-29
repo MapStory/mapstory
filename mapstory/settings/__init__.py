@@ -109,6 +109,7 @@ REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/mapstory-assets'
 REGISTRATION_OPEN = True
 
 DATABASE_PASSWORD = None
+DATABASE_HOST = 'localhost'
 
 AUTOCOMPLETE_QUICK_SEARCH = False
 
@@ -119,9 +120,36 @@ ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
 # To use local, ensure that the mapstory-assets repository is checked out in
 # this project's parent (i.e. ../mapstory-assets)
 LOCAL_CONTENT = False
-
+ENABLE_SOCIAL_LOGIN = False
 if os.path.exists('mapstory/settings/local_settings.py'):
     exec open('mapstory/settings/local_settings.py') in globals()
+
+if ENABLE_SOCIAL_LOGIN:
+
+    SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/profiles/edit/'
+
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'social_auth',
+        'provider',
+        'provider.oauth2',
+    )
+    AUTHENTICATION_BACKENDS = (
+        'social_auth.backends.twitter.TwitterBackend',
+        'social_auth.backends.facebook.FacebookBackend',
+        'social_auth.backends.google.GoogleOAuth2Backend',
+    ) + AUTHENTICATION_BACKENDS
+
+    SOCIAL_AUTH_PIPELINE = (
+        'social_auth.backends.pipeline.social.social_auth_user',
+        'social_auth.backends.pipeline.associate.associate_by_email',
+        'social_auth.backends.pipeline.user.get_username',
+        'social_auth.backends.pipeline.user.create_user',
+        'social_auth.backends.pipeline.social.associate_user',
+        'social_auth.backends.pipeline.user.update_user_details',
+        #'mapstory.social_signals.get_user_avatar',
+        #'mapstory.social_signals.audit_user',
+    )
+
 
 #@todo remove this hack once maploom can deal with other config
 # have to put this after local_settings or any adjustments to OGC_SERVER will
@@ -250,7 +278,7 @@ if DATABASE_PASSWORD:
             'NAME': 'mapstory',
             'USER': 'mapstory',
             'PASSWORD': DATABASE_PASSWORD,
-            'HOST' : 'localhost',
+            'HOST' : DATABASE_HOST,
             'PORT' : '5432',
         },
         'datastore' : {
@@ -258,7 +286,7 @@ if DATABASE_PASSWORD:
             'NAME': 'mapstory_data',
             'USER' : 'mapstory',
             'PASSWORD' : DATABASE_PASSWORD,
-            'HOST' : 'localhost',
+            'HOST' : DATABASE_HOST,
             'PORT' : '5432',
         }
     }

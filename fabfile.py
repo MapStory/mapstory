@@ -123,7 +123,7 @@ def runserver():
 
     with cd('/srv/git/mapstory/mapstory-geonode'):
         with prefix(env.activate):
-            run('python manage.py runserver')
+            sudo('python manage.py runserver', user='www-data')
 
     sudo('supervisorctl start gunicorn-django')
 

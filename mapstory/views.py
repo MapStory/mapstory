@@ -62,7 +62,8 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from geonode.layers.views import _resolve_layer
 from geonode.tasks.deletion import delete_map, delete_layer
-
+from provider.oauth2.models import AccessToken
+from django.utils.timezone import now as provider_now
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -695,3 +696,32 @@ def map_remove(request, mapid, template='maps/map_remove.html'):
     elif request.method == 'POST':
         delete_map.delay(object_id=map_obj.id)
         return HttpResponseRedirect(reverse("index_view"))
+
+
+def account_verify(request):
+
+    access_token = request.GET.get('access_token', '')
+
+    if not access_token:
+        auth = request.META.get('HTTP_AUTHORIZATION', b'')
+        if type(auth) == type(''):
+            # Work around django test client oddness
+            auth = auth.encode('iso-8859-1')
+        auth = auth.split()
+        if auth and auth[0].lower() == 'bearer':
+            access_token = auth[1]
+
+    try:
+        token = AccessToken.objects.select_related('user')
+        token = token.get(token=access_token, expires__gt=provider_now())
+    except AccessToken.DoesNotExist:
+        msg = 'No access token'
+        return HttpResponseForbidden(msg)
+
+    user = token.user
+
+    if not user.is_active:
+        msg = 'User inactive or deleted: %s' % user.username
+        return HttpResponseForbidden(msg)
+    return HttpResponse('{"id":"%s","first_name":"%s","last_name":"%s","username":"%s","email":"%s"}'
+            % (user.id, user.first_name, user.last_name, user.username, user.email), mimetype='application/json')

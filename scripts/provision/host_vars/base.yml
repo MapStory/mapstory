@@ -7,7 +7,7 @@ application_user: mapstory
 
 git_repo: mapstory-geonode
 
-mapstory_branch: mapstory
+mapstory_branch: master
 
 top_project: /srv/git/{{ project_name }}
 project_path: '{{ top_project }}/{{ git_repo }}'
