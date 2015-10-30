@@ -17,6 +17,7 @@ from django.views.generic.list import ListView
 from django.template import RequestContext
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext as _
+from django.utils.text import slugify
 from geonode.base.forms import CategoryForm
 from geonode.base.models import TopicCategory
 from geonode.layers.models import Layer
@@ -24,6 +25,7 @@ from geonode.layers.views import _PERMISSION_MSG_METADATA, _PERMISSION_MSG_GENER
 from geonode.people.forms import ProfileForm
 from geonode.people.models import Profile
 from geonode.maps.views import snapshot_config
+from geonode.upload.utils import create_geoserver_db_featurestore
 from httplib import HTTPConnection, HTTPSConnection
 from mapstory.forms import UploadLayerForm, DeactivateProfileForm, EditProfileForm
 from mapstory.models import get_sponsors
@@ -39,6 +41,9 @@ from mapstory.models import get_communities
 from geonode.base.models import Region
 from geonode.contrib.favorite.models import Favorite
 from geonode.geoserver.helpers import ogc_server_settings
+from geonode.geoserver.helpers import gs_slurp
+from geonode.geoserver.helpers import gs_catalog
+from geoserver.support import DimensionInfo
 from urlparse import urlsplit
 from user_messages.models import Thread
 from .forms import MapStorySignupForm
@@ -46,7 +51,6 @@ from geonode.groups.models import GroupProfile
 
 from actstream.models import actor_stream
 
-from django.utils import simplejson as json
 from geonode.maps.models import Map, MapLayer
 from geonode.utils import GXPLayer
 from geonode.utils import GXPMap
@@ -64,6 +68,9 @@ from geonode.layers.views import _resolve_layer
 from geonode.tasks.deletion import delete_map, delete_layer
 from provider.oauth2.models import AccessToken
 from django.utils.timezone import now as provider_now
+
+import json
+import requests
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -459,6 +466,58 @@ def new_map_json(request):
 def new_map(request):
     from geonode.maps.views import new_map
     return new_map(request)
+
+
+def layer_create(request, data=None, template='upload/layer_create.html'):
+    print 'layer create'
+    if request.method == 'POST':
+        feature_type = json.loads(request.POST.get(u'featureType', None))
+        #store = request.POST.get(u'store', None)
+        store_create_geogig = json.loads(request.POST.get(u'storeCreateGeogig', 'false'))
+
+        if store_create_geogig:
+            if not feature_type['store']['name']:
+                store_proposed = slugify(' '.join([request.user.username, feature_type['name']]))
+            store_created = create_geoserver_db_featurestore(store_type='geogig', store_name=store_proposed)
+            feature_type['store']['name'] = store_created.name
+
+        post_request = requests.post(
+            '{}/workspaces/{}/datastores/{}/featuretypes.json'.format(ogc_server_settings.rest, feature_type['namespace']['name'], feature_type['store']['name']),
+            data='{{"featureType":{}}}'.format(json.dumps(feature_type)),
+            auth=ogc_server_settings.credentials,
+            headers={'content-type': 'application/json'}
+        )
+
+        if post_request.status_code == 200 or post_request.status_code == 201:
+            # import the layer from geoserver to geonode
+            response = gs_slurp(filter=feature_type['name'], workspace=feature_type['namespace']['name'], store=feature_type['store']['name'])
+            if 'layers' in response and len(response['layers']) == 1 and 'name' in response['layers'][0] and response['layers'][0]['name'] == feature_type['name']:
+                # configruer layer with time dimension as a list for now. Since importer is being refactored,
+                # we'll change how it is done.
+                layer = gs_catalog.get_layer(feature_type['name'])
+                resource = layer.resource
+                if layer:
+                    time_info = DimensionInfo(
+                        name='time',
+                        enabled=True,
+                        presentation='LIST',
+                        resolution=None,
+                        units=None,
+                        unitSymbol=None,
+                        attribute='time',
+                        end_attribute=None,
+                        strategy=None)
+                    resource.metadata = {'time': time_info}
+                    resource.catalog.save(resource)
+                    return HttpResponse(status=post_request.status_code, content=post_request.text)
+                return HttpResponse(status=500, content='failed to configure layer')
+            else:
+                return HttpResponse(status=500, content='failed to add created layer from geoserver to geonode')
+        else:
+            return HttpResponse(status=post_request.status_code, content=post_request.text)
+        print '---- create layer response: ', post_request.text
+    return render_to_response(template, RequestContext(request, {}))
+
 
 def layer_detail(request, layername, template='layers/layer_detail.html'):
     layer = _resolve_layer(

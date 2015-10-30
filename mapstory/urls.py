@@ -24,6 +24,7 @@ from mapstory.views import CommunityDetail
 from mapstory.views import GroupDetail
 from mapstory.views import map_detail
 from mapstory.views import layer_detail
+from mapstory.views import layer_create
 from mapstory.views import layer_remove, map_remove
 from geonode.layers.views import layer_replace, layer_thumbnail, layer_upload
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
@@ -104,6 +105,7 @@ urlpatterns = patterns('',
     url(r'^maps/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'),
     url(r'^maps/(?P<mapid>\d+)$', map_detail, name='map_detail'),
     url(r'^layers/upload$', layer_upload, name='layer_upload'),
+    url(r'^layers/create$', layer_create, name='layer_create'),
     url(r'^layers/(?P<layername>[^/]*)/metadata$', layer_metadata, name="layer_metadata"),
     url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
     url(r'^layers/(?P<layername>[^/]*)/replace$', layer_replace, name="layer_replace"),
