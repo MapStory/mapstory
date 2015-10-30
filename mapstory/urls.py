@@ -27,6 +27,8 @@ from mapstory.views import layer_detail
 from mapstory.views import layer_remove, map_remove
 from geonode.layers.views import layer_replace, layer_thumbnail, layer_upload
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic import RedirectView
 
 
 # -- Deprecated url routes for Geoserver authentication -- remove after GeoNode 2.1
@@ -44,6 +46,7 @@ layer_detail_patterns = patterns('',
 
 urlpatterns = patterns('',
     url(r'^$', IndexView.as_view(), name="index_view"),
+    url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))), #temp fix for social auth redirect
     url(r"^account/signup/$", MapStorySignup.as_view(), name="account_signup"),
     url(r'^accounts/verify/$', 'mapstory.views.account_verify',  name='account_verify'),
 
