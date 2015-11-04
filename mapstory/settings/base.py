@@ -105,8 +105,9 @@ OGC_SERVER = {
 
 DEBUG_STATIC = True
 
-REMOTE_CONTENT_URL = 'http://mapstory.dev.boundlessgeo.com/mapstory-assets'
 REGISTRATION_OPEN = True
+
+LOCAL_CONTENT = False
 
 DATABASE_PASSWORD = None
 DATABASE_HOST = 'localhost'
@@ -115,12 +116,9 @@ AUTOCOMPLETE_QUICK_SEARCH = False
 
 ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
 ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
-# Where to load mapstory-assets from. If True, use /static/assets
-# otherwise use REMOTE_CONTENT_URL
-# To use local, ensure that the mapstory-assets repository is checked out in
-# this project's parent (i.e. ../mapstory-assets)
-LOCAL_CONTENT = False
+
 ENABLE_SOCIAL_LOGIN = False
+USE_AWS_S3 = False
 if os.path.exists('mapstory/settings/local_settings.py'):
     exec open('mapstory/settings/local_settings.py') in globals()
 
@@ -268,9 +266,6 @@ MAP_BASELAYERS = [
     }
 ]
 
-if LOCAL_CONTENT:
-    REMOTE_CONTENT_URL = STATIC_URL + 'assets'
-
 if DATABASE_PASSWORD:
     DATABASES = {
         'default': {
@@ -357,3 +352,10 @@ LOGGING = {
 
         },
     }
+
+if USE_AWS_S3:
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+    STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
+REMOTE_CONTENT_URL = STATIC_URL + 'assets'

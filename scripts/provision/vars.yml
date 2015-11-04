@@ -75,3 +75,11 @@ slack_token:
 slack_channel:
 slack_icon_emoji:
 slack_username:
+
+# AWS S3 Settings
+
+use_aws_s3: False
+
+aws_storage_bucket_name:
+aws_access_key_id:
+aws_secret_access_key:
