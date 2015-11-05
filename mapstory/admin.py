@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from django import forms
 
 from mapstory.models import Sponsor
@@ -11,12 +12,58 @@ from mapstory.models import Leader
 from mapstory.models import ParallaxImage
 from mapstory.models import Task
 
+from mapstory.export import export_via_model
+
 from mapstory.apps.flag import admin as flag_admin
+
+from geonode.people.admin import ProfileAdmin as UserAdmin
+
 
 def content_html(obj):
     return obj.html()
 content_html.allow_tags = True
 content_html.short_description = 'Content'
+
+
+def export_as_csv_action(description="Export selected objects as CSV file",
+                         fields=None, exclude=None, query_factory=None):
+    """
+    This function returns an export csv action
+    'fields' and 'exclude' work like in django ModelForm
+    'header' is whether or not to output the column names as the first row
+    """
+    def export_as_csv(modeladmin, request, queryset):
+        """
+        Generic csv export admin action.
+        based on http://djangosnippets.org/snippets/1697/
+        queryset is an iterable returning an object
+        with attributes or no-arg callables matching the field names
+        """
+        if query_factory:
+            queryset = query_factory(queryset)
+
+        return export_via_model(
+            modeladmin.model,
+            request,
+            queryset,
+            fields,
+            exclude
+        )
+
+    export_as_csv.short_description = description
+    return export_as_csv
+
+
+# remove non important values form the export script
+export_func = export_as_csv_action(
+    exclude=[
+        'password',
+        'is_active',
+        'is_superuser',
+        'id'
+    ]
+)
+UserAdmin.actions = [export_func]
 
 
 class GetPageAdmin(admin.ModelAdmin):
