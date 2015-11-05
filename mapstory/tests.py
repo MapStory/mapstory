@@ -16,6 +16,8 @@ from mapstory.models import Community, DiaryEntry
 from geonode.people.models import Profile
 import json
 
+from mapstory.export import export_via_model
+
 User = get_user_model()
 
 
@@ -93,6 +95,18 @@ class MapStoryTests(MapStoryTestMixin):
         response = c.get(reverse('search'))
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
+
+    def test_csv_user_export(self):
+        """
+        Ensure export model returns a csv file
+        """
+        c = Client()
+
+        request = c.get(reverse('index_view'))
+
+        response = export_via_model(User, request, User.objects.all(), exclude=['password'])
+
+        self.assertEqual(response['Content-Type'], 'text/csv')
 
     def test_journal_renders(self):
         """
