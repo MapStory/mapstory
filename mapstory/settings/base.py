@@ -72,7 +72,17 @@ INSTALLED_APPS += (
     'haystack',
     'mailer',
     'django_slack',
+    # Adding Threaded Comments app
+    'fluent_comments',
+    'crispy_forms',
+    'threadedcomments',
+    'django_comments',
+    'django.contrib.sites',
 )
+
+# Adding Threaded Comments app
+FLUENT_COMMENTS_EXCLUDE_FIELDS = ('name', 'email', 'url', 'title')
+COMMENTS_APP = 'fluent_comments'
 
 TEMPLATE_CONTEXT_PROCESSORS += (
     'mapstory.context_processors.context',

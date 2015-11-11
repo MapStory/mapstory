@@ -11,6 +11,7 @@
 {% block title %}{{ resource.title }} — {{ block.super }}{% endblock %}
 
 {% block head %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css" />
 {% include "maps/map_include.html" %}
 {{ block.super }}
 <style type="text/css">
@@ -147,4 +148,5 @@ body.ms-fullscreen .gxp-annotations-tip {
 {% with include_spatial='true' %}
 {% include 'search/search_scripts.html' %}
 {% endwith %}
+<script type="text/javascript" src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
 {% endblock %}

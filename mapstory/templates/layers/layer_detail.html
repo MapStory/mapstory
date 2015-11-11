@@ -12,6 +12,7 @@
 {% block title %}{{ resource.title|default:resource.typename }} — {{ block.super }}{% endblock %}
 
 {% block head %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css" />
 {% if preview == 'geoext' %}
   {% include "layers/layer_geoext_map.html" %}
 {% else %}
@@ -97,4 +98,5 @@
   {% with include_spatial='true' %}
   {% include 'search/search_scripts.html' %}
   {% endwith %}
+  <script type="text/javascript" src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
 {% endblock extra_script %}
