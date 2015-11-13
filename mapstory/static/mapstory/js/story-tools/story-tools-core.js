@@ -1049,7 +1049,7 @@ var StoryPin = function(data, projection) {
 StoryPin.prototype = Object.create(ol.Feature.prototype);
 StoryPin.prototype.constructor = StoryPin;
 // expose these simply for the timeline - it doesn't know they're features
-['id','start_time','end_time','content','title','in_timeline','in_map'].forEach(function(prop) {
+['id','_id', 'start_time','end_time','content','title','in_timeline','in_map'].forEach(function(prop) {
     Object.defineProperty(StoryPin.prototype, prop, {
         get: function() {
             var val = this.get(prop);

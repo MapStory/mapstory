@@ -853,18 +853,39 @@
             for (i = 0; i < pins.length; i++) {
                 var pin = pins[i];
                 for (var j = 0, jj = this.storyPins.length; j < jj; j++) {
-                    if (this.storyPins[j].id == pin.id) {
+                    if (this.storyPins[j]._id == pin._id) {
                         this.storyPins.splice(j, 1);
                         break;
                     }
                 }
             }
         } else if (action == 'add') {
+
+            var maxId = new Date().getTime();
+            this.storyPins.forEach(function(b) {
+                maxId = Math.max(maxId, b._id);
+            });
+
             for (i = 0; i < pins.length; i++) {
+
+                pin = pins[i];
+
+                if (typeof pin._id === 'undefined' || pin._id === null) {
+                        pin._id = ++maxId;
+                }
+
                 this.storyPins.push(pins[i]);
             }
         } else if (action == 'change') {
-            // provided edits could be used to optimize below
+            for (i = 0; i < pins.length; i++) {
+                pin = pins[i];
+                for (var x = 0, xx = this.storyPins.length; x < xx; x++) {
+                    if (this.storyPins[x]._id == box._id) {
+                        this.storyPins[x]= box;
+                        break;
+                    }
+                }
+            }
         } else {
             throw new Error('action? :' + action);
         }

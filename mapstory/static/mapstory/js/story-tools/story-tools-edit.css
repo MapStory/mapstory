@@ -77,7 +77,7 @@
 }
 .style-editor-item .controls > * {
   /* with minified html, spacing that normally appears with newlines is gone */
-  margin-right: .5em;
+  margin: 5px;
 }
 .style-editor-item .btn.active {
   color: orange;
