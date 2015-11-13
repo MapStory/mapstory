@@ -1,5 +1,5 @@
 import datetime
-from account.views import SignupView
+from account.views import SignupView, ConfirmEmailView
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
@@ -68,6 +68,8 @@ from geonode.layers.views import _resolve_layer
 from geonode.tasks.deletion import delete_map, delete_layer
 from provider.oauth2.models import AccessToken
 from django.utils.timezone import now as provider_now
+from django.core.mail import send_mail
+from account.conf import settings as account_settings
 
 import json
 import requests
@@ -353,6 +355,22 @@ class MapStorySignup(SignupView):
         self.created_user.last_name = form.cleaned_data['lastname']
         self.created_user.save()
         return super(MapStorySignup, self).create_account(form)
+
+
+class MapStoryConfirmEmail(ConfirmEmailView):
+    """
+    Extends the ConfirmEmailView to send the welcome email.
+    """
+
+    def after_confirmation(self, confirmation):
+        """
+        Send the welcome email.
+        """
+        subject = "Welcome to MapStory!"
+        message = render_to_string("account/email/welcome_message.txt")
+        send_mail(subject, message, account_settings.DEFAULT_FROM_EMAIL, confirmation.email_address)
+        super(MapStoryConfirmEmail, self).after_confirmation(confirmation)
+
 
 @login_required
 def layer_metadata(request, layername, template='upload/layer_upload_metadata.html'):
