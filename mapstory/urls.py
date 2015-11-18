@@ -26,6 +26,7 @@ from mapstory.views import map_detail
 from mapstory.views import layer_detail
 from mapstory.views import layer_create
 from mapstory.views import layer_remove, map_remove
+from mapstory.views import MapStoryConfirmEmailView
 from geonode.layers.views import layer_replace, layer_thumbnail, layer_upload
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
 from django.core.urlresolvers import reverse_lazy
@@ -50,6 +51,7 @@ urlpatterns = patterns('',
     url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))), #temp fix for social auth redirect
     url(r"^account/signup/$", MapStorySignup.as_view(), name="account_signup"),
     url(r'^accounts/verify/$', 'mapstory.views.account_verify',  name='account_verify'),
+    url(r"^account/confirm_email/(?P<key>\w+)/$", MapStoryConfirmEmailView.as_view(), name="account_confirm_email"),
 
     url(r'^maps/templates/story-about-info.html$', TemplateView.as_view(template_name='mapstory/composer/story-about-info.html'), name='composer-add-layers'),
     url(r'^maps/templates/add-layers.html$', TemplateView.as_view(template_name='mapstory/composer/add-layers.html'), name='composer-add-layers'),

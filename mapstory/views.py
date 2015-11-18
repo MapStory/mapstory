@@ -70,6 +70,9 @@ from provider.oauth2.models import AccessToken
 from django.utils.timezone import now as provider_now
 from django.core.mail import send_mail
 from account.conf import settings as account_settings
+from account.models import EmailConfirmation
+from django.template.loader import render_to_string
+from django.core.mail import EmailMultiAlternatives
 
 import json
 import requests
@@ -357,19 +360,43 @@ class MapStorySignup(SignupView):
         return super(MapStorySignup, self).create_account(form)
 
 
-class MapStoryConfirmEmail(ConfirmEmailView):
+class MapStoryConfirmEmailView(ConfirmEmailView):
     """
     Extends the ConfirmEmailView to send the welcome email.
     """
 
-    def after_confirmation(self, confirmation):
+    # Override the post message to include the context data.
+    def post(self, *args, **kwargs):
+        self.object = confirmation = self.get_object()
+        confirmation.confirm()
+        ctx = self.get_context_data()
+        self.after_confirmation(confirmation, ctx)
+        redirect_url = self.get_redirect_url()
+        if not redirect_url:
+            ctx = self.get_context_data()
+            return self.render_to_response(ctx)
+        if self.messages.get("email_confirmed"):
+            messages.add_message(
+                self.request,
+                self.messages["email_confirmed"]["level"],
+                self.messages["email_confirmed"]["text"].format(**{
+                    "email": confirmation.email_address.email
+                })
+            )
+        return redirect(redirect_url)
+
+    def after_confirmation(self, confirmation, ctx):
         """
         Send the welcome email.
         """
-        subject = "Welcome to MapStory!"
-        message = render_to_string("account/email/welcome_message.txt")
-        send_mail(subject, message, account_settings.DEFAULT_FROM_EMAIL, confirmation.email_address)
-        super(MapStoryConfirmEmail, self).after_confirmation(confirmation)
+        subject = render_to_string("account/email/welcome_subject.txt")
+        html_content = render_to_string("account/email/welcome_message.html", ctx)
+        text_content = render_to_string("account/email/welcome_message.txt", ctx)
+        msg = EmailMultiAlternatives(subject, text_content,
+            account_settings.DEFAULT_FROM_EMAIL, [confirmation.email_address.email])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+        super(MapStoryConfirmEmailView, self).after_confirmation(confirmation)
 
 
 @login_required
