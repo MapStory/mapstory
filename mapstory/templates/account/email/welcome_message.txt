@@ -1,7 +1,7 @@
 {% load mapstory_tags %}
 Welcome to the MapStory community!
 
-Hi, {% firstof user.first_name user.username %}!
+Hi, {% firstof confirmation.email_address.user.first_name confirmation.email_address.user.username %}!
 
 By creating an account, you've joined a community of global citizens working together to organize data and tell stories about how our world has changed, is changing, and might change over time. We come from different places and have different interests, but we are connected by our belief that knowledge is meant to be shared and can always be improved!
 
@@ -12,7 +12,7 @@ Learn
 MapStorytelling involves using open data, maps and your own reflection to illuminate change in place over time. It's something anyone can learn, and your peers are adding more resources all the time to help you along.
 
 Learn the basics:
-{% ext_url 'wiki' 'how_to' %}
+http://mapstory.org/getskills
 
 ------------------
 
