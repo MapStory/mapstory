@@ -1,0 +1,86 @@
+{% extends "upload/layer_upload_base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block title %} {% trans "Upload Append"  %} - {{ block.super }}  {% endblock %}
+
+{% block body_class %}layers upload{% endblock %}
+
+{% block body_outer %}
+<div ng-app="layerUpload">
+  <div class="container" ng-controller="appendController">
+    <div class="page-header">
+      <h2 class="page-title">{% trans "Append StoryLayer" %}</h2>
+    </div>
+
+    <div class="tab-content col-md-8">
+      <h3>Destination Layer Name</h3>
+      <select id="layer_destination" name="layer_destination" required="required" ng-model="layerDestinationSelector">
+          <option value="">Select Destination Layer</option>
+          {% for layer in layers %}
+              <option value="{{ layer }}">{{ layer }}</option>
+          {% endfor %}
+      </select>
+
+      <h3>Source Layer Name</h3>
+      <select id="layer_source" name="layer_source" required="required" ng-model="layerSourceSelector">
+          <option value="">Select Source Layer</option>
+          {% for layer in layers %}
+              <option value="{{ layer }}">{{ layer }}</option>
+          {% endfor %}
+      </select>
+      <div id="status" style="margin-top: 20px;">
+      </div>
+
+      <section>
+        <a href="#" id="append-button" class="btn btn-gray col-sm-3 col-md-offset-4" ng-click="append()">{% trans "Append Layer" %}</a>
+      </section>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block extra_script %}
+<script src="{{STATIC_URL}}lib/js/angular.js"></script>
+<script src="{{STATIC_URL}}lib/js/underscore.js"></script>
+<script src="{{STATIC_URL}}mapstory/js/angular-cookies.js"></script>
+<script src="{{STATIC_URL}}mapstory/js/upload/upload-append.js"></script>
+
+<script type="text/javascript">
+{% autoescape off %}
+
+  csrf_token =  "{{ csrf_token }}",
+  geogig_enabled = {{ GEOGIG_ENABLED|lower  }},
+  time_enabled = {{ TIME_ENABLED|lower  }},
+  userLookup = "{% url "geonode.views.ajax_lookup" %}"
+
+{% endautoescape %}
+
+</script>
+
+<!-- todo: reuse from upload.html -->
+<script type='text/html' id='alertTemplate'>
+  <div class='alert <%= alertLevel %>'>
+    <%= message %>
+  </div>
+</script>
+
+<!-- todo: reuse from upload.html -->
+<script type='text/html' id='completedTemplate'>
+    <p>Total of <%= totalInserted %> features were successfully appended</p>  <!-- translate -->
+    <a href="<%= urlLayerInfo %>" class="btn btn-success">{% trans "Layer Info" %}</a>
+</script>
+
+<!-- todo: reuse from upload.html -->
+<script type='text/html' id='progressTemplate'>
+    <p>{% trans "Performing GeoServer Config Step" %} <img class="pull-right" src="/static/geonode/img/loading.gif"></p>
+</script>
+
+{% if GEONODE_SECURITY_ENABLED %}
+{% with resource=layer %}
+{% include "_permissions_form_js.html" %}
+{% endwith %}
+{% endif %}
+{% endblock extra_script %}
