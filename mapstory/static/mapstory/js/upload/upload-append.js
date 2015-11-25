@@ -29,15 +29,10 @@ $(function() {
           if (response.status === 200 || response.status === 201) {
             var totalInserted = 0;
             console.log('----[ response: ', response.statusText);
-            var docXML = $.parseXML(response.data);
-            $(docXML).find('totalInserted').each(function () {
-              var insertedNum = parseInt($(this).text());
-              if (isNaN(insertedNum) === false) {
-                totalInserted += insertedNum;
-              }
-            });
+            if (response.data && response.data.totalInserted) {
+              totalInserted += response.data.totalInserted;
+            }
             console.log('totalInserted: ', totalInserted);
-
             var template = _.template($('#alertTemplate').html());
             $('#status').html(template({
               alertLevel: 'alert-success',

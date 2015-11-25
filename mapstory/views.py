@@ -596,6 +596,19 @@ def layer_append(request, template='upload/layer_append.html'):
             schema_source[element.attrib['name']] = element.attrib['type']
         return schema_source
 
+    def parse_wfst_response(schema_xml_str):
+        xml = etree.XML(schema_xml_str)
+        tree = etree.ElementTree(xml)
+        root = tree.getroot()
+        for ns in root.nsmap:
+            xpath_ns = etree.FunctionNamespace(root.nsmap[ns])
+            xpath_ns.prefix = ns
+        summary_element = tree.xpath('//wfs:TransactionResponse/wfs:TransactionSummary')
+        summary = {}
+        for child in summary_element[0].getchildren():
+            summary[child.tag.split('}')[1]] = child.text
+        return summary
+
     def parse_layers(get_capabilities_xml_str):
         xml = etree.XML(get_capabilities_xml_str)
         tree = etree.ElementTree(xml)
@@ -609,8 +622,12 @@ def layer_append(request, template='upload/layer_append.html'):
             name_element = layer.find('{http://www.opengis.net/wms}Name')
             if name_element is not None and name_element.text:
                 layers[name_element.text] = name_element.text
-
         return layers
+
+    def chunk_list(list, chunk_size):
+        """Yield successive chunk_size chunks from list."""
+        for i in xrange(0, len(list), chunk_size):
+            yield list[i:i+chunk_size]
 
     if request.method == 'GET':
         # get layers visible to user
@@ -723,8 +740,11 @@ def layer_append(request, template='upload/layer_append.html'):
             layername_element = m.find(layer_source, root.nsmap)
             layername_element.tag = '{' + root.nsmap[tokens[0]] + '}' + tokens[1]
             members_str.append(etree.tostring(m))
-        features_string = ''.join(members_str)
 
+        # divide the features (members_str) into chunks so that we can have a progress indicator
+        feature_count = len(members)
+        features_per_chunk = 5
+        features_chunks = chunk_list(members_str, features_per_chunk)
 
         # example of transactions can be found at:
         # https://github.com/highsource/ogc-schemas/tree/2.0.0/schemas/src/main/resources/ogc/wfs/2.0/examples
@@ -748,18 +768,30 @@ def layer_append(request, template='upload/layer_append.html'):
             '</wfs:Transaction>'
         ))
 
-        wfs_transaction_payload = wfst_insert_v_2_0_0_template.format(features=features_string, workspace='geonode', workspace_uri='http://www.geonode.org/')
-        insert_features_request = requests.post(
-            '{}/wfs/WfsDispatcher'.format(ogc_server_settings.public_url),
-            cookies=request.COOKIES,
-            headers={'Content-Type': 'application/xml'},
-            data=wfs_transaction_payload
-        )
+        features_posted = 0
+        summary_aggregated = {}
+        for features in features_chunks:
+            wfs_transaction_payload = wfst_insert_v_2_0_0_template.format(features=''.join(features), workspace='geonode', workspace_uri='http://www.geonode.org/')
+            insert_features_request = requests.post(
+                '{}/wfs/WfsDispatcher'.format(ogc_server_settings.public_url),
+                cookies=request.COOKIES,
+                headers={'Content-Type': 'application/xml'},
+                data=wfs_transaction_payload
+            )
+            summary = parse_wfst_response(insert_features_request.content)
+            for s in summary:
+                if s in summary_aggregated:
+                    summary_aggregated[s] += int(summary[s])
+                else:
+                    summary_aggregated[s] = int(summary[s])
 
-        if has_exception(get_features_request.content):
-            return error_response(INTERNAL_SERVER_ERROR, get_features_request.content)
+            features_posted += len(features)
+            print 'progress: ', int((1.0 * features_posted / feature_count) * 100)
 
-        return HttpResponse(status=insert_features_request.status_code, content=insert_features_request.content)
+            if has_exception(get_features_request.content):
+                return error_response(INTERNAL_SERVER_ERROR, get_features_request.content)
+
+        return HttpResponse(status=insert_features_request.status_code, content=json.dumps(summary_aggregated))
 
     return render_to_response(template, context, context_instance=RequestContext(request),)
 
