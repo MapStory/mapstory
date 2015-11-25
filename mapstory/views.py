@@ -707,27 +707,24 @@ def layer_append(request, template='upload/layer_append.html'):
         #     </wfs:member>
         # </wfs:FeatureCollection>
 
-        # using lxml will be less efficient but needs to be careful with basic string manipulation,
-        # feature might have xml/html attrib value with potentially "<workspace:layername>" in it
-        features_begin_index = get_features_request.content.index('<wfs:member>')
-        features_end_index = get_features_request.content.rindex('</wfs:member>')
-        features_end_index += len('</wfs:member>')
-        features_string = get_features_request.content[features_begin_index:features_end_index]
-        features_string = features_string.replace(layer_source, layer_destination)
+        # Create the xml containing all the features that need to be posted. Need to get the features form the source
+        # layer, update them so that they get posted to the destination layer
+        xml = etree.XML(get_features_request.content)
+        tree = etree.ElementTree(xml)
+        root = tree.getroot()
+        for ns in root.nsmap:
+            xpath_ns = etree.FunctionNamespace(root.nsmap[ns])
+            xpath_ns.prefix = ns
+        members = tree.xpath('//wfs:FeatureCollection/wfs:member')
+        members_str = []
+        for m in members:
+            # replace the tag <workspace>:<layer_destination> with <workspace>:<layer_source>
+            tokens = layer_destination.split(':')
+            layername_element = m.find(layer_source, root.nsmap)
+            layername_element.tag = '{' + root.nsmap[tokens[0]] + '}' + tokens[1]
+            members_str.append(etree.tostring(m))
+        features_string = ''.join(members_str)
 
-        #xml = etree.XML(get_features_request.content)
-        #tree = etree.ElementTree(xml)
-        #root = tree.getroot()
-        ##ns = etree.FunctionNamespace("http://www.opengis.net/wfs/2.0")
-        ##ns.prefix = "wfs"
-        #for ns in root.nsmap:
-        #    xpath_ns = etree.FunctionNamespace(root.nsmap[ns])
-        #    xpath_ns.prefix = ns
-        #members = tree.xpath('//wfs:FeatureCollection/wfs:member')
-        #members_str = []
-        #for m in members:
-        #    print members_str.append(etree.tostring(m))
-        #features_string = ''.join(members_str)
 
         # example of transactions can be found at:
         # https://github.com/highsource/ogc-schemas/tree/2.0.0/schemas/src/main/resources/ogc/wfs/2.0/examples
