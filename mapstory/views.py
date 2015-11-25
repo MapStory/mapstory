@@ -26,7 +26,7 @@ from geonode.people.forms import ProfileForm
 from geonode.people.models import Profile
 from geonode.maps.views import snapshot_config
 from geonode.upload.utils import create_geoserver_db_featurestore
-from httplib import HTTPConnection, HTTPSConnection, NOT_ACCEPTABLE, INTERNAL_SERVER_ERROR
+from httplib import HTTPConnection, HTTPSConnection, NOT_ACCEPTABLE, INTERNAL_SERVER_ERROR, FORBIDDEN
 from mapstory.forms import UploadLayerForm, DeactivateProfileForm, EditProfileForm
 from mapstory.models import get_sponsors
 from mapstory.models import get_images
@@ -518,7 +518,7 @@ def layer_create(request, data=None, template='upload/layer_create.html'):
     print 'layer create'
     if request.method == 'POST':
         feature_type = json.loads(request.POST.get(u'featureType', None))
-        #store = request.POST.get(u'store', None)
+        datastore = feature_type['store']['name']
         store_create_geogig = json.loads(request.POST.get(u'storeCreateGeogig', 'false'))
 
         if store_create_geogig:
@@ -527,8 +527,17 @@ def layer_create(request, data=None, template='upload/layer_create.html'):
             store_created = create_geoserver_db_featurestore(store_type='geogig', store_name=store_proposed)
             feature_type['store']['name'] = store_created.name
 
+        # -- only allow creation of layers in the whitelisted datastores
+        try:
+            settings.ALLOWED_DATASTORE_LAYER_CREATE
+        except AttributeError:
+            return HttpResponse(status=FORBIDDEN, content='ALLOWED_DATASTORE_LAYER_CREATE whitelist is not defined.')
+
+        if datastore not in settings.ALLOWED_DATASTORE_LAYER_CREATE:
+            return HttpResponse(status=FORBIDDEN, content='datastore specified in featureType is not in the ALLOWED_DATASTORE_LAYER_CREATE whitelist.')
+
         post_request = requests.post(
-            '{}/workspaces/{}/datastores/{}/featuretypes.json'.format(ogc_server_settings.rest, feature_type['namespace']['name'], feature_type['store']['name']),
+            '{}/workspaces/{}/datastores/{}/featuretypes.json'.format(ogc_server_settings.rest, feature_type['namespace']['name'], datastore),
             data='{{"featureType":{}}}'.format(json.dumps(feature_type)),
             auth=ogc_server_settings.credentials,
             headers={'content-type': 'application/json'}
@@ -743,7 +752,7 @@ def layer_append(request, template='upload/layer_append.html'):
 
         # divide the features (members_str) into chunks so that we can have a progress indicator
         feature_count = len(members)
-        features_per_chunk = 5
+        features_per_chunk = 100
         features_chunks = chunk_list(members_str, features_per_chunk)
 
         # example of transactions can be found at:
