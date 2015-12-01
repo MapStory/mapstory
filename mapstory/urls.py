@@ -24,7 +24,7 @@ from mapstory.views import CommunityDetail
 from mapstory.views import GroupDetail
 from mapstory.views import map_detail
 from mapstory.views import layer_detail
-from mapstory.views import layer_create
+from mapstory.views import layer_create, layer_append
 from mapstory.views import layer_remove, map_remove
 from mapstory.views import MapStoryConfirmEmailView
 from geonode.layers.views import layer_replace, layer_thumbnail, layer_upload
@@ -108,6 +108,7 @@ urlpatterns = patterns('',
     url(r'^maps/(?P<mapid>\d+)$', map_detail, name='map_detail'),
     url(r'^layers/upload$', layer_upload, name='layer_upload'),
     url(r'^layers/create$', layer_create, name='layer_create'),
+    url(r'^layers/append$', layer_append, name='layer_append'),
     url(r'^layers/(?P<layername>[^/]*)/metadata$', layer_metadata, name="layer_metadata"),
     url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
     url(r'^layers/(?P<layername>[^/]*)/replace$', layer_replace, name="layer_replace"),
