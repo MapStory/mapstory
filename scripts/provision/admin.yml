@@ -270,3 +270,57 @@
   copy: src=files/supervisor-elasticsearch.conf dest=/etc/supervisor/conf.d
   notify: [reload supervisor]
   tags: [elasticsearch]
+
+# Install RabbitMQ
+- name: Add the RabbitMQ public GPG key to the apt repo
+  apt_key: url=http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+           state=present
+  tags: [rabbitmq]
+
+- name: Add RabbitMQ to the sources list
+  apt_repository: repo='deb http://www.rabbitmq.com/debian/ testing main'
+                  update_cache={{ update_apt_cache }}
+                  state=present
+  tags: [rabbitmq]
+
+- name: Install RabbitMQ server
+  apt: name={{ item }} update_cache={{ update_apt_cache }} force=yes state=installed
+  with_items:
+    - rabbitmq-server
+  tags: [rabbitmq]
+
+- name: Enable the RabbitMQ Management Console
+  rabbitmq_plugin: names=rabbitmq_management state=enabled
+  notify: restart rabbitmq-server
+  tags: [rabbitmq]
+
+- name: Create a vhost for the application
+  rabbitmq_vhost: name={{ rabbitmq_application_vhost }} state=present
+  tags: [rabbitmq]
+
+- name: Create default admin user
+  rabbitmq_user: user={{ rabbitmq_admin_user }}
+                 password={{ rabbitmq_admin_password }}
+                 vhost=/
+                 tags=administrator
+                 state=present
+  tags: [rabbitmq]
+
+- name: Create application user
+  rabbitmq_user: user={{ rabbitmq_application_user }}
+                 password={{ rabbitmq_application_password }}
+                 vhost={{ rabbitmq_application_vhost }}
+                 configure_priv=.*
+                 read_priv=.*
+                 write_priv=.*
+                 state=present
+  tags: [rabbitmq]
+
+- name: Ensure the default 'guest' user doesn't exist
+  rabbitmq_user: user=guest
+                 state=absent
+  tags: [rabbitmq]
+
+- name: Ensure that the RabbitMQ service is running
+  service: name=rabbitmq-server state=started enabled=yes
+  tags: [rabbitmq]

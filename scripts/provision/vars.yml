@@ -1,4 +1,5 @@
 ---
+application_name: mapstory
 pgpass: foobar
 database_host: localhost
 mapstory_branch: master
@@ -83,3 +84,13 @@ use_aws_s3: False
 aws_storage_bucket_name:
 aws_access_key_id:
 aws_secret_access_key:
+
+# RabbitMQ Settings
+rabbitmq_server_name: 192.168.56.151
+
+rabbitmq_admin_user: admin
+rabbitmq_admin_password: password
+
+rabbitmq_application_vhost: "{{ application_name }}"
+rabbitmq_application_user: "{{ application_name }}"
+rabbitmq_application_password: password
