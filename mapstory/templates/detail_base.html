@@ -79,7 +79,7 @@
         <div class="row">
           <div class="col-sm-9">
             {% if resource.region_name_list|length > 0 %}
-            <h3 style="margin-top:0px;margin-bottom:5px;">Region: {{ resource.region_name_list.0 }} <!-- This inequality isn't working for some reason --> {% if resource.region_name_list|length > 1 %} and {{ resource.region_name_list|length|add:"-1" }} more...{% else %} {% endif %}</h3>
+            <h3 style="margin-top:0px;margin-bottom:5px;">Places: {{ resource.region_name_list.0 }} <!-- This inequality isn't working for some reason --> {% if resource.region_name_list|length > 1 %} and {{ resource.region_name_list|length|add:"-1" }} more...{% else %} {% endif %}</h3>
             {% endif %}
             {% ifequal resource.category None %}
             {% else %}

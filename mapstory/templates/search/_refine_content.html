@@ -54,11 +54,13 @@
                         </div>
                     </div>
                     <br>
+                    {% comment %}
+                    <!-- Not working: Seems like it needs to be updated for elastic search? Not querying API?
                     <div class="row">
                         <div class="col-sm-10 col-sm-offset-1">
                             <ul id="categories" class="nav" ng-init="search_regions=[]">
                                 {% verbatim %}
-                                Or search by country or continent
+                                Or search by places (countries or continents):
                                 <nav class="filter">
                                     <div class="input-group search-bar">
                                         <input name="region_search_input" id="region_search_input" ng-model="region_query" type="text" 
@@ -79,7 +81,7 @@
                                 {% endverbatim %}
                             </ul>
                         </div>
-                    </div>
+                    </div> -->{% endcomment %}
                 </div>
             </div>
         </div>
