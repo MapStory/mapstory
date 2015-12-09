@@ -58,13 +58,13 @@
                         <div class="col-sm-10 col-sm-offset-1">
                             <ul id="categories" class="nav" ng-init="search_regions=[]">
                                 {% verbatim %}
-                                Or search by country or continent
+                                Or search by places (countries or continents):
                                 <nav class="filter">
                                     <div class="input-group search-bar">
                                         <input name="region_search_input" id="region_search_input" ng-model="region_query" type="text" 
                                             class="form-control">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-primary" type="submit" id="region_search_btn" ng-click="add_search('regions__name__in', region_query, search_regions)"><i class="fa fa-plus">Add</i></button>
+                                            <button class="btn btn-primary" type="submit" id="region_search_btn" ng-click="add_search('regions', region_query, search_regions)"><i class="fa fa-plus">Add</i></button>
                                         </span>
                                     </div>
                                 </nav>
@@ -72,7 +72,7 @@
                                     <li ng-repeat="search in search_regions">
                                         {{ search }}
                                         <span class="input-group-btn pull-right">
-                                            <button class="btn btn-primary" type="submit" ng-click="remove_search('regions__name__in', search, search_regions)"><i class="fa fa-times"></i></button>
+                                            <button class="btn btn-primary" type="submit" ng-click="remove_search('regions', search, search_regions)"><i class="fa fa-times"></i></button>
                                         </span>
                                     </li>
                                 </ul>
@@ -128,7 +128,7 @@
                                 <input name="keyword_search_input" id="keyword_search_input" ng-model="keyword_query" type="text" 
                                     class="form-control">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="submit" id="keyword_search_btn" ng-click="add_search('keywords__slug__in', keyword_query, search_keywords)"><i class="fa fa-plus">Add</i></button>
+                                    <button class="btn btn-primary" type="submit" id="keyword_search_btn" ng-click="add_search('keywords', keyword_query, search_keywords)"><i class="fa fa-plus">Add</i></button>
                                 </span>
                             </div>
                         </nav>
@@ -136,7 +136,7 @@
                             <li ng-repeat="search in search_keywords">
                                 {{ search }}
                                 <span class="input-group-btn pull-right">
-                                    <button class="btn btn-primary" type="submit" ng-click="remove_search('keywords__slug__in', search, search_keywords)"><i class="fa fa-times"></i></button>
+                                    <button class="btn btn-primary" type="submit" ng-click="remove_search('keywords', search, search_keywords)"><i class="fa fa-times"></i></button>
                                 </span>
                             </li>
                         </ul>
