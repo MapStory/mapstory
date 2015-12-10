@@ -183,8 +183,8 @@ class ProfileDetail(DetailView):
         ctx = super(ProfileDetail, self).get_context_data(**kwargs)
         ctx['diary_entries'] = DiaryEntry.objects.filter(author=self.object).order_by('-date')
         ctx['favorites'] = Favorite.objects.filter(user=self.object).order_by('-created_on')
-        ctx['threads_all'] = Thread.ordered(Thread.objects.inbox(self.request.user))
-        ctx['threads_unread'] = Thread.ordered(Thread.objects.unread(self.request.user))
+        ctx['threads_all'] = Thread.ordered(Thread.objects.inbox(self.object))
+        ctx['threads_unread'] = Thread.ordered(Thread.objects.unread(self.object))
         ctx['action_list'] = actor_stream(ctx['profile'])
 
         return ctx
