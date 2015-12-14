@@ -685,6 +685,11 @@
                 }
             });
 
+            $scope.$on('featuretype-added', function(event, layer) {
+                console.log('FeatureType Added for Layer: ', layer);
+                setLayer($scope.layer);
+            });
+
             $scope.changeClassifyProperty = function(prop, value) {
                 if (false && !promptClassChange()) {
                     return;
@@ -748,6 +753,59 @@
         }]);
     }
 
+    module.directive('carouselNext', function () {
+        return {
+            restrict: 'A',
+            scope: { onNext: '='},
+            require: ['^carousel'],
+            link: function (scope, element, attrs, controllers) {
+                var carousel = controllers[0];
+                function howIsNext() {
+                    if ((carousel.indexOfSlide(carousel.currentSlide) + 1) === carousel.slides.length) {
+                        return 0;
+                    } else {
+                        return carousel.indexOfSlide(carousel.currentSlide) + 1;
+                    }
+                }
+
+                element.bind('click', function () {
+                    var index = howIsNext();
+                    var slide = carousel.slides[index];
+                    if(scope.onNext) {
+                        scope.onNext(slide.$parent.styleType);
+                    }
+                    carousel.select(slide);
+                });
+            }
+        };
+    });
+
+    module.directive('carouselPrev', function () {
+        return {
+            restrict: 'A',
+            scope: { onPrev: '='},
+            require: ['^carousel'],
+            link: function (scope, element, attrs, controllers) {
+                var carousel = controllers[0];
+                function howIsPrev() {
+                    if (carousel.indexOfSlide(carousel.currentSlide) === 0) {
+                        return carousel.slides.length;
+                    } else {
+                        return carousel.indexOfSlide(carousel.currentSlide) - 1;
+                    }
+                }
+                element.bind('click', function () {
+                    var index = howIsPrev();
+                    var slide = carousel.slides[index];
+                    if(scope.onPrev) {
+                        scope.onPrev(slide.$parent.styleType);
+                    }
+                    carousel.select(slide);
+                });
+            }
+        };
+    });
+
     module.directive('styleEditor', function() {
         return {
             restrict: 'E',
@@ -757,7 +815,8 @@
             scope: {
                 layer : '=',
                 onChange : '=',
-                formChanged : '='
+                formChanged : '=',
+                control : '='
             }
         };
     });

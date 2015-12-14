@@ -94,7 +94,7 @@
                             {{layer.get('title')}}
                         </accordion-heading>
                         <!-- to reduce watchers, add ng-if=accordianOpen -->
-                        <style-editor class="minheight" layer="layer" on-change="styleChanged"></style-editor>
+                        <style-editor class="minheight" control="{carousel:true, default:false}" layer="layer" on-change="styleChanged"></style-editor>
                     </accordion-group>
                 </accordion>
             </div>
