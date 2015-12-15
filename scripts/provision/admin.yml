@@ -194,19 +194,27 @@
   tags: [geoserver]
 
 - name: unpack geoserver datadir
-  shell: "[ ! -e /var/lib/geoserver/data ] && unzip /home/mapstory/geoserver.war data/* -d /var/lib/geoserver/ || exit 0"
+  shell: "[ ! -e {{ geoserver_data }} ] && unzip /home/mapstory/geoserver.war data/* -d /var/lib/geoserver/ || exit 0"
+  tags: [geoserver]
+
+- name: copy geoserver config.xml
+  template: src=files/config.xml dest={{ geoserver_data }}/security/config.xml owner=www-data group=www-data
+  tags: [geoserver]
+
+- name: copy geoserver rest.properties
+  template: src=files/rest.properties dest={{ geoserver_data }}/security/rest.properties owner=www-data group=www-data
   tags: [geoserver]
 
 - name: set geoserver password
-  lineinfile: dest=/var/lib/geoserver/data/security/usergroup/default/users.xml regexp='(.*)crypt1:.*("/>)$' line='\1plain:{{gspass}}\2' backrefs=yes
+  lineinfile: dest={{ geoserver_data }}/security/usergroup/default/users.xml regexp='(.*)crypt1:.*("/>)$' line='\1plain:{{gspass}}\2' backrefs=yes
   tags: [geoserver]
 
 - name: geoserver datadir permissions
-  file: path=/var/lib/geoserver/data state=directory owner=www-data group=www-data mode=775 recurse=yes
+  file: path={{ geoserver_data }} state=directory owner=www-data group=www-data mode=775 recurse=yes
   tags: [geoserver]
 
 - name: create geogit data directory
-  file: path=/var/lib/geoserver/data/geogig state=directory mode=0775 owner=www-data group=www-data
+  file: path={{ geoserver_data }}/geogig state=directory mode=0775 owner=www-data group=www-data
   tags: [setup]
 
 - file: path=/tmp/mapstory state=absent
