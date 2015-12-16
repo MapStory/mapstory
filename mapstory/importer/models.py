@@ -17,7 +17,9 @@
 #
 #########################################################################
 
+
 import os
+import tempfile
 from .utils import sizeof_fmt
 from celery.result import AsyncResult
 from djcelery.models import TaskState
@@ -27,7 +29,7 @@ from django.db import models
 from django.conf import settings
 from geonode.layers.models import Layer
 from jsonfield import JSONField
-from .utils import GDALInspector
+from .utils import GDALInspector, NoDataSourceFound
 
 DEFAULT_LAYER_CONFIGURATION = {'configureTime': True,
                                'editable': True,
@@ -52,12 +54,17 @@ def validate_inspector_can_read(value):
     Validates Geospatial data.
     """
 
+    temp_directory = tempfile.mkdtemp()
+    filename = os.path.join(temp_directory, value.name)
+
+    with open(filename, 'wb') as f:
+        for chunk in value.chunks():
+            f.write(chunk)
+
     try:
-        import ipdb; ipdb.set_trace()
-        gi = GDALInspector(value.path)
-        assert gi.data
-    except:
-        raise ValidationError(u'Unable to find geospatial data.')
+        data = GDALInspector(filename).open()
+    except NoDataSourceFound:
+        raise ValidationError('Unable to locate geospatial data.')
 
 
 class UploadedData(models.Model):
@@ -158,7 +165,7 @@ class UploadLayer(models.Model):
 
 class UploadFile(models.Model):
     upload = models.ForeignKey(UploadedData, null=True, blank=True)
-    file = models.FileField(upload_to="uploads", validators=[validate_file_extension])
+    file = models.FileField(upload_to="uploads", validators=[validate_file_extension, validate_inspector_can_read])
     slug = models.SlugField(max_length=250, blank=True)
 
     def __unicode__(self):

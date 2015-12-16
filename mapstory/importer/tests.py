@@ -387,6 +387,15 @@ class UploaderTests(MapStoryTestMixin):
         uploaded_file = upload.uploadfile_set.first()
         self.assertTrue(os.path.exists(uploaded_file.file.path))
 
+
+        f = os.path.join(os.path.dirname(__file__), 'test_ogr', 'empty_file.geojson')
+
+        with open(f) as fp:
+            response = c.post(reverse('uploads-new'), {'file': fp}, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('file', response.context_data['form'].errors)
+
     def test_describe_fields(self):
         """
         Tests the describe fields functionality.
