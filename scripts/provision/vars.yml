@@ -10,6 +10,7 @@ geoserver_proxy_url: ''
 geoserver_enable_gzip: false
 gspass: geoserverer
 media_root: /var/lib/mapstory/media/
+uploads_root: '{{media_root}}uploads'
 django_su_pass: admin
 nginx_server_name: 192.168.56.151
 nginx_client_max_body_size: '500m'
@@ -17,8 +18,10 @@ fixtures: '../geonode/geonode/base/fixtures/initial_data.json mapstory/fixtures/
 update_apt_cache: yes
 
 # don't change these
-venv: ~/.virtualenvs/mapstory
+venv: /home/mapstory/.virtualenvs/mapstory
 venv_activate: '{{ venv }}/bin/activate'
+
+development_server: "{{ nginx_server_name|string()== '192.168.56.151'}}"
 
 # Elasticsearch version from debian repository
 es_version: 1.6
@@ -94,3 +97,5 @@ rabbitmq_admin_password: password
 rabbitmq_application_vhost: "{{ application_name }}"
 rabbitmq_application_user: "{{ application_name }}"
 rabbitmq_application_password: password
+
+broker_url: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@localhost/{{ rabbitmq_application_vhost }}"

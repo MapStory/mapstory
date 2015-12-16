@@ -17,3 +17,5 @@ uploaded
 ._.DS_Store
 ._development.db-journal
 .idea
+mapstory/importer/test_ogr
+mapstory/importer/static/importer/bower_components

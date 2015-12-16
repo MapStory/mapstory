@@ -1,4 +1,6 @@
+from kombu import Queue
 from .local_key import *
+
 MEDIA_ROOT = '{{media_root}}'
 DATABASE_PASSWORD = '{{ pgpass }}'
 DATABASE_HOST = '{{ database_host }}'
@@ -83,3 +85,22 @@ AWS_ACCESS_KEY_ID = '{{ aws_access_key_id }}'
 AWS_SECRET_ACCESS_KEY = '{{ aws_secret_access_key }}'
 
 INSTALLED_APPS += MAPSTORY_APPS
+
+BROKER_URL = "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@localhost/{{ rabbitmq_application_vhost }}"
+
+CELERY_ALWAYS_EAGER = False # Makes tasks run synchronously
+
+CELERY_DEFAULT_QUEUE = "default"
+CELERY_DEFAULT_EXCHANGE = "default"
+CELERY_DEFAULT_EXCHANGE_TYPE = "direct"
+CELERY_DEFAULT_ROUTING_KEY = "default"
+CELERY_CREATE_MISSING_QUEUES = True
+
+{% if development_server|bool %}
+CELERY_ALWAYS_EAGER = True
+{% else %}
+CELERY_ALWAYS_EAGER = False
+{% endif %}
+
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERY_IGNORE_RESULT=False

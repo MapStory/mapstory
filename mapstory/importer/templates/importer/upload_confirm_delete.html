@@ -1,0 +1,31 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block extra_script %}
+{{ block.super }}
+{% endblock %}
+
+{% block body_outer %}
+
+<div class="page-header">
+  <h2 class="page-title">{% trans "Delete upload" %}</h2>
+</div>
+
+<div>
+  <div class="row" style="margin:20px 0 30px">
+      <form action="{% url 'uploads-delete' object.id %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" value="{{ layer.service_typename }}" />
+      <div class="form-actions">
+        <input type="submit" value="{% trans "Yes, I am sure" %}" class="btn btn-danger" />
+        <a href="{{ layer.get_absolute_url }}" class="btn btn-default">{% trans "No, don't remove it" %}</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}
