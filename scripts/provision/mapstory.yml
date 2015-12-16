@@ -61,7 +61,7 @@
   tags: [settings]
 
 - name: mapstory settings
-  template: src=files/local_settings.py dest={{ mapstory_geonode }}/mapstory/settings/local_settings.py
+  template: src=files/local_settings.py.j2 dest={{ mapstory_geonode }}/mapstory/settings/local_settings.py
   notify: restart django
   tags: [settings]
 
