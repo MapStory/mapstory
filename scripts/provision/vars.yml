@@ -21,6 +21,8 @@ update_apt_cache: yes
 venv: /home/mapstory/.virtualenvs/mapstory
 venv_activate: '{{ venv }}/bin/activate'
 
+development_server: "{{ nginx_server_name|string()== '192.168.56.151'}}"
+
 # Elasticsearch version from debian repository
 es_version: 1.6
 es_install_java: True

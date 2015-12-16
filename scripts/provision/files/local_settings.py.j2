@@ -95,6 +95,12 @@ CELERY_DEFAULT_EXCHANGE = "default"
 CELERY_DEFAULT_EXCHANGE_TYPE = "direct"
 CELERY_DEFAULT_ROUTING_KEY = "default"
 CELERY_CREATE_MISSING_QUEUES = True
+
+{% if development_server|bool %}
+CELERY_ALWAYS_EAGER = True
+{% else %}
 CELERY_ALWAYS_EAGER = False
+{% endif %}
+
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 CELERY_IGNORE_RESULT=False
