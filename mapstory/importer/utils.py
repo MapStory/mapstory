@@ -349,7 +349,9 @@ class GDALImport(Import):
 
         if target_store is None:
             d = db.connections['datastore'].settings_dict
-            connection_string = "PG:dbname='%s' user='%s' password='%s'" % (d['NAME'], d['USER'], d['PASSWORD'])
+            connection_string = "PG:dbname='%s' user='%s' password='%s' host='%s' port='%s'" % (d['NAME'], d['USER'],
+                                                                                                d['PASSWORD'],
+                                                                                                d['HOST'], d['PORT'])
             self.target_store = connection_string
 
     def _initialize_handlers(self):
