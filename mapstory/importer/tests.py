@@ -517,6 +517,32 @@ class UploaderTests(MapStoryTestMixin):
         response = c.get('/importer-api/data/')
         self.assertEqual(response.status_code, 200)
 
+        admin = User.objects.get(username=self.username)
+        non_admin = User.objects.get(username=self.non_admin_username)
+        from .models import UploadFile
+
+        f = os.path.join(os.path.dirname(__file__), 'test_ogr', 'US_shootings.csv')
+
+        with open(f, 'rb') as f:
+            uploaded_file = SimpleUploadedFile('test_data', f.read())
+            admin_upload = UploadedData.objects.create(state='Admin test', user=admin)
+            admin_upload.uploadfile_set.add(UploadFile.objects.create(file=uploaded_file))
+
+            non_admin_upload = UploadedData.objects.create(state='Non admin test', user=non_admin)
+            non_admin_upload.uploadfile_set.add(UploadFile.objects.create(file=uploaded_file))
+
+        c.login_as_admin()
+        response = c.get('/importer-api/data/')
+        self.assertEqual(response.status_code, 200)
+        body = json.loads(response.content)
+        self.assertEqual(len(body['objects']), 2)
+
+        response = c.get('/importer-api/data/?user__username=admin')
+        self.assertEqual(response.status_code, 200)
+        body = json.loads(response.content)
+        self.assertEqual(len(body['objects']), 1)
+
+
     def test_layer_list_api(self):
         c = AdminClient()
         response = c.get('/importer-api/data-layers/')

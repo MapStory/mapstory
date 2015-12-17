@@ -32,13 +32,15 @@
         });
     }
 
+    $scope.init = function(user) {
+      getUploads({offset: $scope.offset, limit: $scope.limit, user__username: user});
+    };
+
     $scope.pageChanged = function() {
       $scope.offset = ($scope.currentPage - 1) * $scope.limit;
       var query = {offset: $scope.offset, limit: $scope.limit};
       getUploads(query);
     };
-
-    getUploads({offset: $scope.offset, limit: $scope.limit});
 
    })
 

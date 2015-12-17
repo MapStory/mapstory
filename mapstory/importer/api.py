@@ -1,16 +1,17 @@
 import json
-from tastypie.fields import IntegerField, DictField, ListField, CharField, ToManyField
-from tastypie.constants import ALL
+from tastypie.fields import IntegerField, DictField, ListField, CharField, ToManyField, ForeignKey
+from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
 from .models import UploadedData, UploadLayer
 from tastypie.authentication import SessionAuthentication
-from tastypie.authorization import DjangoAuthorization,Authorization
+from tastypie.authorization import DjangoAuthorization, Authorization
 from tastypie.utils import trailing_slash
 from tastypie import http
 from django.conf.urls import url
 from tastypie.bundle import Bundle
 from .tasks import import_object
 from tastypie.exceptions import ImmediateHttpResponse
+from geonode.api.api import ProfileResource
 
 
 class UploadedLayerResource(ModelResource):
@@ -98,6 +99,7 @@ class UploadedDataResource(ModelResource):
     API for accessing UploadedData.
     """
 
+    user = ForeignKey(ProfileResource, 'user')
     file_size = CharField(attribute='filesize', readonly=True)
     layers = ToManyField(UploadedLayerResource, 'uploadlayer_set', full=True)
     file_url = CharField(attribute='file_url', readonly=True, null=True)
@@ -108,6 +110,7 @@ class UploadedDataResource(ModelResource):
         allowed_methods = ['get', 'delete']
         authorization = UserOwnsObjectAuthorization()
         authentication = SessionAuthentication()
+        filtering = {'user': ALL_WITH_RELATIONS}
 
     def get_object_list(self, request):
         """

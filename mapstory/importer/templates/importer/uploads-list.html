@@ -60,7 +60,7 @@ body{ margin-top:20px; font-size: 14px}
             <div ng-repeat="upload in uploads">
                 <upload upload-object="upload" i="$index"></upload>
             </div>
-            <pagination total-items="totalItems" ng-change="pageChanged()" max-size="7" class="pagination-sm" items-per-page="limit" ng-model="currentPage"></pagination>
+            <pagination total-items="totalItems" ng-init="init('{{user.username}}')" ng-change="pageChanged()" max-size="7" class="pagination-sm" items-per-page="limit" ng-model="currentPage"></pagination>
         </div>
     </div>
 </div>
