@@ -37,7 +37,11 @@ class FieldConverterHandler(object):
             return datasource.convert_field(layer, field)
 
     def handle(self, layer, layer_config, *args, **kwargs):
-        for field_to_convert in layer_config.get('convert_to_date', []):
+        for field_to_convert in set(layer_config.get('convert_to_date', [])):
+
+            if not field_to_convert:
+                continue
+
             new_field = self.convert_field_to_time(layer, field_to_convert)
 
             # if the start_date or end_date needed to be converted to a date

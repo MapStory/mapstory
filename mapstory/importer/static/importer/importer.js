@@ -128,8 +128,8 @@
                       layer['index'] = index;
                   }
 
-                  var checkStartDate = layer.configuration_options.hasOwnProperty('start_date');
-                  var checkEndDate = layer.configuration_options.hasOwnProperty('end_date');
+                  var checkStartDate = layer.configuration_options.hasOwnProperty('start_date') && layer.configuration_options.start_date != "";
+                  var checkEndDate = layer.configuration_options.hasOwnProperty('end_date') && layer.configuration_options.end_date != "";
                   var dates = [];
                   layer.configuration_options.convert_to_date = [];
 

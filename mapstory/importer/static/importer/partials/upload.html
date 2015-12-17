@@ -72,13 +72,15 @@
                                                         <div class="form-group">
                                                             <label for="start_date" class="col-sm-3 col-xs-3 col-md-3 control-label">Start date:</label>
                                                             <select ng-model="layer.configuration_options.start_date" class="col-md-5 col-xs-5 col-sm-5" id="start_date" ng-required='layer.configuration_options'>
-                                                                <option ng-repeat="option in layer.fields" value="{[option.name]}">{[option.name]}</option>
+                                                                <option value="" ng-selected="'' == layer.configuration_options.start_date">--Please select a field--</option>
+                                                                <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.start_date" value="{{option.name}}">{{option.name}}</option>
                                                             </select>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="end_date" class="col-sm-3 col-xs-3 col-md-3 control-label">End date:</label>
                                                             <select ng-model="layer.configuration_options.end_date" class="col-md-5 col-xs-5 col-sm-5" id="end_date">
-                                                                <option ng-repeat="option in layer.fields" value="{[option.name]}">{[option.name]}</option>
+                                                                <option value="" ng-selected="'' == layer.configuration_options.end_date">--Please select a field--</option>
+                                                                <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.end_date" value="{[option.name]}">{[option.name]}</option>
                                                             </select>
                                                         </div>
                                                 </div>
