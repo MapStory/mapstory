@@ -65,6 +65,9 @@ def validate_inspector_can_read(value):
         data = GDALInspector(filename).open()
     except NoDataSourceFound:
         raise ValidationError('Unable to locate geospatial data.')
+    finally:
+        from .tasks import remove_path
+        remove_path.delay(os.path.split(filename)[0])
 
 
 class UploadedData(models.Model):

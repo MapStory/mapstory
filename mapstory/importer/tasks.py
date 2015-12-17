@@ -1,7 +1,10 @@
-from celery.task import task
+import os
+import shutil
 from .utils import GDALImport
 from .models import UploadFile, UploadLayer
+from celery.task import task
 from geonode.layers.models import Layer
+
 
 @task
 def import_object(upload_file_id, configuration_options):
@@ -21,3 +24,12 @@ def import_object(upload_file_id, configuration_options):
             pass
 
     return layers
+
+
+@task
+def remove_path(path):
+    """
+    Removes a path using shutil.rmtree.
+    """
+    if os.path.exists(path):
+        shutil.rmtree(path)
