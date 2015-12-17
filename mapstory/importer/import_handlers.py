@@ -30,7 +30,8 @@ class FieldConverterHandler(object):
 
     def convert_field_to_time(self, layer, field):
         d = db.connections['datastore'].settings_dict
-        connection_string = "PG:dbname='%s' user='%s' password='%s'" % (d['NAME'], d['USER'], d['PASSWORD'])
+        connection_string = "PG:dbname='%s' user='%s' password='%s' host='%s' port='%s'" % (d['NAME'], d['USER'],
+                                                                        d['PASSWORD'], d['HOST'], d['PORT'])
 
         with OGRFieldConverter(connection_string) as datasource:
             return datasource.convert_field(layer, field)
