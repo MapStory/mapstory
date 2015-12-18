@@ -59,6 +59,7 @@ class UploadedLayerResource(ModelResource):
         if isinstance(configuration_options, dict):
             obj.configuration_options = configuration_options
             obj.save()
+            configuration_options = [configuration_options]
 
         if not configuration_options:
             raise ImmediateHttpResponse(response=http.HttpBadRequest('Configuration options missing.'))
