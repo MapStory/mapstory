@@ -676,7 +676,7 @@
         };
 
         $scope.styleChanged = function(layer) {
-            styleUpdater.updateStyle(layer);
+            //styleUpdater.updateStyle(layer);
         };
         $scope.showLoadMapDialog = function() {
             var promise = loadMapDialog.show();
