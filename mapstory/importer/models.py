@@ -62,9 +62,17 @@ def validate_inspector_can_read(value):
             f.write(chunk)
 
     try:
-        data = GDALInspector(filename).open()
+        data = GDALInspector(filename)
+        data.open()
+
+        # Ensure the data has a geometry.
+        for description in data.describe_fields():
+            if description.get('geom_type') in data.INVALID_GEOMETRY_TYPES:
+                raise ValidationError('Unable to find geometry or the geometry type is unsupported.')
+
     except NoDataSourceFound:
         raise ValidationError('Unable to locate geospatial data.')
+
     finally:
         from .tasks import remove_path
         remove_path.delay(os.path.split(filename)[0])

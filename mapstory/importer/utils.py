@@ -27,6 +27,27 @@ DEFAULT_IMPORT_HANDLERS = ['mapstory.importer.import_handlers.FieldConverterHand
 
 IMPORT_HANDLERS = getattr(settings, 'IMPORT_HANDLERS', DEFAULT_IMPORT_HANDLERS)
 
+GDAL_GEOMETRY_TYPES = {
+   0: 'Unknown',
+   1: 'Point',
+   2: 'LineString',
+   3: 'Polygon',
+   4: 'MultiPoint',
+   5: 'MultiLineString',
+   6: 'MultiPolygon',
+   7: 'GeometryCollection',
+   100: 'None',
+   101: 'LinearRing',
+   1 + -2147483648: 'Point',
+   2 + -2147483648: 'LineString',
+   3 + -2147483648: 'Polygon',
+   4 + -2147483648: 'MultiPoint',
+   5 + -2147483648: 'MultiLineString',
+   6 + -2147483648: 'MultiPolygon',
+   7 + -2147483648: 'GeometryCollection',
+   }
+
+
 BASE_VRT = '''
 <OGRVRTDataSource>
     <OGRVRTLayer name="{{name}}">
@@ -214,6 +235,8 @@ class OGRInspector(InspectorMixin):
 
 class GDALInspector(InspectorMixin):
 
+    INVALID_GEOMETRY_TYPES = ['None']
+
     def __init__(self, connection_string, *args, **kwargs):
         self.file = connection_string
         self.data = None
@@ -243,15 +266,18 @@ class GDALInspector(InspectorMixin):
 
     def prepare_csv(self, filename, *args, **kwargs):
         """
-        Adds the <X|Y>_POSSIBLE_NAMES opening options.
+        Adds the <X|Y|GEOM>_POSSIBLE_NAMES opening options.
         """
-        x_possible = ['Lon*', 'x', 'lon*']
-        y_possible = ['Lat*', 'y', 'lat*']
+        x_possible = getattr(settings, 'IMPORT_CSV_X_FIELDS', ['Lon*', 'x', 'lon*'])
+        y_possible = getattr(settings, 'IMPORT_CSV_Y_FIELDS', ['Lat*', 'y', 'lat*'])
+        geom_possible = getattr(settings, 'IMPORT_CSV_GEOM_FIELDS',
+                                ['geom', 'GEOM', 'WKT', 'the_geom', 'THE_GEOM', 'WKB'])
 
         oo = kwargs.get('open_options', [])
 
         oo.append('X_POSSIBLE_NAMES={0}'.format(','.join(x_possible)))
         oo.append('Y_POSSIBLE_NAMES={0}'.format(','.join(y_possible)))
+        oo.append('GEOM_POSSIBLE_NAMES={0}'.format(','.join(geom_possible)))
 
         kwargs['open_options'] = oo
 
@@ -291,6 +317,16 @@ class GDALInspector(InspectorMixin):
 
         return self.data
 
+    @staticmethod
+    def geometry_type(number):
+        """
+        Returns a string of the geometry type based on the number.
+        """
+        try:
+            return GDAL_GEOMETRY_TYPES[number]
+        except KeyError:
+            return
+
     def describe_fields(self):
         """
         Returns a dict of the layers with fields and field types.
@@ -306,7 +342,9 @@ class GDALInspector(InspectorMixin):
             layer_description = {'name': layer.GetName(),
                                  'feature_count': layer.GetFeatureCount(),
                                  'fields': [],
-                                 'index': n}
+                                 'index': n,
+                                 'geom_type': self.geometry_type(layer.GetGeomType())
+            }
 
             layer_definition = layer.GetLayerDefn()
             for i in range(layer_definition.GetFieldCount()):

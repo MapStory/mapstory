@@ -297,6 +297,15 @@ class UploaderTests(MapStoryTestMixin):
         configure_time(self.cat.get_layer(layer.name).resource, attribute=date_field)
         self.generic_time_check(layer, attribute=date_field)
 
+    def test_sitins(self):
+        """
+        Tests the import of US_shootings.csv.
+        """
+
+        filename = 'US_Civil_Rights_Sitins0.csv'
+        f = os.path.join(os.path.dirname(__file__), 'test_ogr', filename)
+        layer = self.generic_import(f, configuration_options=[{'index': 0, 'convert_to_date': ['Date']}])
+
     def get_layer_names(self, in_file):
         """
         Gets layer names from a data source.
@@ -669,6 +678,17 @@ class UploaderTests(MapStoryTestMixin):
 
         with self.assertRaises(ValidationError):
             validate_file_extension(SimpleUploadedFile('test.txt', ''))
+
+    def test_no_geom(self):
+        """
+        Test the file extension validator.
+        """
+
+        with self.assertRaises(ValidationError):
+            validate_inspector_can_read(SimpleUploadedFile('test.csv', 'test,loc\nyes,POINT(0,0)'))
+
+        # This should pass (geom type is unknown)
+        validate_inspector_can_read(SimpleUploadedFile('test.csv', 'test,WKT\nyes,POINT(0,0)'))
 
     def test_numeric_overflow(self):
         """
