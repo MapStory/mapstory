@@ -58,7 +58,7 @@ body{ margin-top:20px; font-size: 14px}
             </div>
             <div class="layer-upload-counts">Showing uploads {[offset]}-{[offset+uploads.length]} of {[totalItems]}.</div>
             <div ng-repeat="upload in uploads">
-                <upload upload-object="upload" i="$index"></upload>
+                <upload upload-object="upload" i="$index" template-url="{{ STATIC_URL }}importer/partials/upload.html"></upload>
             </div>
             <pagination total-items="totalItems" ng-init="init('{{user.username}}')" ng-change="pageChanged()" max-size="7" class="pagination-sm" items-per-page="limit" ng-model="currentPage"></pagination>
         </div>

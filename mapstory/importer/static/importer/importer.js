@@ -7,11 +7,18 @@
       'mapstory.factories'
   ])
 
-  .config(function($interpolateProvider, $httpProvider) {
+  .config(function($interpolateProvider, $httpProvider, $sceDelegateProvider) {
     $interpolateProvider.startSymbol('{[');
     $interpolateProvider.endSymbol(']}');
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    $sceDelegateProvider.resourceUrlWhitelist([
+    // Allow same origin resource loads.
+    'self',
+    // Allow loading from our assets domain.  Notice the difference between * and **.
+    'http://mapstory-static.s3.amazonaws.com/**',
+    'https://mapstory-static.s3.amazonaws.com/**'
+  ]);
   })
 
 
@@ -49,7 +56,9 @@
         return {
           restrict: 'E',
           replace: true,
-          templateUrl: '/static/importer/partials/upload.html',
+          templateUrl: function(elem,attrs) {
+           return attrs.templateUrl || '/static/importer/partials/upload.html'
+          },
           scope: {
               upload: '=uploadObject',
               i: '=' //passes the index of the object, used to delete uploads
