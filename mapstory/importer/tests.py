@@ -465,6 +465,7 @@ class UploaderTests(MapStoryTestMixin):
         self.assertEqual(layer.store, self.datastore.name)
         self.assertEqual(layer.storeType, 'dataStore')
         self.assertTrue(layer.attributes[1].attribute_type, 'xsd:dateTime')
+        self.assertEqual(Layer.objects.all()[0].owner.username, self.non_admin_username)
 
         lyr = self.cat.get_layer(layer.name)
         self.assertTrue('time' in lyr.resource.metadata)
@@ -651,7 +652,7 @@ class UploaderTests(MapStoryTestMixin):
         response = c.get('/importer-api/data-layers/1/')
         self.assertEqual(response.status_code, 200)
 
-        response = c.post('/importer-api/data-layers/1/configure/', data=json.dumps(payload),
+        response = c.post('/importer-api/data-layers/1/configure/', data=json.dumps([payload]),
                           content_type='application/json')
 
         self.assertEqual(response.status_code, 200)

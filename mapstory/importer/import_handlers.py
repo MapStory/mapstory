@@ -65,12 +65,18 @@ class GeoNodePublishHandler(ImportHandler):
     def handle(self, layer, layer_config, *args, **kwargs):
         """
         Adds a layer in GeoNode, after it has been added to Geoserver.
+
+        Handler specific params:
+        "layer_owner": Sets the owner of the layer.
         """
 
         if not self.can_run(layer, layer_config):
             return
 
-        return gs_slurp(workspace='geonode', store=self.store_name, filter=layer)
+        return gs_slurp(workspace='geonode',
+                        store=self.store_name,
+                        filter=layer,
+                        owner=layer_config.get('layer_owner'))
 
 
 class GeoServerTimeHandler(ImportHandler):
