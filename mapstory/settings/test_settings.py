@@ -1,4 +1,9 @@
 from mapstory.settings import *
+DATABASE_PASSWORD = 'foobar'
+DATABASE_HOST = 'localhost'
+OGC_SERVER['default']['PASSWORD'] = 'geoserverer'
+OGC_SERVER['default']['PUBLIC_LOCATION'] = 'http://192.168.56.151/geoserver/'
+LOCAL_CONTENT = False
 
 HAYSTACK_SEARCH = True
 # Avoid permissions prefiltering
