@@ -133,7 +133,7 @@ class EditProfileForm(forms.ModelForm):
     Volunteer_Technical_Community = forms.BooleanField(help_text=_("Join the Volunteer Technical Community"), required=False)
     keywords = taggit.forms.TagField(
         required=False,
-        label='interests',
+        label='Interests',
         help_text=_("A list of personal interests"))
 
     class Meta:
