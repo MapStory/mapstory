@@ -5,7 +5,7 @@ server_root_dir: "{{ top_project }}"
 virtualenv_path: "{{ venv }}"
 project_path: "{{ mapstory_geonode }}"
 
-celery_user: mapstory
+celery_user: www-data
 celery_group: www-data
 
 celery_application_name: mapstory-celery
