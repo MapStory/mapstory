@@ -91,6 +91,7 @@ class UploadedData(models.Model):
 
     class Meta:
         ordering = ['-date']
+        verbose_name_plural = 'Upload data'
 
     STATE_INVALID = 'INVALID'
 
