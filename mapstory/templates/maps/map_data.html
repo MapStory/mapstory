@@ -62,7 +62,7 @@
   </div>
 </div>
 <!-- If the owner is this user, or it is a content moderator, allow them to publish or unpublish the map -->
-{% if content_moderators in user.groups.all or user == resource.owner %}
+{% if user == resource.owner or content_moderator %}
 <hr>
 <div class="row">
   <div class="col-sm-12">

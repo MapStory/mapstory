@@ -895,7 +895,10 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         metadata_form = MetadataForm(instance=layer)
         published_form = PublishStatusForm(instance=layer)
 
-    content_moderators = Group.objects.filter(name='content_moderator').first()
+    content_moderator = False
+    for group in request.user.groups.all():
+        if group.name == 'content_moderators':
+            content_moderator = True
 
     context_dict = {
         "resource": layer,
@@ -907,7 +910,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "keywords_form": keywords_form,
         "metadata_form": metadata_form,
         "published_form": published_form,
-        "content_moderators": content_moderators,
+        "content_moderator": content_moderator,
     }
 
     context_dict["viewer"] = json.dumps(
@@ -985,6 +988,11 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         keywords_form = KeywordsForm(instance=map_obj)
         published_form = PublishStatusForm(instance=map_obj)
 
+    content_moderator = False
+    for group in request.user.groups.all():
+        if group.name == 'content_moderators':
+            content_moderator = True
+
     context_dict = {
         'config': config,
         'resource': map_obj,
@@ -993,6 +1001,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         "documents": get_related_documents(map_obj),
         "keywords_form": keywords_form,
         "published_form": published_form,
+        "content_moderator": content_moderator,
     }
 
     if settings.SOCIAL_ORIGINS:
