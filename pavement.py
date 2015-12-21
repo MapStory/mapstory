@@ -79,9 +79,14 @@ def static():
 
 
 @task
+@cmdopts([
+    ('options=', 'o', 'django collect static options to run')
+])
 @needs('static')
-def collect_static():
-    sh('python manage.py collectstatic --link --noinput --ignore node_modules')
+def collect_static(options):
+    opts = options.get('options', '--link --noinput --ignore node_modules')
+    cmd = 'python manage.py collectstatic %s' % opts
+    sh(cmd)
 
 
 @cmdopts([
