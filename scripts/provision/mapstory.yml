@@ -12,7 +12,7 @@
   tags: [config]
 
 - name: mapstory checkout
-  git: repo=git://github.com/MapStory/mapstory.git dest={{ top_project }}
+  git: repo=git://github.com/MapStory/mapstory.git dest={{ top_project }} force=yes
   tags: [git]
 
 - name: mapstory branch
@@ -86,14 +86,6 @@
 #  # would use django_manage but no way to avoid initial data?
 #  shell: . {{ venv_activate }} && python manage.py rebuild_index chdir={{ mapstory_geonode }}
 #  tags: [setup]
-
-- name: init maploom
-  command: paver build_maploom --init chdir=/srv/git/mapstory
-  tags: [setup]
-
-- name: update maploom
-  command: paver build_maploom chdir=/srv/git/mapstory
-  tags: [update]
 
 - name: collect-static
   # while we could use django_manage, this does a bit more
