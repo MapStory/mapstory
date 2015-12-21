@@ -10,8 +10,45 @@
 {% block body_class %}people explore{% endblock %}
 
 {% block extra_head %}
-<link href="{{ STATIC_URL }}mapstory/css/profile.css" rel="stylesheet" />
-<link href="{{ STATIC_URL }}mapstory/css/search.css" rel="stylesheet" />
+<link href="{{ STATIC_URL }}mapstory/css/profile.css" rel="stylesheet" xmlns="http://www.w3.org/1999/html"/>
+    <link href="{{ STATIC_URL }}mapstory/css/search.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}importer/css/angular-wizard.min.css">
+    <style>
+body{ margin-top:20px; font-size: 14px}
+.glyphicon { margin-right:5px;}
+.section-box h2 { margin-top:0px;}
+.section-box h2 a { font-size:15px; }
+.glyphicon-heart { color:#e74c3c;}
+.glyphicon-comment { color:#27ae60;}
+.separator { padding-right:5px;padding-left:5px; }
+.section-box hr {margin-top: 0;margin-bottom: 5px;border: 0;border-top: 1px solid rgb(199, 199, 199);}
+.import-options-form { margin-top: 20px;}
+.import-options-form .form-group {margin-bottom:4px; font-size: 13px;}
+.import-options-form .control-label {font-weight: 600;}
+.clrs-red {color:#FF4136;}
+.user-data-metadata {font-size: 12px;}
+.user-data-story-layers-list {font-size: 13px;}
+.user-data-story-layer-actions {font-size: 13px; margin-top: 20px;}
+.light-bold {font-weight: 600;}
+.import-title{font-size: 14px;}
+.section-box-subtitle {margin-top: -4px;}
+.import-head {cursor: pointer;}
+.import-options {margin-left: 15px;}
+.importer-layer-name {word-wrap: break-word;}
+.layer-in-upload {background-color: #DCDCDC; padding: 8px; margin-top: 20px; border-radius: 3px;}
+.layer-upload-field {font-size: 13px; margin-top: 15px;}
+.layer-upload-name { padding: 4px; }
+.layer-upload-field-name { font-weight: 600; }
+.layer-upload-details { font-size: 13px; }
+.layer-upload-counts {margin-bottom: 6px;}
+.layer-upload-field {max-height: 200px; overflow-y: scroll;}
+.import-wizard-button { margin: 30px 0 10px 0;}
+.import-wizard-image {height: 100px;}
+.steps-indicator {font-size: 12px; margin-top: 46px}
+.import-wizard-icon {float: right; height: 40px; margin-top:-5px; opacity: .8}
+.import-wizard-error-list{margin-top: 5px; padding-left: 0px}
+</style>
+
 {% endblock %}
 
 {% block body %}
@@ -19,65 +56,31 @@
         <div id="paralaxSlice1" data-stellar-background-ratio="0.5" style="background-position: 50% 25px;">
 <div class="maskParent">
     <div class="paralaxMask"></div>
-<div class="paralaxText container" style="text-align:left;padding-bottom:0">
-								<div class="row">
-									<div class="col-sm-1">
-										  <img class="img-circle" src="{% avatar_url profile 75 %}" width="75" height="75" style="margin-top:55px;margin-bottom:0px"/>
+    <div class="paralaxText container" style="text-align:left;padding-bottom:0">
+        <div class="row">
+            <div class="col-sm-1">
+              <img class="img-circle" src="{% avatar_url profile 75 %}" width="75" height="75" style="margin-top:55px;margin-bottom:0px"/>
+            </div>
+            <div class="col-sm-6">
+                <div style="padding:60px 0px 0px 10px;">
+                    <h1 style="font-size:3em">{{ profile.name_long }}</h1>
+                    <h1 style="font-size:1.1em;">
+                    {% if profile.position %}
+                        <span>{{ profile.position }}, </span>
+                    {% endif %}
+                    {% if profile.organization %}
+                        <span>{{ profile.organization }}</span>
+                    {% endif %}
 
-									</div>
-									<div class="col-sm-6">
-										<div style="padding:60px 0px 0px 10px;">
-											<h1 style="font-size:3em">{{ profile.name_long }}</h1>
-											<h1 style="font-size:1.1em;">
-										    {% if profile.position %}
-                                                <span>{{ profile.position }}, </span>
-                                            {% endif %}
-                                            {% if profile.organization %}
-                                                <span>{{ profile.organization }}</span>
-                                            {% endif %}
+                    {% if profile.location %}
+                        <span>{{ profile.location }}</span>
+                    {% endif %}
+                    </h1>
+                </div>
+            </div>
 
-                                            {% if profile.location %}
-                                                <span>{{ profile.location }}</span>
-                                            {% endif %}
-                                            </h1>
-										</div>
-									</div>
-									<div class="col-sm-5">
-                                        <!-- This shouldn't be here -->
-                                        <!-- 
-										<div class="row" style="padding:80px 0px 10px 10px;">
-
-                                       {% if user == profile %}
-
-                                        <div class="col-sm-4">
-										<a class="btn btn-sm btn-block" href="{% url "profile_edit" user.username %}" style="font-size:0.9em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
-											edit my profile
-										</a>
-										</div>
-										<div class="col-sm-4">
-										<a class="btn btn-sm btn-block" href="{% url "new_map" %}" style="font-size:0.9em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
-											create a mapstory
-										</a>
-										</div>
-										<div class="col-sm-4">
-										<a class="btn btn-sm btn-block" href="{% url "layer_upload" %}" style="font-size:0.9em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
-											upload storylayer
-										</a>
-										</div>
-
-                                         {% else %}
-
-										<div class="col-sm-4 col-sm-offset-8">
-										<a class="btn btn-sm btn-block" style="font-size:1em;background-color:transparent;color:white;border:1px solid white;" title="" href="#" target="blank">
-											+ follow
-										</a>
-									    </div>
-
-                                         {% endif %}
-								        </div> -->
-									</div>
-							</div>
-						</div>
+        </div>
+    </div>
 </div>
 <!--article id="profile-banner">
     <div class="row">
@@ -143,7 +146,7 @@
                 <a href="{% url "account_password" %}">{% trans "change password" %}</a>
             </div>
             <div class="sidebar-content">
-                <a href="{% url "layer_upload" %}">{% trans "upload storylayer" %}</a>
+                <a ng-controller="ModalDemoCtrl" style="cursor: pointer" ng-click="open(null, null, '{{ STATIC_URL }}/importer/partials/uploadModal.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png')">{% trans "upload storylayer" %}</a>
             </div>
             <div class="sidebar-content">
                 <a href="{% url "new_map" %}">{% trans "create a mapstory" %}</a>
@@ -185,21 +188,11 @@
 
             <!-- tags and interests -->
             {% if profile.keyword_list %}
-            <div class="sidebar-header"><h3>tags & interests </h3></div>
-            {% for keyword in profile.keyword_list %}
-            <div class="label label-tags">{{ keyword }}</div>
-            {% endfor %}
+                <div class="sidebar-header"><h3>tags & interests </h3></div>
+                {% for keyword in profile.keyword_list %}
+                    <div class="label label-tags">{{ keyword }}</div>
+                {% endfor %}
             {% endif %}
-
-            <!-- what is this part?
-            {% if object.email %}
-                <dt><i class="fa fa-envelope-o"></i></dt>
-                <dd>
-                    <a href="mailto:{{ object.email }}">{{ object.email }}</a>
-                </dd>
-            {% endif %}
-
-            -->
         </div>
 
         <div class="col-sm-10" style="border-left: 1px solid gainsboro">
@@ -218,10 +211,17 @@
                         </li>
                         {% if user == profile %}
                         <li>
+                            <a href="#uploads_list" data-toggle="tab">
+                                <div class="counter"><span ng-bind="totalItems"></span></div>
+                                Uploads
+                            </a>
+                        </li>
+                        <li>
                             <a href="#messages_list" data-toggle="tab">
                                 <div class="counter">{{ inbox_count }}</div>
                                 Messages </a>
                         </li>
+
                         {% endif %}
                         <li>
                             <a href="#user_activities" data-toggle="tab">
@@ -263,6 +263,30 @@
                                 </ul>
                             </div>
                         </div>
+
+                        <div class="tab-pane" id="uploads_list">
+                            <div class="no-content" ng-hide="uploads.length">
+                                <h2>No Uploads.</h2>
+                                <h4><a ng-controller="ModalDemoCtrl" style="cursor: pointer" ng-click="open(null, null, '{{ STATIC_URL }}/importer/partials/uploadModal.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png')">Click here</a> to upload your data!.</h4>
+                            </div>
+                            <div class="" ng-show="uploads.length">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div ng-show="loading" style="margin-right: 50%; margin-left: 50%; margin-top: 30px; margin-bottom: 30px">
+                                                <i class="fa fa-spinner fa-spin fa-3x"></i>
+                                            </div>
+                                            <div class="layer-upload-counts">Showing uploads {[offset]}-{[offset+uploads.length]} of {[totalItems]}.</div>
+                                            <div ng-repeat="upload in uploads">
+                                                <upload upload-object="upload" i="$index" template-url="{{ STATIC_URL }}importer/partials/upload.html"></upload>
+                                            </div>
+                                            <uib-pagination total-items="totalItems" ng-init="init('{{user.username}}')" ng-change="pageChanged()" max-size="7" class="pagination-sm" items-per-page="limit" ng-model="currentPage"></uib-pagination>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="tab-pane" id="messages_list">
 
                             {% if not inbox_count %}
@@ -400,6 +424,15 @@ WHAT IS THIS PART?!-->
   {% endif %}
 <script src="{{ STATIC_URL }}lib/js/angular.js"></script>
 <script src="{{ STATIC_URL }}mapstory/js/profile.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}importer/js/angular-resource.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}importer/js/underscore-min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}importer/js/ui-bootstrap-tpls-0.14.2.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}importer/js/angular-cookies.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}importer/js/angular-wizard.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}importer/factories.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}importer/js/angular-file-upload.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}importer/importer.js"></script>
+
   <script type="text/javascript">
     HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
     HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
@@ -410,7 +443,7 @@ WHAT IS THIS PART?!-->
           SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}?owner__username__in={{profile.username}}';
       {% endif %}
       
-      var module = angular.module('search', ['profile_search']);
+      var module = angular.module('search', ['profile_search', 'mapstory.uploader']);
       module.constant('Configs', {
         url: SEARCH_URL
       });

@@ -155,7 +155,6 @@ class UploaderTests(MapStoryTestMixin):
         self.assertEqual(date_attr.attribute_type, 'xsd:dateTime')
         self.generic_time_check(layer, attribute=date_attr.attribute)
 
-
     def test_boxes_with_date_csv(self):
         """
         Tests a CSV with WKT polygon.
@@ -393,6 +392,23 @@ class UploaderTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertIn('file', response.context_data['form'].errors)
 
+    def test_file_add_view_as_json(self):
+        """
+        Tests the file_add_view.
+        """
+        f = os.path.join(os.path.dirname(__file__), 'test_ogr', 'point_with_date.geojson')
+        c = AdminClient()
+        c.login_as_non_admin()
+
+        with open(f) as fp:
+            print fp
+            response = c.post(reverse('uploads-new-json'), {'file': fp}, follow=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('application/json', response.get('Content-Type', ''))
+        content = json.loads(response.content)
+        self.assertEqual(content, {'state': 'UPLOADED', 'id': 1})
+
     def test_describe_fields(self):
         """
         Tests the describe fields functionality.
@@ -453,6 +469,7 @@ class UploaderTests(MapStoryTestMixin):
                           content_type='application/json')
 
         self.assertTrue(response.status_code, 200)
+
         layer = Layer.objects.all()[0]
         self.assertEqual(layer.srid, 'EPSG:4326')
         self.assertEqual(layer.store, self.datastore.name)
@@ -560,7 +577,6 @@ class UploaderTests(MapStoryTestMixin):
         body = json.loads(response.content)
         self.assertEqual(len(body['objects']), 1)
 
-
     def test_layer_list_api(self):
         c = AdminClient()
         response = c.get('/importer-api/data-layers/')
@@ -613,6 +629,7 @@ class UploaderTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 204)
 
         self.assertEqual(UploadedData.objects.all().count(), 0)
+
 
     def naming_an_import(self):
         """

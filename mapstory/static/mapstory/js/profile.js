@@ -2,7 +2,9 @@
 
 (function(){
 
-  var module = angular.module('profile_search', [], function($locationProvider) {
+  var module = angular.module('profile_search', [
+      'mapstory.uploader'
+  ], function($locationProvider) {
       if (window.navigator.userAgent.indexOf("MSIE") == -1){
           $locationProvider.html5Mode({
             enabled: true,
@@ -19,11 +21,47 @@
   * Load data from api and defines the multiple and single choice handlers
   * Syncs the browser url with the selections
   */
-  module.controller('profile_search_controller', function($injector, $scope, $location, $http, Configs){
+  module.controller('profile_search_controller', function($injector, $scope, $location, $http, Configs,
+                                                          UploadedData, $rootScope){
     $scope.query = $location.search();
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
     $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
+    $scope.uploads = [];
+    $scope.loading = true;
+    $scope.currentPage = 0;
+    $scope.offset = 0;
+    $scope.limit = 10;
+
+    $scope.init = function(user) {
+      getUploads({offset: $scope.offset, limit: $scope.limit, user__username: user});
+    };
+
+    $scope.pageChanged = function() {
+      $scope.offset = ($scope.currentPage - 1) * $scope.limit;
+      var query = {offset: $scope.offset, limit: $scope.limit};
+      getUploads(query);
+    };
+
+    function getUploads(query) {
+
+        if (query == null) {
+            query = {offset: $scope.offset, limit: $scope.limit, user__username: $scope.user}
+        }
+
+        UploadedData.query(query).$promise.then(function(data) {
+            $scope.uploads = data.objects;
+            $scope.offset = data.meta.offset;
+            $scope.totalItems = data.meta.total_count;
+            $scope.loading = false;
+        });
+    }
+
+    $rootScope.$on('upload:complete', function(event, args) {
+        if (args.hasOwnProperty('id')) {
+            getUploads();
+        }
+    });
 
     $scope.search = function() {
       $scope.query.limit = 100;

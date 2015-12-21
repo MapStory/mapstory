@@ -73,6 +73,7 @@ from account.conf import settings as account_settings
 from account.models import EmailConfirmation
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
+from importer.forms import UploadFileForm
 
 from lxml import etree
 import json
@@ -186,6 +187,8 @@ class ProfileDetail(DetailView):
         ctx['threads_all'] = Thread.ordered(Thread.objects.inbox(self.object))
         ctx['threads_unread'] = Thread.ordered(Thread.objects.unread(self.object))
         ctx['action_list'] = actor_stream(ctx['profile'])
+        # need to render the form
+        ctx['form'] = UploadFileForm()
 
         return ctx
 

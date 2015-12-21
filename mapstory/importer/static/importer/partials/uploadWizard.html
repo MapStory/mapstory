@@ -1,0 +1,97 @@
+<div class="modal-header">
+        <h3 class="modal-title">Create a StoryLayer<img class="import-wizard-icon" ng-src="{[modalImage]}"/></h3>
+</div>
+<div class="modal-body row">
+    <div class="col-sm-12 col-md-12 col-lg-12" style="padding-top: 5px; padding-left: 2px; text-align:center">
+        <wizard on-finish="importLayer()">
+
+        <wz-step title="Name">
+            <h3><strong>Name your StoryLayer</strong></h3>
+            <p>Descriptive layer names make it easy for others to find your data.</p>
+            <form name="importOptionsForm" class="form-horizontal import-options-form">
+                <div class="form-group">
+                    <input id="layerName" type="text" class=input-lg ng-model="layer.configuration_options.name">
+                </div>
+
+                <div class="import-wizard-button">
+                    <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+                </div>
+            </form>
+        </wz-step>
+
+        <wz-step title="Enable Time?" canexit="layer.configuration_options.configureTime || false">
+            <img class="import-wizard-image" src="/static/mapstory/img/time.png"/>
+            <h3><strong>Confirm dataset has time attributes</strong></h3>
+            <p>All datasets uploaded to MapStory must contain time information. If the dataset contains only one timeslice, add a column indicating the timeslice. Learn more about Time Attributes.</p>
+
+            <div class="btn-group">
+                <label class="btn btn-success" ng-model="layer.configuration_options.configureTime" uib-btn-radio="true" uncheckable>Yes</label>
+                <label class="btn" ng-model="layer.configuration_options.configureTime" uib-btn-radio="false" uncheckable>No</label>
+            </div>
+
+
+            <div class="import-wizard-button">
+                <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+            </div>
+
+        </wz-step>
+
+        <wz-step title="Configure time" wz-disabled="{[timeEnabled(true)]}">
+            <h3><strong>Configure your time attributes:</strong></h3>
+            <form name="importOptionsForm" class="form-horizontal import-options-form">
+                <p>All datasets uploaded to MapStory must contain time information. If the dataset contains only one timeslice, add a column indicating the timeslice. Learn more about Time Attributes.</p>
+                    <div class="form-group">
+                        <label for="start_date" class="col-sm-4 col-xs-4 col-md-4 control-label">Date field (start date):</label>
+                        <select ng-model="layer.configuration_options.start_date" class="col-md-5 col-xs-5 col-sm-5 input-md" id="start_date" ng-required='layer.configuration_options'>
+                            <option value="" ng-selected="'' == layer.configuration_options.start_date">--Please select a field--</option>
+                            <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.start_date" value="{[option.name]}">{[option.name]}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="end_date" class="col-sm-4 col-xs-4 col-md-4 control-label">Optional end date field:</label>
+                        <select ng-model="layer.configuration_options.end_date" class="col-md-5 col-xs-5 col-sm-5 input-md" id="end_date">
+                            <option value="" ng-selected="'' == layer.configuration_options.end_date">--Please select a field--</option>
+                            <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.end_date" value="{[option.name]}">{[option.name]}</option>
+                        </select>
+                    </div>
+                <div class="import-wizard-button">
+                <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+            </div>
+            </form>
+        </wz-step>
+        <wz-step title="Permissions">
+            <img class="import-wizard-image" canexit="permission_clicked" src="/static/mapstory/img/edit.png"/>
+            <h3><strong>Allow other users to edit this data?</strong></h3>
+            <p>StoryLayers are better when multiple authors work together.  Would you like to enable editing?</p>
+            <div class="btn-group">
+                <label class="btn btn-success" ng-click="permission_clicked=true" ng-model="layer.configuration_options.permissions" uib-btn-radio="{'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}}" uncheckable>Yes</label>
+                <label class="btn" ng-click="permission_clicked=true" ng-model="layer.configuration_options.permissions" uib-btn-radio="{'users':{'AnonymousUser':['download_resourcebase', 'view_resourcebase']}}" uncheckable>No</label>
+            </div>
+            <div class="import-wizard-button">
+                <button class="btn" type="submit" wz-next ng-class="{'disabled': !permission_clicked}" value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+            </div>
+        </wz-step>
+        <wz-step title="Import">
+            <h3><strong>Ok, we're ready to create the StoryLayer!</strong></h3>
+            <p>Click below to create your StoryLayer</p>
+            <div>
+                <div style="color:#3D9970; font-weight: 400;" ng-show="success">The import has finished successfully. View the <a href="{[layer.geonode_layer.url]}" style="font-weight: 600" target="_self">StoryLayer</a>.</div>
+                <div style="color:#FF4136; font-weight: 400;" ng-show="errors">StoryLayer creation has failed.  Please adjust your configuration and try again.</div>
+            </div>
+            <div class="import-wizard-button">
+                <i class="fa fa-spinner fa-spin fa-3x" ng-show="processing"></i>
+                <button class="btn" ng-show="!processing && !success" type="submit" wz-next value="Continue">Create my StoryLayer <i class="fa fa-arrow-circle-right"></i></button>
+            </div>
+            <div>
+                <ul class="import-wizard-error-list" ng-show="errorMessages">
+                    <li style="color:#FF4136; font-weight: 600;list-style-type:none; font-size: 13px" ng-repeat="error in errorMessages">{[error]}</li>
+                </ul>
+            </div>
+
+        </wz-step>
+    </wizard>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Close</button>
+</div>

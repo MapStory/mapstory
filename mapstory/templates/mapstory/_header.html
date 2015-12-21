@@ -61,7 +61,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url "uploads-new" %}"><i class="fa fa-cloud-upload"></i> {% trans "Upload StoryLayers" %}</a></li>
-                        <li><a href="{% url "uploads-list" %}"><i class="fa fa-cloud-upload"></i> {% trans "Your Data" %}</a></li>
+                        <li><a href="{% url "profile_detail" slug=user.username %}"><i class="fa fa-cloud-upload"></i> {% trans "Your Data" %}</a></li>
                         <li class="divider"></li>
                         <li><a href="{% url "profile_detail" slug=user.username %}"><i class="fa fa-user"></i> {% trans "Profile" %}</a></li>
                         <li><a href="{% url "recent-activity" %}"><i class="fa fa-fire"></i> {% trans "Recent Activity" %}</a></li>

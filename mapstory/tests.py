@@ -361,6 +361,7 @@ class MapStoryTests(MapStoryTestMixin):
         # Regardless of email content used, ensure it personally addresses the user
         self.assertTrue(user.username in mail.outbox[1].body or user.first_name in mail.outbox[1].body)
 
+
 class Oauth2ProviderTest(TestCase):
 
     fixtures = ['test_user_data.json']
@@ -422,6 +423,40 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
 
         response = c.get(reverse('layer_metadata', args=[layer.typename]))
         self.assertEqual(response.status_code, 200)
+
+    def test_geonode_authorize_layer(self):
+        authorize_layer = os.path.join(os.path.split(__file__)[0],os.pardir,
+                                    'scripts/provision/roles/db/files/geonode_authorize_layer.sql')
+
+        if not os.path.exists(authorize_layer):
+            self.skipTest('Authorize layer function does not exist.')
+
+        layer = Layer.objects.first()
+        from django.db import connection
+        cursor = connection.cursor()
+
+        def geonode_authorize_layer(username, typename):
+            cursor.execute("select geonode_authorize_layer(%s, %s)", [username, typename])
+            return cursor.fetchone()[0]
+
+        # Create the authorize layer function
+        with open(authorize_layer, 'rb') as sql:
+            cursor.execute(sql.read())
+
+        self.assertEqual(geonode_authorize_layer('admin', layer.typename), 'su-rw')
+        self.assertEqual(geonode_authorize_layer('user1', layer.typename), 'lo-rw')
+
+        anon = User.objects.get(username='AnonymousUser')
+        perms = layer.get_all_level_info()
+        perms['users']['AnonymousUser'] = ['change_layer_data']
+        layer.set_permissions(perms)
+        print layer.get_all_level_info()
+        self.assertEqual(geonode_authorize_layer('AnonymousUser', layer.typename), 'lo-rw')
+
+
+
+
+
 
 
 

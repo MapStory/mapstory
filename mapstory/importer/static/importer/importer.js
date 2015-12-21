@@ -1,10 +1,18 @@
 'use strict';
 
 (function() {
+
+  var httpService_ = null;
+  var layerService_ = null;
+  var q_ = null;
+
   angular.module('mapstory.uploader', [
       'ngResource',
       'ui.bootstrap',
-      'mapstory.factories'
+      'mapstory.factories',
+      'angularFileUpload',
+      'ngCookies',
+      'mgo-angular-wizard'
   ])
 
   .config(function($interpolateProvider, $httpProvider, $sceDelegateProvider) {
@@ -21,8 +29,96 @@
   ]);
   })
 
+  .provider('layerService', function() {
 
-  .controller('uploadList', function($scope, UploadedData) {
+    this.$get = function($http, $q) {
+      httpService_ = $http;
+      q_ = $q;
+      layerService_ = this;
+      return this;
+    };
+
+    this.validateConfigurationOptions = function(layer) {
+      layer.configuration_options = layer.configuration_options || {};
+
+      if (!layer.hasOwnProperty('index') === true) {
+          layer['index'] = index;
+      }
+
+      var checkStartDate = layer.configuration_options.hasOwnProperty('start_date') && layer.configuration_options.start_date != "";
+      var checkEndDate = layer.configuration_options.hasOwnProperty('end_date') && layer.configuration_options.end_date != "";
+      var dates = [];
+      layer.configuration_options.convert_to_date = [];
+
+      if ((checkStartDate === true || checkEndDate == true)
+          && layer.configuration_options.configureTime === true) {
+          for (var i = 0; i < layer.fields.length; i++) {
+
+              var fieldType = layer.fields[i]['type'];
+                if (fieldType === 'Date' || fieldType === 'DateTime') {
+                    dates.push(layer.fields[i]['name']);
+                }
+          }
+
+          if (checkStartDate === true && dates.indexOf(layer.configuration_options['start_date']) == -1) {
+            layer.configuration_options.convert_to_date.push(layer.configuration_options['start_date']);
+          }
+
+          if (checkEndDate === true && dates.indexOf(layer.configuration_options['end_date']) == -1) {
+            layer.configuration_options.convert_to_date.push(layer.configuration_options['end_date']);
+          }
+      } else {
+          layer.configuration_options['start_date'] = null;
+          layer.configuration_options['end_date'] = null;
+        }
+
+      return layer;
+
+    };
+
+    this.configureUpload = function(layer) {
+      var deferredResponse = q_.defer();
+      this.validateConfigurationOptions(layer);
+      httpService_.post(layer.resource_uri + 'configure/', layer.configuration_options).success(function(data, status) {
+        // extend current object with get request to resource_uri
+        deferredResponse.resolve(layerService_.update(layer));
+      }).error(function(data, status) {
+          var error = 'Error configuring layer.';
+          if (data.hasOwnProperty('error_message')) {
+              error = data.error_message;
+          }
+          deferredResponse.reject(error, data, status);
+        });
+      return deferredResponse.promise;
+    };
+
+    this.layerFailure = function(layer) {
+        return layer.status === 'FAILURE';
+      };
+
+    this.layerSuccessful = function(layer) {
+      return layer.status === 'SUCCESS';
+    };
+
+    this.layerProcessing = function(layer) {
+      return layer.status === 'PENDING' || layer.status === 'STARTED';
+    };
+
+    this.layerComplete = function(layer) {
+      return layerService_.layerSuccessful(layer) || layerService_.layerFailure(layer);
+    };
+
+    this.update = function(layer) {
+      var deferredResponse = q_.defer();
+      httpService_.get(layer.resource_uri).success(function(data, status) {
+            deferredResponse.resolve(angular.extend(layer, data));
+        });
+      return deferredResponse.promise;
+    };
+
+  })
+
+  .controller('uploadList', function($scope, UploadedData, $rootScope) {
     $scope.uploads = [];
     $scope.loading = true;
     $scope.currentPage = 0;
@@ -31,6 +127,11 @@
 
 
     function getUploads(query) {
+
+        if (query == null) {
+            query = {offset: $scope.offset, limit: $scope.limit, user__username: $scope.user}
+        }
+
         UploadedData.query(query).$promise.then(function(data) {
             $scope.uploads = data.objects;
             $scope.offset = data.meta.offset;
@@ -40,8 +141,15 @@
     }
 
     $scope.init = function(user) {
-      getUploads({offset: $scope.offset, limit: $scope.limit, user__username: user});
+      $scope.user = user;
+      getUploads();
     };
+
+    $rootScope.$on('upload:complete', function(event, args) {
+        if (args.hasOwnProperty('id')) {
+            getUploads();
+        }
+    });
 
     $scope.pageChanged = function() {
       $scope.offset = ($scope.currentPage - 1) * $scope.limit;
@@ -50,6 +158,171 @@
     };
 
    })
+  .controller('ImportController', function ($scope, $uibModal, $log) {
+
+      $scope.errors = [];
+      $scope.animationsEnabled = true;
+
+      $scope.open = function (layer, templateUrl, modalImage) {
+
+        var modalInstance = $uibModal.open({
+          animation: $scope.animationsEnabled,
+          templateUrl: templateUrl || 'importWizard.html',
+          controller:  'WizardController',
+          //size: size,
+          resolve: {
+            layer: function () {
+              return layer;
+            },
+            modalImage: function () {
+              return modalImage;
+            }
+          }
+        });
+
+        modalInstance.result.then(function (selectedItem) {
+          $scope.selected = selectedItem;
+        }, function () {
+          $log.info('Modal dismissed at: ' + new Date());
+        });
+      };
+
+      $scope.toggleAnimation = function () {
+        $scope.animationsEnabled = !$scope.animationsEnabled;
+      };
+
+  })
+
+  .controller('WizardController', function ($scope, $modalInstance, layer, layerService, $interval, modalImage) {
+      $scope.layer = layer;
+      $scope.errors = false;
+      $scope.errorMessages = [];
+      $scope.modalImage = modalImage;
+      var stop;
+
+      if ($scope.layer.hasOwnProperty('name') && !($scope.layer.configuration_options.hasOwnProperty('name'))) {
+       $scope.layer.configuration_options.name = $scope.layer.name;
+      }
+
+      $scope.timeEnabled = function(string) {
+
+        if (layer.configuration_options.configureTime !== true) {
+         //Angular wizard 'wz-disabled' disables a wizard screen when it receives 'true' (string) as a value.
+         if (string === true) {
+          return 'true';
+         }
+          return true;
+        }
+      };
+
+      $scope.ok = function () {
+        $modalInstance.dismiss('cancel');
+      };
+
+      $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+      };
+
+      $scope.stopPolling = function() {
+          if (angular.isDefined(stop)) {
+            $interval.cancel(stop);
+            stop = undefined;
+          }
+        };
+
+      $scope.importLayer = function () {
+        // Stop if we're already polling
+        if (angular.isDefined(stop)) {
+          return;
+        }
+        $scope.processing = true;
+        layerService.configureUpload(layer).then(function(newLayer) {
+          stop = $interval(function() {
+              layerService.update(newLayer).then(function(updatedLayer){
+                if (layerService.layerComplete(updatedLayer)) {
+                    $scope.stopPolling();
+                    $scope.processing = false;
+                    $scope.errors = layerService.layerFailure(updatedLayer);
+                    $scope.success = layerService.layerSuccessful(updatedLayer);
+                }
+              })
+          }, 2000);
+          },function(reason) {
+          $scope.errors = true;
+          $scope.errorMessages.push(reason);
+          $scope.processing = false;
+        });
+      }
+
+    })
+
+  .controller('ModalDemoCtrl', function ($scope, $uibModal, $log) {
+
+      $scope.errors = [];
+      $scope.animationsEnabled = true;
+
+      $scope.open = function (size, controller, templateUrl, modalImage) {
+
+        var controller = controller || 'UploaderController';
+        var templateUrl = templateUrl || 'myModalContent.html';
+
+        var modalInstance = $uibModal.open({
+          animation: $scope.animationsEnabled,
+          templateUrl: templateUrl,
+          controller: controller,
+          size: size,
+          resolve: {
+            errors: function () {
+              return $scope.errors;
+            },
+            modalImage: function() {
+                return modalImage;
+            }
+          }
+        });
+      };
+
+      $scope.toggleAnimation = function () {
+        $scope.animationsEnabled = !$scope.animationsEnabled;
+      };
+
+  })
+
+    .controller('UploaderController', function ($scope, $modalInstance, errors, FileUploader, $cookies, $rootScope,
+                                                modalImage) {
+      $scope.errors = errors;
+      $scope.uploadSuccessful = false;
+      $scope.modalImage = modalImage;
+      $scope.uploader = new FileUploader({'url': '/uploads/new/json',
+          autoUpload: true,
+          headers:{'X-CSRFToken': $cookies['csrftoken']},
+          removeAfterUpload: true
+      });
+
+      $scope.reset = function() {
+          $scope.errors = [];
+          $scope.uploadSuccessful = false;
+      };
+
+      $scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
+        $scope.reset();
+        if (response.hasOwnProperty('errors')) {
+          $scope.uploadSuccessful = false;
+          $scope.errors = response.errors;
+        } else {
+          $scope.uploadSuccessful = true;
+          $rootScope.$broadcast('upload:complete', response);
+        }
+      };
+
+      $scope.ok = function () {
+        $modalInstance.dismiss('cancel');
+      };
+
+      $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+      };
+    })
 
   .directive('upload',
       function($http, UploadedData) {
@@ -202,6 +475,7 @@
 
 
               scope.configureUpload = function() {
+                  alert('what');
                   scope.configuring = true;
                   validateImportOptions();
                   $http.post(scope.layer.resource_uri + 'configure/', scope.layer.configuration_options).success(function(data, status) {

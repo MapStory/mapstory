@@ -34,13 +34,8 @@ body{ margin-top:20px; font-size: 14px}
 {% endblock %}
 
 {% block extra_script %}
-
-<script type="text/javascript" src="{{STATIC_URL}}importer/js/angular.js"></script>
-<script type="text/javascript" src="{{STATIC_URL}}importer/js/angular-resource.js"></script>
-<script type="text/javascript" src="{{STATIC_URL}}importer/js/ui-bootstrap-tpls.js"></script>
-<script type="text/javascript" src="{{STATIC_URL}}importer/factories.js"></script>
-<script type="text/javascript" src="{{STATIC_URL}}importer/importer.js"></script>
-{{ block.super }}
+    {% include 'importer/_importer_scripts.html' %}
+    {{ block.super }}
 {% endblock %}
 
 {% block body_outer %}

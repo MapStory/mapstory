@@ -2,7 +2,7 @@ import json
 from tastypie.fields import IntegerField, DictField, ListField, CharField, ToManyField, ForeignKey
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
-from .models import UploadedData, UploadLayer
+from .models import UploadedData, UploadLayer, UploadFile
 from tastypie.authentication import SessionAuthentication
 from tastypie.authorization import DjangoAuthorization, Authorization
 from tastypie.utils import trailing_slash
@@ -123,3 +123,40 @@ class UploadedDataResource(ModelResource):
             return queryset.filter(user=request.user)
 
         return queryset
+
+
+class MultipartResource(object):
+
+    def deserialize(self, request, data, format=None):
+
+        if not format:
+            format = request.META.get('CONTENT_TYPE', 'application/json')
+
+        if format == 'application/x-www-form-urlencoded':
+            return request.POST
+
+        if format.startswith('multipart/form-data'):
+            multipart_data = request.POST.copy()
+            multipart_data.update(request.FILES)
+            return multipart_data
+
+        return super(MultipartResource, self).deserialize(request, data, format)
+
+    def put_detail(self, request, **kwargs):
+        if request.META.get('CONTENT_TYPE', '').startswith('multipart/form-data') and not hasattr(request, '_body'):
+            request._body = ''
+        return super(MultipartResource, self).put_detail(request, **kwargs)
+
+    def patch_detail(self, request, **kwargs):
+        if request.META.get('CONTENT_TYPE', '').startswith('multipart/form-data') and not hasattr(request, '_body'):
+            request._body = ''
+        return super(MultipartResource, self).patch_detail(request, **kwargs)
+
+
+class UploadedFileResource(MultipartResource, ModelResource):
+
+    class Meta:
+        queryset = UploadFile.objects.all()
+        authentication = SessionAuthentication()
+        allowed_methods = ['put']
+        resource_name = 'file-upload'
