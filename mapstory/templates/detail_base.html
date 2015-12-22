@@ -1,5 +1,5 @@
 {% load i18n %}
-{% load comments %}
+{% load threadedcomments_tags %}
 {% load fluent_comments_tags %}
 {% load agon_ratings_tags %}
 {% load bootstrap_tags %}
@@ -59,7 +59,7 @@
               {% get_comment_count for resource as num_comments %}
               {{ num_comments }} comments
               {% if user.is_authenticated %}
-              {% render_comment_form for resource %}
+                {% render_comment_form for resource %}
               {% endif %}
               {% render_comment_list for resource %}
             </article>

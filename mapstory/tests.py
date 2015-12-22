@@ -15,8 +15,9 @@ from geonode.layers.populate_layers_data import create_layer_data
 from mapstory.models import Community, DiaryEntry
 from geonode.people.models import Profile
 import json
-
+from geonode.geoserver.helpers import gs_catalog
 from mapstory.export import export_via_model
+from socket import error as socket_error
 
 User = get_user_model()
 
@@ -391,29 +392,36 @@ class Oauth2ProviderTest(TestCase):
         account = json.loads(resp.content)
         self.assertEqual(int(account['id']), self.bobby.id)
 
-#
-# class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
-#
-#     def setUp(self):
-#         # these are needed for the geonode fixtures
-#         TopicCategory.objects.create(identifier='biota')
-#         TopicCategory.objects.create(identifier='location')
-#         TopicCategory.objects.create(identifier='elevation')
-#
-#         create_models(type='layer')
-#         create_layer_data()
-#
-#     def test_layer(self):
-#         layer = Layer.objects.first()
-#         c = Client()
-#         response = c.get(reverse('layer_detail', args=[layer.typename]))
-#         self.assertEqual(response.status_code, 200)
-#
-#         response = c.get(reverse('layer_metadata', args=[layer.typename]))
-#         self.assertLoginRequired(response)
-#
-#         response = c.get(reverse('layer_edit', args=[layer.typename]))
-#         self.assertLoginRequired(response)
+
+class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
+
+    def setUp(self):
+
+        try:
+            # Ensure that gs_catalog.about() is falsy
+            assert not gs_catalog.about()
+        except AssertionError:
+            # geoserver is running, skip the test
+            self.skipTest('Geoserver should not be running for this test.')
+        except socket_error as e:
+            # gs_config.about() will throw a socket error if geoserver is not running (which is good in this case)
+            pass
+
+        TopicCategory.objects.create(identifier='biota')
+        TopicCategory.objects.create(identifier='location')
+        TopicCategory.objects.create(identifier='elevation')
+
+        create_models(type='layer')
+
+    def test_layer(self):
+        layer = Layer.objects.first()
+        c = AdminClient()
+        c.login_as_admin()
+        response = c.get(reverse('layer_detail', args=[layer.typename]))
+        self.assertEqual(response.status_code, 200)
+
+        response = c.get(reverse('layer_metadata', args=[layer.typename]))
+        self.assertEqual(response.status_code, 200)
 
 
 
