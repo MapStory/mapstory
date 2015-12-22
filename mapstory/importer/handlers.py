@@ -4,6 +4,7 @@ from geonode.geoserver.helpers import gs_catalog
 from django import db
 from geoserver.catalog import FailedRequestError
 from geonode.geoserver.helpers import gs_slurp, gs_catalog
+from itertools import chain
 
 class ImportHandler(object):
 
@@ -147,4 +148,103 @@ class GeoserverPublishHandler(ImportHandler):
         if not self.can_run(layer, layer_config):
             return
 
-        self.catalog.publish_featuretype(layer, self.store, 'EPSG:4326')
+        return self.catalog.publish_featuretype(layer, self.store, 'EPSG:4326')
+
+
+class GeoWebCacheHandler(ImportHandler):
+    """
+    Configures GeoWebCache for a layer in geoserver.
+    """
+    catalog = gs_catalog
+    workspace = 'geonode'
+
+    @staticmethod
+    def config(**kwargs):
+        return """<?xml version="1.0" encoding="UTF-8"?>
+            <GeoServerLayer>
+              <name>{name}</name>
+              <enabled>true</enabled>
+              <mimeFormats>
+                <string>image/png</string>
+                <string>image/jpeg</string>
+                <string>image/png8</string>
+              </mimeFormats>
+              <gridSubsets>
+                <gridSubset>
+                  <gridSetName>EPSG:900913</gridSetName>
+                </gridSubset>
+                <gridSubset>
+                  <gridSetName>EPSG:4326</gridSetName>
+                </gridSubset>
+                <gridSubset>
+                  <gridSetName>EPSG:3857</gridSetName>
+                </gridSubset>
+              </gridSubsets>
+              <metaWidthHeight>
+                <int>4</int>
+                <int>4</int>
+              </metaWidthHeight>
+              <expireCache>0</expireCache>
+              <expireClients>0</expireClients>
+              <parameterFilters>
+                {regex_parameter_filter}
+                <styleParameterFilter>
+                  <key>STYLES</key>
+                  <defaultValue/>
+                </styleParameterFilter>
+              </parameterFilters>
+              <gutter>0</gutter>
+            </GeoServerLayer>""".format(**kwargs)
+
+    def can_run(self, layer, layer_config, *args, **kwargs):
+        """
+        Only run this handler if the layer is found in Geoserver.
+        """
+        self.layer = self.catalog.get_layer(layer)
+
+        if self.layer:
+            return True
+
+        return
+
+    @staticmethod
+    def time_enabled(layer):
+        """
+        Returns True is time is enabled for a Geoserver layer.
+        """
+        return 'time' in (getattr(layer.resource, 'metadata', []) or [])
+
+    def gwc_url(self, layer):
+        """
+        Returns the GWC url from a Geoserver layer.
+        """
+
+        return self.catalog.service_url.replace('rest', 'gwc/rest/layers/{workspace}:{layer_name}.xml'
+                                               .format(workspace=layer.resource.workspace.name,
+                                                       layer_name=layer.name))
+
+    def handle(self, layer, layer_config, *args, **kwargs):
+        """
+        Adds a layer to GWC.
+        """
+
+        if not self.can_run(layer, layer_config):
+            return
+
+        regex_filter = ""
+        time_enabled = self.time_enabled(self.layer)
+
+        if time_enabled:
+            regex_filter = """
+                <regexParameterFilter>
+                  <key>TIME</key>
+                  <defaultValue/>
+                  <regex>.*</regex>
+                </regexParameterFilter>
+                """
+
+        url = self.gwc_url(self.layer)
+
+        return self.catalog.http.request(url, method="POST", body=self.config(regex_parameter_filter=regex_filter,
+                                                                              name=self.layer.name))
+

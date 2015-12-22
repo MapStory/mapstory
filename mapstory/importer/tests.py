@@ -15,6 +15,7 @@ from geonode.geoserver.helpers import gs_slurp
 from mapstory.importer.models import UploadLayer
 from .models import validate_file_extension, IMPORTER_VALID_EXTENSIONS, ValidationError, validate_inspector_can_read
 from .models import UploadedData
+from .handlers import GeoWebCacheHandler
 
 User = get_user_model()
 
@@ -149,13 +150,15 @@ class UploaderTests(MapStoryTestMixin):
         """
 
         layer = self.generic_import('boxes_with_date.shp', configuration_options=[{'index': 0,
-                                                                                         'convert_to_date': ['date']}])
+                                                                                   'convert_to_date': ['date'],
+                                                                                   'start_date': 'date',
+                                                                                   'configureTime': True
+                                                                                   }])
+
         date_attr = filter(lambda attr: attr.attribute == 'date_as_date', layer.attributes)[0]
         self.assertEqual(date_attr.attribute_type, 'xsd:dateTime')
-
-        configure_time(self.cat.get_layer(layer.name).resource, attribute=date_attr.attribute,)
-
         self.generic_time_check(layer, attribute=date_attr.attribute)
+
 
     def test_boxes_with_date_csv(self):
         """
@@ -168,7 +171,6 @@ class UploaderTests(MapStoryTestMixin):
         self.assertEqual(date_attr.attribute_type, 'xsd:dateTime')
 
         configure_time(self.cat.get_layer(layer.name).resource, attribute=date_attr.attribute,)
-
         self.generic_time_check(layer, attribute=date_attr.attribute)
 
     def test_boxes_with_iso_date(self):
@@ -697,5 +699,35 @@ class UploaderTests(MapStoryTestMixin):
         # https://trac.osgeo.org/gdal/ticket/5241
         """
         self.generic_import('Walmart.zip', configuration_options=[{'index': 0, 'convert_to_date': []}])
+
+    def test_gwc_handler(self):
+        """
+        Tests the GeoWebCache handler
+        """
+        layer = self.generic_import('boxes_with_date.shp', configuration_options=[{'index': 0,
+                                                                                   'convert_to_date': ['date'],
+                                                                                   'start_date': 'date',
+                                                                                   'configureTime': True
+                                                                                   }])
+
+        gwc = GeoWebCacheHandler(None)
+        gs_layer = self.cat.get_layer(layer.name)
+
+        self.assertTrue(gwc.time_enabled(gs_layer))
+        gs_layer.fetch()
+
+        payload = self.cat.http.request(gwc.gwc_url(gs_layer))
+        self.assertTrue('regexParameterFilter' in payload[1])
+        self.assertEqual(int(payload[0]['status']), 200)
+
+        # Don't configure time, ensure everything still works
+        layer = self.generic_import('boxes_with_date_iso_date.shp', configuration_options=[{'index': 0}])
+        gs_layer = self.cat.get_layer(layer.name)
+        self.cat._cache.clear()
+        gs_layer.fetch()
+
+        payload = self.cat.http.request(gwc.gwc_url(gs_layer))
+        self.assertFalse('regexParameterFilter' in payload[1])
+        self.assertEqual(int(payload[0]['status']), 200)
 
 

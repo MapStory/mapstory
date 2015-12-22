@@ -20,10 +20,10 @@ logger = logging.getLogger(__name__)
 ogr.UseExceptions()
 
 
-DEFAULT_IMPORT_HANDLERS = ['mapstory.importer.import_handlers.FieldConverterHandler',
-                           'mapstory.importer.import_handlers.GeoserverPublishHandler',
-                           'mapstory.importer.import_handlers.GeoServerTimeHandler',
-                           'mapstory.importer.import_handlers.GeoNodePublishHandler']
+DEFAULT_IMPORT_HANDLERS = ['mapstory.importer.handlers.FieldConverterHandler',
+                           'mapstory.importer.handlers.GeoserverPublishHandler',
+                           'mapstory.importer.handlers.GeoServerTimeHandler',
+                           'mapstory.importer.handlers.GeoNodePublishHandler']
 
 IMPORT_HANDLERS = getattr(settings, 'IMPORT_HANDLERS', DEFAULT_IMPORT_HANDLERS)
 
@@ -375,9 +375,11 @@ class GDALInspector(InspectorMixin):
         except AttributeError:
             return
 
+
 class GDALImport(Import):
 
     _import_handlers = []
+    handler_results = []
     source_inspectors = [GDALInspector]
     target_inspectors = [OGRInspector]
 
@@ -395,6 +397,10 @@ class GDALImport(Import):
     def _initialize_handlers(self):
         self._import_handlers = [load_handler(handler, self)
                                  for handler in IMPORT_HANDLERS]
+
+    def filter_handler_results(self, handler_name):
+        return filter(lambda results: handler_name in results.keys(), self.handler_results)
+
     @property
     def import_handlers(self):
         """
@@ -454,12 +460,12 @@ class GDALImport(Import):
         """
         Handlers that are run on each layer of a data set.
         """
-        results = []
+        self.handler_results = []
 
         for handler in self.import_handlers:
-            results.append({type(handler).__name__ : handler.handle(layer, layer_config, *args, **kwargs)})
+            self.handler_results.append({type(handler).__name__ : handler.handle(layer, layer_config, *args, **kwargs)})
 
-        return results
+        return self.handler_results
 
     def import_file(self, *args, **kwargs):
         """

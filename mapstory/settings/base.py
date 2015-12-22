@@ -131,6 +131,16 @@ ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
 
 ENABLE_SOCIAL_LOGIN = False
 USE_AWS_S3 = False
+
+
+IMPORT_HANDLERS = (
+'mapstory.importer.handlers.FieldConverterHandler',
+'mapstory.importer.handlers.GeoserverPublishHandler',
+'mapstory.importer.handlers.GeoServerTimeHandler',
+'mapstory.importer.handlers.GeoWebCacheHandler',
+'mapstory.importer.handlers.GeoNodePublishHandler')
+
+
 if os.path.exists('mapstory/settings/local_settings.py'):
     exec open('mapstory/settings/local_settings.py') in globals()
 
