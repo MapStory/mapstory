@@ -1,16 +1,37 @@
+from .utils import configure_time
+from .inspectors import OGRFieldConverter
 from django import db
-from .utils import GDALImport, GDALInspector, configure_time, OGRFieldConverter
-from geonode.geoserver.helpers import gs_catalog
-from django import db
-from geoserver.catalog import FailedRequestError
+from django.conf import settings
 from geonode.geoserver.helpers import gs_slurp, gs_catalog
-from itertools import chain
+from geoserver.catalog import FailedRequestError
+
+
+DEFAULT_IMPORT_HANDLERS = ['mapstory.importer.handlers.FieldConverterHandler',
+                           'mapstory.importer.handlers.GeoserverPublishHandler',
+                           'mapstory.importer.handlers.GeoServerTimeHandler',
+                           'mapstory.importer.handlers.GeoNodePublishHandler']
+
+IMPORT_HANDLERS = getattr(settings, 'IMPORT_HANDLERS', DEFAULT_IMPORT_HANDLERS)
+
+def ensure_can_run(func):
+    """
+    Convenience decorator that executes the "can_run" method class and returns the function if the can_run is True.
+    """
+
+    def func_wrapper(self, *args, **kwargs):
+
+        if self.can_run(*args, **kwargs):
+            return func(self, *args, **kwargs)
+
+    return func_wrapper
+
 
 class ImportHandler(object):
 
     def __init__(self, importer, *args, **kwargs):
         self.importer = importer
 
+    @ensure_can_run
     def handle(self, layer, layerconfig, *args, **kwargs):
         raise NotImplementedError('Subclass should implement this.')
 
@@ -21,13 +42,10 @@ class ImportHandler(object):
         return True
 
 
-class FieldConverterHandler(object):
+class FieldConverterHandler(ImportHandler):
     """
-    Converts fields based on the layer_configuration
+    Converts fields based on the layer_configuration.
     """
-
-    def __init__(self, importer, *args, **kwargs):
-        self.importer = importer
 
     def convert_field_to_time(self, layer, field):
         d = db.connections['datastore'].settings_dict
@@ -37,6 +55,7 @@ class FieldConverterHandler(object):
         with OGRFieldConverter(connection_string) as datasource:
             return datasource.convert_field(layer, field)
 
+    @ensure_can_run
     def handle(self, layer, layer_config, *args, **kwargs):
         for field_to_convert in set(layer_config.get('convert_to_date', [])):
 
@@ -57,12 +76,15 @@ class GeoNodePublishHandler(ImportHandler):
     Creates a GeoNode Layer from a layer in Geoserver.
     """
 
+    workspace = 'geonode'
+
     @property
     def store_name(self):
         #TODO: this shouldn't be this dumb
         connection = db.connections['datastore']
         return connection.settings_dict['NAME']
 
+    @ensure_can_run
     def handle(self, layer, layer_config, *args, **kwargs):
         """
         Adds a layer in GeoNode, after it has been added to Geoserver.
@@ -71,10 +93,7 @@ class GeoNodePublishHandler(ImportHandler):
         "layer_owner": Sets the owner of the layer.
         """
 
-        if not self.can_run(layer, layer_config):
-            return
-
-        return gs_slurp(workspace='geonode',
+        return gs_slurp(workspace=self.workspace,
                         store=self.store_name,
                         filter=layer,
                         owner=layer_config.get('layer_owner'))
@@ -95,13 +114,16 @@ class GeoServerTimeHandler(ImportHandler):
 
         return True
 
+    @ensure_can_run
     def handle(self, layer, layer_config, *args, **kwargs):
         """
         Configures time on the object.
-        """
 
-        if not self.can_run(layer, layer_config):
-            return
+        Handler specific params:
+        "configureTime": Must be true for this handler to run.
+        "start_date": Passed as the start time to Geoserver.
+        "end_date" (optional): Passed as the end attribute to Geoserver.
+        """
 
         lyr = gs_catalog.get_layer(layer)
         configure_time(lyr.resource, attribute=layer_config.get('start_date'),
@@ -111,6 +133,7 @@ class GeoServerTimeHandler(ImportHandler):
 class GeoserverPublishHandler(ImportHandler):
     catalog = gs_catalog
     workspace = 'geonode'
+    srs = 'EPSG:4326'
 
     def get_or_create_datastore(self):
         connection = db.connections['datastore']
@@ -140,20 +163,18 @@ class GeoserverPublishHandler(ImportHandler):
     def store(self):
         return self.get_or_create_datastore()
 
+    @ensure_can_run
     def handle(self, layer, layer_config, *args, **kwargs):
         """
         Publishes a layer to GeoServer.
         """
 
-        if not self.can_run(layer, layer_config):
-            return
-
-        return self.catalog.publish_featuretype(layer, self.store, 'EPSG:4326')
+        return self.catalog.publish_featuretype(layer, self.store, self.srs)
 
 
 class GeoWebCacheHandler(ImportHandler):
     """
-    Configures GeoWebCache for a layer in geoserver.
+    Configures GeoWebCache for a layer in Geoserver.
     """
     catalog = gs_catalog
     workspace = 'geonode'
@@ -216,21 +237,17 @@ class GeoWebCacheHandler(ImportHandler):
 
     def gwc_url(self, layer):
         """
-        Returns the GWC url from a Geoserver layer.
+        Returns the GWC URL given a Geoserver layer.
         """
 
-        return self.catalog.service_url.replace('rest', 'gwc/rest/layers/{workspace}:{layer_name}.xml'
-                                               .format(workspace=layer.resource.workspace.name,
-                                                       layer_name=layer.name))
+        return self.catalog.service_url.replace('rest', 'gwc/rest/layers/{workspace}:{layer_name}.xml'.format(
+            workspace=layer.resource.workspace.name, layer_name=layer.name))
 
+    @ensure_can_run
     def handle(self, layer, layer_config, *args, **kwargs):
         """
         Adds a layer to GWC.
         """
-
-        if not self.can_run(layer, layer_config):
-            return
-
         regex_filter = ""
         time_enabled = self.time_enabled(self.layer)
 
@@ -243,8 +260,6 @@ class GeoWebCacheHandler(ImportHandler):
                 </regexParameterFilter>
                 """
 
-        url = self.gwc_url(self.layer)
-
-        return self.catalog.http.request(url, method="POST", body=self.config(regex_parameter_filter=regex_filter,
-                                                                              name=self.layer.name))
+        return self.catalog.http.request(self.gwc_url(self.layer), method="POST",
+                                         body=self.config(regex_parameter_filter=regex_filter, name=self.layer.name))
 

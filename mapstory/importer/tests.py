@@ -6,8 +6,9 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.gis.gdal import DataSource
-from mapstory.importer.utils import GDALImport
-from mapstory.importer.utils import create_vrt, configure_time, ensure_defaults, GDALInspector, OGRFieldConverter
+from .importers import GDALImport
+from .utils import create_vrt, configure_time, ensure_defaults
+from .inspectors import GDALInspector, OGRFieldConverter
 from geoserver.catalog import Catalog, FailedRequestError
 from geonode.layers.models import Layer
 from geonode.geoserver.helpers import ogc_server_settings

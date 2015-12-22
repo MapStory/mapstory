@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from .forms import UploadFileForm
 from .models import UploadedData, UploadLayer, DEFAULT_LAYER_CONFIGURATION
-from .utils import GDALInspector
+from .inspectors import GDALInspector
 
 
 class UploadListView(ListView):

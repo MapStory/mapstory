@@ -29,7 +29,8 @@ from django.db import models
 from django.conf import settings
 from geonode.layers.models import Layer
 from jsonfield import JSONField
-from .utils import GDALInspector, NoDataSourceFound
+from .inspectors import GDALInspector
+from .utils import NoDataSourceFound
 
 DEFAULT_LAYER_CONFIGURATION = {'configureTime': True,
                                'editable': True,

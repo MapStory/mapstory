@@ -1,6 +1,6 @@
 import os
 import shutil
-from .utils import GDALImport
+from .importers import GDALImport
 from .models import UploadFile, UploadLayer
 from celery.task import task
 from geonode.layers.models import Layer
