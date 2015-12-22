@@ -16,7 +16,7 @@
   tags: [config]
 
 - name: mapstory checkout
-  git: repo=git://github.com/MapStory/mapstory.git dest={{ top_project }}
+  git: repo=git://github.com/MapStory/mapstory.git dest={{ top_project }} force=yes
   sudo_user: '{{ application_user }}'
   when: setup_git_repo is defined and setup_git_repo
   tags: [git]
@@ -49,13 +49,6 @@
   sudo_user: '{{ application_user }}'
   tags: [update]
 
-- name: initial setup
-  shell: . {{ venv_activate }} && paver setup chdir={{ project_path }}
-  sudo_user: '{{ application_user }}'
-  tags: [setup]
-  args:
-     executable: /bin/bash
-
 - name: configure media root
   file: path={{ media_root }} owner=www-data group=www-data mode=0775 state=directory
   sudo_user: '{{ application_user }}'
@@ -69,6 +62,7 @@
 
 - name: generate django secret key
   shell: python -c 'import random;print "".join(random.sample("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)",50))'
+  sudo_user: '{{ application_user }}'
   register: secret_key
   tags: [settings]
 
@@ -79,7 +73,7 @@
   notify: restart django
 
 - name: write project local settings
-  template: src=roles/web/files/local_settings.py dest={{ project_path }}/{{ project_name }}/settings/local_settings.py
+  template: src=roles/web/files/local_settings.py.j2 dest={{ project_path }}/{{ project_name }}/settings/local_settings.py
   sudo_user: '{{ application_user }}'
   notify: restart django
   tags: [settings]
@@ -104,10 +98,18 @@
     chdir={{ project_path }}
   tags: [superuser]
 
-- name: collect-static
+- name: collect-static remote
+  # Modify the paver args when using s3 since there is no need to apply --link
+  shell: . {{ venv_activate }} && paver collect_static -o '--noinput --ignore node_modules' chdir={{ project_path }}
+  sudo_user: '{{ application_user }}'
+  when: use_aws_s3 is defined and use_aws_s3
+  tags: [update]
+
+- name: collect-static local
   # while we could use django_manage, this does a bit more
   shell: . {{ venv_activate }} && paver collect_static chdir={{ project_path }}
   sudo_user: '{{ application_user }}'
+  when: use_aws_s3 is undefined or use_aws_s3 == False
   tags: [update]
   ignore_errors: True
 

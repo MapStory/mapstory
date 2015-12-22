@@ -28,14 +28,22 @@
 
 - name: Load PostGIS Extension
   sudo_user: postgres
-  shell: psql -d mapstory_data -c "CREATE EXTENSION postgis"
-  when: db_created|changed
+  shell: psql -d  {{ item.key }} -c "CREATE EXTENSION postgis"
+  when: db_created|changed and mapstory_dbs and item.value.db_type == 'spatial'
+  with_dict: "{{ mapstory_dbs|default({}) }}"
   tags: ['db']
 
 - name: Load DBLink Extension
   sudo_user: postgres
   shell: psql -d {{ item.key }} -c "CREATE EXTENSION dblink"
   when: db_created|changed and setup_dblink is defined and setup_dblink and mapstory_dbs
+  with_dict: "{{ mapstory_dbs|default({}) }}"
+  tags: ['db']
+
+- name: Grant Perms on Spatial Ref Sys
+  sudo_user: postgres
+  shell: psql -d {{ item.key }} -c "GRANT ALL PRIVILEGES on spatial_ref_sys TO {{db_user}};"
+  when: db_created|changed and mapstory_dbs and item.value.db_type == 'spatial'
   with_dict: "{{ mapstory_dbs|default({}) }}"
   tags: ['db']
 

@@ -24,9 +24,14 @@ from mapstory.views import CommunityDetail
 from mapstory.views import GroupDetail
 from mapstory.views import map_detail
 from mapstory.views import layer_detail
+from mapstory.views import layer_create, layer_append
 from mapstory.views import layer_remove, map_remove
+from mapstory.views import MapStoryConfirmEmailView
 from geonode.layers.views import layer_replace, layer_thumbnail, layer_upload
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic import RedirectView
+from mapstory.importer.urls import urlpatterns as importer_urlpatterns
 
 
 # -- Deprecated url routes for Geoserver authentication -- remove after GeoNode 2.1
@@ -43,9 +48,15 @@ layer_detail_patterns = patterns('',
     )
 
 urlpatterns = patterns('',
+    # Adding Threaded Comments app
+    url(r'^articles/comments/', include('django_comments.urls')),
+    url(r'^blog/comments/', include('fluent_comments.urls')),
+
     url(r'^$', IndexView.as_view(), name="index_view"),
+    url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))), #temp fix for social auth redirect
     url(r"^account/signup/$", MapStorySignup.as_view(), name="account_signup"),
     url(r'^accounts/verify/$', 'mapstory.views.account_verify',  name='account_verify'),
+    url(r"^account/confirm_email/(?P<key>\w+)/$", MapStoryConfirmEmailView.as_view(), name="account_confirm_email"),
 
     url(r'^maps/templates/story-about-info.html$', TemplateView.as_view(template_name='mapstory/composer/story-about-info.html'), name='composer-add-layers'),
     url(r'^maps/templates/add-layers.html$', TemplateView.as_view(template_name='mapstory/composer/add-layers.html'), name='composer-add-layers'),
@@ -101,6 +112,8 @@ urlpatterns = patterns('',
     url(r'^maps/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'),
     url(r'^maps/(?P<mapid>\d+)$', map_detail, name='map_detail'),
     url(r'^layers/upload$', layer_upload, name='layer_upload'),
+    url(r'^layers/create$', layer_create, name='layer_create'),
+    url(r'^layers/append$', layer_append, name='layer_append'),
     url(r'^layers/(?P<layername>[^/]*)/metadata$', layer_metadata, name="layer_metadata"),
     url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
     url(r'^layers/(?P<layername>[^/]*)/replace$', layer_replace, name="layer_replace"),
@@ -109,6 +122,7 @@ urlpatterns = patterns('',
 ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 
 urlpatterns += maploom_urls
+urlpatterns += importer_urlpatterns
 
 if settings.DEBUG:
     urlpatterns = urlpatterns + patterns('',

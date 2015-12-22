@@ -140,6 +140,7 @@ def restart():
     sudo('supervisorctl restart gunicorn-django')
     sudo('service nginx restart')
     sudo('service tomcat7 restart')
+    sudo('supervisorctl restart mapstory-celery')
 
 
 def notify(channel='#general', username='webhookbot',

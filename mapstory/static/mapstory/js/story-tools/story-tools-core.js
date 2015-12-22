@@ -29,7 +29,7 @@ var Box = function(data, projection) {
 
 
         if(this.range !== null && this.speed !== null){
-            this._steps = this.data === null ? Math.floor(this.range.width() / this.speed.interval) + 1: this.data.length;
+            this._steps = Math.floor(this.range.width() / this.speed.interval) + 1;
 
         }
 
@@ -519,6 +519,7 @@ function create(options) {
         if (Array.isArray(options.data)) {
             data = options.data;
             totalRange = utils.computeRange(options.data);
+            interval = utils.pickInterval(totalRange);
         } else {
             interval = options.data.interval || utils.pickInterval(options.data);
             totalRange = options.data;
@@ -1049,7 +1050,7 @@ var StoryPin = function(data, projection) {
 StoryPin.prototype = Object.create(ol.Feature.prototype);
 StoryPin.prototype.constructor = StoryPin;
 // expose these simply for the timeline - it doesn't know they're features
-['id','start_time','end_time','content','title','in_timeline','in_map'].forEach(function(prop) {
+['id','_id', 'start_time','end_time','content','title','in_timeline','in_map'].forEach(function(prop) {
     Object.defineProperty(StoryPin.prototype, prop, {
         get: function() {
             var val = this.get(prop);

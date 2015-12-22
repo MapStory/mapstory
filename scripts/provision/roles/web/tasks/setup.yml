@@ -148,6 +148,12 @@
   file: path={{ media_root }} state=directory owner=www-data group=www-data mode=775 recurse=yes
   tags: [nginx]
 
+- name: django uploads
+  file: path={{ uploads_root }} state=directory owner=www-data group=www-data mode=775 recurse=yes
+  tags: [nginx]
+
+
+
 # install apt key
 - name: adding elasticsearch gpg key
   apt_key: url=http://packages.elasticsearch.org/GPG-KEY-elasticsearch state=present
@@ -211,3 +217,72 @@
   sudo: yes
   sudo_user: root
   tags: [elasticsearch]
+
+# Install RabbitMQ
+- name: Add the RabbitMQ public GPG key to the apt repo
+  apt_key: url=http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+           state=present
+  tags: [rabbitmq]
+
+- name: Add RabbitMQ to the sources list
+  apt_repository: repo='deb http://www.rabbitmq.com/debian/ testing main'
+                  update_cache={{ update_apt_cache }}
+                  state=present
+  tags: [rabbitmq]
+
+- name: Install RabbitMQ server
+  apt: name={{ item }} update_cache={{ update_apt_cache }} force=yes state=installed
+  with_items:
+    - rabbitmq-server
+  tags: [rabbitmq]
+
+- name: Enable the RabbitMQ Management Console
+  rabbitmq_plugin: names=rabbitmq_management state=enabled
+  notify: restart rabbitmq-server
+  tags: [rabbitmq]
+
+- name: Create a vhost for the application
+  rabbitmq_vhost: name={{ rabbitmq_application_vhost }} state=present
+  tags: [rabbitmq]
+
+- name: Create default admin user
+  rabbitmq_user: user={{ rabbitmq_admin_user }}
+                 password={{ rabbitmq_admin_password }}
+                 vhost=/
+                 tags=administrator
+                 state=present
+  tags: [rabbitmq]
+
+- name: Create application user
+  rabbitmq_user: user={{ rabbitmq_application_user }}
+                 password={{ rabbitmq_application_password }}
+                 vhost={{ rabbitmq_application_vhost }}
+                 configure_priv=.*
+                 read_priv=.*
+                 write_priv=.*
+                 state=present
+  tags: [rabbitmq]
+
+- name: Ensure the default 'guest' user doesn't exist
+  rabbitmq_user: user=guest
+                 state=absent
+  tags: [rabbitmq]
+
+- name: Ensure that the RabbitMQ service is running
+  service: name=rabbitmq-server state=started enabled=yes
+  tags: [rabbitmq]
+
+- name: download gdal
+  git: repo=https://github.com/OSGeo/gdal.git dest=/srv/gdal update=no
+
+- name: build gdal
+  shell: '{{item}}'
+  args:
+    chdir: /srv/gdal/gdal
+  with_items:
+    - ./configure --with-python
+    - make
+    - make install
+    - ldconfig
+  tags: packages
+

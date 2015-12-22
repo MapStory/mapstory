@@ -221,7 +221,27 @@
             $scope.text_query = $location.search()['q'].replace(/\W+/g," ");
           }
           if ($location.search().hasOwnProperty('type__in')){
-            $scope.type__in = $location.search()['type__in'].replace(/\W+/g," ");;
+            $scope.type__in = $location.search()['type__in'].replace(/\W+/g," ");
+          }
+          // Filter by Regions
+          if ($location.search().hasOwnProperty('regions') && $location.search()['regions'].length > 0) {
+            $scope.results = data.objects.filter(function(value) {
+              for (var index = 0; index < value.regions.length; index++) {
+                if ($location.search()['regions'].indexOf(value.regions[index]) > -1) {
+                  return true;
+                }
+              }
+            });
+          }
+          // Filter by Keywords
+          if ($location.search().hasOwnProperty('keywords') && $location.search()['keywords'].length > 0) {
+            $scope.results = data.objects.filter(function(value) {
+              for (var index = 0; index < value.keywords.length; index++) {
+                if ($location.search()['keywords'].indexOf(value.keywords[index]) > -1) {
+                  return true;
+                }
+              }
+            });
           }
         } else {
           if ($location.search().hasOwnProperty('title__icontains')){

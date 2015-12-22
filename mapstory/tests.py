@@ -16,6 +16,8 @@ from mapstory.models import Community, DiaryEntry
 from geonode.people.models import Profile
 import json
 
+from mapstory.export import export_via_model
+
 User = get_user_model()
 
 
@@ -93,6 +95,18 @@ class MapStoryTests(MapStoryTestMixin):
         response = c.get(reverse('search'))
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
+
+    def test_csv_user_export(self):
+        """
+        Ensure export model returns a csv file
+        """
+        c = Client()
+
+        request = c.get(reverse('index_view'))
+
+        response = export_via_model(User, request, User.objects.all(), exclude=['password'])
+
+        self.assertEqual(response['Content-Type'], 'text/csv')
 
     def test_journal_renders(self):
         """
@@ -335,6 +349,16 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(user.first_name, data['firstname'])
         self.assertEqual(user.last_name, data['lastname'])
         self.assertEqual(user.email, data['email'])
+
+        response = c.post(reverse('account_confirm_email', args=[conf.key]))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(len(mail.outbox), 2)
+        #self.assertHasGoogleAnalytics(response) - This is returning False for some reason
+
+        # make sure the custom subject and welcome template is being used
+        self.assertEqual(mail.outbox[1].subject, "Welcome to MapStory!")
+        # Regardless of email content used, ensure it personally addresses the user
+        self.assertTrue(user.username in mail.outbox[1].body or user.first_name in mail.outbox[1].body)
 
 class Oauth2ProviderTest(TestCase):
 

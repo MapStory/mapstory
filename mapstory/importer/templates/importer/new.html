@@ -1,0 +1,60 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block extra_head %}
+<style>
+.errorlist{color:#FF4136; list-style-type: none; padding: 4px; padding-top: 10; font-weight: 600; font-size: 13px}
+.fa-warning{color:#FF4136;}
+</style>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+
+   function chooseFile() {
+      $("#id_file").click();
+   }
+
+   $("#id_file").on("change", function() {
+     $("#uploads-new-form").submit();
+    });
+
+</script>
+
+{{ block.super }}
+{% endblock %}
+
+{% block body_outer %}
+
+<div class="page-header">
+  <a href="{% url 'uploads-list' %}"><div class="pull-right" style="margin-top: 25px; font-size: 14px">View Data <i class="fa fa-long-arrow-right"></i></div></a>
+  <h2 class="page-title">{% trans "Add data" %}</h2>
+</div>
+
+<div>
+  <div class="row" style="margin:20px 0 30px">
+	<form id="uploads-new-form" action="{% url 'uploads-new' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div style="height:0px;overflow:hidden">
+            {{form}}
+        </div>
+        <div class="row">
+            <button type="button" class="btn-info col-md-4 btn" onclick="chooseFile();">choose file</button>
+        </div>
+        <div class="row">
+            <div class="errorlist">
+            {% for error in form.file.errors %}
+                <i class="fa fa-warning">  {{ error|escape }}</i>
+            {% endfor %}
+            </div>
+            <div class="col-md-6" style="padding-top: 5px; padding-left: 2px;">
+                Valid file types are .csv, .geojson, .gpx, .kml, .tif, zipped Shapefile.
+            </div>
+
+        </div>
+        </form>
+	</div>
+</div>
+
+
+{% endblock %}

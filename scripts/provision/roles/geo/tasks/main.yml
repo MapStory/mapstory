@@ -8,6 +8,9 @@
     #- openjdk-7-jre
   tags: [install]
 
+- file: path=/tmp/{{ application_name }} state=directory
+  tags: [setup, geoserver]
+
 - name: make geoserver dirs
   file: path=/var/lib/geoserver/geoserver state=directory
   tags: [geoserver]
@@ -16,11 +19,12 @@
   copy: src=roles/geo/files/geogigconfig dest=/usr/share/tomcat7/.geogigconfig mode=0775 owner=tomcat7 group=tomcat7
   tags: [setup]
 
-- file: path=/tmp/mapstory state=directory
-  tags: [setup]
-
 - name: fetch geoserver
-  shell: wget -SN https://s3.amazonaws.com/garnertb-share/geoserver.war chdir=/tmp/mapstory
+  shell: wget -SN {{ geoserver_download }} chdir=/tmp/{{ application_name }}
+  tags: [geoserver]
+
+- name: fetch geoserver wps classify libs
+  shell: wget -SN {{ geoserver_wps_classify }} chdir=/tmp/{{ application_name }}
   tags: [geoserver]
 
 - name: db client settings
@@ -28,7 +32,7 @@
   tags: [geoserver]
 
 - name: copy geoserver.war to tomcat webapps
-  shell: cp /tmp/mapstory/geoserver.war /var/lib/tomcat7/webapps/geoserver.war
+  shell: cp /tmp/{{ application_name }}/geoserver.war /var/lib/tomcat7/webapps/geoserver.war
   notify: restart geoserver
   tags: [geoserver]
 
@@ -42,25 +46,38 @@
   template: src=roles/geo/files/web.xml dest=/var/lib/tomcat7/webapps/geoserver/WEB-INF/web.xml owner=tomcat7 group=tomcat7
   tags: [geoserver]
 
+- name: copy geoserver wps classify libs
+  shell: sudo unzip -j -o classify.zip "*.jar" -d {{ geoserver_lib_dir }} && sudo chown -R tomcat7:tomcat7 {{ geoserver_lib_dir }} chdir=/tmp/{{ application_name }}
+  notify: restart geoserver
+  tags: [geoserver, wps]
+
 - name: geogig global config
   copy: src=roles/geo/files/geogigconfig dest=/var/lib/geoserver/geoserver/.geogigconfig mode=0775 owner=www-data group=www-data
   tags: [geoserver]
 
 - name: unpack geoserver datadir
-  shell: "[ ! -e /var/lib/geoserver/data ] && unzip /tmp/mapstory/geoserver.war data/* -d /var/lib/geoserver/ || exit 0"
+  shell: "[ ! -e {{ geoserver_data }} ] && unzip /tmp/{{ application_name }}/geoserver.war data/* -d /var/lib/geoserver/ || exit 0"
+  tags: [geoserver]
+
+- name: copy geoserver config.xml
+  template: src=roles/geo/files/config.xml dest={{ geoserver_data }}/security/config.xml owner=www-data group=www-data
+  tags: [geoserver]
+
+- name: copy geoserver rest.properties
+  template: src=roles/geo/files/rest.properties dest={{ geoserver_data }}/security/rest.properties owner=www-data group=www-data
   tags: [geoserver]
 
 - name: set geoserver password
-  lineinfile: dest=/var/lib/geoserver/data/security/usergroup/default/users.xml regexp='(.*)crypt1:.*("/>)$' line='\1plain:{{geoserver_password}}\2' backrefs=yes
+  lineinfile: dest={{ geoserver_data }}/security/usergroup/default/users.xml regexp='(.*)crypt1:.*("/>)$' line='\1plain:{{gspass}}\2' backrefs=yes
   tags: [geoserver]
 
 - name: geoserver datadir permissions
-  file: path=/var/lib/geoserver/data state=directory owner=www-data group=www-data mode=775 recurse=yes
+  file: path={{ geoserver_data }} state=directory owner=www-data group=www-data mode=775 recurse=yes
   tags: [geoserver]
 
 - name: create geogit data directory
-  file: path=/var/lib/geoserver/data/geogig state=directory mode=0775 owner=www-data group=www-data
+  file: path={{ geoserver_data }}/geogig state=directory mode=0775 owner=www-data group=www-data
   tags: [setup]
 
-- file: path=/tmp/mapstory state=absent
-  tags: [setup]
+- file: path=/tmp/{{ application_name }} state=absent
+  tags: [setup, geoserver]

@@ -1,5 +1,3 @@
----
-
 # Git settings.
 setup_git_repo: no
 sym_link_repo: yes
@@ -29,7 +27,18 @@ allowed_hosts: ['{{ inventory_hostname }}','localhost']
 
 # Application settings.
 
+application_name: mapstory
+pgpass: foobar
+database_host: localhost
+mapstory_branch: master
+top_project: /srv/git/mapstory
+mapstory_geonode: '{{ top_project }}/mapstory-geonode'
+geoserver_data: /var/lib/geoserver/data
+geoserver_proxy_url: ''
+geoserver_enable_gzip: false
+gspass: geoserverer
 media_root: /var/lib/mapstory/media/
+uploads_root: '{{media_root}}uploads'
 django_su_pass: admin
 
 mapstory_dbs:
@@ -40,6 +49,7 @@ mapstory_dbs:
     db_lc_collate: 'en_US.UTF-8'
     db_lc_ctype: 'en_US.UTF-8'
     db_template: 'template0'
+    db_type: ''
   mapstory_data:
     db_password: '{{ db_password }}'
     db_owner: 'mapstory'
@@ -47,7 +57,18 @@ mapstory_dbs:
     db_lc_collate: 'en_US.UTF-8'
     db_lc_ctype: 'en_US.UTF-8'
     db_template: 'template0'
+    db_type: 'spatial'
 
+# don't change these
+venv: /home/mapstory/.virtualenvs/mapstory
+venv_activate: '{{ venv }}/bin/activate'
+
+#Geoserver download
+geoserver_download: 'https://s3-us-west-2.amazonaws.com/mapstory-resources/geoserver/2.6/geoserver.war'
+geoserver_wps_classify: 'https://s3-us-west-2.amazonaws.com/mapstory-resources/geoserver/2.6/libs/wps/classify.zip'
+geoserver_lib_dir: '/var/lib/tomcat7/webapps/geoserver/WEB-INF/lib'
+
+development_server: "{{ nginx_server_name|string()== '192.168.56.151'}}"
 
 # Elasticsearch version from debian repository
 es_version: 1.6
@@ -115,3 +136,23 @@ geoserver_password: geoserver
 
 
 fixtures: '../geonode/geonode/base/fixtures/initial_data.json mapstory/fixtures/initial_data.json'
+
+# AWS S3 Settings
+
+use_aws_s3: False
+
+aws_storage_bucket_name:
+aws_access_key_id:
+aws_secret_access_key:
+
+# RabbitMQ Settings
+rabbitmq_server_name: 192.168.56.151
+
+rabbitmq_admin_user: admin
+rabbitmq_admin_password: password
+
+rabbitmq_application_vhost: "{{ application_name }}"
+rabbitmq_application_user: "{{ application_name }}"
+rabbitmq_application_password: password
+
+broker_url: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@localhost/{{ rabbitmq_application_vhost }}"

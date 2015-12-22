@@ -14,3 +14,4 @@
   roles:
     - common
     - web
+    - celery

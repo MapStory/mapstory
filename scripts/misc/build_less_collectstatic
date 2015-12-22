@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+source /home/mapstory/.virtualenvs/mapstory/bin/activate
+cd /srv/git/mapstory/mapstory-geonode/mapstory/static
+grunt less
+cd /srv/git/mapstory/mapstory-geonode/
+python manage.py collectstatic --link --noinput --ignore node_modules

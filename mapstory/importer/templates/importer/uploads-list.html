@@ -1,0 +1,67 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+
+{% block extra_head %}
+<style>
+body{ margin-top:20px; font-size: 14px}
+.glyphicon { margin-right:5px;}
+.section-box h2 { margin-top:0px;}
+.section-box h2 a { font-size:15px; }
+.glyphicon-heart { color:#e74c3c;}
+.glyphicon-comment { color:#27ae60;}
+.separator { padding-right:5px;padding-left:5px; }
+.section-box hr {margin-top: 0;margin-bottom: 5px;border: 0;border-top: 1px solid rgb(199, 199, 199);}
+.import-options-form { margin-top: 20px;}
+.import-options-form .form-group {margin-bottom:4px; font-size: 13px;}
+.import-options-form .control-label {font-weight: 600;}
+.clrs-red {color:#FF4136;}
+.user-data-metadata {font-size: 12px;}
+.user-data-story-layers-list {font-size: 13px;}
+.user-data-story-layer-actions {font-size: 13px; margin-top: 20px;}
+.light-bold {font-weight: 600;}
+.import-title{font-size: 14px;}
+.section-box-subtitle {margin-top: -4px;}
+.import-head {cursor: pointer;}
+.import-options {margin-left: 15px;}
+.importer-layer-name {word-wrap: break-word;}
+.layer-in-upload {background-color: #DCDCDC; padding: 8px; margin-top: 20px; border-radius: 3px;}
+.layer-upload-field {font-size: 13px; margin-top: 15px;}
+.layer-upload-name { padding: 4px; }
+.layer-upload-field-name { font-weight: 600; }
+.layer-upload-details { font-size: 13px; }
+.layer-upload-counts {margin-bottom: 6px;}
+</style>
+{% endblock %}
+
+{% block extra_script %}
+
+<script type="text/javascript" src="{{STATIC_URL}}importer/js/angular.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}importer/js/angular-resource.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}importer/js/ui-bootstrap-tpls.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}importer/factories.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}importer/importer.js"></script>
+{{ block.super }}
+{% endblock %}
+
+{% block body_outer %}
+
+<div class="page-header">
+  <a href="{% url 'uploads-new' %}"><div class="pull-right" style="margin-top: 25px; font-size: 14px"><i class="fa fa-long-arrow-left"></i> Add Data</div></a>
+  <h2 class="page-title">{% trans "Manage your data" %}</h2>
+</div>
+
+<div class="container" ng-app="mapstory.uploader" ng-controller="uploadList">
+    <div class="row">
+        <div class="col-md-8">
+            <div ng-show="loading" style="margin-right: 50%; margin-left: 50%; margin-top: 30px; margin-bottom: 30px">
+                <i class="fa fa-spinner fa-spin fa-3x"></i>
+            </div>
+            <div class="layer-upload-counts">Showing uploads {[offset]}-{[offset+uploads.length]} of {[totalItems]}.</div>
+            <div ng-repeat="upload in uploads">
+                <upload upload-object="upload" i="$index" template-url="{{ STATIC_URL }}importer/partials/upload.html"></upload>
+            </div>
+            <pagination total-items="totalItems" ng-init="init('{{user.username}}')" ng-change="pageChanged()" max-size="7" class="pagination-sm" items-per-page="limit" ng-model="currentPage"></pagination>
+        </div>
+    </div>
+</div>
+{% endblock %}
