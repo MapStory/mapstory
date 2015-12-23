@@ -295,5 +295,5 @@ class GeoServerBoundsHandler(ImportHandler):
                 dec.quantize(1)
 
         except InvalidOperation:
-            resource.latlon_bbox = ['-180', '-90', '180', '90', 'EPSG:4326']
+            resource.latlon_bbox = ['-180', '180', '-90', '90', 'EPSG:4326']
             self.catalog.save(resource)

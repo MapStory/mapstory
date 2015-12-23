@@ -691,6 +691,8 @@ class UploaderTests(MapStoryTestMixin):
         Regression where layers with features outside projection bounds fail.
         """
         self.generic_import('Spring_2015.zip', configuration_options=[{'index': 0 }])
+        resource = self.cat.get_layer('spring_2015').resource
+        self.assertEqual(resource.latlon_bbox, ('-180.0', '180.0', '-90.0', '90.0', 'EPSG:4326'))
 
     def test_gwc_handler(self):
         """
