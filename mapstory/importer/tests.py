@@ -113,12 +113,7 @@ class UploaderTests(MapStoryTestMixin):
         filename = os.path.join(os.path.dirname(__file__), 'test_ogr', f)
 
         res = self.import_file(filename, configuration_options=configuration_options)
-        res = res[0]
-
-        layer = res['layers'][0]
-
-        self.assertEqual(layer['status'], 'updated')
-        layer = Layer.objects.get(name=layer['name'])
+        layer = Layer.objects.get(name=res[0][0])
         self.assertEqual(layer.srid, 'EPSG:4326')
         self.assertEqual(layer.store, self.datastore.name)
         self.assertEqual(layer.storeType, 'dataStore')
@@ -331,17 +326,7 @@ class UploaderTests(MapStoryTestMixin):
         gi = GDALImport(in_file)
         layers = gi.handle(configuration_options=configuration_options)
 
-        d = db.connections['datastore'].settings_dict
-        connection_string = "PG:dbname='%s' user='%s' password='%s'" % (d['NAME'], d['USER'], d['PASSWORD'])
-
-        output = []
-        for layer, layer_config in layers:
-            # expose the featureType in geoserver
-            self.cat.publish_featuretype(layer, self.datastore, 'EPSG:4326')
-            output.append(gs_slurp(workspace='geonode', store=self.datastore.name, filter=layer))
-
-        return output
-
+        return layers
 
     @staticmethod
     def createFeatureType(catalog, datastore, name):
@@ -700,6 +685,12 @@ class UploaderTests(MapStoryTestMixin):
         # https://trac.osgeo.org/gdal/ticket/5241
         """
         self.generic_import('Walmart.zip', configuration_options=[{'index': 0, 'convert_to_date': []}])
+
+    def test_outside_bounds_regression(self):
+        """
+        Regression where layers with features outside projection bounds fail.
+        """
+        self.generic_import('Spring_2015.zip', configuration_options=[{'index': 0 }])
 
     def test_gwc_handler(self):
         """

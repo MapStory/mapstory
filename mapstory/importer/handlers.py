@@ -1,5 +1,6 @@
 from .utils import configure_time
 from .inspectors import OGRFieldConverter
+from decimal import Decimal, InvalidOperation
 from django import db
 from django.conf import settings
 from geonode.geoserver.helpers import gs_slurp, gs_catalog
@@ -263,3 +264,36 @@ class GeoWebCacheHandler(ImportHandler):
         return self.catalog.http.request(self.gwc_url(self.layer), method="POST",
                                          body=self.config(regex_parameter_filter=regex_filter, name=self.layer.name))
 
+
+class GeoServerBoundsHandler(ImportHandler):
+    """
+    Sets the lat/long bounding box of a layer to the max extent of WGS84 if the values of the current lat/long
+    bounding box fail the Decimal quantize method (which Django uses internally when validating decimals).
+
+    This can occur when the native bounding box contain Infinity values.
+    """
+
+    catalog = gs_catalog
+    workspace = 'geonode'
+
+    def can_run(self, layer, layer_config, *args, **kwargs):
+        """
+        Only run this handler if the layer is found in Geoserver.
+        """
+        self.layer = self.catalog.get_layer(layer)
+
+        if self.layer:
+            return True
+
+        return
+
+    @ensure_can_run
+    def handle(self, layer, layer_config, *args, **kwargs):
+        resource = self.layer.resource
+        try:
+            for dec in map(Decimal, resource.latlon_bbox[:4]):
+                dec.quantize(1)
+
+        except InvalidOperation:
+            resource.latlon_bbox = ['-180', '-90', '180', '90', 'EPSG:4326']
+            self.catalog.save(resource)
