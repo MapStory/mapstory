@@ -15,7 +15,7 @@ project_path: '{{ top_project }}/{{ git_repo }}'
 
 
 # don't change these
-venv: ~/.virtualenvs/{{ project_name }}
+venv: /home/mapstory/.virtualenvs/{{ project_name }}
 venv_activate: '{{ venv }}/bin/activate'
 
 update_apt_cache: yes

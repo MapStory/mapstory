@@ -40,6 +40,9 @@
   file: path=/var/lib/tomcat7/webapps/geoserver.war state=file owner=tomcat7 group=tomcat7
   notify: restart geoserver
 
+- name: restart geoserver
+  service: name=tomcat7 state=restarted
+
 - wait_for: path=/var/lib/tomcat7/webapps/geoserver/WEB-INF/
 
 - name: copy geoserver web.xml
@@ -68,7 +71,7 @@
   tags: [geoserver]
 
 - name: set geoserver password
-  lineinfile: dest={{ geoserver_data }}/security/usergroup/default/users.xml regexp='(.*)crypt1:.*("/>)$' line='\1plain:{{gspass}}\2' backrefs=yes
+  lineinfile: dest={{ geoserver_data }}/security/usergroup/default/users.xml regexp='(.*)crypt1:.*("/>)$' line='\1plain:{{geoserver_password}}\2' backrefs=yes
   tags: [geoserver]
 
 - name: geoserver datadir permissions
