@@ -1,0 +1,59 @@
+---
+
+- name: Create database user
+  sudo_user: postgres
+  postgresql_user: name={{db_user}} password={{ db_password }}
+  tags: ['db']
+
+- name: Create database
+  sudo_user: postgres
+  postgresql_db:
+    name={{ item.key }}
+    owner={{ item.value.db_owner}}
+    encoding={{ item.value.db_encoding }}
+    lc_collate={{ item.value.db_lc_collate }}
+    lc_ctype={{ item.value.db_lc_ctype }}
+    template={{ item.value.db_template }}
+  register: db_created
+  when: mapstory_dbs is defined
+  with_dict: "{{ mapstory_dbs|default({}) }}"
+  tags: ['db']
+
+- name: Add bigdate UDT
+  sudo_user: postgres
+  shell: psql -d {{ item.key }} -c "create domain bigdate as bigint"
+  when: db_created|changed and mapstory_dbs
+  with_dict: "{{ mapstory_dbs|default({}) }}"
+  tags: ['db']
+
+- name: Load PostGIS Extension
+  sudo_user: postgres
+  shell: psql -d  {{ item.key }} -c "CREATE EXTENSION postgis"
+  when: db_created|changed and mapstory_dbs and item.value.db_type == 'spatial'
+  with_dict: "{{ mapstory_dbs|default({}) }}"
+  tags: ['db']
+
+- name: Load DBLink Extension
+  sudo_user: postgres
+  shell: psql -d {{ item.key }} -c "CREATE EXTENSION dblink"
+  when: db_created|changed and setup_dblink is defined and setup_dblink and mapstory_dbs
+  with_dict: "{{ mapstory_dbs|default({}) }}"
+  tags: ['db']
+
+- name: Grant Perms on Spatial Ref Sys
+  sudo_user: postgres
+  shell: psql -d {{ item.key }} -c "GRANT ALL PRIVILEGES on spatial_ref_sys TO {{db_user}};"
+  when: db_created|changed and mapstory_dbs and item.value.db_type == 'spatial'
+  with_dict: "{{ mapstory_dbs|default({}) }}"
+  tags: ['db']
+
+- copy: src=roles/db/files/geonode_authorize_layer.sql dest=/tmp
+  tags: ['db']
+
+- name: load geonode_authorize_layers
+  sudo_user: postgres
+  shell: psql -f /tmp/geonode_authorize_layer.sql -d mapstory
+  tags: ['db']
+
+- file: path=/tmp/geonode_authorize_layer.sql state=absent
+  tags: ['db']

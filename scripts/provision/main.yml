@@ -1,40 +1,5 @@
 ---
-- hosts: mapstory
-  sudo: yes
-  vars_files:
-    - vars.yml
-    - [ '{{ vars }}', vars.yml ]
-  tasks:
-    - include: admin.yml
-  handlers:
-    - include: handlers.yml
 
-- hosts: mapstory
-  sudo: yes
-  sudo_user: postgres
-  vars_files:
-    - vars.yml
-    - [ '{{ vars }}', vars.yml ]
-  tasks:
-    - include: postgres.yml
-  handlers:
-    - include: handlers.yml
-
-- hosts: mapstory
-  sudo: yes
-  sudo_user: mapstory
-  vars_files:
-    - vars.yml
-    - [ '{{ vars }}', vars.yml ]
-  tasks:
-    - include: mapstory.yml
-  handlers:
-    - include: handlers.yml
-
-- hosts: mapstory
-  sudo: yes
-  vars_files:
-    - vars.yml
-    - [ '{{ vars }}', vars.yml ]
-  roles:
-    - celery
+- include: dbservers.yml
+- include: geoservers.yml
+- include: webservers.yml

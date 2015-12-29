@@ -1,0 +1,120 @@
+---
+- name: ensure known hosts
+  shell: mkdir ~/.ssh; touch ~/.ssh/known_hosts
+  tags: [config]
+
+- name: remove github.com from known host
+  shell: ssh-keygen -R github.com
+  sudo_user: '{{ application_user }}'
+  when: setup_git_repo is defined and setup_git_repo
+  tags: [config]
+
+- name: ensure github.com in known host
+  shell: ssh-keyscan -H github.com > ~/.ssh/known_hosts
+  sudo_user: '{{ application_user }}'
+  when: setup_git_repo is defined and setup_git_repo
+  tags: [config]
+
+- name: mapstory checkout
+  git: repo=git://github.com/MapStory/mapstory.git dest={{ top_project }} force=yes
+  sudo_user: '{{ application_user }}'
+  when: setup_git_repo is defined and setup_git_repo
+  tags: [git]
+
+- name: mapstory branch
+  command: git checkout {{ mapstory_branch }} chdir={{ top_project }}
+  sudo_user: '{{ application_user }}'
+  when: setup_git_repo is defined and setup_git_repo
+  tags: [git]
+
+- name: clean modified geonode content to prevent submodule update fail
+  command: git checkout -- . chdir={{ top_project }}/geonode
+  sudo_user: '{{ application_user }}'
+  when: setup_git_repo is defined and setup_git_repo
+  tags: [update]
+
+- name: mapstory update
+  shell: git pull && git submodule sync && git submodule update --init --recursive chdir={{ top_project }}
+  sudo_user: '{{ application_user }}'
+  when: setup_git_repo is defined and setup_git_repo
+  tags: [update]
+
+- name: setup-virtual-env
+  script: roles/web/files/setup.sh &> /tmp/setup-project.out
+  sudo_user: '{{ application_user }}'
+  tags: [setup]
+
+- name: pip install
+  shell: ~/.virtualenvs/{{ project_name }}/bin/pip install -r requirements.txt chdir={{ project_path }}
+  sudo_user: '{{ application_user }}'
+  tags: [update]
+
+- name: configure media root
+  file: path={{ media_root }} owner=www-data group=www-data mode=0775 state=directory
+  sudo_user: '{{ application_user }}'
+  tags: [setup, media]
+
+- name: compile python
+  shell: '{{ venv }}/bin/python -m compileall -f {{ top_project }}/geonode -f {{ project_path }}'
+  sudo_user: '{{ application_user }}'
+  tags: [update]
+  notify: restart django
+
+- name: generate django secret key
+  shell: python -c 'import random;print "".join(random.sample("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)",50))'
+  sudo_user: '{{ application_user }}'
+  register: secret_key
+  tags: [settings]
+
+- name: write secret key
+  template: src=roles/web/files/local_key.py dest={{ project_path }}/{{ project_name }}/settings/local_key.py
+  sudo_user: '{{ application_user }}'
+  tags: [settings]
+  notify: restart django
+
+- name: write project local settings
+  template: src=roles/web/files/local_settings.py.j2 dest={{ project_path }}/{{ project_name }}/settings/local_settings.py
+  sudo_user: '{{ application_user }}'
+  notify: restart django
+  tags: [settings]
+
+- name: syncdb
+  # would use django_manage but no way to avoid initial data?
+  shell: . {{ venv_activate }} && python manage.py syncdb --noinput --no-initial-data chdir={{ project_path }}
+  sudo_user: '{{ application_user }}'
+  tags: [update, syncdb]
+
+- name: load initial data
+  django_manage: app_path={{ project_path }} virtualenv={{ venv }} fixtures='{{ fixtures }}' command=loaddata
+  sudo_user: '{{ application_user }}'
+  tags: [settings, initial_data]
+
+- name: create or update django super user
+  sudo_user: '{{ application_user }}'
+  shell: >
+    PYTHONPATH=. DJANGO_SETTINGS_MODULE={{ application_name }}.settings
+    {{ venv }}/bin/python -c
+    "from geonode.people.models import Profile; p,_ = Profile.objects.get_or_create(username='admin'); p.is_staff=p.is_superuser=True; p.set_password('{{django_su_pass}}'); p.save()"
+    chdir={{ project_path }}
+  tags: [superuser]
+
+- name: collect-static remote
+  # Modify the paver args when using s3 since there is no need to apply --link
+  shell: . {{ venv_activate }} && paver collect_static -o '--noinput --ignore node_modules' chdir={{ project_path }}
+  sudo_user: '{{ application_user }}'
+  when: use_aws_s3 is defined and use_aws_s3
+  tags: [update]
+
+- name: collect-static local
+  # while we could use django_manage, this does a bit more
+  shell: . {{ venv_activate }} && paver collect_static chdir={{ project_path }}
+  sudo_user: '{{ application_user }}'
+  when: use_aws_s3 is undefined or use_aws_s3 == False
+  tags: [update]
+  ignore_errors: True
+
+- name: reload indexes
+  shell: . {{ venv_activate }} && python manage.py rebuild_index --noinput chdir={{ project_path }}
+  sudo_user: '{{ application_user }}'
+  tags: [elasticsearch]
+  ignore_errors: True

@@ -1,0 +1,7 @@
+---
+
+- include: install_postgres.yml
+  tags: db
+
+- include: setup_db.yml
+  tags: db

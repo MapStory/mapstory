@@ -1,25 +1,17 @@
+---
+
 - name: restart nginx
   service: name=nginx state=restarted
 
 - name: reload supervisor
-  shell: /usr/bin/supervisorctl reread && /usr/bin/supervisorctl update
+  shell: /usr/bin/supervisorctl reload
   sudo: yes
-  sudo_user: root
 
 - name: restart django
   supervisorctl: name=gunicorn-django state=started
   sudo: yes
-  sudo_user: root
   notify: check django running
   ignore_errors: True
-
-
-- name: restart geoserver
-  service: name=tomcat7 state=restarted
-  sudo: yes
-
-- name: reload postgres
-  service: name=postgresql state=reloaded
 
 - name: check django running
   uri: url=http://localhost

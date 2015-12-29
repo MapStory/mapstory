@@ -15,7 +15,6 @@
   apt: name={{item}} state=present
   with_items:
 # these were copied from geonode installation instructions
-    - build-essential
     - gcc
     - gdal-bin
     - gettext
@@ -29,8 +28,6 @@
     - libxslt1-dev
     - nodejs
     - patch
-    - postgresql-9.3
-    - postgresql-9.3-postgis-2.1
     - python-bs4
     - python-dev
     - python-django
@@ -52,11 +49,8 @@
     - python-support
     - python-urlgrabber
     - python-virtualenv
-    - tomcat7
     - transifex-client
-    - unzip
     - virtualenvwrapper
-    - zip
   tags: [install]
 
 - name: install node tools
@@ -69,8 +63,6 @@
       - python-pastescript
       - virtualenvwrapper
       - gunicorn
-      # needed since we're not pulling in tomcat
-      - openjdk-7-jre
       - nginx
       - supervisor
       - ipython
@@ -103,16 +95,16 @@
     - libssl-doc
   tags: [install]
 
-- name: mapstory user
-  user: name=mapstory groups=www-data
+- name: created application user
+  user: name={{ application_user }} groups=www-data
   tags: [config, user]
 
 - name: srv layout
-  file: path=/srv/scripts state=directory owner=mapstory group=www-data
+  file: path=/srv/scripts state=directory owner={{ application_user }} group=www-data
   tags: [config, files]
 
 - name: git layout
-  file: path=/srv/git state=directory owner=mapstory group=www-data
+  file: path=/srv/git state=directory owner={{ application_user }} group=www-data
   tags: [config, files]
 
 - name: create www-data home directory
@@ -120,12 +112,12 @@
   tags: [setup]
 
 - name: gunicorn-app
-  copy: src=files/gunicorn-app.sh dest=/srv/scripts/gunicorn-app.sh mode=650 owner=mapstory group=www-data
-  notify: [restart django]
+  copy: src=roles/web/files/gunicorn-app.sh dest=/srv/scripts/gunicorn-app.sh mode=650 owner={{ application_user }} group=www-data
+  notify: restart django
   tags: [config, files, gunicorn]
 
 - name: supervisor-gunicorn
-  copy: src=files/supervisor-gunicorn-django.conf dest=/etc/supervisor/conf.d
+  copy: src=roles/web/files/supervisor-gunicorn-django.conf dest=/etc/supervisor/conf.d
   notify: [reload supervisor, restart django]
   tags: [config, gunicorn]
 
@@ -133,7 +125,7 @@
   file: path=/etc/supervisor/conf.d/supervisor-jetty.conf state=absent
 
 - name: nginx-conf
-  template: src=files/nginx.conf dest=/etc/nginx/sites-available/mapstory
+  template: src=roles/web/files/nginx.conf dest=/etc/nginx/sites-available/{{ application_name }}
   notify: restart nginx
   tags: [config, nginx]
 
@@ -142,8 +134,8 @@
   notify: restart nginx
   tags: [config, nginx]
 
-- name: nginx-enable-mapstory
-  file: src=/etc/nginx/sites-available/mapstory dest=/etc/nginx/sites-enabled/mapstory state=link
+- name: nginx-enable
+  file: src=/etc/nginx/sites-available/{{ application_name }} dest=/etc/nginx/sites-enabled/{{ application_name }} state=link
   notify: restart nginx
   tags: [config, nginx]
 
@@ -160,78 +152,6 @@
   file: path={{ uploads_root }} state=directory owner=www-data group=www-data mode=775 recurse=yes
   tags: [nginx]
 
-- name: make geoserver dirs
-  file: path=/var/lib/geoserver/geoserver state=directory
-  tags: [geoserver]
-
-- name: geogig global config
-  copy: src=files/geogigconfig dest=/usr/share/tomcat7/.geogigconfig mode=0775 owner=tomcat7 group=tomcat7
-  tags: [setup]
-
-- name: fetch geoserver
-  shell: wget -SN {{ geoserver_download }} chdir=/home/mapstory
-  tags: [geoserver]
-
-- name: fetch geoserver wps classify libs
-  shell: wget -SN {{ geoserver_wps_classify }} chdir=/home/mapstory
-  tags: [geoserver]
-
-- name: db client settings
-  template: src=files/geoserver.xml dest=/etc/tomcat7/Catalina/localhost/geoserver.xml mode=0700 owner=tomcat7 group=tomcat7
-  tags: [geoserver]
-
-- name: copy geoserver.war to tomcat webapps
-  shell: cp /home/mapstory/geoserver.war /var/lib/tomcat7/webapps/geoserver.war
-  notify: restart geoserver
-  tags: [geoserver]
-
-- name: update geoserver perms
-  file: path=/var/lib/tomcat7/webapps/geoserver.war state=file owner=tomcat7 group=tomcat7
-
-- name: restart geoserver
-  service: name=tomcat7 state=restarted
-
-- wait_for: path=/var/lib/tomcat7/webapps/geoserver/WEB-INF/
-
-- name: copy geoserver web.xml
-  template: src=files/web.xml dest=/var/lib/tomcat7/webapps/geoserver/WEB-INF/web.xml owner=tomcat7 group=tomcat7
-  tags: [geoserver]
-
-- name: copy geoserver wps classify libs
-  shell: sudo unzip -j -o classify.zip "*.jar" -d {{ geoserver_lib_dir }} && sudo chown -R tomcat7:tomcat7 {{ geoserver_lib_dir }} chdir=/home/mapstory
-  notify: restart geoserver
-  tags: [geoserver, wps]
-
-- name: geogig global config
-  copy: src=files/geogigconfig dest=/var/lib/geoserver/geoserver/.geogigconfig mode=0775 owner=www-data group=www-data
-  tags: [geoserver]
-
-- name: unpack geoserver datadir
-  shell: "[ ! -e {{ geoserver_data }} ] && unzip /home/mapstory/geoserver.war data/* -d /var/lib/geoserver/ || exit 0"
-  tags: [geoserver]
-
-- name: copy geoserver config.xml
-  template: src=files/config.xml dest={{ geoserver_data }}/security/config.xml owner=www-data group=www-data
-  tags: [geoserver]
-
-- name: copy geoserver rest.properties
-  template: src=files/rest.properties dest={{ geoserver_data }}/security/rest.properties owner=www-data group=www-data
-  tags: [geoserver]
-
-- name: set geoserver password
-  lineinfile: dest={{ geoserver_data }}/security/usergroup/default/users.xml regexp='(.*)crypt1:.*("/>)$' line='\1plain:{{gspass}}\2' backrefs=yes
-  tags: [geoserver]
-
-- name: geoserver datadir permissions
-  file: path={{ geoserver_data }} state=directory owner=www-data group=www-data mode=775 recurse=yes
-  tags: [geoserver]
-
-- name: create geogit data directory
-  file: path={{ geoserver_data }}/geogig state=directory mode=0775 owner=www-data group=www-data
-  tags: [setup]
-
-- file: path=/tmp/mapstory state=absent
-  tags: [setup]
 
 
 # install apt key
@@ -288,8 +208,14 @@
   tags: [elasticsearch]
 
 - name: supervisor-elasticsearch
-  copy: src=files/supervisor-elasticsearch.conf dest=/etc/supervisor/conf.d
-  notify: [reload supervisor]
+  copy: src=roles/web/files/supervisor-elasticsearch.conf dest=/etc/supervisor/conf.d
+  notify: reload supervisor
+  tags: [elasticsearch]
+
+- name: reload supervisor
+  shell: /usr/bin/supervisorctl reread && /usr/bin/supervisorctl update
+  sudo: yes
+  sudo_user: root
   tags: [elasticsearch]
 
 # Install RabbitMQ
