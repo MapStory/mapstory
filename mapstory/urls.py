@@ -66,8 +66,6 @@ urlpatterns = patterns('',
     url(r'^maps/templates/load-new-map-dialog.html$', TemplateView.as_view(template_name='mapstory/composer/load-new-map-dialog.html'), name='composer-load-new-map'),
     url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
 
-    # Keeping route for testing
-    url(r'^maps/old$', 'mapstory.views.new_map', name="new_map"),
     url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
     url(r'^maps/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'),
     url(r'^maps/(?P<mapid>\d+)$', map_detail, name='map_detail'),
@@ -75,8 +73,8 @@ urlpatterns = patterns('',
     # MapLoom
 
     url(r'^maps/new',
-        'geonode.maps.views.new_map', {'template': 'maps/_map_view_maploom.html'},
-        name='map-edit'),
+        'mapstory.views.new_map', {'template': 'maps/_map_view_maploom.html'},
+        name='map-new'),
 
     url(r'^maps/edit$',
         'geonode.maps.views.new_map', {'template': 'maps/_map_view_maploom.html'},

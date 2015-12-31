@@ -509,9 +509,9 @@ def new_map_json(request):
     return new_map_json(request)
 
 @login_required
-def new_map(request):
+def new_map(request, template):
     from geonode.maps.views import new_map
-    return new_map(request)
+    return new_map(request, template)
 
 @login_required
 def layer_create(request, data=None, template='upload/layer_create.html'):
