@@ -6,6 +6,7 @@ mapstory/static/geonode/css/base.css
 mapstory/static/mapstory/css
 mapstory/static/vendor/
 mapstory/settings/local_key.py
+celerybeat-schedule
 node_modules
 *.pyc
 .ropeproject
