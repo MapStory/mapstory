@@ -69,7 +69,7 @@
     <form name="published_form" method="POST" id="form_post_published" action="{{ resource.detail_url }}">
       {% csrf_token %}
       {{ published_form|as_bootstrap }}
-      <button class="btn btn-primary" aria-hidden="true" id="published_submit_btn" type="submit">{% trans "Save" %}</button>
+      <button class="btn btn-primary" aria-hidden="true" id="published_submit_btn" name="published_submit_btn" type="submit">{% trans "Save" %}</button>
     </form>
   </div>
 </div>
