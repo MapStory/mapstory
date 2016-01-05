@@ -79,7 +79,7 @@
           {{ published_form|as_bootstrap }}
           <button class="btn btn-primary" aria-hidden="true" id="published_submit_btn" type="submit">{% trans "Save" %}</button>
         </form>
-        <!-- <a class="btn btn-danger" href="{% url "layer_remove" resource.service_typename %}">{% trans "Delete" %}</a> -->
+         <a class="btn btn-danger" href="{% url "layer_remove" resource.service_typename %}">{% trans "Delete" %}</a>
         {% endif %}
       </div>
       <div class="tab-pane" id="Edits">
