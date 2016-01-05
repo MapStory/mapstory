@@ -51,36 +51,7 @@
             <td width="65%">{{ resource.purpose }}</td>
           </tr>
         </table>
-        <!-- If the owner is this user, or it is a content moderator, make a button visible which spawns a modal to modify the metadata -->
-        {% if content_moderators in user.groups.all or user == resource.owner %}
-        <button href="#metaForm" class="btn btn-primary" data-toggle="modal" style="float: right;">{% trans "Edit Medata" %}</button>
-        <div id="metaForm" class="modal fade" tabindex="-1" role="dialog">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                  <h4 class="modal-title">{% trans 'Edit Metadata' %}</h4>
-              </div>
-              <form name="metadata_form" method="POST" id="form_post_metadata" action="{{ resource.detail_url }}">
-                <div class="modal-body">
-                  {% csrf_token %}
-                  {{ metadata_form|as_bootstrap }}
-                </div>
-                <div class="modal-footer">
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
-                    <button class="btn btn-primary" aria-hidden="true" id="metadata_submit_btn" type="submit">{% trans "Save" %}</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-        <form name="published_form" method="POST" id="form_post_published" action="{{ resource.detail_url }}">
-          {% csrf_token %}
-          {{ published_form|as_bootstrap }}
-          <button class="btn btn-primary" aria-hidden="true" id="published_submit_btn" type="submit">{% trans "Save" %}</button>
-        </form>
-         <a class="btn btn-danger" href="{% url "layer_remove" resource.service_typename %}">{% trans "Delete" %}</a>
-        {% endif %}
+
       </div>
       <div class="tab-pane" id="Edits">
         <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
@@ -165,5 +136,36 @@
         </div>
       </div>
     </div>
+
+  <!-- If the owner is this user, or it is a content moderator, make a button visible which spawns a modal to modify the metadata -->
+  <hr size="2"></hr>
+      {% if content_moderators in user.groups.all or user == resource.owner %}
+  <div class="panel panel-default" style="background-color: rgba(0,0,0,0.05)">
+  <div class="panel-body">
+        <a href="#metaForm" class="btn btn-primary" data-toggle="modal">{% trans "Edit StoryLayer Settings" %}</a>
+        <a class="btn btn-danger" href="{% url "layer_remove" resource.service_typename %}">{% trans "Delete StoryLayer" %}</a>
+        <div id="metaForm" class="modal fade" tabindex="-1" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                  <h4 class="modal-title">{% trans 'Edit Metadata' %}</h4>
+              </div>
+              <form name="metadata_form" method="POST" id="form_post_metadata" action="{{ resource.detail_url }}">
+                <div class="modal-body">
+                  {% csrf_token %}
+                  {{ metadata_form|as_bootstrap }}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                    <button class="btn btn-primary" aria-hidden="true" id="metadata_submit_btn" type="submit">{% trans "Save" %}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+  </div>
+  </div>
+          {% endif %}
   </div>
 </div>
