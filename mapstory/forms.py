@@ -105,6 +105,7 @@ class MetadataForm(forms.ModelForm):
     class Meta:
         model = ResourceBase
         fields = [
+            'title',
             'category',
             'language',
             'distribution_url',
