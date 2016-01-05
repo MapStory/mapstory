@@ -49,6 +49,10 @@
   template: src=roles/geo/files/web.xml dest=/var/lib/tomcat7/webapps/geoserver/WEB-INF/web.xml owner=tomcat7 group=tomcat7
   tags: [geoserver]
 
+- name: copy tomcat context settings
+  template: src=roles/geo/files/context.xml dest=/var/lib/tomcat7/conf/context.xml mode=0700 owner=tomcat7 group=www-data
+  tags: [setup]
+
 - name: copy geoserver wps classify libs
   shell: sudo unzip -j -o classify.zip "*.jar" -d {{ geoserver_lib_dir }} && sudo chown -R tomcat7:tomcat7 {{ geoserver_lib_dir }} chdir=/tmp/{{ application_name }}
   notify: restart geoserver
