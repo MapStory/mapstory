@@ -430,6 +430,8 @@ class UploaderTests(MapStoryTestMixin):
         Tests the configuration view.
         """
         f = os.path.join(os.path.dirname(__file__), 'test_ogr', 'point_with_date.geojson')
+        new_user = User.objects.create(username='test')
+        new_user_perms = ['change_resourcebase_permissions']
         c = AdminClient()
         c.login_as_non_admin()
 
@@ -442,7 +444,10 @@ class UploaderTests(MapStoryTestMixin):
                     'convert_to_date': ['date'],
                     'start_date': 'date',
                     'configureTime': True,
-                    'editable': True}]
+                    'editable': True,
+                    'permissions': {'users': {'test': new_user_perms,
+                                              'AnonymousUser': ["change_layer_data", "download_resourcebase",
+                                                                "view_resourcebase"]}}}]
 
         response = c.post('/importer-api/data-layers/{0}/configure/'.format(upload.id), data=json.dumps(payload),
                           content_type='application/json')
@@ -454,6 +459,21 @@ class UploaderTests(MapStoryTestMixin):
         self.assertEqual(layer.storeType, 'dataStore')
         self.assertTrue(layer.attributes[1].attribute_type, 'xsd:dateTime')
         self.assertEqual(Layer.objects.all()[0].owner.username, self.non_admin_username)
+
+        perms = layer.get_all_level_info()
+        user = User.objects.get(username=self.non_admin_username)
+
+        # check user permissions
+        for perm in [u'publish_resourcebase', u'change_resourcebase_permissions',
+                     u'delete_resourcebase', u'change_resourcebase', u'change_resourcebase_metadata',
+                     u'download_resourcebase', u'view_resourcebase', u'change_layer_style',
+                     u'change_layer_data']:
+            self.assertIn(perm, perms['users'][user])
+
+        self.assertTrue(perms['users'][new_user])
+        self.assertIn('change_resourcebase_permissions', perms['users'][new_user])
+
+        self.assertIn("change_layer_data", perms['users'][User.objects.get(username='AnonymousUser')])
 
         lyr = self.cat.get_layer(layer.name)
         self.assertTrue('time' in lyr.resource.metadata)

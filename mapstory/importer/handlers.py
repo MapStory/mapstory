@@ -97,7 +97,9 @@ class GeoNodePublishHandler(ImportHandler):
         return gs_slurp(workspace=self.workspace,
                         store=self.store_name,
                         filter=layer,
-                        owner=layer_config.get('layer_owner'))
+                        owner=layer_config.get('layer_owner'),
+                        permissions=layer_config.get('permissions')
+                        )
 
 
 class GeoServerTimeHandler(ImportHandler):
