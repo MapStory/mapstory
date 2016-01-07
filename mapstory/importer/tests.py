@@ -182,6 +182,19 @@ class UploaderTests(MapStoryTestMixin):
 
         self.generic_time_check(layer, attribute=date_attr.attribute)
 
+    def test_duplicate_imports(self):
+        """
+        Tests importing the same layer twice to ensure incrementing file names is properly handled.
+        """
+        filename = os.path.join(os.path.dirname(__file__), 'test_ogr', 'boxes_with_date_iso_date.zip')
+
+        gi = GDALImport(filename)
+        layers1 = gi.handle({'index': 0})
+        layers2 = gi.handle({'index': 0})
+
+        self.assertEqual(layers1[0][0], 'boxes_with_date_iso_date')
+        self.assertEqual(layers2[0][0], 'boxes_with_date_iso_date0')
+
     def test_boxes_with_date_iso_date_zip(self):
         """
         Tests the import of test_boxes_with_iso_date.

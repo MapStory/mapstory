@@ -147,17 +147,30 @@ class GDALImport(Import):
 
             layer_name = launder(str(layer_name))
 
-            # if the layer name already exists, increment it
-            while target_file.GetLayerByName(layer_name):
-                layer_name = increment(layer_name)
-
             # default the layer to 4326 if a spatial reference is not provided
             if not srs:
                 srs = osr.SpatialReference()
                 srs.ImportFromEPSG(4326)
 
-            target_layer = self.create_target_dataset(target_file, layer_name, srs,
-                                                      layer.GetGeomType(), options=target_create_options)
+            n = 0
+            while True:
+                n += 1
+                try:
+                    target_layer = self.create_target_dataset(target_file, layer_name, srs,
+                                                              layer.GetGeomType(), options=target_create_options)
+                except RuntimeError as e:
+                    # the layer already exists in the target store, increment the name
+                    if 'Use the layer creation option OVERWRITE=YES to replace it.' in e.message:
+                        layer_name = increment(layer_name)
+
+                        # try 100 times to increment then break
+                        if n >= 100:
+                            break
+
+                        continue
+                    else:
+                        raise e
+                break
 
             # adding fields to new layer
             layer_definition = ogr.Feature(layer.GetLayerDefn())
