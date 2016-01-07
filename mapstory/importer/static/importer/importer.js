@@ -16,8 +16,8 @@
   ])
 
   .config(function($interpolateProvider, $httpProvider, $sceDelegateProvider) {
-    $interpolateProvider.startSymbol('{[');
-    $interpolateProvider.endSymbol(']}');
+    //$interpolateProvider.startSymbol('{[');
+    //$interpolateProvider.endSymbol(']}');
     $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
     $sceDelegateProvider.resourceUrlWhitelist([
@@ -163,7 +163,7 @@
       $scope.errors = [];
       $scope.animationsEnabled = true;
 
-      $scope.open = function (layer, templateUrl, modalImage) {
+      $scope.open = function (layer, templateUrl, modalImage, staticUrl) {
 
         var modalInstance = $uibModal.open({
           animation: $scope.animationsEnabled,
@@ -176,6 +176,9 @@
             },
             modalImage: function () {
               return modalImage;
+            },
+            staticUrl: function () {
+              return staticUrl;
             }
           }
         });
@@ -193,11 +196,13 @@
 
   })
 
-  .controller('WizardController', function ($scope, $modalInstance, layer, layerService, $interval, modalImage) {
+  .controller('WizardController', function ($scope, $modalInstance, layer, layerService, $interval, modalImage, staticUrl) {
       $scope.layer = layer;
       $scope.errors = false;
       $scope.errorMessages = [];
       $scope.modalImage = modalImage;
+      $scope.staticUrl = staticUrl;
+
       var stop;
 
       if ($scope.layer.hasOwnProperty('name') && !($scope.layer.configuration_options.hasOwnProperty('name'))) {

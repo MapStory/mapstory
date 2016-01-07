@@ -1,6 +1,6 @@
 
 <div class="modal-header">
-    <h3 class="modal-title">Upload a StoryLayer <img class="import-wizard-icon" ng-src="{[modalImage]}"/></h3>
+    <h3 class="modal-title">Upload a StoryLayer <img class="import-wizard-icon" ng-src="{{modalImage}}"/></h3>
 </div>
 <div class="modal-body row">
     <div class="col-sm-8 col-md-8 col-lg-8 col-md-offset-2" style="padding-top: 5px; padding-left: 2px;">
@@ -9,7 +9,7 @@
 
         <div ng-repeat="fields in errors" style="color: #d43f3a">
             <div ng-repeat="error in fields" style="color: #d43f3a">
-                <i class="fa fa-warning" ng-show="error"></i> {[ error ]}
+                <i class="fa fa-warning" ng-show="error"></i> {{ error }}
             </div>
         </div>
 
