@@ -282,6 +282,7 @@ class GeoServerBoundsHandler(ImportHandler):
         """
         Only run this handler if the layer is found in Geoserver.
         """
+        self.catalog._cache.clear()
         self.layer = self.catalog.get_layer(layer)
 
         if self.layer:
@@ -292,6 +293,7 @@ class GeoServerBoundsHandler(ImportHandler):
     @ensure_can_run
     def handle(self, layer, layer_config, *args, **kwargs):
         resource = self.layer.resource
+
         try:
             for dec in map(Decimal, resource.latlon_bbox[:4]):
                 dec.quantize(1)
