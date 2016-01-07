@@ -334,7 +334,8 @@
           },
           scope: {
               upload: '=uploadObject',
-              i: '=' //passes the index of the object, used to delete uploads
+              i: '=', //passes the index of the object, used to delete uploads
+              staticUrl: '@'
           },
           link: function(scope, element, attrs) {
               scope.showImportOptions = false;
