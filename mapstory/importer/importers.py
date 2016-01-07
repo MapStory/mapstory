@@ -116,6 +116,7 @@ class GDALImport(Import):
         Loads data that has been uploaded into whatever format we need for serving.
         """
         filename = self.file
+        self.completed_layers = []
         err = GdalErrorHandler()
         gdal.PushErrorHandler(err.handler)
         configuration_options = kwargs.get('configuration_options', [{'index': 0}])
