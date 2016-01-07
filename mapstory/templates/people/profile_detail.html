@@ -146,7 +146,7 @@ body{ margin-top:20px; font-size: 14px}
                 <a href="{% url "account_password" %}">{% trans "change password" %}</a>
             </div>
             <div class="sidebar-content">
-                <a ng-controller="ModalDemoCtrl" style="cursor: pointer" ng-click="open(null, null, '{{ STATIC_URL }}/importer/partials/uploadModal.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png')">{% trans "upload storylayer" %}</a>
+                <a ng-controller="ModalDemoCtrl" style="cursor: pointer" ng-click="open(null, null, '{{ STATIC_URL }}importer/partials/uploadModal.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png')">{% trans "upload storylayer" %}</a>
             </div>
             <div class="sidebar-content">
                 <a href="{% url "new_map" %}">{% trans "create a mapstory" %}</a>
@@ -267,7 +267,7 @@ body{ margin-top:20px; font-size: 14px}
                         <div class="tab-pane" id="uploads_list">
                             <div class="no-content" ng-hide="uploads.length">
                                 <h2>No Uploads.</h2>
-                                <h4><a ng-controller="ModalDemoCtrl" style="cursor: pointer" ng-click="open(null, null, '{{ STATIC_URL }}/importer/partials/uploadModal.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png')">Click here</a> to upload your data!.</h4>
+                                <h4><a ng-controller="ModalDemoCtrl" style="cursor: pointer" ng-click="open(null, null, '{{ STATIC_URL }}importer/partials/uploadModal.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png')">Click here</a> to upload your data!.</h4>
                             </div>
                             <div class="" ng-show="uploads.length">
                                 <div class="container">
