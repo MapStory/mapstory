@@ -16,6 +16,10 @@
       <!-- <span style="font-size:1.3em;color:gainsboro">edit</span> -->
     </a>
   </div>
+  <div style="text-align:right" ng-app="mapstory.uploader">
+    <hr style="margin:5px">
+    <a ng-controller="ImportController"  style="cursor: pointer" ng-click="open(null, '{{ STATIC_URL }}/importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')"><span style="font-size:1.3em;color:gainsboro">append</span></a>
+  </div>
   <hr style="margin:5px">
   <div style="text-align:right">
   {% include "favorite/_favorite.html" with span_style="font-size:1.3em;color:gainsboro" btn_style="font-size:1.3em;color:gainsboro;border:none;background:none" %}

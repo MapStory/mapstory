@@ -31,6 +31,9 @@
 
 {% block extra_script %}
 
+    <script type="text/javascript" src="{{STATIC_URL}}lib/js/angular.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}mapstory/js/mapstory.js"></script>
+
     {% if GEOGIG_ENABLED and resource.link_set.geogig %}
         {% with "_geogig_scripts.html" as geogig_scripts_template %}
             {% include  geogig_scripts_template %}
@@ -95,8 +98,14 @@
           SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}';
       {% endif %}
     </script>
+  {% comment %}
   {% with include_spatial='true' %}
   {% include 'search/search_scripts.html' %}
   {% endwith %}
+  {% endcomment %}
+
+  {% include "importer/_importer_scripts.html" %}
+
+
   <script type="text/javascript" src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
 {% endblock extra_script %}

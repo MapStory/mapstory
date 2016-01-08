@@ -5,6 +5,36 @@
     <div class="col-sm-12 col-md-12 col-lg-12" style="padding-top: 5px; padding-left: 2px; text-align:center">
         <wizard on-finish="importLayer()">
 
+        <wz-step title="Upload" wz-disabled="{{layerSet}}" canexit="layer != null" class="row">
+            <div class="col-sm-8 col-md-8 col-lg-8 col-md-offset-2" style="padding-top: 5px; padding-left: 2px;" ng-controller="UploaderController">
+                <h3><strong>Upload your data.</strong></h3>
+                <p>Valid file types are .csv, .geojson, .gpx, .kml, .tif, zipped Shapefile.</p>
+                <div style="margin: 15px 0 10px 0;">
+                    <input type="file" nv-file-select uploader="uploader"/>
+                    </div>
+
+                <div ng-repeat="fields in errors" style="color: #d43f3a">
+                    <div ng-repeat="error in fields" style="color: #d43f3a">
+                        <i class="fa fa-warning" ng-show="error"></i> {{ error }}
+                    </div>
+                </div>
+
+                <div ng-show="uploadInProgress" style="margin: 10px 0 10px 0;">
+                    <i class="fa fa-spinner fa-spin"></i> Uploading...
+                </div>
+
+                <div ng-show="uploadSuccessful" style="color: #3D9970; margin: 10px 0 10px 0;">
+                    <i class="fa fa-check"></i> Upload successful.
+                </div>
+
+                <div class="import-wizard-button">
+                    <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+                </div>
+
+            </div>
+        </wz-step>
+
+
         <wz-step title="Name">
             <h3><strong>Name your StoryLayer</strong></h3>
             <p>Descriptive layer names make it easy for others to find your data.</p>

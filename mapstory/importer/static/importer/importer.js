@@ -163,6 +163,7 @@
       $scope.errors = [];
       $scope.animationsEnabled = true;
 
+      // TODO: Refactor args into a config object.
       $scope.open = function (layer, templateUrl, modalImage, staticUrl) {
 
         var modalInstance = $uibModal.open({
@@ -202,16 +203,28 @@
       $scope.errorMessages = [];
       $scope.modalImage = modalImage;
       $scope.staticUrl = staticUrl;
-
+      $scope.layerSet = ($scope.layer != null).toString();
       var stop;
 
-      if ($scope.layer.hasOwnProperty('name') && !($scope.layer.configuration_options.hasOwnProperty('name'))) {
-       $scope.layer.configuration_options.name = $scope.layer.name;
-      }
+      $scope.setDefaults = function() {
+        if ($scope.layer != null && $scope.layer.hasOwnProperty('name') && !($scope.layer.configuration_options.hasOwnProperty('name'))) {
+            $scope.layer.configuration_options.name = $scope.layer.name;
+        }
+      };
+
+      $scope.setLayer = function(layer) {
+        $scope.layer = layer;
+        $scope.setDefaults();
+      };
+
+      $scope.setDefaults();
 
       $scope.timeEnabled = function(string) {
+        if ($scope.layer == null) {
+            return false;
+        }
 
-        if (layer.configuration_options.configureTime !== true) {
+        if ($scope.layer.configuration_options.configureTime !== true) {
          //Angular wizard 'wz-disabled' disables a wizard screen when it receives 'true' (string) as a value.
          if (string === true) {
           return 'true';
@@ -241,7 +254,7 @@
           return;
         }
         $scope.processing = true;
-        layerService.configureUpload(layer).then(function(newLayer) {
+        layerService.configureUpload($scope.layer).then(function(newLayer) {
           stop = $interval(function() {
               layerService.update(newLayer).then(function(updatedLayer){
                 if (layerService.layerComplete(updatedLayer)) {
@@ -261,43 +274,8 @@
 
     })
 
-  .controller('ModalDemoCtrl', function ($scope, $uibModal, $log) {
-
-      $scope.errors = [];
-      $scope.animationsEnabled = true;
-
-      $scope.open = function (size, controller, templateUrl, modalImage) {
-
-        var controller = controller || 'UploaderController';
-        var templateUrl = templateUrl || 'myModalContent.html';
-
-        var modalInstance = $uibModal.open({
-          animation: $scope.animationsEnabled,
-          templateUrl: templateUrl,
-          controller: controller,
-          size: size,
-          resolve: {
-            errors: function () {
-              return $scope.errors;
-            },
-            modalImage: function() {
-                return modalImage;
-            }
-          }
-        });
-      };
-
-      $scope.toggleAnimation = function () {
-        $scope.animationsEnabled = !$scope.animationsEnabled;
-      };
-
-  })
-
-    .controller('UploaderController', function ($scope, $modalInstance, errors, FileUploader, $cookies, $rootScope,
-                                                modalImage) {
-      $scope.errors = errors;
-      $scope.uploadSuccessful = false;
-      $scope.modalImage = modalImage;
+    .controller('UploaderController', function ($scope,  FileUploader, $cookies, $rootScope, UploadedData
+                                                ) {
       $scope.uploader = new FileUploader({'url': '/uploads/new/json',
           autoUpload: true,
           headers:{'X-CSRFToken': $cookies['csrftoken']},
@@ -307,7 +285,11 @@
       $scope.reset = function() {
           $scope.errors = [];
           $scope.uploadSuccessful = false;
+          // TODO: Implement this:
+          $scope.uploadInProgress = false;
       };
+
+      $scope.reset();
 
       $scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
         $scope.reset();
@@ -315,6 +297,9 @@
           $scope.uploadSuccessful = false;
           $scope.errors = response.errors;
         } else {
+          UploadedData.query({id: response.id}).$promise.then(function(response){
+              $scope.setLayer(response['layers'][0]);
+          });
           $scope.uploadSuccessful = true;
           $rootScope.$broadcast('upload:complete', response);
         }
