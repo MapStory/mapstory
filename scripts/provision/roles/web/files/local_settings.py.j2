@@ -100,7 +100,7 @@ CELERY_DEFAULT_EXCHANGE_TYPE = "direct"
 CELERY_DEFAULT_ROUTING_KEY = "default"
 CELERY_CREATE_MISSING_QUEUES = True
 
-CELERY_ALWAYS_EAGER = {{ celery_always_eager }}  # False Makes tasks run synchronously
+CELERY_ALWAYS_EAGER = {{ celery_always_eager }}  # False makes tasks run asynchronously
 
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 CELERY_IGNORE_RESULT=False
