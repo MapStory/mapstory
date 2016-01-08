@@ -85,6 +85,12 @@ class GeoNodePublishHandler(ImportHandler):
         connection = db.connections['datastore']
         return connection.settings_dict['NAME']
 
+    def can_run(self, layer, layer_config, *args, **kwargs):
+        """
+        Skips this layer if the user is appending data to another dataset.
+        """
+        return 'appendTo' not in layer_config
+
     @ensure_can_run
     def handle(self, layer, layer_config, *args, **kwargs):
         """

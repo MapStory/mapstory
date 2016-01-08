@@ -139,7 +139,9 @@ IMPORT_HANDLERS = (
 'mapstory.importer.handlers.GeoServerBoundsHandler',
 'mapstory.importer.handlers.GeoServerTimeHandler',
 'mapstory.importer.handlers.GeoWebCacheHandler',
-'mapstory.importer.handlers.GeoNodePublishHandler')
+'mapstory.importer.handlers.GeoNodePublishHandler',
+'mapstory.import_handlers.LayerAppendHandler'
+)
 
 
 if os.path.exists('mapstory/settings/local_settings.py'):

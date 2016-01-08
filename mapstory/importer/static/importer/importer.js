@@ -164,7 +164,7 @@
       $scope.animationsEnabled = true;
 
       // TODO: Refactor args into a config object.
-      $scope.open = function (layer, templateUrl, modalImage, staticUrl) {
+      $scope.open = function (layer, templateUrl, modalImage, staticUrl, append) {
 
         var modalInstance = $uibModal.open({
           animation: $scope.animationsEnabled,
@@ -180,7 +180,11 @@
             },
             staticUrl: function () {
               return staticUrl;
+            },
+            append: function() {
+                return append;
             }
+
           }
         });
 
@@ -197,7 +201,8 @@
 
   })
 
-  .controller('WizardController', function ($scope, $modalInstance, layer, layerService, $interval, modalImage, staticUrl) {
+  .controller('WizardController', function ($scope, $modalInstance, layer, layerService, $interval, modalImage, staticUrl, append) {
+      $scope.append = append;
       $scope.layer = layer;
       $scope.errors = false;
       $scope.errorMessages = [];
@@ -214,6 +219,11 @@
 
       $scope.setLayer = function(layer) {
         $scope.layer = layer;
+
+        if ($scope.append != null) {
+            $scope.layer.configuration_options.appendTo = $scope.append;
+        }
+
         $scope.setDefaults();
       };
 

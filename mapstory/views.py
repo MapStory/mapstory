@@ -576,6 +576,13 @@ def layer_create(request, data=None, template='upload/layer_create.html'):
         print '---- create layer response: ', post_request.text
     return render_to_response(template, RequestContext(request, {}))
 
+
+def layer_append_minimal(source, target):
+    """
+    The main layer_append logic that can run outside of a request.
+    """
+    raise NotImplementedError
+
 @login_required
 def layer_append(request, template='upload/layer_append.html'):
     print 'layer append'
