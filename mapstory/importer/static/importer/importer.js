@@ -182,7 +182,7 @@
               return staticUrl;
             },
             append: function() {
-                return append;
+                return append || false;
             }
 
           }
@@ -209,11 +209,16 @@
       $scope.modalImage = modalImage;
       $scope.staticUrl = staticUrl;
       $scope.layerSet = ($scope.layer != null).toString();
+      $scope.defaultPermissions = {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}};
       var stop;
 
       $scope.setDefaults = function() {
         if ($scope.layer != null && $scope.layer.hasOwnProperty('name') && !($scope.layer.configuration_options.hasOwnProperty('name'))) {
             $scope.layer.configuration_options.name = $scope.layer.name;
+        }
+
+        if ($scope.layer != null && $scope.layer.configuration_options.permissions == null) {
+            $scope.layer.configuration_options.permissions = $scope.defaultPermissions;
         }
       };
 
