@@ -15,9 +15,10 @@
                     <input type="file" nv-file-select uploader="uploader"/>
                     </div>
 
-                <div style="margin: 10px 0 10px 0;">
-                    <div ng-show="uploadSuccessful" class="clrs-green"><i class="fa fa-check"></i> Upload successful.</div>
-                    <div ng-show="uploadInProgress"><i class="fa fa-spinner fa-spin"></i> Uploading...</div>
+                <div style="margin: 20px 0 10px 0;">
+
+                    <uib-progressbar type="success" ng-show="uploader.progress > 0" value="uploader.progress">{{uploader.progress}}%</uib-progressbar>
+
                     <div ng-repeat="fields in errors" class="clrs-red">
                         <div ng-repeat="error in fields" class="clrs-red">
                             <i class="fa fa-warning" ng-show="error"></i> {{ error }}
