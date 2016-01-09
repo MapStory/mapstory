@@ -455,6 +455,47 @@ class UploaderTests(MapStoryTestMixin):
             with GDALInspector(path) as f:
                 self.assertEqual(f.file_type(), file_type)
 
+    def test_append(self):
+        """
+        Tests the configuration view.
+        """
+        f = os.path.join(os.path.dirname(__file__), 'test_ogr', 'point_with_date.geojson')
+        new_user = User.objects.create(username='test')
+        new_user_perms = ['change_resourcebase_permissions']
+        c = AdminClient()
+        c.login_as_non_admin()
+
+        with open(f) as fp:
+            response = c.post(reverse('uploads-new'), {'file': fp}, follow=True)
+
+        upload = response.context['object_list'][0]
+
+        payload = [{'index': 0,
+                    'name': 'append',
+                    'convert_to_date': ['date'],
+                    'start_date': 'date',
+                    'configureTime': True,
+                    'editable': True,
+                    'permissions': {'users': {'test': new_user_perms,
+                                              'AnonymousUser': ["change_layer_data", "download_resourcebase",
+                                                                "view_resourcebase"]}}}]
+
+        response = c.post('/importer-api/data-layers/{0}/configure/'.format(upload.id), data=json.dumps(payload),
+                          content_type='application/json')
+
+        payload[0]['appendTo'] = 'append'
+        f = os.path.join(os.path.dirname(__file__), 'test_ogr', 'point_with_date_2.geojson')
+
+
+        with open(f) as fp:
+            response = c.post(reverse('uploads-new'), {'file': fp}, follow=True)
+
+        upload = response.context['object_list'][0]
+
+        response = c.post('/importer-api/data-layers/{0}/configure/'.format(upload.id), data=json.dumps(payload),
+                          content_type='application/json')
+
+
     def test_configure_view(self):
         """
         Tests the configuration view.

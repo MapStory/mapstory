@@ -28,6 +28,8 @@ from geonode.maps.views import snapshot_config
 from geonode.upload.utils import create_geoserver_db_featurestore
 from httplib import HTTPConnection, HTTPSConnection, NOT_ACCEPTABLE, INTERNAL_SERVER_ERROR, FORBIDDEN
 from mapstory.forms import UploadLayerForm, DeactivateProfileForm, EditProfileForm
+from mapstory import tasks
+from mapstory.utils import has_exception, error_response, parse_schema
 from mapstory.models import get_sponsors
 from mapstory.models import get_images
 from mapstory.models import get_group_layers
@@ -74,6 +76,8 @@ from account.models import EmailConfirmation
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from importer.forms import UploadFileForm
+
+
 
 from lxml import etree
 import json
@@ -581,52 +585,158 @@ def layer_append_minimal(source, target):
     """
     The main layer_append logic that can run outside of a request.
     """
-    raise NotImplementedError
+    source = 'geonode:' + source
+
+    def chunk_list(list, chunk_size):
+        """Yield successive chunk_size chunks from list."""
+        for i in xrange(0, len(list), chunk_size):
+            yield list[i:i+chunk_size]
+    # TODO: shape files may have truncated attributes names. do "startsWith" to match best columns
+    # allow_truncated_attribute_names = json.loads(request.POST.get(u'allowTruncatedAttributeNames', 'false'))
+
+    # TODO: use the provided column to decide which features should be updated and which should be created
+    # join_on_attribute = json.loads(request.POST.get(u'joinOnAttributeName', 'false'))
+
+    # make sure that source layer schema is a subset of destination schema.
+    #   - should work for creating a layer that has an extra filed and importing old one.
+    describe_feature_type_source = requests.post(
+            '{}/wfs?service=wfs&version=2.0.0&request=DescribeFeatureType&typeName={}'.format(
+                ogc_server_settings.public_url, source),
+            auth=ogc_server_settings.credentials
+    )
+
+    if has_exception(describe_feature_type_source.content):
+        return error_response(NOT_ACCEPTABLE, describe_feature_type_source.content)
+
+    describe_feature_type_destination = requests.post(
+            '{}/wfs?service=wfs&version=2.0.0&request=DescribeFeatureType&typeName={}'.format(
+                ogc_server_settings.public_url, target),
+            auth=ogc_server_settings.credentials
+    )
+
+    if has_exception(describe_feature_type_destination.content):
+        return error_response(NOT_ACCEPTABLE, describe_feature_type_destination.content)
+
+    schema_source = parse_schema(describe_feature_type_source.content)
+    schema_destination = parse_schema(describe_feature_type_destination.content)
+
+    if len(schema_source) == 0:
+        return error_response(NOT_ACCEPTABLE, 'source layer has no attributes')
+
+    if len(schema_destination) == 0:
+        return error_response(NOT_ACCEPTABLE, 'destination layer has no attributes')
+
+    if len(schema_destination) < len(schema_source):
+        return error_response(NOT_ACCEPTABLE, 'destination layer has fewer attributes than the source layer')
+
+    is_subset = True
+    for attrib in schema_source:
+        if attrib in schema_destination:
+            if schema_source[attrib] != schema_destination[attrib]:
+                is_subset = False
+                break
+        else:
+            # TODO: check for truncated attrib names
+            is_subset = False
+            break
+
+    if not is_subset:
+        return error_response(NOT_ACCEPTABLE,
+                              "source layer attributes are not a subset of destination layer's attributes")
+
+    get_features_request = requests.post(
+            '{}/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames={}'.format(ogc_server_settings.public_url,
+                                                                                      source),
+            auth=ogc_server_settings.credentials
+    )
+
+    if has_exception(get_features_request.content):
+        return error_response(NOT_ACCEPTABLE, get_features_request.content)
+
+    # the response to getfeatures will look like the following. We want everything between first <wfs:member> and last </wfs:member>
+    # <wfs:FeatureCollection ...>
+    #     <wfs:member>
+    #         <geonode:a3 gml:id="a3.4">
+    #             <geonode:geometry>
+    #                 <gml:Point srsDimension="2" srsName="urn:ogc:def:crs:EPSG::4326">
+    #                     <gml:pos>14.101186235070415 -87.19960869178765</gml:pos>
+    #                 </gml:Point>
+    #             </geonode:geometry>
+    #         </geonode:a3>
+    #     </wfs:member>
+    #     ...
+    #     <wfs:member>
+    #         ...
+    #     </wfs:member>
+    # </wfs:FeatureCollection>
+
+    # Create the xml containing all the features that need to be posted. Need to get the features form the source
+    # layer, update them so that they get posted to the destination layer
+    xml = etree.XML(get_features_request.content)
+    tree = etree.ElementTree(xml)
+    root = tree.getroot()
+    for ns in root.nsmap:
+        xpath_ns = etree.FunctionNamespace(root.nsmap[ns])
+        xpath_ns.prefix = ns
+    members = tree.xpath('//wfs:FeatureCollection/wfs:member')
+    members_str = []
+    for m in members:
+        # replace the tag <workspace>:<layer_destination> with <workspace>:<layer_source>
+        tokens = target.split(':')
+        layername_element = m.find(source, root.nsmap)
+        layername_element.tag = '{' + root.nsmap[tokens[0]] + '}' + tokens[1]
+        members_str.append(etree.tostring(m))
+
+    # divide the features (members_str) into chunks so that we can have a progress indicator
+    feature_count = len(members)
+    features_per_chunk = 100
+    features_chunks = chunk_list(members_str, features_per_chunk)
+
+    # example of transactions can be found at:
+    # https://github.com/highsource/ogc-schemas/tree/2.0.0/schemas/src/main/resources/ogc/wfs/2.0/examples
+    wfst_insert_template = ' '.join((
+        '<?xml version="1.0" encoding="utf-8"?>',
+        '<wfs:Transaction',
+        'service="WFS"',
+        'version="2.0.0"',
+        'xmlns:{workspace}="{workspace_uri}"',
+        'xmlns:gml="http://www.opengis.net/gml/3.2"',
+        'xmlns:wfs="http://www.opengis.net/wfs/2.0"',
+        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
+        'xsi:schemaLocation="',
+        'http://www.opengis.net/wfs/2.0',
+        'http://schemas.opengis.net/wfs/2.0/wfs.xsd',
+        'http://www.opengis.net/gml/3.2',
+        'http://schemas.opengis.net/gml/3.2.1/gml.xsd">',
+        '<wfs:Insert>',
+        '{features}',
+        '</wfs:Insert>',
+        '</wfs:Transaction>'
+    ))
+
+    features_posted = 0
+    summary_aggregated = {}
+    insertResults = []
+    for features in features_chunks:
+        taskPromise = tasks.append_feature_chunks.delay(features, wfst_insert_template, get_features_request)
+        insertResults.append(taskPromise)
+
+    #for results in insertResults:
+        #summary = results.get()
+        #features_posted += len(features)
+        #print 'progress: ', int((1.0 * features_posted / feature_count) * 100)
+
+    return insertResults
 
 @login_required
-def layer_append(request, template='upload/layer_append.html'):
+def layer_append(request, layername, template='upload/layer_append.html'):
     print 'layer append'
     context = {}
-
-    ### --- move these methods --- ###
-    def error_response(status_code, text):
-        return HttpResponse(status=status_code, content=text)
-
-    def has_exception(response_xml):
-        xml = etree.XML(response_xml)
-        tree = etree.ElementTree(xml)
-        root = tree.getroot()
-        # if prefix 'ows' is not define in the xml file, then ows:Exception won't exist either
-        if 'ows' not in root.nsmap:
-            return False
-        exceptions = root.findall('.//ows:Exception', root.nsmap)
-        return len(exceptions) == 0
-
-    def parse_schema(schema_xml_str):
-        xml = etree.XML(schema_xml_str)
-        tree = etree.ElementTree(xml)
-        root = tree.getroot()
-        for ns in root.nsmap:
-            xpath_ns = etree.FunctionNamespace(root.nsmap[ns])
-            xpath_ns.prefix = ns
-        sequences = tree.xpath('//xsd:schema/xsd:complexType/xsd:complexContent/xsd:extension/xsd:sequence/xsd:element')
-        schema_source = {}
-        for element in sequences:
-            schema_source[element.attrib['name']] = element.attrib['type']
-        return schema_source
-
-    def parse_wfst_response(schema_xml_str):
-        xml = etree.XML(schema_xml_str)
-        tree = etree.ElementTree(xml)
-        root = tree.getroot()
-        for ns in root.nsmap:
-            xpath_ns = etree.FunctionNamespace(root.nsmap[ns])
-            xpath_ns.prefix = ns
-        summary_element = tree.xpath('//wfs:TransactionResponse/wfs:TransactionSummary')
-        summary = {}
-        for child in summary_element[0].getchildren():
-            summary[child.tag.split('}')[1]] = child.text
-        return summary
+    layer_destination = _resolve_layer(
+        request,
+        layername,
+        'base.change_resourcebase_metadata',
+        _PERMISSION_MSG_METADATA)
 
     def parse_layers(get_capabilities_xml_str):
         xml = etree.XML(get_capabilities_xml_str)
@@ -642,175 +752,6 @@ def layer_append(request, template='upload/layer_append.html'):
             if name_element is not None and name_element.text:
                 layers[name_element.text] = name_element.text
         return layers
-
-    def chunk_list(list, chunk_size):
-        """Yield successive chunk_size chunks from list."""
-        for i in xrange(0, len(list), chunk_size):
-            yield list[i:i+chunk_size]
-
-    if request.method == 'GET':
-        # get layers visible to user
-        get_capabilities = requests.post(
-            '{}/wms?version=2.0.0&request=GetCapabilities'.format(ogc_server_settings.public_url),
-            cookies=request.COOKIES
-        )
-
-        if has_exception(get_capabilities.content):
-            return error_response(INTERNAL_SERVER_ERROR, get_capabilities.content)
-
-        context['layers'] = parse_layers(get_capabilities.content)
-
-        if len(context['layers']) == 0:
-            return error_response(NOT_ACCEPTABLE, 'no layers found')
-
-    elif request.method == 'POST':
-        # format workspace:layername
-        layer_destination = request.POST.get(u'layerDestination', None)
-        layer_source = request.POST.get(u'layerSource', None)
-
-        # TODO: shape files may have truncated attributes names. do "startsWith" to match best columns
-        #allow_truncated_attribute_names = json.loads(request.POST.get(u'allowTruncatedAttributeNames', 'false'))
-
-        # TODO: use the provided column to decide which features should be updated and which should be created
-        #join_on_attribute = json.loads(request.POST.get(u'joinOnAttributeName', 'false'))
-
-        # make sure that source layer schema is a subset of destination schema.
-        #   - should work for creating a layer that has an extra filed and importing old one.
-        describe_feature_type_source = requests.post(
-            '{}/wfs?service=wfs&version=2.0.0&request=DescribeFeatureType&typeName={}'.format(ogc_server_settings.public_url, layer_source),
-            cookies=request.COOKIES
-        )
-
-        if has_exception(describe_feature_type_source.content):
-            return error_response(NOT_ACCEPTABLE, describe_feature_type_source.content)
-
-        describe_feature_type_destination = requests.post(
-            '{}/wfs?service=wfs&version=2.0.0&request=DescribeFeatureType&typeName={}'.format(ogc_server_settings.public_url, layer_destination),
-            cookies=request.COOKIES
-        )
-
-        if has_exception(describe_feature_type_destination.content):
-            return error_response(NOT_ACCEPTABLE, describe_feature_type_destination.content)
-
-        schema_source = parse_schema(describe_feature_type_source.content)
-        schema_destination = parse_schema(describe_feature_type_destination.content)
-
-        if len(schema_source) == 0:
-            return error_response(NOT_ACCEPTABLE, 'source layer has no attributes')
-
-        if len(schema_destination) == 0:
-            return error_response(NOT_ACCEPTABLE, 'destination layer has no attributes')
-
-        if len(schema_destination) < len(schema_source):
-            return error_response(NOT_ACCEPTABLE, 'destination layer has fewer attributes than the source layer')
-
-        is_subset = True
-        for attrib in schema_source:
-            if attrib in schema_destination:
-                if schema_source[attrib] != schema_destination[attrib]:
-                    is_subset = False
-                    break
-            else:
-                # TODO: check for truncated attrib names
-                is_subset = False
-                break
-
-        if not is_subset:
-            return error_response(NOT_ACCEPTABLE, "source layer attributes are not a subset of destination layer's attributes")
-
-        get_features_request = requests.post(
-            '{}/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames={}'.format(ogc_server_settings.public_url, layer_source),
-            cookies=request.COOKIES
-        )
-
-        if has_exception(get_features_request.content):
-            return error_response(NOT_ACCEPTABLE, get_features_request.content)
-
-        # the response to getfeatures will look like the following. We want everything between first <wfs:member> and last </wfs:member>
-        # <wfs:FeatureCollection ...>
-        #     <wfs:member>
-        #         <geonode:a3 gml:id="a3.4">
-        #             <geonode:geometry>
-        #                 <gml:Point srsDimension="2" srsName="urn:ogc:def:crs:EPSG::4326">
-        #                     <gml:pos>14.101186235070415 -87.19960869178765</gml:pos>
-        #                 </gml:Point>
-        #             </geonode:geometry>
-        #         </geonode:a3>
-        #     </wfs:member>
-        #     ...
-        #     <wfs:member>
-        #         ...
-        #     </wfs:member>
-        # </wfs:FeatureCollection>
-
-        # Create the xml containing all the features that need to be posted. Need to get the features form the source
-        # layer, update them so that they get posted to the destination layer
-        xml = etree.XML(get_features_request.content)
-        tree = etree.ElementTree(xml)
-        root = tree.getroot()
-        for ns in root.nsmap:
-            xpath_ns = etree.FunctionNamespace(root.nsmap[ns])
-            xpath_ns.prefix = ns
-        members = tree.xpath('//wfs:FeatureCollection/wfs:member')
-        members_str = []
-        for m in members:
-            # replace the tag <workspace>:<layer_destination> with <workspace>:<layer_source>
-            tokens = layer_destination.split(':')
-            layername_element = m.find(layer_source, root.nsmap)
-            layername_element.tag = '{' + root.nsmap[tokens[0]] + '}' + tokens[1]
-            members_str.append(etree.tostring(m))
-
-        # divide the features (members_str) into chunks so that we can have a progress indicator
-        feature_count = len(members)
-        features_per_chunk = 100
-        features_chunks = chunk_list(members_str, features_per_chunk)
-
-        # example of transactions can be found at:
-        # https://github.com/highsource/ogc-schemas/tree/2.0.0/schemas/src/main/resources/ogc/wfs/2.0/examples
-        wfst_insert_v_2_0_0_template = ' '.join((
-            '<?xml version="1.0" encoding="utf-8"?>',
-            '<wfs:Transaction',
-            'service="WFS"',
-            'version="2.0.0"',
-            'xmlns:{workspace}="{workspace_uri}"',
-            'xmlns:gml="http://www.opengis.net/gml/3.2"',
-            'xmlns:wfs="http://www.opengis.net/wfs/2.0"',
-            'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
-            'xsi:schemaLocation="',
-                'http://www.opengis.net/wfs/2.0',
-                'http://schemas.opengis.net/wfs/2.0/wfs.xsd',
-                'http://www.opengis.net/gml/3.2',
-                'http://schemas.opengis.net/gml/3.2.1/gml.xsd">',
-                '<wfs:Insert>',
-                '{features}',
-                '</wfs:Insert>',
-            '</wfs:Transaction>'
-        ))
-
-        features_posted = 0
-        summary_aggregated = {}
-        for features in features_chunks:
-            wfs_transaction_payload = wfst_insert_v_2_0_0_template.format(features=''.join(features), workspace='geonode', workspace_uri='http://www.geonode.org/')
-            insert_features_request = requests.post(
-                '{}/wfs/WfsDispatcher'.format(ogc_server_settings.public_url),
-                cookies=request.COOKIES,
-                headers={'Content-Type': 'application/xml'},
-                data=wfs_transaction_payload
-            )
-            summary = parse_wfst_response(insert_features_request.content)
-            for s in summary:
-                if s in summary_aggregated:
-                    summary_aggregated[s] += int(summary[s])
-                else:
-                    summary_aggregated[s] = int(summary[s])
-
-            features_posted += len(features)
-            print 'progress: ', int((1.0 * features_posted / feature_count) * 100)
-
-            if has_exception(get_features_request.content):
-                return error_response(INTERNAL_SERVER_ERROR, get_features_request.content)
-
-        return HttpResponse(status=insert_features_request.status_code, content=json.dumps(summary_aggregated))
 
     return render_to_response(template, context, context_instance=RequestContext(request),)
 

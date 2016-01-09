@@ -22,12 +22,13 @@ def import_object(upload_file_id, configuration_options):
 
     gi = GDALImport(upload_file.file.path)
     layers = gi.handle(configuration_options=configuration_options)
-
     for layer, config in layers:
         try:
             matched_layer = Layer.objects.get(name=layer)
             UploadLayer.objects.filter(upload=upload_file.upload, index=config.get('index')).update(layer=matched_layer)
-        except UploadLayer.DoesNotExist, Layer.DoesNotExist:
+        except Layer.DoesNotExist:
+            pass
+        except UploadLayer.DoesNotExist:
             pass
 
     return layers
