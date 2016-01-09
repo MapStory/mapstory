@@ -57,3 +57,9 @@
 
 - file: path=/tmp/geonode_authorize_layer.sql state=absent
   tags: ['db']
+
+- name: Grant mapstory SUPERUSER for local testing.
+  sudo_user: postgres
+  shell: psql -c  "alter user mapstory superuser"
+  when: env == 'vagrant'
+  tags: ['db']
