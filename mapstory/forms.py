@@ -99,8 +99,13 @@ class KeywordsForm(forms.ModelForm):
         model = ResourceBase
         fields = ['keywords']
 
+
 # A form for just Metadata
 class MetadataForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(MetadataForm, self).__init__(*args, **kwargs)
+        self.fields['distribution_url'].label = "Data Source"
 
     class Meta:
         model = ResourceBase
