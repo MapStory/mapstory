@@ -1,6 +1,5 @@
 <div class="modal-header">
-        <h3 ng-if="!append" class="modal-title">Create a StoryLayer<img class="import-wizard-icon" ng-src="{{modalImage}}"/></h3>
-        <h3 ng-if="append" class="modal-title">Append data to StoryLayer<img class="import-wizard-icon" ng-src="{{modalImage}}"/></h3>
+        <h3 class="modal-title">{{appending() === true ? "Append data to StoryLayer" : "Create a StoryLayer"}}<img class="import-wizard-icon" ng-src="{{modalImage}}"/></h3>
 </div>
 <div class="modal-body row">
     <div class="col-sm-12 col-md-12 col-lg-12 import-wizard-modal">
@@ -88,7 +87,7 @@
             </div>
             </form>
         </wz-step>
-        <wz-step title="Permissions">
+        <wz-step title="Permissions" wz-disabled="{{appending(true)}}">
             <img class="import-wizard-image" ng-src="{{staticUrl}}mapstory/img/edit.png"/>
             <h3><strong>Allow other users to edit this data?</strong></h3>
             <p>StoryLayers are better when multiple authors work together.  Would you like to enable editing?</p>
@@ -100,7 +99,7 @@
                 <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
             </div>
         </wz-step>
-        <wz-step title="Import">
+        <wz-step title="{{appending() === true ? 'Append' : 'Import'}}">
             <h3><strong>Ok, we're ready to create the StoryLayer!</strong></h3>
             <p>Click below to create your StoryLayer</p>
             <div>

@@ -164,7 +164,7 @@
       $scope.animationsEnabled = true;
 
       // TODO: Refactor args into a config object.
-      $scope.open = function (layer, templateUrl, modalImage, staticUrl, append) {
+      $scope.open = function (layer, templateUrl, modalImage, staticUrl, appendTo) {
 
         var modalInstance = $uibModal.open({
           animation: $scope.animationsEnabled,
@@ -181,8 +181,8 @@
             staticUrl: function () {
               return staticUrl;
             },
-            append: function() {
-                return append || false;
+            appendTo: function() {
+                return appendTo;
             }
 
           }
@@ -201,8 +201,8 @@
 
   })
 
-  .controller('WizardController', function ($scope, $modalInstance, layer, layerService, $interval, modalImage, staticUrl, append) {
-      $scope.append = append;
+  .controller('WizardController', function ($scope, $modalInstance, layer, layerService, $interval, modalImage, staticUrl, appendTo) {
+      $scope.appendTo = appendTo;
       $scope.layer = layer;
       $scope.errors = false;
       $scope.errorMessages = [];
@@ -222,11 +222,22 @@
         }
       };
 
+      $scope.appending = function(asString) {
+          var appending = ($scope.appendTo != null && $scope.appendTo !== false);
+
+          if (asString === true) {
+              return appending.toString()
+          }
+
+          return appending;
+
+      };
+
       $scope.setLayer = function(layer) {
         $scope.layer = layer;
 
-        if ($scope.append != null) {
-            $scope.layer.configuration_options.appendTo = $scope.append;
+        if (($scope.appending()) === true) {
+            $scope.layer.configuration_options.appendTo = $scope.appendTo;
         }
 
         $scope.setDefaults();
@@ -234,14 +245,14 @@
 
       $scope.setDefaults();
 
-      $scope.timeEnabled = function(string) {
+      $scope.timeEnabled = function(asString) {
         if ($scope.layer == null) {
             return false;
         }
 
         if ($scope.layer.configuration_options.configureTime !== true) {
          //Angular wizard 'wz-disabled' disables a wizard screen when it receives 'true' (string) as a value.
-         if (string === true) {
+         if (asString === true) {
           return 'true';
          }
           return true;
