@@ -35,3 +35,5 @@
 .import-wizard-error-list li{font-weight: 600; list-style-type:none; font-size: 13px}
 .fnt-weight-400 {font-weight: 400}
 .fnt-weight-600 {font-weight: 400}
+.modal-footer-help {font-size: 13px; color: grey; padding-top: 5px}
+.modal-footer-help a {padding-left: 4px; padding-right: 4px;}

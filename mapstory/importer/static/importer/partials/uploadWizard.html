@@ -8,7 +8,7 @@
         <wz-step title="Upload" wz-disabled="{{layerSet}}" canexit="layer != null" class="row">
             <div class="col-sm-8 col-md-8 col-lg-8 col-md-offset-2" style="padding-top: 5px; padding-left: 2px;" ng-controller="UploaderController">
                 <h3><strong>Upload your data.</strong></h3>
-                <p>Valid file types are .csv, .geojson, .gpx, .kml, .tif, zipped Shapefile.</p>
+                <p>Mapstory only accepts openly licensed .csv, .geojson, .gpx, .kml, .tif and zipped shapefile formats. For print maps, use <a href="//warper.mapstory.org" target="_blank">MapStory Warper</a> to georefence before uploading.</p>
 
                 <div style="margin: 15px 0 10px 0;">
                     <input type="file" nv-file-select uploader="uploader"/>
@@ -121,5 +121,7 @@
     </div>
 </div>
 <div class="modal-footer">
+    <span class="pull-left modal-footer-help">
+        <a href="//help.mapstory.org">Ask for help</a> &#0149; <a href="/getskills">Example Data</a> &#0149; <a href="//wiki.mapstory.org/wiki/Data_Repositories">Find Data</a></span>
     <button class="btn btn-primary" type="button" ng-click="ok()">Close</button>
 </div>
