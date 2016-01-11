@@ -62,6 +62,13 @@
             return false;
           });
 
+    {% if request.GET.showMetadata == 'true'%}
+    // prompt user to fill out metadata if the showMetadata GET param is true
+    $(window).load(function(){
+            $('#metaForm').modal('show');
+        });
+    {% endif %}
+
     {% if resource.get_legend.link_type == 'json' %}
     $.getJSON('{{resource.get_legend_url}}', function (data) {
         var legend = data.layers[0].legend;
