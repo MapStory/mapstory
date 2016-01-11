@@ -111,6 +111,34 @@ class GDALImport(Import):
 
         return self.handler_results
 
+    def get_layer_type(self, layer, source):
+        """
+        A hook for returning the GeometryType of a layer.
+
+        This is work around for a limitation of the Shapefile: when reading a Shapefile of type
+        SHPT_ARC, the corresponding layer will be reported as of type wkbLineString, but depending on the number
+        of parts of each geometry, the actual type of the geometry for each feature can be either OGRLineString
+        or OGRMultiLineString. The same applies for SHPT_POLYGON shapefiles, reported as layers of type wkbPolygon,
+        but depending on the number of parts of each geometry, the actual type can be either OGRPolygon or
+        OGRMultiPolygon.
+        """
+        if source.GetDriver().ShortName == 'ESRI Shapefile':
+            geom_type = layer.GetGeomType()
+
+            # If point return MultiPoint
+            if geom_type == 1:
+                return 4
+
+            # If LineString return MultiLineString
+            if geom_type == 2:
+                return 5
+
+            # if Polygon return MutliPolygon
+            if geom_type == 3:
+                return 6
+
+        return layer.GetGeomType()
+
     def import_file(self, *args, **kwargs):
         """
         Loads data that has been uploaded into whatever format we need for serving.
@@ -138,6 +166,7 @@ class GDALImport(Import):
         for layer_options in configuration_options:
             layer = data.GetLayer(layer_options.get('index'))
             layer_name = layer_options.get('name', layer.GetName().lower())
+            layer_type = self.get_layer_type(layer, data)
             srs = layer.GetSpatialRef()
 
             if layer_name == 'ogrgeojson':
@@ -158,7 +187,7 @@ class GDALImport(Import):
                 n += 1
                 try:
                     target_layer = self.create_target_dataset(target_file, layer_name, srs,
-                                                              layer.GetGeomType(), options=target_create_options)
+                                                              layer_type, options=target_create_options)
                 except RuntimeError as e:
                     # the layer already exists in the target store, increment the name
                     if 'Use the layer creation option OVERWRITE=YES to replace it.' in e.message:
@@ -183,6 +212,19 @@ class GDALImport(Import):
                 feature = layer.GetFeature(i)
 
                 if feature:
+                    if feature.geometry().GetGeometryType() != target_layer.GetGeomType() and \
+                        target_layer.GetGeomType() in range(4, 7):
+
+                        conversion_function = ogr.ForceToMultiPolygon
+
+                        if target_layer.GetGeomType() == 5:
+                            conversion_function = ogr.ForceToMultiLineString
+
+                        elif target_layer.GetGeomType() == 4:
+                            conversion_function = ogr.ForceToMultiPoint
+
+                        geom = ogr.CreateGeometryFromWkb(feature.geometry().ExportToWkb())
+                        feature.SetGeometry(conversion_function(geom))
                     target_layer.CreateFeature(feature)
 
             self.completed_layers.append([target_layer.GetName(), layer_options])

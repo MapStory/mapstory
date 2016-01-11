@@ -113,6 +113,7 @@ class UploaderTests(MapStoryTestMixin):
         filename = os.path.join(os.path.dirname(__file__), 'test_ogr', f)
 
         res = self.import_file(filename, configuration_options=configuration_options)
+
         layer = Layer.objects.get(name=res[0][0])
         self.assertEqual(layer.srid, 'EPSG:4326')
         self.assertEqual(layer.store, self.datastore.name)
@@ -189,11 +190,11 @@ class UploaderTests(MapStoryTestMixin):
         filename = os.path.join(os.path.dirname(__file__), 'test_ogr', 'boxes_with_date_iso_date.zip')
 
         gi = GDALImport(filename)
-        layers1 = gi.handle({'index': 0})
-        layers2 = gi.handle({'index': 0})
+        layers1 = gi.handle({'index': 0, 'name': 'test'})
+        layers2 = gi.handle({'index': 0,  'name': 'test'})
 
-        self.assertEqual(layers1[0][0], 'boxes_with_date_iso_date')
-        self.assertEqual(layers2[0][0], 'boxes_with_date_iso_date0')
+        self.assertEqual(layers1[0][0], 'test')
+        self.assertEqual(layers2[0][0], 'test0')
 
     def test_boxes_with_date_iso_date_zip(self):
         """
@@ -414,13 +415,13 @@ class UploaderTests(MapStoryTestMixin):
         c.login_as_non_admin()
 
         with open(f) as fp:
-            print fp
             response = c.post(reverse('uploads-new-json'), {'file': fp}, follow=True)
 
         self.assertEqual(response.status_code, 200)
         self.assertIn('application/json', response.get('Content-Type', ''))
         content = json.loads(response.content)
-        self.assertEqual(content, {'state': 'UPLOADED', 'id': 1})
+        self.assertIn('state', content)
+        self.assertIn('id', content)
 
     def test_describe_fields(self):
         """
@@ -743,6 +744,13 @@ class UploaderTests(MapStoryTestMixin):
         self.generic_import('Spring_2015.zip', configuration_options=[{'index': 0 }])
         resource = self.cat.get_layer('spring_2015').resource
         self.assertEqual(resource.latlon_bbox, ('-180.0', '180.0', '-90.0', '90.0', 'EPSG:4326'))
+
+    def test_multipolygon_shapefile(self):
+        """
+        Tests shapefile with multipart polygons.
+        """
+
+        self.generic_import('PhoenixFirstDues.zip', configuration_options=[{'index': 0}])
 
     def test_gwc_handler(self):
         """
