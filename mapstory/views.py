@@ -586,7 +586,6 @@ def layer_append_minimal(source, target):
     The main layer_append logic that can run outside of a request.
     """
     source = 'geonode:' + source
-
     def chunk_list(list, chunk_size):
         """Yield successive chunk_size chunks from list."""
         for i in xrange(0, len(list), chunk_size):
@@ -621,7 +620,7 @@ def layer_append_minimal(source, target):
     schema_destination = parse_schema(describe_feature_type_destination.content)
 
     if len(schema_source) == 0:
-        return error_response(NOT_ACCEPTABLE, 'source layer has no attributes')
+        return error_response(NOT_ACCEPTABLE, 'source layer has no attributes' )
 
     if len(schema_destination) == 0:
         return error_response(NOT_ACCEPTABLE, 'destination layer has no attributes')
@@ -649,6 +648,7 @@ def layer_append_minimal(source, target):
                                                                                       source),
             auth=ogc_server_settings.credentials
     )
+
 
     if has_exception(get_features_request.content):
         return error_response(NOT_ACCEPTABLE, get_features_request.content)
@@ -688,7 +688,6 @@ def layer_append_minimal(source, target):
         members_str.append(etree.tostring(m))
 
     # divide the features (members_str) into chunks so that we can have a progress indicator
-    feature_count = len(members)
     features_per_chunk = 100
     features_chunks = chunk_list(members_str, features_per_chunk)
 
@@ -713,18 +712,10 @@ def layer_append_minimal(source, target):
         '</wfs:Insert>',
         '</wfs:Transaction>'
     ))
-
-    features_posted = 0
-    summary_aggregated = {}
     insertResults = []
     for features in features_chunks:
         taskPromise = tasks.append_feature_chunks.delay(features, wfst_insert_template, get_features_request)
         insertResults.append(taskPromise)
-
-    #for results in insertResults:
-        #summary = results.get()
-        #features_posted += len(features)
-        #print 'progress: ', int((1.0 * features_posted / feature_count) * 100)
 
     return insertResults
 

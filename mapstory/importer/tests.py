@@ -483,7 +483,11 @@ class UploaderTests(MapStoryTestMixin):
         response = c.post('/importer-api/data-layers/{0}/configure/'.format(upload.id), data=json.dumps(payload),
                           content_type='application/json')
 
-        payload[0]['appendTo'] = 'append'
+        cursor = db.connections['datastore'].cursor()
+        cursor.execute('select count(*) from append')
+        self.assertEqual(1,cursor.fetchone()[0])
+
+        payload[0]['appendTo'] = 'geonode:append'
         f = os.path.join(os.path.dirname(__file__), 'test_ogr', 'point_with_date_2.geojson')
 
 
@@ -494,6 +498,11 @@ class UploaderTests(MapStoryTestMixin):
 
         response = c.post('/importer-api/data-layers/{0}/configure/'.format(upload.id), data=json.dumps(payload),
                           content_type='application/json')
+
+        cursor = db.connections['datastore'].cursor()
+        cursor.execute('select count(*) from append')
+        self.assertEqual(2,cursor.fetchone()[0])
+
 
 
     def test_configure_view(self):

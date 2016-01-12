@@ -1,7 +1,50 @@
 import os
 import re
+from lxml import etree
 from django.contrib.staticfiles.templatetags import staticfiles
+from django.http import HttpResponse
 
+def parse_schema(schema_xml_str):
+    xml = etree.XML(schema_xml_str)
+    tree = etree.ElementTree(xml)
+    root = tree.getroot()
+    for ns in root.nsmap:
+        xpath_ns = etree.FunctionNamespace(root.nsmap[ns])
+        xpath_ns.prefix = ns
+    sequences = tree.xpath('//xsd:schema/xsd:complexType/xsd:complexContent/xsd:extension/xsd:sequence/xsd:element')
+    schema_source = {}
+    for element in sequences:
+        schema_source[element.attrib['name']] = element.attrib['type']
+    return schema_source
+
+
+def error_response(status_code, text):
+    return HttpResponse(status=status_code, content=text)
+
+
+def has_exception(response_xml):
+    xml = etree.XML(response_xml)
+    tree = etree.ElementTree(xml)
+    root = tree.getroot()
+    # if prefix 'ows' is not define in the xml file, then ows:Exception won't exist either
+    if 'ows' not in root.nsmap:
+        return False
+    exceptions = root.findall('.//ows:Exception', root.nsmap)
+    return len(exceptions) == 0
+
+
+def parse_wfst_response(schema_xml_str):
+    xml = etree.XML(schema_xml_str)
+    tree = etree.ElementTree(xml)
+    root = tree.getroot()
+    for ns in root.nsmap:
+        xpath_ns = etree.FunctionNamespace(root.nsmap[ns])
+        xpath_ns.prefix = ns
+    summary_element = tree.xpath('//wfs:TransactionResponse/wfs:TransactionSummary')
+    summary = {}
+    for child in summary_element[0].getchildren():
+        summary[child.tag.split('}')[1]] = child.text
+    return summary
 
 class Link(object):
 
