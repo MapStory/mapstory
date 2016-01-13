@@ -115,7 +115,7 @@ $(function() {
     if (storeCreateGeogig) {
       featureType.store.name = null;
     } else {
-      featureType.store.name = 'datastore';
+      featureType.store.name = 'mapstory_data';
     }
 
     // add attributes to feature type

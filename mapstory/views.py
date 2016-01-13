@@ -522,7 +522,6 @@ def new_map(request, template):
 
 @login_required
 def layer_create(request, data=None, template='upload/layer_create.html'):
-    print 'layer create'
     if request.method == 'POST':
         feature_type = json.loads(request.POST.get(u'featureType', None))
         datastore = feature_type['store']['name']
@@ -540,7 +539,7 @@ def layer_create(request, data=None, template='upload/layer_create.html'):
         except AttributeError:
             return HttpResponse(status=FORBIDDEN, content='ALLOWED_DATASTORE_LAYER_CREATE whitelist is not defined.')
 
-        if datastore not in settings.ALLOWED_DATASTORE_LAYER_CREATE:
+        if datastore not in getattr(settings, 'ALLOWED_DATASTORE_LAYER_CREATE', []) and '*' not in getattr(settings, 'ALLOWED_DATASTORE_LAYER_CREATE', []):
             return HttpResponse(status=FORBIDDEN, content='datastore specified in featureType is not in the ALLOWED_DATASTORE_LAYER_CREATE whitelist.')
 
         post_request = requests.post(
@@ -551,10 +550,15 @@ def layer_create(request, data=None, template='upload/layer_create.html'):
         )
 
         if post_request.status_code == 200 or post_request.status_code == 201:
+
             # import the layer from geoserver to geonode
-            response = gs_slurp(filter=feature_type['name'], workspace=feature_type['namespace']['name'], store=feature_type['store']['name'])
+            response = gs_slurp(filter=feature_type['name'],
+                                workspace=feature_type['namespace']['name'],
+                                store=feature_type['store']['name'],
+                                owner=request.user)
+
             if 'layers' in response and len(response['layers']) == 1 and 'name' in response['layers'][0] and response['layers'][0]['name'] == feature_type['name']:
-                # configruer layer with time dimension as a list for now. Since importer is being refactored,
+                # configure layer with time dimension as a list for now. Since importer is being refactored,
                 # we'll change how it is done.
                 layer = gs_catalog.get_layer(feature_type['name'])
                 resource = layer.resource

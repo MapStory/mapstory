@@ -18,6 +18,10 @@ import json
 from geonode.geoserver.helpers import gs_catalog
 from mapstory.export import export_via_model
 from socket import error as socket_error
+from geoserver.catalog import FailedRequestError
+from geonode.geoserver.helpers import gs_catalog
+from django import db
+
 
 User = get_user_model()
 
@@ -454,10 +458,83 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         print layer.get_all_level_info()
         self.assertEqual(geonode_authorize_layer('AnonymousUser', layer.typename), 'lo-rw')
 
+class LayersCreateTest(MapStoryTestMixin):
 
+    def create_datastore(self, connection, catalog):
+        settings = connection.settings_dict
+        params = {'database': settings['NAME'],
+                  'passwd': settings['PASSWORD'],
+                  'namespace': 'http://www.geonode.org/',
+                  'type': 'PostGIS',
+                  'dbtype': 'postgis',
+                  'host': settings['HOST'],
+                  'user': settings['USER'],
+                  'port': settings['PORT'],
+                  'enabled': "True"}
 
+        store = catalog.create_datastore(settings['NAME'], workspace=self.workspace)
+        store.connection_parameters.update(params)
 
+        try:
+            catalog.save(store)
+        except FailedRequestError:
+            # assuming this is because it already exists
+            pass
 
+        return catalog.get_store(settings['NAME'])
 
+    def setUp(self):
 
+        self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
+        self.non_admin, self.non_admin_password = self.create_user('non_admin', 'non_admin', is_superuser=True)
+        self.layer_name = 'testz'
+        self.workspace ='geonode'
+        self.postgis = db.connections['datastore']
+        self.datastore = self.create_datastore(self.postgis, gs_catalog)
 
+        cursor = self.postgis.cursor()
+        cursor.execute("create domain bigdate as bigint;")
+
+    def tearDown(self):
+
+        layer = gs_catalog.get_layer(self.layer_name)
+
+        if layer:
+            gs_catalog.delete(layer)
+
+        if self.datastore:
+            gs_catalog.delete(self.datastore, recurse=True)
+
+    def test_create_layers(self):
+        """
+        Tests the layer create view.
+        """
+        c = Client()
+        response = c.get(reverse('layer_create'))
+
+        # user must be authenticated
+        self.assertEqual(response.status_code, 302)
+
+        c.login(**{'username': self.non_admin, 'password': self.non_admin_password})
+        response = c.get(reverse('layer_create'))
+        self.assertEqual(response.status_code, 200)
+
+        js = {"name": self.layer_name,
+              "store": {"name": self.datastore.name},
+              "namespace": {"name": 'geonode'},
+              "attributes": {"attribute": [{"name": "time",
+                                               "binding": "org.geotools.data.postgis.PostGISDialect$XDate",
+                                               "minOccurs": 0,
+                                               "nillable": True},
+                                           {"name": "geometry",
+                                                "binding": "com.vividsolutions.jts.geom.Point",
+                                                "minOccurs":0,
+                                                "nillable":True}]},
+              "nativeCRS": "EPSG:4326",
+              "srs": "EPSG:4326"}
+
+        response = c.post(reverse('layer_create'), {'featureType': json.dumps(js)})
+
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(Layer.objects.all().count())
+        self.assertEqual(Layer.objects.first().owner.username, self.non_admin)

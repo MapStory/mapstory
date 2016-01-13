@@ -387,4 +387,4 @@ REMOTE_CONTENT_URL = STATIC_URL + 'assets'
 
 # the layer_create view allows users to create layer by providing a workspace and a featureType
 # this settings whitelists the datastores in which layers creation are allowed
-ALLOWED_DATASTORE_LAYER_CREATE = ('datastore',)
+ALLOWED_DATASTORE_LAYER_CREATE = ('*',)
