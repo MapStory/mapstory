@@ -485,6 +485,12 @@ class LayersCreateTest(MapStoryTestMixin):
 
     def setUp(self):
 
+        try:
+            # Ensure Geoserver is running.
+            assert gs_catalog.about()
+        except socket_error as e:
+            self.skipTest('Geoserver must be running for this test.')
+
         self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
         self.non_admin, self.non_admin_password = self.create_user('non_admin', 'non_admin', is_superuser=True)
         self.layer_name = 'testz'
