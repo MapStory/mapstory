@@ -68,7 +68,7 @@ urlpatterns = patterns('',
 
     url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
     url(r'^maps/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'),
-    url(r'^maps/(?P<mapid>\d+)$', map_detail, name='map_detail'),
+    url(r'^maps/(?P<mapid>\d+)/?$', map_detail, name='map_detail'),
 
     # MapLoom
 
