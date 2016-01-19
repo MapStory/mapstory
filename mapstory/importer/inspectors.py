@@ -208,13 +208,15 @@ class OGRFieldConverter(OGRInspector):
         field_as_string = str(field)
         fieldname = '{0}_as_date'.format(field)
         target_layer = self.data.GetLayerByName(layer_name)
-
-        while target_layer.GetLayerDefn().GetFieldIndex(fieldname) >= 0:
+        target_defn = target_layer.GetLayerDefn()
+        while target_defn.GetFieldIndex(fieldname) >= 0:
             fieldname = increment(fieldname)
 
-        original_field_index = target_layer.GetLayerDefn().GetFieldIndex(field_as_string)
+        original_field_index = target_defn.GetFieldIndex(field_as_string)
         target_layer.CreateField(ogr.FieldDefn(fieldname, ogr.OFTDateTime))
-        field_index = target_layer.GetLayerDefn().GetFieldIndex(fieldname)
+
+        field_index = target_defn.GetFieldIndex(fieldname)
+
         field_defn = ogr.FieldDefn(field_as_string, ogr.OFTDateTime)
 
         for feat in target_layer:
@@ -233,7 +235,7 @@ class OGRFieldConverter(OGRInspector):
                 target_layer.SetFeature(feat)
 
         target_layer.DeleteField(original_field_index)
-        field_index = target_layer.GetLayerDefn().GetFieldIndex(fieldname)
+        field_index = target_defn.GetFieldIndex(fieldname)
         target_layer.AlterFieldDefn(field_index,field_defn,ogr.ALTER_NAME_FLAG)
 
         return field

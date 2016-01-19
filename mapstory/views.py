@@ -29,7 +29,7 @@ from geonode.upload.utils import create_geoserver_db_featurestore
 from httplib import HTTPConnection, HTTPSConnection, NOT_ACCEPTABLE, INTERNAL_SERVER_ERROR, FORBIDDEN
 from mapstory.forms import UploadLayerForm, DeactivateProfileForm, EditProfileForm
 from mapstory import tasks
-from mapstory.utils import has_exception, error_response, parse_schema
+from mapstory.utils import has_exception, error_response, parse_schema, parse_wfst_response, print_exception
 from mapstory.models import get_sponsors
 from mapstory.models import get_images
 from mapstory.models import get_group_layers
@@ -76,8 +76,7 @@ from account.models import EmailConfirmation
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from importer.forms import UploadFileForm
-
-
+from celery import group
 
 from lxml import etree
 import json
@@ -716,12 +715,13 @@ def layer_append_minimal(source, target):
         '</wfs:Insert>',
         '</wfs:Transaction>'
     ))
-    insertResults = []
-    for features in features_chunks:
-        taskPromise = tasks.append_feature_chunks.delay(features, wfst_insert_template, get_features_request)
-        insertResults.append(taskPromise)
+    insert_tasks = group(tasks.append_feature_chunks.subtask((features,wfst_insert_template,get_features_request)) for features in features_chunks)
 
-    return insertResults
+    results = insert_tasks.apply_async()
+
+    insert_summary = results.join()
+
+    return insert_summary
 
 @login_required
 def layer_append(request, layername, template='upload/layer_append.html'):

@@ -29,8 +29,18 @@ def has_exception(response_xml):
     # if prefix 'ows' is not define in the xml file, then ows:Exception won't exist either
     if 'ows' not in root.nsmap:
         return False
+
     exceptions = root.findall('.//ows:Exception', root.nsmap)
     return len(exceptions) == 0
+
+def print_exception(response_xml):
+    xml = etree.XML(response_xml)
+    tree = etree.ElementTree(xml)
+    root = tree.getroot()
+    exceptions = root.findall('.//ows:Exception',root.nsmap)
+    for exception in exceptions:
+        print 'Exception {0}: {1}'.format(exception.tag,exception.text)
+
 
 
 def parse_wfst_response(schema_xml_str):
