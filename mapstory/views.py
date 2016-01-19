@@ -638,7 +638,12 @@ def layer_append_minimal(source, target):
                 is_subset = False
                 break
         else:
-            # TODO: check for truncated attrib names
+            trunc_attrib = False
+            for dest_attrib in schema_destination:
+                if dest_attrib.startswith(attrib) and len(dest_attrib) > 10:
+                    trunc_attrib = True
+            if trunc_attrib is True:
+                continue
             is_subset = False
             break
 
