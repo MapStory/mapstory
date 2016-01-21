@@ -16,7 +16,7 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">{% trans 'Create' %}</a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url "profile_detail" slug=user.username %}">{% trans "Upload Data" %}</a></li>
-                        <li><a href="{% url 'layer_create' %}">Create Storylayer</a></li>
+                        <li><a ng-controller="createLayerCtrl" ng-click="open('{{ STATIC_URL }}importer/partials/uploadWizard.html')">Create Storylayer</a></li>
                         <li><a href="{% url 'new_map' %}?tour">Compose MapStory</a></li>
                     </ul>
                 </li>
@@ -98,11 +98,9 @@
                 </li>
             </ul>
         </div><!--/.nav-collapse -->
-
         {% endif %}
     </div>
 </div>
-
 {% if not hide_menu %}
 
 {% include 'mapstory/_login_register.html' %}

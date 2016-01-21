@@ -105,7 +105,14 @@
           SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}';
       {% endif %}
     </script>
+
   {% include "importer/_importer_scripts.html" %}
+
+  {% comment %}
+  {% with include_spatial='true' %}
+  {% include 'search/search_scripts.html' %}
+  {% endwith %}
+  {% endcomment %}
 
 
   <script type="text/javascript" src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>

@@ -10,9 +10,11 @@
 {% comment %}Using 35730 for mapstory css to not conflict with maploom grunt{% endcomment %}
 <script src="http://{{ LIVE_RELOAD }}:35730/livereload.js"></script>
 {% endif %}
+{% include "mapstory/_site_scripts.html" %}
 {% endblock head %}
 
 {% block extra_script %}
+
 <script type="text/javascript">
 /* Script for keywords autocomplete */
     {% if AUTOCOMPLETE_QUICK_SEARCH %}

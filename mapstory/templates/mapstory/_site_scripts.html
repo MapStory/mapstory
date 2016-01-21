@@ -1,0 +1,30 @@
+{% load leaflet_tags %}
+
+<script src="{{ STATIC_URL }}lib/js/jquery.min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}lib/js/angular.js"></script>
+{% include "importer/_importer_scripts.html" %}
+<script src="{{ STATIC_URL }}geonode/js/search/explore.js"></script>
+<script src="{{ STATIC_URL }}mapstory/js/search.js"></script>
+
+<script type="text/javascript">
+  CATEGORIES_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='categories' %}';
+  KEYWORDS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='keywords' %}';
+  REGIONS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='regions' %}';
+  HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
+  HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
+  CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
+  AUTOCOMPLETE_URL_RESOURCEBASE = '{% url "autocomplete_light_autocomplete" "ResourceBaseAutocomplete" %}';
+  AUTOCOMPLETE_URL_REGION = '{% url "autocomplete_light_autocomplete" "RegionAutocomplete" %}';
+  AUTOCOMPLETE_URL_KEYWORD = '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}';
+
+  {% if HAYSTACK_SEARCH %}
+    SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}'
+    {% else %}
+    SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'
+  {% endif %}
+
+</script>
+{% leaflet_js %}
+{% leaflet_css %}
+<script src="{{ STATIC_URL }}lib/js/angular-leaflet-directive.min.js"></script>
+<script src="{{ STATIC_URL }}mapstory/js/mapstory.js"></script>
