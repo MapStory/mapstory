@@ -1,8 +1,12 @@
 import os
 import re
+import logging
 from lxml import etree
 from django.contrib.staticfiles.templatetags import staticfiles
 from django.http import HttpResponse
+
+logger = logging.getLogger(__name__)
+
 
 def parse_schema(schema_xml_str):
     xml = etree.XML(schema_xml_str)
@@ -29,8 +33,18 @@ def has_exception(response_xml):
     # if prefix 'ows' is not define in the xml file, then ows:Exception won't exist either
     if 'ows' not in root.nsmap:
         return False
+
     exceptions = root.findall('.//ows:Exception', root.nsmap)
     return len(exceptions) == 0
+
+def print_exception(response_xml):
+    xml = etree.XML(response_xml)
+    tree = etree.ElementTree(xml)
+    root = tree.getroot()
+    exceptions = root.findall('.//ows:Exception',root.nsmap)
+    for exception in exceptions:
+         logger.warning('Insert exception {0}: {1}'.format(exception.tag,exception.text))
+
 
 
 def parse_wfst_response(schema_xml_str):

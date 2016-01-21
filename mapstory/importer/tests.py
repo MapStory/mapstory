@@ -503,7 +503,52 @@ class UploaderTests(MapStoryTestMixin):
         cursor.execute('select count(*) from append')
         self.assertEqual(2,cursor.fetchone()[0])
 
+    def test_trunc_append(self):
+        f = os.path.join(os.path.dirname(__file__), 'test_ogr', 'long_attr_name.geojson')
+        new_user = User.objects.create(username='test')
+        new_user_perms = ['change_resourcebase_permissions']
+        c = AdminClient()
+        c.login_as_non_admin()
 
+        with open(f) as fp:
+            response = c.post(reverse('uploads-new'), {'file': fp}, follow=True)
+
+        upload = response.context['object_list'][0]
+
+        payload = [{'index': 0,
+                    'name': 'append',
+                    'convert_to_date': ['date_as_date'],
+                    'start_date': 'date_as_date',
+                    'configureTime': True,
+                    'editable': True,
+                    'permissions': {'users': {'test': new_user_perms,
+                                              'AnonymousUser': ["change_layer_data", "download_resourcebase",
+                                                                "view_resourcebase"]}}}]
+
+        response = c.post('/importer-api/data-layers/{0}/configure/'.format(upload.id), data=json.dumps(payload),
+                          content_type='application/json')
+
+        cursor = db.connections['datastore'].cursor()
+        cursor.execute('select count(*) from append')
+        self.assertEqual(1,cursor.fetchone()[0])
+
+        payload[0]['appendTo'] = 'geonode:append'
+        payload[0]['convert_to_date'] = ['date_as_da']
+        payload[0]['start_date'] = 'date_as_da'
+        f = os.path.join(os.path.dirname(__file__), 'test_ogr', 'long_attr_trunc.geojson')
+
+
+        with open(f) as fp:
+            response = c.post(reverse('uploads-new'), {'file': fp}, follow=True)
+
+        upload = response.context['object_list'][0]
+
+        response = c.post('/importer-api/data-layers/{0}/configure/'.format(upload.id), data=json.dumps(payload),
+                          content_type='application/json')
+
+        cursor = db.connections['datastore'].cursor()
+        cursor.execute('select count(*) from append')
+        self.assertEqual(2,cursor.fetchone()[0])
 
     def test_configure_view(self):
         """
