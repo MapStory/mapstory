@@ -1,7 +1,9 @@
 import os
-import ogr
+
 import gdal
+import ogr
 from django.conf import settings
+
 from .utils import NoDataSourceFound, GDAL_GEOMETRY_TYPES, increment, parse
 
 
@@ -218,12 +220,12 @@ class OGRTruncatedConverter(OGRInspector):
         dest_field_count = dest_schema.GetFieldCount()
         source_field_count = source_schema.GetFieldCount()
         if dest_field_count == 0:
-            raise AttributeError(message='Destination Layer has no attributes')
+            raise AttributeError('Destination layer has no attributes.')
         if source_field_count == 0:
-            raise AttributeError(message='Source Layer has no attributes')
+            raise AttributeError('Source layer has no attributes.')
 
         if dest_field_count < source_field_count:
-            raise AttributeError(message='Destination Layer has fewer attributes than source')
+            raise AttributeError('Destination layer has fewer attributes than source layer.')
 
         dest_field_schema = self.extract_field_definitions(dest_schema, dest_field_count)
         source_field_schema = self.extract_field_definitions(source_schema, source_field_count)
@@ -245,7 +247,7 @@ class OGRTruncatedConverter(OGRInspector):
                     converted_mapping[attribute] = truncated_name
 
         if is_subset is False:
-            raise AttributeError(message='Source layer attributes are not a subset of destination')
+            raise AttributeError('Source layer attributes are not a subset of destination.')
 
         for truncated_name in truncated_fields:
             trunc_field_index = truncated_fields[truncated_name]

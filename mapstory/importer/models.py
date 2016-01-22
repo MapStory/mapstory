@@ -20,17 +20,19 @@
 
 import os
 import tempfile
-from .utils import sizeof_fmt
+
 from celery.result import AsyncResult
-from djcelery.models import TaskState
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.conf import settings
-from geonode.layers.models import Layer
+from djcelery.models import TaskState
 from jsonfield import JSONField
+
+from geonode.layers.models import Layer
 from .inspectors import GDALInspector
 from .utils import NoDataSourceFound
+from .utils import sizeof_fmt
 
 DEFAULT_LAYER_CONFIGURATION = {'configureTime': True,
                                'editable': True,
@@ -204,3 +206,36 @@ class UploadFile(models.Model):
     def delete(self, *args, **kwargs):
         self.file.delete(False)
         super(UploadFile, self).delete(*args, **kwargs)
+
+
+class UploadException(models.Model):
+    """
+    A generic object for storing exceptions during upload
+    """
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Timestamp when the exception was logged.')
+    error = models.TextField()
+    upload_layer = models.ForeignKey(UploadLayer, blank=True, null=True)
+    task_id = models.CharField(max_length=36, blank=True, null=True)
+    traceback = models.TextField(blank=True, null=True)
+    verbose_traceback = models.TextField(blank=True, null=True, help_text='A humanized exception message.')
+
+    """
+    A method to create a new saved exception.
+    """
+    @classmethod
+    def raise_exception(cls, error, task_id, upload_layer, verbose_message):
+        if verbose_message is None:
+            verbose_message = error
+        exception = cls(error=error, verbose_traceback=verbose_message, task_id=task_id, upload_layer=upload_layer)
+        exception.save()
+        return exception
+
+    @property
+    def error(self):
+        return self.error
+
+    def __unicode__(self):
+        return self.verbose_traceback
+
+    class Meta:
+        verbose_name = 'Upload Exception'

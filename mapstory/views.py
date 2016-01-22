@@ -604,7 +604,7 @@ def layer_append_minimal(source, target):
     )
 
     if has_exception(get_features_request.content):
-        return error_response(NOT_ACCEPTABLE, get_features_request.content)
+        raise AssertionError('Failed to get features from source layer: {0}'.format(source))
 
     # the response to getfeatures will look like the following. We want everything between first <wfs:member> and last </wfs:member>
     # <wfs:FeatureCollection ...>
@@ -666,9 +666,7 @@ def layer_append_minimal(source, target):
         '</wfs:Transaction>'
     ))
     insert_tasks = group(tasks.append_feature_chunks.subtask((features,wfst_insert_template,get_features_request)) for features in features_chunks)
-
     results = insert_tasks.apply_async()
-
     insert_summary = results.join()
 
     return insert_summary

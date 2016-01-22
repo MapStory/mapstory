@@ -1,9 +1,10 @@
+import logging
 import os
 import re
-import logging
-from lxml import etree
+
 from django.contrib.staticfiles.templatetags import staticfiles
 from django.http import HttpResponse
+from lxml import etree
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +38,7 @@ def has_exception(response_xml):
     exceptions = root.findall('.//ows:Exception', root.nsmap)
     return len(exceptions) == 0
 
+
 def print_exception(response_xml):
     xml = etree.XML(response_xml)
     tree = etree.ElementTree(xml)
@@ -44,7 +46,6 @@ def print_exception(response_xml):
     exceptions = root.findall('.//ows:Exception',root.nsmap)
     for exception in exceptions:
          logger.warning('Insert exception {0}: {1}'.format(exception.tag,exception.text))
-
 
 
 def parse_wfst_response(schema_xml_str):
@@ -59,6 +60,7 @@ def parse_wfst_response(schema_xml_str):
     for child in summary_element[0].getchildren():
         summary[child.tag.split('}')[1]] = child.text
     return summary
+
 
 class Link(object):
 

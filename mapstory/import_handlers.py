@@ -1,7 +1,8 @@
+from django import db
+
+from mapstory.importer.inspectors import OGRTruncatedConverter
 from .importer.handlers import ImportHandler, ensure_can_run
 from .views import layer_append_minimal
-from django import db
-from mapstory.importer.inspectors import OGRTruncatedConverter
 
 
 class LayerAppendHandler(ImportHandler):
