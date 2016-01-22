@@ -547,8 +547,11 @@ class UploaderTests(MapStoryTestMixin):
                           content_type='application/json')
 
         cursor = db.connections['datastore'].cursor()
-        cursor.execute('select count(*) from append')
-        self.assertEqual(2,cursor.fetchone()[0])
+        cursor.execute('select count(*), date_as_date from append group by date_as_date')
+        result = cursor.fetchone()
+        #ensure that the feature was added and the attribute was appended
+        self.assertEqual(2,result[0])
+        self.assertNotEqual(None,result[1])
 
     def test_configure_view(self):
         """

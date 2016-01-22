@@ -202,6 +202,85 @@ class GDALInspector(InspectorMixin):
             return
 
 
+class OGRTruncatedConverter(OGRInspector):
+    def convert_truncated(self, source_layer_name, dest_layer_name):
+        converted_mapping = {}
+        dest_layer_name = dest_layer_name.split(':')[1]
+        dest_layer = self.data.GetLayerByName(dest_layer_name)
+        source_layer = self.data.GetLayerByName(source_layer_name)
+        dest_schema = dest_layer.GetLayerDefn()
+        source_schema = source_layer.GetLayerDefn()
+
+        #if the feature definitions are exactly the same we don't need to do any work.
+        if dest_schema.IsSame(source_schema) is True:
+            return True
+
+        dest_field_count = dest_schema.GetFieldCount()
+        source_field_count = source_schema.GetFieldCount()
+        if dest_field_count == 0:
+            raise AttributeError(message='Destination Layer has no attributes')
+        if source_field_count == 0:
+            raise AttributeError(message='Source Layer has no attributes')
+
+        if dest_field_count < source_field_count:
+            raise AttributeError(message='Destination Layer has fewer attributes than source')
+
+        dest_field_schema = self.extract_field_definitions(dest_schema, dest_field_count)
+        source_field_schema = self.extract_field_definitions(source_schema, source_field_count)
+
+        is_subset = True
+        truncated_fields = {}
+        for attribute in source_field_schema:
+            if attribute in dest_field_schema:
+                source_type = source_field_schema[attribute]
+                dest_type = dest_field_schema[attribute]
+                if source_type != dest_type and (self.compatible_types(source_type,dest_type) is False):
+                    is_subset = False
+                    break
+            elif len(attribute) == 10:
+                truncated_name = self.find_truncated_name(attribute,dest_field_schema)
+                if truncated_name is not None and truncated_name not in source_field_schema:
+                    trunc_field_index = source_schema.GetFieldIndex(attribute)
+                    truncated_fields[truncated_name] = trunc_field_index
+                    converted_mapping[attribute] = truncated_name
+
+        if is_subset is False:
+            raise AttributeError(message='Source layer attributes are not a subset of destination')
+
+        for truncated_name in truncated_fields:
+            trunc_field_index = truncated_fields[truncated_name]
+            name_alter = ogr.FieldDefn(truncated_name,ogr.OFTInteger)
+            source_layer.AlterFieldDefn(trunc_field_index,name_alter,ogr.ALTER_NAME_FLAG)
+
+        return converted_mapping
+
+    @staticmethod
+    def compatible_types(source_type, dest_type):
+
+        if source_type is ogr.OFTString:
+            if dest_type is ogr.OFTDateTime or dest_type is ogr.OFTDate:
+                return True
+        elif source_type is ogr.OFTDate or source_type is ogr.OFTDateTime:
+            if dest_type is ogr.OFTString:
+                return True
+        return False
+
+    @staticmethod
+    def find_truncated_name(attribute, field_list):
+        for dest_attribute in field_list:
+            if dest_attribute.startswith(attribute) and len(dest_attribute) > 10:
+                return dest_attribute
+        return None
+
+    @staticmethod
+    def extract_field_definitions(schema,field_count):
+        field_schema = {}
+        for field_index in range(0,field_count):
+            field_definition = schema.GetFieldDefn(field_index)
+            field_schema[field_definition.GetNameRef()] = field_definition.GetType()
+        return field_schema
+
+
 class OGRFieldConverter(OGRInspector):
 
     def convert_field(self, layer_name, field):

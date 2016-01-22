@@ -134,6 +134,7 @@ USE_AWS_S3 = False
 
 
 IMPORT_HANDLERS = (
+'mapstory.import_handlers.TruncatedNameHandler',
 'mapstory.importer.handlers.FieldConverterHandler',
 'mapstory.importer.handlers.GeoserverPublishHandler',
 'mapstory.importer.handlers.GeoServerBoundsHandler',
