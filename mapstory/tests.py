@@ -21,7 +21,8 @@ from socket import error as socket_error
 from geoserver.catalog import FailedRequestError
 from geonode.geoserver.helpers import gs_catalog
 from django import db
-
+from .importers import GeoServerLayerCreator
+from mapstory.importer.utils import UploadError
 
 User = get_user_model()
 
@@ -499,6 +500,7 @@ class LayersCreateTest(MapStoryTestMixin):
         self.datastore = self.create_datastore(self.postgis, gs_catalog)
 
         cursor = self.postgis.cursor()
+        cursor.execute("drop domain if exists bigdate cascade;")
         cursor.execute("create domain bigdate as bigint;")
 
     def tearDown(self):
@@ -533,14 +535,58 @@ class LayersCreateTest(MapStoryTestMixin):
                                                "minOccurs": 0,
                                                "nillable": True},
                                            {"name": "geometry",
-                                                "binding": "com.vividsolutions.jts.geom.Point",
+                                                "binding": "com.vividsolutions.jts.geom.MultiLineString",
                                                 "minOccurs":0,
                                                 "nillable":True}]},
               "nativeCRS": "EPSG:4326",
               "srs": "EPSG:4326"}
 
-        response = c.post(reverse('layer_create'), {'featureType': json.dumps(js)})
+        response = c.post(reverse('layer_create'), json.dumps({'featureType': js}), content_type='application/json',
+                          HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
         self.assertEqual(response.status_code, 201)
+        res = json.loads(response.content)
+        self.assertIn('status', res)
+        self.assertIn('url', res['layers'][0])
+        self.assertIn('name', res['layers'][0])
         self.assertTrue(Layer.objects.all().count())
         self.assertEqual(Layer.objects.first().owner.username, self.non_admin)
+
+    def test_geoserverlayercreator(self):
+        """
+        Tests the layer create view.
+        """
+        c = Client()
+        creater = GeoServerLayerCreator()
+        owner = User.objects.get(username=self.non_admin)
+        layer_name = 'This is a test.'
+        js = {"name": layer_name,
+              "store": {"name": self.datastore.name},
+              "namespace": {"name": 'geonode'},
+              "attributes": {"attribute": [{"name": "time",
+                                               "binding": "org.geotools.data.postgis.PostGISDialect$XDate",
+                                               "minOccurs": 0,
+                                               "nillable": True},
+                                           {"name": "geometry",
+                                                "binding": "com.vividsolutions.jts.geom.MultiLineString",
+                                                "minOccurs":0,
+                                                "nillable":True}]},
+              "nativeCRS": "EPSG:4326",
+              "srs": "EPSG:4326"}
+
+        response = creater.handle(configuration_options=[{'featureType': js, 'layer_owner': owner, 'title': 'This is a test.'}])
+
+        layer = Layer.objects.first()
+        self.assertIn(layer.name, response[0])
+        self.assertTrue(layer)
+        self.assertEqual(layer.name, 'this_is_a_test')
+        self.assertEqual(layer.title, 'This is a test.')
+        self.assertEqual(layer.owner, owner)
+        self.assertTrue('xsd:dateTime' or 'xsd:date' in [n.attribute_type for n in layer.attributes.all()])
+        #import ipdb; ipdb.set_trace()
+        self.assertEqual(layer.geographic_bounding_box, 'SRID=EPSG:4326;POLYGON((-180.0000000000 -90.0000000000,-180.0000000000 90.0000000000,180.0000000000 90.0000000000,180.0000000000 -90.0000000000,-180.0000000000 -90.0000000000))')
+
+        with self.assertRaises(UploadError):
+            response = creater.handle(configuration_options=[{'featureType': js, 'layer_owner': owner}])
+
+

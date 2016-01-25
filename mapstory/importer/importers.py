@@ -9,9 +9,28 @@ from django import db
 
 ogr.UseExceptions()
 
-class Import(object):
 
+class Import(object):
+    _import_handlers = []
+    handler_results = []
     file_extensions = ['shp', 'zip']
+
+    def filter_handler_results(self, handler_name):
+        return filter(lambda results: handler_name in results.keys(), self.handler_results)
+
+    def _initialize_handlers(self):
+        self._import_handlers = [load_handler(handler, self)
+                                 for handler in IMPORT_HANDLERS]
+
+    @property
+    def import_handlers(self):
+        """
+        Initializes handlers and/or returns them.
+        """
+        if not self._import_handlers:
+            self._initialize_handlers()
+
+        return self._import_handlers
 
     def import_file(self, filename, **kwargs):
         raise NotImplementedError
@@ -19,11 +38,35 @@ class Import(object):
     def file_extension_not_allowed(self, request, *args, **kwargs):
         raise FileTypeNotAllowed
 
+    def handle(self, configuration_options, *args, **kwargs):
+        """
+        Executes the entire import process.
+        1) Imports the dataset from the source dataset to the target.
+        2) Executes arbitrary handlers that can modify the data set.
+        3) Executes arbitrary publish handlers to publish the data set.
+        """
+
+        layers = self.import_file(configuration_options=configuration_options)
+
+        for layer, config in layers:
+            config['handler_results'] = self.run_import_handlers(layer, config)
+
+        return layers
+
+    def run_import_handlers(self, layer, layer_config, *args, **kwargs):
+        """
+        Handlers that are run on each layer of a data set.
+        """
+        self.handler_results = []
+
+        for handler in self.import_handlers:
+            self.handler_results.append({type(handler).__name__ : handler.handle(layer, layer_config, *args, **kwargs)})
+
+        return self.handler_results
+
 
 class GDALImport(Import):
 
-    _import_handlers = []
-    handler_results = []
     source_inspectors = [GDALInspector]
     target_inspectors = [OGRInspector]
 
@@ -37,23 +80,6 @@ class GDALImport(Import):
                                                                                                 d['PASSWORD'],
                                                                                                 d['HOST'], d['PORT'])
             self.target_store = connection_string
-
-    def _initialize_handlers(self):
-        self._import_handlers = [load_handler(handler, self)
-                                 for handler in IMPORT_HANDLERS]
-
-    def filter_handler_results(self, handler_name):
-        return filter(lambda results: handler_name in results.keys(), self.handler_results)
-
-    @property
-    def import_handlers(self):
-        """
-        Initializes handlers and/or returns them.
-        """
-        if not self._import_handlers:
-            self._initialize_handlers()
-
-        return self._import_handlers
 
     def open_datastore(self, connection_string, inspectors, *args, **kwargs):
         """
@@ -84,32 +110,6 @@ class GDALImport(Import):
         Creates the data source in the target data store.
         """
         return target_datastore.CreateLayer(layer_name, *args, **kwargs)
-
-    def handle(self, configuration_options, *args, **kwargs):
-        """
-        Executes the entire import process.
-        1) Imports the dataset from the source dataset to the target.
-        2) Executes arbitrary handlers that can modify the data set.
-        3) Executes arbitrary publish handlers to publish the data set.
-        """
-
-        layers = self.import_file(configuration_options=configuration_options)
-
-        for layer, config in layers:
-            config['handler_results'] = self.run_import_handlers(layer, config)
-
-        return layers
-
-    def run_import_handlers(self, layer, layer_config, *args, **kwargs):
-        """
-        Handlers that are run on each layer of a data set.
-        """
-        self.handler_results = []
-
-        for handler in self.import_handlers:
-            self.handler_results.append({type(handler).__name__ : handler.handle(layer, layer_config, *args, **kwargs)})
-
-        return self.handler_results
 
     def get_layer_type(self, layer, source):
         """

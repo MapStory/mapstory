@@ -1,44 +1,16 @@
 <div class="modal-header">
-        <h3 class="modal-title">Create a StoryL<img class="import-wizard-icon" ng-src="{{modalImage}}"/></h3>
+        <h3 class="modal-title">Create a new StoryLayer<img class="import-wizard-icon" ng-src="{{modalImage}}"/></h3>
 </div>
 <div class="modal-body row">
     <div class="col-sm-12 col-md-12 col-lg-12 import-wizard-modal">
-        <wizard on-finish="importLayer()">
+        <wizard on-finish="createLayer()">
 
-        <wz-step title="Upload" wz-disabled="{{layerSet}}" canexit="layer != null" class="row">
-            <div class="col-sm-8 col-md-8 col-lg-8 col-md-offset-2" style="padding-top: 5px; padding-left: 2px;" ng-controller="UploaderController">
-                <h3><strong>Upload your data.</strong></h3>
-                <p>MapStory accepts data in .csv, .geojson, .gpx, .kml,  .tif, and zipped shapefile formats. To upload a print map or raster image, first you need to georeference it with the MapStory Warper. By sharing your data in MapStory, you agree to our <a href="http://wiki.mapstory.org/wiki/Terms_of_Service" target="_blank">licensing and terms</a>.</p>
-
-                <div style="margin: 23px 0 10px 0;">
-                    <input type="file" nv-file-select uploader="uploader"/>
-                    </div>
-
-                <div style="margin: 20px 0 10px 0;">
-
-                    <uib-progressbar type="success" ng-show="uploader.progress > 0" value="uploader.progress">{{uploader.progress}}%</uib-progressbar>
-
-                    <div ng-repeat="fields in errors" class="clrs-red">
-                        <div ng-repeat="error in fields" class="clrs-red">
-                            <i class="fa fa-warning" ng-show="error"></i> {{ error }}
-                    </div>
-                </div>
-                </div>
-
-                <div class="import-wizard-button">
-                    <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
-                </div>
-
-            </div>
-        </wz-step>
-
-
-        <wz-step title="Name">
+        <wz-step title="Name" canexit="nameValid">
             <h3><strong>Name your StoryLayer</strong></h3>
             <p>Descriptive layer names make it easy for others to find your data.</p>
             <form name="importOptionsForm" class="form-horizontal import-options-form">
                 <div class="form-group">
-                    <input id="layerName" type="text" class=input-lg ng-model="layer.configuration_options.name">
+                    <input id="layerName" placeholder="My StoryLayer" type="text" class=input-lg ng-model="layer.configuration_options.name">
                 </div>
 
                 <div class="import-wizard-button">
@@ -47,46 +19,51 @@
             </form>
         </wz-step>
 
-        <wz-step title="Enable Time?" canexit="layer.configuration_options.configureTime || false">
-            <img class="import-wizard-image" ng-src="{{staticUrl}}mapstory/img/time.png"/>
-            <h3><strong>Confirm dataset has time attributes</strong></h3>
-            <p>All datasets uploaded to MapStory must contain time information. If the dataset contains only one timeslice, add a column indicating the timeslice. Learn more about Time Attributes.</p>
+        <wz-step title="Geometry" canexit="true">
+            <h3><strong>Choose a geometry type.</strong></h3>
+            <p>Descriptive layer names make it easy for others to find your data.</p>
+            <form name="importOptionsForm" class="form-horizontal import-options-form">
+                <div class="form-group">
+                    <label for="geometry_type" class="col-sm-4 col-xs-4 col-md-4 control-label">Geometry Type:</label>
+                    <select ng-model="layer.configuration_options.attributes.attribute[0].binding" class="col-md-5 col-xs-5 col-sm-5 input-md" id="geometry_type">
+                        <option value="" >--Please select a geometry--</option>
+                        <option ng-repeat="option in geometryTypes" ng-selected="option.value == layer.configuration_options.geom_type" value="{{option.value}}">{{option.label}}</option>
+                    </select>
+                    </div>
+            </form>
 
-            <div class="btn-group">
-                <label class="btn btn-success" ng-model="layer.configuration_options.configureTime" uib-btn-radio="true">Yes</label>
-                <label class="btn" ng-model="layer.configuration_options.configureTime" uib-btn-radio="false">No</label>
-            </div>
-
-
-            <div class="import-wizard-button">
-                <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
-            </div>
-
+                    <div class="import-wizard-button">
+                        <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+                    </div>
         </wz-step>
 
-        <wz-step title="Configure time" wz-disabled="{{timeEnabled(true)}}">
-            <h3><strong>Configure your time attributes:</strong></h3>
-            <form name="importOptionsForm" class="form-horizontal import-options-form">
+        <wz-step title="Attributes">
+            <h3><strong>Add attributes:</strong></h3>
+            <form name="attributes" class="form-horizontal import-options-form">
                 <p>All datasets uploaded to MapStory must contain time information. If the dataset contains only one timeslice, add a column indicating the timeslice. Learn more about Time Attributes.</p>
-                    <div class="form-group">
-                        <label for="start_date" class="col-sm-4 col-xs-4 col-md-4 control-label">Date field (start date):</label>
-                        <select ng-model="layer.configuration_options.start_date" class="col-md-5 col-xs-5 col-sm-5 input-md" id="start_date" ng-required='layer.configuration_options'>
-                            <option value="" ng-selected="'' == layer.configuration_options.start_date">--Please select a field--</option>
-                            <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.start_date" value="{{option.name}}">{{option.name}}</option>
+                <div style="padding-top: 10px" class="col-md-offset-9">
+                    <button class="btn btn-default btn-xs" ng-click="addDefaultAttribute()"><i class="fa fa-plus-circle"></i> Add Field</button>
+                </div>
+                    <div class="form-group" style="padding-top: 15px" ng-repeat="field in layer.configuration_options.attributes.attribute | filter: {name:'!geometry'} ">
+                        <label for="fieldName-{{$index}}" class="col-sm-4 col-xs-4 col-md-4 control-label">Field name:</label>
+                        <input id="fieldName-{{$index}}" class="pull-left" placeholder="Field name" ng-model="field.name" value="field.name"/>
+                        <label for="fieldType-{{$index}}" class="col-sm-4 col-xs-4 col-md-4 control-label">Field type:</label>
+                        <select ng-model="field.binding" id="fieldType-{{$index}}" class="col-md-5 col-xs-5 col-sm-5 input-md">
+                            <option value="" ng-selected="!field.binding">--Please select a field--</option>
+                            <option ng-repeat="option in attributeTypes" ng-selected="field.binding === option.value" value="{{option.value}}">{{option.label}}</option>
                         </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="end_date" class="col-sm-4 col-xs-4 col-md-4 control-label">Optional end date field:</label>
-                        <select ng-model="layer.configuration_options.end_date" class="col-md-5 col-xs-5 col-sm-5 input-md" id="end_date">
-                            <option value="" ng-selected="'' == layer.configuration_options.end_date">--Please select a field--</option>
-                            <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.end_date" value="{{option.name}}">{{option.name}}</option>
-                        </select>
+                        <label for="fieldNillable-{{$index}}" class="col-sm-4 col-xs-4 col-md-4 control-label">Required:</label>
+                        <input type="checkbox" class="pull-left" id="fieldNillable-{{$index}}" ng-model="field.nillable" ng-true-value="false" ng-false-value="true">
+                        <div style="clear:left;">
+                            <a ng-click="remove(field)" href="#">Delete this Field</a>
+                        </div>
                     </div>
                 <div class="import-wizard-button">
                 <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
             </div>
             </form>
         </wz-step>
+
         <wz-step title="Permissions" wz-disabled="{{appending(true)}}">
             <img class="import-wizard-image" ng-src="{{staticUrl}}mapstory/img/edit.png"/>
             <h3><strong>Allow other users to edit this data?</strong></h3>
@@ -99,12 +76,14 @@
                 <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
             </div>
         </wz-step>
-        <wz-step title="{{appending() === true ? 'Append' : 'Import'}}">
+        <wz-step title="Create">
             <h3><strong>Ok, we're ready to create the StoryLayer!</strong></h3>
             <p>Click below to create your StoryLayer</p>
             <div>
-                <div class="clrs-green fnt-weight-400" ng-show="success">The import has finished successfully. View the <a href="{{layer.geonode_layer.url}}?showMetadata=true" class="fnt-weight-600" target="_self">StoryLayer</a>.</div>
-                <div class="clrs-red fnt-weight-400" ng-show="errors">StoryLayer creation has failed.  Please adjust your configuration and try again.</div>
+                <div class="clrs-green fnt-weight-400" ng-show="success">Your new StoryLayer<span ng-show="created_layers.length > 1">s are</span><span ng-show="created_layers.length > 1"> is</span> ready.</div>
+                <div class="clrs-green fnt-weight-400" ng-repeat="created_layer in created_layers" ng-show="success">View the <a href="{{created_layer.url}}?showMetadata=true" class="fnt-weight-600" target="_self">StoryLayer</a>.</div>
+                <div class="clrs-red fnt-weight-400" ng-show="errors.length">StoryLayer creation has failed.</div>
+                <div class="clrs-red fnt-weight-400" ng-repeat="error in errors" ng-show="errors.length"><span style="font-weight: 600">{{error[0]}}:</span> {{error[1]}}</div>
             </div>
             <div class="import-wizard-button">
                 <i class="fa fa-spinner fa-spin fa-3x" ng-show="processing"></i>

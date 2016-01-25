@@ -40,12 +40,10 @@ from mapstory.models import DiaryEntry
 from mapstory.models import Leader
 from mapstory.models import Community
 from mapstory.models import get_communities
+from mapstory.importers import GeoServerLayerCreator
 from geonode.base.models import Region
 from geonode.contrib.favorite.models import Favorite
 from geonode.geoserver.helpers import ogc_server_settings
-from geonode.geoserver.helpers import gs_slurp
-from geonode.geoserver.helpers import gs_catalog
-from geoserver.support import DimensionInfo
 from urlparse import urlsplit
 from user_messages.models import Thread
 from .forms import MapStorySignupForm
@@ -77,7 +75,8 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from importer.forms import UploadFileForm
 from celery import group
-
+from mapstory.importer.utils import configure_time
+from mapstory.importer.utils import UploadError
 from lxml import etree
 import json
 import requests
@@ -520,67 +519,40 @@ def new_map(request, template):
     return new_map(request, template)
 
 @login_required
-def layer_create(request, data=None, template='upload/layer_create.html'):
+def layer_create(request, template='upload/layer_create.html'):
     if request.method == 'POST':
-        feature_type = json.loads(request.POST.get(u'featureType', None))
-        datastore = feature_type['store']['name']
-        store_create_geogig = json.loads(request.POST.get(u'storeCreateGeogig', 'false'))
-
-        if store_create_geogig:
-            if not feature_type['store']['name']:
-                store_proposed = slugify(' '.join([request.user.username, feature_type['name']]))
-            store_created = create_geoserver_db_featurestore(store_type='geogig', store_name=store_proposed)
-            feature_type['store']['name'] = store_created.name
-
-        # -- only allow creation of layers in the whitelisted datastores
-        try:
-            settings.ALLOWED_DATASTORE_LAYER_CREATE
-        except AttributeError:
-            return HttpResponse(status=FORBIDDEN, content='ALLOWED_DATASTORE_LAYER_CREATE whitelist is not defined.')
-
-        if datastore not in getattr(settings, 'ALLOWED_DATASTORE_LAYER_CREATE', []) and '*' not in getattr(settings, 'ALLOWED_DATASTORE_LAYER_CREATE', []):
-            return HttpResponse(status=FORBIDDEN, content='datastore specified in featureType is not in the ALLOWED_DATASTORE_LAYER_CREATE whitelist.')
-
-        post_request = requests.post(
-            '{}/workspaces/{}/datastores/{}/featuretypes.json'.format(ogc_server_settings.rest, feature_type['namespace']['name'], datastore),
-            data='{{"featureType":{}}}'.format(json.dumps(feature_type)),
-            auth=ogc_server_settings.credentials,
-            headers={'content-type': 'application/json'}
-        )
-
-        if post_request.status_code == 200 or post_request.status_code == 201:
-
-            # import the layer from geoserver to geonode
-            response = gs_slurp(filter=feature_type['name'],
-                                workspace=feature_type['namespace']['name'],
-                                store=feature_type['store']['name'],
-                                owner=request.user)
-
-            if 'layers' in response and len(response['layers']) == 1 and 'name' in response['layers'][0] and response['layers'][0]['name'] == feature_type['name']:
-                # configure layer with time dimension as a list for now. Since importer is being refactored,
-                # we'll change how it is done.
-                layer = gs_catalog.get_layer(feature_type['name'])
-                resource = layer.resource
-                if layer:
-                    time_info = DimensionInfo(
-                        name='time',
-                        enabled=True,
-                        presentation='LIST',
-                        resolution=None,
-                        units=None,
-                        unitSymbol=None,
-                        attribute='time',
-                        end_attribute=None,
-                        strategy=None)
-                    resource.metadata = {'time': time_info}
-                    resource.catalog.save(resource)
-                    return HttpResponse(status=post_request.status_code, content=post_request.text)
-                return HttpResponse(status=500, content='failed to configure layer')
-            else:
-                return HttpResponse(status=500, content='failed to add created layer from geoserver to geonode')
+        errors = False
+        error_messages = []
+        if request.is_ajax():
+            configuration_options = json.loads(request.body)
         else:
-            return HttpResponse(status=post_request.status_code, content=post_request.text)
-        print '---- create layer response: ', post_request.text
+            configuration_options = request.POST
+            if isinstance(configuration_options.get('featureType', {}), str) \
+                    or isinstance(configuration_options.get('featureType', {}), unicode):
+                configuration_options['featureType'] = json.loads(configuration_options['featureType'])
+
+        if not configuration_options.get('layer_owner'):
+            configuration_options['layer_owner'] = request.user
+
+        creator = GeoServerLayerCreator()
+        try:
+            layers = creator.handle(configuration_options=configuration_options)
+
+        except UploadError as e:
+            errors = True
+            error_messages.append((configuration_options['featureType']['name'], e.message))
+
+        if request.is_ajax():
+            if errors:
+                return HttpResponse(json.dumps({'status': 'failure', 'errors': error_messages}), status=400,
+                                    content_type='application/json')
+            if layers:
+                layer_names = map(lambda layer: {'name': layer.name, 'url': layer.get_absolute_url()},
+                                  Layer.objects.filter(name__in=[n[0] for n in layers]))
+
+                return HttpResponse(json.dumps({'status': 'success', 'layers': layer_names}), status=201,
+                                    content_type='application/json')
+
     return render_to_response(template, RequestContext(request, {}))
 
 
