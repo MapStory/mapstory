@@ -108,6 +108,7 @@ def create_vrt(file_path):
     temp_file.seek(0)
     return temp_file
 
+
 class StdOutCapture(list):
     def __enter__(self):
         self._stdout = sys.stdout
@@ -130,6 +131,7 @@ class GdalErrorHandler(object):
         self.err_msg = err_msg
 
 lastNum = re.compile(r'(?:[^\d]*(\d+)[^\d]*)+')
+
 
 def increment(s):
     """ look for the last sequence of number(s) in a string and increment """
@@ -157,7 +159,9 @@ class FileTypeNotAllowed(Exception):
     pass
 
 
+class UploadError(Exception):
 
+    pass
 
 
 def launder(string):
@@ -169,7 +173,6 @@ def launder(string):
         string = string.replace(i, '_')
 
     return string.lower()
-
 
 
 def sizeof_fmt(num):

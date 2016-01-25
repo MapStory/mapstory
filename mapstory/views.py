@@ -593,63 +593,9 @@ def layer_append_minimal(source, target):
         """Yield successive chunk_size chunks from list."""
         for i in xrange(0, len(list), chunk_size):
             yield list[i:i+chunk_size]
-    # TODO: shape files may have truncated attributes names. do "startsWith" to match best columns
-    # allow_truncated_attribute_names = json.loads(request.POST.get(u'allowTruncatedAttributeNames', 'false'))
 
     # TODO: use the provided column to decide which features should be updated and which should be created
     # join_on_attribute = json.loads(request.POST.get(u'joinOnAttributeName', 'false'))
-
-    # make sure that source layer schema is a subset of destination schema.
-    #   - should work for creating a layer that has an extra filed and importing old one.
-    describe_feature_type_source = requests.post(
-            '{}/wfs?service=wfs&version=2.0.0&request=DescribeFeatureType&typeName={}'.format(
-                ogc_server_settings.public_url, source),
-            auth=ogc_server_settings.credentials
-    )
-
-    if has_exception(describe_feature_type_source.content):
-        return error_response(NOT_ACCEPTABLE, describe_feature_type_source.content)
-
-    describe_feature_type_destination = requests.post(
-            '{}/wfs?service=wfs&version=2.0.0&request=DescribeFeatureType&typeName={}'.format(
-                ogc_server_settings.public_url, target),
-            auth=ogc_server_settings.credentials
-    )
-
-    if has_exception(describe_feature_type_destination.content):
-        return error_response(NOT_ACCEPTABLE, describe_feature_type_destination.content)
-
-    schema_source = parse_schema(describe_feature_type_source.content)
-    schema_destination = parse_schema(describe_feature_type_destination.content)
-
-    if len(schema_source) == 0:
-        return error_response(NOT_ACCEPTABLE, 'source layer has no attributes' )
-
-    if len(schema_destination) == 0:
-        return error_response(NOT_ACCEPTABLE, 'destination layer has no attributes')
-
-    if len(schema_destination) < len(schema_source):
-        return error_response(NOT_ACCEPTABLE, 'destination layer has fewer attributes than the source layer')
-
-    is_subset = True
-    for attrib in schema_source:
-        if attrib in schema_destination:
-            if schema_source[attrib] != schema_destination[attrib]:
-                is_subset = False
-                break
-        else:
-            trunc_attrib = False
-            for dest_attrib in schema_destination:
-                if dest_attrib.startswith(attrib) and len(dest_attrib) > 10:
-                    trunc_attrib = True
-            if trunc_attrib is True:
-                continue
-            is_subset = False
-            break
-
-    if not is_subset:
-        return error_response(NOT_ACCEPTABLE,
-                              "source layer attributes are not a subset of destination layer's attributes")
 
     get_features_request = requests.post(
             '{}/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames={}'.format(ogc_server_settings.public_url,
@@ -657,9 +603,8 @@ def layer_append_minimal(source, target):
             auth=ogc_server_settings.credentials
     )
 
-
     if has_exception(get_features_request.content):
-        return error_response(NOT_ACCEPTABLE, get_features_request.content)
+        raise AssertionError('Failed to get features from source layer: {0}'.format(source))
 
     # the response to getfeatures will look like the following. We want everything between first <wfs:member> and last </wfs:member>
     # <wfs:FeatureCollection ...>
@@ -721,9 +666,7 @@ def layer_append_minimal(source, target):
         '</wfs:Transaction>'
     ))
     insert_tasks = group(tasks.append_feature_chunks.subtask((features,wfst_insert_template,get_features_request)) for features in features_chunks)
-
     results = insert_tasks.apply_async()
-
     insert_summary = results.join()
 
     return insert_summary
