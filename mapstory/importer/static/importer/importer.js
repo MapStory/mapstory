@@ -164,28 +164,33 @@
       $scope.animationsEnabled = true;
 
       // TODO: Refactor args into a config object.
-      $scope.open = function (layer, templateUrl, modalImage, staticUrl, appendTo) {
+      $scope.open = function (layer, templateUrl, modalImage, staticUrl, appendTo, shapefile_link, csv_link) {
 
         var modalInstance = $uibModal.open({
-          animation: $scope.animationsEnabled,
-          templateUrl: templateUrl || 'importWizard.html',
-          controller:  'WizardController',
+            animation: $scope.animationsEnabled,
+            templateUrl: templateUrl || 'importWizard.html',
+            controller: 'WizardController',
           //size: size,
-          resolve: {
-            layer: function () {
-              return layer;
-            },
-            modalImage: function () {
-              return modalImage;
-            },
-            staticUrl: function () {
-              return staticUrl;
-            },
-            appendTo: function() {
-                return appendTo;
+            resolve: {
+                layer: function () {
+                    return layer;
+                },
+                modalImage: function () {
+                    return modalImage;
+                },
+                staticUrl: function () {
+                    return staticUrl;
+                },
+                appendTo: function () {
+                    return appendTo;
+                },
+                shapefile_link: function () {
+                    return shapefile_link;
+                },
+                csv_link: function () {
+                    return csv_link;
+                }
             }
-
-          }
         });
 
         modalInstance.result.then(function (selectedItem) {
@@ -201,13 +206,15 @@
 
   })
 
-  .controller('WizardController', function ($scope, $modalInstance, layer, layerService, $interval, modalImage, staticUrl, appendTo) {
+  .controller('WizardController', function ($scope, $modalInstance, layer, layerService, $interval, modalImage, staticUrl, appendTo, shapefile_link, csv_link) {
       $scope.appendTo = appendTo;
       $scope.layer = layer;
       $scope.errors = false;
       $scope.errorMessages = [];
       $scope.modalImage = modalImage;
       $scope.staticUrl = staticUrl;
+      $scope.shapefile_link = shapefile_link;
+      $scope.csv_link = csv_link;
       $scope.layerSet = ($scope.layer != null).toString();
       $scope.defaultPermissions = {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}};
       var stop;

@@ -258,7 +258,6 @@ class OGRTruncatedConverter(OGRInspector):
 
     @staticmethod
     def compatible_types(source_type, dest_type):
-
         if source_type is ogr.OFTString:
             if dest_type is ogr.OFTDateTime or dest_type is ogr.OFTDate:
                 return True

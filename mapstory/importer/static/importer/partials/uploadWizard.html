@@ -5,6 +5,19 @@
     <div class="col-sm-12 col-md-12 col-lg-12 import-wizard-modal">
         <wizard on-finish="importLayer()">
 
+        <wz-step title="Add Data" wz-disabled="{{layerSet}}" class="row">
+            <h3><strong>Append Data to Schema</strong></h3>
+            <p>Before appending data to the layer, download and append your data to this blank layer.</p>
+
+            <a class="btn-link" style="display: block" href="{{ shapefile_link }}">Download Shape-file schema</a>
+            <a class="btn-link" style="display: block" href="{{ csv_link }}">Download csv schema</a>
+
+
+            <div class="import-wizard-button">
+                <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+            </div>
+        </wz-step>
+
         <wz-step title="Upload" wz-disabled="{{layerSet}}" canexit="layer != null" class="row">
             <div class="col-sm-8 col-md-8 col-lg-8 col-md-offset-2" style="padding-top: 5px; padding-left: 2px;" ng-controller="UploaderController">
                 <h3><strong>Upload your data.</strong></h3>
