@@ -5,7 +5,7 @@
     <div class="col-sm-12 col-md-12 col-lg-12 import-wizard-modal">
         <wizard on-finish="importLayer()">
 
-        <wz-step title="Add Data" wz-disabled="{{layerSet}}" class="row">
+        <wz-step title="Add Data" wz-disabled="{{appending() === true ? false : 'true'}}" class="row">
             <h3><strong>Append Data to Schema</strong></h3>
             <p>Before appending data to the layer, download and append your data to this blank layer.</p>
 
