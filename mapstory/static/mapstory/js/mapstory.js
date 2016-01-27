@@ -13,7 +13,7 @@
       }
     })
 
-.config(['$httpProvider', function($httpProvider) {
+.config(['$httpProvider', function($httpProvider, $sceDelegateProvider) {
         // this makes request.is_ajax() == True in Django
         $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 
