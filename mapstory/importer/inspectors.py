@@ -99,7 +99,7 @@ class GDALInspector(InspectorMixin):
         x_possible = getattr(settings, 'IMPORT_CSV_X_FIELDS', ['Lon*', 'x', 'lon*'])
         y_possible = getattr(settings, 'IMPORT_CSV_Y_FIELDS', ['Lat*', 'y', 'lat*'])
         geom_possible = getattr(settings, 'IMPORT_CSV_GEOM_FIELDS',
-                                ['geom', 'GEOM', 'WKT', 'the_geom', 'THE_GEOM', 'WKB'])
+                                ['geom', 'GEOM', 'WKT', 'the_geom', 'THE_GEOM', 'WKB', 'wkb_geometry'])
 
         oo = kwargs.get('open_options', [])
 
