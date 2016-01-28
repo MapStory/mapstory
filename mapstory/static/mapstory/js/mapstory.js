@@ -1,7 +1,13 @@
 'use strict';
 
 (function() {
-    angular.module('mapstory', [ 'mapstory.uploader', 'ui.bootstrap', 'geonode_main_search', 'leaflet-directive'], function($locationProvider) {
+    angular.module('mapstory', [
+        'mapstory.uploader',
+        'ui.bootstrap',
+        'geonode_main_search',
+        'leaflet-directive',
+        'slick'
+    ], function($locationProvider) {
          if (window.navigator.userAgent.indexOf("MSIE") == -1){
           $locationProvider.html5Mode({
             enabled: true,

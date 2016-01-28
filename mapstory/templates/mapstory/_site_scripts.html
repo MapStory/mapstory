@@ -1,10 +1,10 @@
 {% load leaflet_tags %}
 <link href="{{ STATIC_URL }}mapstory/css/mapstory.css" rel="stylesheet" />
-<script src="{{ STATIC_URL }}lib/js/jquery.min.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}lib/js/angular.js"></script>
 {% include "importer/_importer_scripts.html" %}
 <script src="{{ STATIC_URL }}geonode/js/search/explore.js"></script>
 <script src="{{ STATIC_URL }}mapstory/js/search.js"></script>
+
 
 <script type="text/javascript">
   CATEGORIES_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='categories' %}';
@@ -26,5 +26,11 @@
 </script>
 {% leaflet_js %}
 {% leaflet_css %}
+
+<link href="{{ STATIC_URL }}vendor/slick-carousel/slick/slick.css" rel="stylesheet" />
+<link href="{{ STATIC_URL }}vendor/slick-carousel/slick/slick-theme.css" rel="stylesheet" />
+<script type="text/javascript" src="{{ STATIC_URL }}vendor/slick-carousel/slick/slick.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}vendor/angular-slick/dist/slick.js"></script>
+
 <script src="{{ STATIC_URL }}lib/js/angular-leaflet-directive.min.js"></script>
 <script src="{{ STATIC_URL }}mapstory/js/mapstory.js"></script>
