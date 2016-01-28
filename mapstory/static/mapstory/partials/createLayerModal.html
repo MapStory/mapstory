@@ -19,9 +19,9 @@
             </form>
         </wz-step>
 
-        <wz-step title="Geometry" canexit="true">
-            <h3><strong>Choose a geometry type.</strong></h3>
-            <p>Descriptive layer names make it easy for others to find your data.</p>
+        <wz-step title="Type" canexit="true">
+            <h3><strong>Choose Type of StoryLayer</strong></h3>
+            <p>Next, lets determine what kind of StoryLayer you want to create. Here is a list of each kind of StoryLayer you can make, and a link to an example so you can see what they look like:</p>
             <form name="importOptionsForm" class="form-horizontal import-options-form">
                 <div class="form-group">
                     <label for="geometry_type" class="col-sm-4 col-xs-4 col-md-4 control-label">Geometry Type:</label>
@@ -37,10 +37,10 @@
                     </div>
         </wz-step>
 
-        <wz-step title="Attributes">
+        <wz-step title="Add Attributes">
             <h3><strong>Add attributes:</strong></h3>
             <form name="attributes" class="form-horizontal import-options-form">
-                <p>All datasets uploaded to MapStory must contain time information. If the dataset contains only one timeslice, add a column indicating the timeslice. Learn more about Time Attributes.</p>
+                <p>Next you'll need to define the attributes you'll have for the features in your StoryLayer. Attributes are just the bits of information you have for your features. For example (link), this StoryLayer about prisons in the US has 3 attributes: Prison Name, US State and Year Built. Note that after you set your attributes here you won't be able to change them later. So think hard!</p>
                 <div style="padding-top: 10px" class="col-md-offset-9">
                     <button class="btn btn-default btn-xs" ng-click="addDefaultAttribute()"><i class="fa fa-plus-circle"></i> Add Field</button>
                 </div>
