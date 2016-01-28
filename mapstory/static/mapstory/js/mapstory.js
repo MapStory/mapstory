@@ -24,9 +24,8 @@
         'self',
         // Allow loading from our assets domain.  Notice the difference between * and **.
         'http://mapstory-static.s3.amazonaws.com/**',
-        'https://mapstory-static.s3.amazonaws.com/**'
-  ])
-    }])
+        'https://mapstory-static.s3.amazonaws.com/**'])
+    })
 .constant('Configs', {
     url: SEARCH_URL
     })
