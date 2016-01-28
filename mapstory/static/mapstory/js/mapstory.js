@@ -15,7 +15,7 @@
 
 .config(function($httpProvider, $sceDelegateProvider) {
         // this makes request.is_ajax() == True in Django
-        $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+        $httpProvider.defaults.headers.post["X-Requested-With"] = 'XMLHttpRequest';
 
         $httpProvider.defaults.xsrfCookieName = 'csrftoken';
         $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -24,7 +24,7 @@
         'self',
         // Allow loading from our assets domain.  Notice the difference between * and **.
         'http://mapstory-static.s3.amazonaws.com/**',
-        'https://mapstory-static.s3.amazonaws.com/**'])
+        'https://mapstory-static.s3.amazonaws.com/**']);
     })
 .constant('Configs', {
     url: SEARCH_URL
