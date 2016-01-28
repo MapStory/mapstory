@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-sm-3">
                     <h3>
-                        <a href="{% url 'uploads-new' %}">
+                        <a ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">
                             Upload StoryLayers
                         </a>
                     </h3>
