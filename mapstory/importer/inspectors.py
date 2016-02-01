@@ -262,7 +262,10 @@ class OGRTruncatedConverter(OGRInspector):
             if dest_type is ogr.OFTDateTime or dest_type is ogr.OFTDate:
                 return True
         elif source_type is ogr.OFTDate or source_type is ogr.OFTDateTime:
-            if dest_type is ogr.OFTString:
+            if dest_type is ogr.OFTString or ogr.OFTDateTime or ogr.OFTDate:
+                return True
+        elif source_type is ogr.OFTInteger or ogr.OFTReal:
+            if dest_type is ogr.OFTInteger or ogr.OFTReal:
                 return True
         return False
 

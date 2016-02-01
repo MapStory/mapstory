@@ -15,8 +15,7 @@ def append_feature_chunks(features, wfst_insert_template,get_features_request):
             headers={'Content-Type': 'application/xml'},
             data=wfs_transaction_payload
     )
-
-    if(has_exception(insert_features_request.content)):
+    if has_exception(insert_features_request.content) is False:
         print_exception(insert_features_request.content)
     else:
         summary = parse_wfst_response(insert_features_request.content)
