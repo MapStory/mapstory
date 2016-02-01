@@ -6,7 +6,7 @@
         <wizard on-finish="importLayer()">
 
         <wz-step title="Add Data" wz-disabled="{{appending() === true ? false : 'true'}}" class="row">
-            <h3><strong>Append Data to Schema</strong></h3>
+            <h3><strong>Add Data</strong></h3>
             <p>Instead of adding edits to data one-by-one, with Append you can bulk upload a set of edits all at once. To Append, download a blank schema below, add your features to it, and proceed with your upload here</p>
 
             <a class="btn-link" style="display: block" href="{{shapefile_link}}" target="_self">Download Shape-file schema</a>
@@ -19,8 +19,14 @@
 
         <wz-step title="Upload" wz-disabled="{{layerSet}}" canexit="layer != null" class="row">
             <div class="col-sm-8 col-md-8 col-lg-8 col-md-offset-2" style="padding-top: 5px; padding-left: 2px;" ng-controller="UploaderController">
-                <h3><strong>Upload your data.</strong></h3>
-                <p>MapStory accepts data in .csv, .geojson, .gpx, .kml,  .tif, and zipped shapefile formats. To upload a print map or raster image, first you need to georeference it with the MapStory Warper. By sharing your data in MapStory, you agree to our <a href="http://wiki.mapstory.org/wiki/Terms_of_Service" target="_blank">licensing and terms</a>.</p>
+
+                <h3 ng-show="appending() === false"><strong>Upload your data.</strong></h3>
+                <p ng-show="appending() === false ">MapStory accepts data in .csv, .geojson, .gpx, .kml,  .tif, and zipped shapefile formats. To upload a print map or raster image, first you need to georeference it with the MapStory Warper. By sharing your data in MapStory, you agree to our <a href="http://wiki.mapstory.org/wiki/Terms_of_Service" target="_blank">licensing and terms</a>.</p>
+
+                <h3 ng-show="appending()"><strong>Upload your feature edits.</strong></h3>
+                <p ng-show="appending()">Upload the blank file you downloaded earlier that now has your new feature edits added. Once your append is complete, you should see all of your new features added as edits to this StoryLayer.</p>
+
+
 
                 <div style="margin: 23px 0 10px 0;">
                     <input type="file" nv-file-select uploader="uploader"/>
@@ -28,7 +34,7 @@
 
                 <div style="margin: 20px 0 10px 0;">
 
-                    <uib-progressbar type="success" ng-show="uploader.progress > 0" value="uploader.progress">{{uploader.progress}}%</uib-progressbar>
+                    <uib-progressbar type="success" ng-show="uploader.progress > 0 && uploader.progress < 100" value="uploader.progress">{{uploader.progress}}%</uib-progressbar>
 
                     <div ng-repeat="fields in errors" class="clrs-red">
                         <div ng-repeat="error in fields" class="clrs-red">
