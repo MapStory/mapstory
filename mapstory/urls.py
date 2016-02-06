@@ -72,7 +72,7 @@ urlpatterns = patterns('',
 
     # MapLoom
 
-    url(r'^maps/new',
+    url(r'^maps/new$',
         'mapstory.views.new_map', {'template': 'maps/_map_view_maploom.html'},
         name='map-new'),
 
