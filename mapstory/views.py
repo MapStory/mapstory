@@ -792,15 +792,15 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                 name__in=settings.DOWNLOAD_FORMATS_RASTER)
         context_dict["links"] = links
 
-        shapefile_link = layer.link_set.download().filter(mime='SHAPE-ZIP').first()
-        if shapefile_link is not None:
-            shapefile_link = shapefile_link.url + '&featureID=fakeID'
-            context_dict["shapefile_link"] = shapefile_link
+    shapefile_link = layer.link_set.download().filter(mime='SHAPE-ZIP').first()
+    if shapefile_link is not None:
+        shapefile_link = shapefile_link.url + '&featureID=fakeID'
+        context_dict["shapefile_link"] = shapefile_link
 
-        csv_link = layer.link_set.download().filter(mime='csv').first()
-        if csv_link is not None:
-            csv_link = csv_link.url + '&featureID=fakeID'
-            context_dict["csv_link"] = csv_link
+    csv_link = layer.link_set.download().filter(mime='csv').first()
+    if csv_link is not None:
+        csv_link = csv_link.url + '&featureID=fakeID'
+        context_dict["csv_link"] = csv_link
 
     if settings.SOCIAL_ORIGINS:
         context_dict["social_links"] = build_social_links(request, layer)
