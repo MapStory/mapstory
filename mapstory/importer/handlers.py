@@ -1,9 +1,11 @@
+import requests
 from .utils import configure_time
 from .inspectors import OGRFieldConverter
 from decimal import Decimal, InvalidOperation
 from django import db
 from django.conf import settings
 from geonode.geoserver.helpers import gs_slurp, gs_catalog
+from geonode.upload.utils import create_geoserver_db_featurestore
 from geoserver.catalog import FailedRequestError
 
 
@@ -81,9 +83,15 @@ class GeoNodePublishHandler(ImportHandler):
 
     @property
     def store_name(self):
-        #TODO: this shouldn't be this dumb
-        connection = db.connections['datastore']
-        return connection.settings_dict['NAME']
+
+        geoserver_publishers = self.importer.filter_handler_results('GeoserverPublishHandler')
+
+        for result in geoserver_publishers:
+            for key, feature_type in result.items():
+                if feature_type and hasattr(feature_type, 'store'):
+                    return feature_type.store.name
+
+        return db.connections['datastore'].settings_dict['NAME']
 
     def can_run(self, layer, layer_config, *args, **kwargs):
         """
@@ -144,41 +152,75 @@ class GeoserverPublishHandler(ImportHandler):
     workspace = 'geonode'
     srs = 'EPSG:4326'
 
-    def get_or_create_datastore(self):
+    def get_default_store(self):
         connection = db.connections['datastore']
         settings = connection.settings_dict
 
+        return {
+              'database': settings['NAME'],
+              'passwd': settings['PASSWORD'],
+              'namespace': 'http://www.geonode.org/',
+              'type': 'PostGIS',
+              'dbtype': 'postgis',
+              'host': settings['HOST'],
+              'user': settings['USER'],
+              'port': settings['PORT'],
+              'enabled': 'True',
+              'name': settings['NAME']
+        }
+
+    def get_or_create_datastore(self, layer_config):
+        connection_string = layer_config.get('geoserver_store', self.get_default_store())
+
         try:
-            return self.catalog.get_store(settings['NAME'])
+            return self.catalog.get_store(connection_string['name'])
         except FailedRequestError:
-
-            params = {'database': settings['NAME'],
-                      'passwd': settings['PASSWORD'],
-                      'namespace': 'http://www.geonode.org/',
-                      'type': 'PostGIS',
-                      'dbtype': 'postgis',
-                      'host': settings['HOST'],
-                      'user': settings['USER'],
-                      'port': settings['PORT'],
-                      'enabled': "True"}
-
-            store = self.catalog.create_datastore(settings['NAME'], workspace=self.workspace)
-            store.connection_parameters.update(params)
+            store = self.catalog.create_datastore(connection_string['name'], workspace=self.workspace)
+            store.connection_parameters.update(connection_string)
             self.catalog.save(store)
 
-        return self.catalog.get_store(settings['NAME'])
+        return self.catalog.get_store(connection_string['name'])
 
-    @property
-    def store(self):
-        return self.get_or_create_datastore()
+    def geogig_handler(self, store, layer, layer_config):
+
+        repo = store.connection_parameters['geogig_repository']
+        auth = (self.catalog.username, self.catalog.password)
+        repo_url = self.catalog.service_url.replace('/rest', '/geogig/{0}/'.format(repo))
+        transaction = requests.get(repo_url + 'beginTransaction.json', auth=auth)
+        transaction_id = transaction.json()['response']['Transaction']['ID']
+        params = self.get_default_store()
+        params['password'] = params['passwd']
+        params['table'] = layer
+        params['transactionId'] = transaction_id
+
+        import_command = requests.get(repo_url + 'postgis/import.json', params=params, auth=auth)
+        task = import_command.json()['task']
+
+        status = 'NOT RUN'
+        while status != 'FINISHED':
+            check_task = requests.get(task['href'], auth=auth)
+            status = check_task.json()['task']['status']
+
+        if check_task.json()['task']['status'] == 'FINISHED':
+            requests.get(repo_url + 'add.json', params={'transactionId': transaction_id}, auth=auth)
+            requests.get(repo_url + 'commit.json', params={'transactionId': transaction_id}, auth=auth)
+            requests.get(repo_url + 'endTransaction.json', params={'transactionId': transaction_id}, auth=auth)
+
 
     @ensure_can_run
     def handle(self, layer, layer_config, *args, **kwargs):
         """
         Publishes a layer to GeoServer.
-        """
 
-        return self.catalog.publish_featuretype(layer, self.store, self.srs)
+        Handler specific params:
+        "geoserver_store": Connection parameters used to get/create the geoserver store.
+        """
+        store = self.get_or_create_datastore(layer_config)
+
+        if getattr(store, 'type', '').lower() == 'geogig':
+            self.geogig_handler(store, layer, layer_config)
+
+        return self.catalog.publish_featuretype(layer, self.get_or_create_datastore(layer_config), self.srs)
 
 
 class GeoWebCacheHandler(ImportHandler):

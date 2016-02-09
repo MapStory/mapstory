@@ -50,6 +50,12 @@
       var dates = [];
       layer.configuration_options.convert_to_date = [];
 
+      if (layer.configuration_options.editable === true) {
+         layer.configuration_options.geoserver_store = {'type': 'geogig'};
+      } else {
+         delete layer.configuration_options.geoserver_store;
+      }
+
       if ((checkStartDate === true || checkEndDate == true)
           && layer.configuration_options.configureTime === true) {
           for (var i = 0; i < layer.fields.length; i++) {
@@ -220,13 +226,18 @@
       var stop;
 
       $scope.setDefaults = function() {
-        if ($scope.layer != null && $scope.layer.hasOwnProperty('name') && !($scope.layer.configuration_options.hasOwnProperty('name'))) {
+        if ($scope.layer == null) {
+            return
+        }
+        if ($scope.layer.hasOwnProperty('name') && !($scope.layer.configuration_options.hasOwnProperty('name'))) {
             $scope.layer.configuration_options.name = $scope.layer.name;
         }
 
-        if ($scope.layer != null && $scope.layer.configuration_options.permissions == null) {
+        if ($scope.layer.configuration_options.permissions == null) {
             $scope.layer.configuration_options.permissions = $scope.defaultPermissions;
         }
+
+        $scope.layer.configuration_options.editable = true;
       };
 
       $scope.appending = function(asString) {

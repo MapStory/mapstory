@@ -912,6 +912,71 @@ class UploaderTests(MapStoryTestMixin):
 
         self.generic_import('PhoenixFirstDues.zip', configuration_options=[{'index': 0}])
 
+    def test_geogig_handler(self):
+        """
+        Tests the GeoGIG handler.
+        """
+        gi = GDALImport(filename=os.path.join(os.path.dirname(__file__), 'test_ogr', 'boxes_with_date.shp'),
+                        )
+
+        # strip out the geoserver handlers until we get the import working
+        gi._initialize_handlers()
+        gi._import_handlers = filter(lambda handler: type(handler).__name__ not in ['GeoServerTimeHandler'],
+                                       gi._import_handlers)
+
+        layer = gi.handle(configuration_options=[{'index': 0,
+                                                   'convert_to_date': ['date'],
+                                                   'start_date': 'date',
+                                                   'configureTime': True,
+                                                   'geoserver_store': {
+                                                       'type': 'GeoGig',
+                                                       'name': 'test',
+                                                       'branch': 'master',
+                                                       'create': 'true',
+                                                       'geogig_repository': os.path.join(ogc_server_settings.GEOGIG_DATASTORE_DIR, 'testi')
+                                                   }
+                                                   }])
+
+
+        store = self.cat.get_store('test')
+        self.assertEqual(store.connection_parameters['name'], 'test')
+        self.assertEqual(store.connection_parameters['create'], 'true')
+        self.assertEqual(store.connection_parameters['branch'], 'master')
+        self.assertEqual(store.connection_parameters['type'], 'GeoGig')
+        self.cat.delete(store, purge=True, recurse=True)
+
+    def test_geogig_from_api(self):
+
+        f = os.path.join(os.path.dirname(__file__), 'test_ogr', 'point_with_date.geojson')
+        new_user = User.objects.create(username='test')
+        new_user_perms = ['change_resourcebase_permissions']
+        c = AdminClient()
+        c.login_as_non_admin()
+
+        with open(f) as fp:
+            response = c.post(reverse('uploads-new'), {'file': fp}, follow=True)
+
+        upload = response.context['object_list'][0]
+
+        payload = [{'index': 0,
+                    'convert_to_date': ['date'],
+                    'start_date': 'date',
+                    'configureTime': True,
+                    'editable': True,
+                    'geoserver_store': {'type': 'GeoGig'}
+                    }]
+
+        response = c.post('/importer-api/data-layers/{0}/configure/'.format(upload.id), data=json.dumps(payload),
+                          content_type='application/json')
+
+        self.assertTrue(response.status_code, 200)
+        layer = Layer.objects.all()[0]
+        self.assertEqual(layer.srid, 'EPSG:4326')
+        self.assertEqual(layer.store, 'non_admin-storylayers')
+        self.assertEqual(layer.storeType, 'dataStore')
+        self.assertEqual(Layer.objects.all()[0].owner.username, self.non_admin_username)
+
+
     def test_gwc_handler(self):
         """
         Tests the GeoWebCache handler

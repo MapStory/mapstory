@@ -16,10 +16,6 @@ def import_object(upload_file_id, configuration_options):
 
     upload_file = UploadFile.objects.get(id=upload_file_id)
 
-    for options in configuration_options:
-        if not options.get('layer_owner'):
-            options['layer_owner'] = upload_file.upload.user
-
     gi = GDALImport(upload_file.file.path)
     layers = gi.handle(configuration_options=configuration_options)
     for layer, config in layers:

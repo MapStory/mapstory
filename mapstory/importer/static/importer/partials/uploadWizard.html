@@ -110,8 +110,8 @@
             <h3><strong>Allow other users to edit this data?</strong></h3>
             <p>StoryLayers are better when multiple authors work together.  Would you like to enable editing?</p>
             <div class="btn-group">
-                <label class="btn btn-success" ng-model="layer.configuration_options.permissions" uib-btn-radio="defaultPermissions">Yes</label>
-                <label class="btn" ng-model="layer.configuration_options.permissions" uib-btn-radio="{'users':{'AnonymousUser':['download_resourcebase', 'view_resourcebase']}}">No</label>
+                <label class="btn btn-success"  ng-model='layer.configuration_options.editable' uib-btn-radio="true">Yes</label>
+                <label class="btn" ng-model='layer.configuration_options.editable' uib-btn-radio="false">No</label>
             </div>
             <div class="import-wizard-button">
                 <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>

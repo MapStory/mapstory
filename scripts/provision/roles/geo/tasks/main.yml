@@ -1,11 +1,14 @@
 ---
 
+- name: install java8
+  apt_repository: repo='ppa:openjdk-r/ppa'
+
 - name: Install Geoserver Dependencies
-  apt: name={{item}} state=present
+  apt: name={{item}} state=present update_cache=yes cache_valid_time=3600
   with_items:
     - tomcat7
     # needed if we're not pulling in tomcat
-    #- openjdk-7-jre
+    - openjdk-8-jdk
   tags: [install]
 
 - file: path=/tmp/{{ application_name }} state=directory
@@ -23,10 +26,6 @@
   shell: wget -SN {{ geoserver_download }} chdir=/tmp/{{ application_name }}
   tags: [geoserver]
 
-- name: fetch geoserver wps classify libs
-  shell: wget -SN {{ geoserver_wps_classify }} chdir=/tmp/{{ application_name }}
-  tags: [geoserver]
-
 - name: db client settings
   template: src=roles/geo/files/geoserver.xml dest=/etc/tomcat7/Catalina/localhost/geoserver.xml mode=0700 owner=tomcat7 group=tomcat7
   tags: [geoserver]
@@ -40,8 +39,9 @@
   file: path=/var/lib/tomcat7/webapps/geoserver.war state=file owner=tomcat7 group=tomcat7
   notify: restart geoserver
 
-- name: restart geoserver
-  service: name=tomcat7 state=restarted
+- name: restart tomcat
+  shell: service tomcat7 restart
+  tags: [geoserver]
 
 - wait_for: path=/var/lib/tomcat7/webapps/geoserver/WEB-INF/
 
@@ -50,16 +50,30 @@
   tags: [geoserver]
 
 - name: copy tomcat context settings
-  template: src=roles/geo/files/context.xml dest=/var/lib/tomcat7/conf/context.xml mode=0700 owner=tomcat7 group=www-data
+  template: src=roles/geo/files/context.xml dest=/var/lib/tomcat7/conf/context.xml mode=0700 owner=tomcat7 group=tomcat7
   tags: [setup]
 
-- name: copy geoserver wps classify libs
-  shell: sudo unzip -j -o classify.zip "*.jar" -d {{ geoserver_lib_dir }} && sudo chown -R tomcat7:tomcat7 {{ geoserver_lib_dir }} chdir=/tmp/{{ application_name }}
-  notify: restart geoserver
-  tags: [geoserver, wps]
+- stat: path=/var/lib/tomcat7/webapps/geoserver/WEB-INF/lib/postgresql-9.4-1201-jdbc41.jar
+  register: postgresql_source
+  tags: [geoserver]
+
+- stat: path=/usr/share/tomcat7/lib/postgresql-9.4-1201-jdbc41.jar
+  register: postgresql_target
+  tags: [geoserver]
+
+- name: move postgresql-9.4-1201-jdbc41.jar
+  command: mv /var/lib/tomcat7/webapps/geoserver/WEB-INF/lib/postgresql-9.4-1201-jdbc41.jar /usr/share/tomcat7/lib/
+  sudo: yes
+  when: postgresql_source.stat.exists and not postgresql_target.stat.exists
+  tags: [geoserver]
+
+#- name: copy geoserver wps classify libs
+#  shell: sudo unzip -j -o classify.zip "*.jar" -d {{ geoserver_lib_dir }} && sudo chown -R tomcat7:tomcat7 {{ geoserver_lib_dir }} chdir=/tmp/{{ application_name }}/geoserver
+#  notify: restart geoserver
+#  tags: [geoserver, wps]
 
 - name: geogig global config
-  copy: src=roles/geo/files/geogigconfig dest=/var/lib/geoserver/geoserver/.geogigconfig mode=0775 owner=www-data group=www-data
+  copy: src=roles/geo/files/geogigconfig dest=/var/lib/geoserver/geoserver/.geogigconfig mode=0775 owner=tomcat7 group=tomcat7
   tags: [geoserver]
 
 - name: unpack geoserver datadir
@@ -67,11 +81,19 @@
   tags: [geoserver]
 
 - name: copy geoserver config.xml
-  template: src=roles/geo/files/config.xml dest={{ geoserver_data }}/security/config.xml owner=www-data group=www-data
+  template: src=roles/geo/files/config.xml dest={{ geoserver_data }}/security/config.xml owner=tomcat7 group=tomcat7
   tags: [geoserver]
 
 - name: copy geoserver rest.properties
-  template: src=roles/geo/files/rest.properties dest={{ geoserver_data }}/security/rest.properties owner=www-data group=www-data
+  template: src=roles/geo/files/rest.properties dest={{ geoserver_data }}/security/rest.properties owner=tomcat7 group=tomcat7
+  tags: [geoserver]
+
+- name: update java home
+  lineinfile: 'dest=/etc/default/tomcat7 regexp="^JAVA_HOME" line="JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"'
+  tags: [geoserver]
+
+- name: update java opts
+  lineinfile: 'dest=/etc/default/tomcat7 regexp="^JAVA_OPTS" line="JAVA_OPTS=\"-Djava.awt.headless=true -Xmx{{ansible_memtotal_mb//2}}m -XX:+UseConcMarkSweepGC\""'
   tags: [geoserver]
 
 - name: set geoserver password
@@ -79,12 +101,13 @@
   tags: [geoserver]
 
 - name: geoserver datadir permissions
-  file: path={{ geoserver_data }} state=directory owner=www-data group=www-data mode=775 recurse=yes
+  file: path={{ geoserver_data }} state=directory owner=tomcat7 group=tomcat7 mode=775 recurse=yes
   tags: [geoserver]
 
 - name: create geogit data directory
-  file: path={{ geoserver_data }}/geogig state=directory mode=0775 owner=www-data group=www-data
+  file: path={{ geoserver_data }}/geogig state=directory mode=0775 owner=tomcat7 group=tomcat7
   tags: [setup]
 
 - file: path=/tmp/{{ application_name }} state=absent
   tags: [setup, geoserver]
+

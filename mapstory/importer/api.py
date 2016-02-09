@@ -1,4 +1,5 @@
 import json
+import os
 from tastypie.fields import IntegerField, DictField, ListField, CharField, ToManyField, ForeignKey
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
@@ -12,7 +13,8 @@ from tastypie.bundle import Bundle
 from .tasks import import_object
 from tastypie.exceptions import ImmediateHttpResponse
 from geonode.api.api import ProfileResource
-
+from django.utils.text import slugify
+from geonode.geoserver.helpers import ogc_server_settings
 
 class UploadedLayerResource(ModelResource):
     """
@@ -56,9 +58,25 @@ class UploadedLayerResource(ModelResource):
         if 'application/json' in request.META.get('CONTENT_TYPE', ''):
             configuration_options = json.loads(request.body)
 
+        if isinstance(configuration_options, list) and len(configuration_options) == 1:
+            configuration_options = configuration_options[0]
+
         if isinstance(configuration_options, dict):
+            if configuration_options.get('geoserver_store'):
+                store = configuration_options.get('geoserver_store')
+                if store.get('type', str).lower() == 'geogig':
+                    store.setdefault('branch', 'master')
+                    store.setdefault('create', 'true')
+                    store.setdefault('name', '{0}-storylayers'.format(request.user.username))
+                    store['geogig_repository'] = os.path.join(ogc_server_settings.GEOGIG_DATASTORE_DIR,
+                                                              store.get('name'))
+
             obj.configuration_options = configuration_options
             obj.save()
+
+            if not configuration_options.get('layer_owner'):
+                configuration_options['layer_owner'] = obj.upload.user
+
             configuration_options = [configuration_options]
 
         if not configuration_options:
