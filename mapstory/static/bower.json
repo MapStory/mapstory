@@ -19,8 +19,8 @@
     "w3c-schemas": "highsource/w3c-schemas#master",
     "angular-sortable-view" : "0.0.13",
     "angular-slick": "https://github.com/MapStory/angular-slick.git#dynamic-data",
-    "story-tools": "https://github.com/MapStory/story-tools.git#master",
-    "jquery.cookie": "1.4.1"
+    "jquery.cookie": "1.4.1",
+    "story-tools": "https://github.com/MapStory/story-tools.git#master"
   },
   "resolutions": {
     "angular": "1.3.0",

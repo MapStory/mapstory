@@ -12,15 +12,14 @@
 <script src="{{STATIC_URL}}vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <script src="{{STATIC_URL}}vendor/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
 
-<script src="{{STATIC_URL}}mapstory/js/story-tools/ol.js"></script>
-<script src="{{STATIC_URL}}mapstory/js/story-tools/story-tools-core-tpls.js"></script>
-<script src="{{STATIC_URL}}mapstory/js/story-tools/story-tools-core.js"></script>
-<script src="{{STATIC_URL}}mapstory/js/story-tools/story-tools-core-ng.js"></script>
-<script src="{{STATIC_URL}}mapstory/js/story-tools/ows.min.js"></script>
-<script src="{{STATIC_URL}}mapstory/js/story-tools/story-tools-mapstory.js"></script>
+<script src="{{STATIC_URL}}mapstory/js/ol.js"></script>
+<script src="{{STATIC_URL}}vendor/story-tools/dist/story-tools-core-tpls.js"></script>
+<script src="{{STATIC_URL}}vendor/story-tools/dist/story-tools-core.min.js"></script>
+<script src="{{STATIC_URL}}vendor/story-tools/dist/story-tools-core-ng.min.js"></script>
+<script src="{{STATIC_URL}}vendor/story-tools/dist/ows.min.js"></script>
+<script src="{{STATIC_URL}}vendor/story-tools/dist/story-tools-mapstory.min.js"></script>
 
 {% include 'maps/viewer.js' %}
-<script src="http://localhost:35729/livereload.js"></script>
 <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}mapstory/css/viewer.css"/>
 <div ng-app="viewer" ng-controller="viewerController as viewer"id="container">
     <div id="main">
@@ -36,21 +35,6 @@
     </div>
 
     <div id="footer" class='floating-below' ng-show="timeControlsManager.timeControls">
-        <div class="panel-group" id="currentBox" ng-show="timeControlsManager.timeControls.getCurrentBox().get('title')">
-            <div class="panel panel-default" id="story-box-accordion">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a id="story-box-title" data-toggle="collapse" data-target="#collapseOne" class="collapsed">
-                        </a>
-                    </h4>
-
-                </div>
-                <div id="collapseOne" class="panel-collapse collapse" style="height: 0px;">
-                    <div id="story-box-description" class="panel-body"></div>
-                </div>
-            </div>
-        </div>
-
         <div id="time-controls-panel">
             <div class="navbar" ng-controller="tileProgressController">
                 <st-playback-controls class="container-full" time-controls="timeControlsManager.timeControls"></st-playback-controls>
