@@ -100,10 +100,11 @@ class IndexView(TemplateView):
 class DiaryListView(ListView):
     template_name = 'mapstory/diary.html'
     context_object_name = 'entries'
+    # Need to fix how they are ordered - by most recent date
     paginate_by = 10
 
     def get_queryset(self):
-        return DiaryEntry.objects.filter(publish=True)
+        return DiaryEntry.objects.filter(publish=True).order_by('-date')
 
     def get_context_data(self, **kwargs):
         ctx = super(DiaryListView, self).get_context_data(**kwargs)
