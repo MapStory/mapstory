@@ -31,7 +31,7 @@ from geonode.layers.views import layer_replace, layer_thumbnail, layer_upload
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
-from mapstory.importer.urls import urlpatterns as importer_urlpatterns
+from osgeo_importer.urls import urlpatterns as importer_urlpatterns
 
 
 # -- Deprecated url routes for Geoserver authentication -- remove after GeoNode 2.1
