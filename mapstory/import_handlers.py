@@ -1,7 +1,7 @@
 from django import db
 
-from mapstory.importer.inspectors import OGRTruncatedConverter
-from .importer.handlers import ImportHandler, ensure_can_run
+from osgeo_importer.inspectors import OGRTruncatedConverter
+from osgeo_importer.handlers import ImportHandler, ensure_can_run
 from .views import layer_append_minimal
 
 
