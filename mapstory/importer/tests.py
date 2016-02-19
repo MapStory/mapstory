@@ -113,7 +113,6 @@ class UploaderTests(MapStoryTestMixin):
         filename = os.path.join(os.path.dirname(__file__), 'test_ogr', f)
 
         res = self.import_file(filename, configuration_options=configuration_options)
-
         layer = Layer.objects.get(name=res[0][0])
         self.assertEqual(layer.srid, 'EPSG:4326')
         self.assertEqual(layer.store, self.datastore.name)
@@ -133,6 +132,20 @@ class UploaderTests(MapStoryTestMixin):
         """
 
         layer = self.generic_import('boxes_with_year_field.shp', configuration_options=[{'index': 0,
+                                                                                         'convert_to_date': ['date']}])
+        date_attr = filter(lambda attr: attr.attribute == 'date', layer.attributes)[0]
+        self.assertEqual(date_attr.attribute_type, 'xsd:dateTime')
+
+        configure_time(self.cat.get_layer(layer.name).resource, attribute=date_attr.attribute,)
+
+        self.generic_time_check(layer, attribute=date_attr.attribute)
+
+    def test_box_with_year_field2(self):
+        """
+        Tests the import of test_box_with_year_field_2.
+        """
+
+        layer = self.generic_import('boxes_with_year_field2.shp', configuration_options=[{'index': 0,
                                                                                          'convert_to_date': ['date']}])
         date_attr = filter(lambda attr: attr.attribute == 'date', layer.attributes)[0]
         self.assertEqual(date_attr.attribute_type, 'xsd:dateTime')

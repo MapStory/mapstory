@@ -309,6 +309,9 @@ class OGRFieldConverter(OGRInspector):
 
             string_field = feat[field_as_string]
 
+            if isinstance(string_field, float):
+                string_field = int(string_field)
+
             if string_field:
                 pars = parse(str(string_field))
 
