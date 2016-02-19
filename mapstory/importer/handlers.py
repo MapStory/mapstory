@@ -197,7 +197,7 @@ class GeoserverPublishHandler(ImportHandler):
         task = import_command.json()['task']
 
         status = 'NOT RUN'
-        while status != 'FINISHED':
+        while status != 'FINISHED' and status != 'FAILED':
             check_task = requests.get(task['href'], auth=auth)
             status = check_task.json()['task']['status']
 
