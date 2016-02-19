@@ -1,4 +1,6 @@
 {% extends "site_base.html" %}
+{% load threadedcomments_tags %}
+{% load fluent_comments_tags %}
 {% load mapstory_tags %}
 {% load avatar_tags %}
 
@@ -55,7 +57,10 @@
   <div class="col-sm-6">
     <article id="comments" class="tab-pane">
       {% with entry as resource %}
-        {% include "_comments.html" %}
+      {% render_comment_list for resource %}
+      {% if user.is_authenticated %}
+        {% render_comment_form for resource %}
+      {% endif %}
       {% endwith %}
     </article>
   </div>

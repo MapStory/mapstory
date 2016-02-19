@@ -100,7 +100,6 @@ class IndexView(TemplateView):
 class DiaryListView(ListView):
     template_name = 'mapstory/diary.html'
     context_object_name = 'entries'
-    # Need to fix how they are ordered - by most recent date
     paginate_by = 10
 
     def get_queryset(self):
