@@ -25,14 +25,14 @@
     <div id="main">
         <div id="content">
             <div id="middle">
-                <div id="storyHeader">
+                <div id="header">
                     {%verbatim%}
-                    <div id="storyTitle">
+                    <div id="title">
                         <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}/viewer">
                             <span ng-bind="mapManager.storyMap.getStoryTitle()"></span>
                         </a>
                     </div>
-                    <div id="storyAuthor" ng-bind="mapManager.storyMap.getStoryOwner()"></div>
+                    <div id="author" ng-bind="mapManager.storyMap.getStoryOwner()"></div>
                     {%endverbatim%}
                 </div>
                 <div id="map"></div>
@@ -41,15 +41,12 @@
     </div>
 
     <div id="footer" class='floating-below' ng-show="timeControlsManager.timeControls">
-        <div id="time-controls-panel">
-            <div id="slider"></div>
-            <div class="navbar" style="margin:5px 0 0; min-height: auto" ng-controller="tileProgressController">
+        <div id="time-controls-panel2">
+            <div class="navbar" ng-controller="tileProgressController">
                 <st-playback-controls class="pull-left"
                                       time-controls="timeControlsManager.timeControls"></st-playback-controls>
-                <progressbar animate="false" style="width: 15%; margin:6px 0; font-size:14px"
-                             class="navbar-nav navbar-right" value="tilesLoadedProgress"><b ng-if="tilesLoaded"
-                                                                                            ng-bind="tilesLoaded + '/' + tilesToLoad"
-                                                                                            style="color:black"></b>
+                <progressbar animate="false" class="navbar-nav navbar-right" value="tilesLoadedProgress">
+                    <b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad"></b>
                 </progressbar>
             </div>
             <div id="timeline" style="display:none;"></div>
