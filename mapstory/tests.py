@@ -22,7 +22,7 @@ from geoserver.catalog import FailedRequestError
 from geonode.geoserver.helpers import gs_catalog
 from django import db
 from .importers import GeoServerLayerCreator
-from mapstory.importer.utils import UploadError
+from osgeo_importer.utils import UploadError
 
 User = get_user_model()
 

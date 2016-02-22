@@ -78,7 +78,7 @@ INSTALLED_APPS += (
     'threadedcomments',
     'django_comments',
     'django.contrib.sites',
-    'mapstory.importer',
+    'osgeo_importer',
     'djcelery',
 )
 
@@ -135,13 +135,13 @@ USE_AWS_S3 = False
 
 IMPORT_HANDLERS = (
 'mapstory.import_handlers.TruncatedNameHandler',
-'mapstory.importer.handlers.FieldConverterHandler',
-'mapstory.importer.handlers.GeoserverPublishHandler',
-'mapstory.importer.handlers.GeoServerBoundsHandler',
-'mapstory.importer.handlers.GeoServerTimeHandler',
-'mapstory.importer.handlers.GeoWebCacheHandler',
-'mapstory.importer.handlers.GeoNodePublishHandler',
-'mapstory.import_handlers.LayerAppendHandler'
+'osgeo_importer.handlers.FieldConverterHandler',
+'osgeo_importer.handlers.GeoserverPublishHandler',
+'osgeo_importer.handlers.GeoServerBoundsHandler',
+'osgeo_importer.handlers.GeoServerTimeHandler',
+'osgeo_importer.handlers.GeoWebCacheHandler',
+'osgeo_importer.handlers.GeoNodePublishHandler',
+'osgeo_import_handlers.LayerAppendHandler'
 )
 
 
