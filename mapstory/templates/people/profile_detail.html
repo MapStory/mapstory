@@ -124,7 +124,7 @@
                 <a ng-controller="ImportController"  style="cursor: pointer" ng-click="open(null, '{{ STATIC_URL }}importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "upload storylayer" %}</a>
             </div>
             <div class="sidebar-content">
-                <a href="{% url "new_map" %}">{% trans "create a mapstory" %}</a>
+                <a href="{% url "new_map" %}">{% trans "compose a mapstory" %}</a>
             </div>
             {% if_has_tag if_relationship %}
             <div class="sidebar-content">
