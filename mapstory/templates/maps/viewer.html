@@ -35,12 +35,33 @@
                     <div id="author" ng-bind="mapManager.storyMap.getStoryOwner()"></div>
                     {%endverbatim%}
                 </div>
+                <div class="stLegend"></div>
                 <div id="map"></div>
             </div>
         </div>
     </div>
 
     <div id="footer" class='floating-below' ng-show="timeControlsManager.timeControls">
+
+        {%verbatim%}
+        <div class="panel-group" id="summary-panel" ng-show="mapManager.storyMap.getStoryAbstract()">
+            <div class="panel panel-default" id="summary-accordion">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a id="summary-title" data-toggle="collapse" data-target="#summary-body" class="collapsed">
+                            Summary
+                        </a>
+                    </h4>
+
+                </div>
+                <div id="summary-body" class="panel-collapse collapse" style="height: 0px;">
+                    <div id="summary-description" class="panel-body"
+                         ng-bind="mapManager.storyMap.getStoryAbstract()"></div>
+                </div>
+            </div>
+        </div>
+        {%endverbatim%}
+
         <div id="time-controls-panel2">
             <div class="navbar" ng-controller="tileProgressController">
                 <st-playback-controls class="pull-left"
@@ -48,6 +69,10 @@
                 <progressbar animate="false" class="navbar-nav navbar-right" value="tilesLoadedProgress">
                     <b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad"></b>
                 </progressbar>
+            </div>
+            <div id="playback-settings" class="panel-collapse collapse" style="height: 0px; color:white">
+                <div class="panel-heading">Playback Options</div>
+                <st-playback-settings playback-options="playbackOptions" time-controls="timeControlsManager.timeControls"></st-playback-settings>
             </div>
             <div id="timeline" style="display:none;"></div>
         </div>
