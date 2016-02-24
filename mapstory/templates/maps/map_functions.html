@@ -3,7 +3,7 @@
 {% load flag_tags %}
 <div class="col-sm-3" style="border-left:1px solid gainsboro">
   <div style="text-align:right">
-    <a href="{% url "map_viewer" resource.id %}" >
+    <a href="" onclick="toggleFullScreen(); return false;">
       <span style="font-size:1.3em;color:gainsboro">play</span>
       <br>
       <span style="font-size:1.3em;color:gainsboro">fullscreen</span>
@@ -36,5 +36,21 @@
     </div>
   </div>
 </div>
-
+<script>
+function toggleFullScreen() {
+  var elem = document.getElementById('embedded_map');
+  if (!document.webkitFullScreen || !document.mozFullScreen ||
+    !document.msFullscreenElement || !document.fullscreenElement) {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullScreen) {
+      elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+  }
+};
+</script>
 {% include "favorite/_favorite_js.html" %}
