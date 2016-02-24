@@ -89,6 +89,14 @@
             {% if profile.profile %}
             <div class="sidebar-content">{{ profile.profile }}</div>
             {% endif %}
+            {% if profile.education %}
+            <div class="sidebar-header"><h5>education</h5></div>
+            <div class="sidebar-content">{{ profile.education }}</div>
+            {% endif %}
+            {% if profile.expertise %}
+            <div class="sidebar-header"><h5>expertise</h5></div>
+            <div class="sidebar-content">{{ profile.expertise }}</div>
+            {% endif %}
             <!-- Getting rid of this as it is replaced by the keywords field for profiles -->
             {% comment %}
             <!-- 
@@ -175,7 +183,7 @@
             {% if profile.keyword_list %}
                 <div class="sidebar-header"><h3>tags & interests </h3></div>
                 {% for keyword in profile.keyword_list %}
-                    <div class="label label-tags">{{ keyword }}</div>
+                    <div class="label label-tags"><a href='/search/?q={{ keyword }}&type__in=user&limit=100&offset=0'>{{ keyword }}</a></div>
                 {% endfor %}
             {% endif %}
         </div>
