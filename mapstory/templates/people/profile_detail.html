@@ -149,14 +149,24 @@
                     <a href="mailto:{{ profile.email }}"><i class="fa fa-envelope-o"></i>email {{ profile.first_name|default_if_none:profile.username }}</a>
                 </div>
                 {% endif %}
-                {% if profile.email %}
+                {% if profile.social_facebook %}
                 <div class="sidebar-content">
-                    <a href="mailto:{{ profile.email }}"><i class="fa fa-facebook"></i>facebook</a>
+                    <a href="{{ profile.social_facebook }}"><i class="fa fa-facebook"></i>facebook</a>
                 </div>
                 {% endif %}
-                {% if profile.email %}
+                {% if profile.social_twitter %}
                 <div class="sidebar-content">
-                    <a href="mailto:{{ profile.email }}"><i class="fa fa-twitter"></i>twitter</a>
+                    <a href="{{ profile.social_twitter }}"><i class="fa fa-twitter"></i>twitter</a>
+                </div>
+                {% endif %}
+                {% if profile.social_github %}
+                <div class="sidebar-content">
+                    <a href="{{ profile.social_github }}"><i class="fa fa-github"></i>github</a>
+                </div>
+                {% endif %}
+                {% if profile.social_linkedin %}
+                <div class="sidebar-content">
+                    <a href="{{ profile.social_linkedin }}"><i class="fa fa-linkedin"></i>linkedin</a>
                 </div>
                 {% endif %}
             {% endif %}
