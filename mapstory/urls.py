@@ -23,7 +23,7 @@ from mapstory.views import MapStorySignup
 from mapstory.views import CommunityDetail
 from mapstory.views import GroupDetail
 from mapstory.views import map_detail
-from mapstory.views import layer_detail
+from mapstory.views import layer_detail, layer_detail_id
 from mapstory.views import layer_create, layer_append
 from mapstory.views import layer_remove, map_remove
 from mapstory.views import MapStoryConfirmEmailView
@@ -44,6 +44,7 @@ if 'geonode.geoserver' in settings.INSTALLED_APPS:
                            )
 
 layer_detail_patterns = patterns('',
+    url(r'^layers/(?P<layerid>[^/]*)$', layer_detail_id, name="layer_detail_id"),
     url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
     )
 
