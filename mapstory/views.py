@@ -730,36 +730,35 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         name__in=settings.DOWNLOAD_FORMATS_METADATA)
 
     if request.method == "POST":
-        keywords_form = KeywordsForm(request.POST, instance=layer)
-        metadata_form = MetadataForm(request.POST, instance=layer)
-        published_form = PublishStatusForm(request.POST, instance=layer)
-
-        if keywords_form.is_valid():
-            new_keywords = keywords_form.cleaned_data['keywords']
-            layer.keywords.clear()
-            layer.keywords.add(*new_keywords)
-        if metadata_form.is_valid():
-            # update all the metadata
-            if metadata_form.cleaned_data['category'] is not None:
-                new_category = TopicCategory.objects.get(id=metadata_form.cleaned_data['category'].id)
-                Layer.objects.filter(id=layer.id).update(category=new_category)
-            new_language = metadata_form.cleaned_data['language']
-            new_distribution_url = metadata_form.cleaned_data['distribution_url']
-            new_data_quality_statement = metadata_form.cleaned_data['data_quality_statement']
-            new_purpose = metadata_form.cleaned_data['purpose']
-            layer.language = new_language
-            layer.distribution_url = new_distribution_url
-            layer.data_quality_statement = new_data_quality_statement
-            layer.purpose = new_purpose
-            layer.save()
-        if published_form.is_valid():
-            layer.is_published = published_form.cleaned_data['is_published']
-            layer.save()
-            
+        if 'keywords' in request.POST:
+            keywords_form = KeywordsForm(request.POST, instance=layer)
+            if keywords_form.is_valid():
+                keywords_form.save()
+                new_keywords = keywords_form.cleaned_data['keywords']
+                layer.keywords.clear()
+                layer.keywords.add(*new_keywords)
+                layer.save()
+            metadata_form = MetadataForm(instance=layer)
+            published_form = PublishStatusForm(instance=layer)
+        elif 'title' in request.POST:
+            metadata_form = MetadataForm(request.POST, instance=layer)
+            if metadata_form.is_valid():
+                metadata_form.save()
+                # update all the metadata
+                if metadata_form.cleaned_data['category'] is not None:
+                    new_category = TopicCategory.objects.get(id=metadata_form.cleaned_data['category'].id)
+                    Layer.objects.filter(id=layer.id).update(category=new_category)
+                layer.title = metadata_form.cleaned_data['title']
+                layer.language = metadata_form.cleaned_data['language']
+                layer.distribution_url = metadata_form.cleaned_data['distribution_url']
+                layer.data_quality_statement = metadata_form.cleaned_data['data_quality_statement']
+                layer.purpose = metadata_form.cleaned_data['purpose']
+                layer.is_published = metadata_form.cleaned_data['is_published']
+                layer.save()                
+            keywords_form = KeywordsForm(instance=layer)
     else:
         keywords_form = KeywordsForm(instance=layer)
         metadata_form = MetadataForm(instance=layer)
-        published_form = PublishStatusForm(instance=layer)
 
     content_moderators = Group.objects.filter(name='content_moderator').first()
 
@@ -772,7 +771,6 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "wps_enabled": settings.OGC_SERVER['default']['WPS_ENABLED'],
         "keywords_form": keywords_form,
         "metadata_form": metadata_form,
-        "published_form": published_form,
         "content_moderators": content_moderators,
     }
 
@@ -840,23 +838,22 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     layers = MapLayer.objects.filter(map=map_obj.id)
 
     if request.method == "POST":
-        keywords_form = KeywordsForm(request.POST, instance=map_obj)
-        published_form = PublishStatusForm(request.POST, instance=map_obj)
-
-        if published_form.is_valid():
-            map_obj.is_published = published_form.cleaned_data['is_published']
-            map_obj.save()
-        if keywords_form.is_valid():
-            new_keywords = keywords_form.cleaned_data['keywords']
-            map_obj.keywords.clear()
-            map_obj.keywords.add(*new_keywords)
-            map_obj.save()
-            return HttpResponseRedirect(
-                reverse(
-                    'map_detail',
-                    args=(
-                        map_obj.id,
-                    )))
+        if 'keywords' in request.POST:
+            keywords_form = KeywordsForm(request.POST, instance=map_obj)
+            if keywords_form.is_valid():
+                keywords_form.save()
+                new_keywords = keywords_form.cleaned_data['keywords']
+                map_obj.keywords.clear()
+                map_obj.keywords.add(*new_keywords)
+                map_obj.save()
+            published_form = PublishStatusForm(instance=map_obj)
+        elif 'published_submit_btn' in request.POST:
+            published_form = PublishStatusForm(request.POST, instance=map_obj)
+            if published_form.is_valid():
+                published_form.save()
+                map_obj.is_published = published_form.cleaned_data['is_published']
+                map_obj.save()
+            keywords_form = KeywordsForm(instance=map_obj)
     else:
         keywords_form = KeywordsForm(instance=map_obj)
         published_form = PublishStatusForm(instance=map_obj)
