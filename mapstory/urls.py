@@ -45,6 +45,7 @@ if 'geonode.geoserver' in settings.INSTALLED_APPS:
 
 layer_detail_patterns = patterns('',
     url(r'^layers/(?P<layerid>[^/]*)$', layer_detail_id, name="layer_detail_id"),
+    url(r'^storylayer/(?P<layerid>[^/]*)$', layer_detail_id, name="storylayer_detail_id"),
     url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
     )
 
@@ -70,6 +71,7 @@ urlpatterns = patterns('',
     url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
     url(r'^maps/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'),
     url(r'^maps/(?P<mapid>\d+)/?$', map_detail, name='map_detail'),
+    url(r'^mapstory/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
 
     # MapLoom
 
