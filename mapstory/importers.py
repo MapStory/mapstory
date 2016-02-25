@@ -2,8 +2,8 @@ import json
 import requests
 
 from django.conf import settings
-from mapstory.importer.importers import Import
-from mapstory.importer.utils import UploadError, launder
+from osgeo_importer.importers import Import
+from osgeo_importer.utils import UploadError, launder
 from django.utils.text import slugify
 from geonode.upload.utils import create_geoserver_db_featurestore
 from django.http import HttpResponseForbidden
