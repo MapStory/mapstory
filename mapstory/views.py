@@ -73,10 +73,10 @@ from account.conf import settings as account_settings
 from account.models import EmailConfirmation
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
-from importer.forms import UploadFileForm
+from osgeo_importer.forms import UploadFileForm
 from celery import group
-from mapstory.importer.utils import configure_time
-from mapstory.importer.utils import UploadError
+from osgeo_importer.utils import configure_time
+from osgeo_importer.utils import UploadError
 from lxml import etree
 import json
 import requests
