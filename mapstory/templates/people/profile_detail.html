@@ -89,6 +89,14 @@
             {% if profile.profile %}
             <div class="sidebar-content">{{ profile.profile }}</div>
             {% endif %}
+            {% if profile.education %}
+            <div class="sidebar-header"><h5>education</h5></div>
+            <div class="sidebar-content">{{ profile.education }}</div>
+            {% endif %}
+            {% if profile.expertise %}
+            <div class="sidebar-header"><h5>expertise</h5></div>
+            <div class="sidebar-content">{{ profile.expertise }}</div>
+            {% endif %}
             <!-- Getting rid of this as it is replaced by the keywords field for profiles -->
             {% comment %}
             <!-- 
@@ -124,7 +132,7 @@
                 <a ng-controller="ImportController"  style="cursor: pointer" ng-click="open(null, '{{ STATIC_URL }}importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "upload storylayer" %}</a>
             </div>
             <div class="sidebar-content">
-                <a href="{% url "new_map" %}">{% trans "create a mapstory" %}</a>
+                <a href="{% url "new_map" %}">{% trans "compose a mapstory" %}</a>
             </div>
             {% if_has_tag if_relationship %}
             <div class="sidebar-content">
@@ -149,14 +157,24 @@
                     <a href="mailto:{{ profile.email }}"><i class="fa fa-envelope-o"></i>email {{ profile.first_name|default_if_none:profile.username }}</a>
                 </div>
                 {% endif %}
-                {% if profile.email %}
+                {% if profile.social_facebook %}
                 <div class="sidebar-content">
-                    <a href="mailto:{{ profile.email }}"><i class="fa fa-facebook"></i>facebook</a>
+                    <a href="{{ profile.social_facebook }}"><i class="fa fa-facebook"></i>facebook</a>
                 </div>
                 {% endif %}
-                {% if profile.email %}
+                {% if profile.social_twitter %}
                 <div class="sidebar-content">
-                    <a href="mailto:{{ profile.email }}"><i class="fa fa-twitter"></i>twitter</a>
+                    <a href="{{ profile.social_twitter }}"><i class="fa fa-twitter"></i>twitter</a>
+                </div>
+                {% endif %}
+                {% if profile.social_github %}
+                <div class="sidebar-content">
+                    <a href="{{ profile.social_github }}"><i class="fa fa-github"></i>github</a>
+                </div>
+                {% endif %}
+                {% if profile.social_linkedin %}
+                <div class="sidebar-content">
+                    <a href="{{ profile.social_linkedin }}"><i class="fa fa-linkedin"></i>linkedin</a>
                 </div>
                 {% endif %}
             {% endif %}
@@ -165,7 +183,7 @@
             {% if profile.keyword_list %}
                 <div class="sidebar-header"><h3>tags & interests </h3></div>
                 {% for keyword in profile.keyword_list %}
-                    <div class="label label-tags">{{ keyword }}</div>
+                    <div class="label label-tags"><a href='/search/?q={{ keyword }}&type__in=user&limit=100&offset=0'>{{ keyword }}</a></div>
                 {% endfor %}
             {% endif %}
         </div>
