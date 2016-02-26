@@ -44,7 +44,7 @@ if 'geonode.geoserver' in settings.INSTALLED_APPS:
                            )
 
 layer_detail_patterns = patterns('',
-    url(r'^layers/(?P<layerid>[^/]*)$', layer_detail_id, name="layer_detail_id"),
+    url(r'^layers/(?P<layerid>\d+)$', layer_detail_id, name="layer_detail_id"),
     url(r'^storylayer/(?P<layerid>\d+)$', layer_detail_id, name="storylayer_detail_id"),
     url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
     )
