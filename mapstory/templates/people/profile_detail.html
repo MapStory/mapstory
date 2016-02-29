@@ -193,7 +193,8 @@
             {% if profile.keyword_list %}
                 <div class="sidebar-header"><h3>tags & interests </h3></div>
                 {% for keyword in profile.keyword_list %}
-                    <div class="label label-tags"><a href='/search/?q={{ keyword }}&type__in=user&limit=100&offset=0'>{{ keyword }}</a></div>
+                    <!-- This isn't working for some reason... -->
+                    <div class="label label-tags"><a href='/search/?limit=100&offset=0&type__in=user&keywords__slug__in={{ keyword }}'>{{ keyword }}</a></div>
                 {% endfor %}
             {% endif %}
         </div>

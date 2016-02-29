@@ -5,6 +5,25 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title clearfix">
+                <a data-toggle="collapse" data-parent="#accordion2" href="#user-tab">
+                    <span class="pull-left">Who</span>
+                    <span class="pull-right"></span>
+                </a>
+            </div>
+        </div>
+        <nav id="user-tab" class="panel-collapse collapse filter">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <input class="autocomplete-light-text-widget" data-autocomplete-choice-selector="[data-value]" data-autocomplete-placeholder="Profile to search by" data-autocomplete-url="/autocomplete/ProfileAutocomplete/" data-bootstrap="normal" id="profile_filter" name="profiles" type="text" autocomplete="off" placeholder="Profile to search by" data-widget-ready="1">
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title clearfix">
                 <a data-toggle="collapse" data-parent="#accordion2" href="#category-tab">
                     <span class="pull-left">What</span>
                     <span class="pull-right"></span>
@@ -42,21 +61,8 @@
         <div id="regions" class="panel-collapse collapse">
             <div class="panel-body">
                 <div class="row">
-                    Click, Drag and Zoom on the Map to filter results
-                    <div class="control-group leaflet_map">
-                        <leaflet center="map_center" defaults="defaults" layers="layers">
-                        </leaflet>
-                    </div>
-                    <br>
-                    <div class="row">
                         <div class="col-sm-10 col-sm-offset-1">
-                            <button class="btn btn-primary" type="submit" ng-click="delete_query('extent')">Clear Map</button>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-sm-10 col-sm-offset-1">
-                            <ul id="categories" class="nav" ng-init="search_regions=[]">
+                            <ul id="regions" class="nav" ng-init="search_regions=[]">
                                 {% verbatim %}
                                 Or search by places (countries or continents):
                                 <nav class="filter">
@@ -64,7 +70,7 @@
                                         <input name="region_search_input" id="region_search_input" ng-model="region_query" type="text" 
                                             class="form-control">
                                         <span class="input-group-btn">
-                                            <button class="btn btn-primary" type="submit" id="region_search_btn" ng-click="add_search('regions', region_query, search_regions)"><i class="fa fa-plus">Add</i></button>
+                                            <button class="btn btn-primary" type="submit" id="region_search_btn" ng-click="add_search('regions__name__in', region_query, search_regions)"><i class="fa fa-plus">Add</i></button>
                                         </span>
                                     </div>
                                 </nav>
@@ -72,14 +78,13 @@
                                     <li ng-repeat="search in search_regions">
                                         {{ search }}
                                         <span class="input-group-btn pull-right">
-                                            <button class="btn btn-primary" type="submit" ng-click="remove_search('regions', search, search_regions)"><i class="fa fa-times"></i></button>
+                                            <button class="btn btn-primary" type="submit" ng-click="remove_search('regions__name__in', search, search_regions)"><i class="fa fa-times"></i></button>
                                         </span>
                                     </li>
                                 </ul>
                                 {% endverbatim %}
                             </ul>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -107,8 +112,6 @@
             </div>
         </div>
     </div>
-</div>
-<div class="panel panel-default">
     <div class="panel-heading">
         <div class="panel-title clearfix">
             <a data-toggle="collapse" data-parent="#accordion2" href="#keyword-tab">
@@ -128,7 +131,7 @@
                                 <input name="keyword_search_input" id="keyword_search_input" ng-model="keyword_query" type="text" 
                                     class="form-control">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="submit" id="keyword_search_btn" ng-click="add_search('keywords', keyword_query, search_keywords)"><i class="fa fa-plus">Add</i></button>
+                                    <button class="btn btn-primary" type="submit" id="keyword_search_btn" ng-click="add_search('keywords__slug__in', keyword_query, search_keywords)"><i class="fa fa-plus">Add</i></button>
                                 </span>
                             </div>
                         </nav>
@@ -136,7 +139,7 @@
                             <li ng-repeat="search in search_keywords">
                                 {{ search }}
                                 <span class="input-group-btn pull-right">
-                                    <button class="btn btn-primary" type="submit" ng-click="remove_search('keywords', search, search_keywords)"><i class="fa fa-times"></i></button>
+                                    <button class="btn btn-primary" type="submit" ng-click="remove_search('keywords__slug__in', search, search_keywords)"><i class="fa fa-times"></i></button>
                                 </span>
                             </li>
                         </ul>
