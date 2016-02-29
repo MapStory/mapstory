@@ -161,6 +161,7 @@
             {% if user == profile %}
             {% else %}
                 <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
+                <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary" >message</a>
                 {% if profile.email %}
                 <div class="sidebar-content">
                     <a href="mailto:{{ profile.email }}"><i class="fa fa-envelope-o"></i>email {{ profile.first_name|default_if_none:profile.username }}</a>
