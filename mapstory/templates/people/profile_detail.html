@@ -89,6 +89,15 @@
             {% if profile.profile %}
             <div class="sidebar-content">{{ profile.profile }}</div>
             {% endif %}
+            {% if profile.city or profile.country %}
+            <div class="sidebar-header"><h5>location</h5></div>
+            {% if profile.city %}
+            <div class="sidebar-content">{{ profile.city }}</div>
+            {% endif %}
+            {% if profile.country %}
+            <div class="sidebar-content">{{ profile.country }}</div>
+            {% endif %}
+            {% endif %}
             {% if profile.education %}
             <div class="sidebar-header"><h5>education</h5></div>
             <div class="sidebar-content">{{ profile.education }}</div>
