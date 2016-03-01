@@ -223,26 +223,6 @@
           if ($location.search().hasOwnProperty('type__in')){
             $scope.type__in = $location.search()['type__in'].replace(/\W+/g," ");
           }
-          // Filter by Regions
-          if ($location.search().hasOwnProperty('regions') && $location.search()['regions'].length > 0) {
-            $scope.results = data.objects.filter(function(value) {
-              for (var index = 0; index < value.regions.length; index++) {
-                if ($location.search()['regions'].indexOf(value.regions[index]) > -1) {
-                  return true;
-                }
-              }
-            });
-          }
-          // Filter by Keywords
-          if ($location.search().hasOwnProperty('keywords') && $location.search()['keywords'].length > 0) {
-            $scope.results = data.objects.filter(function(value) {
-              for (var index = 0; index < value.keywords.length; index++) {
-                if ($location.search()['keywords'].indexOf(value.keywords[index]) > -1) {
-                  return true;
-                }
-              }
-            });
-          }
         } else {
           if ($location.search().hasOwnProperty('title__icontains')){
             $scope.text_query = $location.search()['title__icontains'].replace(/\W+/g," ");
@@ -267,6 +247,20 @@
     };
     $scope.query['is_published'] = true;
     query_api($scope.query);
+
+    // Do a single query to grab the top keywords
+    function keywords_query(data) {
+      return $http.get('/api/keywords', {params: data || {}}).success(function(data){
+        var results = data.objects;
+        var num_trending = (results.length > 8) ? 8 : results.length;
+        for (var i = 0; i < num_trending; i++) {
+          $scope.trending.push(results[i].name);
+        }
+      });
+    };
+    $scope.trending = [];
+    // Need to adjust this to put the right query in data to order by count
+    keywords_query();
 
     $scope.query_category = function(category, type) {
       $scope.query.type__in = type;
@@ -733,6 +727,26 @@
           }
     });
 */
+    // Toggle the background of the header buttons to indicate which one is active
+    // Make the content one active, user inactive
+    $scope.toggle_content = function() {
+      $('#content-search').css('background-color', 'white');
+      $('#user-search').css('background-color', 'gainsboro');
+    };
+    // Make the user one active, content inactive
+    $scope.toggle_user = function() {
+      $('#content-search').css('background-color', 'gainsboro');
+      $('#user-search').css('background-color', 'white');
+    };
+    
+    // Profile filter
+    $('#profile_filter').bind('selectChoice', function(e, choice, text_autocomplete) {
+          if(choice[0].children[0] == undefined) {
+              $('#profile_filter').val(choice[0].innerHTML);
+              $scope.query['owner__username__in'] = choice[0].innerHTML;
+              query_api($scope.query);
+          }
+    });
 
     $scope.feature_select = function($event){
       var element = $($event.target);

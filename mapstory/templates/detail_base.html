@@ -92,7 +92,8 @@
             <h3 style="margin-top:0px;margin-bottom:5px;">Tags:</h3>
             <!-- NOTE: This has some formatting issues; needs to wrap around to a second line nicely -->
             {% for keyword in resource.keyword_list|slice:"5" %}
-              <span class="label label-default">{{ keyword }}</span>
+            <!-- Make each one clickable and populate search with keyword already -->
+              <a href='/search/?limit=100&offset=0&keywords__slug__in={{ keyword }}'><span class="label label-default">{{ keyword }}</span></a>
             {% endfor %}
             {% if resource.keyword_list|length > 5 %}
               <span class="label label-default">{{ resource.keyword_list|length|add:"-5" }} more</span>

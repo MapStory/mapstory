@@ -1,0 +1,11 @@
+{% load i18n %}
+<hr>
+<h3><i class="fa fa-signal"></i> Trending Tags</h3>
+<div class="panel-group" id="accordion2">
+    <!-- Add some styling here -->
+    <div class="panel panel-default" ng-repeat="item in trending">
+        {% verbatim %}
+        #{{ item }}
+        {% endverbatim %}
+    </div>
+</div>
