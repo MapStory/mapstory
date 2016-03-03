@@ -46,6 +46,7 @@
                         StoryMap, stStoryMapBuilder, stStoryMapBaseBuilder, StoryPinLayerManager) {
         this.storyMap = new StoryMap({target: 'map'});
         var self = this;
+        StoryPinLayerManager.map = self.storyMap;
         this.loadMap = function(options) {
             options = options || {};
             if (options.id) {
