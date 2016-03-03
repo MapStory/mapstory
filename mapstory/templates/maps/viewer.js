@@ -66,10 +66,42 @@
                 stStoryMapBaseBuilder.defaultMap(this.storyMap);
             }
             this.currentMapOptions = options;
+
+            var element = document.getElementById('story-pin-popup');
+
+            var popup = new ol.Overlay({
+                element: element,
+                positioning: 'bottom-center',
+                stopEvent: false
+            });
+            self.storyMap.getMap().addOverlay(popup);
+
+            // display popup on click
+            self.storyMap.getMap().on('click', function(evt) {
+                var feature = self.storyMap.getMap().forEachFeatureAtPixel(evt.pixel,
+                      function(feature, layer) {
+                          return feature;
+                      });
+                if (feature) {
+                    var geometry = feature.getGeometry();
+                    var coord = geometry.getCoordinates();
+                    $(element).popover('destroy');
+                    popup.setPosition(coord);
+                    $(element).popover({
+                        'placement': 'right',
+                        'html': true,
+                        'title': feature.get('title'),
+                        'content': feature.get('content')
+                    });
+                    $(element).popover('show');
+                } else {
+                    $(element).popover('destroy');
+                }
+            });
         };
         $rootScope.$on('$locationChangeSuccess', function() {
             var config = {% autoescape off %}{{ config }};{% endautoescape%}
-            self.loadMap(config);
+        self.loadMap(config);
     });
 }
 
