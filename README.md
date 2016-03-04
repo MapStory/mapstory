@@ -12,25 +12,25 @@ The full build lives in a 'meta-project' at https://github.com/MapStory/mapstory
 Deployment
 ----------
 
-For a local developer build, clone the following repositories as siblings of each other:
+## local developer build
+
+clone the following repositories as siblings of each other:
 * https://github.com/MapStory/MapLoom
 * https://github.com/GeoNode/geonode
 * https://github.com/MapStory/geoserver-geonode-ext
 * https://github.com/MapStory/mapstory-geonode
 
-** This is incompatible with the vagrantfile - which is configured to assume a clone of the *mapstory* meta-project.
+**This is incompatible with the vagrantfile - which is configured to assume a clone of the *mapstory* meta-project.**
 
-If one was to work on a module - and fork it - then how do you work with the fork in the context of the vagrant approach? 
-
-**
+**If one was to work on a module - and fork it - then how do you work with the fork in the context of the vagrant approach?**
 
 * https://github.com/ischneider/geotools (optional - only needed for extended datetime support)
 
 ** _check this last one - what is the status of this and what does it mean in practice?_ **
 
-a manual build process is described in [manual_setup.md]
+a manual build process is described in (manual_setup.md)
 
-an automated virtual machine provisioning process using vagrant is documented in [scripts/provision/README.md]
+an automated virtual machine provisioning process using vagrant is documented in (scripts/provision/README.md)
 
-For a production deployment: 
+## Production deployment: 
 **Todo**
