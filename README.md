@@ -2,76 +2,35 @@
 mapstory-geonode
 ================
 
-[![Build Status](https://travis-ci.org/MapStory/mapstory-geonode.svg)](https://travis-ci.org/MapStory/mapstory-geonode)
-
-**PROVISIONAL MANUAL SETUP INSTRUCTIONS**
-
-Assuming Ubuntu 14.04
-
-Prerequisites:
-* git
-* node
-* grunt
-* bower
-* python-2.7
-* python-paste
-* python-pastescript
-* virtualenv OR virtualenvwrapper
+[Clarify: mapstory-geonode relation to mapstory meta-project - why isnt the build in the meta-project? if mapstory-geonode handles all the dependencies why do we need the meta-project at all? ]
 
 Repositories
 ------------
 
 The full build lives in a 'meta-project' at https://github.com/MapStory/mapstory/tree/master. This is used for stability as the upstream dependent projects are pegged to specific versions. While MapStory has forks of upstream projects, the goal is to support temporary efforts that are intended for eventual merging into the respective projects. The forks will be updated as needed.
 
+Deployment
+----------
+
 For a local developer build, clone the following repositories as siblings of each other:
 * https://github.com/MapStory/MapLoom
 * https://github.com/GeoNode/geonode
 * https://github.com/MapStory/geoserver-geonode-ext
 * https://github.com/MapStory/mapstory-geonode
+
+** This is incompatible with the vagrantfile - which is configured to assume a clone of the *mapstory* meta-project.
+
+If one was to work on a module - and fork it - then how do you work with the fork in the context of the vagrant approach? 
+
+**
+
 * https://github.com/ischneider/geotools (optional - only needed for extended datetime support)
 
-Setup
------
+** _check this last one - what is the status of this and what does it mean in practice?_ **
 
-Follow installation instructions in GeoNode for the relevant operating system.
-*STOP* when you reach the point of running `pip install -e geonode`
+a manual build process is described in [manual_setup.md]
 
-Make virtualenv for mapstory, activate it, change directory to `mapstory-geonode` and run:
+an automated virtual machine provisioning process using vagrant is documented in [scripts/provision/README.md]
 
-    pip install -r requirements.txt
-    
-*NOTE*: while it is safer (to avoid conflicts with other packages and keep dependencies isolated) to create your virtualenv using the default mode of ignoring site-packages, this may result in more requirements being installed by pip. It is possible to use the virtualenv flag `--system-site-packages` if you run into issues.
-
-Now, change directory to `MapLoom` and bootstrap:
-
-    bower install
-    npm install
-    grunt copy
-
-Important Tasks
-===============
-
-Many paver tasks are reused from GeoNode. They should be run in the `mapstory-geonode` directory to work properly.
-
-To setup from an initially clean state:
-
-    paver setup sync static
-
-Then start geoserver and django/grunt:
-
-    paver start
-
-Django/grunt will run in the foreground and can be stopped with ctrl-c but
-geoserver will run in the background and can be stopped with:
-
-    paver stop_geoserver
-
-To run django/grunt alone:
-
-    paver start_django
-
-By default, this will bind to localhost but if you need to bind to another interface (like when running in a headless VM and accessing on a host-only network), you can use the `--bind` option:
-
-    paver start_django --bind=192.168.56.100
-
-MapStory should be available at this point on port 8000.
+For a production deployment: 
+**Todo**
