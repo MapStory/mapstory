@@ -1,12 +1,30 @@
+
 Provisioning
 ============
 
-Ansible is used to provision MapStory.
+Mostly this assumes a deployment for the purposes of development to a VirtualBox ubuntu/trusty (14.04) environment.
+
+** break out AWS and other environments to separate files? **
+
+Prerequisites
+-------------
+
+GIT source code checkout - see [../../README.md]
+Vagrant (https://www.vagrantup.com/) 
+VirtualBox 
+ansible **version 1.9.3 ????** - or - vagrant-guest_ansible *
+
+
+Ansible is used to provision MapStory. It can be run from either the command machine or on the guest vm. Ansible is not supported on Windows - so the ansible guest mode is used for this - which requires installing ansible on the guest.
+**Can this be done automatically by vagrant? ** 
+At the time of writing the inbuilf ansible local provision is borked and cannot be used.
 
 NOTE: `vagrant` and `ansible playbook` commands should be run in this directory.
 
-Vagrant
--------
+Vagrant based setup
+------------------- 
+
+### Setup options
 
 NOTE: As a developer if you would like the git repos to be checked out by Ansible, make the following changes:
     
@@ -14,10 +32,45 @@ NOTE: As a developer if you would like the git repos to be checked out by Ansibl
     
  In /host_vars/vagrant.yml set `setup_git_repo: no`
 
-To provision a VirtualBox Vagrant instance, use the following command (this will take a while):
+### Basic deployment
 
-    vagrant up
+#### Windows
+1. install VirtualBox 
+1. install Vagrant
+1. `vagrant plugin install vagrant-guest_ansible
+1. `vagrant up --no-provision` (this will take a while as it downloads ubuntu` **can this be run in a mode that doesnt provision - to get a chance to install the right version of ansible on the target machine?"
+1. vagrant ssh 
+1.1 sudo apt-get install software-properties-common
+1.1 sudo apt-add-repository ppa:ansible/ansible
+1.1 sudo apt-get install ansible
+1.1 exit 
+1. vagrant reload --provision **
 
+#### linux:
+1. install VirtualBox 
+1. install Vagrant
+1. `vagrant up`
+
+#### troubleshooting:
+  ** where are ansible logs created? **
+
+Initial tests
+-------------
+
+### vm
+this is accessible using
+`vagrant ssh`
+
+check that the source code is accessible at /srv/git/mapstory/ (as specified in [Vagrantfile])
+
+### Database
+Install deploys a postgres database accessible from the local network (i.e. the guest machine) - this is accessible at the ip address reported by the vagrant setup, on the standard port (5432) using postgres/foobar
+**todo - add link to security configuration section when available**
+
+
+  
+Operations
+----------  
 Once complete, the instance should be available at 192.168.56.151
 
 If shell access is needed, use:

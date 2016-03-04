@@ -25,26 +25,49 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       mount_options: ['rw', 'vers=4', 'tcp', 'nolock']
     }
   end
+#
+# Ansible provisioning can be done a few different ways: locally of by control machine - but Windows control machines not supported.
+#
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.sudo = true
-    ansible.host_key_checking = false
-    ansible.inventory_path = "inventory.ini"
-    ansible.playbook = "main.yml"
-
-    # As of Vagrant 1.5, the machine name (taken from config.vm.define) is set as default limit to ensure
-    # that vagrant provision steps only affect the expected machine. Setting ansible.limit will override this default.
-
-    # Setting ansible.limit = 'all' can be used to make Ansible connect to all machines from the inventory file.
-
-    # Enable if config.vm.define is not defined above or is not set to a name found in the inventory file.
-
-    ansible.limit = "mapstory"
-
-    #ansible.verbose = "vvv"
-
+  if Vagrant::Util::Platform.windows? 
+  
+	#   note - this should work except for bug: (adds C: to path)
+	#
+	#	  config.vm.provision "ansible_local" do |ansible|	
+	#	ansible.provisioning_path = "/srv/git/mapstory/mapstory-geonode/scripts/provision"
+	#
+	#
+	# do this "vagrant plugin install vagrant-guest_ansible" on control machine 
+	# https://github.com/vovimayhem/vagrant-guest_ansible
+	#
+		config.vm.provision :guest_ansible do |ansible|
+		ansible.sudo = true
+		ansible.host_key_checking = false
+		ansible.inventory_path = "inventory.ini"
+		ansible.playbook = "main.yml"
+		ansible.limit = "mapstory"
+		#ansible.verbose = "vvv"
+	end
+   else
+    config.vm.provision :ansible do |ansible|
+ 		ansible.sudo = true
+		ansible.host_key_checking = false
+		ansible.inventory_path = "inventory.ini"
+		ansible.playbook = "main.yml"
+		ansible.limit = "mapstory"
+		#ansible.verbose = "vvv"
+    end
   end
 
+  
+		# As of Vagrant 1.5, the machine name (taken from config.vm.define) is set as default limit to ensure
+		# that vagrant provision steps only affect the expected machine. Setting ansible.limit will override this default.
+
+		# Setting ansible.limit = 'all' can be used to make Ansible connect to all machines from the inventory file.
+
+		# Enable if config.vm.define is not defined above or is not set to a name found in the inventory file.
+		
+		
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--memory", "2048"]
     vb.customize ["modifyvm", :id, "--cpus", "2"]
