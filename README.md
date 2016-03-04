@@ -26,11 +26,11 @@ clone the following repositories as siblings of each other:
 
 * https://github.com/ischneider/geotools (optional - only needed for extended datetime support)
 
-** _check this last one - what is the status of this and what does it mean in practice?_ **
+**_check this last one - what is the status of this and what does it mean in practice?_**
 
-a manual build process is described in (manual_setup.md)
+a manual build process is described in [manual_setup.md](manual_setup.md)
 
-an automated virtual machine provisioning process using vagrant is documented in (scripts/provision/README.md)
+an automated virtual machine provisioning process using vagrant is documented in [scripts/provision/README.md](scripts/provision/README.md)
 
 ## Production deployment: 
 **Todo**
