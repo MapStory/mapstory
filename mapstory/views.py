@@ -51,7 +51,7 @@ from geonode.groups.models import GroupProfile
 
 from actstream.models import actor_stream
 
-from geonode.maps.models import Map, MapLayer
+from geonode.maps.models import Map, MapLayer, MapStory
 from geonode.utils import GXPLayer
 from geonode.utils import GXPMap
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm
@@ -512,6 +512,19 @@ def layer_metadata(request, layername, template='upload/layer_upload_metadata.ht
 def new_map_json(request):
     from geonode.maps.views import new_map_json
     return new_map_json(request)
+
+def mapstory_view(request, storyid, template='maps/mapstory_map_viewer.html'):
+    """
+    The view that returns the map viewer opened to
+    the mapstory with the given ID.
+    """
+
+    story_obj = MapStory.objects.get(id=storyid)
+    config = story_obj.viewer_json(request.user)
+
+    return render_to_response(template, RequestContext(request, {
+        'config': json.dumps(config)
+    }))
 
 @login_required
 def new_map(request, template):

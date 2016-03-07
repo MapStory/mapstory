@@ -45,13 +45,40 @@
     function MapManager($http, $q, $log, $rootScope, $location,
                         StoryMap, stStoryMapBuilder, stStoryMapBaseBuilder, StoryPinLayerManager) {
         this.storyMap = new StoryMap({target: 'map'});
+        var _config = {};
+        this.title = "";
+        this.owner = "";
+        this.storyChapter = 1;
+        this.chapterCount = 1;
         var self = this;
         StoryPinLayerManager.map = self.storyMap;
+
+        this.loadConfig = function(config, chapter){
+            _config = config;
+
+            if(config.chapters){
+                self.chapterCount = config.chapters.length;
+                if(chapter > 0 && chapter <= config.chapters.length) {
+                    self.storyChapter = chapter;
+                    $log.info("Loading Chapter " + chapter + " of " + config.chapters.length);
+                    self.loadMap(config.chapters[chapter - 1]);
+                }else{
+                    $log.warn("Chapter " + chapter + " is INVALID so defaulting to Chapter 1. ");
+                    self.loadMap(config.chapters[0]);
+                }
+            }else{
+                $log.info("Story config has no chapters so just loading the defaults.");
+                self.loadMap(config);
+            }
+
+            self.title = config.title;
+            self.owner = config.owner;
+        };
+
         this.loadMap = function(options) {
             options = options || {};
             if (options.id) {
-                var config = options;
-                stStoryMapBuilder.modifyStoryMap(self.storyMap, config);
+                stStoryMapBuilder.modifyStoryMap(self.storyMap, options);
 
                 var annotationsURL = "/maps/" + options.id + "/annotations";
                 if (annotationsURL.slice(-1) === '/') {
@@ -101,7 +128,15 @@
         };
         $rootScope.$on('$locationChangeSuccess', function() {
             var config = {% autoescape off %}{{ config }};{% endautoescape%}
-        self.loadMap(config);
+            var path = $location.path(), chapter = 1, matches;
+
+            if (path.indexOf('/chapter') === 0){
+                if ((matches = /\d+/.exec(path)) !== null) {
+                    chapter = matches[0]
+                }
+            }
+
+            self.loadConfig(config, chapter);
     });
 }
 
@@ -130,9 +165,32 @@ module.controller('tileProgressController', function($scope) {
     });
 });
 
-module.controller('viewerController', function($scope, $injector, MapManager, TimeControlsManager) {
+module.controller('viewerController', function($scope, $location, $injector, $log, MapManager, TimeControlsManager) {
     $scope.timeControlsManager = $injector.instantiate(TimeControlsManager);
     $scope.mapManager = MapManager;
+
+    $scope.nextChapter = function(){
+        var nextChapter = Number(MapManager.storyChapter) + 1;
+        if(nextChapter <= MapManager.chapterCount) {
+             $log.info("Going to Chapter ", nextChapter);
+            $location.path('/chapter/' + nextChapter);
+        }else{
+             $location.path('');
+        }
+
+    };
+
+    $scope.previousChapter = function(){
+        var previousChapter = Number(MapManager.storyChapter) - 1;
+        if(previousChapter > 0) {
+            $log.info("Going to the Chapter ", previousChapter);
+            $location.path('/chapter/' + previousChapter);
+        }else{
+             $location.path('');
+        }
+
+    };
+
     $scope.playbackOptions = {
         mode: 'instant',
         fixed: false
