@@ -1,3 +1,4 @@
+{% load i18n %}
 <footer class="color4" style="padding:20px 10px;width:100%;">
     <section id="mainFooter">
         <div class="container" id="footer">
@@ -28,9 +29,25 @@
         <div class="container">
             <hr style="margin:10px 0 10px 0">
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-8">
                     <p><small>By using this site, you agree to the License, <a href="http://wiki.mapstory.org/wiki/Terms_of_Service">Terms of Use and Privacy Policy.</a> MapStory® is a registered trademark of the MapStory Foundation, Inc., a non-profit organization.</small></p>
                     <p><small><a href="{% url 'getpage' 'started' %}">About the MapStory Foundation</a> | <a href="http://blog.mapstory.org">Blog</a> | <a href="http://wiki.mapstory.org/wiki/The_MapStory_Foundation">Contact</a> | <a href="http://wiki.mapstory.org/wiki/Developers">Developers</a> | Mobile View | <a href="http://wiki.mapstory.org/wiki/The_MapStory_Foundation#News_Coverage">Press</a> | <a href="http://wiki.mapstory.org/wiki/Terms_of_Service">Disclaimers</a> | <a href="http://wiki.mapstory.org/wiki/Community_Ethics">Values</a> | <a href="http://mapstory.myshopify.com/">Merchandise</a> | <a href="http://wiki.mapstory.org">wiki.MapStory.org</a> | <a href="http://help.mapstory.org">help.Mapstory.org</a></small></p>
+                </div>
+                <div class="col-sm-4">
+                    <label class="hidden">{% trans "Language" %}</label>
+                    {% if csrf_token != "NOTPROVIDED" %}
+                    {% get_current_language as LANGUAGE %}
+                    <form class="form-inline" action="/i18n/setlang/" method="post">
+                    {% csrf_token %}
+                    <select class="col-md-6 pull-right" name="language" onchange="javascript:form.submit()">
+                        {% for lang in LANGUAGES %}
+                        <option value="{{ lang.0 }}" {% ifequal LANGUAGE_CODE lang.0 %} selected="selected"{% endifequal %}>
+                            {{ lang.1 }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    </form>
+                    {% endif %}
                 </div>
             </div>
         </div>
