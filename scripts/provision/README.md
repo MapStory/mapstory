@@ -35,16 +35,18 @@ NOTE: As a developer if you would like the git repos to be checked out by Ansibl
 ### Basic deployment
 
 #### Windows
+1. Ensure shell scripts (roles/web/files/*.sh) are in unix format - GIT has not DOS linefed them or they will fail. [TODO test git settings to default to this] 
 1. install VirtualBox 
 1. install Vagrant
-1. `vagrant plugin install vagrant-guest_ansible
-1. `vagrant up --no-provision` (this will take a while as it downloads ubuntu` **can this be run in a mode that doesnt provision - to get a chance to install the right version of ansible on the target machine?"
-1. vagrant ssh 
-1.1 sudo apt-get install software-properties-common
-1.1 sudo apt-add-repository ppa:ansible/ansible
-1.1 sudo apt-get install ansible
-1.1 exit 
-1. vagrant reload --provision **
+1. `vagrant plugin install vagrant-guest_ansible`
+1. `vagrant up --no-provision` (this will take a while as it downloads ubuntu)
+1. install ansible on target machine... actually to update it from 1.5 to 2.0+ which seems to work
+  1. `vagrant ssh` 
+  1. `sudo apt-get install software-properties-common`
+  1. `sudo apt-add-repository ppa:ansible/ansible`
+  1. `sudo apt-get install ansible`
+  1. `exit` 
+1. vagrant reload --provision
 
 #### linux:
 1. install VirtualBox 
