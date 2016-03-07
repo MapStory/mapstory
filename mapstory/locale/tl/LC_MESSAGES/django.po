@@ -1,20 +1,21 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
+#
 # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: mapstory\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-07 15:12-0800\n"
+"POT-Creation-Date: 2016-03-07 15:30-0800\n"
 "PO-Revision-Date: 2016-03-07 23:12+0000\n"
 "Last-Translator: Jeffrey Johnson <ortelius@gmail.com>\n"
-"Language-Team: Tagalog (http://www.transifex.com/mapstory/mapstory/language/tl/)\n"
+"Language-Team: Tagalog (http://www.transifex.com/mapstory/mapstory/language/"
+"tl/)\n"
+"Language: tl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: tl\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: forms.py:17
@@ -86,8 +87,7 @@ msgid "content removed by moderator"
 msgstr ""
 
 #: apps/flag/views.py:36
-msgid ""
-"You have added a flag. A moderator will review your submission shortly."
+msgid "You have added a flag. A moderator will review your submission shortly."
 msgstr ""
 
 #: apps/flag/templates/flag/thank_you.html:3
@@ -357,6 +357,10 @@ msgstr ""
 msgid "Help Center"
 msgstr ""
 
+#: templates/index.html:237
+msgid "Ask questions, find answers, and help others."
+msgstr ""
+
 #: templates/index.html:265
 msgid "No Featured Thinkers and Thoughts"
 msgstr ""
@@ -528,6 +532,12 @@ msgstr ""
 msgid "Terms of Use and Privacy Policy."
 msgstr ""
 
+#: templates/mapstory/_footer.html:33
+msgid ""
+"is a registered trademark of the MapStory Foundation, Inc., a non-profit "
+"organization."
+msgstr ""
+
 #: templates/mapstory/_footer.html:34
 msgid "About the MapStory Foundation"
 msgstr ""
@@ -678,13 +688,11 @@ msgstr ""
 msgid "Append Layer"
 msgstr ""
 
-#: templates/upload/layer_append.html:73
-#: templates/upload/layer_create.html:124
+#: templates/upload/layer_append.html:73 templates/upload/layer_create.html:124
 msgid "Layer Info"
 msgstr ""
 
-#: templates/upload/layer_append.html:78
-#: templates/upload/layer_create.html:131
+#: templates/upload/layer_append.html:78 templates/upload/layer_create.html:131
 msgid "Performing GeoServer Config Step"
 msgstr ""
 
@@ -771,13 +779,11 @@ msgstr ""
 msgid "Select the charset or leave default"
 msgstr ""
 
-#: templates/upload/layer_upload.html:88
-#: templates/upload/layer_upload.html:103
+#: templates/upload/layer_upload.html:88 templates/upload/layer_upload.html:103
 msgid "Clear"
 msgstr ""
 
-#: templates/upload/layer_upload.html:89
-#: templates/upload/layer_upload.html:104
+#: templates/upload/layer_upload.html:89 templates/upload/layer_upload.html:104
 msgid "Upload files"
 msgstr ""
 
@@ -796,7 +802,8 @@ msgstr ""
 #: templates/upload/layer_upload_crs.html:17
 msgid ""
 "\n"
-"        A coordinate reference system for this layer could not be determined.\n"
+"        A coordinate reference system for this layer could not be "
+"determined.\n"
 "        Locate or enter the appropriate ESPG code for this layer below.\n"
 "        One way to do this is do visit:\n"
 "        <a href=\"http://prj2epsg.org/search\" target=\"_\">prj2epsg</a>\n"
@@ -850,8 +857,10 @@ msgstr ""
 
 #: templates/upload/layer_upload_csv.html:72
 msgid ""
-"We did not detect columns that could be used for the latitude and longitude.\n"
-"Please verify that you have two columns in your csv file that can be used for\n"
+"We did not detect columns that could be used for the latitude and "
+"longitude.\n"
+"Please verify that you have two columns in your csv file that can be used "
+"for\n"
 "the latitude and longitude."
 msgstr ""
 
@@ -870,8 +879,10 @@ msgstr ""
 
 #: templates/upload/layer_upload_metadata.html:20
 msgid ""
-"Note: this layer's orginal metadata was populated by importing a metadata XML file.\n"
-"          GeoNode's metadata import supports a subset of ISO, FGDC, and Dublin Core metadata elements.\n"
+"Note: this layer's orginal metadata was populated by importing a metadata "
+"XML file.\n"
+"          GeoNode's metadata import supports a subset of ISO, FGDC, and "
+"Dublin Core metadata elements.\n"
 "          Some of your original metadata may have been lost."
 msgstr ""
 
@@ -896,7 +907,8 @@ msgid "Editing details for "
 msgstr ""
 
 #: templates/upload/no_upload.html:7
-msgid "Returning to the upload starting page in <span id=\"cnt\">5</span>seconds "
+msgid ""
+"Returning to the upload starting page in <span id=\"cnt\">5</span>seconds "
 msgstr ""
 
 #: templates/upload/no_upload.html:8

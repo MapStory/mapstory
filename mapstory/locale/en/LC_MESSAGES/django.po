@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-07 15:12-0800\n"
+"POT-Creation-Date: 2016-03-07 15:30-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -356,6 +356,10 @@ msgstr ""
 msgid "Help Center"
 msgstr ""
 
+#: templates/index.html:237
+msgid "Ask questions, find answers, and help others."
+msgstr ""
+
 #: templates/index.html:265
 msgid "No Featured Thinkers and Thoughts"
 msgstr ""
@@ -525,6 +529,12 @@ msgstr ""
 
 #: templates/mapstory/_footer.html:33
 msgid "Terms of Use and Privacy Policy."
+msgstr ""
+
+#: templates/mapstory/_footer.html:33
+msgid ""
+"is a registered trademark of the MapStory Foundation, Inc., a non-profit "
+"organization."
 msgstr ""
 
 #: templates/mapstory/_footer.html:34
