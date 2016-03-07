@@ -4,15 +4,15 @@ Provisioning
 
 Mostly this assumes a deployment for the purposes of development to a VirtualBox ubuntu/trusty (14.04) environment.
 
-** break out AWS and other environments to separate files? **
+_break out AWS and other environments to separate files?_
 
 Prerequisites
 -------------
 
-GIT source code checkout - see [../../README.md]
-Vagrant (https://www.vagrantup.com/) 
-VirtualBox 
-ansible **version 1.9.3 ????** - or - vagrant-guest_ansible *
+* GIT source code checkout - see [../../README.md](../../README.md)
+* Vagrant (https://www.vagrantup.com/) 
+* VirtualBox 
+* ansible **version 1.9.3 ????** - or - vagrant-guest_ansible *
 
 
 Ansible is used to provision MapStory. It can be run from either the command machine or on the guest vm. Ansible is not supported on Windows - so the ansible guest mode is used for this - which requires installing ansible on the guest.
