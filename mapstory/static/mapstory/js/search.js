@@ -177,7 +177,7 @@
   * Load data from api and defines the multiple and single choice handlers
   * Syncs the browser url with the selections
   */
-  module.controller('geonode_search_controller', function($injector, $scope, $location, $http, Configs){
+  module.controller('geonode_search_controller', function($injector, $scope, $location, $http, $q, Configs){
     $scope.query = $location.search();
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
@@ -747,7 +747,7 @@
     var keywords = [];
 
     function profile_autocomplete() {
-      return $http.get('/api/profiles').success(function(data){
+      return $http.get('/api/profiles/').success(function(data){
         var results = data.objects;
         // Here we have first name, last name, and username
         // append them all together to be used in the profile autocomplete
@@ -762,30 +762,47 @@
       $('#tokenfield-profile').tokenfield({
         autocomplete: {
           source: profile_autocompletes,
-          delay: 100
+          delay: 100,
+          minLength: 3
         },
-        showAutocompleteOnFocus: true
+        showAutocompleteOnFocus: true,
+        limit: 10
+      })
+      .on('tokenfield:createtoken', function(e) {
+        // Tokenize by space if num_spaces > 3
+        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+        var data = e.attrs.value.split(' ');
+        if (num_spaces > 3) {
+          e.attrs.value = data[0];
+          e.attrs.label = data[0];
+          for (var i = 1; i < data.length; i++) {
+            $('#tokenfield-profile').tokenfield('createToken', data[i]);
+          }
+        }
       })
       .on('tokenfield:createdtoken', function(e) {
         // Match search to possible usernames - casting a wide net for now
-        // WIP
-        /*
-        var usernames_to_search = possible_profiles(e.attrs.value);
-        console.log(usernames_to_search);
-        for (var i = 0; i < usernames_to_search.length; i++) {
-          $scope.add_search('owner__username__in', usernames_to_search[i], usernames);
-        }*/
-        $scope.add_search('owner__username__in', e.attrs.value, usernames);
+        possible_profiles(e.attrs.value).then(function(usernames_to_search) {
+          // Duplicates are fine in usernames_to_search because the add_search() function will catch them
+          for (var i = 0; i < usernames_to_search.length; i++) {
+            $scope.add_search('owner__username__in', usernames_to_search[i], usernames);
+          }
+        });
+        //$scope.add_search('owner__username__in', e.attrs.value, usernames);
       })
       .on('tokenfield:removedtoken', function(e) {
         $scope.remove_search('owner__username__in', e.attrs.value, usernames);
       });
     });
+
     function possible_profiles(tag) {
+      var promises = [];
       var profiles = [];
       var query = {};
+      var deferred = $q.defer();
       // Count spaces in tag
       var num_spaces = (tag.match(/ /g)||[]).length;
+      console.log(num_spaces);
       // If there's no spaces, we might be directly searching a username
       if (num_spaces == 0) {
         profiles.push(tag);
@@ -793,30 +810,38 @@
       for (var i = 0; i < num_spaces; i++) {
         // split at ith instance of space in tag
         // grab first and last name
-        query['first_name'] = tag.split(' ').slice(0, i);
-        query['last_name'] = tag.split(' ').slice(i);
+        query['first_name'] = tag.split(' ').slice(0, (i + 1)).join(' ');
+        query['last_name'] = tag.split(' ').slice(i + 1).join(' ');
+        // Why do I have to do this instead of passing {param: query}?
+        var api_request = '/api/profiles/?first_name=' + query['first_name'] + '&last_name=' + query['last_name'];
         // query api w/query
-        $http.get('/api/profiles', {param: query}).success(function(data) {
+        promises[i] = $http.get(api_request).success(function(data) {
           var results = data.objects;
-          for (var i = 0; i < results.length; i++) {
-            profiles.push(results.username);
+          for (var j = 0; j < results.length; j++) {
+            profiles.push(results[j].username);
           }
         });
       }
       query['first_name'] = tag;
-      query['last_name'] = null;
-      $http.get('/api/profiles', {param: query}).success(function(data) {
+      var api_request = '/api/profiles/?first_name=' + query['first_name'];
+      promises.push($http.get(api_request).success(function(data) {
         var results = data.objects;
-        for (var i = 0; i < results.length; i++) {
-          profiles.push(results.username);
+        for (var j = 0; j < results.length; j++) {
+          profiles.push(results[j].username);
         }
-      });
-      // TODO: This needs a promise chain, otherwise it will not work
-      return profiles;
+      }));
+
+      $q.all(promises).then(function() {
+        deferred.resolve(profiles);
+      }, function() {
+        deferred.reject('Some HTTP requests failed');
+      })
+
+      return deferred.promise;
     };
 
     function region_autocomplete() {
-      return $http.get('/api/regions').success(function(data){
+      return $http.get('/api/regions/').success(function(data){
         var results = data.objects;
         for (var i = 0; i < results.length; i++) {
           region_autocompletes.push(results[i].name);
@@ -827,9 +852,23 @@
       $('#tokenfield-region').tokenfield({
         autocomplete: {
           source: region_autocompletes,
-          delay: 100
+          delay: 100,
+          minLength: 3
         },
-        showAutocompleteOnFocus: true
+        showAutocompleteOnFocus: true,
+        limit: 10
+      })
+      .on('tokenfield:createtoken', function(e) {
+        // Tokenize by space if num_spaces > 3
+        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+        var data = e.attrs.value.split(' ');
+        if (num_spaces > 3) {
+          e.attrs.value = data[0];
+          e.attrs.label = data[0];
+          for (var i = 1; i < data.length; i++) {
+            $('#tokenfield-region').tokenfield('createToken', data[i]);
+          }
+        }
       })
       .on('tokenfield:createdtoken', function(e) {
         $scope.add_search('regions__name__in', e.attrs.value, regions);
@@ -840,7 +879,7 @@
     });
 
     function keyword_autocomplete() {
-      return $http.get('/api/keywords').success(function(data){
+      return $http.get('/api/keywords/').success(function(data){
         var results = data.objects;
         for (var i = 0; i < results.length; i++) {
           keyword_autocompletes.push(results[i].slug);
@@ -851,15 +890,56 @@
       $('#tokenfield-keyword').tokenfield({
         autocomplete: {
           source: keyword_autocompletes,
-          delay: 100
+          delay: 100,
+          minLength: 3
         },
-        showAutocompleteOnFocus: true
+        showAutocompleteOnFocus: true,
+        limit: 10
+      })
+      .on('tokenfield:createtoken', function(e) {
+        // Tokenize by space if num_spaces > 3
+        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+        var data = e.attrs.value.split(' ');
+        if (num_spaces > 3) {
+          e.attrs.value = data[0];
+          e.attrs.label = data[0];
+          for (var i = 1; i < data.length; i++) {
+            $('#tokenfield-keyword').tokenfield('createToken', data[i]);
+          }
+        }
       })
       .on('tokenfield:createdtoken', function(e) {
         $scope.add_search('keywords__slug__in', e.attrs.value, keywords);
       })
       .on('tokenfield:removedtoken', function(e) {
         $scope.remove_search('keywords__slug__in', e.attrs.value, keywords);
+      });
+
+      $('#tokenfield-interests').tokenfield({
+        autocomplete: {
+          source: keyword_autocompletes,
+          delay: 100
+        },
+        showAutocompleteOnFocus: true,
+        limit: 10
+      })
+      .on('tokenfield:createtoken', function(e) {
+        // Tokenize by space if num_spaces > 3
+        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+        var data = e.attrs.value.split(' ');
+        if (num_spaces > 3) {
+          e.attrs.value = data[0];
+          e.attrs.label = data[0];
+          for (var i = 1; i < data.length; i++) {
+            $('#tokenfield-keyword').tokenfield('createToken', data[i]);
+          }
+        }
+      })
+      .on('tokenfield:createdtoken', function(e) {
+        $scope.add_search('interest_list', e.attrs.value, keywords);
+      })
+      .on('tokenfield:removedtoken', function(e) {
+        $scope.remove_search('interest_list', e.attrs.value, keywords);
       });
     });
 
