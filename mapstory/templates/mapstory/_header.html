@@ -16,16 +16,16 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">{% trans 'Create' %}</a>
                     <ul class="dropdown-menu">
                         <li><a class="pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "Upload StoryLayer" %}</a></li>
-                        <li><a class="pointer" ng-controller="createLayerCtrl" ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">Create Storylayer</a></li>
-                        <li><a href="{% url 'new_map' %}?tour">Compose MapStory</a></li>
+                        <li><a class="pointer" ng-controller="createLayerCtrl" ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "Create Storylayer" %}</a></li>
+                        <li><a href="{% url 'new_map' %}?tour">{% trans "Compose MapStory" %}</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">{% trans 'How To' %}</a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'getpage' 'started' %}">Get Started</a></li>
-                        <li><a href="{% url 'getpage' 'skills' %}">Get Skills</a></li>
-                        <li><a href="{% url 'getpage' 'involved' %}">Get Involved</a></li>
+                        <li><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></li>
+                        <li><a href="{% url 'getpage' 'skills' %}">{% trans "Get Skills" %}</a></li>
+                        <li><a href="{% url 'getpage' 'involved' %}">{% trans "Get Involved" %}</a></li>
                     </ul>
                 </li>
                 <li class="navbar-menu">
