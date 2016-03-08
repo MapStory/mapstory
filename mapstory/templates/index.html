@@ -96,25 +96,24 @@
     </section>
 
     <!-- TODO: New categories must be implemented or the button queries will just return nothing -->
-    {% verbatim %}
     <section class="slice">
         <div class="container">
             <nav id="filter" class="col-md-12 text-center" style="left: -20px;">
                 <ul class="nav nav-tabs" style="padding-left: 50px;">
                     <!-- NOTE: The specific category names for querying may need to be updated -->
-                    <li><a ng-click="query_category();" class="btn btn-filter btn-sm sectionTab">{% endverbatim %}{% trans "All MapStories" %}{% verbatim %}</a></li>
-                    <li><a ng-click="query_category('crisis');" class="btn btn-filter btn-sm sectionTab">{% endverbatim %}{% trans "Crisis" %}{% verbatim %}</a></li>
-                    <li><a ng-click="query_category('geopolitics');" class="btn btn-filter btn-sm sectionTab">{% endverbatim %}{% trans "Geopolitics" %}{% verbatim %}</a></li>
-                    <li><a ng-click="query_category('scienceIndustry');" class="btn btn-filter btn-sm sectionTab">{% endverbatim %}{% trans "Science & Industry" %}{% verbatim %}</a></li>
-                    <li><a ng-click="query_category('humanSettlement');" class="btn btn-filter btn-sm sectionTab">{% endverbatim %}{% trans "Human Settlement" %}{% verbatim %}</a></li>
-                    <li><a ng-click="query_category('cultureIdeas');" class="btn btn-filter btn-sm sectionTab">{% endverbatim %}{% trans "Culture & Ideas" %}{% verbatim %}</a></li>
-                    <li><a ng-click="query_category('natureEnvironment');" class="btn btn-filter btn-sm sectionTab">{% endverbatim %}{% trans "Nature & Environment" %}{% verbatim %}</a></li>
-                    <li><a ng-click="query_category('health');" class="btn btn-filter btn-sm sectionTab">{% endverbatim %}{% trans "Health" %}{% verbatim %}</a></li>
-                    <li><a ng-click="query_category('biography');" class="btn btn-filter btn-sm sectionTab">{% endverbatim %}{% trans "Biography" %}{% verbatim %}</a></li>
+                    <li><a ng-click="query_category();" class="btn btn-filter btn-sm sectionTab">{% trans "All MapStories" %}</a></li>
+                    <li><a ng-click="query_category('crisis');" class="btn btn-filter btn-sm sectionTab">{% trans "Crisis" %}</a></li>
+                    <li><a ng-click="query_category('geopolitics');" class="btn btn-filter btn-sm sectionTab">{% trans "Geopolitics" %}</a></li>
+                    <li><a ng-click="query_category('scienceIndustry');" class="btn btn-filter btn-sm sectionTab">{% trans "Science & Industry" %}</a></li>
+                    <li><a ng-click="query_category('humanSettlement');" class="btn btn-filter btn-sm sectionTab">{% trans "Human Settlement" %}</a></li>
+                    <li><a ng-click="query_category('cultureIdeas');" class="btn btn-filter btn-sm sectionTab">{% trans "Culture & Ideas" %}</a></li>
+                    <li><a ng-click="query_category('natureEnvironment');" class="btn btn-filter btn-sm sectionTab">{% trans "Nature & Environment" %}</a></li>
+                    <li><a ng-click="query_category('health');" class="btn btn-filter btn-sm sectionTab">{% trans "Health" %}</a></li>
+                    <li><a ng-click="query_category('biography');" class="btn btn-filter btn-sm sectionTab">{% trans "Biography" %}</a></li>
                 </ul>
             </nav>
             <div class="row">
-                <p ng-hide="results.length">{% endverbatim %}{% trans "No Featured Items in this category" %}{% verbatim %} ...</p>
+                <p ng-hide="results.length">{% trans "No Featured Items in this category" %} ...</p>
             </div>
         </div>
     </section>
@@ -124,16 +123,17 @@
             <div ng-if="results.length">
                 <slick infinite="true" slides-to-show="4" autoplay="true" init-onload="true" data="results">
                     <div class="col-md-3" ng-repeat="item in results" style="right: -5px;">
+                        {% verbatim %}
                         <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
                         <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
-                        <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...{% trans "read more" %}</i></a></h5>
+                        <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...{% endverbatim %}{% trans "read more" %}{% verbatim %}</i></a></h5>
                         <h4><span class="owner">{{ item.owner.username}}</span></h4>
+                        {% endverbatim %}
                     </div>
                 </slick>
             </div>
         </div>
     </section>
-    {% endverbatim %}
 
     <section class="parallax">
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
