@@ -137,14 +137,15 @@ USE_AWS_S3 = False
 IMPORT_HANDLERS = (
 'mapstory.import_handlers.TruncatedNameHandler',
 'osgeo_importer.handlers.FieldConverterHandler',
-'osgeo_importer.handlers.GeoserverPublishHandler',
-'osgeo_importer.handlers.GeoServerBoundsHandler',
-'osgeo_importer.handlers.GeoServerTimeHandler',
-'osgeo_importer.handlers.GeoWebCacheHandler',
-'osgeo_importer.handlers.GeoNodePublishHandler',
+'osgeo_importer.handlers.geoserver.GeoserverPublishHandler',
+'osgeo_importer.handlers.geoserver.GeoServerBoundsHandler',
+'osgeo_importer.handlers.geoserver.GeoServerTimeHandler',
+'osgeo_importer.handlers.geoserver.GeoWebCacheHandler',
+'osgeo_importer.handlers.geonode.GeoNodePublishHandler',
 'mapstory.import_handlers.LayerAppendHandler'
 )
 
+OSGEO_IMPORTER_GEONODE_ENABLED = True
 
 if os.path.exists('mapstory/settings/local_settings.py'):
     exec open('mapstory/settings/local_settings.py') in globals()

@@ -75,7 +75,6 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from osgeo_importer.forms import UploadFileForm
 from celery import group
-from osgeo_importer.utils import configure_time
 from osgeo_importer.utils import UploadError
 from lxml import etree
 import json
