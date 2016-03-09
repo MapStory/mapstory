@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# this file must be in unix EOL format to be run by django within a provisioned unix environment.
 import os
 import sys
 
