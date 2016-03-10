@@ -210,9 +210,11 @@
         return false;
     };
 
+    $scope.api_endpoint = '/api/base/search/';
+
     //Get data from apis and make them available to the page
     function query_api(data){
-      return $http.get('/api/base/search/', {params: data || {}}).success(function(data){
+      return $http.get($scope.api_endpoint, {params: data || {}}).success(function(data){
         $scope.results = data.objects;
         $scope.total_counts = data.meta.total_count;
         $scope.$root.query_data = data;
@@ -731,11 +733,17 @@
     $scope.toggle_content = function() {
       $('#content-search').css('background-color', 'white');
       $('#user-search').css('background-color', 'gainsboro');
+      // clear the content search
+      $('#tokenfield-profile').tokenfield('setTokens', []);
+      $('#tokenfield-region').tokenfield('setTokens', []);
+      $('#tokenfield-keyword').tokenfield('setTokens', []);
     };
     // Make the user one active, content inactive
     $scope.toggle_user = function() {
       $('#content-search').css('background-color', 'gainsboro');
       $('#user-search').css('background-color', 'white');
+      // clear the user search
+      $('#tokenfield-interests').tokenfield('setTokens', []);
     };
 
     // Configure new autocomplete
@@ -788,30 +796,29 @@
             $scope.add_search('owner__username__in', usernames_to_search[i], usernames);
           }
         });
-        //$scope.add_search('owner__username__in', e.attrs.value, usernames);
       })
       .on('tokenfield:removedtoken', function(e) {
         $scope.remove_search('owner__username__in', e.attrs.value, usernames);
       });
     });
 
-    function possible_profiles(tag) {
+    function possible_profiles(token) {
       var promises = [];
       var profiles = [];
       var query = {};
       var deferred = $q.defer();
-      // Count spaces in tag
-      var num_spaces = (tag.match(/ /g)||[]).length;
+      // Count spaces in token
+      var num_spaces = (token.match(/ /g)||[]).length;
       console.log(num_spaces);
       // If there's no spaces, we might be directly searching a username
       if (num_spaces == 0) {
-        profiles.push(tag);
+        profiles.push(token);
       }
       for (var i = 0; i < num_spaces; i++) {
-        // split at ith instance of space in tag
+        // split at ith instance of space in token
         // grab first and last name
-        query['first_name'] = tag.split(' ').slice(0, (i + 1)).join(' ');
-        query['last_name'] = tag.split(' ').slice(i + 1).join(' ');
+        query['first_name'] = token.split(' ').slice(0, (i + 1)).join(' ');
+        query['last_name'] = token.split(' ').slice(i + 1).join(' ');
         // Why do I have to do this instead of passing {param: query}?
         var api_request = '/api/profiles/?first_name=' + query['first_name'] + '&last_name=' + query['last_name'];
         // query api w/query
@@ -822,7 +829,7 @@
           }
         });
       }
-      query['first_name'] = tag;
+      query['first_name'] = token;
       var api_request = '/api/profiles/?first_name=' + query['first_name'];
       promises.push($http.get(api_request).success(function(data) {
         var results = data.objects;
@@ -918,7 +925,8 @@
       $('#tokenfield-interests').tokenfield({
         autocomplete: {
           source: keyword_autocompletes,
-          delay: 100
+          delay: 100,
+          minLength: 3
         },
         showAutocompleteOnFocus: true,
         limit: 10
@@ -942,8 +950,6 @@
         $scope.remove_search('interest_list', e.attrs.value, keywords);
       });
     });
-
-
 
     $scope.feature_select = function($event){
       var element = $($event.target);
