@@ -41,14 +41,14 @@
         </div>
     </div>
 
-    <div id="footer" class='floating-below' ng-show="timeControlsManager.timeControls">
+    <div id="footer" class='floating-below'>
 
         {%verbatim%}
         <div class="panel-group" id="summary-panel">
             <div class="panel panel-default" id="summary-accordion">
                 <div class="panel-heading" style="height: 50px;">
-                    <button class="btn ng-scope" style="float: left;" ng-click="previousChapter()" ng-disabled="mapManager.storyChapter == 1" tooltip-placement="top" tooltip-append-to-body="true" tooltip="Previous Chapter"><i class="glyphicon glyphicon-fast-backward"></i></button>
-                    <button class="btn ng-scope" style="float: right;" ng-click="nextChapter()" ng-disabled="mapManager.storyChapter == mapManager.chapterCount" tooltip-placement="top" tooltip-append-to-body="true" tooltip="Next Chapter"><i class="glyphicon glyphicon-fast-forward"></i></button>
+                    <button class="btn ng-scope" style="float: left;" ng-click="previousChapter()" ng-disabled="mapManager.storyChapter == 1" tooltip-placement="top" tooltip-append-to-body="true" tooltip="Previous Chapter"><i class="glyphicon glyphicon-step-backward"></i></button>
+                    <button class="btn ng-scope" style="float: right;" ng-click="nextChapter()" ng-disabled="mapManager.storyChapter == mapManager.chapterCount" tooltip-placement="top" tooltip-append-to-body="true" tooltip="Next Chapter"><i class="glyphicon glyphicon-step-forward"></i></button>
                     <h4 class="panel-title" style="text-align: center;">
                         <a id="summary-title" style="font-weight:400;" data-toggle="collapse" data-target="#summary-body" class="collapsed">
                             <div>{{ mapManager.storyMap.getStoryTitle() }}</div>
@@ -64,7 +64,7 @@
         </div>
         {%endverbatim%}
 
-        <div id="time-controls-panel2">
+        <div id="time-controls-panel2" ng-show="timeControlsManager.timeControls">
             <div class="navbar" ng-controller="tileProgressController">
                 <st-playback-controls class="pull-left"
                                       time-controls="timeControlsManager.timeControls"></st-playback-controls>

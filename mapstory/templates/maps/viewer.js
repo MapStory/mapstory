@@ -71,8 +71,8 @@
                 self.loadMap(config);
             }
 
-            self.title = config.title;
-            self.owner = config.owner;
+            self.title = config.about.title;
+            self.owner = config.about.owner;
         };
 
         this.loadMap = function(options) {
