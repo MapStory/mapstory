@@ -2,4 +2,4 @@
 * text=auto
 
 # Declare files that will always have LF line endings on checkout.
-*.sh,manage.py text eol=lf
+*.sh,manage.py,/scripts/misc/* text eol=lf
