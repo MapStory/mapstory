@@ -1,4 +1,6 @@
 
+Note - [see section on rebooting](#reboot)  - current configuration does not automatically restart after a guest or host machine reboot.
+
 Provisioning
 ============
 
@@ -69,8 +71,26 @@ check that the source code is accessible at /srv/git/mapstory/ (as specified in 
 Install deploys a postgres database accessible from the local network (i.e. the guest machine) - this is accessible at the ip address reported by the vagrant setup, on the standard port (5432) using postgres/foobar
 **todo - add link to security configuration section when available**
 
+Reboot
+------
 
-  
+On rebooting the following things (currently) need to be reset
+* mounting the synced file system
+* restart elasticsearch
+
+Elasticsearch has an issue in that the installed version attempts to write to a directory /var/run/elasticsearch - but /var/run is a tempfs and this directory disappears.
+
+### windows host
+
+1) Open a CMD prompt as administrator in this  (scripts/provision) directory
+2) vagrant reload --no-provision
+3) vagrant ssh
+4) sudo /etc/init.d/elasticsearch restart
+
+
+### Linux host
+*todo*
+
 Operations
 ----------  
 Once complete, the instance should be available at 192.168.56.151
