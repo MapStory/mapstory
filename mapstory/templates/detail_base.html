@@ -90,6 +90,11 @@
             <h3 style="margin-top:0px;margin-bottom:5px;">Topic: {{ resource.category }}</h3>
             {% endifequal %}
             <h3 style="margin-top:0px;margin-bottom:5px;">Tags:</h3>
+            <script type="text/javascript">
+                // Pass the keyword list from the django template into the javascript
+                var keyword_list = "{{resource.keyword_list|escapejs}}";
+            </script>
+            <input type="text" class="form-control" id="tokenfield-tags"/>
             <!-- NOTE: This has some formatting issues; needs to wrap around to a second line nicely -->
             {% for keyword in resource.keyword_list|slice:"5" %}
             <!-- Make each one clickable and populate search with keyword already -->
@@ -160,12 +165,6 @@
     </div>
   </div>
 </section>
-<script type="text/javascript">
-    function toggle_visibility(id) {
-       var e = document.getElementById(id);
-       if(e.style.display == 'block')
-          e.style.display = 'none';
-       else
-          e.style.display = 'block';
-    }
-</script>
+<link href="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css" rel="stylesheet" />
+<script type="text/javascript" src="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/detail_page.js"></script>

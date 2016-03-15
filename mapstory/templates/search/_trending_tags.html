@@ -2,10 +2,16 @@
 <hr>
 <h3><i class="fa fa-signal"></i> Trending Tags</h3>
 <div class="panel-group" id="accordion2">
-    <!-- Add some styling here -->
-    <div class="panel panel-default" ng-repeat="item in trending">
-        {% verbatim %}
-        #{{ item }}
-        {% endverbatim %}
-    </div>
+    <nav class="panel panel-default filter">
+        <ul class="nav">
+            {% verbatim %}
+            <li ng-repeat="item in trending">
+                <a ng-init="toggle=true" ng-click="toggle_query(toggle, 'keywords__slug__in', item); toggle=!toggle;" ng-class="{active: !toggle}">#{{ item }}
+                    <span ng-show="!toggle" class="pull-right"><i class="fa fa-check"></i></span>
+                </a>                                
+            </li>
+            {% endverbatim %}                       
+        </ul>
+    </nav>
+
 </div>

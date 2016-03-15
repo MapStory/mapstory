@@ -247,22 +247,39 @@
         }
       });
     };
-    $scope.query['is_published'] = true;
+    // Configure first search
+    // Check the url for its search terms and apply the queries
+    for (var item in $location.search()) {
+      // If we see type__in, we want to change the api query accordingly
+      if (item == 'type__in') {
+        if ($location.search()[item] == 'user') {
+          $scope.api_endpoint = '/api/profiles/';
+        } else {
+          $scope.api_endpoint='/api/base/search/';
+          $scope.query['is_published'] = true;
+        }
+      }
+      $scope.query[item] = $location.search()[item];
+    }
     query_api($scope.query);
 
-    // Do a single query to grab the top keywords
-    function keywords_query(data) {
+    // Grab the keywords and sort them by 'count' to determine the trending tags
+    function trending_keywords_query(data) {
       return $http.get('/api/keywords', {params: data || {}}).success(function(data){
         var results = data.objects;
+        // Sort them by count in order from highest to lowest
+        results.sort(function(kw1, kw2) {
+          return kw2.count - kw1.count;
+        });
+        // Grab the top 8
         var num_trending = (results.length > 8) ? 8 : results.length;
         for (var i = 0; i < num_trending; i++) {
-          $scope.trending.push(results[i].name);
+          $scope.trending.push(results[i].slug);
         }
       });
     };
     $scope.trending = [];
-    // Need to adjust this to put the right query in data to order by count
-    keywords_query();
+    trending_keywords_query();
 
     $scope.query_category = function(category, type) {
       $scope.query.type__in = type;
@@ -809,7 +826,6 @@
       var deferred = $q.defer();
       // Count spaces in token
       var num_spaces = (token.match(/ /g)||[]).length;
-      console.log(num_spaces);
       // If there's no spaces, we might be directly searching a username
       if (num_spaces == 0) {
         profiles.push(token);
@@ -819,10 +835,8 @@
         // grab first and last name
         query['first_name'] = token.split(' ').slice(0, (i + 1)).join(' ');
         query['last_name'] = token.split(' ').slice(i + 1).join(' ');
-        // Why do I have to do this instead of passing {param: query}?
-        var api_request = '/api/profiles/?first_name=' + query['first_name'] + '&last_name=' + query['last_name'];
         // query api w/query
-        promises[i] = $http.get(api_request).success(function(data) {
+        promises[i] = $http.get('/api/profiles/', {params: query}).success(function(data) {
           var results = data.objects;
           for (var j = 0; j < results.length; j++) {
             profiles.push(results[j].username);
@@ -830,8 +844,8 @@
         });
       }
       query['first_name'] = token;
-      var api_request = '/api/profiles/?first_name=' + query['first_name'];
-      promises.push($http.get(api_request).success(function(data) {
+      query['last_name'] = null;
+      promises.push($http.get('/api/profiles/', {params: query}).success(function(data) {
         var results = data.objects;
         for (var j = 0; j < results.length; j++) {
           profiles.push(results[j].username);
