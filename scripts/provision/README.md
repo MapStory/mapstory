@@ -15,7 +15,7 @@ Prerequisites
 * Vagrant (https://www.vagrantup.com/) 
 * VirtualBox 
 * ansible **version 1.9.3 ????** - or - vagrant-guest_ansible *
-
+* python + fabric on host machine
 
 Ansible is used to provision MapStory. It can be run from either the command machine or on the guest vm. Ansible is not supported on Windows - so the ansible guest mode is used for this - which requires installing ansible on the guest.
 **Can this be done automatically by vagrant? ** 
@@ -40,6 +40,7 @@ NOTE: As a developer if you would like the git repos to be checked out by Ansibl
 1. Ensure shell scripts (roles/web/files/*.sh) are in unix format - GIT has not DOS linefed them or they will fail. [TODO test git settings to default to this] 
 1. install VirtualBox 
 1. install Vagrant
+1. pip install fabric
 1. `vagrant plugin install vagrant-guest_ansible`
 1. `vagrant up --no-provision` (this will take a while as it downloads ubuntu)
 1. install ansible on target machine... actually to update it from 1.5 to 2.0+ which seems to work
@@ -99,6 +100,19 @@ If shell access is needed, use:
 
     vagrant ssh
 
+### restart Django in debugging mode
+
+on the host machine 
+>fab dev runserver
+
+### update data
+
+to collect all the changes to all the component django apps and deploy them to the vm:
+
+on the host machine 
+>fab dev collect restart
+
+-> old docs (do these work?)
 To update use the following:
 
     ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini --private-key=~/.vagrant.d/insecure_private_key -u vagrant -t update main.yml
