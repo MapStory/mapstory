@@ -30,6 +30,12 @@ a manual build process is described in [manual_setup.md](manual_setup.md)
 
 an automated virtual machine provisioning process using vagrant is documented in [scripts/provision/README.md](scripts/provision/README.md)
 
+### things you should know
+Other codebases are imported that do key things - these instructions do not handle how to inspect, nodify or debug these (Todo)
+* https://github.com/MapStory/story-tools  (imported by bower 
+* https://github.com/ProminentEdge/django-osgeo-importer
+
+
 ## Rebooting!
 
 Currently Mapstory does not recover gracefully from a system reboot.  See [scripts/provision/README.md](scripts/provision/README.md#reboot)
