@@ -1,4 +1,6 @@
 
+Note - [see section on rebooting](#reboot)  - current configuration does not automatically restart after a guest or host machine reboot.
+
 Provisioning
 ============
 
@@ -38,6 +40,7 @@ NOTE: As a developer if you would like the git repos to be checked out by Ansibl
 1. Ensure shell scripts (roles/web/files/*.sh) are in unix format - GIT has not DOS linefed them or they will fail. [TODO test git settings to default to this] 
 1. install VirtualBox 
 1. install Vagrant
+1. pip install fabric
 1. `vagrant plugin install vagrant-guest_ansible`
 1. pip install fabric (presumes you have python on host machine) 
 1. `vagrant up --no-provision` (this will take a while as it downloads ubuntu)
@@ -70,8 +73,26 @@ check that the source code is accessible at /srv/git/mapstory/ (as specified in 
 Install deploys a postgres database accessible from the local network (i.e. the guest machine) - this is accessible at the ip address reported by the vagrant setup, on the standard port (5432) using postgres/foobar
 **todo - add link to security configuration section when available**
 
+Reboot
+------
 
-  
+On rebooting the following things (currently) need to be reset
+* mounting the synced file system
+* restart elasticsearch
+
+Elasticsearch has an issue in that the installed version attempts to write to a directory /var/run/elasticsearch - but /var/run is a tempfs and this directory disappears.
+
+### windows host
+
+1) Open a CMD prompt as administrator in this  (scripts/provision) directory
+2) vagrant reload --no-provision
+3) vagrant ssh
+4) sudo /etc/init.d/elasticsearch restart
+
+
+### Linux host
+*todo*
+
 Operations
 ----------  
 Once complete, the instance should be available at 192.168.56.151
@@ -80,6 +101,19 @@ If shell access is needed, use:
 
     vagrant ssh
 
+### restart Django in debugging mode
+
+on the host machine 
+>fab dev runserver
+
+### update data
+
+to collect all the changes to all the component django apps and deploy them to the vm:
+
+on the host machine 
+>fab dev collect restart
+
+-> old docs (do these work?)
 To update use the following:
 
     ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini --private-key=~/.vagrant.d/insecure_private_key -u vagrant -t update main.yml
