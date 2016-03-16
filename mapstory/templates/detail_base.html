@@ -9,6 +9,7 @@
 {% load friendly_loader %}
 {% friendly_load avatar_tags %}
 
+<div ng-controller="detail_page_controller">
 <section class="slice" id="dashboard">
   <div class="container">
     <div class="row">
@@ -93,17 +94,15 @@
             <script type="text/javascript">
                 // Pass the keyword list from the django template into the javascript
                 var keyword_list = "{{resource.keyword_list|escapejs}}";
+                var url = "{{ resource.detail_url }}";
             </script>
+            {% ifequal resource.owner request.user %}
             <input type="text" class="form-control" id="tokenfield-tags"/>
-            <!-- NOTE: This has some formatting issues; needs to wrap around to a second line nicely -->
-            {% for keyword in resource.keyword_list|slice:"5" %}
-            <!-- Make each one clickable and populate search with keyword already -->
-              <a href='/search/?limit=100&offset=0&keywords__slug__in={{ keyword }}'><span class="label label-default">{{ keyword }}</span></a>
-            {% endfor %}
-            {% if resource.keyword_list|length > 5 %}
-              <span class="label label-default">{{ resource.keyword_list|length|add:"-5" }} more</span>
-            {% endif %}
-            <a href="#addTag" role="button" data-toggle="modal" style="hover: cursor;"><span class="label label-default">+ add</span></a>
+            {% verbatim %}
+              <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+            {% endverbatim %}
+            <!-- TODO: Bug with this where the AJAX updates no longer match the keywords_form -->
+            <a href="#addTag" role="button" data-toggle="modal" style="hover: cursor;" ng-show="tags.length >= 10"><span class="label label-default">+ add more tags</span></a>
             <div id="addTag" class="modal fade" tabindex="-1" role="dialog">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -124,6 +123,12 @@
                 </div>
               </div>
             </div>
+            {% else %}
+            <input type="text" class="form-control" id="tokenfield-tags-readonly"/>
+            {% verbatim %}
+              <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+            {% endverbatim %}
+            {% endifequal %}
 
             <hr style="margin-top:15px;margin-bottom:0px">
             <!--
@@ -165,6 +170,4 @@
     </div>
   </div>
 </section>
-<link href="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css" rel="stylesheet" />
-<script type="text/javascript" src="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/detail_page.js"></script>
+</div>\
