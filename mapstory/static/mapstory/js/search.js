@@ -747,7 +747,7 @@
       $('#content-search').css('background-color', 'gainsboro');
       $('#user-search').css('background-color', 'white');
       // clear the user search
-      $('#tokenfield-interests').tokenfield('setTokens', []);
+      $('#tokenfield-interest').tokenfield('setTokens', []);
       $scope.api_endpoint = '/api/base/search/';
       $scope.query = {is_published: true};
     };
@@ -923,7 +923,7 @@
           $scope.remove_search('keywords__slug__in', e.attrs.value, keywords);
         });
 
-        $('#tokenfield-interests').tokenfield({
+        $('#tokenfield-interest').tokenfield({
           autocomplete: {
             source: keyword_autocompletes,
             delay: 100,
@@ -940,7 +940,7 @@
             e.attrs.value = data[0];
             e.attrs.label = data[0];
             for (var i = 1; i < data.length; i++) {
-              $('#tokenfield-interests').tokenfield('createToken', data[i]);
+              $('#tokenfield-interest').tokenfield('createToken', data[i]);
             }
           }
         })
@@ -1065,7 +1065,7 @@
         }
         // if we have a "interest" search, populate that
         if (item == 'interest_list') {
-          $('#tokenfield-interests').tokenfield('createToken', $location.search()[item]);
+          $('#tokenfield-interest').tokenfield('createToken', $location.search()[item]);
         }
       }
       query_api($scope.query);
