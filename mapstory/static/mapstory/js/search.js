@@ -767,9 +767,15 @@
     var profile_autocompletes = [];
     var region_autocompletes = [];
     var keyword_autocompletes = [];
+    var city_autocompletes = [];
     var usernames = [];
     var regions = [];
     var keywords = [];
+    var cities = [];
+    var countries = [];
+    // This will contain the country code, i.e. Canada's code is CAN, at the same index location
+    // as region_autocompletes stores the country name.
+    var country_codes = [];
 
     function profile_autocomplete() {
       return $http.get('/api/profiles/').success(function(data){
@@ -780,6 +786,9 @@
           profile_autocompletes.push(results[i].first_name);
           profile_autocompletes.push(results[i].last_name);
           profile_autocompletes.push(results[i].username);
+          if (results[i].city != null) {
+            city_autocompletes.push(results[i].city);
+          }
         }
       });
     };
@@ -816,6 +825,34 @@
       })
       .on('tokenfield:removedtoken', function(e) {
         $scope.remove_search('owner__username__in', e.attrs.value, usernames);
+      });
+
+      $('#tokenfield-city').tokenfield({
+        autocomplete: {
+          source: city_autocompletes,
+          delay: 100,
+          minLength: 3
+        },
+        showAutocompleteOnFocus: true,
+        limit: 10
+      })
+      .on('tokenfield:createtoken', function(e) {
+        // Tokenize by space if num_spaces > 3
+        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+        var data = e.attrs.value.split(' ');
+        if (num_spaces > 3) {
+          e.attrs.value = data[0];
+          e.attrs.label = data[0];
+          for (var i = 1; i < data.length; i++) {
+            $('#tokenfield-city').tokenfield('createToken', data[i]);
+          }
+        }
+      })
+      .on('tokenfield:createdtoken', function(e) {
+        $scope.add_search('city', e.attrs.value, cities);
+      })
+      .on('tokenfield:removedtoken', function(e) {
+        $scope.remove_search('city', e.attrs.value, cities);
       });
     });
 
@@ -866,6 +903,7 @@
         var results = data.objects;
         for (var i = 0; i < results.length; i++) {
           region_autocompletes.push(results[i].name);
+          country_codes.push(results[i].code);
         }
       });
     };
@@ -896,6 +934,39 @@
       })
       .on('tokenfield:removedtoken', function(e) {
         $scope.remove_search('regions__name__in', e.attrs.value, regions);
+      });
+
+      $('#tokenfield-country').tokenfield({
+        autocomplete: {
+          source: region_autocompletes,
+          delay: 100,
+          minLength: 3
+        },
+        showAutocompleteOnFocus: true,
+        limit: 10
+      })
+      .on('tokenfield:createtoken', function(e) {
+        // Tokenize by space if num_spaces > 3
+        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+        var data = e.attrs.value.split(' ');
+        if (num_spaces > 3) {
+          e.attrs.value = data[0];
+          e.attrs.label = data[0];
+          for (var i = 1; i < data.length; i++) {
+            $('#tokenfield-country').tokenfield('createToken', data[i]);
+          }
+        }
+      })
+      .on('tokenfield:createdtoken', function(e) {
+        if (region_autocompletes.indexOf(e.attrs.value) != -1) {
+          $scope.add_search('country', country_codes[region_autocompletes.indexOf(e.attrs.value)], countries);
+        }
+        
+      })
+      .on('tokenfield:removedtoken', function(e) {
+        if (region_autocompletes.indexOf(e.attrs.value) != -1) {
+          $scope.remove_search('country', country_codes[region_autocompletes.indexOf(e.attrs.value)], countries);
+        }
       });
     });
 
@@ -936,7 +1007,7 @@
         $scope.remove_search('keywords__slug__in', e.attrs.value, keywords);
       });
 
-      $('#tokenfield-interests').tokenfield({
+      $('#tokenfield-interest').tokenfield({
         autocomplete: {
           source: keyword_autocompletes,
           delay: 100,
@@ -953,7 +1024,7 @@
           e.attrs.value = data[0];
           e.attrs.label = data[0];
           for (var i = 1; i < data.length; i++) {
-            $('#tokenfield-keyword').tokenfield('createToken', data[i]);
+            $('#tokenfield-interest').tokenfield('createToken', data[i]);
           }
         }
       })
@@ -964,6 +1035,16 @@
         $scope.remove_search('interest_list', e.attrs.value, keywords);
       });
     });
+
+    $scope.filterVTC = function() {
+      // When VTC check box is clicked, also filter by VTC; when unchecked, reset it
+      if ($scope.VTCisChecked == true) {
+        $scope.itemFilter['Volunteer_Technical_Community'] = true;
+      } else {
+        $scope.itemFilter = { is_active: true };
+      }
+    };
+    $scope.filterVTC();
 
     $scope.feature_select = function($event){
       var element = $($event.target);
