@@ -80,6 +80,8 @@ from lxml import etree
 import json
 import requests
 
+import pdb
+
 class IndexView(TemplateView):
     template_name = 'index.html'
 
@@ -533,6 +535,7 @@ def new_map(request, template):
 @login_required
 def layer_create(request, template='upload/layer_create.html'):
     if request.method == 'POST':
+        pdb.set_trace()
         errors = False
         error_messages = []
         if request.is_ajax():
@@ -747,8 +750,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             if keywords_form.is_valid():
                 keywords_form.save()
                 new_keywords = keywords_form.cleaned_data['keywords']
-                layer.keywords.clear()
-                layer.keywords.add(*new_keywords)
+                layer.keywords.set(*new_keywords)
                 layer.save()
             metadata_form = MetadataForm(instance=layer)
             published_form = PublishStatusForm(instance=layer)
@@ -768,6 +770,12 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                 layer.is_published = metadata_form.cleaned_data['is_published']
                 layer.save()                
             keywords_form = KeywordsForm(instance=layer)
+        elif 'add_keyword' in request.POST:
+            layer.keywords.add(request.POST['add_keyword'])
+            layer.save()
+        elif 'remove_keyword' in request.POST:
+            layer.keywords.remove(request.POST['remove_keyword'])
+            layer.save()
     else:
         keywords_form = KeywordsForm(instance=layer)
         metadata_form = MetadataForm(instance=layer)
@@ -855,8 +863,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
             if keywords_form.is_valid():
                 keywords_form.save()
                 new_keywords = keywords_form.cleaned_data['keywords']
-                map_obj.keywords.clear()
-                map_obj.keywords.add(*new_keywords)
+                map_obj.keywords.set(*new_keywords)
                 map_obj.save()
             published_form = PublishStatusForm(instance=map_obj)
         elif 'published_submit_btn' in request.POST:
@@ -866,6 +873,12 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
                 map_obj.is_published = published_form.cleaned_data['is_published']
                 map_obj.save()
             keywords_form = KeywordsForm(instance=map_obj)
+        elif 'add_keyword' in request.POST:
+            map_obj.keywords.add(request.POST['add_keyword'])
+            map_obj.save()
+        elif 'remove_keyword' in request.POST:
+            map_obj.keywords.remove(request.POST['remove_keyword'])
+            map_obj.save()
     else:
         keywords_form = KeywordsForm(instance=map_obj)
         published_form = PublishStatusForm(instance=map_obj)

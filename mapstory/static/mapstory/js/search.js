@@ -247,21 +247,6 @@
         }
       });
     };
-    // Configure first search
-    // Check the url for its search terms and apply the queries
-    for (var item in $location.search()) {
-      // If we see type__in, we want to change the api query accordingly
-      if (item == 'type__in') {
-        if ($location.search()[item] == 'user') {
-          $scope.api_endpoint = '/api/profiles/';
-        } else {
-          $scope.api_endpoint='/api/base/search/';
-          $scope.query['is_published'] = true;
-        }
-      }
-      $scope.query[item] = $location.search()[item];
-    }
-    query_api($scope.query);
 
     // Grab the keywords and sort them by 'count' to determine the trending tags
     function trending_keywords_query(data) {
@@ -754,13 +739,17 @@
       $('#tokenfield-profile').tokenfield('setTokens', []);
       $('#tokenfield-region').tokenfield('setTokens', []);
       $('#tokenfield-keyword').tokenfield('setTokens', []);
+      $scope.api_endpoint = '/api/profiles/';
+      $scope.query = {};
     };
     // Make the user one active, content inactive
     $scope.toggle_user = function() {
       $('#content-search').css('background-color', 'gainsboro');
       $('#user-search').css('background-color', 'white');
       // clear the user search
-      $('#tokenfield-interests').tokenfield('setTokens', []);
+      $('#tokenfield-interest').tokenfield('setTokens', []);
+      $scope.api_endpoint = '/api/base/search/';
+      $scope.query = {is_published: true};
     };
 
     // Configure new autocomplete
@@ -777,6 +766,201 @@
     // as region_autocompletes stores the country name.
     var country_codes = [];
 
+    function init_tokenfields() {
+      var deferred = $q.defer();
+      var promises = [];
+      promises.push(profile_autocomplete().then(function() {
+        $('#tokenfield-profile').tokenfield({
+          autocomplete: {
+            source: profile_autocompletes,
+            delay: 100,
+            minLength: 3
+          },
+          showAutocompleteOnFocus: true,
+          limit: 10
+        })
+        .on('tokenfield:createtoken', function(e) {
+          // Tokenize by space if num_spaces > 3
+          var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+          var data = e.attrs.value.split(' ');
+          if (num_spaces > 3) {
+            e.attrs.value = data[0];
+            e.attrs.label = data[0];
+            for (var i = 1; i < data.length; i++) {
+              $('#tokenfield-profile').tokenfield('createToken', data[i]);
+            }
+          }
+        })
+        .on('tokenfield:createdtoken', function(e) {
+          // Match search to possible usernames - casting a wide net for now
+          possible_profiles(e.attrs.value).then(function(usernames_to_search) {
+            // Duplicates are fine in usernames_to_search because the add_search() function will catch them
+            for (var i = 0; i < usernames_to_search.length; i++) {
+              $scope.add_search('owner__username__in', usernames_to_search[i], usernames);
+            }
+          });
+        })
+        .on('tokenfield:removedtoken', function(e) {
+          $scope.remove_search('owner__username__in', e.attrs.value, usernames);
+        });
+
+        $('#tokenfield-city').tokenfield({
+          autocomplete: {
+            source: city_autocompletes,
+            delay: 100,
+            minLength: 3
+          },
+          showAutocompleteOnFocus: true,
+          limit: 10
+        })
+        .on('tokenfield:createtoken', function(e) {
+          // Tokenize by space if num_spaces > 3
+          var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+          var data = e.attrs.value.split(' ');
+          if (num_spaces > 3) {
+            e.attrs.value = data[0];
+            e.attrs.label = data[0];
+            for (var i = 1; i < data.length; i++) {
+              $('#tokenfield-city').tokenfield('createToken', data[i]);
+            }
+          }
+        })
+        .on('tokenfield:createdtoken', function(e) {
+          $scope.add_search('city', e.attrs.value, cities);
+        })
+        .on('tokenfield:removedtoken', function(e) {
+          $scope.remove_search('city', e.attrs.value, cities);
+        });
+      }));
+      promises.push(region_autocomplete().then(function() {
+        $('#tokenfield-region').tokenfield({
+          autocomplete: {
+            source: region_autocompletes,
+            delay: 100,
+            minLength: 3
+          },
+          showAutocompleteOnFocus: true,
+          limit: 10
+        })
+        .on('tokenfield:createtoken', function(e) {
+          // Tokenize by space if num_spaces > 3
+          var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+          var data = e.attrs.value.split(' ');
+          if (num_spaces > 3) {
+            e.attrs.value = data[0];
+            e.attrs.label = data[0];
+            for (var i = 1; i < data.length; i++) {
+              $('#tokenfield-region').tokenfield('createToken', data[i]);
+            }
+          }
+        })
+        .on('tokenfield:createdtoken', function(e) {
+          $scope.add_search('regions__name__in', e.attrs.value, regions);
+        })
+        .on('tokenfield:removedtoken', function(e) {
+          $scope.remove_search('regions__name__in', e.attrs.value, regions);
+        });
+
+        $('#tokenfield-country').tokenfield({
+          autocomplete: {
+            source: region_autocompletes,
+            delay: 100,
+            minLength: 3
+          },
+          showAutocompleteOnFocus: true,
+          limit: 10
+        })
+        .on('tokenfield:createtoken', function(e) {
+          // Tokenize by space if num_spaces > 3
+          var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+          var data = e.attrs.value.split(' ');
+          if (num_spaces > 3) {
+            e.attrs.value = data[0];
+            e.attrs.label = data[0];
+            for (var i = 1; i < data.length; i++) {
+              $('#tokenfield-country').tokenfield('createToken', data[i]);
+            }
+          }
+        })
+        .on('tokenfield:createdtoken', function(e) {
+          if (region_autocompletes.indexOf(e.attrs.value) != -1) {
+            $scope.add_search('country', country_codes[region_autocompletes.indexOf(e.attrs.value)], countries);
+          }
+          
+        })
+        .on('tokenfield:removedtoken', function(e) {
+          if (region_autocompletes.indexOf(e.attrs.value) != -1) {
+            $scope.remove_search('country', country_codes[region_autocompletes.indexOf(e.attrs.value)], countries);
+          }
+        });
+      }));
+      promises.push(keyword_autocomplete().then(function() {
+        $('#tokenfield-keyword').tokenfield({
+          autocomplete: {
+            source: keyword_autocompletes,
+            delay: 100,
+            minLength: 3
+          },
+          showAutocompleteOnFocus: true,
+          limit: 10
+        })
+        .on('tokenfield:createtoken', function(e) {
+          // Tokenize by space if num_spaces > 3
+          var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+          var data = e.attrs.value.split(' ');
+          if (num_spaces > 3) {
+            e.attrs.value = data[0];
+            e.attrs.label = data[0];
+            for (var i = 1; i < data.length; i++) {
+              $('#tokenfield-keyword').tokenfield('createToken', data[i]);
+            }
+          }
+        })
+        .on('tokenfield:createdtoken', function(e) {
+          $scope.add_search('keywords__slug__in', e.attrs.value, keywords);
+        })
+        .on('tokenfield:removedtoken', function(e) {
+          $scope.remove_search('keywords__slug__in', e.attrs.value, keywords);
+        });
+
+        $('#tokenfield-interest').tokenfield({
+          autocomplete: {
+            source: keyword_autocompletes,
+            delay: 100,
+            minLength: 3
+          },
+          showAutocompleteOnFocus: true,
+          limit: 10
+        })
+        .on('tokenfield:createtoken', function(e) {
+          // Tokenize by space if num_spaces > 3
+          var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+          var data = e.attrs.value.split(' ');
+          if (num_spaces > 3) {
+            e.attrs.value = data[0];
+            e.attrs.label = data[0];
+            for (var i = 1; i < data.length; i++) {
+              $('#tokenfield-interest').tokenfield('createToken', data[i]);
+            }
+          }
+        })
+        .on('tokenfield:createdtoken', function(e) {
+          $scope.add_search('interest_list', e.attrs.value, keywords);
+        })
+        .on('tokenfield:removedtoken', function(e) {
+          $scope.remove_search('interest_list', e.attrs.value, keywords);
+        });
+      }));
+
+      $q.all(promises).then(function() {
+        deferred.resolve();
+      }, function() {
+        deferred.reject('Some tokenization field initializations failed');
+      });
+
+      return deferred.promise;
+    }
+
     function profile_autocomplete() {
       return $http.get('/api/profiles/').success(function(data){
         var results = data.objects;
@@ -792,69 +976,6 @@
         }
       });
     };
-    profile_autocomplete().then(function() {
-      $('#tokenfield-profile').tokenfield({
-        autocomplete: {
-          source: profile_autocompletes,
-          delay: 100,
-          minLength: 3
-        },
-        showAutocompleteOnFocus: true,
-        limit: 10
-      })
-      .on('tokenfield:createtoken', function(e) {
-        // Tokenize by space if num_spaces > 3
-        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-        var data = e.attrs.value.split(' ');
-        if (num_spaces > 3) {
-          e.attrs.value = data[0];
-          e.attrs.label = data[0];
-          for (var i = 1; i < data.length; i++) {
-            $('#tokenfield-profile').tokenfield('createToken', data[i]);
-          }
-        }
-      })
-      .on('tokenfield:createdtoken', function(e) {
-        // Match search to possible usernames - casting a wide net for now
-        possible_profiles(e.attrs.value).then(function(usernames_to_search) {
-          // Duplicates are fine in usernames_to_search because the add_search() function will catch them
-          for (var i = 0; i < usernames_to_search.length; i++) {
-            $scope.add_search('owner__username__in', usernames_to_search[i], usernames);
-          }
-        });
-      })
-      .on('tokenfield:removedtoken', function(e) {
-        $scope.remove_search('owner__username__in', e.attrs.value, usernames);
-      });
-
-      $('#tokenfield-city').tokenfield({
-        autocomplete: {
-          source: city_autocompletes,
-          delay: 100,
-          minLength: 3
-        },
-        showAutocompleteOnFocus: true,
-        limit: 10
-      })
-      .on('tokenfield:createtoken', function(e) {
-        // Tokenize by space if num_spaces > 3
-        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-        var data = e.attrs.value.split(' ');
-        if (num_spaces > 3) {
-          e.attrs.value = data[0];
-          e.attrs.label = data[0];
-          for (var i = 1; i < data.length; i++) {
-            $('#tokenfield-city').tokenfield('createToken', data[i]);
-          }
-        }
-      })
-      .on('tokenfield:createdtoken', function(e) {
-        $scope.add_search('city', e.attrs.value, cities);
-      })
-      .on('tokenfield:removedtoken', function(e) {
-        $scope.remove_search('city', e.attrs.value, cities);
-      });
-    });
 
     function possible_profiles(token) {
       var promises = [];
@@ -893,7 +1014,7 @@
         deferred.resolve(profiles);
       }, function() {
         deferred.reject('Some HTTP requests failed');
-      })
+      });
 
       return deferred.promise;
     };
@@ -907,68 +1028,6 @@
         }
       });
     };
-    region_autocomplete().then(function() {
-      $('#tokenfield-region').tokenfield({
-        autocomplete: {
-          source: region_autocompletes,
-          delay: 100,
-          minLength: 3
-        },
-        showAutocompleteOnFocus: true,
-        limit: 10
-      })
-      .on('tokenfield:createtoken', function(e) {
-        // Tokenize by space if num_spaces > 3
-        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-        var data = e.attrs.value.split(' ');
-        if (num_spaces > 3) {
-          e.attrs.value = data[0];
-          e.attrs.label = data[0];
-          for (var i = 1; i < data.length; i++) {
-            $('#tokenfield-region').tokenfield('createToken', data[i]);
-          }
-        }
-      })
-      .on('tokenfield:createdtoken', function(e) {
-        $scope.add_search('regions__name__in', e.attrs.value, regions);
-      })
-      .on('tokenfield:removedtoken', function(e) {
-        $scope.remove_search('regions__name__in', e.attrs.value, regions);
-      });
-
-      $('#tokenfield-country').tokenfield({
-        autocomplete: {
-          source: region_autocompletes,
-          delay: 100,
-          minLength: 3
-        },
-        showAutocompleteOnFocus: true,
-        limit: 10
-      })
-      .on('tokenfield:createtoken', function(e) {
-        // Tokenize by space if num_spaces > 3
-        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-        var data = e.attrs.value.split(' ');
-        if (num_spaces > 3) {
-          e.attrs.value = data[0];
-          e.attrs.label = data[0];
-          for (var i = 1; i < data.length; i++) {
-            $('#tokenfield-country').tokenfield('createToken', data[i]);
-          }
-        }
-      })
-      .on('tokenfield:createdtoken', function(e) {
-        if (region_autocompletes.indexOf(e.attrs.value) != -1) {
-          $scope.add_search('country', country_codes[region_autocompletes.indexOf(e.attrs.value)], countries);
-        }
-        
-      })
-      .on('tokenfield:removedtoken', function(e) {
-        if (region_autocompletes.indexOf(e.attrs.value) != -1) {
-          $scope.remove_search('country', country_codes[region_autocompletes.indexOf(e.attrs.value)], countries);
-        }
-      });
-    });
 
     function keyword_autocomplete() {
       return $http.get('/api/keywords/').success(function(data){
@@ -978,62 +1037,38 @@
         }
       });
     };
-    keyword_autocomplete().then(function() {
-      $('#tokenfield-keyword').tokenfield({
-        autocomplete: {
-          source: keyword_autocompletes,
-          delay: 100,
-          minLength: 3
-        },
-        showAutocompleteOnFocus: true,
-        limit: 10
-      })
-      .on('tokenfield:createtoken', function(e) {
-        // Tokenize by space if num_spaces > 3
-        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-        var data = e.attrs.value.split(' ');
-        if (num_spaces > 3) {
-          e.attrs.value = data[0];
-          e.attrs.label = data[0];
-          for (var i = 1; i < data.length; i++) {
-            $('#tokenfield-keyword').tokenfield('createToken', data[i]);
+    // Only after the tokenfields are initialized, create the tokens based on the URL
+    init_tokenfields().then(function() {
+      // Configure first search
+      // Check the url for its search terms and apply the queries
+      for (var item in $location.search()) {
+        // If we see type__in, we want to change the api query accordingly
+        if (item == 'type__in') {
+          if ($location.search()[item] == 'user') {
+            $scope.toggle_content();
+          } else {
+            $scope.toggle_user();
           }
         }
-      })
-      .on('tokenfield:createdtoken', function(e) {
-        $scope.add_search('keywords__slug__in', e.attrs.value, keywords);
-      })
-      .on('tokenfield:removedtoken', function(e) {
-        $scope.remove_search('keywords__slug__in', e.attrs.value, keywords);
-      });
-
-      $('#tokenfield-interest').tokenfield({
-        autocomplete: {
-          source: keyword_autocompletes,
-          delay: 100,
-          minLength: 3
-        },
-        showAutocompleteOnFocus: true,
-        limit: 10
-      })
-      .on('tokenfield:createtoken', function(e) {
-        // Tokenize by space if num_spaces > 3
-        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-        var data = e.attrs.value.split(' ');
-        if (num_spaces > 3) {
-          e.attrs.value = data[0];
-          e.attrs.label = data[0];
-          for (var i = 1; i < data.length; i++) {
-            $('#tokenfield-interest').tokenfield('createToken', data[i]);
-          }
+        $scope.query[item] = $location.search()[item];
+        // if we have a "who" search, populate that
+        if (item == 'owner__username__in') {
+          $('#tokenfield-profile').tokenfield('createToken', $location.search()[item]);
         }
-      })
-      .on('tokenfield:createdtoken', function(e) {
-        $scope.add_search('interest_list', e.attrs.value, keywords);
-      })
-      .on('tokenfield:removedtoken', function(e) {
-        $scope.remove_search('interest_list', e.attrs.value, keywords);
-      });
+        // if we have a "region" search, populate that
+        if (item == 'regions__name__in') {
+          $('#tokenfield-region').tokenfield('createToken', $location.search()[item]);
+        }
+        // if we have a "keyword" search, populate that
+        if (item == 'keywords__slug__in') {
+          $('#tokenfield-keyword').tokenfield('createToken', $location.search()[item]);
+        }
+        // if we have a "interest" search, populate that
+        if (item == 'interest_list') {
+          $('#tokenfield-interest').tokenfield('createToken', $location.search()[item]);
+        }
+      }
+      query_api($scope.query);
     });
 
     $scope.filterVTC = function() {
