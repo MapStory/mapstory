@@ -65,20 +65,19 @@ DATABASES = {
 INSTALLED_APPS += (
     'mapstory',
     'django.contrib.webdesign',
+    'django.contrib.sites',
     'geonode.contrib.geogig',
+    'geonode.contrib.collections',
+    'geonode.contrib.favorite',
     'icon_commons',
     'maploom',
-    'geonode.contrib.favorite',
     'haystack',
     'mailer',
     'django_slack',
-    # Adding Threaded Comments app
     'fluent_comments',
     'crispy_forms',
     'threadedcomments',
     'django_comments',
-    'django.contrib.sites',
-    #'mapstory.importer',
     'djcelery',
     'osgeo_importer'
 )
