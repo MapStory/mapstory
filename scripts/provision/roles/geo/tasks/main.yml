@@ -74,7 +74,16 @@
 
 - name: geogig global config
   copy: src=roles/geo/files/geogigconfig dest=/var/lib/geoserver/geoserver/.geogigconfig mode=0775 owner=tomcat7 group=tomcat7
-  tags: [geoserver]
+  tags: [geoserver, geogig]
+
+- name: default styles
+  copy: src=roles/geo/files/{{item}} dest=/var/lib/geoserver/data/styles mode=0775 owner=tomcat7 group=tomcat7
+  with_items:
+    - default_generic.sld
+    - default_line.sld
+    - default_point.sld
+    - default_polygon.sld
+  tags: [geoserver, styles]
 
 - name: unpack geoserver datadir
   shell: "[ ! -e {{ geoserver_data }} ] && unzip /tmp/{{ application_name }}/geoserver.war data/* -d /var/lib/geoserver/ || exit 0"
