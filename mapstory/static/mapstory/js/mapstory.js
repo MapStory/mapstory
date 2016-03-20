@@ -276,10 +276,8 @@
     // of the token as the keyword search filter
     $('.token-label').click(function(e) {
       var interest = $(e.target).text();
-      // TODO: Modify search.js to handle this correctly
       window.location.href = '/search/?limit=100&offset=0&type__in=user&interest_list=' + interest;
     });
-
 
 
     $scope.init = function(user) {

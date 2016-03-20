@@ -92,10 +92,10 @@
             {% if profile.city or profile.country %}
             <div class="sidebar-header"><h5>location</h5></div>
             {% if profile.city %}
-            <div class="sidebar-content">{{ profile.city }}</div>
+            <a href="/search/?limit=100&offset=0&type__in=user&city={{ profile.city }}"><div class="sidebar-content">{{ profile.city }}</div></a>
             {% endif %}
             {% if profile.country %}
-            <div class="sidebar-content">{{ profile.country }}</div>
+            <a href="/search/?limit=100&offset=0&type__in=user&country={{ profile.country }}"><div class="sidebar-content">{{ profile.country }}</div></a>
             {% endif %}
             {% endif %}
             {% if profile.education %}
