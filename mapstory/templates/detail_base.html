@@ -153,6 +153,7 @@
             {% endif %}        
             </article>
             <h3 style="margin-top:-15px;margin-bottom:10px">{% trans "Average:" %} {% if resource.rating %}{{ resource.rating }}/5{% else %}Not yet rated{% endif %}</h3>
+            <h3 style="margin-top:-5px;margin-bottom:10px">{% trans "Created:" %} {{ resource.date|date }}</h3>
           </div>
           {% ifequal page "layer" %}
           {% include "layers/layer_functions.html" %}

@@ -1067,6 +1067,14 @@
         if (item == 'interest_list') {
           $('#tokenfield-interest').tokenfield('createToken', $location.search()[item]);
         }
+        // if we have a "city" search, populate that
+        if (item == 'city') {
+          $('#tokenfield-city').tokenfield('createToken', $location.search()[item]);
+        }
+        // if we have a "country" search, populate that
+        if (item == 'country') {
+          $('#tokenfield-country').tokenfield('createToken', $location.search()[item]);
+        }
       }
       query_api($scope.query);
     });
