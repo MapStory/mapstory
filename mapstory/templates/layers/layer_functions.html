@@ -9,6 +9,7 @@
       <span style="font-size:1.3em;color:gainsboro">mapstory</span>
     </a>
   </div>
+  {% if GEOGIG_ENABLED and resource.link_set.geogig %}
   <hr style="margin:5px">
   <div style="text-align:right">
     <a title="" href="#" target="blank">
@@ -16,6 +17,7 @@
       <!-- <span style="font-size:1.3em;color:gainsboro">edit</span> -->
     </a>
   </div>
+  {% endif %}
     {% if request.user.is_authenticated %}
   <div style="text-align:right">
     <hr style="margin:5px">
