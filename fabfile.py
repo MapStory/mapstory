@@ -182,6 +182,32 @@ def syncdb():
         with prefix(env.activate):
             sudo('python manage.py syncdb --noinput --no-initial-data', user='mapstory')
 
+def updateapp(app):
+
+    """
+
+    Clear the database models for a given project, load 
+
+    """
+
+    with cd('/srv/git/mapstory/mapstory-geonode'):
+        with prefix(env.activate):
+            sudo('python manage.py sqlclear {0} | psql'.format(app), user='mapstory')
+            sudo('python manage.py syncdb'.format(app), user='mapstory') 
+            sudo('supervisorctl restart gunicorn-django')
+            
+def clearappdb(app):
+
+    """
+
+    Clear the database models for a given project
+
+    """
+
+    with cd('/srv/git/mapstory/mapstory-geonode'):
+        with prefix(env.activate):
+            sudo('python manage.py sqlclear {0} | psql'.format(app), user='mapstory')            
+
 
 def tail(logfile='gunicorn-django', count=30):
 

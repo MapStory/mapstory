@@ -87,6 +87,9 @@ urlpatterns = patterns('',
         'geonode.maps.views.map_view', {'template': 'maps/_map_view_maploom.html'},
         name='map-view'),
 
+    # Gazetteer 
+    url(r"^gazetteer/", include('mapstory.apps.gazetteer.urls')),
+    
     # StoryTools
 
     url(r'^maps/(?P<mapid>\d+)/viewer$',
