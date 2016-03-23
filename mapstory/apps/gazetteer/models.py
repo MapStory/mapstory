@@ -23,7 +23,7 @@ class Location(models.Model):
         return ( self.defaultName  )
 
 class LocationName(models.Model):
-    Location = models.ForeignKey(Location)
+    location = models.ForeignKey(Location)
     name = models.CharField(max_length=200)
     language = models.CharField(max_length=2,help_text='language code e.g. <em>en</em>', default='en')
     namespace = models.URLField(blank=True)
