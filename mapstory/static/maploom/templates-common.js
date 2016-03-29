@@ -1,0 +1,1 @@
+/srv/git/mapstory/MapLoom/build/templates-common.js
