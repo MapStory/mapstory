@@ -25,5 +25,6 @@ django-storages==1.1.8
 boto==2.38.0
 
 #threaded comments dependencies
+django-contrib-comments==1.6.2
 django-threadedcomments==1.0.1
 django-fluent-comments==1.0.5
