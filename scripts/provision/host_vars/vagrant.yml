@@ -37,6 +37,7 @@ ssl_key_password: password
 
 allowed_hosts: ['{{inventory_hostname}}', 'localhost']
 
+site_url: 'http://{{ nginx_server_name }}'
 
 # Celery settings.
 
@@ -56,7 +57,7 @@ django_debug_enabled: True
 
 
 #Geoserver Settings
-
+geoserver_host: '{{ nginx_server_name }}'
 geoserver_download: 'https://s3.amazonaws.com/boundlessps-public/mapstory/rc1a/geoserver.war'
 geoserver_wps_classify: 'https://s3-us-west-2.amazonaws.com/mapstory-resources/geoserver/2.6/libs/wps/classify.zip'
 geoserver_lib_dir: '/var/lib/tomcat7/webapps/geoserver/WEB-INF/lib'
