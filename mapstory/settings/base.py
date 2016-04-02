@@ -130,7 +130,8 @@ ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
 ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
 
 ENABLE_SOCIAL_LOGIN = False
-USE_AWS_S3 = False
+USE_AWS_S3_STATIC = False
+USE_AWS_S3_MEDIA = False
 
 
 IMPORT_HANDLERS = (
@@ -380,10 +381,15 @@ LOGGING = {
         },
     }
 
-if USE_AWS_S3:
-    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-    STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
-    STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+if USE_AWS_S3_STATIC:
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'mapstory.s3_storages.StaticStorage'
+    STATIC_URL = "https://%s/%s/" % (AWS_S3_BUCKET_DOMAIN, STATICFILES_LOCATION)
+
+if USE_AWS_S3_MEDIA:
+    MEDIAFILES_LOCATION = 'media'
+    MEDIA_URL = "https://%s/%s/" % (AWS_S3_BUCKET_DOMAIN, MEDIAFILES_LOCATION)
+    DEFAULT_FILE_STORAGE = 'mapstory.s3_storages.MediaStorage'
 
 REMOTE_CONTENT_URL = STATIC_URL + 'assets'
 
