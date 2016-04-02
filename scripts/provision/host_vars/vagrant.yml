@@ -130,7 +130,8 @@ fixtures: '../geonode/geonode/base/fixtures/initial_data.json mapstory/fixtures/
 
 # AWS S3 Settings
 
-use_aws_s3: False
+use_aws_s3_static: False
+use_aws_s3_media: False
 
 aws_storage_bucket_name:
 aws_access_key_id:
