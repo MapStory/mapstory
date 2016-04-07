@@ -15,7 +15,7 @@ from mapstory.views import DiaryCreateView
 from mapstory.views import DiaryUpdateView
 from mapstory.views import GetPageView
 from mapstory.views import ProfileDetail
-from mapstory.views import profile_delete, profile_edit
+from mapstory.views import profile_delete, profile_edit, set_profile_notification
 from mapstory.views import SearchView
 from mapstory.views import LeaderListView
 from mapstory.views import proxy
@@ -100,6 +100,7 @@ urlpatterns = patterns('',
     url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
     url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
+    url(r"^storyteller/edit/(?P<username>[^/]*)/set-notification$", set_profile_notification, name="set_profile_notification"),
     url(r'^tours/editor_tour$', TemplateView.as_view(template_name='maps/editor_tour.html'), name='editor_tour'),
 
     url(r'^journal$', DiaryListView.as_view(), name='diary'),

@@ -1,6 +1,7 @@
 import datetime
 from account.views import SignupView, ConfirmEmailView
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -77,10 +78,16 @@ from osgeo_importer.forms import UploadFileForm
 from celery import group
 from osgeo_importer.utils import UploadError
 from lxml import etree
+from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
+
 import json
 import requests
 
 import pdb
+
+PROFILE_NOTICE_SETTINGS = ['layer_comment', 'layer_rated', 'layer_favorited', 'layer_flagged',
+    'layer_downloaded', 'layer_used', 'layer_initiative', 'map_comment', 'map_rated', 'map_favorited',
+    'map_flagged', 'map_featured', 'map_initiative'] 
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -206,6 +213,7 @@ def profile_edit(request, username=None):
         profile = get_object_or_404(Profile, username=username)
 
     if username == request.user.username:
+        notice_settings = []
         if request.method == "POST":
             form = EditProfileForm(request.POST, instance=profile)
             if form.is_valid():
@@ -218,10 +226,28 @@ def profile_edit(request, username=None):
                             request.user.username]))
         else:
             form = EditProfileForm(instance=profile)
-
+            for notice in NoticeType.objects.filter(label__in=PROFILE_NOTICE_SETTINGS):
+                notice_settings.append(NoticeSetting.for_user(request.user, notice, NOTICE_MEDIA[0][0]))
         return render(request, "people/profile_edit.html", {
             "form": form,
+            "notice_settings": notice_settings
         })
+    else:
+        return HttpResponseForbidden(
+            'You are not allowed to edit other users profile')
+
+@login_required
+@require_POST
+def set_profile_notification(request, username):
+    if username == request.user.username:
+        notice_type = request.POST.get('notice_type', None)
+        if notice_type:
+            notice = NoticeType.objects.get(label=notice_type)
+            setting = NoticeSetting.for_user(request.user, notice, NOTICE_MEDIA[0][0])
+            setting.send = json.loads(request.POST.get('send', True))
+            setting.save()
+            return HttpResponse('Ok')
+
     else:
         return HttpResponseForbidden(
             'You are not allowed to edit other users profile')
@@ -535,7 +561,6 @@ def new_map(request, template):
 @login_required
 def layer_create(request, template='upload/layer_create.html'):
     if request.method == 'POST':
-        pdb.set_trace()
         errors = False
         error_messages = []
         if request.is_ajax():
