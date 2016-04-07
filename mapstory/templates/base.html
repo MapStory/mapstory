@@ -18,6 +18,7 @@
       {% endif %}
       <link href="{{ STATIC_URL }}geonode/css/ext-compatibility.css" rel="stylesheet" />
       <link href="{{ STATIC_URL }}geonode/css/base.css" rel="stylesheet" />
+      {% include "osgeo_importer/_importer_styles.html" %}
       <style type="text/css">[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}</style>
       {% block extra_head %}
       {% endblock %}
@@ -34,7 +35,7 @@
     <![endif]-->
   </head>
   
-  <body class="{% block body_class %}{% endblock %}">
+  <body class="{% block body_class %}{% endblock %}" ng-cloak>
 
     {% block header %}
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -300,6 +301,18 @@
         };
     </script>
     <script type="text/javascript" src="{% url "lang" %}"></script>
-
+    {% if  USER_SNAP %}
+        <script type="text/javascript">
+        (function() {
+        var s = document.createElement("script");
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = '//api.usersnap.com/load/'+
+                'bbadd6c6-bbf7-4426-a52c-965ebb008963.js';
+        var x = document.getElementsByTagName('script')[0];
+        x.parentNode.insertBefore(s, x);
+        })();
+        </script>
+    {% endif %}
   </body>
 </html>

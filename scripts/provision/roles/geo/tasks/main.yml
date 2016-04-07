@@ -74,7 +74,7 @@
 
 - name: geogig global config
   copy: src=roles/geo/files/geogigconfig dest=/var/lib/geoserver/geoserver/.geogigconfig mode=0775 owner=tomcat7 group=tomcat7
-  tags: [geoserver]
+  tags: [geoserver, geogig]
 
 - name: unpack geoserver datadir
   shell: "[ ! -e {{ geoserver_data }} ] && unzip /tmp/{{ application_name }}/geoserver.war data/* -d /var/lib/geoserver/ || exit 0"
@@ -87,6 +87,15 @@
 - name: copy geoserver rest.properties
   template: src=roles/geo/files/rest.properties dest={{ geoserver_data }}/security/rest.properties owner=tomcat7 group=tomcat7
   tags: [geoserver]
+
+- name: default styles
+  copy: src=roles/geo/files/{{item}} dest={{ geoserver_data }}/styles mode=0775 owner=tomcat7 group=tomcat7
+  with_items:
+    - default_generic.sld
+    - default_line.sld
+    - default_point.sld
+    - default_polygon.sld
+  tags: [geoserver, styles]
 
 - name: update java home
   lineinfile: 'dest=/etc/default/tomcat7 regexp="^JAVA_HOME" line="JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"'

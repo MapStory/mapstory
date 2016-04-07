@@ -92,10 +92,10 @@
             {% if profile.city or profile.country %}
             <div class="sidebar-header"><h5>location</h5></div>
             {% if profile.city %}
-            <div class="sidebar-content">{{ profile.city }}</div>
+            <a href="/search/?limit=100&offset=0&type__in=user&city={{ profile.city }}"><div class="sidebar-content">{{ profile.city }}</div></a>
             {% endif %}
             {% if profile.country %}
-            <div class="sidebar-content">{{ profile.country }}</div>
+            <a href="/search/?limit=100&offset=0&type__in=user&country={{ profile.country }}"><div class="sidebar-content">{{ profile.country }}</div></a>
             {% endif %}
             {% endif %}
             {% if profile.education %}
@@ -192,10 +192,13 @@
             <!-- tags and interests -->
             {% if profile.keyword_list %}
                 <div class="sidebar-header"><h3>tags & interests </h3></div>
-                {% for keyword in profile.keyword_list %}
-                    <!-- This isn't working for some reason... -->
-                    <div class="label label-tags"><a href='/search/?limit=100&offset=0&type__in=user&keywords__slug__in={{ keyword }}'>{{ keyword }}</a></div>
-                {% endfor %}
+                <script type="text/javascript">
+                    // Pass the keyword list from the django template into the javascript
+                    var keyword_list = "{{profile.keyword_list|escapejs}}";
+                </script>
+                <div style="padding-top: 5px;">
+                    <input type="text" class="form-control" id="tokenfield-interests"/>
+                </div>
             {% endif %}
         </div>
 

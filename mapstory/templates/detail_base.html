@@ -9,6 +9,7 @@
 {% load friendly_loader %}
 {% friendly_load avatar_tags %}
 
+<div ng-controller="detail_page_controller">
 <section class="slice" id="dashboard">
   <div class="container">
     <div class="row">
@@ -90,15 +91,18 @@
             <h3 style="margin-top:0px;margin-bottom:5px;">Topic: {{ resource.category }}</h3>
             {% endifequal %}
             <h3 style="margin-top:0px;margin-bottom:5px;">Tags:</h3>
-            <!-- NOTE: This has some formatting issues; needs to wrap around to a second line nicely -->
-            {% for keyword in resource.keyword_list|slice:"5" %}
-            <!-- Make each one clickable and populate search with keyword already -->
-              <a href='/search/?limit=100&offset=0&keywords__slug__in={{ keyword }}'><span class="label label-default">{{ keyword }}</span></a>
-            {% endfor %}
-            {% if resource.keyword_list|length > 5 %}
-              <span class="label label-default">{{ resource.keyword_list|length|add:"-5" }} more</span>
-            {% endif %}
-            <a href="#addTag" role="button" data-toggle="modal" style="hover: cursor;"><span class="label label-default">+ add</span></a>
+            <script type="text/javascript">
+                // Pass the keyword list from the django template into the javascript
+                var keyword_list = "{{resource.keyword_list|escapejs}}";
+                var url = "{{ resource.detail_url }}";
+            </script>
+            {% ifequal resource.owner request.user %}
+            <input type="text" class="form-control" id="tokenfield-tags"/>
+            {% verbatim %}
+              <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+            {% endverbatim %}
+            <!-- TODO: Bug with this where the AJAX updates no longer match the keywords_form -->
+            <a href="#addTag" role="button" data-toggle="modal" style="hover: cursor;" ng-show="tags.length >= 10"><span class="label label-default">+ add more tags</span></a>
             <div id="addTag" class="modal fade" tabindex="-1" role="dialog">
               <div class="modal-dialog">
                 <div class="modal-content">
@@ -119,6 +123,12 @@
                 </div>
               </div>
             </div>
+            {% else %}
+            <input type="text" class="form-control" id="tokenfield-tags-readonly"/>
+            {% verbatim %}
+              <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+            {% endverbatim %}
+            {% endifequal %}
 
             <hr style="margin-top:15px;margin-bottom:0px">
             <!--
@@ -143,6 +153,7 @@
             {% endif %}        
             </article>
             <h3 style="margin-top:-15px;margin-bottom:10px">{% trans "Average:" %} {% if resource.rating %}{{ resource.rating }}/5{% else %}Not yet rated{% endif %}</h3>
+            <h3 style="margin-top:-5px;margin-bottom:10px">{% trans "Created:" %} {{ resource.date|date }}</h3>
           </div>
           {% ifequal page "layer" %}
           {% include "layers/layer_functions.html" %}
@@ -160,12 +171,4 @@
     </div>
   </div>
 </section>
-<script type="text/javascript">
-    function toggle_visibility(id) {
-       var e = document.getElementById(id);
-       if(e.style.display == 'block')
-          e.style.display = 'none';
-       else
-          e.style.display = 'block';
-    }
-</script>
+</div>\

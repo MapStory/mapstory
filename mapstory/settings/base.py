@@ -65,20 +65,19 @@ DATABASES = {
 INSTALLED_APPS += (
     'mapstory',
     'django.contrib.webdesign',
+    'django.contrib.sites',
     'geonode.contrib.geogig',
+    'geonode.contrib.collections',
+    'geonode.contrib.favorite',
     'icon_commons',
     'maploom',
-    'geonode.contrib.favorite',
     'haystack',
     'mailer',
     'django_slack',
-    # Adding Threaded Comments app
     'fluent_comments',
     'crispy_forms',
     'threadedcomments',
     'django_comments',
-    'django.contrib.sites',
-    #'mapstory.importer',
     'djcelery',
     'osgeo_importer'
 )
@@ -137,14 +136,15 @@ USE_AWS_S3 = False
 IMPORT_HANDLERS = (
 'mapstory.import_handlers.TruncatedNameHandler',
 'osgeo_importer.handlers.FieldConverterHandler',
-'osgeo_importer.handlers.GeoserverPublishHandler',
-'osgeo_importer.handlers.GeoServerBoundsHandler',
-'osgeo_importer.handlers.GeoServerTimeHandler',
-'osgeo_importer.handlers.GeoWebCacheHandler',
-'osgeo_importer.handlers.GeoNodePublishHandler',
+'osgeo_importer.handlers.geoserver.GeoserverPublishHandler',
+'osgeo_importer.handlers.geoserver.GeoServerBoundsHandler',
+'osgeo_importer.handlers.geoserver.GeoServerTimeHandler',
+'osgeo_importer.handlers.geoserver.GeoWebCacheHandler',
+'osgeo_importer.handlers.geonode.GeoNodePublishHandler',
 'mapstory.import_handlers.LayerAppendHandler'
 )
 
+OSGEO_IMPORTER_GEONODE_ENABLED = True
 
 if os.path.exists('mapstory/settings/local_settings.py'):
     exec open('mapstory/settings/local_settings.py') in globals()

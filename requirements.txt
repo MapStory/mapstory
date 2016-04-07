@@ -5,13 +5,16 @@
 -e ../django-osgeo-importer
 #git://github.com/rob-metalinkage/django-osgeo-importer.git@fc356c91c1865e2fc4f58dd79849ddf44543bac0#egg=osgeo_importer
 
+#-e git://github.com/ProminentEdge/django-osgeo-importer.git@26132b316463572a59f9170c626fecf22861dbc3#egg=osgeo_importer
+
+
 docutils
 textile
 
 # dev dependencies
 dj.paste
 PasteDeploy
-https://github.com/MapStory/django-maploom/archive/mapstory.zip
+https://github.com/MapStory/django-maploom/archive/composer.zip
 django-haystack==2.4.0
 elasticsearch==1.6.0
 django-slack==4.1.0
