@@ -1,11 +1,11 @@
 from django import db
 
 from osgeo_importer.inspectors import OGRTruncatedConverter
-from osgeo_importer.handlers import ImportHandler, ensure_can_run
+from osgeo_importer.handlers import ImportHandlerMixin, ensure_can_run
 from .views import layer_append_minimal
 
 
-class LayerAppendHandler(ImportHandler):
+class LayerAppendHandler(ImportHandlerMixin):
     """
     Appends data from the source to the target dataset.
     """
@@ -24,7 +24,7 @@ class LayerAppendHandler(ImportHandler):
         return layer_append_minimal(layer, layer_config.get('appendTo'))
 
 
-class TruncatedNameHandler(ImportHandler):
+class TruncatedNameHandler(ImportHandlerMixin):
     """
     Converts truncated field names from the source to the target dataset field name.
     """
