@@ -16,14 +16,12 @@
             <div class="input-group">
               <i class="input-group-addon fa fa-clipboard" data-clipboard-text="{{ repoURL }}" id="copy-button" data-toggle="tooltip"
                  title="Copy the clone url."></i>
-              <input class="form-control" id="clone-url" value="{{ repoURL }}" readonly>
             </div>
           </div>
-          <dt>About this GeoGig Layer:</dt>
           <table class="table table-bordered">
               <tr>
                   <td class="table-center">
-                      <div class="stat-title">total commits</div>
+                      <div class="stat-title">total edits</div>
                       <div class="stat-value">{{ stats.totalCommits | number}}</div>
 
                   </td>
@@ -33,7 +31,7 @@
                   </td>
               </tr>
           </table>
-          <dt>Recent Commit History:</dt>
+          <dt>Recent Edits</dt>
 
           <div ng-repeat-start="commit in commits">
              <div class="commit" id="commit-{{ commit.id }}">
