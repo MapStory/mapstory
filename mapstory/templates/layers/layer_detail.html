@@ -114,4 +114,19 @@
 
 
   <script type="text/javascript" src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
+
+  <script type="text/javascript">
+    $('.download-link').click(function(event){
+      var extension = $(event.target).attr('data-extension');
+      var id = $(event.target).attr('data-id');
+      $.ajax({
+        method: 'POST',
+        url: "{% url "notify-layer-download" %}",
+        data: {
+          extension: extension,
+          id: id
+        }
+      })
+    });
+  </script>
 {% endblock extra_script %}

@@ -15,7 +15,7 @@ from mapstory.views import DiaryCreateView
 from mapstory.views import DiaryUpdateView
 from mapstory.views import GetPageView
 from mapstory.views import ProfileDetail
-from mapstory.views import profile_delete, profile_edit, set_profile_notification
+from mapstory.views import profile_delete, profile_edit
 from mapstory.views import SearchView
 from mapstory.views import LeaderListView
 from mapstory.views import proxy
@@ -27,6 +27,7 @@ from mapstory.views import layer_detail, layer_detail_id
 from mapstory.views import layer_create, layer_append
 from mapstory.views import layer_remove, map_remove
 from mapstory.views import MapStoryConfirmEmailView
+from mapstory.notifications import notify_download, set_profile_notification
 from geonode.layers.views import layer_replace, layer_thumbnail, layer_upload
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
 from django.core.urlresolvers import reverse_lazy
@@ -132,6 +133,7 @@ urlpatterns = patterns('',
     url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
     url(r'^layers/(?P<layername>[^/]*)/replace$', layer_replace, name="layer_replace"),
     url(r'^layers/(?P<layername>[^/]*)/thumbnail$', layer_thumbnail, name='layer_thumbnail'),
+    url(r'^layers/notify-download$', notify_download, name='notify-layer-download'),
 
 ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 

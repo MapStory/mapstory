@@ -80,14 +80,12 @@ from osgeo_importer.utils import UploadError
 from lxml import etree
 from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 
+from .notifications import PROFILE_NOTICE_SETTINGS
+
 import json
 import requests
 
-import pdb
 
-PROFILE_NOTICE_SETTINGS = ['layer_comment', 'layer_rated', 'layer_favorited', 'layer_flagged',
-    'layer_downloaded', 'layer_used', 'layer_initiative', 'map_comment', 'map_rated', 'map_favorited',
-    'map_flagged', 'map_featured', 'map_initiative'] 
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -236,21 +234,6 @@ def profile_edit(request, username=None):
         return HttpResponseForbidden(
             'You are not allowed to edit other users profile')
 
-@login_required
-@require_POST
-def set_profile_notification(request, username):
-    if username == request.user.username:
-        notice_type = request.POST.get('notice_type', None)
-        if notice_type:
-            notice = NoticeType.objects.get(label=notice_type)
-            setting = NoticeSetting.for_user(request.user, notice, NOTICE_MEDIA[0][0])
-            setting.send = json.loads(request.POST.get('send', True))
-            setting.save()
-            return HttpResponse('Ok')
-
-    else:
-        return HttpResponseForbidden(
-            'You are not allowed to edit other users profile')
 
 @login_required
 def profile_delete(request, username=None):

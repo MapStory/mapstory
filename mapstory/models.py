@@ -15,6 +15,10 @@ from geonode.groups.models import GroupProfile
 from geonode.maps.models import Map
 from guardian.shortcuts import get_objects_for_user
 
+from mapstory.notifications import set_mapstory_notifications
+
+set_mapstory_notifications()
+
 def _stamp(data):
     s = hashlib.sha1()
     s.update(data)
