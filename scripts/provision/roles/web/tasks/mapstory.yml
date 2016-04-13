@@ -39,15 +39,19 @@
   when: setup_git_repo is defined and setup_git_repo
   tags: [update]
 
-- name: setup-virtual-env
-  script: roles/web/files/setup.sh &> /tmp/setup-project.out
+- name: check if virtualenv already exists
+  stat: path={{venv}}
+  register: venv_dir
+
+- name: create virtualenv
+  shell: virtualenv --system-site-packages {{venv}}
   sudo_user: '{{ application_user }}'
-  tags: [setup]
+  when: venv_dir.stat.isdir is not defined
 
 - name: pip install
-  shell: ~/.virtualenvs/{{ project_name }}/bin/pip install -r requirements.txt chdir={{ project_path }}
+  pip: virtualenv={{venv}} chdir={{ project_path }} requirements=requirements.txt
   sudo_user: '{{ application_user }}'
-  tags: [update]
+  tags: [update, debug]
 
 - name: configure media root
   file: path={{ media_root }} owner=www-data group=www-data mode=0775 state=directory

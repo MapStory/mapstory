@@ -263,7 +263,7 @@
                  state=present
   tags: [rabbitmq]
 
-- name: Ensure the default 'guest' user doesn't exist
+- name: Ensure the default guest user does not exist
   rabbitmq_user: user=guest
                  state=absent
   tags: [rabbitmq]
