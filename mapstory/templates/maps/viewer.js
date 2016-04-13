@@ -8,6 +8,7 @@
         'storytools.core.mapstory',
         'storytools.core.pins',
         'storytools.core.ogc',
+        'storytools.core.legend',
         'ui.bootstrap'
     ]);
 

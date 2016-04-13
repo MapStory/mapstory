@@ -202,4 +202,12 @@ def get_group_maps(gProfile):
 
     return [item for sublist in maps for item in sublist]
 
+def get_group_journals(gProfile):
+    users = gProfile.group.user_set.all()
+    journals = []
+    for user in users:
+        journals.append(DiaryEntry.objects.filter(author=user))
+
+    return [item for sublist in journals for item in sublist]
+
 signals.post_save.connect(name_post_save, sender=Community)
