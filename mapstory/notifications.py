@@ -30,12 +30,20 @@ def send_notification(notice_type_label, user, extra_content=None):
 
 def post_save_flag(instance, sender, **kwargs):
     notice_type_label = '%s_flagged' % instance.flagged_content.content_type.name
-    send_notification(notice_type_label, instance.user, extra_content={'instance': instance})
+    extra_content = {
+        'instance': instance,
+        'sender': instance.user
+    }
+    send_notification(notice_type_label, instance.flagged_content.content_object.owner, extra_content=extra_content)
 
 
 def favorite_post_save(instance, sender, **kwargs):
     notice_type_label = '%s_favorited' % instance.content_object.class_name.lower()
-    send_notification(notice_type_label, instance.user, extra_content={'instance': instance})
+    extra_content = {
+        'instance': instance,
+        'sender': instance.user
+    }
+    send_notification(notice_type_label, instance.content_object.owner, extra_content=extra_content)
     send_queued_notifications.delay()
 
 
@@ -58,7 +66,7 @@ def comment_post_save(instance, sender, **kwargs):
             'instance': instance,
             'sender': instance.user
         }
-        send_notification(notice_type_label, instance.user, extra_content=extra_content)
+        send_notification(notice_type_label, author, extra_content=extra_content)
         send_queued_notifications.delay()
 
 
