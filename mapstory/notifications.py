@@ -9,6 +9,7 @@ from notification import models as notification
 from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 from threadedcomments.models import ThreadedComment
 from user_messages.models import Message
+from agon_ratings.models import Rating
 
 from geonode.tasks.email import send_queued_notifications
 from geonode.people.models import Profile
@@ -127,6 +128,15 @@ def pre_save_profile(instance, sender, **kwargs):
         if instance.password != cur_pwd:
             send_notification('password_updated', instance)
 
+def post_save_rating(instance, sender, **kwargs):
+    author = instance.content_object.owner
+    notice_type_label = '%s_rated' % instance.content_object.class_name.lower()
+    extra_content = {
+        'instance': instance,
+        'sender': instance.user
+    }
+    send_notification(notice_type_label, author, extra_content=extra_content)
+    send_queued_notifications.delay()
 
 def set_mapstory_notifications():
     signals.post_save.connect(comment_post_save, sender=ThreadedComment)
@@ -137,6 +147,7 @@ def set_mapstory_notifications():
     signals.post_save.connect(post_save_mapstory, sender=MapStory)
     signals.pre_save.connect(pre_save_profile, sender=Profile)
     signals.post_save.connect(post_save_profile, sender=Profile)
+    signals.post_save.connect(post_save_rating, sender=Rating)
 
 
 @login_required
