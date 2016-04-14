@@ -25,6 +25,7 @@ from mapstory.views import layer_detail, layer_detail_id
 from mapstory.views import layer_create, layer_append
 from mapstory.views import layer_remove, map_remove
 from mapstory.views import MapStoryConfirmEmailView
+from mapstory.notifications import notify_download, set_profile_notification
 from geonode.layers.views import layer_replace, layer_thumbnail, layer_upload
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
 from django.core.urlresolvers import reverse_lazy
@@ -99,6 +100,7 @@ urlpatterns = patterns('',
     url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
     url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
+    url(r"^storyteller/edit/(?P<username>[^/]*)/set-notification$", set_profile_notification, name="set_profile_notification"),
     url(r'^tours/editor_tour$', TemplateView.as_view(template_name='maps/editor_tour.html'), name='editor_tour'),
 
     url(r'^journal$', DiaryListView.as_view(), name='diary'),
@@ -133,6 +135,7 @@ urlpatterns = patterns('',
     url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
     url(r'^layers/(?P<layername>[^/]*)/replace$', layer_replace, name="layer_replace"),
     url(r'^layers/(?P<layername>[^/]*)/thumbnail$', layer_thumbnail, name='layer_thumbnail'),
+    url(r'^layers/notify-download$', notify_download, name='notify-layer-download'),
 
 ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 

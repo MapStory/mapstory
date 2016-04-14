@@ -93,7 +93,7 @@
                 {% if links %}
                 <ul>
                   {% for link in links %}
-                  <li><a href="{{ link.url }}">{% trans link.name %}</a></li>
+                  <li><a href="{{ link.url }}" class="download-link" data-extension="{{ link.name }}" data-id="{{ resource.id }}">{% trans link.name %}</a></li>
                   {% endfor %}
                 </ul>
                 {% endif %}
