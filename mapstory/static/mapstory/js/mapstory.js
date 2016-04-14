@@ -322,7 +322,7 @@
     // query={q: query.q}; query.type__in='map'; search();
     $scope.calculate_maps_layers = function() {
       $scope.query.type__in = 'layer';
-      $scope.query.owner__username__in = Configs.url.split("?owner__username__in=").pop();
+      $scope.query.owner__username__in = PROFILE_USERNAME;
       $scope.search().then(function(result) {
         $scope.total_layers = $scope.total_counts;
         $scope.query.type__in = 'map';
