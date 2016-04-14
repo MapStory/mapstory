@@ -192,10 +192,6 @@
             <!-- tags and interests -->
             {% if profile.keyword_list %}
                 <div class="sidebar-header"><h3>tags & interests </h3></div>
-                <script type="text/javascript">
-                    // Pass the keyword list from the django template into the javascript
-                    var keyword_list = "{{profile.keyword_list|escapejs}}";
-                </script>
                 <div style="padding-top: 5px;">
                     <input type="text" class="form-control" id="tokenfield-interests"/>
                 </div>
@@ -435,6 +431,8 @@ WHAT IS THIS PART?!-->
 {% include 'favorite/_favorite_list_js.html' %}
 <script type="text/javascript">
     PROFILE_USERNAME ="{{ profile.username }}";
+    // Pass the keyword list from the django template into the javascript
+    keyword_list = "{{profile.keyword_list|escapejs}}";
 </script>
 {% endblock %}
 
