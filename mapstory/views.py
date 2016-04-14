@@ -202,6 +202,10 @@ class ProfileDetail(DetailView):
         ctx['action_list'] = actor_stream(ctx['profile'])
         # need to render the form
         ctx['form'] = UploadFileForm()
+        notice_settings = []
+        for notice in NoticeType.objects.filter(label__in=PROFILE_NOTICE_SETTINGS):
+            notice_settings.append(NoticeSetting.for_user(self.object, notice, NOTICE_MEDIA[0][0]))
+        ctx['notice_settings'] = notice_settings
 
         return ctx
 
@@ -216,7 +220,6 @@ def profile_edit(request, username=None):
         profile = get_object_or_404(Profile, username=username)
 
     if username == request.user.username:
-        notice_settings = []
         if request.method == "POST":
             form = EditProfileForm(request.POST, instance=profile)
             if form.is_valid():
@@ -229,11 +232,9 @@ def profile_edit(request, username=None):
                             request.user.username]))
         else:
             form = EditProfileForm(instance=profile)
-            for notice in NoticeType.objects.filter(label__in=PROFILE_NOTICE_SETTINGS):
-                notice_settings.append(NoticeSetting.for_user(request.user, notice, NOTICE_MEDIA[0][0]))
+          
         return render(request, "people/profile_edit.html", {
-            "form": form,
-            "notice_settings": notice_settings
+            "form": form
         })
     else:
         return HttpResponseForbidden(
