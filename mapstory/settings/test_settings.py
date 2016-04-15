@@ -1,5 +1,5 @@
 from mapstory.settings import *
-
+SITENAME = 'MapStory'
 HAYSTACK_SEARCH = True
 # Avoid permissions prefiltering
 SKIP_PERMS_FILTER = False
