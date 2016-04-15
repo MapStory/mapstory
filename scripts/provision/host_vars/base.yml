@@ -23,3 +23,6 @@ update_apt_cache: yes
 postgresql_version: "9.3"
 postgis_version: "2.1"
 postgis_package_version: "2.1.*.pgdg14.04+1"
+
+
+icons_commons_download: 'https://github.com/reynalddizon/iconcommons/archive/master.zip'
