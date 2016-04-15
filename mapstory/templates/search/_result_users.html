@@ -1,9 +1,9 @@
 {% verbatim %}
 <div>
-    <li ng-repeat="item in results | filter:itemFilter" resource_id="{{ item.id}}" class="col-md-3">
+    <li ng-repeat="item in results | filter:itemFilter" resource_id="{{ item.id }}" class="col-md-3">
         <div style="text-align: left;">
-            <a href="{{ item.profile_detail_url}}"><img class="thumb img-responsive img-circle" src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100" ng-src="{{ item.avatar_100}}"/></a>
-            <h3><a href="{{ item.profile_detail_url}}">{{ item.first_name }} {{ item.last_name }}</a></h3>
+            <a href="/people/profile/{{ item.username }}"><img class="thumb img-responsive img-circle" src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100" ng-src="{{ item.avatar_100}}"/></a>
+            <h3><a href="/people/profile/{{ item.username }}">{{ item.first_name }} {{ item.last_name }}</a></h3>
             <!-- If both exist, comma separated... otherwise no comma separation -->
             <div ng-if="item.position || item.organization">
                 <h4 ng-show="item.position && item.organization"><i class="fa fa-briefcase"></i> {{ item.position }}, {{ item.organization }}</h4>
@@ -15,7 +15,7 @@
             </div>
             <h4>{{ item.profile }}</h4>
 
-            <a href="{{ item.profile_detail_url }}"><button class="btn btn-primary btn-xs"><i class="fa fa-user"></i> view profile</button></a>
+            <a href="/people/profile/{{ item.username }}"><button class="btn btn-primary btn-xs"><i class="fa fa-user"></i> view profile</button></a>
             <a href="/messages/create/{{ item.id }}/"><button class="btn btn-primary btn-xs"><i class="fa fa-envelope"></i> message</button></a>
         </div>
     </li>
