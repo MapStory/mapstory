@@ -1,0 +1,155 @@
+# Git settings.
+setup_git_repo: no
+
+# Database settings.
+db_user: "{{ application_name }}"
+db_name: "{{ application_name }}"
+db_password: $secure_pwd
+db_host: localhost
+
+mapstory_dbs:
+  mapstory:
+    db_password: '{{ db_password }}'
+    db_owner: '{{ db_user }}'
+    db_encoding: 'UTF-8'
+    db_lc_collate: 'en_US.UTF-8'
+    db_lc_ctype: 'en_US.UTF-8'
+    db_template: 'template0'
+    db_type: ''
+  mapstory_data:
+    db_password: '{{ db_password }}'
+    db_owner: '{{ db_user }}'
+    db_encoding: 'UTF-8'
+    db_lc_collate: 'en_US.UTF-8'
+    db_lc_ctype: 'en_US.UTF-8'
+    db_template: 'template0'
+    db_type: 'spatial'
+
+setup_dblink: yes
+
+# Nginx settings.
+
+nginx_server_name: "{{ inventory_hostname }}"
+nginx_client_max_body_size: '500m'
+ssl_src_dir: ssl_self_signed
+ssl_dest_dir: /etc/ssl
+ssl_key_password: password
+
+allowed_hosts: ['{{inventory_hostname}}', 'localhost']
+
+site_url: 'http://{{ nginx_server_name }}'
+
+# Celery settings.
+
+celery_always_eager: False
+
+
+# Application Settings
+
+session_cookie_domain: "{{ nginx_server_name }}"
+mapstory_branch: master
+top_project: /srv/git/mapstory
+mapstory_geonode: '{{ top_project }}/mapstory-geonode'
+media_root: /var/lib/mapstory/media/
+uploads_root: '{{media_root}}uploads'
+django_su_pass: admin
+django_debug_enabled: True
+
+
+#Geoserver Settings
+geoserver_host: '{{ nginx_server_name }}'
+geoserver_download: 'https://s3.amazonaws.com/boundlessps-public/mapstory/rc1a/geoserver.war'
+geoserver_wps_classify: 'https://s3-us-west-2.amazonaws.com/mapstory-resources/geoserver/2.6/libs/wps/classify.zip'
+geoserver_lib_dir: '/var/lib/tomcat7/webapps/geoserver/WEB-INF/lib'
+geoserver_data: /var/lib/geoserver/data
+geoserver_proxy_url: ''
+geoserver_enable_gzip: false
+geoserver_password: geoserver
+
+development_server: "{{ nginx_server_name|string()== '192.168.56.151'}}"
+
+# Elasticsearch version from debian repository
+
+es_version: 1.6
+es_install_java: True
+es_java_version: 'openjdk-7-jdk'
+es_heap_size: '500mb'
+es_fqdn: localhost
+es_port: 9200
+
+# Force user ids
+es_uid:
+es_gid:
+
+# Manage service
+es_manage_service: False
+
+# Social Authentication
+enable_social_login: False
+
+twitter_consumer_key:
+twitter_consumer_secret:
+
+facebook_app_id:
+facebook_api_secret:
+
+google_oauth2_client_id:
+google_oauth2_client_secret:
+
+
+# User Registration
+
+registration_open: True
+account_open_signup: True
+account_email_confirmation_required:
+account_activation_days: 0
+default_from_email:
+
+# Google Analytics
+
+google_analytics:
+
+# Email Settings
+
+email_host:
+email_host_user:
+email_host_password:
+email_port:
+email_use_tls:
+email_backend: 'mailer.backend.DbBackend'
+
+# Slack Settings
+
+slack_backend: 'django_slack.backends.RequestsBackend'
+slack_token:
+slack_channel:
+slack_icon_emoji:
+slack_username:
+
+fixtures: '../geonode/geonode/base/fixtures/initial_data.json mapstory/fixtures/initial_data.json'
+
+# AWS S3 Settings
+
+use_aws_s3_static: False
+use_aws_s3_media: False
+
+aws_storage_bucket_name:
+aws_access_key_id:
+aws_secret_access_key:
+
+# RabbitMQ Settings
+
+rabbitmq_server_name: "{{ nginx_server_name }}"
+
+rabbitmq_admin_user: admin
+rabbitmq_admin_password: password
+
+rabbitmq_application_vhost: "{{ application_name }}"
+rabbitmq_application_user: "{{ application_name }}"
+rabbitmq_application_password: password
+
+broker_url: "amqp://{{ rabbitmq_application_user }}:{{ rabbitmq_application_password }}@localhost/{{ rabbitmq_application_vhost }}"
+
+# UserSnap Settings
+
+user_snap: True
