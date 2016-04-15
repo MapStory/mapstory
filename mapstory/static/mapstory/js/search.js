@@ -739,7 +739,7 @@
       $('#tokenfield-profile').tokenfield('setTokens', []);
       $('#tokenfield-region').tokenfield('setTokens', []);
       $('#tokenfield-keyword').tokenfield('setTokens', []);
-      $scope.api_endpoint = '/api/profiles/';
+      $scope.api_endpoint = '/api/owners/';
       $scope.query = {};
     };
     // Make the user one active, content inactive
@@ -962,7 +962,7 @@
     }
 
     function profile_autocomplete() {
-      return $http.get('/api/profiles/').success(function(data){
+      return $http.get('/api/owners/').success(function(data){
         var results = data.objects;
         // Here we have first name, last name, and username
         // append them all together to be used in the profile autocomplete
