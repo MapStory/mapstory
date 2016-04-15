@@ -18,8 +18,8 @@
         <!-- item.is_published for public or not -->
         <div>
           <p>
-            <i ng-if="item.type === 'mapstory'">MapStory</i>
-            <i ng-if="item.type === 'layer'">StoryLayer</i>
+            <i ng-if="item.type === 'mapstory'">{{ SITE_NAME }}</i>
+            <i ng-if="item.type === 'layer'">{% trans "StoryLayer" %}</i>
           </p>
         </div>
         <h4> Created {{ item.date|date }}</h4>

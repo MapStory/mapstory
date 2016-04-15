@@ -6,17 +6,16 @@
 {% load story_tags %}
 {% load cache %}
 {% load avatar_tags %}
-{% load threadedcomments_tags %}
-{% load fluent_comments_tags %}
 
 {% block extra_head %}
 <link href="{{ STATIC_URL }}mapstory/css/search.css" rel="stylesheet" />
 {% endblock %}
 
+{% block title %}{{ community.name }}{% endblock %}
+
 {% block middle %}
-<div ng-controller="collection_controller">
-        <div ng-init="query({{id}})">
-        </div>
+<div ng-app="paginate"><div ng-controller="paginate_controller">
+        <!-- content -->
         <section class="parallax">
           <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }}); background-size: 100%; background-position: 0% 20%;">
             <div class="maskParent">
@@ -24,15 +23,12 @@
               <div class="paralaxText container" style="text-align:left;padding-bottom:0">
                 <div class="row">
                   <div class="col-sm-1">
-                    {% verbatim %}
-                    <img class="img-rounded" src="{{ avatar }}" width="75" height="75" style="margin-top:55px;margin-bottom:0px" ng-if="avatar"/>
-                    {% endverbatim %}
+                    <img class="img-rounded" src="{{ community.url }}" width="75" height="75" style="margin-top:55px;margin-bottom:0px"/>
+                    
                   </div>
                   <div class="col-sm-11">
                     <div style="padding:60px 0px 0px 10px;">
-                      {% verbatim %}
-                      <h1 style="font-size:3em; color: white;">{{ title }}</h1>
-                      {% endverbatim %}
+                      <h1 style="font-size:3em; color: white;">{{ community.name }}</h1>
                     </div>
                   </div>
                  </div>
@@ -40,146 +36,79 @@
            </div>
           </div>
         </section>
+        <!-- dashboard -->
         <section class="slice" id="dashboard" style="padding-top:20px">
           <div class="container">
             <div class="row" >
               <div class="col-lg-3" style="padding-top:10px">
                 <h3>
-                  {% if managers %}
-                  <span id="send-message-manager">Help lead this initiative! <br/><a href='{% url "message_create" user_id=managers.0.pk %}'><span style="color:orange">Send a message</span></a> to the Initiative Leader</span>
-                    {% for manager in managers %}
-                      {% ifequal manager user %}
-                      <script>
-                      // Hide the message button if we're a manager
-                      document.getElementById("send-message-manager").style.display = "none";
-                      </script>
-                      {% verbatim %}
-                      <a href='/initiatives/members/{{ slug }}'><span style="color:orange">manage members</span></a>
-                      {% endverbatim %}
-                      {% endifequal %}
-                    {% endfor %}
-                  {% else %}
-                  Help lead this initiative! <br/><a href='{% url "message_create" %}'><span style="color:orange">Send a message</span></a> to the Initiative Leader
-                  {% endif %}
+                  <span>Help lead this initiative! Send a message to one of the current Initiative Leads</span>
                 </h3>
-
-                <hr style="margin:5px">
-                {% verbatim %}
-                <h3 ng-if="facebook">
-                  <span style="color:dodgerblue">facebook.com/{{ facebook }}</span>
-                </h3>
-                <hr style="margin:5px" ng-if="facebook">
-                <h3 ng-if="twitter">
-                  <span style="color:deepskyblue">twitter @{{ twitter }}</span>
-                </h3>
-                <hr style="margin:5px" ng-if="twitter">
-                {% endverbatim %}
-              </div>
-              <div class="col-lg-9" style="border-left:1px solid darkgray">
+                          </div>
+                          <div class="col-lg-9" style="border-left:1px solid darkgray">
                 <ul class="nav nav-tabs">
                     <li  class="active"><a href="#guidelines" data-toggle="tab">Overview &<br/> Guidelines</a></li>
                     <li><a href="#tasks" data-toggle="tab">Tasks &<br/> Milestones</a></li>
-                    <li><a href="#storylayers" data-toggle="tab">StoryLayers<br/>List</a></li>
-                    <li><a href="#mapstories" data-toggle="tab">Favorited<br/>MapStories</a></li>
+                    <li><a href="#storylayers" data-toggle="tab">{% trans "StoryLayers" %}<br/>List</a></li>
+                  <li><a href="#stories" data-toggle="tab">Favorited <br/>{% trans "Mapstories" %}</a></li>
                     <li><a href="#leads" data-toggle="tab">Initiative <br/>Leads</a></li>
                     <li><a href="#blogs" data-toggle="tab">Journal<br/>Entries</a></li>
                 </ul>
                 <div class="tab-content">
+                  <!-- TODO: Hook in favorites here -->
+                  <div class="tab-pane" id="stories">
+                    <div class="container">
+                      
+                    </div>
+                  </div>
                   <div class="tab-pane" id="tasks">
                     <div class="container">
-                      <!-- TODO: This is supposed to be a list of many text items... but why? Some interaction here? -->
-                      {% verbatim %}
-                      <p>{{ tasks }}</p>
-                      <p ng-if="!tasks">There are no tasks for this initiative.</p>
-                      {% endverbatim %}
+                      <ul>
+                        {% for task in community.tasks.all %}
+                          <li>
+                          {{ task.task }}
+                          </li>
+                        {% empty %}
+                        There are no tasks for this initiative.
+                        {% endfor %}
+                      </ul>
                     </div>
                   </div>
                   <div class="tab-pane active" id="guidelines">
-                    {% verbatim %}
-                      {{ summary }}
-                    {% endverbatim %}
+                      {{ community.description }}
                   </div>
                   <div class="tab-pane" id="storylayers">
                     <div class="col-lg-12">
                       <div class="clearfix search-results">
                         <ul>
-                          {% verbatim %}
-                          <li ng-repeat="item in layers" resource_id="{{ item.id}}" class="col-md-4">
+                          {% for layer in community.layer.all %}
+                          <li class="col-md-4">
                             <div style="text-align: left; height: 500px;">
-                                <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
-                                <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
-                                <div>
-                                  <p>
-                                    <i>StoryLayer</i>
-                                  </p>
-                                </div>
-                                <h4> Created {{ item.date|date }}</h4>
-                                <h4 ng-if="item.owner__first_name || item.owner__last_name"><span class="owner"><i class="fa fa-user"></i> {{ item.owner__first_name }} {{ item.owner__last_name }}</span></h4>
-                                <h4 style="text-transform: capitalize;"><span><i class="fa fa-flag-o"></i></span> <span>{{ item.category }}</span><span ng-if="!item.category">Uncategorized</span></h4>
-                                <h4><a href="{{ item.detail_url}}"><i class="fa fa-eye"></i> {{ item.popular_count}} views</a></h4>
-                                <h4><a href="{{ item.detail_url}}#rate"><i class="fa fa-star"></i> {{ item.rating}}</a></h4>
-                                <div><h5 class="abstract">{{ item.abstract|limitTo:70 }}<a href="{{ item.detail_url}}"> <i>...read more</i></a></h5></div>
-                                <div class="btn-toolbar">
-                                    <h4>
-                                        <!-- goes to composer -->
-                                        <a href="/maps/new?layer={{ item.detail_url.substring(8) | decodeURIComponent }}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> use</button></a>
-                                        <!-- goes to layer edit -->
-                                        <a href='/maps/edit?layer={{ item.detail_url.substring(8) | decodeURIComponent }}'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
-                                        <!-- TODO: Hook in favorites functionality -->
-                                        <!-- <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button> -->
-                                    </h4>
-                                </div>
+                              <a href="{{ layer.detail_url}}"><img class="thumb img-responsive" src="{{ layer.thumbnail_url}}"/></a>
+                              <h3><a href="{{ layer.detail_url}}">{{ layer.title}}</a></h3>
+                              <div><p><i>{% trans "StoryLayer" %}</p></i></div>
+                              <h4><span class="owner"><i class="fa fa-user"></i>{{ layer.owner.first_name }} {{ layer.owner.last_name }}</span></h4>
+                              <h4><span><i class="fa fa-flag-o"></i></span>{{ layer.category.gn_description}}</h4>
+                              <!-- TODO: Hook in the edits -->
+                              <h4><a href="{{ layer.detail_url}}"><i class="fa fa-pencil"></i> edits</a></h4>
+                              <h4><a href="{{ layer.detail_url}}#rate"><i class="fa fa-star"></i> {{ layer.rating}}</a></h4>
+                              <div><h5 class="abstract"><a href="#">{{ layer.abstract|slice:"70" }}<i>...read more</i></a></h5></div>
+                              <div class="btn-toolbar">
+                                <h4>
+                                  <!-- goes to composer -->
+                                  <a href="{% url "new_map" %}?layer={{ layer.detail_url|slice:"8:" }}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> use</button></a>
+                                  <!-- goes to layer edit -->
+                                  <a href='{% url "map-edit" %}?layer={{layer.service_typename}}'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
+                                  <!-- TODO: Hook in favorites functionality -->
+                                  <button class="btn btn-primary btn-xs"><i class="fa fa-heart-o"></i> favorite</button>
+                                </h4>
+                              </div>
                             </div>
                           </li>
-                          <p ng-if="layers.length == 0">There are no layers made by this initiative.</p>
-                          {% endverbatim %}
+                          {% empty %}
+                          There are no layers for this initiative.
+                          {% endfor %}
                         </ul>
-                      </div>
-                      <span>Total: </span>
-                      <span ng-bind="total_counts"></span>
-                      <a href><strong ng-click="paginate_down()">&laquo;</strong></a>
-                      <span>page </span>
-                      <span ng-model="page" ng-bind="page"></span>
-                      <span> of </span>
-                      <span ng-bind="numpages"></span>
-                      <a href><strong ng-click="paginate_up()">&raquo;</strong></a>
-                    </div>
-                  </div>
-                  <div class="tab-pane" id="mapstories">
-                    <div class="col-lg-12">
-                      <div class="clearfix search-results">
-                        <ul>
-                          {% verbatim %}
-                          <li ng-repeat="item in maps" resource_id="{{ item.id}}" class="col-md-4">
-                            <div style="text-align: left; height: 500px;">
-                                <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
-                                <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
-                                <div>
-                                  <p>
-                                    <i>MapStory</i>
-                                  </p>
-                                </div>
-                                <h4> Created {{ item.date|date }}</h4>
-                                <h4 ng-if="item.owner__first_name || item.owner__last_name"><span class="owner"><i class="fa fa-user"></i> {{ item.owner__first_name }} {{ item.owner__last_name }}</span></h4>
-                                <h4 style="text-transform: capitalize;"><span><i class="fa fa-flag-o"></i></span> <span>{{ item.category }}</span><span ng-if="!item.category">Uncategorized</span></h4>
-                                <h4><a href="{{ item.detail_url}}"><i class="fa fa-eye"></i> {{ item.popular_count}} views</a></h4>
-                                <h4><a href="{{ item.detail_url}}#rate"><i class="fa fa-star"></i> {{ item.rating}}</a></h4>
-                                <div><h5 class="abstract">{{ item.abstract|limitTo:70 }}<a href="{{ item.detail_url}}"> <i>...read more</i></a></h5></div>
-                                <div class="btn-toolbar">
-                                    <h4>
-                                        <!-- goes to the viewer -->
-                                        <a href="/maps/{{ item.id }}/viewer"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> play</button></a>
-                                        <!-- TODO: Hook in favorites functionality -->
-                                        <!-- <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button> -->
-                                        <!-- TODO: Hook in share functionality -->
-                                        <!-- <button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> share</button> -->
-                                    </h4>
-                                </div>
-                            </div>
-                          </li>
-                        </ul>
-                        <p ng-if="maps.length == 0">There are no mapstories made by this initiative.</p>
-                        {% endverbatim %}
                       </div>
                       <span>Total: </span>
                       <span ng-bind="total_counts"></span>
@@ -193,33 +122,32 @@
                   </div>
                   <div class="tab-pane" id="leads">
                     <div class="col-lg-12">
-                     <div class="clearfix search-results">
+                      <div class="clearfix search-results">
                         <ul>
-                          {% for manager in managers %}
+                          {% for lead in community.leads.all %}
                             <li class="col-md-4">
                               <div style="text-align: left;">
-                                  <a href="{{ manager.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ manager.avatar_100}}" src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100"/></a>
-                                  <h3><a href="{{ manager.profile_detail_url}}">{{ manager.first_name }} {{ manager.last_name }}</a></h3>
+                                  <a href="{{ lead.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ lead.avatar_100}}" src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100"/></a>
+                                  <h3><a href="{{ lead.profile_detail_url}}">{{ lead.first_name }} {{ lead.last_name }}</a></h3>
                                   <!-- If both exist, comma separated... otherwise no comma separation -->
-                                  {% if manager.position and manager.organization %}
-                                    <h4><i class="fa fa-briefcase"></i>{{ manager.position }}, {{ manager.organization }}</h4>
+                                  {% if lead.position and lead.organization %}
+                                    <h4><i class="fa fa-briefcase"></i>{{ lead.position }}, {{ lead.organization }}</h4>
                                   {% else %}
-                                    {% if manager.position or manager.organization %}
-                                      <h4><i class="fa briefcase"></i>{{ manager.position }} {{ manager.organization }}</h4>
+                                    {% if lead.position or lead.organization %}
+                                      <h4><i class="fa briefcase"></i>{{ lead.position }} {{ lead.organization }}</h4>
                                     {% endif %}
                                   {% endif %}
-                                  {% if manager.city and manager.country %}
-                                    <h4><i class="fa fa-map-marker"></i>{{ manager.city }}, {{ manager.country }}</h4>
+                                  {% if lead.city and lead.country %}
+                                    <h4><i class="fa fa-map-marker"></i>{{ lead.city }}, {{ lead.country }}</h4>
                                   {% else %}
-                                    {% if manager.city or manager.country %}
-                                      <h4><i class="fa fa-map-marker"></i>{{ manager.city }} {{ manager.country }}</h4>
+                                    {% if lead.city or lead.country %}
+                                      <h4><i class="fa fa-map-marker"></i>{{ lead.city }} {{ lead.country }}</h4>
                                     {% endif %}
                                   {% endif %}
-                                  {% if manager.profile %}
-                                  <h4>{{ manager.profile }}</h4>
-                                  {% endif %}
- 
-                                  <a href="{{ manager.profile_detail_url }}"><button class="btn btn-primary btn-xs"><i class="fa fa-user"></i> view profile</button></a>
+                                  <h4>{{ lead.profile }}</h4>
+
+                                  <a href="{{ lead.profile_detail_url }}"><button class="btn btn-primary btn-xs"><i class="fa fa-user"></i> view profile</button></a>
+                                  <!-- TODO: Hook in messaging functionality -->
                                   <a><button class="btn btn-primary btn-xs"><i class="fa fa-envelope"></i> message</button></a>
                               </div>
                             </li>
@@ -231,53 +159,42 @@
                     </div>
                   </div>
                   <div class="tab-pane" id="blogs">
-                    {% if not journals %}
-                    <p>There are no journals for this initiative.</p>
-                    {% endif %}
-                    {% for entry in journals %}
-                    <div class="row blog-panel">
-                        <div class="col-sm-12">
-                            <div class="row">
-                                <div class="col-lg-10 col-lg-offset-2  col-xs-12">
-                                    <h5 class="blog-title">{{ entry.date }}</h5>
-                                    <h1 class="blog-title"><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h2>
-                                    <h5 class="blog-title"><a href="{% url "profile_detail" slug=entry.author.username %}">{% avatar entry.author 30 %} {{ entry.author.first_name }} {{ entry.author.last_name }}</a></h5>
+                    <div class="col-lg-12">
+                      {% for entry in community.journals.all %}
+                        <div class="row blog-panel">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-lg-10 col-lg-offset-2  col-xs-12 blog-header">
+                                        <h5 class="blog-title">{{ entry.date }}</h5>
+                                        <h2 class="blog-title"><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h2>
+                                        <h5 class="blog-title">{% avatar entry.author 30 %} {{ entry.author }}</h5>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-2 col-xs-6 qlink-right">
-                                </div>
-                                <div class="col-lg-8 col-xs-6 blog-content bl">
-                                    {{ entry.html|safe }}
-                                </div>
-                                <div class="col-lg-2 col-xs-6">
-                                    {% ifequal entry.author request.user %}
-                                        <a href="{% url 'diary-update' pk=entry.pk %}">
-                                            <button class="btn btn-primary" aria-hidden="true" id="published_submit_btn" type="submit">{% trans "Edit" %}</button>
-                                        </a>
-                                    {% endifequal %}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-2 col-xs-6 qlink-right">
-                                </div>
-                                <div class="col-lg-8 col-xs-6 blog-content bl">
-                                    {% get_comment_count for entry as num_comments %}
-                                    {{ num_comments }} comments
-                                    {% if user.is_authenticated %}
-                                    <a href="{{ entry.get_absolute_url }}" class="btn btn-primary btn-xs" role="button">Reply</a>
-                                    {% endif %}
+                                <div class="row">
+                                    <div class="col-lg-2 col-xs-6 qlink-right">
+                                        <div class="qlink qlink-gen"><a href="#">comment</a></div>
+                                        <div class="qlink qlink-gen"><a href="#">favorite</a></div>
+                                        <div class="qlink qlink-fb"><a href="#">facebook</a></div>
+                                        <div class="qlink qlink-tw"><a href="#">twitter</a></div>
+                                        <div class="qlink qlink-dg"><a href="#">flag/report</a></div>
+                                    </div>
+                                    <div class="col-lg-10 col-xs-6 blog-content bl">
+                                        {{ entry.html|safe }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                      {% empty %}
+                      <p>There are no journals for this initiative.</p>
+                      {% endfor %}
                     </div>
-                    {% endfor %}
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
+        <!-- dashboard -->
 </div></div>
 {% endblock %}
 {% block extra_script %}

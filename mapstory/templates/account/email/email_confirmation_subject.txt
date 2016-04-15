@@ -1,1 +1,1 @@
-Account activation on MapStory
+Account activation on {{ SITE_NAME }}

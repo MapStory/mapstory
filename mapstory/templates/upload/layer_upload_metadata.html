@@ -59,7 +59,7 @@
             <input type="submit" class="btn btn-primary" value="{% trans "Save as Draft" %}"/>
           </div>
           <p>
-            Once you hit save, your StoryLayer will appear in your Profile as a private draft. To make it Public for everyone to see and use, you can switch the viewing status in the metadata tab of the StoryLayer.
+            Once you hit save, your {% trans "StoryLayer" %} will appear in your Profile as a private draft. To make it Public for everyone to see and use, you can switch the viewing status in the metadata tab of the {% trans "StoryLayer" %}.
           </p>
         </div>
 
@@ -68,7 +68,7 @@
   </div>
   <div class="col-md-4 well">
       <h3>Having problems?</h3>
-      <p>Click <a href="http://wiki.mapstory.org/wiki/MapStory_Uploader">here</a> for more resources to help you with Upload. Or visit <a href="http://help.mapstory.org">help.mapstory.org</a> and post your question for the community</p>
+      <p>Click <a href="http://wiki.{{ current_site.domain }}/wiki/MapStory_Uploader">here</a> for more resources to help you with Upload. Or visit <a href="http://help.{{ current_site.domain }}">help.{{ current_site.domain }}</a> and post your question for the community</p>
   </div>
 </div>
 {% endblock %}

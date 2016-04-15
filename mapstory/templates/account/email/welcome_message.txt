@@ -1,5 +1,5 @@
 {% load story_tags %}
-Welcome to the MapStory community!
+Welcome to the {{ SITE_NAME }} community!
 
 Hi, {% firstof confirmation.email_address.user.first_name confirmation.email_address.user.username %}!
 
@@ -12,28 +12,28 @@ Learn
 MapStorytelling involves using open data, maps and your own reflection to illuminate change in place over time. It's something anyone can learn, and your peers are adding more resources all the time to help you along.
 
 Learn the basics:
-http://mapstory.org/getskills
+http://{{ current_site.domain }}/getskills
 
 ------------------
 
 Share What You Know
 
-There's three ways to share on MapStory. Just remember A, B, C. First, you can add new spatially and temporally enabled datasets, which we call StoryLayers. Second, you can build MapStories using StoryLayers and other narrative elements that you would like. Finally, you can curate content that appears on MapStory to improve its quality and accuracy.
+There's three ways to share on {{ SITE_NAME }}. Just remember A, B, C. First, you can add new spatially and temporally enabled datasets, which we call {% trans "StoryLayers" %}. Second, you can build MapStories using {% trans "StoryLayers" %} and other narrative elements that you would like. Finally, you can curate content that appears on {{ SITE_NAME }} to improve its quality and accuracy.
 
-Start sharing on MapStory:
-http://mapstory.org/
+Start sharing on {{ SITE_NAME }}:
+http://{{ current_site.domain }}
 
 ------------------
 
 Build the Community
 
-MapStory is a nonprofit open educational resource. We rely on users like you to launch new initiatives, develop new tools and raise funds to keep the project going. So, get involved and build the future of MapStory that you want to see!
+{{ SITE_NAME }} is a nonprofit open educational resource. We rely on users like you to launch new initiatives, develop new tools and raise funds to keep the project going. So, get involved and build the future of {{ SITE_NAME }} that you want to see!
 
 Get involved with the community:
-http://wiki.mapstory.org
+http://wiki.{{ current_site.domain }}
 
 ------------------
 
 
 Thanks for joining us, and happy MapStorytelling!
-The MapStory Team
+The {{ SITE_NAME }} Team

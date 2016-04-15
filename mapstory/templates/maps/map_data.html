@@ -5,8 +5,7 @@
     <ul class="nav nav-tabs">
         <li class="active"><a href="#Summary" data-toggle="tab" style="font-size:0.8em;">Summary</a></li>
         <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;" ng-click="query_category('{{ resource.category }}', 'map');">Related</a></li>
-        <li><a href="#Chapters" data-toggle="tab" style="font-size:0.8em;">Chapters</a></li>
-        <li><a href="#StoryLayers" data-toggle="tab" style="font-size:0.8em;">StoryLayers Used</a></li>
+        <li><a href="#StoryLayers" data-toggle="tab" style="font-size:0.8em;">{% trans "StoryLayers" %} Used</a></li>
     </ul>
     <div class="tab-content">
       <div class="tab-pane active" id="Summary">
@@ -14,27 +13,9 @@
           {{ resource.abstract }}
         </div>
       </div>
-      <div class="tab-pane" id="Chapters">
-        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-          <!-- TODO: What do we want to show for chapters? -->
-          {% for item in resource.chapters %}
-          <div class="col-sm-12">
-            <div class="row boxFeature">
-              <div class="col-xs-3">
-                <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/>
-              </div>
-              <div class="col-xs-9">
-                <h3>{{ item.title }}</h3>
-                <p>{{ item.abstract|slice:"250"  }}<i>...read more</i></p>
-              </div>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
       <div class="tab-pane" id="StoryLayers">
         <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-          {% for item in layers %}
+          {% for item in resource.local_layers %}
           <div class="col-sm-12">
             <div class="row boxFeature">
               <div class="col-xs-3">
@@ -52,10 +33,9 @@
       <div class="tab-pane" id="Related">
         <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
           {% if resource.category %}
-          <!-- TODO: Did this ever work? Not sure where the results came from... query_category? Check ng-apps -->
             {% verbatim %}
             <div ng-hide="results.length">
-              No related mapstories found...
+              No related layers found...
             </div>
             <div ng-show="results.length">
               <div class="col-sm-12" ng-repeat="item in results">
@@ -73,7 +53,7 @@
             {% endverbatim %}
           {% else %}
             <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-              No related mapstories found...
+              No related layers found...
             </div>
           {% endif %}
         </div>
