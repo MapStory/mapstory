@@ -1,4 +1,4 @@
-{% load mapstory_tags %}
+{% load story_tags %}
 Welcome to the MapStory community!
 
 Hi, {% firstof confirmation.email_address.user.first_name confirmation.email_address.user.username %}!
