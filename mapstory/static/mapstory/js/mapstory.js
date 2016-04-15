@@ -396,11 +396,11 @@
   $scope.query = function(group_id) {
     $http.get('/api/collections/').then(function(response) {
       // Determine which collection this is by using the group id
-      var groups = response.data.objects;
+      var collections = response.data.objects;
       var data;
-      for (var i = 0; i < groups.length; i++) {
-        if (groups[i].id == group_id) {
-          data = groups[i];
+      for (var i = 0; i < collections.length; i++) {
+        if (collections[i].group.id == group_id) {
+          data = collections[i];
         }
       }
       $scope.avatar = data.group.logo;
