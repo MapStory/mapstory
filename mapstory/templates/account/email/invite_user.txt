@@ -1,4 +1,4 @@
-{% load mapstory_tags %}
+{% load story_tags %}
 
 {{ signup_code.inviter }} ({{signup_code.inviter.email}}) has
 invited you to join MapStory ( http://{{ current_site.domain }} )!
