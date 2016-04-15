@@ -49,14 +49,14 @@
                 <ul class="nav nav-tabs">
                     <li  class="active"><a href="#guidelines" data-toggle="tab">Overview &<br/> Guidelines</a></li>
                     <li><a href="#tasks" data-toggle="tab">Tasks &<br/> Milestones</a></li>
-                    <li><a href="#storylayers" data-toggle="tab">StoryLayers<br/>List</a></li>
-                  <li><a href="#mapstories" data-toggle="tab">Favorited <br/>MapStories</a></li>
+                    <li><a href="#storylayers" data-toggle="tab">{% trans "StoryLayers" %}<br/>List</a></li>
+                  <li><a href="#stories" data-toggle="tab">Favorited <br/>{% trans "Mapstories" %}</a></li>
                     <li><a href="#leads" data-toggle="tab">Initiative <br/>Leads</a></li>
                     <li><a href="#blogs" data-toggle="tab">Journal<br/>Entries</a></li>
                 </ul>
                 <div class="tab-content">
                   <!-- TODO: Hook in favorites here -->
-                  <div class="tab-pane" id="mapstories">
+                  <div class="tab-pane" id="stories">
                     <div class="container">
                       
                     </div>
@@ -86,7 +86,7 @@
                             <div style="text-align: left; height: 500px;">
                               <a href="{{ layer.detail_url}}"><img class="thumb img-responsive" src="{{ layer.thumbnail_url}}"/></a>
                               <h3><a href="{{ layer.detail_url}}">{{ layer.title}}</a></h3>
-                              <div><p><i>StoryLayer</p></i></div>
+                              <div><p><i>{% trans "StoryLayer" %}</p></i></div>
                               <h4><span class="owner"><i class="fa fa-user"></i>{{ layer.owner.first_name }} {{ layer.owner.last_name }}</span></h4>
                               <h4><span><i class="fa fa-flag-o"></i></span>{{ layer.category.gn_description}}</h4>
                               <!-- TODO: Hook in the edits -->

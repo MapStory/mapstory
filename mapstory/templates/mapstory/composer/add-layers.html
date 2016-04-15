@@ -29,14 +29,14 @@
                             <a ng-click="showLoadSearchDialog({explore:true})">
                                 <div class="box-content box-statistic">
                                     <div class="title text-primary"><i class="glyphicon glyphicon-th"></i>Explore All</div>
-                                    <small><span ng-bind="total_counts"></span> Storylayers</small>
+                                    <small><span ng-bind="total_counts"></span> {% trans "StoryLayers" %}</small>
 
                                 </div>
                             </a>
                             <a ng-click="showLoadSearchDialog({common:true})">
                                 <div class="box-content box-statistic">
-                                    <div class="title text-primary"><i class="glyphicon glyphicon-star"></i>Common StoryLayers</div>
-                                    <small>0 Storylayers</small>
+                                    <div class="title text-primary"><i class="glyphicon glyphicon-star"></i>Common {% trans "StoryLayers" %}</div>
+                                    <small>0 {% trans "StoryLayers" %}</small>
 
                                 </div>
                             </a>
@@ -51,7 +51,7 @@
 
                             <a target="_blank" href="/layers/upload">
                                 <div class="box-content box-statistic">
-                                    <div class="title text-primary"><i class="glyphicon glyphicon-upload"></i>Upload New StoryLayer</div>
+                                    <div class="title text-primary"><i class="glyphicon glyphicon-upload"></i>Upload New {% trans "StoryLayer" %}</div>
 
                                 </div>
                             </a>

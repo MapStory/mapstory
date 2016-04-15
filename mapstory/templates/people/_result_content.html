@@ -7,8 +7,8 @@
         <!-- item.is_published for public or not -->
         <div>
           <p>
-            <i ng-if="item.type === 'map'">MapStory</i>
-            <i ng-if="item.type === 'layer'">StoryLayer</i>
+            <i ng-if="item.type === 'map'">{{ SITE_NAME }}</i>
+            <i ng-if="item.type === 'layer'">{% trans "StoryLayer" %}</i>
           </p>
         </div>
         <h4 ng-if="item.owner__first_name && item.owner__last_name"><span class="owner"><i class="fa fa-user"></i>{{ item.owner__first_name }} {{ item.owner__last_name }}</span></h4>

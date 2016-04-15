@@ -128,7 +128,7 @@
                 <accordion>
                     <accordion-group>
                         <accordion-heading>
-                            About Your MapStory
+                            About Your {{ SITE_NAME }}
                         </accordion-heading>
                         <story-about-info></story-about-info>
                     </accordion-group>
@@ -192,7 +192,7 @@
         {% verbatim %}
         Congratulations! Your map has been saved. Take a look <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}/viewer">here!</a>
         <br><br>
-        If you like how it looks, go ahead <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}">here</a> to publish your MapStory to share it with the world!
+        If you like how it looks, go ahead <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}">here</a> to publish your {{ SITE_NAME }} to share it with the world!
         {% endverbatim %}
       </div>
       <div class="modal-footer">

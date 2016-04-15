@@ -1,7 +1,7 @@
 {% load story_tags %}
 
 {{ signup_code.inviter }} ({{signup_code.inviter.email}}) has
-invited you to join MapStory ( http://{{ current_site.domain }} )!
+invited you to join {{ SITE_NAME }} ( http://{{ current_site.domain }} )!
 
 Just click this <a href="{{ signup_url }}">link</a> to get started.
 
@@ -19,4 +19,4 @@ this {% ext_link 'wiki' 'license_and_copyright' 'license' %}.
 
 Please do not reply to this e-mail.  If you have questions about
 this invite, please e-mail the person who sent it or
-info@mapstory.org
+info@{{ current_site.domain }}

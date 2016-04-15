@@ -2,7 +2,7 @@
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header col-md-2">
-            <a class="navbar-brand" href="{% url "home" %}">MapStory</a>
+            <a class="navbar-brand" href="{% url "home" %}">{{ SITE_NAME }}</a>
         </div>
 
         {% if not hide_menu %}
@@ -80,7 +80,7 @@
                         <li><a href="{% url "admin:index" %}"><i class="fa fa-cog"></i> {% trans "Admin" %}</a></li>
                         {% endif %}
                         <li class="divider"></li>
-                        <li><a title="Help" rel="tooltip" href="http://help.mapstory.org"><i class="fa fa-question-circle"></i> {% trans "Help" %}</a></li>
+                        <li><a title="Help" rel="tooltip" href="http://help.{{ current_site.domain }}"><i class="fa fa-question-circle"></i> {% trans "Help" %}</a></li>
                         <li class="divider"></li>
                         <li>
                             <form action="{% url "account_logout" %}" id="logout_form" method="post">
