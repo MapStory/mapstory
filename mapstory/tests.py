@@ -23,6 +23,9 @@ from geonode.geoserver.helpers import gs_catalog
 from django import db
 from .importers import GeoServerLayerCreator
 from osgeo_importer.utils import UploadError
+from geonode.groups.models import GroupProfile
+from geonode.contrib.collections.models import Collection
+from datetime import datetime
 
 User = get_user_model()
 
@@ -349,7 +352,6 @@ class MapStoryTests(MapStoryTestMixin):
         # Regardless of email content used, ensure it personally addresses the user
         self.assertTrue(user.username in mail.outbox[1].body or user.first_name in mail.outbox[1].body)
 
-
 class Oauth2ProviderTest(TestCase):
 
     fixtures = ['test_user_data.json']
@@ -492,6 +494,84 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         for lkeyword in layer.keywords.all():
             layer_keywords_names.append(lkeyword.name)
         self.assertEqual(layer_keywords_names, new_keywords_names)
+
+    def test_organizations(self):
+        admin = AdminClient()
+        admin.login_as_admin()
+        response = admin.get(reverse('organization_create'))
+        self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
+
+        # Create new organization
+        form_data = {'social_twitter': 'notreal', 'social_facebook': 'notreal', 'title': 'Test Organization',
+        'description': 'Testing', 'email': 'test@test.com', 'access': 'public', 'date_joined': datetime.now(),
+        'city': 'Victoria', 'country': 'CAN', 'keywords': 'test', 'profile_type': 'org', 'slug': 'Test-Organization'}
+        response = admin.post(reverse('organization_create'), data=form_data)
+        # Redirect when form is submitted, therefore 302
+        self.assertEqual(response.status_code, 302)
+
+        # When the organization is created, a GroupProfile and Collection model pointing to it should be created
+        group = GroupProfile.objects.all().first()
+        collection = Collection.objects.all().first()
+        self.assertEqual(collection.group, group)
+
+        # Test editing the organization
+        form_data = {'title': 'Test Organization', 'description': 'Edit', 'keywords': 'edit', 'profile_type': 'org',
+        'access': 'public', 'slug': 'Test-Organization', 'date_joined': datetime.now()}
+        response = admin.post(reverse('organization_edit', args=[group.slug]), data=form_data)
+        # Redirect when form is submitted, therefore 302
+        self.assertEqual(response.status_code, 302)
+
+        group = GroupProfile.objects.all().first()
+        self.assertEqual(group.description, 'Edit')
+        group_keywords = []
+        for keyword in group.keywords.all():
+            group_keywords.append(keyword.name)
+        self.assertEqual(group_keywords, ['edit'])
+
+        # Make sure the detail page can be viewed by a regular user
+        c = Client()
+        response = c.get(reverse('organization_detail', args=[group.slug]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_initiatives(self):
+        admin = AdminClient()
+        admin.login_as_admin()
+        response = admin.get(reverse('initiative_create'))
+        self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
+
+        # Create new organization
+        form_data = {'social_twitter': 'notreal', 'social_facebook': 'notreal', 'title': 'Test Initiative',
+        'description': 'Testing', 'email': 'test@test.com', 'access': 'public', 'date_joined': datetime.now(),
+        'city': 'Victoria', 'country': 'CAN', 'keywords': 'test', 'profile_type': 'ini', 'slug': 'Test-Initiative'}
+        response = admin.post(reverse('initiative_create'), data=form_data)
+        # Redirect when form is submitted, therefore 302
+        self.assertEqual(response.status_code, 302)
+
+        # When the organization is created, a GroupProfile and Collection model pointing to it should be created
+        group = GroupProfile.objects.all().first()
+        collection = Collection.objects.all().first()
+        self.assertEqual(collection.group, group)
+
+        # Test editing the organization
+        form_data = {'title': 'Test Initiative', 'description': 'Edit', 'keywords': 'edit', 'profile_type': 'ini',
+        'access': 'public', 'slug': 'Test-Initiative', 'date_joined': datetime.now()}
+        response = admin.post(reverse('initiative_edit', args=[group.slug]), data=form_data)
+        # Redirect when form is submitted, therefore 302
+        self.assertEqual(response.status_code, 302)
+
+        group = GroupProfile.objects.all().first()
+        self.assertEqual(group.description, 'Edit')
+        group_keywords = []
+        for keyword in group.keywords.all():
+            group_keywords.append(keyword.name)
+        self.assertEqual(group_keywords, ['edit'])
+
+        # Make sure the detail page can be viewed by a regular user
+        c = Client()
+        response = c.get(reverse('initiative_detail', args=[group.slug]))
+        self.assertEqual(response.status_code, 200)
 
 
 class LayersCreateTest(MapStoryTestMixin):

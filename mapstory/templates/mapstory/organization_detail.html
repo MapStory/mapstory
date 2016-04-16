@@ -13,15 +13,11 @@
 <link href="{{ STATIC_URL }}mapstory/css/search.css" rel="stylesheet" />
 {% endblock %}
 
-{% block title %}{{ groupprofile.title }}{% endblock %}
-
 {% block body_outer %}
 <div ng-controller="collection_controller">
-        <!-- content -->
         <div ng-init="query({{id}})">
         </div>
         <section class="parallax">
-          <!-- TODO: This doesn't look very good -->
           <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }}); background-size: 100%; background-position: 0% 20%;">
             <div class="maskParent">
               <div class="paralaxMask"></div>
@@ -76,7 +72,6 @@
            </div>
           </div>
         </section>
-        <!-- dashboard -->
         <section class="slice" id="dashboard" style="padding-top:20px">
           <div class="container">
             <div class="row" >
@@ -91,7 +86,8 @@
                       document.getElementById("send-message-manager").style.display = "none";
                       </script>
                       {% verbatim %}
-                      <a href='/organizations/edit/{{ slug }}'><span style="color:orange">edit org page</span></a>
+                      <a href='/organizations/edit/{{ slug }}'><span style="color:orange">edit org page</span></a><br/><br/>
+                      <a href='/organizations/members/{{ slug }}'><span style="color:orange">manage members</span></a>
                       {% endverbatim %}
                       {% endifequal %}
                     {% endfor %}
@@ -166,7 +162,7 @@
                                 </div>
                             </div>
                           </li>
-                          <p ng-if="!maps">There are no mapstories made by this group.</p>
+                          <p ng-if="org_maps.length == 0">There are no mapstories made by this organization.</p>
                           {% endverbatim %}
                         </ul>
                       </div>
@@ -212,7 +208,7 @@
                                 </div>
                             </div>
                           </li>
-                          <p ng-if="!layers">There are no layers made by this group.</p>
+                          <p ng-if="org_layers.length == 0">There are no layers made by this organization.</p>
                           {% endverbatim %}
                         </ul>
                       </div>
@@ -246,7 +242,7 @@
                                   <a href="/messages/create/{{ user.id }}/"><button class="btn btn-primary btn-xs"><i class="fa fa-envelope"></i> message </button></a>
                               </div>
                           </li>
-                          <p ng-if="!storytellers">There are no members in this group.</p>
+                          <p ng-if="!storytellers">There are no members in this organization.</p>
                           {% endverbatim %}
                         </ul>
                       </div>
@@ -254,7 +250,7 @@
                   </div>
                   <div class="tab-pane" id="blogs">
                     {% if not journals %}
-                    <h2>No Journal Entries Yet :(</h2>
+                    <p>There are no journals for this organization.</p>
                     {% endif %}
                     {% for entry in journals %}
                     <div class="row blog-panel">

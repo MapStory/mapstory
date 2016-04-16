@@ -405,10 +405,12 @@
       }
       $scope.avatar = data.group.logo;
       $scope.title = data.group.title;
+      document.title = $scope.title;
       $scope.slug = data.group.slug;
       // grab only the media names
       $scope.facebook = data.group.social_facebook.split('/')[1];
       $scope.twitter = data.group.social_twitter.split('/')[1];
+      $scope.tasks = data.group.tasks;
       $scope.interests = data.group.keywords;
       $scope.summary = data.group.description;
       $scope.city = data.group.city;
