@@ -12,7 +12,7 @@ from geonode.base.models import TopicCategory
 from geonode.base.populate_test_data import create_models
 from geonode.layers.models import Layer
 from geonode.layers.populate_layers_data import create_layer_data
-from mapstory.models import Community, DiaryEntry
+from mapstory.models import DiaryEntry
 from geonode.people.models import Profile
 import json
 from geonode.geoserver.helpers import gs_catalog
@@ -228,23 +228,6 @@ class MapStoryTests(MapStoryTestMixin):
         c = Client()
         response = c.get(reverse('editor_tour'))
         self.assertEqual(response.status_code, 200)
-
-    def test_initiative_renders(self):
-        """
-        Ensure the initiative view renders.
-        """
-        c = Client()
-        response = c.get(reverse('community-detail', args=['nope']))
-        self.assertEqual(response.status_code, 404)
-        icon = SimpleUploadedFile(name='test_image.png',
-                               content=open(finders.find('mapstory/img/img_95x65.png'), 'rb').read(),
-                               content_type='image/png')
-
-        community = Community(name='testing', icon=icon)
-        community.save()
-        response = c.get(reverse('community-detail', kwargs=dict(slug='testing')))
-        self.assertEqual(response.status_code, 200)
-        self.assertHasGoogleAnalytics(response)
 
     def test_about_leaders_page_renders(self):
         """

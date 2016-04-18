@@ -336,7 +336,7 @@ def initiative_create(request):
             group.save()
             form.save_m2m()
             group.join(request.user, role="manager")
-            # Create the collection corresponding to this organization
+            # Create the collection corresponding to this initiative
             collection = Collection()
             collection.name = group.title
             collection.slug = group.slug
