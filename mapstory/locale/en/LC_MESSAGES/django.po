@@ -473,7 +473,7 @@ msgid "Close"
 msgstr ""
 
 #: templates/layers/layer_data.html:145
-msgid "Edit StoryLayer Settings"
+msgid "Update StoryLayer Settings"
 msgstr ""
 
 #: templates/layers/layer_data.html:146

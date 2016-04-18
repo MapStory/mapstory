@@ -142,7 +142,7 @@
       {% if content_moderators in user.groups.all or user == resource.owner %}
   <div class="panel panel-default" style="background-color: rgba(0,0,0,0.05)">
   <div class="panel-body">
-        <a href="#metaForm" class="btn btn-primary" data-toggle="modal">{% trans "Edit StoryLayer Settings" %}</a>
+        <a href="#metaForm" class="btn btn-primary" data-toggle="modal">{% trans "Update StoryLayer Settings" %}</a>
         <a class="btn btn-danger" href="{% url "layer_remove" resource.service_typename %}">{% trans "Delete StoryLayer" %}</a>
         <div id="metaForm" class="modal fade" tabindex="-1" role="dialog">
           <div class="modal-dialog">
