@@ -58,7 +58,7 @@ def updateloc(req, *args, **kwargs):
     return _matchloc(req, insert=True )
     
 def _matchloc(req,insert):
-    # import ipdb; ipdb.set_trace()
+#    import pdb; pdb.set_trace()
     try:
         if req.method == 'POST':
             locobj = json.loads(req.body)
@@ -163,7 +163,7 @@ def _matchloc(req,insert):
         return json_response({'code':codematch, 'name_lang':namelangmatch, 'name':namematch } )
 
     except Exception as e:
-        import ipdb; ipdb.set_trace()   
+        import pdb; pdb.set_trace()   
         return HttpResponse(e, status=400)
     
 # return empty list    
@@ -182,12 +182,20 @@ def _insertloc(locobj):
  
     
 def recordname(req, locid):
-# dumbly assume POST for now
-    status = 'hit me'
-#    pdb.set_trace()
-    try:
+    if req.method == 'POST':
         nameobj = json.loads(req.body)
         status = 'got json'
+    elif req.method == 'GET':
+        if not req.GET.get('namespace') and req.GET.get('name'):
+            nameobj = { 'name':req.GET.get('name'), 'namespace': req.GET.get('name')}
+        elif req.GET['language'] and req.GET.get('name') :
+            nameobj = { 'language':req.GET['language'], 'name': req.GET.get('name') }
+        else :
+            HttpResponse('must specify name and language or namespace', status=400)
+    else :
+        HttpResponse('method not supported', status=404) 
+#    pdb.set_trace()
+    try:
         status = _recordname(nameobj,locid)
     except Exception as e:
         return HttpResponse(e, status=400)
@@ -197,8 +205,31 @@ def recordname(req, locid):
 def _recordname(nameobj,locid) :
     loc = Location.objects.get(id=locid)
     status = 'got loc'
-    (obj, created) = LocationName.objects.get_or_create(
-    location = loc, name=nameobj['name'], language=nameobj.get('language'),defaults = nameobj )
+    # import pdb; pdb.set_trace()
+    if not nameobj.get('name') :
+        return 'invalid name object - no name element defined'
+    elif nameobj.get('namespace') :
+        # we need to check if an incompatible name has been defined already
+        names = LocationName.objects.filter( location = loc, namespace=nameobj['namespace'])
+        if names :
+           for nn in names :
+                if nn.name != unicode(nameobj['name']) :
+                    raise ValueError('conflicting names {0} {1} found for namespace {2}'.format((nameobj['name'],  nn.name ,nameobj['namespace'] )))
+    elif not nameobj.get('language') :
+        names = LocationName.objects.filter( location = loc, name=nameobj['name'] )
+        #if found then had a name already so ignore this unqualified option
+        if names :
+            return 'name exists, ignoring'
+    else :
+        names = LocationName.objects.filter( location = loc, name=nameobj['name'] , language=None)
+        if names :
+            # merge this record with existing one - refine to set language - later add temporal info
+            for nn in names :
+                nn.language = nameobj.get('language')
+                nn.save()
+                return 'updated assumed language for matching name'
+    
+    (obj, created) = LocationName.objects.get_or_create( location = loc, name=nameobj['name'], language=nameobj.get('language'),namespace=nameobj.get('namespace'), defaults = nameobj )
     status = 'location created ' + str(created)
     if not created:
         # obj.extra_field = 'some_val'

@@ -8,6 +8,7 @@ import json
 # from mapstory.models import Location, LocationName
 import psycopg2
 import psycopg2.extras
+from psycopg2.extensions import AsIs
 import requests
 
 
@@ -46,7 +47,7 @@ def harvestlayer(req, layerid):
             newnames += newnamecount
             updatednames += updatenamecount
     except Exception as e:
-        import ipdb; ipdb.set_trace() 
+        import pdb; pdb.set_trace() 
         if conn :
             conn.close()
         
@@ -67,14 +68,19 @@ def _getfeatures(conn,config):
         May want to switch to server-side cursor.
     """
     cur = conn.cursor(cursor_factory = psycopg2.extras.RealDictCursor)
-    SQL = "select * from tu_sample3" 
+    SQL = "select * from %s "  
     if config.get('filter') :
         filterclause = 'WHERE '
 
         # process clauses in an injection-safe way and append to SQL 
-    cur.execute(SQL)
+    try :
+        cur.execute(SQL, (AsIs(config.get('source')), ))
+    except Exception as e:
+        import pdb; pdb.set_trace() 
+        raise e
     for r in cur :
         yield r
+        # break
     # refactor if necessary to force connection close on failure
     
 def _updategaz(req,f,config):
@@ -114,13 +120,14 @@ def _updategaz(req,f,config):
         # import ipdb; ipdb.set_trace() 
         requests.post( req.build_absolute_uri(reverse('updateloc')),data=json.dumps(gazobj))
     except Exception as e:
-        import ipdb; ipdb.set_trace()
+        import pdb; pdb.set_trace()
         raise e
         
     return (True, 0, 0)
     
 def _getharvestconfig(sourcelayer):
     config = {
+        'source': 'tu_sample',
         'filter': None , 
         'locationTypeField' : { 'field': 'dsg', 'namespace':'http://geonames.nga.mil/def/fc/' },
         'defaultNameField' : 'full_name_' ,

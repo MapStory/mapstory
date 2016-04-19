@@ -29,7 +29,7 @@ class LocationName(models.Model):
     location = models.ForeignKey(Location)
     name = models.CharField(max_length=200)
     language = models.CharField(max_length=2,help_text='language code e.g. <em>en</em>', blank=True, null=True)
-    namespace = models.URLField(blank=True)
+    namespace = models.URLField(blank=True,null=True)
     nameValidStart = models.DateField(blank=True,null=True)
     nameValidEnd = models.DateField(blank=True,null=True)   
     def __unicode__(self):
