@@ -3,6 +3,7 @@
   shell: mkdir ~/.ssh; touch ~/.ssh/known_hosts
   tags: [config]
 
+  
 - name: remove github.com from known host
   shell: ssh-keygen -R github.com
   sudo_user: '{{ application_user }}'
@@ -71,13 +72,24 @@
   tags: [settings]
 
 - name: write secret key
-  template: src=roles/web/files/local_key.py dest={{ project_path }}/{{ project_name }}/settings/local_key.py
+  template: src=roles/web/files/local_key.py dest=/tmp/local_key.py
   sudo_user: '{{ application_user }}'
   tags: [settings]
-  notify: restart django
+#  notify: restart django
 
-- name: write project local settings
-  template: src=roles/web/files/local_settings.py.j2 dest={{ project_path }}/{{ project_name }}/settings/local_settings.py
+- name: mv project local settings across synced file system if necessary
+  command: mv /tmp/local_key.py {{ project_path }}/{{ project_name }}/settings/local_key.py
+  sudo_user: '{{ application_user }}'
+  notify: restart django
+  tags: [settings]
+ 
+- name: write project local settings - sync filesystem safe
+  template: src=roles/web/files/local_settings.py.j2 dest=/tmp/local_settings.py
+  sudo_user: '{{ application_user }}'
+  tags: [settings]
+
+- name: mv project local settings across synced file system if necessary
+  command: mv /tmp/local_settings.py {{ project_path }}/{{ project_name }}/settings/local_settings.py
   sudo_user: '{{ application_user }}'
   notify: restart django
   tags: [settings]

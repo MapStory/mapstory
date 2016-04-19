@@ -180,6 +180,11 @@
   lineinfile: dest=/etc/default/elasticsearch regexp='^ES_HEAP_SIZE' line="ES_HEAP_SIZE={{ es_heap_size }}" state=present
   tags: [elasticsearch]
 
+# this is to workaround known bugs in early versions of elasticsearch in use. 
+- name: set pid file to be reachable
+  lineinfile: dest=/etc/default/elasticsearch regexp='^PID_DIR' line="PID_DIR=/var/run" state=present
+  tags: [elasticsearch]
+  
 - name: update group gid
   group: name=elasticsearch gid={{ es_gid }} state=present
   when: es_gid

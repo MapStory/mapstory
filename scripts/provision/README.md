@@ -1,9 +1,14 @@
 
+Note - [see section on rebooting](#reboot)  - current configuration does not automatically restart after a guest or host machine reboot.
+
 Provisioning
 ============
 
 Mostly this assumes a deployment for the purposes of development to a VirtualBox ubuntu/trusty (14.04) environment.
 
+
+_break out AWS and other environments to separate files?_
+=======
 Provisioning uses a complex stack of automation tools including:
 * Vagrant
 * Ansible
@@ -16,14 +21,18 @@ the full horror should be hidden - but if something goes wrong please check here
 
 *break out AWS and other environments to separate files?*
 
+
 Prerequisites
 -------------
 
-GIT source code checkout - see [../../README.md]([../../README.md])
-Vagrant (https://www.vagrantup.com/) 
-VirtualBox 
-ansible (linux host)
-vagrant-guest_ansible (windows host)
+
+* GIT source code checkout - see [../../README.md](../../README.md)
+* Vagrant (https://www.vagrantup.com/) 
+* VirtualBox 
+* python + fabric on host machine
+* ansible (linux host)
+* vagrant-guest_ansible (windows host)
+
 
 Ansible is used to provision MapStory. It can be run from either the command machine or on the guest vm. Ansible is not supported on Windows - so the ansible guest mode is used for this - which requires installing ansible on the guest.
 **Can this be done automatically by vagrant? ** 
@@ -47,8 +56,10 @@ Alternatively if you would like the git repos to be checked out by Ansible, make
 ### Basic deployment
 
 #### Windows
+1. Ensure shell scripts (roles/web/files/*.sh) are in unix format - GIT has not DOS linefed them or they will fail. [TODO test git settings to default to this] 
 1. install VirtualBox 
 1. install Vagrant
+1. pip install fabric
 1. Open a cmd window **as administrator** - if you dont do this the shared folders wont be able to use symlinks and the very last provisioning steps will fail horribly after wasting half your day :-) 
 1. `vagrant plugin install vagrant-guest_ansible
 1. `vagrant up --no-provision` (this will take a while as it downloads ubuntu` **can this be run in a mode that doesnt provision - to get a chance to install the right version of ansible on the target machine?"
@@ -63,6 +74,7 @@ Alternatively if you would like the git repos to be checked out by Ansible, make
 1. vagrant provision
 
 nb it is possible to reload the vm with no provisioning - to reset the symlinks support issue - use vagrant up --no-provision after shutting down VM in GUI manager (this seems to avoid VBoxManage.exe: error: Context: "LockMachine(a->session, LockType_Write)"  )
+
 
 #### linux:
 1. install VirtualBox 
@@ -104,8 +116,26 @@ check that the source code is accessible at /srv/git/mapstory/ (as specified in 
 Install deploys a postgres database accessible from the local network (i.e. the guest machine) - this is accessible at the ip address reported by the vagrant setup, on the standard port (5432) using postgres/foobar
 **todo - add link to security configuration section when available**
 
+Reboot
+------
 
-  
+On rebooting the following things (currently) need to be reset
+* mounting the synced file system
+* restart elasticsearch
+
+Elasticsearch has an issue in that the installed version attempts to write to a directory /var/run/elasticsearch - but /var/run is a tempfs and this directory disappears.
+
+### windows host
+
+1) Open a CMD prompt as administrator in this  (scripts/provision) directory
+2) vagrant reload --no-provision
+3) vagrant ssh
+4) sudo /etc/init.d/elasticsearch restart
+
+
+### Linux host
+*todo*
+
 Operations
 ----------  
 Once complete, the instance should be available at the ip address (e.g. 192.168.56.151)
@@ -120,18 +150,42 @@ If shell access is needed, use:
     vagrant ssh
 
 
+### restart Django in debugging mode
+
+insert breakpoints into code with pdb as required, then
+on the host machine 
+>fab dev runserver
+
+(there are apparently ways of invoking django in debugging mode but it is not obvious how to set a breakpoint automatically when doing so)
+
+
+### update data
+
+to collect all the changes to all the component django apps and deploy them to the vm:
+
+on the host machine 
+>fab dev collect restart
+
+-> old docs (do these work?)
+To update use the following:
+=======
+
 Update 
 ------
 
 Updates to HTML and JS should propagate directly from the git controlled working copies to the running application. Browser refresh may be necessary.
 
-### specific update scenarios
-- specific update scenarios will be documented here where additional steps are necessary.
+## Updating the model for an app
+A fabric target has been provided for convenience to clear and rebuild the database tables for a specific app:
+
+__fab dev updateapp:app=gazetteer__
+
 
 Existing documentation on this:
 To update (**todo - define what content and dev Use Cases need these steps**)  use the following:
 
 (in Windows first use vagrant ssh -we will be running on guest machine)
+
 
     ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini --private-key=~/.vagrant.d/insecure_private_key -u vagrant -t update main.yml
 

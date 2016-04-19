@@ -2,7 +2,7 @@
 mapstory-geonode
 ================
 
-[Clarify: mapstory-geonode relation to mapstory meta-project - why isnt the build in the meta-project? if mapstory-geonode handles all the dependencies why do we need the meta-project at all? ]
+This is the main codebase for the MapStory application layer. It depends on some forks of other dependent projects.
 
 Repositories
 ------------
@@ -14,15 +14,13 @@ Deployment
 
 ## local developer build
 
-clone the following repositories as siblings of each other:
+*nb - you may wish to fork the repositories you will be working on and use the fork instead of the master.*
+
+clone the following repositories as siblings (i.e. with these exact names under the same local directory) of each other:
 * https://github.com/MapStory/MapLoom
 * https://github.com/GeoNode/geonode
 * https://github.com/MapStory/geoserver-geonode-ext
 * https://github.com/MapStory/mapstory-geonode
-
-**This is incompatible with the vagrantfile - which is configured to assume a clone of the *mapstory* meta-project.**
-
-**If one was to work on a module - and fork it - then how do you work with the fork in the context of the vagrant approach?**
 
 * https://github.com/ischneider/geotools (optional - only needed for extended datetime support)
 
@@ -31,6 +29,16 @@ clone the following repositories as siblings of each other:
 a manual build process is described in [manual_setup.md](manual_setup.md)
 
 an automated virtual machine provisioning process using vagrant is documented in [scripts/provision/README.md](scripts/provision/README.md)
+
+### things you should know
+Other codebases are imported that do key things - these instructions do not handle how to inspect, nodify or debug these (Todo)
+* https://github.com/MapStory/story-tools  (imported by bower 
+* https://github.com/ProminentEdge/django-osgeo-importer
+
+
+## Rebooting!
+
+Currently Mapstory does not recover gracefully from a system reboot.  See [scripts/provision/README.md](scripts/provision/README.md#reboot)
 
 ## Production deployment: 
 **Todo**

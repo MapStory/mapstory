@@ -152,7 +152,15 @@ def restart():
     sudo('service tomcat7 restart')
     sudo('supervisorctl restart mapstory-celery')
 
+def rebootrecover():
+    """
 
+    Restart whatever is broken on system reboot
+
+    """
+    sudo('/etc/init.d/elasticsearch restart')
+    sudo('/etc/init.d/elasticsearch status')
+    
 def notify(channel='#general', username='webhookbot',
            message=env.notify_message, icon=':ship:',
            end_point='https://hooks.slack.com/services/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'):
@@ -182,6 +190,47 @@ def syncdb():
         with prefix(env.activate):
             sudo('python manage.py syncdb --noinput --no-initial-data', user='mapstory')
 
+def cleandb():
+
+    """
+
+    Clear the database models for alls project, load 
+
+    """
+
+    with cd('/srv/git/mapstory/mapstory-geonode'):
+        with prefix(env.activate):
+            sudo('supervisorctl stop gunicorn-django')
+            sudo('python manage.py reset_db', user='mapstory')
+            sudo('python manage.py syncdb'.format(app), user='mapstory') 
+            sudo('supervisorctl restart gunicorn-django')
+ 
+def updateapp(app):
+
+    """
+
+    Clear the database models for a given project, load 
+
+    """
+
+    with cd('/srv/git/mapstory/mapstory-geonode'):
+        with prefix(env.activate):
+            sudo('python manage.py sqlclear {0} | psql'.format(app), user='mapstory')
+            sudo('python manage.py syncdb'.format(app), user='mapstory') 
+            sudo('supervisorctl restart gunicorn-django')
+            
+def clearappdb(app):
+
+    """
+
+    Clear the database models for a given project
+
+    """
+
+    with cd('/srv/git/mapstory/mapstory-geonode'):
+        with prefix(env.activate):
+            sudo('python manage.py sqlclear {0} | psql'.format(app), user='mapstory')            
+
 
 def tail(logfile='gunicorn-django', count=30):
 
@@ -193,17 +242,17 @@ def tail(logfile='gunicorn-django', count=30):
 
     run('tail -n {0} -f /var/log/{1}.log'.format(count, logfile))
 
-def test():
+def test(tests='mapstory.tests'):
 
     """
 
-    Synchronize the database models
+    Run a test suite (mapstory.tests by default)
 
     """
 
     with cd('/srv/git/mapstory/mapstory-geonode'):
         with prefix(env.activate):
-            sudo('python manage.py test mapstory.tests --settings=mapstory.settings.test_settings', user='mapstory')
+            sudo('python manage.py test ' + tests + ' --settings=mapstory.settings.test_settings', user='mapstory')
 
 
 

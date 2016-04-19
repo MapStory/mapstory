@@ -66,7 +66,7 @@ urlpatterns = patterns('',
     url(r'^maps/templates/load-map-dialog.html$', TemplateView.as_view(template_name='mapstory/composer/load-map-dialog.html'), name='composer-load-map'),
     url(r'^maps/templates/load-search-dialog.html$', TemplateView.as_view(template_name='mapstory/composer/load-search-dialog.html'), name='composer-load-search'),
     url(r'^maps/templates/load-new-map-dialog.html$', TemplateView.as_view(template_name='mapstory/composer/load-new-map-dialog.html'), name='composer-load-new-map'),
-    url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
+    url(r'^maps/(?P<mapid>\d+)/$', include('mapstory.apps.boxes.urls')),
 
     url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
     url(r'^story/(?P<storyid>[^/]+)$', 'mapstory.views.mapstory_view', name='mapstory_view'),
@@ -88,6 +88,9 @@ urlpatterns = patterns('',
         'geonode.maps.views.map_view', {'template': 'maps/_map_view_maploom.html'},
         name='map-view'),
 
+    # Gazetteer 
+    url(r"^gazetteer/", include('mapstory.apps.gazetteer.urls')),
+    
     # StoryTools
 
     url(r'^maps/(?P<mapid>\d+)/viewer$',
