@@ -152,7 +152,15 @@ def restart():
     sudo('service tomcat7 restart')
     sudo('supervisorctl restart mapstory-celery')
 
+def rebootrecover():
+    """
 
+    Restart whatever is broken on system reboot
+
+    """
+    sudo('/etc/init.d/elasticsearch restart')
+    sudo('/etc/init.d/elasticsearch status')
+    
 def notify(channel='#general', username='webhookbot',
            message=env.notify_message, icon=':ship:',
            end_point='https://hooks.slack.com/services/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'):
@@ -234,17 +242,17 @@ def tail(logfile='gunicorn-django', count=30):
 
     run('tail -n {0} -f /var/log/{1}.log'.format(count, logfile))
 
-def test():
+def test(tests='mapstory.tests'):
 
     """
 
-    Synchronize the database models
+    Run a test suite (mapstory.tests by default)
 
     """
 
     with cd('/srv/git/mapstory/mapstory-geonode'):
         with prefix(env.activate):
-            sudo('python manage.py test mapstory.tests --settings=mapstory.settings.test_settings', user='mapstory')
+            sudo('python manage.py test ' + tests + ' --settings=mapstory.settings.test_settings', user='mapstory')
 
 
 

@@ -13,6 +13,10 @@ Generally
 * you can insert pdb.set_trace() into code (or ipdb) - probably a way to set it up to run python with _-m pdb_ and preset a breakpoint without messing with code.
 * with migration to later versions of django .17 and above this may help: https://github.com/django-debug-toolbar/django-debug-toolbar
 
+##Running unit tests
+unit tests can be run for a specific module using
+fab dev test:tests=mapstory.apps.gazetteer.tests
+
 ##Access environment
 vagrant ssh
 sudo su mapstory

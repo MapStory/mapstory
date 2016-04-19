@@ -59,19 +59,7 @@ Alternatively if you would like the git repos to be checked out by Ansible, make
 1. Ensure shell scripts (roles/web/files/*.sh) are in unix format - GIT has not DOS linefed them or they will fail. [TODO test git settings to default to this] 
 1. install VirtualBox 
 1. install Vagrant
-<<<<<<< HEAD
 1. pip install fabric
-1. `vagrant plugin install vagrant-guest_ansible`
-1. pip install fabric (presumes you have python on host machine) 
-1. `vagrant up --no-provision` (this will take a while as it downloads ubuntu)
-1. install ansible on target machine... actually to update it from 1.5 to 2.0+ which seems to work
-  1. `vagrant ssh` 
-  1. `sudo apt-get install software-properties-common`
-  1. `sudo apt-add-repository ppa:ansible/ansible`
-  1. `sudo apt-get install ansible`
-  1. `exit` 
-1. vagrant reload --provision
-=======
 1. Open a cmd window **as administrator** - if you dont do this the shared folders wont be able to use symlinks and the very last provisioning steps will fail horribly after wasting half your day :-) 
 1. `vagrant plugin install vagrant-guest_ansible
 1. `vagrant up --no-provision` (this will take a while as it downloads ubuntu` **can this be run in a mode that doesnt provision - to get a chance to install the right version of ansible on the target machine?"
@@ -86,7 +74,7 @@ Alternatively if you would like the git repos to be checked out by Ansible, make
 1. vagrant provision
 
 nb it is possible to reload the vm with no provisioning - to reset the symlinks support issue - use vagrant up --no-provision after shutting down VM in GUI manager (this seems to avoid VBoxManage.exe: error: Context: "LockMachine(a->session, LockType_Write)"  )
->>>>>>> 0a0a9c9d951506482bf3c450ab6489dd29f0b2e3
+
 
 #### linux:
 1. install VirtualBox 
@@ -161,11 +149,15 @@ If shell access is needed, use:
 
     vagrant ssh
 
-<<<<<<< HEAD
+
 ### restart Django in debugging mode
 
+insert breakpoints into code with pdb as required, then
 on the host machine 
 >fab dev runserver
+
+(there are apparently ways of invoking django in debugging mode but it is not obvious how to set a breakpoint automatically when doing so)
+
 
 ### update data
 
@@ -183,14 +175,17 @@ Update
 
 Updates to HTML and JS should propagate directly from the git controlled working copies to the running application. Browser refresh may be necessary.
 
-### specific update scenarios
-- specific update scenarios will be documented here where additional steps are necessary.
+## Updating the model for an app
+A fabric target has been provided for convenience to clear and rebuild the database tables for a specific app:
+
+__fab dev updateapp:app=gazetteer__
+
 
 Existing documentation on this:
 To update (**todo - define what content and dev Use Cases need these steps**)  use the following:
 
 (in Windows first use vagrant ssh -we will be running on guest machine)
->>>>>>> 0a0a9c9d951506482bf3c450ab6489dd29f0b2e3
+
 
     ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory.ini --private-key=~/.vagrant.d/insecure_private_key -u vagrant -t update main.yml
 
