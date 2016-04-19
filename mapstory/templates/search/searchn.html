@@ -43,7 +43,7 @@
             {% include 'search/_pagination.html' %}
             </div>
         </div>
-        <div ng-show="api_endpoint == '/api/profiles/'">
+        <div ng-show="api_endpoint == '/api/owners/'">
             <div class="col-lg-3" style="border-right:1px solid darkgray">
                 {% include 'search/_refine_profiles.html' %}
                 {% comment %}
@@ -55,7 +55,7 @@
                 <nav class="filter">
                     <div class="input-group search-bar">
                     <input name="user_search_input" id="user_search_input" ng-model="query.q" type="text"
-                        class="form-control">
+                        class="form-control" ng-enter="search()">
                     <span class="input-group-btn">
                         <button class="btn btn-primary" type="submit" ng-click="search()" ng-class="{'disabled': !query.q}" id="user_search_btn"><i class="fa fa-search"></i> Search</button>
                     </span>

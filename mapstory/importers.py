@@ -12,6 +12,7 @@ from django.utils.text import slugify
 
 
 class GeoServerLayerCreator(Import):
+    upload_file = None
     handlers_to_ignore = ['GeoserverPublishHandler', 'GeoServerTimeHandler']
 
 

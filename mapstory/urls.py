@@ -20,19 +20,19 @@ from mapstory.views import SearchView
 from mapstory.views import LeaderListView
 from mapstory.views import proxy
 from mapstory.views import MapStorySignup
-from mapstory.views import CommunityDetail
-from mapstory.views import GroupDetail
 from mapstory.views import map_detail
 from mapstory.views import layer_detail, layer_detail_id
 from mapstory.views import layer_create, layer_append
 from mapstory.views import layer_remove, map_remove
 from mapstory.views import MapStoryConfirmEmailView
+from mapstory.notifications import notify_download, set_profile_notification
 from geonode.layers.views import layer_replace, layer_thumbnail, layer_upload
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
-
+from mapstory.views import organization_create, organization_edit, organization_detail
+from mapstory.views import initiative_create, initiative_edit, initiative_detail
 
 # -- Deprecated url routes for Geoserver authentication -- remove after GeoNode 2.1
 # -- Use /gs/acls, gs/resolve_user/, gs/download instead
@@ -103,6 +103,7 @@ urlpatterns = patterns('',
     url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
     url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
+    url(r"^storyteller/edit/(?P<username>[^/]*)/set-notification$", set_profile_notification, name="set_profile_notification"),
     url(r'^tours/editor_tour$', TemplateView.as_view(template_name='maps/editor_tour.html'), name='editor_tour'),
 
     url(r'^journal$', DiaryListView.as_view(), name='diary'),
@@ -110,9 +111,12 @@ urlpatterns = patterns('',
     url(r'^journal/write$', login_required(DiaryCreateView.as_view()), name='diary-create'),
     url(r'^journal/write/(?P<pk>\d+)$', login_required(DiaryUpdateView.as_view()), name='diary-update'),
 
-    url(r'^initiative/(?P<slug>[^/]*)$', CommunityDetail.as_view(), name='community-detail'),
-
-    url(r'^channels/(?P<slug>[^/]*)$', GroupDetail.as_view(), name='group_detail'),
+    url(r'^organizations/create/$', organization_create, name='organization_create'),
+    url(r'^organizations/(?P<slug>[^/]*)$', organization_detail, name='organization_detail'),
+    url(r'^organizations/edit/(?P<slug>[^/]*)$', organization_edit, name='organization_edit'),
+    url(r'^initiatives/create/$', initiative_create, name='initiative_create'),
+    url(r'^initiatives/(?P<slug>[^/]*)$', initiative_detail, name='initiative_detail'),
+    url(r'^initiatives/edit/(?P<slug>[^/]*)$', initiative_edit, name='initiative_edit'),
 
     url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
     url(r'^search/$', SearchView.as_view(), name='search'),
@@ -134,6 +138,7 @@ urlpatterns = patterns('',
     url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
     url(r'^layers/(?P<layername>[^/]*)/replace$', layer_replace, name="layer_replace"),
     url(r'^layers/(?P<layername>[^/]*)/thumbnail$', layer_thumbnail, name='layer_thumbnail'),
+    url(r'^layers/notify-download$', notify_download, name='notify-layer-download'),
 
 ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 

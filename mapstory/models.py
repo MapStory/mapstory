@@ -15,6 +15,10 @@ from geonode.groups.models import GroupProfile
 from geonode.maps.models import Map
 from guardian.shortcuts import get_objects_for_user
 
+from mapstory.notifications import set_mapstory_notifications
+
+set_mapstory_notifications()
+
 def _stamp(data):
     s = hashlib.sha1()
     s.update(data)
@@ -197,5 +201,13 @@ def get_group_maps(gProfile):
         maps.append(get_objects_for_user(user, 'base.view_resourcebase').instance_of(Map))
 
     return [item for sublist in maps for item in sublist]
+
+def get_group_journals(gProfile):
+    users = gProfile.group.user_set.all()
+    journals = []
+    for user in users:
+        journals.append(DiaryEntry.objects.filter(author=user))
+
+    return [item for sublist in journals for item in sublist]
 
 signals.post_save.connect(name_post_save, sender=Community)

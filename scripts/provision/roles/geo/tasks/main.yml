@@ -23,7 +23,7 @@
   tags: [setup]
 
 - name: fetch geoserver
-  shell: wget -SN {{ geoserver_download }} chdir=/tmp/{{ application_name }}
+  get_url: url={{ geoserver_download }} dest=/tmp/{{ application_name }}
   tags: [geoserver]
 
 - name: db client settings
@@ -40,7 +40,7 @@
   notify: restart geoserver
 
 - name: restart tomcat
-  shell: service tomcat7 restart
+  service: name=tomcat7 state=restarted
   tags: [geoserver]
 
 - wait_for: path=/var/lib/tomcat7/webapps/geoserver/WEB-INF/

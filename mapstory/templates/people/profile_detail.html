@@ -143,6 +143,9 @@
             <div class="sidebar-content">
                 <a href="{% url "new_map" %}">{% trans "compose a mapstory" %}</a>
             </div>
+            <div>
+                <a href="#" class="sidebar-content" data-toggle="modal" data-target="#notifications">notifications settings</a>
+            </div>
             {% if_has_tag if_relationship %}
             <div class="sidebar-content">
                 {% include "relationships/_manage_connections.html" %}
@@ -192,10 +195,6 @@
             <!-- tags and interests -->
             {% if profile.keyword_list %}
                 <div class="sidebar-header"><h3>tags & interests </h3></div>
-                <script type="text/javascript">
-                    // Pass the keyword list from the django template into the javascript
-                    var keyword_list = "{{profile.keyword_list|escapejs}}";
-                </script>
                 <div style="padding-top: 5px;">
                     <input type="text" class="form-control" id="tokenfield-interests"/>
                 </div>
@@ -420,6 +419,31 @@ WHAT IS THIS PART?!-->
 
         {% endcomment %}
 </div>
+<div id="notifications" class="modal fade col-md-8">
+    <div class="modal-content">
+      <h2 style="display:inline">Notifications settings</h2>
+      <a class="btn pull-right" data-dismiss="modal">Close</a>
+      <table class="table table-striped notice_settings">
+        <tr>
+            <th>{% trans "Notification Type" %}</th>
+            <th>{% trans "Activate" %}</th>
+        </tr>
+        {% for settings in notice_settings %}
+            <tr class="notice-row">
+                <td>
+                  <strong>{{ settings.notice_type.display }}</strong><br/>
+                  <span class="notice_type_description">
+                      {{ settings.notice_type.description }}
+                  </span>
+                </td>
+                <td>
+                  <input class="notice_setting" type="checkbox" name="{{ settings.notice_type.label }}" {% if settings.send %}checked="yes"{% endif %} />                  
+                </td>
+            </tr>
+        {% endfor %}
+      </table> 
+    </div>
+  </div>
 </div>
 
 
@@ -433,6 +457,29 @@ WHAT IS THIS PART?!-->
   {% endif %}
 
 {% include 'favorite/_favorite_list_js.html' %}
+<script type="text/javascript">
+    PROFILE_USERNAME ="{{ profile.username }}";
+    // Pass the keyword list from the django template into the javascript
+    keyword_list = "{{profile.keyword_list|escapejs}}";
+</script>
+<script type="text/javascript">
+  $('.notice_setting').change(function(event){
+    var element = event.target;
+    var send = element.checked;
+    var notice_type = element.name;
+    $.post(
+      "{% url "set_profile_notification" user.get_username %}",
+      {
+        send: send,
+        notice_type: notice_type,
+        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]')[0].value
+      }
+    ).fail(function(data) {
+      alert('There was an error saving your setting');
+    });
+  });
+</script>
+
 {% endblock %}
 
 

@@ -5,8 +5,13 @@ MEDIA_ROOT = '{{media_root}}'
 DATABASE_PASSWORD = '{{ db_password }}'
 DATABASE_HOST = '{{ db_host }}'
 OGC_SERVER['default']['PASSWORD'] = '{{ geoserver_password }}'
-OGC_SERVER['default']['PUBLIC_LOCATION'] = 'http://{{ nginx_server_name }}/geoserver/'
+OGC_SERVER['default']['PUBLIC_LOCATION'] = 'http://{{ geoserver_host }}/geoserver/'
 LOCAL_CONTENT = False
+
+{% if site_id is defined %}
+SITE_ID={{ site_id }}
+{% endif %}
+SITEURL='{{ site_url }}'
 
 DEBUG = {{ django_debug_enabled }}
 {% if not django_debug_enabled|bool %}
@@ -37,7 +42,6 @@ MAPSTORY_APPS = (
  'mapstory.apps.gazetteer', 
 )
 
-
 # Social Authentication Settings
 
 ENABLE_SOCIAL_LOGIN = {{ enable_social_login }}
@@ -65,7 +69,7 @@ DEFAULT_FROM_EMAIL = '{{ default_from_email }}'
 GOOGLE_ANALYTICS = '{{ google_analytics }}'
 
 # Email Settings
-
+THEME_ACCOUNT_CONTACT_EMAIL = '{{ email_host_user }}'
 EMAIL_HOST = '{{ email_host }}'
 EMAIL_HOST_USER = '{{ email_host_user }}'
 EMAIL_HOST_PASSWORD = '{{ email_host_password }}'
@@ -84,11 +88,16 @@ SLACK_USERNAME = '{{ slack_username }}'
 
 # AWS S3 Settings
 
-USE_AWS_S3 = {{ use_aws_s3 }}
+USE_AWS_S3_STATIC = {{ use_aws_s3_static }}
+USE_AWS_S3_MEDIA = {{ use_aws_s3_media }}
+
+# Required to run Sync Media to S3
+AWS_BUCKET_NAME = '{{ aws_storage_bucket_name }}'
 
 AWS_STORAGE_BUCKET_NAME = '{{ aws_storage_bucket_name }}'
 AWS_ACCESS_KEY_ID = '{{ aws_access_key_id }}'
 AWS_SECRET_ACCESS_KEY = '{{ aws_secret_access_key }}'
+AWS_S3_BUCKET_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
 INSTALLED_APPS += MAPSTORY_APPS
 

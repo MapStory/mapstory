@@ -4,7 +4,7 @@ setup_git_repo: no
 # Database settings.
 db_user: "{{ application_name }}"
 db_name: "{{ application_name }}"
-db_password: foobar
+db_password: $secure_pwd
 db_host: localhost
 
 mapstory_dbs:
@@ -101,7 +101,7 @@ google_oauth2_client_secret:
 
 registration_open: True
 account_open_signup: True
-account_email_confirmation_required: False
+account_email_confirmation_required:
 account_activation_days: 0
 default_from_email:
 
@@ -114,8 +114,8 @@ google_analytics:
 email_host:
 email_host_user:
 email_host_password:
-email_port: 0
-email_use_tls: None
+email_port:
+email_use_tls:
 email_backend: 'mailer.backend.DbBackend'
 
 # Slack Settings

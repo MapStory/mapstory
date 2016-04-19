@@ -1,6 +1,7 @@
 import datetime
 from account.views import SignupView, ConfirmEmailView
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -77,10 +78,19 @@ from osgeo_importer.forms import UploadFileForm
 from celery import group
 from osgeo_importer.utils import UploadError
 from lxml import etree
+from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
+
+from .notifications import PROFILE_NOTICE_SETTINGS
+
 import json
 import requests
+from geonode.groups.models import GroupProfile
+from geonode.groups.forms import GroupForm
+from geonode.groups.forms import GroupUpdateForm
+from geonode.contrib.collections.models import Collection
 
-import pdb
+from mapstory.models import get_group_journals
+
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -192,6 +202,10 @@ class ProfileDetail(DetailView):
         ctx['action_list'] = actor_stream(ctx['profile'])
         # need to render the form
         ctx['form'] = UploadFileForm()
+        notice_settings = []
+        for notice in NoticeType.objects.filter(label__in=PROFILE_NOTICE_SETTINGS):
+            notice_settings.append(NoticeSetting.for_user(self.object, notice, NOTICE_MEDIA[0][0]))
+        ctx['notice_settings'] = notice_settings
 
         return ctx
 
@@ -218,13 +232,14 @@ def profile_edit(request, username=None):
                             request.user.username]))
         else:
             form = EditProfileForm(instance=profile)
-
+          
         return render(request, "people/profile_edit.html", {
-            "form": form,
+            "form": form
         })
     else:
         return HttpResponseForbidden(
             'You are not allowed to edit other users profile')
+
 
 @login_required
 def profile_delete(request, username=None):
@@ -254,32 +269,149 @@ def profile_delete(request, username=None):
         return HttpResponseForbidden(
             'You are not allowed to delete other users profile')
 
-class CommunityDetail(DetailView):
-    # TODO: We need to differentiate between viewing as an outsider or logged in
-    template_name = 'mapstory/initiative_visit.html'
-    slug_field = 'slug'
-    model = Community
+def organization_detail(request, slug):
+    group = GroupProfile.objects.get(slug=slug)
 
-    def get_context_data(self, **kwargs):
-        ctx = super(CommunityDetail, self).get_context_data(**kwargs)
-        ctx['images'] = get_images()
+    if not group.profile_type == 'org':
+        return HttpResponse(status=404)
 
-        return ctx
+    return render_to_response("mapstory/organization_detail.html", {
+        "id": group.id,
+        "images": get_images(),
+        "journals": get_group_journals(group),
+        "managers": group.get_managers().all()
+        }, context_instance=RequestContext(request))
 
-class GroupDetail(DetailView):
-    # TODO: We need to differentiate between viewing as an outsider or logged in
-    template_name = 'groups/organization_visit.html'
-    slug_field = 'slug'
-    model = GroupProfile
+def initiative_detail(request, slug):
+    group = GroupProfile.objects.get(slug=slug)
 
-    def get_context_data(self, **kwargs):
-        ctx = super(GroupDetail, self).get_context_data(**kwargs)
-        ctx['images'] = get_images()
-        ctx['layers'] = get_group_layers(ctx['groupprofile'])
-        ctx['maps'] = get_group_maps(ctx['groupprofile'])
-        
-        return ctx
+    if not group.profile_type == 'ini':
+        return HttpResponse(status=404)
 
+    return render_to_response("mapstory/initiative_detail.html", {
+        "id": group.id,
+        "images": get_images(),
+        "journals": get_group_journals(group),
+        "managers": group.get_managers().all()
+        }, context_instance=RequestContext(request))
+
+@login_required
+def organization_create(request):
+    if request.method == "POST":
+        form = GroupForm(request.POST, request.FILES)
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.profile_type = 'org'
+            group.save()
+            form.save_m2m()
+            group.join(request.user, role="manager")
+            # Create the collection corresponding to this organization
+            collection = Collection()
+            collection.name = group.title
+            collection.slug = group.slug
+            collection.group = group
+            collection.save()
+            return HttpResponseRedirect(
+                reverse(
+                    "organization_detail",
+                    args=[
+                        group.slug]))
+    else:
+        form = GroupForm(initial={'profile_type': 'org'})
+
+    if request.user.is_superuser:
+        return render_to_response("groups/group_create.html", {
+            "form": form,
+            }, context_instance=RequestContext(request))
+    else:
+        return HttpResponse(status=403)
+
+@login_required
+def initiative_create(request):
+    if request.method == "POST":
+        form = GroupForm(request.POST, request.FILES)
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.profile_type = 'ini'
+            group.save()
+            form.save_m2m()
+            group.join(request.user, role="manager")
+            # Create the collection corresponding to this initiative
+            collection = Collection()
+            collection.name = group.title
+            collection.slug = group.slug
+            collection.group = group
+            collection.save()
+            return HttpResponseRedirect(
+                reverse(
+                    "initiative_detail",
+                    args=[
+                        group.slug]))
+    else:
+        form = GroupForm(initial={'profile_type': 'ini'})
+
+    if request.user.is_superuser:
+        return render_to_response("groups/group_create.html", {
+            "form": form,
+            }, context_instance=RequestContext(request))
+    else:
+        return HttpResponse(status=403)
+
+@login_required
+def organization_edit(request, slug):
+    group = GroupProfile.objects.get(slug=slug)
+    if not group.profile_type == 'org':
+        return HttpResponse(status=404)
+    # Can use this function to toggle manager view
+    if not group.user_is_role(request.user, role="manager"):
+        return HttpResponseForbidden()
+
+    if request.method == "POST":
+        form = GroupUpdateForm(request.POST, request.FILES, instance=group)
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.save()
+            form.save_m2m()
+            return HttpResponseRedirect(
+                reverse(
+                    "organization_detail",
+                    args=[
+                        group.slug]))
+    else:
+        form = GroupForm(instance=group)
+
+    return render_to_response("groups/group_update.html", {
+        "form": form,
+        "group": group,
+    }, context_instance=RequestContext(request))
+
+@login_required
+def initiative_edit(request, slug):
+    group = GroupProfile.objects.get(slug=slug)
+    if not group.profile_type == 'ini':
+        return HttpResponse(status=404)
+    # Can use this function to toggle manager view
+    if not group.user_is_role(request.user, role="manager"):
+        return HttpResponseForbidden()
+
+    if request.method == "POST":
+        form = GroupUpdateForm(request.POST, request.FILES, instance=group)
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.save()
+            form.save_m2m()
+            return HttpResponseRedirect(
+                reverse(
+                    "organization_detail",
+                    args=[
+                        group.slug]))
+    else:
+        form = GroupForm(instance=group)
+
+    return render_to_response("groups/group_update.html", {
+        "form": form,
+        "group": group,
+    }, context_instance=RequestContext(request))
 
 class LeaderListView(ListView):
     context_object_name = 'leaders'
@@ -535,7 +667,6 @@ def new_map(request, template):
 @login_required
 def layer_create(request, template='upload/layer_create.html'):
     if request.method == 'POST':
-        pdb.set_trace()
         errors = False
         error_messages = []
         if request.is_ajax():
