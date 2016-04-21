@@ -104,9 +104,8 @@
             });
             self.storyMap.getMap().addOverlay(popup);
 
-            // display popup on click
-            self.storyMap.getMap().on('click', function(evt) {
-                var feature = self.storyMap.getMap().forEachFeatureAtPixel(evt.pixel,
+            var displayPinInfo = function(pixel){
+                var feature = self.storyMap.getMap().forEachFeatureAtPixel(pixel,
                       function(feature, layer) {
                           return feature;
                       });
@@ -125,6 +124,19 @@
                 } else {
                     $(element).popover('destroy');
                 }
+            };
+
+            // display popup on hover
+            self.storyMap.getMap().on('pointermove', function(evt) {
+                if (evt.dragging){
+                    return;
+                }
+                displayPinInfo(evt.pixel);
+            });
+
+            // display popup on click
+            self.storyMap.getMap().on('click', function(evt) {
+                displayPinInfo(evt.pixel);
             });
         };
         $rootScope.$on('$locationChangeSuccess', function() {
