@@ -465,7 +465,7 @@
 })
 
 .controller('detail_page_controller', function($compile, $scope, $http){
-  function toggle_visibility(id) {
+  $scope.toggle_visibility = function(id) {
      var e = document.getElementById(id);
      if(e.style.display == 'block')
         e.style.display = 'none';

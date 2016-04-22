@@ -27,7 +27,6 @@
               <h2 style="font-size:1.5em">{{ resource.owner.first_name }} {{ resource.owner.last_name }}</h2>
               <hr style="margin:5px">
               <h2 style="font-size:1.2em;color:gainsboro">
-                <!-- TODO: Add Mapstory messaging functionality, has this been implemented? -->
                 <a href="{% url "message_create" resource.owner.pk %}"><span style="color:orange">message</span></a> |
                 {% for social_link in social_links %}
                 {% ifequal social_link "twitter" %}
@@ -37,8 +36,8 @@
                   <a href="{{ social_link.url }}"><span style="color:dodgerblue">facebook</span></a> |
                 {% endifequal %}
                 {% endfor %}
-                {% if resource.layers %}
-                <span style="color:green; hover: cursor;" onclick="toggle_visibility('share');">share</span> | <span style="color:#00CC99; hover: cursor;" onclick="toggle_visibility('embed');">embed</span>
+                {% if resource.chapters %}
+                <span style="color:green; cursor: pointer;" ng-click="toggle_visibility('share');">share</span> | <span style="color:#00CC99; cursor: pointer;" ng-click="toggle_visibility('embed');">embed</span>
                 {% endif %}
               </h2>
           </div>
@@ -46,7 +45,7 @@
         <div class="row">
           <div class="col-sm-12">
             <!-- share -->
-            <div style="display:none;" id="share">Share link: <textarea style="color:#00CC99; width:100%;">http://{{ request.get_host }}{% url 'geonode.maps.views.map_detail' resource.id %}</textarea></div>
+            <div style="display:none;" id="share">Share link: <textarea style="color:#00CC99; width:100%;">http://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}</textarea></div>
             <!-- embed -->
             <div style="display:none;" id="embed">Embed link: <textarea style="color:#00CC99; width:100%;"><iframe style="border: none;" height="400" width="600" src="http://{{ request.get_host }}{% url 'geonode.maps.views.map_embed' resource.id %}"></iframe></textarea></div>
           </div>
