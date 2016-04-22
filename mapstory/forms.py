@@ -7,6 +7,8 @@ from geonode.layers.models import Layer
 from geonode.base.forms import Profile
 from geonode.base.models import ResourceBase
 import taggit
+from geonode.groups.models import GroupProfile
+from geonode.groups.forms import GroupForm, GroupUpdateForm
 
 class MapStorySignupForm(SignupForm):
     """
@@ -145,3 +147,17 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['first_name', 'last_name', 'keywords', 'city', 'country', 'profile', 'education', 'expertise', 'social_twitter', 'social_facebook', 'social_linkedin', 'social_github', 'Volunteer_Technical_Community']
+
+# Organization forms
+class OrganizationForm(GroupForm):
+
+    class Meta:
+        model = GroupProfile
+        exclude = ['group', 'profile_type', 'tasks']
+
+
+class OrganizationUpdateForm(GroupUpdateForm):
+
+    class Meta:
+        model = GroupProfile
+        exclude = ['group', 'profile_type', 'tasks']

@@ -84,12 +84,13 @@ from .notifications import PROFILE_NOTICE_SETTINGS
 
 import json
 import requests
-from geonode.groups.models import GroupProfile
-from geonode.groups.forms import GroupForm
-from geonode.groups.forms import GroupUpdateForm
+from geonode.groups.models import GroupProfile, GroupMember
+from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
 from geonode.contrib.collections.models import Collection
 
 from mapstory.models import get_group_journals
+from django.contrib.auth import get_user_model
+from mapstory.forms import OrganizationForm, OrganizationUpdateForm
 
 
 class IndexView(TemplateView):
@@ -269,6 +270,7 @@ def profile_delete(request, username=None):
         return HttpResponseForbidden(
             'You are not allowed to delete other users profile')
 
+# TODO: Refactor this code to use content mixins and class based views so it avoids repetition
 def organization_detail(request, slug):
     group = GroupProfile.objects.get(slug=slug)
 
@@ -298,7 +300,7 @@ def initiative_detail(request, slug):
 @login_required
 def organization_create(request):
     if request.method == "POST":
-        form = GroupForm(request.POST, request.FILES)
+        form = OrganizationForm(request.POST, request.FILES)
         if form.is_valid():
             group = form.save(commit=False)
             group.profile_type = 'org'
@@ -317,7 +319,7 @@ def organization_create(request):
                     args=[
                         group.slug]))
     else:
-        form = GroupForm(initial={'profile_type': 'org'})
+        form = OrganizationForm(initial={'profile_type': 'org'})
 
     if request.user.is_superuser:
         return render_to_response("groups/group_create.html", {
@@ -367,7 +369,7 @@ def organization_edit(request, slug):
         return HttpResponseForbidden()
 
     if request.method == "POST":
-        form = GroupUpdateForm(request.POST, request.FILES, instance=group)
+        form = OrganizationUpdateForm(request.POST, request.FILES, instance=group)
         if form.is_valid():
             group = form.save(commit=False)
             group.save()
@@ -378,7 +380,7 @@ def organization_edit(request, slug):
                     args=[
                         group.slug]))
     else:
-        form = GroupForm(instance=group)
+        form = OrganizationForm(instance=group)
 
     return render_to_response("groups/group_update.html", {
         "form": form,
@@ -412,6 +414,152 @@ def initiative_edit(request, slug):
         "form": form,
         "group": group,
     }, context_instance=RequestContext(request))
+
+def organization_members(request, slug):
+    group = get_object_or_404(GroupProfile, slug=slug)
+    ctx = {}
+
+    if not group.can_view(request.user):
+        raise Http404()
+
+    if group.access in [
+            "public-invite",
+            "private"] and group.user_is_role(
+            request.user,
+            "manager"):
+        ctx["invite_form"] = GroupInviteForm()
+
+    if group.user_is_role(request.user, "manager"):
+        ctx["member_form"] = GroupMemberForm()
+
+    ctx.update({
+        "group": group,
+        "members": group.member_queryset(),
+        "is_member": group.user_is_member(request.user),
+        "is_manager": group.user_is_role(request.user, "manager"),
+    })
+    ctx = RequestContext(request, ctx)
+    return render_to_response("mapstory/organization_members.html", ctx)
+
+@require_POST
+@login_required
+def organization_members_add(request, slug):
+    group = get_object_or_404(GroupProfile, slug=slug)
+
+    if not group.user_is_role(request.user, role="manager"):
+        return HttpResponseForbidden()
+
+    form = GroupMemberForm(request.POST)
+
+    if form.is_valid():
+        role = form.cleaned_data["role"]
+        for user in form.cleaned_data["user_identifiers"]:
+            group.join(user, role=role)
+
+    return redirect("organization_detail", slug=group.slug)
+
+@login_required
+def organization_member_remove(request, slug, username):
+    group = get_object_or_404(GroupProfile, slug=slug)
+    user = get_object_or_404(get_user_model(), username=username)
+
+    if not group.user_is_role(request.user, role="manager"):
+        return HttpResponseForbidden()
+    else:
+        GroupMember.objects.get(group=group, user=user).delete()
+        user.groups.remove(group.group)
+        return redirect("organization_detail", slug=group.slug)
+
+@require_POST
+def organization_invite(request, slug):
+    group = get_object_or_404(GroupProfile, slug=slug)
+
+    if not group.can_invite(request.user):
+        raise Http404()
+
+    form = GroupInviteForm(request.POST)
+
+    if form.is_valid():
+        for user in form.cleaned_data["invite_user_identifiers"].split("\n"):
+            group.invite(
+                user,
+                request.user,
+                role=form.cleaned_data["invite_role"])
+
+    return redirect("organization_members", slug=group.slug)
+
+def initiative_members(request, slug):
+    group = get_object_or_404(GroupProfile, slug=slug)
+    ctx = {}
+
+    if not group.can_view(request.user):
+        raise Http404()
+
+    if group.access in [
+            "public-invite",
+            "private"] and group.user_is_role(
+            request.user,
+            "manager"):
+        ctx["invite_form"] = GroupInviteForm()
+
+    if group.user_is_role(request.user, "manager"):
+        ctx["member_form"] = GroupMemberForm()
+
+    ctx.update({
+        "group": group,
+        "members": group.member_queryset(),
+        "is_member": group.user_is_member(request.user),
+        "is_manager": group.user_is_role(request.user, "manager"),
+    })
+    ctx = RequestContext(request, ctx)
+    return render_to_response("mapstory/initiative_members.html", ctx)
+
+@require_POST
+@login_required
+def initiative_members_add(request, slug):
+    group = get_object_or_404(GroupProfile, slug=slug)
+
+    if not group.user_is_role(request.user, role="manager"):
+        return HttpResponseForbidden()
+
+    form = GroupMemberForm(request.POST)
+
+    if form.is_valid():
+        role = form.cleaned_data["role"]
+        for user in form.cleaned_data["user_identifiers"]:
+            group.join(user, role=role)
+
+    return redirect("initiative_detail", slug=group.slug)
+
+@login_required
+def initiative_member_remove(request, slug, username):
+    group = get_object_or_404(GroupProfile, slug=slug)
+    user = get_object_or_404(get_user_model(), username=username)
+
+    if not group.user_is_role(request.user, role="manager"):
+        return HttpResponseForbidden()
+    else:
+        GroupMember.objects.get(group=group, user=user).delete()
+        user.groups.remove(group.group)
+        return redirect("initiative_detail", slug=group.slug)
+
+@require_POST
+def initiative_invite(request, slug):
+    group = get_object_or_404(GroupProfile, slug=slug)
+
+    if not group.can_invite(request.user):
+        raise Http404()
+
+    form = GroupInviteForm(request.POST)
+
+    if form.is_valid():
+        for user in form.cleaned_data["invite_user_identifiers"].split("\n"):
+            group.invite(
+                user,
+                request.user,
+                role=form.cleaned_data["invite_role"])
+
+    return redirect("initiative_members", slug=group.slug)
 
 class LeaderListView(ListView):
     context_object_name = 'leaders'
