@@ -1116,7 +1116,6 @@ def _resolve_map(request, id, permission='base.change_resourcebase',
     return resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
 
-# TODO: Update this and everything in it for the MapStory object
 def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     '''
     The view that show details of each map
@@ -1138,7 +1137,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     chapters = map_obj.chapters
     layers = []
     for chapter in chapters:
-        layers = layers + list(MapLayer.objects.filter(map=chapter.id))
+        layers = layers + list(chapter.local_layers)
 
     print layers
     if request.method == "POST":
@@ -1175,67 +1174,6 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         'documents': get_related_documents(map_obj),
         'keywords_form': keywords_form,
         'published_form': published_form,
-    }
-
-    if settings.SOCIAL_ORIGINS:
-        context_dict["social_links"] = build_social_links(request, map_obj)
-
-    return render_to_response(template, RequestContext(request, context_dict))
-
-def map_detail2(request, mapid, snapshot=None, template='maps/map_detail.html'):
-    '''
-    The view that show details of each map
-    '''
-
-    map_obj = _resolve_map(request, mapid, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
-
-    # Update count for popularity ranking,
-    # but do not includes admins or resource owners
-    if request.user != map_obj.owner and not request.user.is_superuser:
-        Map.objects.filter(id=map_obj.id).update(popular_count=F('popular_count') + 1)
-
-    if snapshot is None:
-        config = map_obj.viewer_json(request.user)
-    else:
-        config = snapshot_config(snapshot, map_obj, request.user)
-
-    config = json.dumps(config)
-    layers = MapLayer.objects.filter(map=map_obj.id)
-
-    if request.method == "POST":
-        if 'keywords' in request.POST:
-            keywords_form = KeywordsForm(request.POST, instance=map_obj)
-            if keywords_form.is_valid():
-                keywords_form.save()
-                new_keywords = keywords_form.cleaned_data['keywords']
-                map_obj.keywords.set(*new_keywords)
-                map_obj.save()
-            published_form = PublishStatusForm(instance=map_obj)
-        elif 'published_submit_btn' in request.POST:
-            published_form = PublishStatusForm(request.POST, instance=map_obj)
-            if published_form.is_valid():
-                published_form.save()
-                map_obj.is_published = published_form.cleaned_data['is_published']
-                map_obj.save()
-            keywords_form = KeywordsForm(instance=map_obj)
-        elif 'add_keyword' in request.POST:
-            map_obj.keywords.add(request.POST['add_keyword'])
-            map_obj.save()
-        elif 'remove_keyword' in request.POST:
-            map_obj.keywords.remove(request.POST['remove_keyword'])
-            map_obj.save()
-    else:
-        keywords_form = KeywordsForm(instance=map_obj)
-        published_form = PublishStatusForm(instance=map_obj)
-
-    context_dict = {
-        'config': config,
-        'resource': map_obj,
-        'layers': layers,
-        'permissions_json': _perms_info_json(map_obj),
-        "documents": get_related_documents(map_obj),
-        "keywords_form": keywords_form,
-        "published_form": published_form,
     }
 
     if settings.SOCIAL_ORIGINS:
