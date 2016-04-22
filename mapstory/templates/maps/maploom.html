@@ -18,8 +18,10 @@
 <script type="text/javascript">
 {% get_current_language as language %}
 
-$(window).load(function(){
-  $('#welcomeTour').modal('show');
+$(window).load(function () {
+    if (window.location.href.indexOf('edit') < 0) {
+        $('#welcomeTour').modal('show');
+    }
 });
  config =  {
        authStatus: {% if user.is_authenticated %} 200{% else %} 401{% endif %},
