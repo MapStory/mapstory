@@ -33,7 +33,7 @@
                 <!-- goes to composer -->
                 <a href="/maps/new?layer={{ item.detail_url.substring(8) | decodeURIComponent }}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> use</button></a>
                 <!-- goes to layer edit -->
-                <a href='/maps/edit?layer={{ item.detail_url.substring(8) | decodeURIComponent }}'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
+                <a href='{% url "map-edit" %}?layer={{resource.service_typename}}&mode=edit'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
                 <!-- TODO: Hook in favorites functionality -->
                 <!-- <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button> -->
             </h4>
