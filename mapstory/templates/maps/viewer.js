@@ -88,7 +88,7 @@
                 var annotationsLoad = $http.get(annotationsURL);
                 $q.all([annotationsLoad]).then(function(values) {
                     var pins_geojson = values[0].data;
-                    StoryPinLayerManager.loadFromGeoJSON(pins_geojson, self.storyMap.getMap().getView().getProjection());
+                    StoryPinLayerManager.loadFromGeoJSON(pins_geojson, self.storyMap.getMap().getView().getProjection(), true);
                 });
             } else {
                 stStoryMapBaseBuilder.defaultMap(this.storyMap);
