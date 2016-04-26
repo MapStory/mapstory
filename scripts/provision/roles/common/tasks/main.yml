@@ -1,5 +1,14 @@
 ---
 
+- name: dev locale
+  action: command sudo update-locale LC_ALL=en_US.UTF-8
+
+- name: set default locale
+  sudo: yes
+  lineinfile: dest=/etc/default/locale
+    regexp="LC_ALL"
+    line="LC_ALL=\"en_US.UTF-8\""
+
 - name: Ensure bash, OpenSSl, and libssl are the latest versions
   apt: name={{ item }} update_cache={{ update_apt_cache }} state=latest
   with_items:

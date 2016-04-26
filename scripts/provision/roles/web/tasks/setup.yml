@@ -275,6 +275,10 @@
 - name: download gdal
   git: repo=https://github.com/OSGeo/gdal.git dest=/srv/gdal update=no
 
+- name: check if gdal has been built before
+  stat: path=/srv/gdal/gdal/apps/ogrinfo
+  register: ogrinfo
+
 - name: build gdal
   shell: '{{item}}'
   args:
@@ -285,4 +289,4 @@
     - make install
     - ldconfig
   tags: packages
-
+  when: ogrinfo.stat.exists == False
