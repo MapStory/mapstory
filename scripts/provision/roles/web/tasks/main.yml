@@ -3,5 +3,5 @@
 - include: setup.yml
   tags: web
 
-- include: mapstory.yml
+- include: mapstory2.yml
   tags: web

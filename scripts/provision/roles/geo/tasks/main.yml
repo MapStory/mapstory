@@ -23,16 +23,11 @@
   tags: [setup]
 
 - name: fetch geoserver
-  get_url: url={{ geoserver_download }} dest=/tmp/{{ application_name }}
+  get_url: url={{ geoserver_download }} dest=/var/lib/tomcat7/webapps/geoserver.war
   tags: [geoserver]
 
 - name: db client settings
   template: src=roles/geo/files/geoserver.xml dest=/etc/tomcat7/Catalina/localhost/geoserver.xml mode=0700 owner=tomcat7 group=tomcat7
-  tags: [geoserver]
-
-- name: copy geoserver.war to tomcat webapps
-  shell: cp /tmp/{{ application_name }}/geoserver.war /var/lib/tomcat7/webapps/geoserver.war
-  notify: restart geoserver
   tags: [geoserver]
 
 - name: update geoserver perms
