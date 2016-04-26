@@ -72,7 +72,7 @@
   tags: [geoserver, geogig]
 
 - name: unpack geoserver datadir
-  shell: "[ ! -e {{ geoserver_data }} ] && unzip /tmp/{{ application_name }}/geoserver.war data/* -d /var/lib/geoserver/ || exit 0"
+  shell: "[ ! -e {{ geoserver_data }} ] && unzip /var/lib/tomcat7/webapps/geoserver.war data/* -d /var/lib/geoserver/ || exit 0"
   tags: [geoserver]
 
 - name: copy geoserver config.xml
