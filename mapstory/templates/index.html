@@ -64,8 +64,13 @@
                     </h3>
                 </div>
                 <div class="col-sm-3">
+
                     <h3>
-                        <a ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">
+                        {% if user.is_authenticated %}
+                            <a href="#" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">
+                        {% else %}
+                            <a href="#" data-toggle="modal" data-target="#loginModal">
+                        {% endif %}
                             {% trans "Upload StoryLayers" %}
                         </a>
                     </h3>
@@ -213,7 +218,7 @@
     <section class="parallax">
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax2' }});"></div>
     </section>
-                
+
     <section class="slice" id="getskills">
         <div class="container">
                 <h1>{% trans "Get Skills" %}</h1>
