@@ -223,7 +223,8 @@
             $scope.text_query = $location.search()['q'].replace(/\W+/g," ");
           }
           if ($location.search().hasOwnProperty('type__in')){
-            $scope.type__in = $location.search()['type__in'].replace(/\W+/g," ");
+            // TODO: Take into account multiple values for 'type__in'
+            //$scope.type__in = $location.search()['type__in'].replace(/\W+/g," ");
           }
         } else {
           if ($location.search().hasOwnProperty('title__icontains')){
@@ -740,7 +741,7 @@
       $('#tokenfield-region').tokenfield('setTokens', []);
       $('#tokenfield-keyword').tokenfield('setTokens', []);
       $scope.api_endpoint = '/api/owners/';
-      $scope.query = {};
+      $scope.query = {limit: 100, offset: 0};
     };
     // Make the user one active, content inactive
     $scope.toggle_user = function() {
@@ -749,7 +750,7 @@
       // clear the user search
       $('#tokenfield-interest').tokenfield('setTokens', []);
       $scope.api_endpoint = '/api/base/search/';
-      $scope.query = {is_published: true};
+      $scope.query = {is_published: 'true', limit: 100, offset: 0};
     };
 
     // Configure new autocomplete
@@ -1046,9 +1047,9 @@
         if (item == 'type__in') {
           if ($location.search()[item] == 'user') {
             $scope.toggle_content();
-          } else {
-            $scope.toggle_user();
           }
+        } else {
+          $scope.toggle_user();
         }
         $scope.query[item] = $location.search()[item];
         // if we have a "who" search, populate that
