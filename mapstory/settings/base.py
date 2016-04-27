@@ -288,6 +288,26 @@ MAP_BASELAYERS = [
             'ptype': 'gxp_mapboxsource',
             'hidden': True
         },
+        'visibility': False,
+        'name': 'control-room',
+        'title': 'MapBoxControlRoom',
+        'group': 'background'
+    },
+    {
+        'source': {
+            'ptype': 'gxp_mapboxsource',
+            'hidden': True
+        },
+        'visibility': False,
+        'name': 'world-dark',
+        'title': 'World Dark',
+        'group': 'background'
+    },
+    {
+        'source': {
+            'ptype': 'gxp_mapboxsource',
+            'hidden': True
+        },
         'name': 'world-light',
         'title': 'World Light',
         'group': 'background'
