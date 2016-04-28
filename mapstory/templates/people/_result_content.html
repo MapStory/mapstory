@@ -5,7 +5,7 @@
         <div ng-if="item.type === 'mapstory'">
         <a href="/mapstory/{{ item.id }}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
         </div>
-        <div ng-if="item.type === 'mapstory'">
+        <div ng-if="item.type === 'layer'">
         <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
         </div>
         <h3 ng-if="item.type === 'mapstory'">
@@ -34,6 +34,7 @@
             <h4 ng-if="item.type === 'mapstory'">
                 <!-- goes to the viewer -->
                 <a href="/story/{{ item.id }}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> play</button></a>
+                <a class="btn btn-danger btn-xs" href="/mapstory/{{ item.id }}/remove">delete</a>
                 <!-- TODO: Hook in favorites functionality -->
                 <!-- <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button> -->
                 <!-- TODO: Hook in share functionality -->
@@ -43,7 +44,7 @@
                 <!-- goes to composer -->
                 <a href="/maps/new?layer={{ item.detail_url.substring(8) | decodeURIComponent }}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> use</button></a>
                 <!-- goes to layer edit -->
-                <!--<a href='/maps/edit?layer={{ item.detail_url.substring(8) | decodeURIComponent }}&mode=edit'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>-->
+                <a href='/maps/edit?layer={{ item.detail_url.substring(8) | decodeURIComponent }}&mode=edit'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
                 <!-- TODO: Hook in favorites functionality -->
                 <!-- <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button> -->
             </h4>
