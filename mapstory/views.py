@@ -66,7 +66,7 @@ from django.contrib.auth.models import Group
 from django.contrib import messages
 from django.contrib.auth import logout
 from geonode.layers.views import _resolve_layer
-from geonode.tasks.deletion import delete_map, delete_layer
+from geonode.tasks.deletion import delete_mapstory, delete_layer
 from provider.oauth2.models import AccessToken
 from django.utils.timezone import now as provider_now
 from django.core.mail import send_mail
@@ -1225,7 +1225,7 @@ def map_remove(request, mapid, template='maps/map_remove.html'):
         }))
 
     elif request.method == 'POST':
-        delete_map.delay(object_id=map_obj.id)
+        delete_mapstory.delay(object_id=map_obj.id)
         return HttpResponseRedirect(reverse("index_view"))
 
 

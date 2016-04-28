@@ -6,7 +6,7 @@
         <div ng-if="item.type === 'mapstory'">
         <a href="/mapstory/{{ item.id }}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
         </div>
-        <div ng-if="item.type === 'mapstory'">
+        <div ng-if="item.type === 'layer'">
         <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
         </div>
         <h3 ng-if="item.type === 'mapstory'">
