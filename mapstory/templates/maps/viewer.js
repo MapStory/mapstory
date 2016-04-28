@@ -118,7 +118,7 @@
                         'placement': 'right',
                         'html': true,
                         'title': feature.get('title'),
-                        'content': feature.get('content')
+                        'content': feature.get('content') + feature.get('media')
                     });
                     $(element).popover('show');
                 } else {
