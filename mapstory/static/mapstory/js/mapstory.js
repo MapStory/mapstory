@@ -16,6 +16,8 @@
 
           // make sure that angular doesn't intercept the page links
           angular.element("a").prop("target", "_self");
+          // hack to catch new tabs
+          angular.element(document.getElementsByClassName("new-tab")).prop("target", "_blank");
       }
     })
 

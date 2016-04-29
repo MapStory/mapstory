@@ -2,16 +2,8 @@
 <li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4" ng-if="(item.type === 'mapstory' ||item.type === 'layer')">
     <!-- We want the entire tile card to have a set size -->
     <div style="text-align: left; height: 500px;">
-        <div ng-if="item.type === 'mapstory'">
-        <a href="/mapstory/{{ item.id }}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
-        </div>
-        <div ng-if="item.type === 'layer'">
         <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
-        </div>
-        <h3 ng-if="item.type === 'mapstory'">
-            <a href="/mapstory/{{ item.id }}">{{ item.title | limitTo:25}}</a>
-        </h3>
-        <h3 ng-if="item.type === 'layer'">
+        <h3>
             <a href="{{ item.detail_url}}">{{ item.title | limitTo:25}}</a>
         </h3>
         <!-- item.is_published for public or not -->
