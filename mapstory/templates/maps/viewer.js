@@ -54,7 +54,7 @@
         this.chapterCount = 1;
         var self = this;
         StoryPinLayerManager.map = self.storyMap;
-
+        StoryBoxLayerManager.map = self.storyMap;
         this.loadConfig = function(config, chapter){
             _config = config;
 
