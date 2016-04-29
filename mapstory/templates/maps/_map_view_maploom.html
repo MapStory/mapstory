@@ -12,4 +12,4 @@ body{
     padding:0;
 }
 </style>
-<iframe src="{% if map %}{% url 'maploom-map-view' map.id %}{% else %}{% url 'maploom-map-new' %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}{% endif %}" allowFullScreen="true" scrolling="auto" class="maploom"></iframe>
+<iframe src="{% if story %}{% url 'draft_view' story.id %}{% else %}{% url 'maploom-map-new' %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}{% endif %}" allowFullScreen="true" scrolling="auto" class="maploom"></iframe>

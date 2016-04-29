@@ -808,6 +808,11 @@ def mapstory_view(request, storyid, template='maps/mapstory_map_viewer.html'):
     }))
 
 @login_required
+def mapstory_draft(request, storyid, template):
+    from geonode.maps.views import draft_view
+    return draft_view(request, storyid, template)
+
+@login_required
 def new_map(request, template):
     from geonode.maps.views import new_map
     return new_map(request, template)

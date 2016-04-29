@@ -89,6 +89,10 @@ urlpatterns = patterns('',
         'geonode.maps.views.map_view', {'template': 'maps/_map_view_maploom.html'},
         name='map-view'),
 
+    url(r'^mapstory/(?P<storyid>[^/]+)/draft$',
+        'mapstory.views.mapstory_draft', {'template': 'maps/_map_view_maploom.html'},
+        name='mapstory-draft'),
+
     # StoryTools
 
     url(r'^maps/(?P<mapid>\d+)/viewer$',
