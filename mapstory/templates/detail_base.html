@@ -47,7 +47,7 @@
             <!-- share -->
             <div style="display:none;" id="share">Share link: <textarea style="color:#00CC99; width:100%;">http://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}</textarea></div>
             <!-- embed -->
-            <div style="display:none;" id="embed">Embed link: <textarea style="color:#00CC99; width:100%;"><iframe style="border: none;" height="400" width="600" src="http://{{ request.get_host }}{% url 'geonode.maps.views.map_embed' resource.id %}"></iframe></textarea></div>
+            <div style="display:none;" id="embed">Embed link: <textarea style="color:#00CC99; width:100%;"><iframe style="border: none;" height="400" width="600" src="http://{{ request.get_host }}/mapstory/{{ resource.id }}/embed"></iframe></textarea></div>
           </div>
         </div>
         <hr>
