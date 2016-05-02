@@ -4,7 +4,7 @@
     <div style="text-align: left; height: 500px;">
         <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
         <h3>
-            <a href="{{ item.detail_url}}">{{ item.title | limitTo:25}}</a>
+            <span ng-if="item.type === 'mapstory' && item.is_published === false" style="font-weight:bold" >[DRAFT]</span><a href="{{ item.detail_url}}"> {{ item.title | limitTo:25}}</a>
         </h3>
         <!-- item.is_published for public or not -->
         <div>
@@ -26,6 +26,7 @@
             <h4 ng-if="item.type === 'mapstory'">
                 <!-- goes to the viewer -->
                 <a href="/story/{{ item.id }}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> play</button></a>
+                <a ng-href="/mapstory/{{ item.id }}/draft" ng-if="item.is_published === false" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i>resume composing</a>
                 <a class="btn btn-danger btn-xs" href="/mapstory/{{ item.id }}/remove">delete</a>
                 <!-- TODO: Hook in favorites functionality -->
                 <!-- <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button> -->
