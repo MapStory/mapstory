@@ -21,7 +21,7 @@ Ext.onReady(function() {
    {% if resource.chapters %}
    src: '/story/{{ resource.id }}',
    {% else %}
-   src: 'maps/{{ resource.id }}/viewer',
+   src: '/maps/{{ resource.id }}/viewer',
    {% endif %}
    id:  'myFrame',
    allowfullscreen: 'true',
