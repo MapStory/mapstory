@@ -16,7 +16,30 @@
 
 {% block middle %}
 
-        {% include "branding/mapstory_diary_parallax.html" %}
+        <section class="parallax">
+          <div data-stellar-background-ratio="0.5" style="background-image: url({{ images|by_name:'Africa' }}); background-size: 100%; background-position: 0% 20%;">
+            <div class="maskParent">
+                <div class="paralaxMask"></div>
+                <div class="paralaxText container" style="text-align:left;padding-bottom:0">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            {% include "branding/mapstory_diary_parallax.html" %}
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="row"  style="padding:80px 0px 10px 10px;">
+                                <div class="col-sm-8 col-sm-offset-4">
+                                    <a class="btn btn-sm btn-block" style="font-size:1em;background-color:transparent;color:white;border:1px solid white;" title="" href="{% url 'diary-create' %}" target="blank">
+                                        write an entry
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+             </div>
+          </div>
+        </section>
+
 
 <!--
 <div class="container" id="diary-banner">
