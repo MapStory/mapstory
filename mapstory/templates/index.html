@@ -329,11 +329,15 @@
                     <div class="col-sm-2">
                         {% ifequal community.profile_type 'org' %}
                         <a href="{% url "organization_detail" community.slug %}">
+                            {% if community.logo %}
                             <img class="rdphoto" src="{{ community.logo.url }}" alt="{{ community.title }} - {{ community.description }}">
+                            {% endif %}
                         </a>
                         {% else %}
                         <a href="{% url "initiative_detail" community.slug %}">
+                            {% if community.logo %}
                             <img class="rdphoto" src="{{ community.logo.url }}" alt="{{ community.title }} - {{ community.description }}">
+                            {% endif %}
                         </a>
                         {% endifequal %}
                     </div>
