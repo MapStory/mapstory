@@ -1,14 +1,14 @@
 {% load i18n %}
 <footer class="color4" style="padding:20px 10px;width:100%;">
     <section id="mainFooter">
-        {% include "branding/footer_main.html" %}
+        {% include "branding/_footer_main.html" %}
     </section>
     <br>
     <section>
         <div class="container">
             <hr style="margin:10px 0 10px 0">
             <div class="row">
-                {% include "branding/footer_policy.html" %}
+                {% include "branding/_footer_policy.html" %}
                 <div class="col-sm-4">
                     <label class="hidden">{% trans "Language" %}</label>
                     {% if csrf_token != "NOTPROVIDED" %}
