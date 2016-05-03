@@ -794,13 +794,13 @@ def new_map_json(request):
     from geonode.maps.views import new_map_json
     return new_map_json(request)
 
-def mapstory_view(request, storyid, template='maps/mapstory_map_viewer.html'):
+def mapstory_view(request, storyid, snapshot=None, template='maps/mapstory_map_viewer.html'):
     """
     The view that returns the map viewer opened to
     the mapstory with the given ID.
     """
 
-    story_obj = _resolve_map(request, mapid, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
+    story_obj = _resolve_map(request, storyid, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
 
     if snapshot is None:
         config = story_obj.viewer_json(request.user)
