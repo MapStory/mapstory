@@ -2,80 +2,126 @@
 {% load staticfiles %}
 
 {% comment %}
-before doing any more styling work, investigate use of:
-https://github.com/davidjamesmoss/django-inline-css-tag
+    before doing any more styling work, investigate use of:
+    https://github.com/davidjamesmoss/django-inline-css-tag
 {% endcomment %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Welcome To The  Mapstory Community</title>
-        <style type="text/css">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Welcome To The Mapstory Community</title>
+    <style type="text/css">
 
-            outlook a{padding:0;}
-            body{width:100% !important;} .ReadMsgBody{width:100%;} .ExternalClass{width:100%;}
-            body{-webkit-text-size-adjust:none;margin:0; padding:0;}
-            img{border:0; height:auto; line-height:100%; outline:none; text-decoration:none;}
-            table td{border-collapse:collapse;}
+        outlook a {
+            padding: 0;
+        }
 
-            a:visited {
-                 color:#f46817 !important;
-            }
+        body {
+            width: 100% !important;
+        }
 
-        </style>
-    </head>
-    <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" style="background-color:#F2F2F2; font-family: Arial, Helvetica, sans-serif;">
-        <center>
-            <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" style="height:100% !important;
+        .ReadMsgBody {
+            width: 100%;
+        }
+
+        .ExternalClass {
+            width: 100%;
+        }
+
+        body {
+            -webkit-text-size-adjust: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+
+        table td {
+            border-collapse: collapse;
+        }
+
+        a:visited {
+            color: #f46817 !important;
+        }
+
+    </style>
+</head>
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0"
+      style="background-color:#F2F2F2; font-family: Arial, Helvetica, sans-serif;">
+<center>
+    <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" style="height:100% !important;
                 margin:0;
                 padding:20px;
                 width:100% !important;">
-                <tr>
-                    <td align="center" valign="top">
-                        <table border="0" cellpadding="0" cellspacing="0" width="600" style="border:0; background: white; border-top: 20px solid #f46817; color: #4e4e4e; font-size: 14px; line-height: 20px; text-align: justify;">
-                            <tr>
-                                <td  valign="top">
-                                    <div style="margin: 20px; line-height:130%;">
-                                    <img src="{{ site_prefix }}{% static "mail/mapstorylogo.gif" %}" />
-                                    <h2 style="color:#f46817; font-size:24px; font-weight:bold;">Welcome to the MapStory community!</h2>
+        <tr>
+            <td align="center" valign="top">
+                <table border="0" cellpadding="0" cellspacing="0" width="600"
+                       style="border:0; background: white; border-top: 20px solid #f46817; color: #4e4e4e; font-size: 14px; line-height: 20px; text-align: justify;">
+                    <tr>
+                        <td valign="top">
+                            <div style="margin: 20px; line-height:130%;">
+                                <img src="{% static 'mapstory/img/mapstory_orange_logo.gif' %}"/>
+                                <h2 style="color:#f46817; font-size:24px; font-weight:bold;">Welcome to the MapStory community!</h2>
 
-                                    <p style="margin:8px 0">Hi, {% firstof confirmation.email_address.user.first_name confirmation.email_address.user.username %}!</p>
+                                <p style="margin:8px 0">
+                                    Hi, {% firstof confirmation.email_address.user.first_name confirmation.email_address.user.username %}!</p>
 
-                                    <p style="margin:8px 0">By creating an account, you've joined a community of global citizens working together to organize data and tell stories about how and why our world has changed, is changing, and might change over time. We come from different places and have different interests, but we are connected by our belief that knowledge is meant to be shared and can always be improved!</p>
+                                <p style="margin:8px 0">By creating an account, you've joined a community of global citizens working together to
+                                    organize data and tell stories about how and why our world has changed, is changing, and might change over time.
+                                    We come from different places and have different interests, but we are connected by our belief that knowledge is
+                                    meant to be shared and can always be improved!</p>
 
-                                    <p style="margin:8px 0">Here's how you can get started:</p>
+                                <iframe width="560" height="315" src="https://www.youtube.com/embed/Jis7zXhC4gU" frameborder="0"
+                                        allowfullscreen></iframe>
+                                <p style="margin:8px 0">Here's how you can get started:</p>
 
-                                    <h3 style="color:#f46817; font-size:18px; font-weight:normal; margin:32px 0 8px 0;">Learn</h3>
+                                <h3 style="color:#f46817; font-size:18px; font-weight:normal; margin:32px 0 8px 0;">Learn</h3>
 
-                                    <p style="margin:8px 0">MapStorytelling involves using open data, maps and your own reflection to illuminate change in place over time. It's something anyone can learn, and your peers are adding more resources all the time to help you along.</p>
+                                <p style="margin:8px 0">MapStorytelling involves using open data, maps and your own reflection to illuminate change in
+                                    place over time. It's something anyone can learn, and your peers are adding more resources all the time to help
+                                    you along.</p>
 
-                                    <p style="margin:8px 0"><a href="{% url 'getpage' 'skills' %}">Learn the <span style="color:#f46817 !important;">Basics</span></a>.</p>
+                                <p style="margin:8px 0"><a href="{{ current_site.domain }}{% url 'getpage' 'skills' %}">Learn the <span
+                                        style="color:#f46817 !important;">Basics</span></a>.</p>
 
-                                    <h3 style="color:#f46817; font-size:18px; font-weight:normal; margin:32px 0 8px 0;">Share What You Know</h3>
+                                <h3 style="color:#f46817; font-size:18px; font-weight:normal; margin:32px 0 8px 0;">Share What You Know</h3>
 
-                                    <p style="margin:8px 0">There's three ways to share on MapStory. Just remember <b>A, B, C</b>. First, you can <b>add</b> new spatially and temporally enabled datasets, which we call StoryLayers. Second, you can <b>build</b> MapStories using StoryLayers and other narrative elements that you would like. Finally, you can <b>curate</b> content that appears on MapStory to improve its quality and accuracy.</p>
+                                <p style="margin:8px 0">There's three ways to share on MapStory. Just remember <b>A, B, C</b>. First, you can
+                                    <b>add</b> new spatially and temporally enabled datasets, which we call StoryLayers. Second, you can <b>build</b>
+                                    MapStories using StoryLayers and other narrative elements that you would like. Finally, you can <b>curate</b>
+                                    content that appears on MapStory to improve its quality and accuracy.</p>
 
-                                    <p style="margin:8px 0">Start <a style="color:#f46817" href="http://mapstory.org/">sharing on MapStory</a>.</p>
+                                <p style="margin:8px 0">Start <a style="color:#f46817" href="{{ current_site.domain }}">sharing on MapStory</a>.</p>
 
-                                    <h3 style="color:#f46817; font-size:18px; font-weight:normal; margin:32px 0 8px 0;"><a href="{% url 'getpage' 'involved' %}">Build the Community</a></h3>
+                                <h3 style="color:#f46817; font-size:18px; font-weight:normal; margin:32px 0 8px 0;"><a
+                                        href="{{ current_site.domain }}{% url 'getpage' 'involved' %}">Build the Community</a></h3>
 
-                                    <p style="margin:8px 0">MapStory is a nonprofit open educational resource. We rely on users like you to launch new initiatives, develop new tools and raise funds to keep the project going. So, get involved and build the future of MapStory that you want to see!</p>
+                                <p style="margin:8px 0">MapStory is a nonprofit open educational resource. We rely on users like you to launch new
+                                    initiatives, develop new tools and raise funds to keep the project going. So, get involved and build the future of
+                                    MapStory that you want to see!</p>
 
-                                    <p style="margin:8px 0">Get involved with the <a style="color:#f46817" href="http://wiki.mapstory.org">community</a>.</p>
+                                <p style="margin:8px 0">Get involved with the <a style="color:#f46817" href="http://wiki.mapstory.org">community</a>.
+                                </p>
 
-                                    <p style="margin-bottom:0">Thanks for joining us, and happy MapStorytelling!</p>
-                                    <p style="margin-top:0; padding-bottom:18px;">The MapStory Team</p>
-                                </div>
-                                </td>
-                            </tr>
-                        </table>
-                        <br />
-                    </td>
-                </tr>
-            </table>
-        </center>
-    </body>
+                                <p style="margin-bottom:0">Thanks for joining us, and happy MapStorytelling!</p>
+                                <p style="margin-top:0; padding-bottom:18px;">The MapStory Team</p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+            </td>
+        </tr>
+    </table>
+</center>
+</body>
 </html>
 
 

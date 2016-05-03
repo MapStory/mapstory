@@ -18,7 +18,11 @@ Ext.onReady(function() {
 //TODO: Need a better way to embed viewer
 
     $('<iframe>', {
+   {% if resource.chapters %}
    src: '/story/{{ resource.id }}',
+   {% else %}
+   src: 'maps/{{ resource.id }}/viewer',
+   {% endif %}
    id:  'myFrame',
    allowfullscreen: 'true',
    frameborder: 0,

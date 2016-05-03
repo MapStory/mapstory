@@ -12,7 +12,7 @@ from geonode.groups.forms import GroupForm, GroupUpdateForm
 
 class MapStorySignupForm(SignupForm):
     """
-    Extends the accounts SignupForm to include the user's first and last name.
+    Extends the accounts SignupForm to include the user's first and last name and subscribtion to monthly digest.
     """
 
     firstname = forms.CharField(
@@ -27,6 +27,11 @@ class MapStorySignupForm(SignupForm):
         max_length=30,
         widget=forms.TextInput(),
         required=True
+    )
+
+    digest = forms.BooleanField(
+        label=_("Monthly email digest"),
+        required=False
     )
 
 

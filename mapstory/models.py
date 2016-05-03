@@ -183,8 +183,8 @@ def get_images():
 def get_sponsors():
     return Sponsor.objects.filter(order__gte=0)
 
-def get_communities():
-    return Community.objects.filter(order__gte=0)
+def get_featured_groups():
+    return GroupProfile.objects.filter(featured=True)
 
 def get_group_layers(gProfile):
     users = gProfile.group.user_set.all()
