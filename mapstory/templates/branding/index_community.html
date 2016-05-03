@@ -1,0 +1,22 @@
+{% load i18n %}
+<div class="container">
+    <div class="row">
+        <h1 class="text-center">{% trans "Community Initiatives" %}</h1>
+        <h3 class="text-center">{% trans "Our Community Initiative leads are taking on huge data collection tasks, like mapping the history of human settlement and country borders. Click on one below, and start contributing" %}...
+        </h3>
+    </div>
+    <hr/>
+    <div class="row">
+        <slice infinite="true" slides-to-show="6" autoplay="true">
+            {% for community in communities %}
+            <div class="col-sm-2">
+                <a href="{% url "organization_detail" community.slug %}">
+                    <img class="rdphoto" src="{{ community.url }}" alt="{{ community.name }} - {{ community.description }}">
+                </a>
+            </div>
+            {% empty %}
+            <p>{% trans "No Community Initiatives." %} {% trans "Add" %} <a href="{% url 'admin:mapstory_community_add' %}">{% trans "some" %}</a></p>
+            {% endfor %}
+        </slice>
+    </div>
+</div>

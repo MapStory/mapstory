@@ -55,41 +55,7 @@
                     </form>
                </div>
             </div>
-            <div class="row links" style="padding-top:15px;padding-bottom:5px;">
-                <div class="col-sm-3">
-                    <h3>
-                        <a href="#" data-toggle="modal" data-target="#loginModal">
-                            {% trans "Sign up now" %}
-                        </a>
-                    </h3>
-                </div>
-                <div class="col-sm-3">
-
-                    <h3>
-                        {% if user.is_authenticated %}
-                            <a class="pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')" target="_self">
-                        {% else %}
-                            <a class="pointer" data-toggle="modal" data-target="#loginModal">
-                        {% endif %}
-                            {% trans "Upload StoryLayers" %}
-                        </a>
-                    </h3>
-                </div>
-                <div class="col-sm-3">
-                    <h3>
-                        <a href="{% url 'new_map' %}?tour">
-                            {% trans "Compose MapStory" %}
-                        </a>
-                    </h3>
-                </div>
-                <div class="col-sm-3">
-                    <h3>
-                        <a href="{% url 'getpage' 'started' %}">
-                            {% trans "Learn more" %}
-                        </a>
-                    </h3>
-                </div>
-            </div>
+            {% include "branding/index_menu.html" %}
             <div class="row" style="padding-bottom:5px;">
                 <div class="localscroll" style="text-align:center">
                     <!-- TODO: Link to mapstories is the section that doesn't exist yet -->
@@ -102,25 +68,7 @@
 
     <!-- TODO: New categories must be implemented or the button queries will just return nothing -->
     <section class="slice">
-        <div class="container">
-            <nav id="filter" class="col-md-12 text-center" style="left: -20px;">
-                <ul class="nav nav-tabs" style="padding-left: 50px;">
-                    <!-- NOTE: The specific category names for querying may need to be updated -->
-                    <li><a ng-click="query_category();" class="btn btn-filter btn-sm sectionTab">{% trans "All MapStories" %}</a></li>
-                    <li><a ng-click="query_category('crisis');" class="btn btn-filter btn-sm sectionTab">{% trans "Crisis" %}</a></li>
-                    <li><a ng-click="query_category('geopolitics');" class="btn btn-filter btn-sm sectionTab">{% trans "Geopolitics" %}</a></li>
-                    <li><a ng-click="query_category('scienceIndustry');" class="btn btn-filter btn-sm sectionTab">{% trans "Science & Industry" %}</a></li>
-                    <li><a ng-click="query_category('humanSettlement');" class="btn btn-filter btn-sm sectionTab">{% trans "Human Settlement" %}</a></li>
-                    <li><a ng-click="query_category('cultureIdeas');" class="btn btn-filter btn-sm sectionTab">{% trans "Culture & Ideas" %}</a></li>
-                    <li><a ng-click="query_category('natureEnvironment');" class="btn btn-filter btn-sm sectionTab">{% trans "Nature & Environment" %}</a></li>
-                    <li><a ng-click="query_category('health');" class="btn btn-filter btn-sm sectionTab">{% trans "Health" %}</a></li>
-                    <li><a ng-click="query_category('biography');" class="btn btn-filter btn-sm sectionTab">{% trans "Biography" %}</a></li>
-                </ul>
-            </nav>
-            <div class="row">
-                <p ng-hide="results.length">{% trans "No Featured Items in this category" %} ...</p>
-            </div>
-        </div>
+        {% include "branding/index_sections.html" %}
     </section>
 
     <section class="slice">
@@ -145,53 +93,7 @@
     </section>
 
     <section class="slice" id="getstarted">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="csection-text">
-                        <h1><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></h1>
-                        <h3>{% trans "MapStory is an open platform for organizing our knowledge about how the world changes over time and space. Click on a link to the right, and learn how you can start contributing observations of your own." %}
-                        </h3>
-                    </div>
-                </div>
-                <div class="col-sm-8">
-                    <div class="row" style="padding:20px">
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Students"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/students.png"></a>
-                            <h5 class="text-center">{% trans "Students" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Educators"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/teachers.png"></a>
-                            <h5 class="text-center">{% trans "Educators" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Humanitarians"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/humanitarians.png"></a>
-                            <h5 class="text-center">{% trans "Humanitarians" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Businesspeople"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/business.png"></a>
-                            <h5 class="text-center">{% trans "Businesspeople" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Librarians"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/librarians.png"></a>
-                            <h5 class="text-center">{% trans "Librarians" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Researchers"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/researchers.png"></a>
-                            <h5 class="text-center">{% trans "Researchers" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Policymakers"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/policy.png"></a>
-                            <h5 class="text-center">{% trans "Policy Makers" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Journalists"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/journalist.png"></a>
-                            <h5 class="text-center">{% trans "Journalists" %}</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% include "branding/index_getstarted.html" %}
     </section>
 
     <section class="parallax">
@@ -199,20 +101,7 @@
     </section>
 
     <section class="slice" id="getinvolved">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-8">
-                    <img class="img-responsive" src="{% remote_content 'static_img/get-involved-cropped.jpg' %}" style="border-radius: 2%; width: 90%; height: 90%; margin: auto;"/>
-                </div>
-                <div class="col-sm-4">
-                    <div class="csection-text">
-                        <h1><a href="{% url 'getpage' 'involved' %}">{% trans "Get Involved" %}</a></h1>
-                        <h3>{% trans "Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company." %}
-                        </h3>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% include "branding/index_getinvolved.html" %}
     </section>
 
     <section class="parallax">
@@ -220,29 +109,7 @@
     </section>
 
     <section class="slice" id="getskills">
-        <div class="container">
-                <h1>{% trans "Get Skills" %}</h1>
-                <h3>{% trans "MapStory is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed." %}
-                </h3>
-            <br/>
-            <div class="row">
-                <div class="col-sm-4">
-                    <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/101.png">
-                    <a href="{% url 'getpage' 'skills' %}"><h2>1. {% trans "MapStory 101" %}</h2></a>
-                    <h5>{% trans "Learn all the basic skills you need to start collecting data and creating MapStories of your own." %}</h5>
-                </div>
-                <div class="col-sm-4">
-                    <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/wiki.png">
-                    <a href="http://wiki.mapstory.org"><h2>2. {% trans "MapStory Wiki" %}</h2></a>
-                    <h5>{% trans "Find and share more resources alongside the global MapStory community." %}</h5>
-                </div>
-                <div class="col-sm-4">
-                    <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/Help.png">
-                    <a href="http://help.mapstory.org"><h2>3. {% trans "Help Center" %}</h2></a>
-                    <h5>{% trans "Ask questions, find answers, and help others." %}</h5>
-                </div>
-                </div>
-        </div>
+        {% include "branding/index_getskills.html" %}
     </section>
 
     <section class="parallax">
@@ -250,33 +117,7 @@
     </section>
 
     <section class="slice" id="thinkers">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-8">
-                        {% for item in diary_entries %}
-                        {% if forloop.counter0|divisibleby:4 %}<div class="row" style="padding:20px">{% endif %}
-                            <div class="col-sm-3 photobox">
-                                <a href="{% url "diary-detail" item.pk %}">
-                                    <img class="img-circle" src="{% avatar_url item.author 150 %}" width="150" height="150"/>
-                                    <h5 class="text-center">
-                                        <strong>{{ item.title|truncatechars:48 }}</strong>
-                                        <br/>
-                                        {% include "people/_profile_name_display.html" with profile=item.author only %}
-                                    </h5>
-                                </a>
-                            </div>
-                        {% if forloop.counter|divisibleby:4 or forloop.last %}</div>{% endif %}
-                        {% empty %}
-                        <p>{% trans "No Featured Thinkers and Thoughts" %}...</p>
-                        {% endfor %}
-                </div>
-                <div class="col-sm-4">
-                    <h1>{% trans "Thinkers and Thoughts" %}</h1>
-                    <h3>{% trans "The latest insights from leading MapStorytellers. For more, visit the" %} <a href="{% url 'diary' %}">{% trans "Community Journal" %}</a>
-                    </h3>
-                </div>
-            </div>
-        </div>
+        {% include "branding/index_thinkers.html" %}
     </section>
 
     <section class="parallax">
@@ -284,31 +125,7 @@
     </section>
 
     <section class="slice" id="news">
-        <div class="csection">
-            <div class="row">
-                <h1 class="text-center">{% trans "MapStory projects making the news" %}</h1>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <a class="twitter-timeline" href="https://twitter.com/MapStory" data-widget-id="517343764738621440">Tweets by @MapStory</a>
-                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-                </div>
-                <div class="col-sm-8">
-                    {% for item in news_items %}
-                    <h3><strong>{{ item.title }}</strong> <small class="pull-right">{{ item.date }}</small></h3>
-                    <hr>
-                    {{ item.html|safe  }}
-                    {% empty %}
-                    <p>{% trans "No News Items" %}. {% trans "Add" %} <a href="{% url 'admin:mapstory_newsitem_add' %}">{% trans "some" %}</a></p>
-                    {% endfor %}
-                </div>
-            </div>
-            <!-- TODO: What was this supposed to be?
-            <div class="row">
-                <div class="qlink-right qlink-fb">[p_a_g_i_n_a_t_i_o_n l_i_n_k_s h_e_r_e]</div>
-            </div>
-            -->
-        </div>
+        {% include "branding/index_news.html" %}
     </section>
 
     <section class="parallax">
@@ -316,27 +133,7 @@
     </section>
 
     <section class="slice" id="community">
-        <div class="container">
-            <div class="row">
-                <h1 class="text-center">{% trans "Community Initiatives" %}</h1>
-                <h3 class="text-center">{% trans "Our Community Initiative leads are taking on huge data collection tasks, like mapping the history of human settlement and country borders. Click on one below, and start contributing" %}...
-                </h3>
-            </div>
-            <hr/>
-            <div class="row">
-                <slice infinite="true" slides-to-show="6" autoplay="true">
-                    {% for community in communities %}
-                    <div class="col-sm-2">
-                        <a href="{% url "organization_detail" community.slug %}">
-                            <img class="rdphoto" src="{{ community.url }}" alt="{{ community.name }} - {{ community.description }}">
-                        </a>
-                    </div>
-                    {% empty %}
-                    <p>{% trans "No Community Initiatives." %} {% trans "Add" %} <a href="{% url 'admin:mapstory_community_add' %}">{% trans "some" %}</a></p>
-                    {% endfor %}
-                </slice>
-            </div>
-        </div>
+        {% include "branding/index_community.html" %}
     </section>
 
     <section class="parallax">
@@ -344,27 +141,7 @@
     </section>
 
     <section class="slice" id="sponsors">
-        <div class="container">
-            <div class="row">
-                <h1 class="text-center">{% trans "Our Sponsors" %}</h1>
-                <h3 class="text-center">{% trans "Learning institutions like these drive innovation in the MapStory codebase, content and community." %} <a href="{% url 'donate' %}">{% trans "Join them." %}</a>
-                </h3>
-            </div>
-            <hr/>
-            <div class="row">
-                <slice infinite="true" slides-to-show="6" autoplay="true">
-                    {% for sponsor in sponsors %}
-                    <div class="col-sm-2">
-                        <a href="{{ sponsor.link }}">
-                            <img src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
-                        </a>
-                    </div>
-                    {% empty %}
-                    <p>{% trans "No Sponsors." %} {% trans "Add" %} <a href="{% url 'admin:mapstory_sponsor_add' %}">{% trans "some" %}</a></p>
-                    {% endfor %}
-                </slice>
-            </div>
-        </div>
+        {% include "branding/index_sponsors.html" %}
     </section>
 
     <section class="parallax" style="margin-bottom:-40px;">
