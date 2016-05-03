@@ -800,8 +800,12 @@ def mapstory_view(request, storyid, template='maps/mapstory_map_viewer.html'):
     the mapstory with the given ID.
     """
 
-    story_obj = MapStory.objects.get(id=storyid)
-    config = story_obj.viewer_json(request.user)
+    story_obj = _resolve_map(request, mapid, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
+
+    if snapshot is None:
+        config = story_obj.viewer_json(request.user)
+    else:
+        config = snapshot_config(snapshot, story_obj, request.user)
 
     return render_to_response(template, RequestContext(request, {
         'config': json.dumps(config)
