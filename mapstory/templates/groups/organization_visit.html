@@ -102,7 +102,7 @@
 														<div style="text-align: left;">
 															<a href="{{ layer.detail_url}}"><img class="thumb img-responsive" src="{{ layer.thumbnail_url}}"/></a>
 															<h3><a href="{{ layer.detail_url}}">{{ layer.title}}</a></h3>
-															<div><p><i>MapStory</p></i></div>
+															{% include "branding/groups_organization_visit_group.html" %}
 															<h4><span class="owner"><i class="fa fa-user"></i>{{ layer.owner.first_name }} {{ layer.owner.last_name }}</span></h4>
 		        									<h4><span><i class="fa fa-flag-o"></i></span>{{ layer.category.gn_description}}</h4>
 		        									<!-- TODO: Hook in the edits -->
