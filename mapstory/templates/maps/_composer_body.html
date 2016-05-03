@@ -5,7 +5,7 @@
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header col-md-2">
-                <a class="navbar-brand" href="/">MapStory</a>
+                {% include "branding/maps_composer_body_title.html" %}
             </div>
             <div class="navbar-collapse collapse pull-right">
                 <ul class="nav navbar-nav" id="tl-nav">
@@ -124,22 +124,7 @@
                     </accordion-group>
                 </accordion>
             </div>
-            <div ng-show="selected.preview" class="floating ng-hide col-lg-4" style="top:110px">
-                <accordion>
-                    <accordion-group>
-                        <accordion-heading>
-                            About Your MapStory
-                        </accordion-heading>
-                        <story-about-info></story-about-info>
-                    </accordion-group>
-                    <accordion-group>
-                        <accordion-heading>
-                            Playback Options
-                        </accordion-heading>
-                        <st-playback-settings playback-options="playbackOptions" time-controls="timeControlsManager.timeControls"></st-playback-settings>
-                    </accordion-group>
-                </accordion>
-            </div>
+            {% include "branding/maps_composer_body_accordion.html" %}
             <div ng-show="selected.debug" class="floating ng-hide col-lg-8" style="max-height: 75%; overflow: auto; background:white">
                 <div class="panel">
                     <div ng-repeat="lyr in mapManager.storyMap.getStoryLayers().getArray()">
@@ -181,23 +166,4 @@
 
 {% endverbatim %}
 <!-- save modal defined in story-about-info.html -->
-<div id="saveModal" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-          <h4 class="modal-title">{% trans 'Map Saved' %}</h4>
-      </div>
-      <div class="modal-body">
-        {% verbatim %}
-        Congratulations! Your map has been saved. Take a look <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}/viewer">here!</a>
-        <br><br>
-        If you like how it looks, go ahead <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}">here</a> to publish your MapStory to share it with the world!
-        {% endverbatim %}
-      </div>
-      <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Close" %}</button>
-      </div>
-    </div>
-  </div>
-</div>
+{% include "branding/maps_composer_body_savemodal.html" %}

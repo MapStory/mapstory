@@ -1,0 +1,16 @@
+<div ng-show="selected.preview" class="floating ng-hide col-lg-4" style="top:110px">
+    <accordion>
+        <accordion-group>
+            <accordion-heading>
+                About Your MapStory
+            </accordion-heading>
+            <story-about-info></story-about-info>
+        </accordion-group>
+        <accordion-group>
+            <accordion-heading>
+                Playback Options
+            </accordion-heading>
+            <st-playback-settings playback-options="playbackOptions" time-controls="timeControlsManager.timeControls"></st-playback-settings>
+        </accordion-group>
+    </accordion>
+</div>

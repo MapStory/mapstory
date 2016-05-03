@@ -6,7 +6,7 @@
     <a href="{% url "new_map" %}?layer={{resource.service_typename}}" >
       <span style="font-size:1.3em;color:gainsboro">compose</span>
       <br>
-      <span style="font-size:1.3em;color:gainsboro">mapstory</span>
+      {% include "branding/layers_layers_functions.html" %}
     </a>
   </div>
   {% if GEOGIG_ENABLED and resource.link_set.geogig %}

@@ -7,12 +7,7 @@
             <span ng-if="item.type === 'mapstory' && item.is_published === false" style="font-weight:bold" >[DRAFT]</span><a href="{{ item.detail_url}}"> {{ item.title | limitTo:25}}</a>
         </h3>
         <!-- item.is_published for public or not -->
-        <div>
-          <p>
-            <i ng-if="item.type === 'mapstory'">MapStory</i>
-            <i ng-if="item.type === 'layer'">StoryLayer</i>
-          </p>
-        </div>
+        {% include "branding/people_result_content_item.html" %}
         <h4> Created {{ item.date|date }}</h4>
         <h4 ng-if="item.owner__first_name || item.owner__last_name"><span class="owner"><i class="fa fa-user"></i> {{ item.owner__first_name }} {{ item.owner__last_name }}</span></h4>
         <h4 style="text-transform: capitalize;"><span><i class="fa fa-flag-o"></i></span> <span>{{ item.category }}</span><span ng-if="!item.category">Uncategorized</span></h4>

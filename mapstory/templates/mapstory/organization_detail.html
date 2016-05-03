@@ -123,47 +123,13 @@
                 </h3>
               </div>
               <div class="col-lg-9">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#mapstories" data-toggle="tab">MapStories</a></li>
-                    <li><a href="#storylayers" data-toggle="tab">StoryLayers</a></li>
-                    <li><a href="#storytellers" data-toggle="tab">StoryTellers</a></li>
-                    <li><a href="#blogs" data-toggle="tab">Journals</a></li>
-                </ul>
+                {% include "branding/mapstory_organization_detail_ul.html" %}
                 <div class="tab-content">
                   <div class="tab-pane active" id="mapstories">
                     <div class="col-lg-12">
                       <div class="clearfix search-results">
                         <ul>
-                          {% verbatim %}
-                          <li ng-repeat="item in org_maps" resource_id="{{ item.id}}" class="col-md-4">
-                            <div style="text-align: left; height: 500px;">
-                                <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
-                                <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
-                                <div>
-                                  <p>
-                                    <i>MapStory</i>
-                                  </p>
-                                </div>
-                                <h4> Created {{ item.date|date }}</h4>
-                                <h4 ng-if="item.owner__first_name || item.owner__last_name"><span class="owner"><i class="fa fa-user"></i> {{ item.owner__first_name }} {{ item.owner__last_name }}</span></h4>
-                                <h4 style="text-transform: capitalize;"><span><i class="fa fa-flag-o"></i></span> <span>{{ item.category }}</span><span ng-if="!item.category">Uncategorized</span></h4>
-                                <h4><a href="{{ item.detail_url}}"><i class="fa fa-eye"></i> {{ item.popular_count}} views</a></h4>
-                                <h4><a href="{{ item.detail_url}}#rate"><i class="fa fa-star"></i> {{ item.rating}}</a></h4>
-                                <div><h5 class="abstract">{{ item.abstract|limitTo:70 }}<a href="{{ item.detail_url}}"> <i>...read more</i></a></h5></div>
-                                <div class="btn-toolbar">
-                                    <h4>
-                                        <!-- goes to the viewer -->
-                                        <a href="/maps/{{ item.id }}/viewer"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> play</button></a>
-                                        <!-- TODO: Hook in favorites functionality -->
-                                        <!-- <button class="btn btn-primary btn-xs" id="favoriteLink"><i class="fa fa-heart-o"></i> favorite</button> -->
-                                        <!-- TODO: Hook in share functionality -->
-                                        <!-- <button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> share</button> -->
-                                    </h4>
-                                </div>
-                            </div>
-                          </li>
-                          <p ng-if="org_maps.length == 0">There are no mapstories made by this organization.</p>
-                          {% endverbatim %}
+                          {% include "branding/mapstory_organization_detail_verbatim.html" %}
                         </ul>
                       </div>
                       <span>Total: </span>
