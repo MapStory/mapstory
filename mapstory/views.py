@@ -40,7 +40,7 @@ from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
 from mapstory.models import Leader
 from mapstory.models import Community
-from mapstory.models import get_communities
+from mapstory.models import get_featured_groups
 from mapstory.importers import GeoServerLayerCreator
 from geonode.base.models import Region
 from geonode.contrib.favorite.models import Favorite
@@ -99,7 +99,7 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)
         ctx['sponsors'] = get_sponsors()
-        ctx['communities'] = get_communities()
+        ctx['communities'] = get_featured_groups()
         news_items = NewsItem.objects.filter(date__lte=datetime.datetime.now())
         ctx['news_items'] = news_items[:3]
         ctx['images'] = get_images()

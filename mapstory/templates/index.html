@@ -327,12 +327,18 @@
                 <slice infinite="true" slides-to-show="6" autoplay="true">
                     {% for community in communities %}
                     <div class="col-sm-2">
+                        {% ifequal community.profile_type 'org' %}
                         <a href="{% url "organization_detail" community.slug %}">
-                            <img class="rdphoto" src="{{ community.url }}" alt="{{ community.name }} - {{ community.description }}">
+                            <img class="rdphoto" src="{{ community.logo.url }}" alt="{{ community.title }} - {{ community.description }}">
                         </a>
+                        {% else %}
+                        <a href="{% url "initiative_detail" community.slug %}">
+                            <img class="rdphoto" src="{{ community.logo.url }}" alt="{{ community.title }} - {{ community.description }}">
+                        </a>
+                        {% endifequal %}
                     </div>
                     {% empty %}
-                    <p>{% trans "No Community Initiatives." %} {% trans "Add" %} <a href="{% url 'admin:mapstory_community_add' %}">{% trans "some" %}</a></p>
+                    <p>{% trans "No Community Initiatives." %} {% trans "Add" %} <a href="{% url 'initiative_create' %}">{% trans "some" %}</a></p>
                     {% endfor %}
                 </slice>
             </div>
