@@ -1,0 +1,64 @@
+{% extends "site_base.html" %}
+
+{% load avatar_tags %}
+
+{% block extra_head %}
+		<!-- Bootstrap  -->
+		<link type="text/css" rel="stylesheet" href="bootstrap/css/bootstrap.css">
+		<!-- web font  -->
+		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800" rel="stylesheet" type="text/css">
+
+		<!-- icon fonts -->
+		<link type="text/css" rel="stylesheet" href="font-icons/custom-icons/custom-icons.css">
+		<link type="text/css" rel="stylesheet" href="font-icons/custom-icons/css/custom-icons-ie7.css">
+		<link href="font-icons/custom-icons/css/flags.css" media="screen" rel="stylesheet" type="text/css">
+		<!-- Custom css -->
+		<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}mapstory/css/layout.css">
+		<link type="text/css" id="colors" rel="stylesheet" href="{{ STATIC_URL }}mapstory/css/orange.css">
+		<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
+		<!--script src="js/modernizr-2.6.1.min.js"></script-->
+		<!-- Favicons
+		================================================== -->
+		<link rel="shortcut icon" href="images/favicon.ico">
+		<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+		<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+		<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+		<link rel="apple-touch-icon" sizes="144x144" href="images/apple-touch-icon-144x144.png">
+	{% endblock %}
+
+
+            {% block middle %}
+
+
+					<div class="container" style="padding:20px">
+						<div class="row">
+							<div class="col-sm-9" style="border-right:1px solid gainsboro">
+								<blockquote class="bigTitle" style="font-size:2em;text-transformation:none;text-align:left;font-weight:200">
+
+									<br/>From MapStory creator Chris Tucker
+								</blockquote>
+								<br>
+								<h2 style="text-align:left">
+									<p>Storyscapes is not Wikipedia. But, like Wikipedia, we want Storyscapes to be a special place where "we can all go to think, to learn, to share our knowledge with others". As a 501c3 non-profit, the Storyscapes Foundation seeks to provide www.Storyscapes.org as a new dimension to the global data commons, which empowers all of us to organize the world’s knowledge spatially and temporally - rather than encyclopedically.</p>
+									<p>When it comes to certain problems, I strongly believe that you can either make money off of them, or you can solve them. But, you can’t do both. Storyscapes was conceived of in order to let everyone dedicate to the global data commons their knowledge about how the world has changed over time. For this to work, people must be secure in their knowledge that their cultural contributions are not subject to commercial influence.</p>
+									<p>Storyscapes is a new social venture, and we are still working out the kinks. If you are happy having a place where you can freely publish your spatio-temporal representations of the world to a global user community, and to easily access such data from others, perhaps you might consider contributing $10, $20, or $50 to support the hosting and operations costs of this global data commons. Remember, all donations are tax deductible.</p>
+									<p>Thank you very much.</p>
+									<p>Chris Tucker</p>
+								</h2>
+								<hr/>
+							</div>
+							<div class="col-sm-3" style="text-align:center;padding-top:30px">
+								<img class="img-circle" src="{{ STATIC_URL }}mapstory/images/donate.jpg" width="75" height="75">
+								<h2><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3FUCTKSH4R668">Donate Now</a></h2>
+
+								<hr>
+								<img class="img-circle" src="{{ STATIC_URL }}mapstory/images/org-donate.jpg" width="75" height="75">
+								<h2><a href="{% url 'getpage' 'involved' %}#Organization Pages">Sponsor an Organization Page</a></h2>
+
+							</div>
+						</div>
+					</div>
+
+            {% endblock%}
+
+		</div>
