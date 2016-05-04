@@ -1,0 +1,72 @@
+{% load staticfiles i18n avatar_tags maploom_tags %}
+
+<!DOCTYPE html>
+<html ng-app="MapLoom" ng-controller="AppCtrl">
+<head>
+
+<title ng-bind="pageTitle"></title>
+<link rel="shortcut icon" href="{% static 'mapstory/img/favicon.ico' %}">
+
+<script type="text/javascript">
+  var CLOSURE_NO_DEPS = true;
+</script>
+
+{% maploom_js %}
+
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}mapstory/css/app.css"/>
+
+<script type="text/javascript">
+{% get_current_language as language %}
+
+$(window).load(function(){
+  $('#welcomeTour').modal('show');
+});
+ config =  {
+       authStatus: {% if user.is_authenticated %} 200{% else %} 401{% endif %},
+        username: {% if user.is_authenticated %} "{{ user.username }}" {% else %} undefined {% endif %},
+        userprofilename: {% if user.is_authenticated %} "{{ user.get_full_name }}" {% else %} undefined {% endif %},
+        userprofileemail: {% if user.is_authenticated %} "{{ user.email }}" {% else %} undefined {% endif %},
+        currentLanguage: "{{language|default:'en'}}",
+        proxy: '{{ PROXY_URL }}',
+        {% if MF_PRINT_ENABLED %}
+        printService: "{{GEOSERVER_BASE_URL}}pdf/",
+        {% else %}
+        printService: "",
+        {% endif %}
+        /* The URL to a REST map configuration service.  This service
+         * provides listing and, with an authenticated user, saving of
+         * maps on the server for sharing and editing.
+         */
+        rest: "{% url "maps_browse" %}",
+        ajaxLoginUrl: "{% url "account_ajax_login" %}",
+        homeUrl: "{% url "home" %}",
+        portalItems: [{
+            xtype: "container",
+            layout: "fit",
+            {% if classification_banner_enabled %}
+            height: 99,
+            {% else %}
+            height: 81,
+            {% endif %}
+            region: "north"
+        }],
+        localGeoServerBaseUrl: "{{ GEOSERVER_BASE_URL }}",
+        localCSWBaseUrl: "{{ CATALOGUE_BASE_URL }}",
+        csrfToken: "{{ csrf_token }}",
+        tools: [{ptype: "gxp_getfeedfeatureinfo"}],
+  };
+  goog.object.extend( config, {{ config|safe }});
+  console.log('############ config: ', config);
+</script>
+
+
+</head>
+<body style="height:100%">
+
+
+      {% maploom_html %}
+
+
+
+</body>
+</html>

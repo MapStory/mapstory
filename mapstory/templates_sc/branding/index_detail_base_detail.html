@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="col-sm-12">
+    {% ifequal page "layer" %}
+    <h4 style="text-decoration: underline">Layer</h5>
+    {% else %}
+      {% ifequal page "map" %}
+      <h4 style="text-decoration: underline">Storyscapes</h5>
+      {% endifequal %}
+    {% endifequal %}
+    <h2 class="page-title">{{ resource.title }}</h2>
+  </div>
+</div>

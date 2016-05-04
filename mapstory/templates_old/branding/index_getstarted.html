@@ -1,0 +1,48 @@
+{% load i18n %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="csection-text">
+                <h1><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></h1>
+                <h3>{% trans "MapStory is an open platform for organizing our knowledge about how the world changes over time and space. Click on a link to the right, and learn how you can start contributing observations of your own." %}
+                </h3>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="row" style="padding:20px">
+                <div class="col-sm-3 photobox">
+                    <a href="{% url 'getpage' 'started' %}#Students"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/students.png"></a>
+                    <h5 class="text-center">{% trans "Students" %}</h5>
+                </div>
+                <div class="col-sm-3 photobox">
+                    <a href="{% url 'getpage' 'started' %}#Educators"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/teachers.png"></a>
+                    <h5 class="text-center">{% trans "Educators" %}</h5>
+                </div>
+                <div class="col-sm-3 photobox">
+                    <a href="{% url 'getpage' 'started' %}#Humanitarians"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/humanitarians.png"></a>
+                    <h5 class="text-center">{% trans "Humanitarians" %}</h5>
+                </div>
+                <div class="col-sm-3 photobox">
+                    <a href="{% url 'getpage' 'started' %}#Businesspeople"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/business.png"></a>
+                    <h5 class="text-center">{% trans "Businesspeople" %}</h5>
+                </div>
+                <div class="col-sm-3 photobox">
+                    <a href="{% url 'getpage' 'started' %}#Librarians"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/librarians.png"></a>
+                    <h5 class="text-center">{% trans "Librarians" %}</h5>
+                </div>
+                <div class="col-sm-3 photobox">
+                    <a href="{% url 'getpage' 'started' %}#Researchers"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/researchers.png"></a>
+                    <h5 class="text-center">{% trans "Researchers" %}</h5>
+                </div>
+                <div class="col-sm-3 photobox">
+                    <a href="{% url 'getpage' 'started' %}#Policymakers"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/policy.png"></a>
+                    <h5 class="text-center">{% trans "Policy Makers" %}</h5>
+                </div>
+                <div class="col-sm-3 photobox">
+                    <a href="{% url 'getpage' 'started' %}#Journalists"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/journalist.png"></a>
+                    <h5 class="text-center">{% trans "Journalists" %}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

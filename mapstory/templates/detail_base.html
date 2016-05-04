@@ -71,18 +71,7 @@
         </div>
       </div>
       <div class="col-sm-5" style="padding:15px">
-        <div class="row">
-          <div class="col-sm-12">
-            {% ifequal page "layer" %}
-            <h4 style="text-decoration: underline">StoryLayer</h5>
-            {% else %}
-              {% ifequal page "map" %}
-              <h4 style="text-decoration: underline">MapStory</h5>
-              {% endifequal %}
-            {% endifequal %}
-            <h2 class="page-title">{{ resource.title }}</h2>
-          </div>
-        </div>
+        {% include "branding/detail_base_detail.html" %}
         <hr style="margin-top:10px;margin-bottom:10px">
         <div class="row">
           <div class="col-sm-9">

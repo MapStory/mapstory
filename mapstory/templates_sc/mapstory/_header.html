@@ -1,0 +1,113 @@
+{% load i18n avatar_tags %}
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header col-md-2">
+            <a class="navbar-brand" href="{% url "home" %}">MapStory</a>
+        </div>
+
+        {% if not hide_menu %}
+
+        <div class="navbar-collapse collapse pull-right">
+            <ul class="nav navbar-nav">
+                <li class="navbar-menu">
+                    <a href="{% url "search" %}">{% trans "Explore" %}</a>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">{% trans 'Create' %}</a>
+                    <ul class="dropdown-menu">
+                        {% if user.is_authenticated %}
+                            <li><a class="pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "Upload StoryLayer" %}</a></li>
+                            <li><a class="pointer" ng-controller="createLayerCtrl" ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "Create Storylayer" %}</a></li>
+                        {% else %}
+                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Upload StoryLayer" %}</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Create Storylayer" %}</a></li>
+                        {% endif %}
+                        <li><a href="{% url 'new_map' %}?tour">{% trans "Compose Storyscape" %}</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">{% trans 'How To' %}</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></li>
+                        <li><a href="{% url 'getpage' 'skills' %}">{% trans "Get Skills" %}</a></li>
+                        <li><a href="{% url 'getpage' 'involved' %}">{% trans "Get Involved" %}</a></li>
+                    </ul>
+                </li>
+                <li class="navbar-menu">
+                    <a href="{% url "diary" %}">{% trans "Journal" %}</a>
+                </li>
+                <li class="navbar-menu">
+                    <form class="navbar-form" id="search" action="{% url "search" %}">
+                        <div class="col-md-3" style="width:285px;">
+                          <div class="input-group">
+                            {% if HAYSTACK_SEARCH %}
+                            <input id="quicksearch" type="text" class="form-control" name="q">
+                            {% else %}
+                            <input id="quicksearch" type="text" class="form-control" name="keywords__slug__in">
+                            {% endif %}
+                            <span class="input-group-btn">
+                              <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+                            </span>
+                          </div>
+                        </div>
+                    </form>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right" id="navbar-avatar-login">
+                <li class="dropdown">
+                    {% if user.is_authenticated %}
+                <li class="user-avatar">
+                    <img class="img-circle" src="{% avatar_url user 35 %}" width="30" height="30"/>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="admin-icon">
+                        {{ user.username }}
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url "profile_detail" slug=user.username %}"><i class="fa fa-cloud-upload"></i> {% trans "Your Data" %}</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{% url "profile_detail" slug=user.username %}"><i class="fa fa-user"></i> {% trans "Profile" %}</a></li>
+                        <li><a href="{% url "recent-activity" %}"><i class="fa fa-fire"></i> {% trans "Recent Activity" %}</a></li>
+                        <li><a href="{% url "messages_inbox" %}"><i class="fa fa-inbox"></i> {% trans "Inbox" %}</a></li>
+                        {% if perms.announcements.can_manage %}
+                        <li><a href="{% url "announcements_list" %}"><i class="fa fa-bullhorn"></i> {% trans "Announcements" %}</a></li>
+                        {% endif %}
+                        {% if user.is_superuser %}
+                        <li><a href="{% url "services" %}"><i class="fa fa-globe"></i> {% trans "Remote Services" %}</a></li>
+                        <li><a href="{% url "account_invite_user" %}"><i class="fa fa-edit"></i> {% trans "Invite User" %}</a></li>
+                        <li class="divider"></li>
+                        <li><a href="{{ GEOSERVER_BASE_URL }}"><i class="fa fa-gears"></i> {% trans "GeoServer" %}</a></li>
+                        {% endif %}
+                        {% if user.is_staff %}
+                        <li><a href="{% url "admin:index" %}"><i class="fa fa-cog"></i> {% trans "Admin" %}</a></li>
+                        {% endif %}
+                        <li class="divider"></li>
+                        <li><a title="Help" rel="tooltip" href="http://help.mapstory.org"><i class="fa fa-question-circle"></i> {% trans "Help" %}</a></li>
+                        <li class="divider"></li>
+                        <li>
+                            <form action="{% url "account_logout" %}" id="logout_form" method="post">
+                                  {% csrf_token %}
+                                  <a class="navbar-logout" href="javascript:{}" onclick="document.getElementById('logout_form').submit();"><i class="fa fa-sign-out"></i> {% trans "Log out" %}</a>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="navbar-menu">
+                    <a role="button" id="login-icon" data-toggle="modal" data-target="#loginModal">
+                        <i class="fa fa-user"></i>
+                    </a>
+                <li/>
+                {% endif %}
+                </li>
+            </ul>
+        </div><!--/.nav-collapse -->
+        {% endif %}
+    </div>
+</div>
+{% if not hide_menu %}
+
+{% include 'mapstory/_login_register.html' %}
+
+{% endif %}

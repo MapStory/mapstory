@@ -14,9 +14,9 @@
     <h2 class="page-title">{% trans "Delete Your Profile" %}</h2>
   </div>
   <div class="col-md-12">
-    <p>If you would like to deactivate your profile, untick the box below. You will not be able to use your account once deactivated. To reactivate, please email info@mapstory.org.</p>
+    <p>If you would like to deactivate your profile, untick the box below. You will not be able to use your account once deactivated. To reactivate, please email {% include "branding/email.html" %}.</p>
 
-    <p>Note that the deactivation of a profile does not remove the content that was uploaded with this profile. If you wish to remove content, you may do so manually on your <a href="{% url "profile_detail" slug=user.username %}">profile page.</a> Otherwise, to have your profile completely deleted, you must <a href="mailto:info@mapstory.org">contact an administrator.</a></p>
+    <p>Note that the deactivation of a profile does not remove the content that was uploaded with this profile. If you wish to remove content, you may do so manually on your <a href="{% url "profile_detail" slug=user.username %}">profile page.</a> Otherwise, to have your profile completely deleted, you must <a href='mailto:{% include "branding/email.html" %}'>contact an administrator.</a></p>
 
     <form action="" method="post" class="form-horizontal">
       <!-- <legend>{% trans "Edit Your Profile" %}</legend> -->

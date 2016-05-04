@@ -1,0 +1,16 @@
+{% load i18n %}
+{% load mapstory_tags %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <img class="img-responsive" src="{% remote_content 'static_img/get-involved-cropped.jpg' %}" style="border-radius: 2%; width: 90%; height: 90%; margin: auto;"/>
+        </div>
+        <div class="col-sm-4">
+            <div class="csection-text">
+                <h1><a href="{% url 'getpage' 'involved' %}">{% trans "Get Involved" %}</a></h1>
+                <h3>{% trans "Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the storyscapes.org platform. We’re a community, not a company." %}
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>

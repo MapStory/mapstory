@@ -1,0 +1,6 @@
+<div class="col-md-8">
+    {% verbatim %}
+    <button ng-if="agreed && password.length >= 8" id="join-mapstory-button" class="mapstory-auth-btn btn btn-md bg-ms btn-block">Join Storyscapes</button>
+    <button ng-if="!agreed || password.length < 8" id="join-mapstory-button" class="btn btn-md bg-ms btn-block" disabled>Join Storyscapes</button>
+    {% endverbatim %}
+</div>

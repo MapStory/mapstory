@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load scope %}
+
+{% block extra_head %}
+<link href="{{ STATIC_URL }}mapstory/css/app.css" rel="stylesheet" />
+{% endblock %}
+{% block header %}
+{% include 'mapstory/_header.html'  with hide_menu=True %}
+        <div class="oauth-body">
+            <h2>Login with Storyscapes</h2>
+            {% if not error %}
+            <p>{{ client.name }} would like to access the following information:</p>
+            <ul>
+                <li>
+                    Your Storyscapes user profile (including username and email address)
+                </li>
+            </ul>
+            <form method="post" action="{% url "oauth2:authorize" %}">
+            {% csrf_token %}
+            {{ form.errors }}
+            {{ form.non_field_errors }}
+            <div style="display: none;" />
+            <select type="select" name="scope" multiple="multiple">
+                {% for scope in oauth_data.scope|scopes %}
+                <option value="{{ scope }}" selected="selected">{{ scope }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success" name="authorize" value="Authorize" >AUTHORIZE</button>
+        <button type="submit" class="btn btn-danger" value="Cancel">CANCEL</button>
+        </form>
+        {% else %}
+        <div class="alert alert-danger">
+            Sorry, an error occurred:<br>{{ error_description }}
+        </div>
+        {% endif %}
+    </div>
+{% endblock%}
+
+{% block footer %}
+    <footer></footer>
+{% endblock %}

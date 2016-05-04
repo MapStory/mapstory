@@ -98,6 +98,7 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)
+        ctx['SITENAME'] = settings.SITENAME
         ctx['sponsors'] = get_sponsors()
         ctx['communities'] = get_featured_groups()
         news_items = NewsItem.objects.filter(date__lte=datetime.datetime.now())

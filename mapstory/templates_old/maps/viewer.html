@@ -1,0 +1,85 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="{{ STATIC_URL }}mapstory/css/ol.css" type="text/css">
+<link rel="stylesheet" href="{{ STATIC_URL }}mapstory/vis/dist/vis.min.css" type="text/css"/>
+<link rel="stylesheet" href="{{ STATIC_URL }}vendor/nouislider/distribute/jquery.nouislider.min.css" type="text/css">
+
+<script src="{{STATIC_URL}}vendor/jquery/dist/jquery.min.js"></script>
+<script src="{{STATIC_URL}}vendor/angular/angular.js" ></script>
+
+<script src="{{STATIC_URL}}vendor/nouislider/distribute/jquery.nouislider.min.js" type="text/javascript"></script>
+<script src="{{STATIC_URL}}vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="{{STATIC_URL}}vendor/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
+
+<script src="{{STATIC_URL}}mapstory/js/ol.js"></script>
+<script src="{{STATIC_URL}}vendor/story-tools/dist/story-tools-core-tpls.js"></script>
+<script src="{{STATIC_URL}}vendor/story-tools/dist/story-tools-core.js"></script>
+<script src="{{STATIC_URL}}vendor/story-tools/dist/story-tools-core-ng.js"></script>
+<script src="{{STATIC_URL}}vendor/story-tools/dist/ows.js"></script>
+<script src="{{STATIC_URL}}vendor/story-tools/dist/story-tools-mapstory.js"></script>
+
+{% include 'maps/viewer.js' %}
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}mapstory/css/viewer.css"/>
+<div ng-app="viewer" ng-controller="viewerController as viewer" id="story-viewer">
+    <div id="main">
+        <div id="content">
+            <div id="middle">
+                <div id="header">
+                    {%verbatim%}
+                    <div id="title">
+                        <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id')}}/viewer">
+                            <span ng-bind="mapManager.title"></span>
+                        </a>
+                    </div>
+                    <div id="author" ng-bind="mapManager.owner"></div>
+                    {%endverbatim%}
+                </div>
+                <div class="stLegend"></div>
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer" class='floating-below'>
+
+        {%verbatim%}
+        <div class="panel-group" id="summary-panel">
+            <div class="panel panel-default" id="summary-accordion">
+                <div class="panel-heading" style="height: 50px;">
+                    <button class="btn ng-scope" style="float: left;" ng-click="previousChapter()" ng-disabled="mapManager.storyChapter == 1" tooltip-placement="top" tooltip-append-to-body="true" tooltip="Previous Chapter"><i class="glyphicon glyphicon-step-backward"></i></button>
+                    <button class="btn ng-scope" style="float: right;" ng-click="nextChapter()" ng-disabled="mapManager.storyChapter == mapManager.chapterCount" tooltip-placement="top" tooltip-append-to-body="true" tooltip="Next Chapter"><i class="glyphicon glyphicon-step-forward"></i></button>
+                    <h4 class="panel-title" style="text-align: center;">
+                        <a id="summary-title" style="font-weight:400;" data-toggle="collapse" data-target="#summary-body" class="collapsed">
+                            <div>{{ mapManager.storyMap.getStoryTitle() }}</div>
+                            <div style="font-size: smaller;">Chapter {{ mapManager.storyChapter }} of  {{ mapManager.chapterCount }}</div>
+                        </a>
+                    </h4>
+                </div>
+                <div id="summary-body" class="panel-collapse collapse" style="height: 0px;">
+                    <div id="summary-description" class="panel-body"
+                         ng-bind="mapManager.storyMap.getStoryAbstract()"></div>
+                </div>
+            </div>
+        </div>
+        {%endverbatim%}
+
+        <div id="time-controls-panel2" ng-show="timeControlsManager.timeControls">
+            <div class="navbar" ng-controller="tileProgressController">
+                <st-playback-controls class="pull-left"
+                                      time-controls="timeControlsManager.timeControls"></st-playback-controls>
+                <progressbar animate="false" class="navbar-nav navbar-right" value="tilesLoadedProgress">
+                    <b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad"></b>
+                </progressbar>
+            </div>
+            <div id="playback-settings" class="panel-collapse collapse" style="height: 0px; color:white">
+                <div class="panel-heading">Playback Options</div>
+                <st-playback-settings playback-options="playbackOptions" time-controls="timeControlsManager.timeControls"></st-playback-settings>
+            </div>
+            <div id="timeline" style="display:none;"></div>
+        </div>
+    </div>
+</div>
+<div style="display: none;">
+  <div id="story-pin-popup"></div>
+</div>

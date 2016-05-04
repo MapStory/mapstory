@@ -1,0 +1,3 @@
+{{ user }}, activate your account on Storyscapes:
+
+{{ activate_url }}

@@ -1,0 +1,42 @@
+<ul class="nav nav-tabs ">
+    <li class="active">
+        <a href="#mapstories_list" data-toggle="tab" ng-click="query={q: query.q}; query.type__in='mapstory'; query.owner__username__in='{{profile.username}}'; search();">
+            <div class="counter"><span ng-bind="total_maps"></span></div>
+            Storyscapes </a>
+    </li>
+    <li>
+        <a href="#storylayers_list" data-toggle="tab" ng-click="query={q: query.q}; query.type__in='layer'; query.owner__username__in='{{profile.username}}'; search();">
+            <div class="counter"><span ng-bind="total_layers"></span></div>
+            StoryLayers </a>
+    </li>
+    {% if user == profile %}
+    <li>
+        <a href="#uploads_list" data-toggle="tab">
+            <div class="counter"><span ng-bind="totalItems"></span></div>
+            Uploads
+        </a>
+    </li>
+    <li>
+        <a href="#messages_list" data-toggle="tab">
+            <div class="counter">{{ inbox_count }}</div>
+            Messages </a>
+    </li>
+
+    {% endif %}
+    <li>
+        <a href="#user_activities" data-toggle="tab">
+            <div class="counter">{{ action_list.count }}</div>
+            Activity Feed </a>
+    </li>
+    <li>
+        <a href="#diary_entries" data-toggle="tab">
+            <div class="counter">{{diary_entries.count}}</div>
+            Journal Entr{{diary_entries|pluralize:"y,ies"}} </a>
+    </li>
+    <li>
+        <a href="#favorite_list" data-toggle="tab">
+            <div class="counter">{{ favorites.count }}</div>
+            Favorite{{favorites|pluralize}}
+        </a>
+    </li>
+</ul>

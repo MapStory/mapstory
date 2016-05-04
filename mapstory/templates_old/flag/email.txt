@@ -1,0 +1,5 @@
+{{  flag.user.username }} flagged {{ display }}, noting:
+
+{{ flag.comment }}
+
+<a href='{{ url }}'>Admin Link</a>

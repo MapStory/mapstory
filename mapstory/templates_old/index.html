@@ -1,0 +1,373 @@
+{% extends "site_base.html" %}
+{% load webdesign %}
+{% load i18n %}
+{% load staticfiles %}
+{% load base_tags %}
+{% load mapstory_tags %}
+{% load cache %}
+{% load avatar_tags %}
+
+{% block extra_head %}
+<!--<link href="{{ STATIC_URL }}vendor/isotope/css/style.css" rel="stylesheet" />-->
+<link href="{{ STATIC_URL }}mapstory/css/index.css" rel="stylesheet" />
+{% endblock %}
+
+{% block extra_script %}
+{{ block.super }}
+<script type="text/javascript" src="{{ STATIC_URL }}vendor/modernizr/modernizr.js"></script>
+<script async defer src="https://assets.pinterest.com/js/pinit.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}vendor/isotope/jquery.isotope.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/index.js"></script>
+<script type="text/javascript">
+    // Fix placeholder text for Home Page Search
+    HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
+    HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
+    CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
+</script>
+{% endblock %}
+
+{% block middle %}
+<div ng-controller="search_controller">
+    <section id="topParallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }}); height: 600px;"></div>
+    </section>
+
+    <section class="slice" id="welcome" style="margin-top:-250px;">
+        <div class="container">
+            <div class="row" style="padding-top:-10px;">
+                <div class="col-sm-12" style="padding:15px;">
+                    <h1 class="text-center">StoryScapes</h1>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 5px;">
+                <div class="input-group col-sm-6 col-sm-offset-3 col-xs-offset-2">
+                    <form action="{% url "search" %}">
+                        <div class="input-group">
+                        {% if HAYSTACK_SEARCH %}
+                        <input class="form-control" id="homepage_search" type="text" name="q" style="color:chocolate;background-color:whitesmoke;border:1px solid white" placeholder="Explore StoryScapes and StoryLayers">
+                        {% else %}
+                        <input class="form-control" id="homepage_search" type="text" name="keywords__slug__in" style="color:chocolate;background-color:whitesmoke;border:1px solid white" placeholder="Explore StoryScapes and StoryLayers">
+                        {% endif %}
+                        <span class="input-group-btn">
+                          <button class="btn" type="submit" style="background-color:#EEE;color:black;border:1px solid white"><i class="fa fa-search"></i></button>
+                        </span>
+                        </div>
+                    </form>
+               </div>
+            </div>
+            <div class="row links" style="padding-top:15px;padding-bottom:5px color:#fff;">
+                <div class="col-sm-3">
+                    <h3>
+                        <a href="#" data-toggle="modal" data-target="#loginModal">
+                            Sign up now
+                        </a>
+                    </h3>
+                </div>
+                <div class="col-sm-3">
+                    <h3>
+                        <a href="" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">
+                            Upload Layers
+                        </a>
+                    </h3>
+                </div>
+                <div class="col-sm-3">
+                    <h3>
+                        <a href="{% url 'new_map' %}?tour">
+                            Compose Storyscape
+                        </a>
+                    </h3>
+                </div>
+                <div class="col-sm-3">
+                    <h3>
+                        <a href="{% url 'getpage' 'started' %}">
+                            Learn more
+                        </a>
+                    </h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="localscroll" style="text-align:center">
+                    <!-- TODO: Link to mapstories is the section that doesn't exist yet -->
+                    <a href="#mapstories" class="btn btn-circle btn-sm btn-default" style="background-color:#020F1A;color:white;border:1px solid transparent;border-radius:100%;padding:5px 8px"">
+                    <i class="fa fa-chevron-down" id="mapstories"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TODO: New categories must be implemented or the button queries will just return nothing -->
+    {% verbatim %}
+    <section class="slice">
+        <div class="container">
+            <nav id="filter" class="col-md-12 text-center" style="left: -20px;">
+                <ul class="nav nav-tabs" style="padding-left: 50px;">
+                    <!-- NOTE: The specific category names for querying may need to be updated -->
+                    <li><a ng-click="query_category();" class="btn btn-filter btn-sm sectionTab">All StoryScapes</a></li>
+                    <li><a ng-click="query_category('crisis');" class="btn btn-filter btn-sm sectionTab">Crisis</a></li>
+                    <li><a ng-click="query_category('geopolitics');" class="btn btn-filter btn-sm sectionTab">Geopolitics</a></li>
+                    <li><a ng-click="query_category('scienceIndustry');" class="btn btn-filter btn-sm sectionTab">Science & Industry</a></li>
+                    <li><a ng-click="query_category('humanSettlement');" class="btn btn-filter btn-sm sectionTab">Human Settlement</a></li>
+                    <li><a ng-click="query_category('cultureIdeas');" class="btn btn-filter btn-sm sectionTab">Culture & Ideas</a></li>
+                    <li><a ng-click="query_category('natureEnvironment');" class="btn btn-filter btn-sm sectionTab">Nature & Environment</a></li>
+                    <li><a ng-click="query_category('health');" class="btn btn-filter btn-sm sectionTab">Health</a></li>
+                    <li><a ng-click="query_category('biography');" class="btn btn-filter btn-sm sectionTab">Biography</a></li>
+                </ul>
+            </nav>
+            <div class="row">
+                <p ng-hide="results.length">No Featured Items in this category ...</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="slice">
+        <div class="container">
+            <div ng-if="results.length">
+                <slick infinite="true" slides-to-show="4" autoplay="true" init-onload="true" data="results">
+                    <div class="col-md-3" ng-repeat="item in results" style="right: -5px;">
+                        <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:0; border-style:none;"/></a>
+                        <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
+                        <h5 class="abstract">{{ item.abstract|limitTo:250  }}<br><a href="{{ item.detail_url}}" style="color:#428bca; line-height:22px;">→ read more</a></h5>
+                        <h4><span class="owner">{{ item.owner.username}}</span></h4>
+                    </div>
+                </slick>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    {% endverbatim %}
+
+    <!-- <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
+    </section> -->
+
+    <!-- <section class="slice" id="getstarted">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="csection-text">
+                        <h1><a href="{% url 'getpage' 'started' %}">Get Started</a></h1>
+                        <h3>Storyscape is an open platform for organizing our knowledge about how the world changes over time and space. Click on a link to the right, and learn how you can start contributing observations of your own.
+                        </h3>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="row" style="padding:20px">
+                        <div class="col-sm-3 photobox">
+                            <a href="{% url 'getpage' 'started' %}#Students"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/students.png"></a>
+                            <h5 class="text-center">Students</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <a href="{% url 'getpage' 'started' %}#Educators"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/teachers.png"></a>
+                            <h5 class="text-center">Educators</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <a href="{% url 'getpage' 'started' %}#Humanitarians"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/humanitarians.png"></a>
+                            <h5 class="text-center">Humanitarians</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <a href="{% url 'getpage' 'started' %}#Businesspeople"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/business.png"></a>
+                            <h5 class="text-center">Businesspeople</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <a href="{% url 'getpage' 'started' %}#Librarians"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/librarians.png"></a>
+                            <h5 class="text-center">Librarians</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <a href="{% url 'getpage' 'started' %}#Researchers"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/researchers.png"></a>
+                            <h5 class="text-center">Researchers</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <a href="{% url 'getpage' 'started' %}#Policymakers"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/policy.png"></a>
+                            <h5 class="text-center">Policy Makers</h5>
+                        </div>
+                        <div class="col-sm-3 photobox">
+                            <a href="{% url 'getpage' 'started' %}#Journalists"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/journalist.png"></a>
+                            <h5 class="text-center">Journalists</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
+    </section> -->
+
+    <!-- <section class="slice" id="getinvolved">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8">
+                    <img class="img-responsive" src="{% remote_content 'static_img/get-involved-cropped.jpg' %}" style="border-radius: 2%; width: 90%; height: 90%; margin: auto;"/>
+                </div>
+                <div class="col-sm-4">
+                    <div class="csection-text">
+                        <h1><a href="{% url 'getpage' 'involved' %}">Get Involved</a></h1>
+                        <h3>Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the Storyscape platform. We’re a community, not a company.
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax2' }});"></div>
+    </section> -->
+
+    <!-- <section class="slice" id="getskills">
+        <div class="container">
+                <h1>Get Skills</h1>
+                <h3>Storyscape is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed.
+                </h3>
+            <br/>
+            <div class="row">
+                <div class="col-sm-4">
+                    <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/101.png">
+                    <a href="{% url 'getpage' 'skills' %}"><h2>1. Storyscape 101</h2></a>
+                    <h5>Learn all the basic skills you need to start collecting data and creating MapStories of your own.</h5>
+                </div>
+                <div class="col-sm-4">
+                    <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/wiki.png">
+                    <a href="http://wiki.mapstory.org"><h2>2. Storyscape Wiki</h2></a>
+                    <h5>Find and share more resources alongside the global Storyscape community.</h5>
+                </div>
+                <div class="col-sm-4">
+                    <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/Help.png">
+                    <a href="http://help.mapstory.org"><h2>3. Help Center</h2></a>
+                    <h5>Ask questions, find answers, and help others.</h5>
+                </div>
+                </div>
+        </div>
+    </section> -->
+
+    <!-- <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
+    </section> -->
+
+    <!-- <section class="slice" id="thinkers">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8">
+                        {% for item in diary_entries %}
+                        {% if forloop.counter0|divisibleby:4 %}<div class="row" style="padding:20px">{% endif %}
+                            <div class="col-sm-3 photobox">
+                                <a href="{% url "diary-detail" item.pk %}">
+                                    <img class="img-circle" src="{% avatar_url item.author 150 %}" width="150" height="150"/>
+                                    <h5 class="text-center">
+                                        <strong>{{ item.title|truncatechars:48 }}</strong>
+                                        <br/>
+                                        {% include "people/_profile_name_display.html" with profile=item.author only %}
+                                    </h5>
+                                </a>
+                            </div>
+                        {% if forloop.counter|divisibleby:4 or forloop.last %}</div>{% endif %}
+                        {% empty %}
+                        <p>No Featured Thinkers and Thoughts...</p>
+                        {% endfor %}
+                </div>
+                <div class="col-sm-4">
+                    <h1>Thinkers and Thoughts</h1>
+                    <h3>The latest insights from leading Storyscapetellers. For more, visit the <a href="{% url 'diary' %}">Community Journal</a>
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
+    </section> -->
+
+    <!-- <section class="slice" id="news">
+        <div class="csection">
+            <div class="row">
+                <h1 class="text-center">Storyscape projects making the news</h1>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <a class="twitter-timeline" href="https://twitter.com/Storyscapes" data-widget-id="517343764738621440">Tweets by @Storyscape</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                </div>
+                <div class="col-sm-8">
+                    {% for item in news_items %}
+                    <h3><strong>{{ item.title }}</strong> <small class="pull-right">{{ item.date }}</small></h3>
+                    <hr>
+                    {{ item.html|safe  }}
+                    {% empty %}
+                    <p>No News Items. Add <a href="{% url 'admin:mapstory_newsitem_add' %}">some</a></p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="qlink-right qlink-fb">[p_a_g_i_n_a_t_i_o_n l_i_n_k_s h_e_r_e]</div>
+            </div>
+
+        </div>
+    </section> -->
+
+    <!-- <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax2' }});"></div>
+    </section> -->
+
+    <!-- <section class="slice" id="community">
+        <div class="container">
+            <div class="row">
+                <h1 class="text-center">Community Initiatives</h1>
+                <h3 class="text-center">Our Community Initiative leads are taking on huge data collection tasks, like mapping the history of human settlement and country borders. Click on one below, and start contributing...
+                </h3>
+            </div>
+            <hr/>
+            <div class="row">
+                <slice infinite="true" slides-to-show="6" autoplay="true">
+                    {% for community in communities %}
+                    <div class="col-sm-2">
+                        <a href="{% url "community-detail" community.slug %}">
+                            <img class="rdphoto" src="{{ community.url }}" alt="{{ community.name }} - {{ community.description }}">
+                        </a>
+                    </div>
+                    {% empty %}
+                    <p>No Community Initiatives. Add <a href="{% url 'admin:mapstory_community_add' %}">some</a></p>
+                    {% endfor %}
+                </slice>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- <section class="parallax">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
+    </section> -->
+
+    <!-- <section class="slice" id="sponsors">
+        <div class="container">
+            <div class="row">
+                <h1 class="text-center">Our Sponsors</h1>
+                <h3 class="text-center">Learning institutions like these drive innovation in the Storyscape codebase, content and community. <a href="{% url 'donate' %}">Join them.</a>
+                </h3>
+            </div>
+            <hr/>
+            <div class="row">
+                <slice infinite="true" slides-to-show="6" autoplay="true">
+                    {% for sponsor in sponsors %}
+                    <div class="col-sm-2">
+                        <a href="{{ sponsor.link }}">
+                            <img src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
+                        </a>
+                    </div>
+                    {% empty %}
+                    <p>No Sponsors. Add <a href="{% url 'admin:mapstory_sponsor_add' %}">some</a></p>
+                    {% endfor %}
+                </slice>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- <section class="parallax" style="margin-bottom:-40px;">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
+    </section> -->
+</div></div>
+{% endblock %}

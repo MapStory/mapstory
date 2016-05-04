@@ -1,0 +1,78 @@
+{% extends "upload/layer_upload_base.html" %}
+{% load i18n %}
+{% load bootstrap_tags %}
+
+{% block title %} {% trans "Upload Layer" %} - {{ block.super }} {% endblock %}
+
+
+{% block body_outer %}
+<div class="page-header">
+  <h2 class="page-title">{% trans "Edit Metadata" %}</h2>
+</div>
+{% with 'metadata' as active_tab %}
+    {% include 'upload/layer_wizard.html' %}
+{% endwith %}
+
+<div class="row">
+  <div class="col-md-8">
+    <form class="form-horizontal" action="{% url "layer_upload_metadata" layer.service_typename %}" method="POST">
+      {% if layer.metadata_uploaded %}
+    	<p class="bg-warning">{% blocktrans %}Note: this layer's orginal metadata was populated by importing a metadata XML file.
+          GeoNode's metadata import supports a subset of ISO, FGDC, and Dublin Core metadata elements.
+          Some of your original metadata may have been lost.{% endblocktrans %}</p>
+      {% endif %}
+
+      {% if layer_form.errors or category_form.errors %}
+    	  <p class="bg-danger">{% blocktrans %}Error updating metadata.  Please check the following fields: {% endblocktrans %}</p>
+        <ul class="bg-danger">
+          {% for field in layer_form %}
+            {% if field.errors %}
+            <li>{{ field.label }}</li>
+            {% endif %}
+          {% endfor %}
+          {% if category_form.errors %}
+            <li>{{ category_form.errors.as_ul }}</li>
+          {% endif %}
+          </ul>
+        {% endif %}
+
+
+        {% csrf_token %}
+        <div class="col-md-8 form-controls">
+          {{ layer_form|as_bootstrap }}
+
+          <fieldset id="category_form" class="form-group">
+          <label class="control-label required-field">{% trans "Category" %}</label>
+          {% autoescape off %}
+          <select class="form-control" name="category_choice_field">
+              {% for choice in category_form.category_choice_field.field.choices %}
+            <option  value="{{ choice.0 }}"
+              {% ifequal category_form.initial choice.0 %} selected {% endifequal %}>
+              {{ choice.1 }}
+            </option>
+              {% endfor %}
+          </select>
+          {% endautoescape %}
+        </fieldset>
+
+          <div class="form-actions form-group">
+            <input type="submit" class="btn btn-primary" value="{% trans "Save as Draft" %}"/>
+          </div>
+          <p>
+            Once you hit save, your StoryLayer will appear in your Profile as a private draft. To make it Public for everyone to see and use, you can switch the viewing status in the metadata tab of the StoryLayer.
+          </p>
+        </div>
+
+
+      </form>
+  </div>
+  <div class="col-md-4 well">
+      <h3>Having problems?</h3>
+      <p>Click <a href="http://wiki.mapstory.org/wiki/MapStory_Uploader">here</a> for more resources to help you with Upload. Or visit <a href="http://help.mapstory.org">help.mapstory.org</a> and post your question for the community</p>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+ {% include 'metadata_form_js.html' %}
+{% endblock %}

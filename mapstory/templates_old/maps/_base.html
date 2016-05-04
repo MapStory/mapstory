@@ -1,0 +1,32 @@
+{% load staticfiles i18n avatar_tags %}
+
+<!DOCTYPE html>
+<html ng-app="ngBoilerplate">
+<head>
+<title ng-bind="pageTitle"></title>
+
+<script type="text/javascript">
+  var CLOSURE_NO_DEPS = true;
+</script>
+
+<link rel="shortcut icon" href="{% static 'mapstory/img/favicon.ico' %}">
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}mapstory/css/app.css"/>
+{% block styles %}
+{% endblock %}
+
+{% include 'maps/_map_view_common.html' %}
+{% block scripts %}
+{% endblock %}
+
+{% if DEBUG_STATIC %}
+{% comment %}Using 35730 for mapstory css to not conflict with maploom grunt{% endcomment %}
+<script src="http://localhost:35730/livereload.js"></script>
+{% endif %}
+
+
+</head>
+<body>
+{% block body %}
+{% endblock %}
+</body>
+</html>

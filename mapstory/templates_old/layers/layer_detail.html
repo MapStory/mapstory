@@ -1,0 +1,132 @@
+{% extends "layers/layer_base.html" %}
+{% load i18n %}
+{% load dialogos_tags %}
+{% load agon_ratings_tags %}
+{% load bootstrap_tags %}
+{% load url from future %}
+{% load base_tags %}
+{% load guardian_tags %}
+{% load friendly_loader %}
+{% friendly_load avatar_tags %}
+
+{% block title %}{{ resource.title|default:resource.typename }} — {{ block.super }}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css" />
+<link href="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css" rel="stylesheet" />
+{% if preview == 'geoext' %}
+  {% include "layers/layer_geoext_map.html" %}
+{% else %}
+  {% include "layers/layer_leaflet_map.html" %}
+{% endif %}
+{{ block.super }}
+{% endblock %}
+
+
+{% block body_class %}layers{% endblock %}
+
+{% block body_outer %}
+{% include "detail_base.html" with page="layer" %}
+
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript" src="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js"></script>
+    {% if GEOGIG_ENABLED and resource.link_set.geogig %}
+        {% with "_geogig_scripts.html" as geogig_scripts_template %}
+            {% include  geogig_scripts_template %}
+        {% endwith %}
+    {% endif %}
+
+    {% if request.user.is_authenticated %}
+        {% user_rating_js request.user resource "layer" %}
+    {% else %}
+      {% overall_rating resource 'layer' as the_layer_rating %}
+    {% endif %}
+    {% include 'rating.html' %}
+    {% include 'request_download.html' %}
+    <script type="text/javascript">
+       $("#comment_submit_btn").click(function(event) {
+            $.ajax({
+              type: "POST",
+              url: $("#form_post_comment").attr('action'),
+              data: $("#form_post_comment").serialize(),
+              success: function() {
+                $('#form_post_comment_div').modal('hide');
+                $('#comments_section').load(window.location.pathname + ' #comments_section', 
+                    function(){$(this).children().unwrap()})
+              }
+            });
+            return false;
+          });
+
+    {% if request.GET.showMetadata == 'true'%}
+    // prompt user to fill out metadata if the showMetadata GET param is true
+    $(window).load(function(){
+            $('#metaForm').modal('show');
+        });
+    {% endif %}
+
+    {% if resource.get_legend.link_type == 'json' %}
+    $.getJSON('{{resource.get_legend_url}}', function (data) {
+        var legend = data.layers[0].legend;
+        var items = [];
+        $.each(legend, function (key, dvalue) {
+            items.push('<li><img src="data:image/png;base64,' + dvalue.imageData + '">'+dvalue.label+'</li>');
+        });
+
+        $('<ul/>', {
+            'class': 'arcgis-legend',
+            html: items.join('')
+
+        }).appendTo('#legend_placeholder');
+
+    });
+    {% endif %}
+        </script>
+    <script type="text/javascript">
+      $('#set_thumbnail').click(function(){
+        createMapThumbnail();
+        $('#edit-layer').modal('toggle');
+      });
+    </script>
+    {% if GEONODE_SECURITY_ENABLED %}
+    {% include "_permissions_form_js.html" %}
+    {% endif %}
+    <script type="text/javascript">
+      HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
+      HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
+      CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
+      {% if HAYSTACK_SEARCH %}
+          SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}';
+      {% else %}
+          SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}';
+      {% endif %}
+    </script>
+
+  {% include "osgeo_importer/_importer_scripts.html" %}
+
+  {% comment %}
+  {% with include_spatial='true' %}
+  {% include 'search/search_scripts.html' %}
+  {% endwith %}
+  {% endcomment %}
+
+
+  <script type="text/javascript" src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
+
+  <script type="text/javascript">
+    $('.download-link').click(function(event){
+      var extension = $(event.target).attr('data-extension');
+      var id = $(event.target).attr('data-id');
+      $.ajax({
+        method: 'POST',
+        url: "{% url "notify-layer-download" %}",
+        data: {
+          extension: extension,
+          id: id
+        }
+      })
+    });
+  </script>
+{% endblock extra_script %}

@@ -1,0 +1,1394 @@
+{% load staticfiles i18n mapstory_tags %}
+
+<div id="main_area">
+    <div class="row" style="padding:20px">
+        <!--Upper Storyboard-->
+        <div class="row col-sm-12" id="slider">
+            <div class="col-sm-8 col-sm-offset-2" id="carousel-bounding-box">
+                <!--<div id="myCarousel" class="carousel slide">-->
+                <div id="xyz" class="">
+                    <div class="carousel-inner well">
+                        <div class="active item" data-slide-number="0">
+                            <div class="fuelux">
+                                <div class="wizard" id="wizard0">
+                                    <ul class="steps">
+                                        <li class="active" data-target="#0step1">
+                                            <span class="step">Contents</span>
+                                        </li>
+                                        <li data-target="#0step2">
+                                            <span class="step">Bounds</span>
+                                        </li>
+                                        <li data-target="#0step3">
+                                            <span class="step">Layers</span>
+                                        </li>
+                                        <li data-target="#0step4">
+                                            <span class="step">Layout</span>
+                                        </li>
+                                    </ul>
+                                    <div class="actions">
+                                        <button class="btn btn-xs btn-prev"><i class="icon-arrow-left"></i>Prev</button>
+                                        <button class="btn btn-xs btn-default btn-next" data-last="Finish">Next <i class="icon-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                                <div class="step-content">
+                                    <hr class="hr-normal">
+                                    <div class="step-pane active" id="0step1">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <img src="{% remote_content 'storyboard/sb1.png' %}" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
+                                                <button class="btn btn-default">Update</button>
+                                            </div>
+                                            <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
+                                                <form class="form">
+                                                    <fieldset>
+                                                        <label class="control-label">StoryBox Title</label> <input type="text" class="char-max-length form-control" maxlength="50"  title="Title"
+                                                                                                                   required> <br>
+                                                        <label>Abstract</label>
+                                                        <textarea class="char-max-length form-control" maxlength="250" type="text" placeholder="Details" rows="5"></textarea>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                            <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
+                                                <form class="form">
+                                                    <fieldset>
+                                                        <div class="col-sm-6"><label class="control-label">Start Time</label> 	<div class="datepicker input-group" id="datepicker1">
+                                                                <input class="form-control" data-format="yyyy-MM-dd" placeholder="Select start time" type="text">
+                                                                <span class="input-group-addon">
+                                                                    <span data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6"><label class="control-label">End Time</label> 	<div class="datepicker input-group" id="datepicker2">
+                                                                <input class="form-control" data-format="yyyy-MM-dd" placeholder="Select end time" type="text">
+                                                                <span class="input-group-addon">
+                                                                    <span data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <label class="control-label">Playback</label><br>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedPrependedDropdownButton" type="text">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group dropdown">
+                                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                            t	<span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#">Seconds</a></li>
+                                                                            <li><a href="#">Minutes</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-1">per</div>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedPrependedDropdownButton" type="text">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group dropdown">
+                                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                            T
+                                                                            <span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#">Hours</a></li>
+                                                                            <li><a href="#">Days</a></li>
+                                                                            <li><a href="#">Months</a></li>
+                                                                            <li><a href="#">Years</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div> <br><br>
+                                                        <label class="control-label">Transition to next StoryBox</label><br>
+                                                        <div class="btn-group dropdown btn-block">
+                                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                Transition
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a href="#">Map Pan and Zoom</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Fade</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Slide</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div> <br>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="0step2"> </div>
+                                    <div class="step-pane" id="0step3">
+                                        <div class="col-sm-6">
+                                            <div class="well" style="padding:5px">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <form class="form">
+                                                <fieldset>
+                                                    <div class="col-sm-6">
+                                                        <label>XMIN</label> <input type="text" class="form-control" title="Title" required> <label>XMAX</label>
+                                                        <input type="text" class="form-control" title="Title" required> <label>Scale</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">1:</span> <input class="col-sm-12 form-control" id="prependedInput" type="text" placeholder="Scale">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label>YMIN</label> <input type="text" class="form-control" title="Title" required> <label>YMAX</label> <input type="text" class="form-control" title="Title" required>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="0step4">
+                                        <button class="btn btn-primary">Edit my Layers</button>
+                                        <button class="btn btn-default">Refresh list</button>
+                                        <br> <br>
+                                        <div class="well" style="padding:5px">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Layer Name</th>
+                                                        <th>Geo</th>
+                                                        <th>Author</th>
+                                                        <th style="width: 50px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 1</td>
+                                                        <td><span class="label label-success">POINT</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 2</td>
+                                                        <td><span class="label label-info">LINE</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 3</td>
+                                                        <td><span class="label label-danger">POLYGON</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 4</td>
+                                                        <td><span class="label label-success">POINT</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 5</td>
+                                                        <td><span class="label label-info">LINE</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 6</td>
+                                                        <td><span class="label label-danger">POLYGON</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item" data-slide-number="1">
+                            <div class="fuelux">
+                                <div class="wizard" id="wizard1">
+                                    <ul class="steps">
+                                        <li class="active" data-target="#1step1">
+                                            <span class="step">Contents</span>
+                                        </li>
+                                        <li data-target="#1step2">
+                                            <span class="step">Bounds</span>
+                                        </li>
+                                        <li data-target="#1step3">
+                                            <span class="step">Layers</span>
+                                        </li>
+                                        <li data-target="#1step4">
+                                            <span class="step">Layout</span>
+                                        </li>
+                                    </ul>
+                                    <div class="actions">
+                                        <button class="btn btn-xs btn-prev"><i class="icon-arrow-left"></i>Prev</button>
+                                        <button class="btn btn-xs btn-default btn-next" data-last="Finish">Next <i class="icon-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                                <div class="step-content">
+                                    <hr class="hr-normal">
+                                    <div class="step-pane active" id="1step1">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <img src="{% remote_content 'storyboard/sb2.png' %}" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
+                                                <button class="btn btn-default">Update</button>
+                                            </div>
+                                            <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
+                                                <form class="form">
+                                                    <fieldset>
+                                                        <label class="control-label">StoryBox Title</label> <input type="text" class="char-max-length form-control" maxlength="50"  title="Title"
+                                                                                                                   required> <br>
+                                                        <label>Abstract</label>
+                                                        <textarea class="char-max-length form-control" maxlength="250" type="text" placeholder="Details" rows="5"></textarea>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                            <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
+                                                <form class="form">
+                                                    <fieldset>
+                                                        <div class="col-sm-6"><label class="control-label">Start Time</label> 	<div class="datepicker input-group" id="datepicker1">
+                                                                <input class="form-control" data-format="yyyy-MM-dd" placeholder="Select start time" type="text">
+                                                                <span class="input-group-addon">
+                                                                    <span data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6"><label class="control-label">End Time</label> 	<div class="datepicker input-group" id="datepicker2">
+                                                                <input class="form-control" data-format="yyyy-MM-dd" placeholder="Select end time" type="text">
+                                                                <span class="input-group-addon">
+                                                                    <span data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <label class="control-label">Playback</label><br>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedPrependedDropdownButton" type="text">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group dropdown">
+                                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                            t	<span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#">Seconds</a></li>
+                                                                            <li><a href="#">Minutes</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-1">per</div>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedPrependedDropdownButton" type="text">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group dropdown">
+                                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                            T
+                                                                            <span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#">Hours</a></li>
+                                                                            <li><a href="#">Days</a></li>
+                                                                            <li><a href="#">Months</a></li>
+                                                                            <li><a href="#">Years</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div> <br><br>
+                                                        <label class="control-label">Transition to next StoryBox</label><br>
+                                                        <div class="btn-group dropdown btn-block">
+                                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                Transition
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a href="#">Map Pan and Zoom</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Fade</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Slide</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div> <br>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="1step2">
+                                        <div class="col-sm-6">
+                                            <div class="well" style="padding:5px">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <form class="form">
+                                                <fieldset>
+                                                    <div class="col-sm-6">
+                                                        <label>XMIN</label> <input type="text" class="form-control" title="Title" required> <label>XMAX</label>
+                                                        <input type="text" class="form-control" title="Title" required> <label>Scale</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">1:</span> <input class="col-sm-12 form-control" id="prependedInput" type="text" placeholder="Scale">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label>YMIN</label> <input type="text" class="form-control" title="Title" required> <label>YMAX</label> <input type="text" class="form-control" title="Title" required>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="1step3">
+                                        <button class="btn btn-primary">Edit my Layers</button>
+                                        <button class="btn btn-default">Refresh list</button>
+                                        <br> <br>
+                                        <div class="well" style="padding:5px">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Layer Name</th>
+                                                        <th>Geo</th>
+                                                        <th>Author</th>
+                                                        <th style="width: 50px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 1</td>
+                                                        <td><span class="label label-success">POINT</span></td>
+                                                        <td>@storyscapesteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 2</td>
+                                                        <td><span class="label label-info">LINE</span></td>
+                                                        <td>@storyscapesteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 3</td>
+                                                        <td><span class="label label-danger">POLYGON</span></td>
+                                                        <td>@storyscapesteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 4</td>
+                                                        <td><span class="label label-success">POINT</span></td>
+                                                        <td>@storyscapesteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 5</td>
+                                                        <td><span class="label label-info">LINE</span></td>
+                                                        <td>@storyscapesteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 6</td>
+                                                        <td><span class="label label-danger">POLYGON</span></td>
+                                                        <td>@storyscapesteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="1step4">
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'composer/png/layout1.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 1</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'composer/png/layout2.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 2</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'composer/png/layout3.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 3</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item" data-slide-number="2">
+                            <div class="fuelux">
+                                <div class="wizard" id="wizard2">
+                                    <ul class="steps">
+                                        <li class="active" data-target="#2step1">
+                                            <span class="step">Contents</span>
+                                        </li>
+                                        <li data-target="#2step2">
+                                            <span class="step">Bounds</span>
+                                        </li>
+                                        <li data-target="#2step3">
+                                            <span class="step">Layers</span>
+                                        </li>
+                                        <li data-target="#2step4">
+                                            <span class="step">Layout</span>
+                                        </li>
+                                    </ul>
+                                    <div class="actions">
+                                        <button class="btn btn-xs btn-prev"><i class="icon-arrow-left"></i>Prev</button>
+                                        <button class="btn btn-xs btn-default btn-next" data-last="Finish">Next <i class="icon-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                                <div class="step-content">
+                                    <hr class="hr-normal">
+                                    <div class="step-pane active" id="2step1">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <img src="{% remote_content 'storyboard/sb3.png' %}" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
+                                                <button class="btn btn-default">Update</button>
+                                            </div>
+                                            <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
+                                                <form class="form">
+                                                    <fieldset>
+                                                        <label class="control-label">StoryBox Title</label> <input type="text" class="char-max-length form-control" maxlength="50"  title="Title"
+                                                                                                                   required> <br>
+                                                        <label>Abstract</label>
+                                                        <textarea class="char-max-length form-control" maxlength="250" type="text" placeholder="Details" rows="5"></textarea>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                            <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
+                                                <form class="form">
+                                                    <fieldset>
+                                                        <div class="col-sm-6"><label class="control-label">Start Time</label> 	<div class="datepicker input-group" id="datepicker1">
+                                                                <input class="form-control" data-format="yyyy-MM-dd" placeholder="Select start time" type="text">
+                                                                <span class="input-group-addon">
+                                                                    <span data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6"><label class="control-label">End Time</label> 	<div class="datepicker input-group" id="datepicker2">
+                                                                <input class="form-control" data-format="yyyy-MM-dd" placeholder="Select end time" type="text">
+                                                                <span class="input-group-addon">
+                                                                    <span data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <label class="control-label">Playback</label><br>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedPrependedDropdownButton" type="text">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group dropdown">
+                                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                            t	<span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#">Seconds</a></li>
+                                                                            <li><a href="#">Minutes</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-1">per</div>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedPrependedDropdownButton" type="text">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group dropdown">
+                                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                            T
+                                                                            <span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#">Hours</a></li>
+                                                                            <li><a href="#">Days</a></li>
+                                                                            <li><a href="#">Months</a></li>
+                                                                            <li><a href="#">Years</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div> <br><br>
+                                                        <label class="control-label">Transition to next StoryBox</label><br>
+                                                        <div class="btn-group dropdown btn-block">
+                                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                Transition
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a href="#">Map Pan and Zoom</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Fade</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Slide</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div> <br>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="2step2">
+                                        <div class="col-sm-6">
+                                            <div class="well" style="padding:5px">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <form class="form">
+                                                <fieldset>
+                                                    <div class="col-sm-6">
+                                                        <label>XMIN</label> <input type="text" class="form-control" title="Title" required> <label>XMAX</label>
+                                                        <input type="text" class="form-control" title="Title" required> <label>Scale</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">1:</span> <input class="col-sm-12 form-control" id="prependedInput" type="text" placeholder="Scale">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label>YMIN</label> <input type="text" class="form-control" title="Title" required> <label>YMAX</label> <input type="text" class="form-control" title="Title" required>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="2step3">
+                                        <button class="btn btn-primary">Edit my Layers</button>
+                                        <button class="btn btn-default">Refresh list</button>
+                                        <br> <br>
+                                        <div class="well" style="padding:5px">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Layer Name</th>
+                                                        <th>Geo</th>
+                                                        <th>Author</th>
+                                                        <th style="width: 50px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 1</td>
+                                                        <td><span class="label label-success">POINT</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 2</td>
+                                                        <td><span class="label label-info">LINE</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 3</td>
+                                                        <td><span class="label label-danger">POLYGON</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 4</td>
+                                                        <td><span class="label label-success">POINT</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 5</td>
+                                                        <td><span class="label label-info">LINE</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 6</td>
+                                                        <td><span class="label label-danger">POLYGON</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="2step4">
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'composer/png/layout1.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 1</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'png/layout2.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 2</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'png/layout3.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 3</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item" data-slide-number="3">
+                            <div class="fuelux">
+                                <div class="wizard" id="wizard3">
+                                    <ul class="steps">
+                                        <li class="active" data-target="#3step1">
+                                            <span class="step">Contents</span>
+                                        </li>
+                                        <li data-target="#3step2">
+                                            <span class="step">Bounds</span>
+                                        </li>
+                                        <li data-target="#3step3">
+                                            <span class="step">Layers</span>
+                                        </li>
+                                        <li data-target="#3step4">
+                                            <span class="step">Layout</span>
+                                        </li>
+                                    </ul>
+                                    <div class="actions">
+                                        <button class="btn btn-xs btn-prev"><i class="icon-arrow-left"></i>Prev</button>
+                                        <button class="btn btn-xs btn-default btn-next" data-last="Finish">Next <i class="icon-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                                <div class="step-content">
+                                    <hr class="hr-normal">
+                                    <div class="step-pane active" id="3step1">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <img src="{% remote_content 'storyboard/sb4.png' %}" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
+                                                <button class="btn btn-default">Update</button>
+                                            </div>
+                                            <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
+                                                <form class="form">
+                                                    <fieldset>
+                                                        <label class="control-label">StoryBox Title</label> <input type="text" class="char-max-length form-control" maxlength="50"  title="Title"
+                                                                                                                   required> <br>
+                                                        <label>Abstract</label>
+                                                        <textarea class="char-max-length form-control" maxlength="250" type="text" placeholder="Details" rows="5"></textarea>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                            <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
+                                                <form class="form">
+                                                    <fieldset>
+                                                        <div class="col-sm-6"><label class="control-label">Start Time</label> 	<div class="datepicker input-group" id="datepicker1">
+                                                                <input class="form-control" data-format="yyyy-MM-dd" placeholder="Select start time" type="text">
+                                                                <span class="input-group-addon">
+                                                                    <span data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6"><label class="control-label">End Time</label> 	<div class="datepicker input-group" id="datepicker2">
+                                                                <input class="form-control" data-format="yyyy-MM-dd" placeholder="Select end time" type="text">
+                                                                <span class="input-group-addon">
+                                                                    <span data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <label class="control-label">Playback</label><br>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedPrependedDropdownButton" type="text">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group dropdown">
+                                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                            t	<span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#">Seconds</a></li>
+                                                                            <li><a href="#">Minutes</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-1">per</div>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedPrependedDropdownButton" type="text">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group dropdown">
+                                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                            T
+                                                                            <span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#">Hours</a></li>
+                                                                            <li><a href="#">Days</a></li>
+                                                                            <li><a href="#">Months</a></li>
+                                                                            <li><a href="#">Years</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div> <br><br>
+                                                        <label class="control-label">Transition to next StoryBox</label><br>
+                                                        <div class="btn-group dropdown btn-block">
+                                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                Transition
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a href="#">Map Pan and Zoom</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Fade</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Slide</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div> <br>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="3step2">
+                                        <div class="col-sm-6">
+                                            <div class="well" style="padding:5px">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <form class="form">
+                                                <fieldset>
+                                                    <div class="col-sm-6">
+                                                        <label>XMIN</label> <input type="text" class="form-control" title="Title" required> <label>XMAX</label>
+                                                        <input type="text" class="form-control" title="Title" required> <label>Scale</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">1:</span> <input class="col-sm-12 form-control" id="prependedInput" type="text" placeholder="Scale">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label>YMIN</label> <input type="text" class="form-control" title="Title" required> <label>YMAX</label> <input type="text" class="form-control" title="Title" required>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="3step3">
+                                        <button class="btn btn-primary">Edit my Layers</button>
+                                        <button class="btn btn-default">Refresh list</button>
+                                        <br> <br>
+                                        <div class="well" style="padding:5px">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Layer Name</th>
+                                                        <th>Geo</th>
+                                                        <th>Author</th>
+                                                        <th style="width: 50px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 1</td>
+                                                        <td><span class="label label-success">POINT</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 2</td>
+                                                        <td><span class="label label-info">LINE</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 3</td>
+                                                        <td><span class="label label-danger">POLYGON</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 4</td>
+                                                        <td><span class="label label-success">POINT</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 5</td>
+                                                        <td><span class="label label-info">LINE</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 6</td>
+                                                        <td><span class="label label-danger">POLYGON</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="3step4">
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'composer/png/layout1.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 1</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'composer/png/layout2.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 2</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'composer/png/layout3.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 3</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item" data-slide-number="4">
+                            <div class="fuelux">
+                                <div class="wizard" id="wizard4">
+                                    <ul class="steps">
+                                        <li class="active" data-target="#4step1">
+                                            <span class="step">Contents</span>
+                                        </li>
+                                        <li data-target="#4step2">
+                                            <span class="step">Bounds</span>
+                                        </li>
+                                        <li data-target="#4step3">
+                                            <span class="step">Layers</span>
+                                        </li>
+                                        <li data-target="#4step4">
+                                            <span class="step">Layout</span>
+                                        </li>
+                                    </ul>
+                                    <div class="actions">
+                                        <button class="btn btn-xs btn-prev"><i class="icon-arrow-left"></i>Prev</button>
+                                        <button class="btn btn-xs btn-default btn-next" data-last="Finish">Next <i class="icon-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                                <div class="step-content">
+                                    <hr class="hr-normal">
+                                    <div class="step-pane active" id="4step1">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <img src="{% remote_content 'storyboard/sb5.png' %}" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
+                                                <button class="btn btn-default">Update</button>
+                                            </div>
+                                            <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
+                                                <form class="form">
+                                                    <fieldset>
+                                                        <label class="control-label">StoryBox Title</label> <input type="text" class="char-max-length form-control" maxlength="50"  title="Title"
+                                                                                                                   required> <br>
+                                                        <label>Abstract</label>
+                                                        <textarea class="char-max-length form-control" maxlength="250" type="text" placeholder="Details" rows="5"></textarea>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                            <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
+                                                <form class="form">
+                                                    <fieldset>
+                                                        <div class="col-sm-6"><label class="control-label">Start Time</label> 	<div class="datepicker input-group" id="datepicker1">
+                                                                <input class="form-control" data-format="yyyy-MM-dd" placeholder="Select start time" type="text">
+                                                                <span class="input-group-addon">
+                                                                    <span data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6"><label class="control-label">End Time</label> 	<div class="datepicker input-group" id="datepicker2">
+                                                                <input class="form-control" data-format="yyyy-MM-dd" placeholder="Select end time" type="text">
+                                                                <span class="input-group-addon">
+                                                                    <span data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <label class="control-label">Playback</label><br>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedPrependedDropdownButton" type="text">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group dropdown">
+                                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                            t	<span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#">Seconds</a></li>
+                                                                            <li><a href="#">Minutes</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-1">per</div>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedPrependedDropdownButton" type="text">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group dropdown">
+                                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                            T
+                                                                            <span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#">Hours</a></li>
+                                                                            <li><a href="#">Days</a></li>
+                                                                            <li><a href="#">Months</a></li>
+                                                                            <li><a href="#">Years</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div> <br><br>
+                                                        <label class="control-label">Transition to next StoryBox</label><br>
+                                                        <div class="btn-group dropdown btn-block">
+                                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                Transition
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a href="#">Map Pan and Zoom</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Fade</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Slide</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div> <br>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="4step2">
+                                        <div class="col-sm-6">
+                                            <div class="well" style="padding:5px">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <form class="form">
+                                                <fieldset>
+                                                    <div class="col-sm-6">
+                                                        <label>XMIN</label> <input type="text" class="form-control" title="Title" required> <label>XMAX</label>
+                                                        <input type="text" class="form-control" title="Title" required> <label>Scale</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">1:</span> <input class="col-sm-12 form-control" id="prependedInput" type="text" placeholder="Scale">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label>YMIN</label> <input type="text" class="form-control" title="Title" required> <label>YMAX</label> <input type="text" class="form-control" title="Title" required>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    {% include "branding/maps_story_board_4step3.html" %}
+                                    <div class="step-pane" id="4step4">
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'png/layout1.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 1</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'png/layout2.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 2</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'png/layout3.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 3</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item" data-slide-number="5">
+                            <div class="fuelux">
+                                <div class="wizard" id="wizard5">
+                                    <ul class="steps">
+                                        <li class="active" data-target="#5step1">
+                                            <span class="step">Contents</span>
+                                        </li>
+                                        <li data-target="#5step2">
+                                            <span class="step">Bounds</span>
+                                        </li>
+                                        <li data-target="#5step3">
+                                            <span class="step">Layers</span>
+                                        </li>
+                                        <li data-target="#5step4">
+                                            <span class="step">Layout</span>
+                                        </li>
+                                    </ul>
+                                    <div class="actions">
+                                        <button class="btn btn-xs btn-prev"><i class="icon-arrow-left"></i>Prev</button>
+                                        <button class="btn btn-xs btn-default btn-next" data-last="Finish">Next <i class="icon-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                                <div class="step-content">
+                                    <hr class="hr-normal">
+                                    <div class="step-pane active" id="5step1">
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                                <img src="{% remote_content 'storyboard/newsb.png' %}" class="img-rounded" style="height: 100%; width: 100%;" /> <br> <br>
+                                                <button class="btn btn-default">Update</button>
+                                            </div>
+                                            <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
+                                                <form class="form">
+                                                    <fieldset>
+                                                        <label class="control-label">StoryBox Title</label> <input type="text" class="char-max-length form-control" maxlength="50"  title="Title"
+                                                                                                                   required> <br>
+                                                        <label>Abstract</label>
+                                                        <textarea class="char-max-length form-control" maxlength="250" type="text" placeholder="Details" rows="5"></textarea>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                            <div class="col-sm-5" style="padding-left:10px;padding-right:10px">
+                                                <form class="form">
+                                                    <fieldset>
+                                                        <div class="col-sm-6"><label class="control-label">Start Time</label> 	<div class="datepicker input-group" id="datepicker1">
+                                                                <input class="form-control" data-format="yyyy-MM-dd" placeholder="Select start time" type="text">
+                                                                <span class="input-group-addon">
+                                                                    <span data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6"><label class="control-label">End Time</label> 	<div class="datepicker input-group" id="datepicker2">
+                                                                <input class="form-control" data-format="yyyy-MM-dd" placeholder="Select end time" type="text">
+                                                                <span class="input-group-addon">
+                                                                    <span data-date-icon="icon-calendar" data-time-icon="icon-time" class="icon-calendar"></span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                        <label class="control-label">Playback</label><br>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedPrependedDropdownButton" type="text">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group dropdown">
+                                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                            t	<span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#">Seconds</a></li>
+                                                                            <li><a href="#">Minutes</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-1">per</div>
+                                                        <div class="col-sm-4">
+                                                            <div class="input-group">
+                                                                <input class="form-control" id="appendedPrependedDropdownButton" type="text">
+                                                                <div class="input-group-btn">
+                                                                    <div class="btn-group dropdown">
+                                                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                            T
+                                                                            <span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li><a href="#">Hours</a></li>
+                                                                            <li><a href="#">Days</a></li>
+                                                                            <li><a href="#">Months</a></li>
+                                                                            <li><a href="#">Years</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div> <br><br>
+                                                        <label class="control-label">Transition to next StoryBox</label><br>
+                                                        <div class="btn-group dropdown btn-block">
+                                                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                                Transition
+                                                                <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a href="#">Map Pan and Zoom</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Fade</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#">Slide</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div> <br>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="5step2">
+                                        <div class="col-sm-6">
+                                            <div class="well" style="padding:5px">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <form class="form">
+                                                <fieldset>
+                                                    <div class="col-sm-6">
+                                                        <label>XMIN</label> <input type="text" class="form-control" title="Title" required> <label>XMAX</label>
+                                                        <input type="text" class="form-control" title="Title" required> <label>Scale</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">1:</span> <input class="col-sm-12 form-control" id="prependedInput" type="text" placeholder="Scale">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <label>YMIN</label> <input type="text" class="form-control" title="Title" required> <label>YMAX</label> <input type="text" class="form-control" title="Title" required>
+                                                    </div>
+                                                </fieldset>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="5step3">
+                                        <button class="btn btn-primary">Edit my Layers</button>
+                                        <button class="btn btn-default">Refresh list</button>
+                                        <br> <br>
+                                        <div class="well" style="padding:5px">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Layer Name</th>
+                                                        <th>Geo</th>
+                                                        <th>Author</th>
+                                                        <th style="width: 50px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 1</td>
+                                                        <td><span class="label label-success">POINT</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 2</td>
+                                                        <td><span class="label label-info">LINE</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 3</td>
+                                                        <td><span class="label label-danger">POLYGON</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 4</td>
+                                                        <td><span class="label label-success">POINT</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 5</td>
+                                                        <td><span class="label label-info">LINE</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><input type="checkbox" value=""></td>
+                                                        <td>StoryLayer 6</td>
+                                                        <td><span class="label label-danger">POLYGON</span></td>
+                                                        <td>@mapstoryteller</td>
+                                                        <td><a href="#"><i class="glyphicon glyphicon-pencil"></i></a> <a href="#myModal" data-toggle="modal">
+                                                                <i class="glyphicon glyphicon-remove"></i></a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="step-pane" id="5step4">
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'png/layout1.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 1</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'png/layout2.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 2</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="img-thumbnail">
+                                                <img src="{% remote_content 'png/layout3.png' %}" alt="ALT NAME" style="height: 100%; width: 100%;">
+                                                <div class="caption">
+                                                    <h3>Layout 3</h3>
+                                                    <p>Description</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Carousel nav -->
+        </div>
+    </div>
+    <!--/Slider-->
+    <div class="row well" id="slider-thumbs" style="padding:15px;background-color:gainsboro">
+        <!--Lower Storyboard-->
+        <div class="col-sm-1" style="padding-top:50px">
+            <a class="carousel-control left" href="#myCarousel"><span class="glyphicon glyphicon-chevron-left"></span></a>
+            <!--<a class="carousel-control left" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>-->
+        </div>
+        <div class="col-sm-2" style="padding-right:5px;padding-left:5px">
+            <a id="carousel-selector-0" class="thumbnail"> <img src="{% remote_content 'storyboard/sb1.png' %}" />
+            </a>
+        </div>
+        <div class="col-sm-2" style="padding-right:5px;padding-left:5px">
+            <a id="carousel-selector-1" class="thumbnail"> <img src="{% remote_content 'storyboard/sb2.png' %}" />
+            </a>
+        </div>
+        <div class="col-sm-2" style="padding-right:5px;padding-left:5px">
+            <a id="carousel-selector-2" class="thumbnail"> <img src="{% remote_content 'storyboard/sb3.png' %}" />
+            </a>
+        </div>
+        <div class="col-sm-2" style="padding-right:5px;padding-left:5px">
+            <a id="carousel-selector-3" class="thumbnail"> <img src="{% remote_content 'storyboard/sb4.png' %}" />
+            </a>
+        </div>
+        <div class="col-sm-2" style="padding-right:5px;padding-left:5px">
+            <a id="carousel-selector-4" class="thumbnail"> <img src="{% remote_content 'storyboard/sb5.png' %}" />
+            </a>
+        </div>
+        <div class="col-sm-1" style="text-align:left;padding-top:50px">
+            <a class="carousel-control right" href="#myCarousel"><span class="glyphicon glyphicon-chevron-right"></span></a>
+            <!--<a class="carousel-control right" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>-->
+        </div>
+    </div>
+</div>

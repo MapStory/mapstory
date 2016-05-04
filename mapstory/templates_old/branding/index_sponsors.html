@@ -1,0 +1,22 @@
+{% load i18n %}
+<div class="container">
+    <div class="row">
+        <h1 class="text-center">{% trans "Our Sponsors" %}</h1>
+        <h3 class="text-center">{% trans "Learning institutions like these drive innovation in the MapStory codebase, content and community." %} <a href="{% url 'donate' %}">{% trans "Join them." %}</a>
+        </h3>
+    </div>
+    <hr/>
+    <div class="row">
+        <slice infinite="true" slides-to-show="6" autoplay="true">
+            {% for sponsor in sponsors %}
+            <div class="col-sm-2">
+                <a href="{{ sponsor.link }}">
+                    <img src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
+                </a>
+            </div>
+            {% empty %}
+            <p>{% trans "No Sponsors." %} {% trans "Add" %} <a href="{% url 'admin:mapstory_sponsor_add' %}">{% trans "some" %}</a></p>
+            {% endfor %}
+        </slice>
+    </div>
+</div>

@@ -1,1 +1,1 @@
-from mapstory.settings.base import *
+from mapstory.settings.sc_settings import *

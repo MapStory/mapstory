@@ -1,0 +1,176 @@
+{% load i18n %}
+{% load threadedcomments_tags %}
+{% load fluent_comments_tags %}
+{% load agon_ratings_tags %}
+{% load bootstrap_tags %}
+{% load url from future %}
+{% load base_tags %}
+{% load guardian_tags %}
+{% load friendly_loader %}
+{% friendly_load avatar_tags %}
+
+<section class="slice" id="dashboard">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-7" style="padding-right:15px;">
+        <br>
+        <div id="embedded_map" class="mrg-btm">
+          <div id="preview_map"></div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-sm-2">
+            <a href="{% url "profile_detail" resource.owner.username %}"><img class="thumb img-responsive img-circle" src="{% avatar_url resource.owner %}"/></a>
+          </div>
+          <div class="col-sm-10">
+              <h2 style="font-size:1.5em">{{ resource.owner.first_name }} {{ resource.owner.last_name }}</h2>
+              <hr style="margin:5px">
+              <h2 style="font-size:1.2em;color:gainsboro">
+                <!-- TODO: Add Mapstory messaging functionality, has this been implemented? -->
+                <a href="{% url "message_create" resource.owner.pk %}"><span style="color:orange">message</span></a> |
+                {% for social_link in social_links %}
+                {% ifequal social_link.label "Twitter" %}
+                  <a href="{{ social_link.url }}"><span style="color:deepskyblue">twitter</span></a> |
+                {% endifequal %}
+                {% ifequal social_link.label "Facebook" %}
+                  <a href="{{ social_link.url }}"><span style="color:dodgerblue">facebook</span></a> |
+                {% endifequal %}
+                {% ifequal social_link.label "Google +" %}
+                  <a href="{{ social_link.url }}"><span style="color:green">google</span></a> |
+                {% endifequal %}
+                {% ifequal social_link.label "Pinterest" %}
+                  <a {{ social_link.template }}><span style="color:red">pinterest</span></a>
+                {% endifequal %}
+                {% endfor %}
+                <!-- {% if resource.layers %}
+                <span style="color:green; hover: cursor;" onclick="toggle_visibility('share');">share</span> | <span style="color:#00CC99; hover: cursor;" onclick="toggle_visibility('embed');">embed</span>
+                {% endif %} -->
+              </h2>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <!-- share -->
+            <div style="display:none;" id="share">Share link: <textarea style="color:#00CC99; width:100%;">http://{{ request.get_host }}{% url 'geonode.maps.views.map_detail' resource.id %}</textarea></div>
+            <!-- embed -->
+            <div style="display:none;" id="embed">Embed link: <textarea style="color:#00CC99; width:100%;"><iframe style="border: none;" height="400" width="600" src="http://{{ request.get_host }}{% url 'geonode.maps.views.map_embed' resource.id %}"></iframe></textarea></div>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-offset-2">
+          </div>
+          <div class="col-sm-10">
+            <article id="comments" class="tab-pane">
+              {% get_comment_count for resource as num_comments %}
+              {{ num_comments }} comments
+              {% if user.is_authenticated %}
+                {% render_comment_form for resource %}
+              {% endif %}
+              {% render_comment_list for resource %}
+            </article>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-5" style="padding:15px">
+        <div class="row">
+          <div class="col-sm-12">
+            {% ifequal page "layer" %}
+            <h4 style="text-decoration: underline">StoryLayer</h5>
+            {% else %}
+              {% ifequal page "map" %}
+              <h4 style="text-decoration: underline">Storyscapes</h5>
+              {% endifequal %}
+            {% endifequal %}
+            <h2 class="page-title">{{ resource.title }}</h2>
+          </div>
+        </div>
+        <hr style="margin-top:10px;margin-bottom:10px">
+        <div class="row">
+          <div class="col-sm-9">
+            {% if resource.region_name_list|length > 0 %}
+            <h3 style="margin-top:0px;margin-bottom:5px;">Places: {{ resource.region_name_list.0 }} <!-- This inequality isn't working for some reason --> {% if resource.region_name_list|length > 1 %} and {{ resource.region_name_list|length|add:"-1" }} more...{% else %} {% endif %}</h3>
+            {% endif %}
+            {% ifequal resource.category None %}
+            {% else %}
+            <h3 style="margin-top:0px;margin-bottom:5px;">Topic: {{ resource.category }}</h3>
+            {% endifequal %}
+            <h3 style="margin-top:0px;margin-bottom:5px;">Tags:</h3>
+            <!-- NOTE: This has some formatting issues; needs to wrap around to a second line nicely -->
+            {% for keyword in resource.keyword_list|slice:"5" %}
+              <span class="label label-default">{{ keyword }}</span>
+            {% endfor %}
+            {% if resource.keyword_list|length > 5 %}
+              <span class="label label-default">{{ resource.keyword_list|length|add:"-5" }} more</span>
+            {% endif %}
+            <a href="#addTag" role="button" data-toggle="modal" style="hover: cursor;"><span class="label label-default">+ add</span></a>
+            <div id="addTag" class="modal fade" tabindex="-1" role="dialog">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                      <h4 class="modal-title">{% trans 'Add Tag' %}</h4>
+                  </div>
+                  <form name="keywords_form" method="POST" id="form_post_tag" action="{{ resource.detail_url }}">
+                    <div class="modal-body">
+                      {% csrf_token %}
+                      {{ keywords_form|as_bootstrap }}
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                        <button class="btn btn-primary" aria-hidden="true" id="tag_submit_btn" type="submit">{% trans "Add Tags" %}</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <hr style="margin-top:15px;margin-bottom:0px">
+            <!--
+            Rate:
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+            <i class="fa fa-star-o"></i>
+
+            Need to figure out how this is implemented...
+            Looks like an assignment tag probably but the name isn't found any
+            Looks like it uses jquery.raty.js but we want to change the styling of the stars
+            Looks like you can specify staroff and staron
+            It appears this may be from a later version of Geonode?
+            Gotta find out by looking in Sources tab what's going on here and see if we can change the star images that show up-->
+            <article id="rate" class="tab-pane">
+            {% if request.user.is_authenticated %}
+            <h3 style="margin-top:-15px;margin-bottom:0px">{% trans "Rate:" %}</h3>
+            {% user_rating request.user resource "layer" as user_layer_rating %}
+            <div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
+            {% endif %}
+            </article>
+            <h3 style="margin-top:-15px;margin-bottom:10px">{% trans "Average:" %} {% if resource.rating %}{{ resource.rating }}/5{% else %}Not yet rated{% endif %}</h3>
+          </div>
+          {% ifequal page "layer" %}
+          {% include "layers/layer_functions.html" %}
+          {% include "layers/layer_data.html" %}
+          {% else %}
+            {% ifequal page "map" %}
+            {% include "maps/map_functions.html" %}
+            {% include "maps/map_data.html" %}
+            {% else %}
+            {% endifequal %}
+          {% endifequal %}
+        </div>
+        <hr style="margin-top:10px;margin-bottom:10px">
+      </div>
+    </div>
+  </div>
+</section>
+<script type="text/javascript">
+    function toggle_visibility(id) {
+       var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+    }
+</script>

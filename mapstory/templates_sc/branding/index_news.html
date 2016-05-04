@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="csection">
+    <div class="row">
+        <h1 class="text-center">{% trans "Storyscapes projects making the news" %}</h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <a class="twitter-timeline" href="https://twitter.com/storyscapes" data-widget-id="517343764738621440">Tweets by @Storyscapes</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+        </div>
+        <div class="col-sm-8">
+            {% for item in news_items %}
+            <h3><strong>{{ item.title }}</strong> <small class="pull-right">{{ item.date }}</small></h3>
+            <hr>
+            {{ item.html|safe  }}
+            {% empty %}
+            <p>{% trans "No News Items" %}. {% trans "Add" %} <a href="{% url 'admin:mapstory_newsitem_add' %}">{% trans "some" %}</a></p>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- TODO: What was this supposed to be?
+    <div class="row">
+        <div class="qlink-right qlink-fb">[p_a_g_i_n_a_t_i_o_n l_i_n_k_s h_e_r_e]</div>
+    </div>
+    -->
+</div>
