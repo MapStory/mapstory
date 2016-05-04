@@ -1,0 +1,114 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load mapstory_tags %}
+{% load avatar_tags %}
+
+{% block extra_head %}
+<link href="{{ STATIC_URL }}mapstory/css/diary.css" rel="stylesheet" />
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript" src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>
+{{ block.super }}
+{% endblock %}
+
+{% block middle %}
+
+        <section class="parallax">
+          <div data-stellar-background-ratio="0.5" style="background-image: url({{ images|by_name:'Africa' }}); background-size: 100%; background-position: 0% 20%;">
+            <div class="maskParent">
+                <div class="paralaxMask"></div>
+                <div class="paralaxText container" style="text-align:left;padding-bottom:0">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <div style="padding:60px 0px 0px 10px; color:white;">
+                                <h1>Storyscapes Community Journal</h1>
+                                <h4>Share your ideas, projects and questions with the rest of the Storyscapes community.</h3>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="row"  style="padding:80px 0px 10px 10px;">
+                                <div class="col-sm-8 col-sm-offset-4">
+                                    <a class="btn btn-sm btn-block" style="font-size:1em;background-color:transparent;color:white;border:1px solid white;" title="" href="{% url 'diary-create' %}" target="blank">
+                                        write an entry
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+             </div>
+          </div>
+        </section>
+<!--
+<div class="container" id="diary-banner">
+	<div class="row text-center" >
+        <h1>Storyscapes Community Journal</h1>
+        <h3>Share your ideas, projects and questions with the rest of the Storyscapes community.</h3>
+    </div>
+</div>
+-->
+<div class="container" id="diary-menu">
+	{% if user.is_authenticated %}
+    	{% if drafts %}
+    		<span class="dropdown" id="draft-button">
+ 		 		<a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+    				complete a draft entry <span class="caret"></span>
+  				</a>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+					{% for d in drafts %}
+   			 			<li>
+   			 			 	<a href="{% url 'diary-update' pk=d.pk %}">
+        						{{ d.title }} - {{ d.date }}
+    						</a>
+    					</li>
+    				{% endfor %}
+  				</ul>
+			</span>
+		{% endif %}
+    {% endif %}
+</div>
+<div class="container">
+    {% if not entries %}
+    <h2>No Journal Entries Yet :(</h2>
+    {% endif %}
+    {% for entry in entries reversed %}
+    <div class="row blog-panel">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-2  col-xs-12">
+                    <h5 class="blog-title">{{ entry.date }}</h5>
+                    <h1 class="blog-title"><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h2>
+                    <h5 class="blog-title">{% avatar entry.author 30 %} {{ entry.author.first_name }} {{ entry.author.last_name }}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-xs-6 qlink-right">
+                </div>
+                <div class="col-lg-8 col-xs-6 blog-content bl">
+                    {{ entry.html|safe }}
+                </div>
+                <div class="col-lg-2 col-xs-6">
+                    {% ifequal entry.author request.user %}
+                        <a href="{% url 'diary-update' pk=entry.pk %}">
+                            <button class="btn btn-primary" aria-hidden="true" id="published_submit_btn" type="submit">{% trans "Edit" %}</button>
+                        </a>
+                    {% endifequal %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <div class="row pagination text-center">
+        {% if page_obj.has_previous %}
+        <a href="{% url 'diary' %}?page={{ page_obj.previous_page_number }}">[ previous ]</a>
+        {% endif %}
+        <span class="page-current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+        {% if page_obj.has_next %}
+        <a href="{% url 'diary' %}?page={{ page_obj.next_page_number }}">[ next ]</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,18 @@
+<ul class="nav nav-tabs" id="upload-navbar">
+  <!-- layer_create_mode is passed in as a get parameter as in the case of metadata or through the template in teh case of layer_create in views.py-->
+  {% if layer_create_mode or request.GET.layer_create_mode%}
+    <!-- when creating a new layer as opposed to uploading a file, we only need 3 steps in the wizard -->
+    <li role="presentation" class="{% if active_tab == 'create' %}active {% else%}disabled{% endif %}"><a href="#" data-toggle="tab"><span class="badge">1</span> Define Layer</a></li>
+    <!--  Skip time and configure as list for now as we are refactorying the importer right now.
+    <li role="presentation" class="{% if active_tab == 'time' %}active{% else%}disabled{% endif %}"><a href="#"><span class="badge">2</span> Time Info</a></li>
+    -->
+    <li role="presentation" class="{% if active_tab == 'metadata' %}active{% else%}disabled{% endif %}"><a href="#"><span class="badge">3</span> Metadata</a></li>
+    <li role="presentation" class="{% if active_tab == 'finish' %}active{% else%}disabled{% endif %}"><a href="#"><span class="badge">4</span> Finish Upload</a></li>
+  {% else %}
+    <li role="presentation" class="{% if active_tab == 'file_tab' %}active {% else%}disabled{% endif %}"><a href="#file-tab" data-toggle="tab"><span class="badge">1</span> Select Files</a></li>
+    <li role="presentation" class="{% if active_tab == 'geospatial' %}active{% else%}disabled{% endif %}"><a href="#"><span class="badge">2</span> Geospatial Info</a></li>
+    <li role="presentation" class="{% if active_tab == 'time' %}active{% else%}disabled{% endif %}"><a href="#"><span class="badge">3</span> Time Info</a></li>
+    <li role="presentation" class="{% if active_tab == 'metadata' %}active{% else%}disabled{% endif %}"><a href="#"><span class="badge">4</span> Metadata</a></li>
+    <li role="presentation" class="{% if active_tab == 'finish' %}active{% else%}disabled{% endif %}"><a href="#"><span class="badge">6</span> Finish Upload</a></li>
+  {% endif %}
+</ul>

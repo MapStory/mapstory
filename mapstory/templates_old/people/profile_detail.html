@@ -1,0 +1,404 @@
+{% extends "people/profile_base.html" %}
+{% load static %}
+{% load activity_tags social_tags i18n %}
+{% load friendly_loader %}
+{% friendly_load i18n avatar_tags relationship_tags activity_tags %}
+{% load pagination_tags %}
+
+{% block title %} {% trans "Profile of " %}{{ profile.first_name|default_if_none:profile.username }}{% endblock %}
+
+{% block body_class %}people explore{% endblock %}
+
+{% block extra_head %}
+<link href="{{ STATIC_URL }}mapstory/css/profile.css" rel="stylesheet" xmlns="http://www.w3.org/1999/html"/>
+    <link href="{{ STATIC_URL }}mapstory/css/search.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}importer/css/angular-wizard.min.css">
+    <style>
+
+.glyphicon { margin-right:5px;}
+.section-box h2 { margin-top:0px;}
+.section-box h2 a { font-size:15px; }
+.glyphicon-heart { color:#e74c3c;}
+.glyphicon-comment { color:#27ae60;}
+.separator { padding-right:5px;padding-left:5px; }
+.section-box hr {margin-top: 0;margin-bottom: 5px;border: 0;border-top: 1px solid rgb(199, 199, 199);}
+</style>
+
+{% endblock %}
+
+{% block body %}
+<div ng-controller="profile_search_controller">
+        <div id="paralaxSlice1" data-stellar-background-ratio="0.5" style="background-position: 50% 25px;">
+<div class="maskParent">
+    <div class="paralaxMask"></div>
+    <div class="paralaxText container" style="text-align:left;padding-bottom:0">
+        <div class="row">
+            <div class="col-sm-1">
+              <img class="img-circle" src="{% avatar_url profile 75 %}" width="75" height="75" style="margin-top:55px;margin-bottom:0px"/>
+            </div>
+            <div class="col-sm-6">
+                <div style="padding:60px 0px 0px 10px;">
+                    <h1 style="font-size:3em">{{ profile.name_long }}</h1>
+                    <h1 style="font-size:1.1em;">
+                    {% if profile.position %}
+                        <span>{{ profile.position }}, </span>
+                    {% endif %}
+                    {% if profile.organization %}
+                        <span>{{ profile.organization }}</span>
+                    {% endif %}
+
+                    {% if profile.location %}
+                        <span>{{ profile.location }}</span>
+                    {% endif %}
+                    </h1>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--article id="profile-banner">
+    <div class="row">
+        <div class="col-sm-2">
+            {% avatar profile 140 %}
+        </div>
+        <div class="col-sm-8">
+            <div class="profile-title">{{ profile.name_long }}</div>
+            <div class="profile-subtitle">
+                {% if profile.position %}
+                <span>{{ profile.position }}, </span>
+                {% endif %}
+                {% if profile.organization %}
+                <span>{{ profile.organization }}</span>
+                {% endif %}
+            </div>
+            <div class="profile-subtitle">
+                {% if profile.location %}
+                <span>{{ profile.location }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</article-->
+
+<article class="slice">
+    <div class="container">
+        <div class="col-sm-2">
+
+            <div class="sidebar-header"><h3>user info</h3></div>
+            {% if profile.profile %}
+            <div class="sidebar-content">{{ profile.profile }}</div>
+            {% endif %}
+            <!-- Getting rid of this as it is replaced by the keywords field for profiles -->
+            {% comment %}
+            <!--
+            {% if profile.interest_list|length > 0 %}
+
+            <div class="sidebar-content"><h3>Interests</h3></div><br>
+                {% for interest in profile.interest_list|slice:"10" %}
+                  <span class="label label-default">{{ interest }}</span>
+                {% endfor %}
+                {% if profile.interest_list|length > 10 %}
+                  <span class="label label-default">{{ profile.interest_list|length|add:"-10" }} more</span>
+                {% endif %}
+            {% endif %}
+            -->
+            {% endcomment %}
+            {% if user.Volunteer_Technical_Community %}
+            <div class="sidebar-content"><h5 style="font-weight: bold;">Volunteer Technical Community Member</h5></div>
+            {% endif %}
+
+            <!-- notifications -->
+            <div class="sidebar-header"><h3>user actions</h3></div>
+            {% if user == profile %}
+            <div class="sidebar-content">
+                <a href="{% url "edit_profile" user.username %}">{% trans "edit profile" %}</a>
+            </div>
+            <div class="sidebar-content">
+                <a href="{% url "profile_delete" user.username %}">{% trans "delete profile" %}</a>
+            </div>
+            <div class="sidebar-content">
+                <a href="{% url "account_password" %}">{% trans "change password" %}</a>
+            </div>
+            <div class="sidebar-content">
+                <a ng-controller="ImportController"  style="cursor: pointer" ng-click="open(null, '{{ STATIC_URL }}importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "upload storylayer" %}</a>
+            </div>
+            <div class="sidebar-content">
+                <a href="{% url "new_map" %}">{% trans "create a mapstory" %}</a>
+            </div>
+            {% if_has_tag if_relationship %}
+            <div class="sidebar-content">
+                {% include "relationships/_manage_connections.html" %}
+            </div>
+            {% endif_has_tag %}
+            {% else %}<a href="{% actor_url profile %}">{% trans "user activities" %}</a>
+            {% if_has_tag if_relationship %}
+            {% include "relationships/_profile_follow.html" %}
+            {% endif_has_tag %}
+            {% endif %}
+            {% if_has_tag if_relationship %}
+            {% include "relationships/_list_connections.html" %}
+            {% endif_has_tag %}
+
+            <!-- contact profile -->
+            {% if user == profile %}
+            {% else %}
+                <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
+                {% if profile.email %}
+                <div class="sidebar-content">
+                    <a href="mailto:{{ profile.email }}"><i class="fa fa-envelope-o"></i>email {{ profile.first_name|default_if_none:profile.username }}</a>
+                </div>
+                {% endif %}
+                {% if profile.email %}
+                <div class="sidebar-content">
+                    <a href="mailto:{{ profile.email }}"><i class="fa fa-facebook"></i>facebook</a>
+                </div>
+                {% endif %}
+                {% if profile.email %}
+                <div class="sidebar-content">
+                    <a href="mailto:{{ profile.email }}"><i class="fa fa-twitter"></i>twitter</a>
+                </div>
+                {% endif %}
+            {% endif %}
+
+            <!-- tags and interests -->
+            {% if profile.keyword_list %}
+                <div class="sidebar-header"><h3>tags & interests </h3></div>
+                {% for keyword in profile.keyword_list %}
+                    <div class="label label-tags">{{ keyword }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="col-sm-10" style="border-left: 1px solid gainsboro">
+            <div class="tabbable-panel">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs ">
+                        <li class="active">
+                            <a href="#mapstories_list" data-toggle="tab" ng-click="query={q: query.q}; query.type__in='map'; query.owner__username__in='{{profile.username}}'; search();">
+                                <div class="counter"><span ng-bind="total_maps"></span></div>
+                                MapStories </a>
+                        </li>
+                        <li>
+                            <a href="#storylayers_list" data-toggle="tab" ng-click="query={q: query.q}; query.type__in='layer'; query.owner__username__in='{{profile.username}}'; search();">
+                                <div class="counter"><span ng-bind="total_layers"></span></div>
+                                StoryLayers </a>
+                        </li>
+                        {% if user == profile %}
+                        <li>
+                            <a href="#uploads_list" data-toggle="tab">
+                                <div class="counter"><span ng-bind="totalItems"></span></div>
+                                Uploads
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#messages_list" data-toggle="tab">
+                                <div class="counter">{{ inbox_count }}</div>
+                                Messages </a>
+                        </li>
+
+                        {% endif %}
+                        <li>
+                            <a href="#user_activities" data-toggle="tab">
+                                <div class="counter">{{ action_list.count }}</div>
+                                Activity Feed </a>
+                        </li>
+                        <li>
+                            <a href="#diary_entries" data-toggle="tab">
+                                <div class="counter">{{diary_entries.count}}</div>
+                                Journal Entr{{diary_entries|pluralize:"y,ies"}} </a>
+                        </li>
+                        <li>
+                            <a href="#favorite_list" data-toggle="tab">
+                                <div class="counter">{{ favorites.count }}</div>
+                                Favorite{{favorites|pluralize}}
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="mapstories_list">
+                            <div class="no-content" ng-if="results == null">
+                                <h2>No MapStories.</h2>
+                                <h4>Create your first Storyscape now.</h4>
+                            </div>
+                            <div class="clearfix search-results">
+                                <ul>
+                                    {% include 'people/_result_content.html' %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="storylayers_list">
+                            <div class="no-content" ng-if="results == null">
+                                <h2>No StoryLayers.</h2>
+                                <h4>Upload your first StoryLayer now.</h4>
+                            </div>
+                            <div class="clearfix search-results">
+                                <ul>
+                                    {% include 'people/_result_content.html' %}
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="uploads_list">
+                            <div class="no-content" ng-hide="uploads.length">
+                                <h2>No Uploads.</h2>
+                                <h4><a style="cursor: pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">Click here</a> to upload your data!.</h4>
+                            </div>
+                            <div class="" ng-show="uploads.length">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div ng-show="loading" style="margin-right: 50%; margin-left: 50%; margin-top: 30px; margin-bottom: 30px">
+                                                <i class="fa fa-spinner fa-spin fa-3x"></i>
+                                            </div>
+                                            {% verbatim %}
+                                            <div class="layer-upload-counts">Showing uploads {{offset}}-{{offset+uploads.length}} of {{totalItems}}.</div>
+                                            {% endverbatim %}
+                                            <div ng-repeat="upload in uploads">
+                                                <upload upload-object="upload" i="$index" static-url="{{STATIC_URL}}" template-url="{{ STATIC_URL }}importer/partials/upload.html"></upload>
+                                            </div>
+                                            <uib-pagination total-items="totalItems" ng-init="init('{{user.username}}')" ng-change="pageChanged()" max-size="7" class="pagination-sm" items-per-page="limit" ng-model="currentPage"></uib-pagination>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="messages_list">
+
+                            {% if not inbox_count %}
+                            <div class="no-content">
+                                <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
+                                <h4>Compose a new message now.</h4>
+                            </div>
+                            {% else %}
+                            <div class="tab-content">
+                              <article id="inbox" class="tab-pane active">
+                                {% with threads_unread as threads %}
+                                    {% include "user_messages/_message_snippet.html" %}
+                                {% endwith %}
+                              </article>
+                              <article id="all" class="tab-pane">
+                                {% with threads_all as threads %}
+                                    {% include "user_messages/_message_snippet.html" %}
+                                {% endwith %}
+                              </article>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="tab-pane" id="user_activities">
+                            {% if action_list.count == 0 %}
+                            <div class="no-content">
+                                <h2>No activities.</h2>
+                                <h4>Explore Storyscape now.</h4>
+                            </div>
+                            {% endif %}
+                            <div class="row">
+                              <div class="col-md-12">
+                                <ul class="no-style-list">
+                                  {% for action in action_list %}
+                                  {% activity_item action %}
+                                  {% endfor %}
+                                </ul>
+                              </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="diary_entries">
+                            {% if not diary_entries %}
+                            <div class="no-content">
+                                <h2>No entries.</h2>
+                                <h4>Write your first journal entry now.</h4>
+                            </div>
+                            {% else %}
+                                {% for entry in diary_entries %}
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="row">
+                                                <div class="col-lg-12  col-xs-12">
+                                                    <h3><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h3>
+                                                    <h6>{{ entry.date }}</h6>
+                                                    <div>
+                                                    {{ entry.html|safe }}
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="tab-pane" id="favorite_list">
+                            {% include "favorite/_favorite_list.html" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+{% comment %}
+<!--  WHAT IS THIS PART?!?
+
+{% if user.is_authenticated %}
+<div class="col-md-8">
+  <h3>Groups</h3>
+  {% if user == profile %}
+    {% for group in profile.group_list_all %}
+      <article>
+        <div class="row">
+           <div ng-if="group.logo != ''" class="col-md-2">
+             <a href="{{ group.get_absolute_url }}" ><img src="/uploaded/{{ group.logo }}" alt="{{ group.title }}" class="group-logo" /></a>
+           </div>
+           <div class="col-md-10">
+             <h5>
+               <i class="fa fa-group"></i> <a href="{{ group.get_absolute_url }}">{{ group.title }}</a>
+               {% if group.email %} <a href="mailto:{{ group.email }}"><i class="fa fa-envelope-o"></i></a>{% endif %}
+             </h5>
+             <p>{{ group.description}}</p>
+           </div>
+         </div>
+     </article>
+    {% endfor %}
+  {% else %}
+    {% for group in profile.group_list_public %}
+      <article>
+        <div class="row">
+           <div ng-if="group.logo != ''" class="col-md-2">
+             <a href="{{ group.get_absolute_url }}" ><img src="/uploaded/{{ group.logo }}" alt="{{ group.title }}" class="group-logo" /></a>
+           </div>
+           <div class="col-md-10">
+             <h5>
+               <i class="fa fa-group"></i> <a href="{{ group.get_absolute_url }}">{{ group.title }}</a>
+               {% if group.email %} <a href="mailto:{{ group.email }}"><i class="fa fa-envelope-o"></i></a>{% endif %}
+             </h5>
+             <p>{{ group.description}}</p>
+           </div>
+         </div>
+     </article>
+    {% endfor %}
+  {% endif %}
+</div>
+{% endif %}
+
+WHAT IS THIS PART?!-->
+
+        {% endcomment %}
+</div>
+</div>
+
+
+{% include "_bulk_permissions_form.html" %}
+{% endblock %}
+
+{% block extra_script %}
+{{ block.super }}
+  {% if GEONODE_SECURITY_ENABLED %}
+    {% include "_permissions_form_js.html" %}
+  {% endif %}
+
+{% include 'favorite/_favorite_list_js.html' %}
+{% endblock %}

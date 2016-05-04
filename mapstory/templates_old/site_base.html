@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block head %}
+<link rel="shortcut icon" href="{% static 'mapstory/img/favicon.ico' %}">
+{% include "mapstory/google_analytics.html" %}
+{{ block.super }}
+
+{% endblock head %}
+
+{% block extra_script %}
+
+<script type="text/javascript">
+/* Script for keywords autocomplete */
+    {% if AUTOCOMPLETE_QUICK_SEARCH %}
+    var quicksearch_autocomplete = $('#quicksearch').yourlabsAutocomplete({
+          url: '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}',
+          choiceSelector: 'span',
+          hideAfter: 200,
+          minimumCharacters: 1,
+          appendAutocomplete: $('#quicksearch'),
+          placeholder: gettext('Enter keyword here ...')
+    });
+    $('#quicksearch').bind('selectChoice', function(e, choice, quicksearch_autocomplete) {
+          if(choice[0].children[0] == undefined) {
+              $('#quicksearch').val(choice[0].innerHTML);
+              $scope.keyword_query = choice[0].innerHTML;
+          }
+    });
+    {% endif %}
+    // Fix placeholder text for Quick Search
+    $(function() {
+        $('#quicksearch').attr('placeholder','Quick Search');
+    });
+</script>
+{% endblock %}
+
+{% block header %}
+{% include 'mapstory/_header.html' %}
+{% endblock %}
+
+{% block footer %}
+{% include 'mapstory/_footer.html' %}
+{% endblock %}

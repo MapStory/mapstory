@@ -1,0 +1,139 @@
+{% extends "upload/layer_upload_base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block title %} {% trans "Upload Layer"  %} - {{ block.super }}  {% endblock %}
+
+{% block body_class %}layers upload{% endblock %}
+
+
+
+{% block body_outer %}
+<div class="page-header">
+  <h2 class="page-title">{% trans "Create StoryLayer" %}</h2>
+</div>
+
+{% with 'file_tab' as active_tab and 'true' as layer_create_mode %}
+  {% include 'upload/layer_wizard.html' %}
+{% endwith %}
+
+
+<div class="tab-content col-md-8">
+
+<h3>Layer Name</h3>
+<input id="layer-name" type="text" value="" class="form-control max-width-200px"/>
+
+
+<h3>Geometry Type</h3>
+<select class="form-control field ng-pristine ng-valid ng-valid-required ng-touched max-width-200px" id="geometryType">
+	<option label="Point" selected="selected" >com.vividsolutions.jts.geom.Point</option>
+	<option label="Line">com.vividsolutions.jts.geom.Line</option>
+	<option label="Polygon">com.vividsolutions.jts.geom.Polygon</option>
+	<option label="Geometry">com.vividsolutions.jts.geom.Geometry</option>
+	<option label="Multi-Point">com.vividsolutions.jts.geom.MultiPoint</option>
+	<option label="Multi-Line">com.vividsolutions.jts.geom.MultiLinestring</option>
+	<option label="Multi-Polygon">com.vividsolutions.jts.geom.MultiPolygon</option>
+	<option label="Multi-Geometry">com.vividsolutions.jts.geom.MultiGeometry</option>
+</select>
+
+<h3>Attributes</h3>
+<table class="table table-striped attribute-table">
+    <thead>
+        <th>Name</th>
+        <th>Type</th>
+        <th>&nbsp;</th>
+    </thead>
+    <tbody>
+        <tr class="hide">
+            <td><input type="text" value="" class="form-control attrib-name max-width-200px"/></td>
+            <td>
+                <select class="form-control field ng-pristine ng-valid ng-valid-required ng-touched attrib-type max-width-200px">
+                    <option label="Text" selected="selected">java.lang.String</option>
+                    <option label="Number">java.lang.Double</option>
+                    <option label="Date">org.geotools.data.postgis.PostGISDialect$XDate</option>
+                </select>
+            </td>
+            <td><button class="attribute-remove btn"><span class="fa fa-times attribute-remove-icon"></span></button></td>
+        </tr>
+    </tbody>
+</table>
+<div>
+  <a href="#" id="add-row" class="attribute-add"><span class="fa fa-plus attribute-add-icon"></span>{% trans "Add Attribute" %}</a>
+</div>
+
+<div id="status" style="margin-top: 20px;">
+</div>
+<div class="row">
+  <hr/>
+  <div class="col-md-4">
+    <!-- TODO: StoryLayer needs to be one word-->
+    {% trans 'Story Layer Options' %}
+  </div>
+  <div id='options' class='col-md-8'>
+    <div class="checkbox">
+        <input type='checkbox' id='time' name='time' checked disabled/><label for="time">&nbsp;{%  trans "Configure Time. 'Date' attribute automatically added" %}</label>
+    </div>
+    <div class="checkbox">
+        <input type='checkbox' id='geogig_toggle' name='geogig_toggle'/><label for="geogig_toggle">&nbsp;{%  trans 'I want to enable StoryLayer editing.' %}  <a href="#">{%  trans "What's this?" %}</a></label>
+    </div>
+    <div class="checkbox">
+        <input type='checkbox' id='is_private' name='is_private' disabled/><label for="is_private">&nbsp;{%  trans 'Keep this layer private.' %}</label>
+    </div>
+  </div>
+</div>
+
+<section>
+  <a href="#" id="create-button" class="btn btn-gray col-sm-3 col-md-offset-4">{% trans "Create Layer" %}</a>
+</section>
+
+</div>
+{% endblock %}
+
+
+{% block extra_script %}
+<script src="{{STATIC_URL}}mapstory/js/upload/upload-create.js"></script>
+<script src="{{STATIC_URL}}lib/js/underscore.js"></script>
+<!--
+<script data-main="{% static 'geonode/js/upload/main' %}" src="{% static 'lib/js/require.js' %}"></script>
+<script data-main="{% static 'mapstory/js/upload/upload-create' %}" src="{% static 'lib/js/require.js' %}"></script>
+<script src="{{STATIC_URL}}geonode/js/upload/common.js"></script>
+-->
+
+<script type="text/javascript">
+{% autoescape off %}
+
+  csrf_token =  "{{ csrf_token }}",
+  geogig_enabled = {{ GEOGIG_ENABLED|lower  }},
+  time_enabled = {{ TIME_ENABLED|lower  }},
+  userLookup = "{% url "geonode.views.ajax_lookup" %}"
+
+{% endautoescape %}
+
+</script>
+
+<!-- todo: reuse from upload.html -->
+<script type='text/html' id='alertTemplate'>
+  <div class='alert <%= alertLevel %>'>
+    <%= message %>
+  </div>
+</script>
+
+<!-- todo: reuse from upload.html -->
+<script type='text/html' id='completedTemplate'>
+    <p>{% trans "Your layer was successfully uploaded" %}</p>  <!-- translate -->
+    <a href="<%= urlLayerInfo %>" class="btn btn-success">{% trans "Layer Info" %}</a>
+    <a href="<%= urlMetadata %>" class="btn btn-warning">{% trans "Edit Metadata" %}</a>
+    <a href="<%= urlManageStyle %>" class="btn btn-warning">{% trans "Manage Styles" %}</a>
+</script>
+
+<!-- todo: reuse from upload.html -->
+<script type='text/html' id='progressTemplate'>
+    <p>{% trans "Performing GeoServer Config Step" %} <img class="pull-right" src="/static/geonode/img/loading.gif"></p>
+</script>
+
+{% if GEONODE_SECURITY_ENABLED %}
+{% with resource=layer %}
+{% include "_permissions_form_js.html" %}
+{% endwith %}
+{% endif %}
+{% endblock extra_script %}

@@ -1,0 +1,13 @@
+{% load i18n %}
+
+<ul>Type: <a href="" ng-click="add_single_query('type__in', 'all')">All</a> / <a href="" ng-click="add_single_query('type__in', 'map')">Storyscapes</a> / <a href="" ng-click="add_single_query('type__in', 'layer')">StoryLayers</a></ul>
+{% comment %}
+<ul class="nav nav-tabs filter" id="sort">
+  <li><a ng-click="add_single_query('order_by', '-date'); selected='most_recent'" ng-class="{selected: selected == 'most_recent'}">{% trans "Most recent" %}</a></li>
+  <li><a ng-click="add_single_query('order_by', 'date'); selected='less_recent'" ng-class="{selected: selected == 'less_recent'}">{% trans "Less recent" %}</a></li>
+  <li><a ng-click="add_single_query('order_by', 'title'); selected='alpha'" ng-class="{selected: selected == 'alpha'}"><i class="fa fa-sort-alpha-asc"></i> {% trans "Name A-Z" %}</a></li>
+  <li><a ng-click="add_single_query('order_by', '-title'); selected='reverse_alpha'" ng-class="{selected: selected == 'reverse_alpha'}"><i class="fa fa-sort-alpha-desc"></i> {% trans "Name Z-A" %}</a></li>
+  <li><a ng-click="add_single_query('order_by', '-rating'); selected='rating'" ng-class="{selected: selected == 'rating'}">{% trans "Rating" %}</a></li>
+  <li><a ng-click="add_single_query('order_by', '-popular_count'); selected='views'" ng-class="{selected: selected == 'views'}">{% trans "Views" %}</a></li>
+</ul>
+{% endcomment %}

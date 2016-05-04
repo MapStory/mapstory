@@ -1,0 +1,20 @@
+<script type="text/javascript">
+    // add click behavior to the Delete Favorite button.
+    // ajax call to delete favorite and remove row on success.
+    $("#favoritesListId .delete-btn").click(function(event) {
+        var deleteUrl = this.dataset.url;
+        var tr = $(this).closest('tr');
+        $.post(
+            deleteUrl,
+            function(data) {
+                removeDomElementWithFade(tr);
+        });
+    });
+
+    function removeDomElementWithFade(elem) {
+        elem.fadeOut(800, function(){
+            elem.remove();
+        });
+    }
+</script>
+

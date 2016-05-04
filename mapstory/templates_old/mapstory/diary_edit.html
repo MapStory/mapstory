@@ -1,0 +1,42 @@
+{% extends "site_base.html" %}
+
+{% block body_class %}diary{% endblock %}
+
+{% block middle %}
+
+<div class="container">
+    <div class="row">
+        {{ form.non_field_errors }}
+        <form id="entry-form" method="POST" action="#">
+            {% csrf_token %}
+            <div class="form-group full">
+                {{ form.title.errors }}
+                <label class="label-font" for="id_title">Title</label>
+                <hr>
+                {{ form.title }}
+            </div>
+            <div class="form-group full">
+                {{ form.content.errors }}
+                <label class="label-font" for="id_content">Blog Content</label>
+                <h4>To style your blog content (like making text bold, or adding hyperlinks), you can use RedCloth tags. Check <a href="http://www.redcloth.org" target="_blank">redcloth.org</a> for more information.</h4>
+                <hr>
+                {{ form.content }}
+            </div>
+            <div class="form-group">
+                <label class="label-font" for="id_publish">Publish</label>
+                {{ form.publish }}
+            </div>
+            <button type="submit" class="btn ">Save</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_script %}
+{{ block.super }}
+<script>
+{# work-around django form output #}
+$("#entry-form .form-group.full input,textarea").addClass("form-control");
+</script>
+{% endblock %}

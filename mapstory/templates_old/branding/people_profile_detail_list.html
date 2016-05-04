@@ -1,0 +1,11 @@
+<div class="tab-pane active" id="mapstories_list">
+    <div class="no-content" ng-if="results == null">
+        <h2>No MapStories.</h2>
+        <h4>Create your first MapStory now.</h4>
+    </div>
+    <div class="clearfix search-results">
+        <ul>
+            {% include 'people/_result_content.html' %}
+        </ul>
+    </div>
+</div>

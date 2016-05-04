@@ -1,0 +1,151 @@
+{% extends "maps/map_base.html" %}
+{% load i18n %}
+{% load dialogos_tags %}
+{% load agon_ratings_tags %}
+{% load url from future %}
+{% load base_tags %}
+{% load guardian_tags %}
+{% load friendly_loader %}
+{% friendly_load avatar_tags %}
+
+{% block title %}{{ resource.title }} — {{ block.super }}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css" />
+<link href="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css" rel="stylesheet" />
+{% include "maps/map_include.html" %}
+{{ block.super }}
+<style type="text/css">
+div.timeline-highlight-point-decorator {
+    width: 10px;
+}
+#msmap .x-panel-tbar {
+    display: none;
+}
+.gxp-annotations-tip {
+    max-width: 200px;
+}
+.gxp-annotations-tip-body {
+    max-height: 375px;
+    max-width: 185px;
+    overflow-y: auto;
+}
+body.ms-fullscreen .gxp-annotations-tip-body {
+    max-width: 485px;
+}
+body.ms-fullscreen .gxp-annotations-tip {
+    max-width: 500px;
+}
+</style>
+{% endblock %}
+
+{% block body_class %}maps{% endblock %}
+
+{% block body_outer %}
+{% include "detail_base.html" with page="map" %}
+
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript" src="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js"></script>
+{% if SOCIAL_BUTTONS %}
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+{% endif %}
+{% if request.user.is_authenticated %}
+      {% user_rating_js request.user resource "map" %}
+{% else %}
+      {% overall_rating resource "map" as the_map_rating %}
+{% endif %}
+{% include 'rating.html' %}
+<script type="text/javascript">
+ $(function() {
+
+  {% verbatim %}
+  // Publish layer group
+  // TODO: this should really not be inside a script tag...
+  var $wmsBtn = $(".layer-group .btn"),
+      layerGroupElTpl;
+
+  if ($wmsBtn.length > 0) {
+
+    $wmsBtn.on("click", function(event) {
+      event.preventDefault();
+
+      $.ajax({
+        type: "PUT",
+        url: $wmsBtn.attr("href")
+      })
+
+        .done(function(data) {
+          layerGroupElTpl = "<dt>WMS layer group for local map layers:</dt> \
+            <dd><em>{{layerGroupName}}</em> (on <a href='{{ows}}?request=GetCapabilities'>local OWS</a>)</dd>";
+          $.each(data, function(key, value) {
+            // client-side template hack
+            layerGroupElTpl = layerGroupElTpl.replace("{{"+ key + "}}", value);
+          });
+        })
+
+        .fail(function(){
+          layerGroupElTpl = "<dt>Error:</dt> \
+            <dd>Layer group could not be created.</dd>";
+        })
+
+        .always(function(){
+          $(".layer-group dl").html(layerGroupElTpl);
+        });
+
+    });
+  };
+  {% endverbatim %}
+
+
+ });
+{% if SOCIAL_BUTTONS %}
+ (function() {
+   var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+   po.src = 'https://apis.google.com/js/plusone.js';
+   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+ })();
+{% endif %}
+  $("#comment_submit_btn").click(function(event) {
+    $.ajax({
+      type: "POST",
+      url: $("#form_post_comment").attr('action'),
+      data: $("#form_post_comment").serialize(),
+      success: function() {
+        $('#form_post_comment_div').modal('hide');
+        $('#comments_section').load(window.location.pathname + ' #comments_section', 
+            function(){$(this).children().unwrap()})
+      }
+    });
+    return false;
+  });
+ 
+</script>
+{% include "_permissions_form_js.html" %}
+<script type="text/javascript" src="{{ STATIC_URL}}geonode/js/utils/thumbnail.js"></script>
+<script type="text/javascript">
+  $('#set_thumbnail').click(function(){
+    createMapThumbnail();
+    $('#edit-map').modal('toggle');
+  });
+</script>
+<script type="text/javascript">
+  HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
+  HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
+  CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
+  {% if HAYSTACK_SEARCH %}
+      SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}';
+  {% else %}
+      SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}';
+  {% endif %}
+  </script>
+<script type="text/javascript" src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
+{% endblock %}
