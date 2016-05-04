@@ -103,7 +103,41 @@
     </section>
 
     <section class="slice" id="community">
+<<<<<<< HEAD
         {% include "branding/index_community.html" %}
+=======
+        <div class="container">
+            <div class="row">
+                <h1 class="text-center">{% trans "Community Initiatives" %}</h1>
+                <h3 class="text-center">{% trans "Our Community Initiative leads are taking on huge data collection tasks, like mapping the history of human settlement and country borders. Click on one below, and start contributing" %}...
+                </h3>
+            </div>
+            <hr/>
+            <div class="row">
+                <slice infinite="true" slides-to-show="6" autoplay="true">
+                    {% for community in communities %}
+                    <div class="col-sm-2">
+                        {% ifequal community.profile_type 'org' %}
+                        <a href="{% url "organization_detail" community.slug %}">
+                            {% if community.logo %}
+                            <img class="rdphoto" src="{{ community.logo.url }}" alt="{{ community.title }} - {{ community.description }}">
+                            {% endif %}
+                        </a>
+                        {% else %}
+                        <a href="{% url "initiative_detail" community.slug %}">
+                            {% if community.logo %}
+                            <img class="rdphoto" src="{{ community.logo.url }}" alt="{{ community.title }} - {{ community.description }}">
+                            {% endif %}
+                        </a>
+                        {% endifequal %}
+                    </div>
+                    {% empty %}
+                    <p>{% trans "No Community Initiatives." %} {% trans "Add" %} <a href="{% url 'initiative_create' %}">{% trans "some" %}</a></p>
+                    {% endfor %}
+                </slice>
+            </div>
+        </div>
+>>>>>>> master
     </section>
 
     <section class="parallax">
