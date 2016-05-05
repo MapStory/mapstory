@@ -1,11 +1,14 @@
+# Create Postgresql and ElasticSearch services for cloudfoundry.
+
+```
+cf create-service elephantsql turtle mapstory-pgsql
+cf create-service searchly starter mapstory-es
+```
+
+# Push project.
+
 # use pip
 
 ```
-export LD_LIBRARY_PATH=/app/.heroku/python/lib/
-export PATH=/bin:/usr/bin:/app/.heroku/python/bin
-```
-
-# if restart app changes in site packages will be lost
-```
-cf restart APP-NAME
+cf push -f cf/mapstory_manifest.yml
 ```
