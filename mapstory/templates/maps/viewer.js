@@ -139,15 +139,15 @@
         };
         $rootScope.$on('$locationChangeSuccess', function() {
             var config = {% autoescape off %}{{ config }};{% endautoescape%}
-            var path = $location.path(), chapter = 1, matches;
+        var path = $location.path(), chapter = 1, matches;
 
-            if (path.indexOf('/chapter') === 0){
-                if ((matches = /\d+/.exec(path)) !== null) {
-                    chapter = matches[0]
-                }
+        if (path.indexOf('/chapter') === 0){
+            if ((matches = /\d+/.exec(path)) !== null) {
+                chapter = matches[0]
             }
+        }
 
-            self.loadConfig(config, chapter);
+        self.loadConfig(config, chapter);
     });
 }
 
@@ -180,13 +180,16 @@ module.controller('viewerController', function($scope, $location, $injector, $lo
     $scope.timeControlsManager = $injector.instantiate(TimeControlsManager);
     $scope.mapManager = MapManager;
 
+    var values = {annotations: [], boxes: [], data: []};
+
     $scope.nextChapter = function(){
         var nextChapter = Number(MapManager.storyChapter) + 1;
         if(nextChapter <= MapManager.chapterCount) {
-             $log.info("Going to Chapter ", nextChapter);
+            $log.info("Going to Chapter ", nextChapter);
+            $scope.timeControlsManager.timeControls.update(values);
             $location.path('/chapter/' + nextChapter);
         }else{
-             $location.path('');
+            $location.path('');
         }
 
     };
@@ -195,9 +198,10 @@ module.controller('viewerController', function($scope, $location, $injector, $lo
         var previousChapter = Number(MapManager.storyChapter) - 1;
         if(previousChapter > 0) {
             $log.info("Going to the Chapter ", previousChapter);
+            $scope.timeControlsManager.timeControls.update(values);
             $location.path('/chapter/' + previousChapter);
         }else{
-             $location.path('');
+            $location.path('');
         }
 
     };
