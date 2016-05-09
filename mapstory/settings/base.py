@@ -202,16 +202,17 @@ MAP_BASELAYERS = [
         "group":"background"
     },
     {
-        "source": {"ptype":"gxp_olsource"},
+        "source": {"ptype":"gxp_osmsource"},
         "type":"OpenLayers.Layer.OSM",
         "args":["OpenStreetMap"],
-        'title': 'This is the title',
+        "name":'mapnik',
+        'title': 'OpenStreetMap',
         "visibility": False,
         "fixed": True,
         "group":"background"
     },
     {
-        "source": {"ptype":"gxp_olsource"},
+        "source": {"ptype":"gxp_osmsource"},
         "type":"OpenLayers.Layer.OSM",
         "args":["Humanitarian OpenStreetMap", [
             "http://a.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
@@ -219,7 +220,8 @@ MAP_BASELAYERS = [
             "http://c.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png"
           ], {"tileOptions": {"crossOriginKeyword": None}}
         ],
-        'title': 'This is the title',
+        'title': 'Humanitarian OpenStreetMap',
+        'name': "hot",
         "visibility": False,
         "fixed": True,
         "group":"background"
