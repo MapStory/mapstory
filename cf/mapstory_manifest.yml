@@ -1,0 +1,17 @@
+---
+applications:
+- name: mapstory-demo
+  domain: cfapps.io
+  buildpack: https://github.com/panchicore/geonode-python-buildpack
+  command: cf/init_server.sh
+  instances: 1
+  memory: 512M
+  disk_quota: 2G
+  services:
+    - mapstory-pgsql
+    - mapstory-es
+  env:
+    #TODO: Make an env variable on the CF side with a different key.
+    # this one is exposed.
+    SECRET_KEY: 'il%c@@m#*b@g%6s)!!pme9eog$j)!kq^7u8@3l(&)kprsi3$$x'
+    DJANGO_SETTINGS_MODULE: 'mapstory.settings.cf'
