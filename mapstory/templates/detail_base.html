@@ -10,168 +10,185 @@
 {% friendly_load avatar_tags %}
 
 <div ng-controller="detail_page_controller">
-<section class="slice" id="dashboard">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-7" style="padding-right:15px;">
-        <br>
-        <div id="embedded_map" class="mrg-btm">
-          <div id="preview_map"></div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="col-sm-2">
-            <a href="{% url "profile_detail" resource.owner.username %}"><img class="thumb img-responsive img-circle" src="{% avatar_url resource.owner %}"/></a>
-          </div>
-          <div class="col-sm-10">
-              <h2 style="font-size:1.5em">{{ resource.owner.first_name }} {{ resource.owner.last_name }}</h2>
-              <hr style="margin:5px">
-              <h2 style="font-size:1.2em;color:gainsboro">
-                <a href="{% url "message_create" resource.owner.pk %}"><span style="color:orange">message</span></a> |
-                {% for social_link in social_links %}
-                {% ifequal social_link "twitter" %}
-                  <a href="{{ social_link.url }}"><span style="color:deepskyblue">twitter</span></a> |
-                {% endifequal %}
-                {% ifequal social_link "facebook" %}
-                  <a href="{{ social_link.url }}"><span style="color:dodgerblue">facebook</span></a> |
-                {% endifequal %}
-                {% endfor %}
-                {% if resource.chapters %}
-                <span style="color:green; cursor: pointer;" ng-click="toggle_visibility('share');">share</span> | <span style="color:#00CC99; cursor: pointer;" ng-click="toggle_visibility('embed');">embed</span>
-                {% endif %}
-              </h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <!-- share -->
-            <div style="display:none;" id="share">Share link: <textarea style="color:#00CC99; width:100%;">http://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}</textarea></div>
-            <!-- embed -->
-            {% if resource.chapters %}
-            <div style="display:none;" id="embed">Embed link: <textarea style="color:#00CC99; width:100%;"><iframe style="border: none;" height="400" width="600" src="http://{{ request.get_host }}/mapstory/{{ resource.id }}/embed"></iframe></textarea></div>
-            {% else %}
-            <div style="display:none;" id="embed">Embed link: <textarea style="color:#00CC99; width:100%;"><iframe style="border: none;" height="400" width="600" src="http://{{ request.get_host }}{% url 'geonode.maps.views.map_embed' resource.id %}"></iframe></textarea></div>
-            {% endif %}
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <div class="col-sm-offset-2">
-          </div>
-          <div class="col-sm-10">
-            <article id="comments" class="tab-pane">
-              {% get_comment_count for resource as num_comments %}
-              {{ num_comments }} comments
-              {% if user.is_authenticated %}
-                {% render_comment_form for resource %}
-              {% endif %}
-              {% render_comment_list for resource %}
-            </article>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-5" style="padding:15px">
-        <div class="row">
-          <div class="col-sm-12">
-            {% ifequal page "layer" %}
-            <h4 style="text-decoration: underline">StoryLayer</h5>
-            {% else %}
-              {% ifequal page "map" %}
-              <h4 style="text-decoration: underline">MapStory</h5>
-              {% endifequal %}
-            {% endifequal %}
-            <h2 class="page-title">{{ resource.title }}</h2>
-          </div>
-        </div>
-        <hr style="margin-top:10px;margin-bottom:10px">
-        <div class="row">
-          <div class="col-sm-9">
-            {% if resource.region_name_list|length > 0 %}
-            <h3 style="margin-top:0px;margin-bottom:5px;">Places: {{ resource.region_name_list.0 }} <!-- This inequality isn't working for some reason --> {% if resource.region_name_list|length > 1 %} and {{ resource.region_name_list|length|add:"-1" }} more...{% else %} {% endif %}</h3>
-            {% endif %}
-            {% ifequal resource.category None %}
-            {% else %}
-            <h3 style="margin-top:0px;margin-bottom:5px;">Topic: {{ resource.category }}</h3>
-            {% endifequal %}
-            <h3 style="margin-top:0px;margin-bottom:5px;">Tags:</h3>
-            <script type="text/javascript">
-                // Pass the keyword list from the django template into the javascript
-                var keyword_list = "{{resource.keyword_list|escapejs}}";
-                var url = "{{ resource.detail_url }}";
-            </script>
-            {% ifequal resource.owner request.user %}
-            <input type="text" class="form-control" id="tokenfield-tags"/>
-            {% verbatim %}
-              <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
-            {% endverbatim %}
-            <!-- TODO: Bug with this where the AJAX updates no longer match the keywords_form -->
-            <a href="#addTag" role="button" data-toggle="modal" style="hover: cursor;" ng-show="tags.length >= 10"><span class="label label-default">+ add more tags</span></a>
-            <div id="addTag" class="modal fade" tabindex="-1" role="dialog">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                      <h4 class="modal-title">{% trans 'Add Tag' %}</h4>
-                  </div>
-                  <form name="keywords_form" method="POST" id="form_post_tag" action="{{ resource.detail_url }}">
-                    <div class="modal-body">
-                      {% csrf_token %}
-                      {{ keywords_form|as_bootstrap }}
+    <section class="slice" id="dashboard">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-7" style="padding-right:15px;">
+                    <h2 class="page-title">{{ resource.title }}</h2>
+                    <small>Uploaded By <a href="{% url "profile_detail" resource.owner.username %}"></a></small>
+                    <br>
+                    <div id="embedded_map" class="mrg-btm">
+                        <div id="preview_map"></div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
-                        <button class="btn btn-primary" aria-hidden="true" id="tag_submit_btn" type="submit">{% trans "Add Tags" %}</button>
+                    {% ifequal page "layer" %}
+                        {% include "layers/layer_data.html" %}
+                        {% else %}
+                        {% ifequal page "map" %}
+                            {% include "maps/map_data.html" %}
+                            {% else %}
+                        {% endifequal %}
+                    {% endifequal %}
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h2 style="font-size:1.5em">{{ resource.owner.first_name }} {{ resource.owner.last_name }}</h2>
+                            <hr style="margin:5px">
+                            <h2 style="font-size:1.2em;color:gainsboro">
+                                <a href="{% url "message_create" resource.owner.pk %}"><span style="color:orange">message</span></a> |
+                                {% for social_link in social_links %}
+                                    {% ifequal social_link "twitter" %}
+                                        <a href="{{ social_link.url }}"><span style="color:deepskyblue">twitter</span></a> |
+                                    {% endifequal %}
+                                    {% ifequal social_link "facebook" %}
+                                        <a href="{{ social_link.url }}"><span style="color:dodgerblue">facebook</span></a> |
+                                    {% endifequal %}
+                                {% endfor %}
+                                {% if resource.chapters %}
+                                    <span style="color:green; cursor: pointer;" ng-click="toggle_visibility('share');">share</span> |
+                                    <span style="color:#00CC99; cursor: pointer;" ng-click="toggle_visibility('embed');">embed</span>
+                                {% endif %}
+                            </h2>
+                        </div>
                     </div>
-                  </form>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <!-- share -->
+                            <div style="display:none;" id="share">Share link: <textarea
+                                    style="color:#00CC99; width:100%;">http://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}</textarea>
+                            </div>
+                            <!-- embed -->
+                            {% if resource.chapters %}
+                                <div style="display:none;" id="embed">Embed link: <textarea style="color:#00CC99; width:100%;"><iframe
+                                        style="border: none;" height="400" width="600"
+                                        src="http://{{ request.get_host }}/mapstory/{{ resource.id }}/embed"></iframe></textarea></div>
+                            {% else %}
+                                <div style="display:none;" id="embed">Embed link: <textarea style="color:#00CC99; width:100%;"><iframe
+                                        style="border: none;" height="400" width="600"
+                                        src="http://{{ request.get_host }}{% url 'geonode.maps.views.map_embed' resource.id %}"></iframe></textarea>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-offset-2">
+                        </div>
+                        <div class="col-sm-10">
+                            <article id="comments" class="tab-pane">
+                                {% get_comment_count for resource as num_comments %}
+                                {{ num_comments }} comments
+                                {% if user.is_authenticated %}
+                                    {% render_comment_form for resource %}
+                                {% endif %}
+                                {% render_comment_list for resource %}
+                            </article>
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <div class="col-sm-5" style="padding:15px">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {% ifequal page "layer" %}
+                                <h4 style="text-decoration: underline">StoryLayer</h5>
+                                {% else %}
+                                {% ifequal page "map" %}
+                                    <h4 style="text-decoration: underline">MapStory</h5>
+                                {% endifequal %}
+                            {% endifequal %}
+                        </div>
+                    </div>
+                    <hr style="margin-top:10px;margin-bottom:10px">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            {% if resource.region_name_list|length > 0 %}
+                                <h3 style="margin-top:0px;margin-bottom:5px;">Places: {{ resource.region_name_list.0 }}
+                                    <!-- This inequality isn't working for some reason --> {% if resource.region_name_list|length > 1 %} and
+                                        {{ resource.region_name_list|length|add:"-1" }} more...{% else %} {% endif %}</h3>
+                            {% endif %}
+                            {% ifequal resource.category None %}
+                                {% else %}
+                                <h3 style="margin-top:0px;margin-bottom:5px;">Topic: {{ resource.category }}</h3>
+                            {% endifequal %}
+                            <h3 style="margin-top:0px;margin-bottom:5px;">Tags:</h3>
+                            <script type="text/javascript">
+                                // Pass the keyword list from the django template into the javascript
+                                var keyword_list = "{{resource.keyword_list|escapejs}}";
+                                var url = "{{ resource.detail_url }}";
+                            </script>
+                            {% ifequal resource.owner request.user %}
+                                <input type="text" class="form-control" id="tokenfield-tags"/>
+                                {% verbatim %}
+                                    <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+                                {% endverbatim %}
+                                <!-- TODO: Bug with this where the AJAX updates no longer match the keywords_form -->
+                                <a href="#addTag" role="button" data-toggle="modal" style="hover: cursor;" ng-show="tags.length >= 10"><span
+                                        class="label label-default">+ add more tags</span></a>
+                                <div id="addTag" class="modal fade" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                <h4 class="modal-title">{% trans 'Add Tag' %}</h4>
+                                            </div>
+                                            <form name="keywords_form" method="POST" id="form_post_tag" action="{{ resource.detail_url }}">
+                                                <div class="modal-body">
+                                                    {% csrf_token %}
+                                                    {{ keywords_form|as_bootstrap }}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                                                    <button class="btn btn-primary" aria-hidden="true" id="tag_submit_btn"
+                                                            type="submit">{% trans "Add Tags" %}</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% else %}
+                                <input type="text" class="form-control" id="tokenfield-tags-readonly"/>
+                                {% verbatim %}
+                                    <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+                                {% endverbatim %}
+                            {% endifequal %}
+
+                            <hr style="margin-top:15px;margin-bottom:0px">
+                            <!--
+                            Rate:
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <i class="fa fa-star-o"></i>
+
+                            Need to figure out how this is implemented...
+                            Looks like an assignment tag probably but the name isn't found any
+                            Looks like it uses jquery.raty.js but we want to change the styling of the stars
+                            Looks like you can specify staroff and staron
+                            It appears this may be from a later version of Geonode?
+                            Gotta find out by looking in Sources tab what's going on here and see if we can change the star images that show up-->
+                            <article id="rate" class="tab-pane">
+                                {% if request.user.is_authenticated %}
+                                    <h3 style="margin-top:-15px;margin-bottom:0px">{% trans "Rate:" %}</h3>
+                                    {% user_rating request.user resource "layer" as user_layer_rating %}
+                                    <div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
+                                {% endif %}
+                            </article>
+                            <h3 style="margin-top:-15px;margin-bottom:10px">{% trans "Average:" %}
+                                {% if resource.rating %}{{ resource.rating }}/5{% else %}Not yet rated{% endif %}</h3>
+                            <h3 style="margin-top:-5px;margin-bottom:10px">{% trans "Created:" %} {{ resource.date|date }}</h3>
+                        </div>
+                        {% ifequal page "layer" %}
+                            {% include "layers/layer_functions.html" %}
+                            {% else %}
+                            {% ifequal page "map" %}
+                                {% include "maps/map_functions.html" %}
+                                {% else %}
+                            {% endifequal %}
+                        {% endifequal %}
+                    </div>
+                    <hr style="margin-top:10px;margin-bottom:10px">
+                </div>
             </div>
-            {% else %}
-            <input type="text" class="form-control" id="tokenfield-tags-readonly"/>
-            {% verbatim %}
-              <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
-            {% endverbatim %}
-            {% endifequal %}
-
-            <hr style="margin-top:15px;margin-bottom:0px">
-            <!--
-            Rate:
-            <i class="fa fa-star-o"></i>
-            <i class="fa fa-star-o"></i>
-            <i class="fa fa-star-o"></i>
-            <i class="fa fa-star-o"></i>
-            <i class="fa fa-star-o"></i>
-
-            Need to figure out how this is implemented...
-            Looks like an assignment tag probably but the name isn't found any
-            Looks like it uses jquery.raty.js but we want to change the styling of the stars
-            Looks like you can specify staroff and staron
-            It appears this may be from a later version of Geonode?
-            Gotta find out by looking in Sources tab what's going on here and see if we can change the star images that show up-->
-            <article id="rate" class="tab-pane">
-            {% if request.user.is_authenticated %}
-            <h3 style="margin-top:-15px;margin-bottom:0px">{% trans "Rate:" %}</h3>
-            {% user_rating request.user resource "layer" as user_layer_rating %}
-            <div id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
-            {% endif %}        
-            </article>
-            <h3 style="margin-top:-15px;margin-bottom:10px">{% trans "Average:" %} {% if resource.rating %}{{ resource.rating }}/5{% else %}Not yet rated{% endif %}</h3>
-            <h3 style="margin-top:-5px;margin-bottom:10px">{% trans "Created:" %} {{ resource.date|date }}</h3>
-          </div>
-          {% ifequal page "layer" %}
-          {% include "layers/layer_functions.html" %}
-          {% include "layers/layer_data.html" %}
-          {% else %}
-            {% ifequal page "map" %}
-            {% include "maps/map_functions.html" %}
-            {% include "maps/map_data.html" %}
-            {% else %}
-            {% endifequal %}
-          {% endifequal %}
         </div>
-        <hr style="margin-top:10px;margin-bottom:10px">
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 </div>

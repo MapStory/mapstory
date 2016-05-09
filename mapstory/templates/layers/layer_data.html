@@ -8,14 +8,15 @@
 <div class="row">
   <div class="col-sm-12">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#Summary" data-toggle="tab" style="font-size:0.8em;">Summary</a></li>
-        <li><a href="#Metadata" data-toggle="tab" style="font-size:0.8em;">Meta</a></li>
+        <li class="active"><a href="#Abstract" data-toggle="tab" style="font-size:0.8em;">Abstract</a></li>
+        <!--<li><a href="#Metadata" data-toggle="tab" style="font-size:0.8em;">Meta</a></li>-->
         <li><a href="#Edits" data-toggle="tab" style="font-size:0.8em;">Edits</a></li>
-        <li><a href="#Download" data-toggle="tab" style="font-size:0.8em;">Download</a></li>
+        <!--<li><a href="#Download" data-toggle="tab" style="font-size:0.8em;">Download</a></li>-->
         <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;" ng-click="query_category('{{ resource.category }}', 'layer');">Related</a></li>
+        <li><a href="#Comments" data-toggle="tab" style="font-size:0.8em;">Related</a></li>
     </ul>
     <div class="tab-content">
-      <div class="tab-pane active" id="Summary">
+      <div class="tab-pane active" id="Abstract">
         <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
           {{ resource.abstract }}
         </div>
