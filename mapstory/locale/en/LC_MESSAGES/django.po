@@ -445,15 +445,15 @@ msgstr ""
 
 #: templates/favorite/_favorite.html:4 templates/favorite/_favorite.html:6
 #: templates/favorite/_favorite_js.html:26
-msgid "favorite"
+msgid "Mark as Favorite"
 msgstr ""
 
 #: templates/favorite/_favorite.html:6
-msgid "Log in to favorite."
+msgid "Log in to Favorite."
 msgstr ""
 
 #: templates/favorite/_favorite_js.html:23
-msgid "unfavorite"
+msgid "Unfavorite"
 msgstr ""
 
 #: templates/favorite/_favorite_list.html:15
@@ -916,4 +916,17 @@ msgstr ""
 
 #: templates/upload/no_upload.html:8
 msgid "now"
+msgstr ""
+
+#: templates/detail_base.html:55
+msgid "Uploaded on"
+msgstr ""
+
+#: templates/detail_base.html:106
+msgid "Append Data"
+msgstr ""
+
+
+#: templates/detail_base.html:235
+msgid "views"
 msgstr ""

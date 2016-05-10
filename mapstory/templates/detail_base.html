@@ -8,6 +8,7 @@
 {% load base_tags %}
 {% load guardian_tags %}
 {% load friendly_loader %}
+{% load mapstory_tags %}
 {% load flag_tags %}
 {% friendly_load avatar_tags %}
 
@@ -51,19 +52,59 @@
                     {% endifequal %}
                     <ul>
                         <li><i class="fa fa-user"></i> {{ resource.owner.first_name }} {{ resource.owner.last_name }}</li>
-                        <li><i class="fa fa-plus"></i> Uploaded on {{ resource.date|date }}</li>
+                        <li><i class="fa fa-plus"></i> {% trans "Uploaded on" %} {{ resource.date|date }}</li>
                         {% if resource.region_name_list|length > 0 %}
                             <li><i class="fa fa-globe"></i> {{ resource.region_name_list.0 }}</li>
                         {% endif %}
                         <li><i class="fa fa-book"></i> {{ resource.category }}</li>
-                        <li><i class="fa fa-tags"></i> Tags Go Here</li>
+                        <h3 style="margin-top:0px;margin-bottom:5px;">Tags:</h3>
+                        <script type="text/javascript">
+                            // Pass the keyword list from the django template into the javascript
+                            var keyword_list = "{{resource.keyword_list|escapejs}}";
+                            var url = "{{ resource.detail_url }}";
+                        </script>
+                        {% ifequal resource.owner request.user %}
+                            <input type="text" class="form-control" id="tokenfield-tags"/>
+                            {% verbatim %}
+                                <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+                            {% endverbatim %}
+                            <!-- TODO: Bug with this where the AJAX updates no longer match the keywords_form -->
+                            <a href="#addTag" role="button" data-toggle="modal" style="hover: cursor;" ng-show="tags.length >= 10"><span
+                                    class="label label-default">+ add more tags</span></a>
+                            <div id="addTag" class="modal fade" tabindex="-1" role="dialog">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            <h4 class="modal-title">{% trans 'Add Tag' %}</h4>
+                                        </div>
+                                        <form name="keywords_form" method="POST" id="form_post_tag" action="{{ resource.detail_url }}">
+                                            <div class="modal-body">
+                                                {% csrf_token %}
+                                                {{ keywords_form|as_bootstrap }}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                                                <button class="btn btn-primary" aria-hidden="true" id="tag_submit_btn"
+                                                        type="submit">{% trans "Add Tags" %}</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <input type="text" class="form-control" id="tokenfield-tags-readonly"/>
+                            {% verbatim %}
+                                <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+                            {% endverbatim %}
+                        {% endifequal %}
                     </ul>
                     <h3>User Actions</h3>
                     <ul>
                         {% ifequal page "layer" %}
                             <li><i class="fa fa-paste"></i> <a ng-controller="ImportController" style="cursor: pointer"
-                                                               ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{ STATIC_URL }}', '{{ resource.typename }}', '{{ shapefile_link }}','{{ csv_link }}')">Append
-                                Data</a></li>
+                                                               ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{ STATIC_URL }}', '{{ resource.typename }}', '{{ shapefile_link }}','{{ csv_link }}')">{% trans 'Append Data' %}</a>
+                            </li>
                             <div>
                                 <li><i class="fa fa-flag"></i> <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">Flag
                                     content</a></li>
@@ -85,7 +126,7 @@
                                 </div>
                             </div>
                             <li>
-                                <i class="fa fa-heart"></i> {% include "favorite/_favorite.html" with span_style="font-size:18px;color:black" btn_style="font-size:18px;color:black;border:none;background:none" %}
+                                <i class="fa fa-heart"></i>{% include "favorite/_favorite.html" with span_style="font-size:18px;color:#333" btn_style="font-size:18px;color:#333;border:none;background:none" %}
                             </li>
                             {% if resource.storeType != "remoteStore" %}
                                 {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
@@ -149,8 +190,28 @@
                             {% endif %}
                             {% else %}
                             {% ifequal page "map" %}
-                                <li><i class="fa fa-flag"></i> Flag Content</li>
-                                <li><i class="fa fa-heart"></i> Mark as favorite</li>
+                                <div>
+                                    <li><i class="fa fa-flag"></i> <a href="#flag" role="button" data-toggle="modal"
+                                                                      style="hover: cursor;">{% trans 'Flag Content' %}</a></li>
+                                    <div id="flag" class="modal fade" tabindex="-1" role="dialog">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                    <h4 class="modal-title">{% trans 'Flag Content' %}</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {% flag resource 'owner' %}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <i class="fa fa-heart"></i>
+                                {% include "favorite/_favorite.html" with span_style="font-size:18px;color:#333" btn_style="font-size:18px;color:#333;border:none;background:none" %}
                                 {% else %}
                             {% endifequal %}
                         {% endifequal %}
@@ -158,15 +219,25 @@
                     <h3>Usage Summary</h3>
                     <ul>
                         {% ifequal page "layer" %}
-                            <!--<li>Rating</li>-->
-                            <li><i class="fa fa-eye"></i> views</li>
-                            <li><i class="fa fa-heart"></i> favorites</li>
-                            <li><i class="fa fa-pencil"></i> community edits</li>
+                            <article id="rate">
+                                {% if request.user.is_authenticated %}
+                                    <li>
+                                        {% trans "Rate:" %} {% user_rating request.user resource "layer" as user_layer_rating %}
+                                        {% user_rating request.user resource "layer" as user_layer_rating %}
+                                        <div style="display:inline" id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
+                                    </li>
+
+                                {% endif %}
+                            </article>
+                            <li>{% trans "Average:" %} {% if resource.rating %}{{ resource.rating }}/5{% else %}Not yet rated{% endif %}</li>
+                            <li><i class="fa fa-eye"></i> {{ resource.popular_count }} views</li>
+                            <!--<li><i class="fa fa-heart"></i> {{ resource.favorites }} favorites</li>-->
+                            <!--<li><i class="fa fa-pencil"></i> community edits</li>-->
                             {% else %}
                             {% ifequal page "map" %}
                                 <!--<li>Rating</li>-->
-                                <li><i class="fa fa-eye"></i> views</li>
-                                <li><i class="fa fa-heart"></i> favorites</li>
+                                <li><i class="fa fa-eye"></i> {{ resource.popular_count }} {% trans 'views' %}</li>
+                                <!--<li><i class="fa fa-heart"></i> favorites</li>-->
                                 {% else %}
                             {% endifequal %}
                         {% endifequal %}
@@ -176,3 +247,4 @@
         </div>
     </section>
 </div>
+{% include "favorite/_favorite_js.html" %}
