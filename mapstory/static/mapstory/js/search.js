@@ -182,6 +182,7 @@
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
     $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
+    $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
 
     $scope.search = function() {
       $scope.query.limit = 100;
