@@ -1,4 +1,6 @@
 {% load i18n %}
+{% load threadedcomments_tags %}
+{% load fluent_comments_tags %}
 {% load dialogos_tags %}
 {% load agon_ratings_tags %}
 {% load bootstrap_tags %}
@@ -6,167 +8,107 @@
 {% load base_tags %}
 {% load guardian_tags %}
 <div class="row">
-  <div class="col-sm-12">
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#Abstract" data-toggle="tab" style="font-size:0.8em;">Abstract</a></li>
-        <!--<li><a href="#Metadata" data-toggle="tab" style="font-size:0.8em;">Meta</a></li>-->
-        <li><a href="#Edits" data-toggle="tab" style="font-size:0.8em;">Edits</a></li>
-        <!--<li><a href="#Download" data-toggle="tab" style="font-size:0.8em;">Download</a></li>-->
-        <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;" ng-click="query_category('{{ resource.category }}', 'layer');">Related</a></li>
-        <li><a href="#Comments" data-toggle="tab" style="font-size:0.8em;">Related</a></li>
-    </ul>
-    <div class="tab-content">
-      <div class="tab-pane active" id="Abstract">
-        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-          {{ resource.abstract }}
-        </div>
-      </div>
-      <div class="tab-pane" id="Metadata">
-        <table class="table table-condensed table-hover">
-          <tr>
-            <td width="35%">Topic</td>
-            <td width="65%">{{ resource.category }}</td>
-          </tr>
-          <tr>
-            <td width="35%">Time Range</td>
-            {% if resource.temporal_extent_start and resource.temporal_extent_end %}
-            <td width="65%">{{ resource.temporal_extent_start }} - {{ resource.temporal_extent_end }}</td>
-            {% else %}
-            <td width="65%">No time information.</td>
-            {% endif %}
-          </tr>
-          <tr>
-            <td width="35%">Language</td>
-            <td width="65%"><i class="flag flag-us"></i>{% if resource.language %}{{ resource.language_title }}{% else %}No language information.{% endif %}</td>
-          </tr>
-          <tr>
-            <td width="35%">Data Source</td>
-            <td width="65%">{{ resource.distribution_url }}</td>
-          </tr> 
-          <tr>
-            <td width="35%">Data Quality Statement</td>
-            <td width="65%">{{ resource.data_quality_statement }}</td>
-          </tr>
-          <tr>
-            <td width="35%">Purpose</td>
-            <td width="65%">{{ resource.purpose }}</td>
-          </tr>
-        </table>
-
-      </div>
-      <div class="tab-pane" id="Edits">
-        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-          {% if GEOGIG_ENABLED and resource.link_set.geogig %}
-            {% with "_geogig_layer_detail.html" as geogig_template %}
-            <article id="geogig" class="tab-pane">
-              {% with resource as obj %}
-                {% include geogig_template %}
-              {% endwith %}
-            </article>
-            {% endwith %}
-          {% endif %}
-        </div>
-      </div>
-      <div class="tab-pane" id="Download">
-        <ul class="list-group">
-          {% if resource.storeType != "remoteStore" %}
-            {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
-            
-            <li class="list-group-item">
-            {% if links %}
-               <button class="btn btn-primary btn-md btn-block" data-toggle="modal" data-target="#download-layer">{% trans "Download Layer" %}</button>
-            {% else %}
-              {% if request.user.is_authenticated %}
-              <button class="btn btn-primary btn-md btn-block" id="request-download">{% trans "Request Download" %}</button>
-              {% endif %}
-            {% endif %}
-            </li>
-          {% endif %}
+    <div class="col-sm-12">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#Abstract" data-toggle="tab" style="font-size:0.8em;">Abstract</a></li>
+            <!--<li><a href="#Metadata" data-toggle="tab" style="font-size:0.8em;">Meta</a></li>-->
+            <li><a href="#Edits" data-toggle="tab" style="font-size:0.8em;">Edits</a></li>
+            <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;"
+                   ng-click="query_category('{{ resource.category }}', 'layer');">Related</a></li>
+            <li><a href="#Comments" data-toggle="tab" style="font-size:0.8em;">Comments</a></li>
         </ul>
-        <div class="modal fade" id="download-layer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">{% trans "Download Layer" %}</h4>
-              </div>
-              <div class="modal-body">
-                {% if links %}
-                <ul>
-                  {% for link in links %}
-                  <li><a href="{{ link.url }}" class="download-link" data-extension="{{ link.name }}" data-id="{{ resource.id }}">{% trans link.name %}</a></li>
-                  {% endfor %}
-                </ul>
-                {% endif %}
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="tab-pane" id="Related">
-        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-          {% if resource.category %}
-            {% verbatim %}
-            <div ng-hide="results.length">
-              No related layers found...
-            </div>
-            <div ng-show="results.length">
-              <div class="col-sm-12" ng-repeat="item in results">
-                <div ng-show="{{ item.id }} != {% endverbatim %}{{ resource.id }}{% verbatim %}">
-                  <div class="row boxFeature">
-                    <div class="col-xs-3">
-                      <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
-                    </div>
-                    <div class="col-xs-9">
-                      <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
-                      <p>{{ item.abstract|limitTo:"250"  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></p>
-                    </div>
-                  </div>
+        <div class="tab-content">
+            <div class="tab-pane active" id="Abstract">
+                <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+                    {{ resource.abstract }}
                 </div>
-              </div>
             </div>
-            {% endverbatim %}
-          {% else %}
-            <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-              No related layers found...
-            </div>
-          {% endif %}
-        </div>
-      </div>
-    </div>
+            <div class="tab-pane" id="Metadata">
+                <table class="table table-condensed table-hover">
+                    <tr>
+                        <td width="35%">Topic</td>
+                        <td width="65%">{{ resource.category }}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">Time Range</td>
+                        {% if resource.temporal_extent_start and resource.temporal_extent_end %}
+                            <td width="65%">{{ resource.temporal_extent_start }} - {{ resource.temporal_extent_end }}</td>
+                        {% else %}
+                            <td width="65%">No time information.</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td width="35%">Language</td>
+                        <td width="65%"><i class="flag flag-us"></i>{% if resource.language %}{{ resource.language_title }}{% else %}No language
+                            information.{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">Data Source</td>
+                        <td width="65%">{{ resource.distribution_url }}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">Data Quality Statement</td>
+                        <td width="65%">{{ resource.data_quality_statement }}</td>
+                    </tr>
+                    <tr>
+                        <td width="35%">Purpose</td>
+                        <td width="65%">{{ resource.purpose }}</td>
+                    </tr>
+                </table>
 
-  <!-- If the owner is this user, or it is a content moderator, make a button visible which spawns a modal to modify the metadata -->
-  <hr size="2"></hr>
-      {% if content_moderators in user.groups.all or user == resource.owner %}
-  <div class="panel panel-default" style="background-color: rgba(0,0,0,0.05)">
-  <div class="panel-body">
-        <a href="#metaForm" class="btn btn-primary" data-toggle="modal">{% trans "Update StoryLayer Settings" %}</a>
-        <a class="btn btn-danger" href="{% url "layer_remove" resource.service_typename %}">{% trans "Delete StoryLayer" %}</a>
-        <div id="metaForm" class="modal fade" tabindex="-1" role="dialog">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                  <h4 class="modal-title">{% trans 'Edit Metadata' %}</h4>
-              </div>
-              <form name="metadata_form" method="POST" id="form_post_metadata" action="{{ resource.detail_url }}">
-                <div class="modal-body">
-                  {% csrf_token %}
-                  {{ metadata_form|as_bootstrap }}
-                </div>
-                <div class="modal-footer">
-                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
-                    <button class="btn btn-primary" aria-hidden="true" id="metadata_submit_btn" type="submit">{% trans "Save" %}</button>
-                </div>
-              </form>
             </div>
-          </div>
+            <div class="tab-pane" id="Edits">
+                <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+                    {% if GEOGIG_ENABLED and resource.link_set.geogig %}
+                        {% with "_geogig_layer_detail.html" as geogig_template %}
+                            <article id="geogig" class="tab-pane">
+                                {% with resource as obj %}
+                                    {% include geogig_template %}
+                                {% endwith %}
+                            </article>
+                        {% endwith %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="tab-pane" id="Related">
+                <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+                    {% if resource.category %}
+                        {% verbatim %}
+                            <div ng-hide="results.length">
+                                No related layers found...
+                            </div>
+                            <div ng-show="results.length">
+                            <div class="col-sm-12" ng-repeat="item in results">
+                            <div ng-show="{{ item.id }} != {% endverbatim %}{{ resource.id }}{% verbatim %}">
+                            <div class="row boxFeature">
+                                <div class="col-xs-3">
+                                    <a href="{{ item.detail_url }}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url }}"
+                                                                         style="border-width:1px; border-style:solid; border-color:grey;"/></a>
+                                </div>
+                                <div class="col-xs-9">
+                                    <h3><a href="{{ item.detail_url }}">{{ item.title }}</a></h3>
+                                    <p>{{ item.abstract|limitTo:"250"  }}<a href="{{ item.detail_url }}"><i>...read more</i></a></p>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                    {% endverbatim %}
+                    {% else %}
+                        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
+                            No related layers found...
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="tab-pane" id="Comments">
+                {% get_comment_count for resource as num_comments %}
+                {{ num_comments }} comments
+                {% if user.is_authenticated %}
+                    {% render_comment_form for resource %}
+                {% endif %}
+                {% render_comment_list for resource %}
+            </div>
         </div>
-  </div>
-  </div>
-          {% endif %}
-  </div>
+    </div>
 </div>
