@@ -1,0 +1,32 @@
+{% load i18n %}
+<div class="container">
+    <div class="row" style="padding-top:-10px;">
+        <div class="col-sm-12">
+            <h1 class="text-center">{% trans "The atlas of change that everyone can edit" %}</h1>
+        </div>
+    </div>
+    <div class="row" style="padding-top: 5px;">
+        <div class="input-group col-sm-6 col-sm-offset-3">
+            <form action="{% url "search" %}">
+                <div class="input-group">
+                {% if HAYSTACK_SEARCH %}
+                <input class="form-control" id="homepage_search" type="text" name="q" style="color:chocolate;background-color:whitesmoke;border:1px solid white" placeholder="{% trans "Explore MapStories and StoryLayers" %}">
+                {% else %}
+                <input class="form-control" id="homepage_search" type="text" name="keywords__slug__in" style="color:chocolate;background-color:whitesmoke;border:1px solid white" placeholder="{% trans "Explore MapStories and StoryLayers" %}">
+                {% endif %}
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" type="submit" style="background-color:chocolate;color:white;border:1px solid white"><i class="fa fa-search"></i></button>
+                </span>
+                </div>
+            </form>
+       </div>
+    </div>
+    {% include "branding/index_menu.html" %}
+    <div class="row" style="padding-bottom:5px;">
+        <div class="localscroll" style="text-align:center">
+            <!-- TODO: Link to mapstories is the section that doesn't exist yet -->
+            <a href="#mapstories" class="btn btn-circle btn-sm btn-default" style="background-color:#BD5E1B;color:white;border:1px solid transparent;border-radius:25%">
+            <i class="icon-down" id="mapstories"></i></a>
+        </div>
+    </div>
+</div>

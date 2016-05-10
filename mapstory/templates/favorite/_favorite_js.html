@@ -20,10 +20,10 @@
     // set button text and url based on whether user has favorite.
     function setFavoriteButton(hasFavorite, deleteUrl) {
         if (hasFavorite == "true") {
-            $("#favoriteLink").html("{% trans "Unfavorite" %}");
+            $("#favoriteLink").html("{% trans "unfavorite" %}");
             favoriteCurrentUrl = deleteUrl;
         } else {
-            $("#favoriteLink").html("{% trans "Mark as Favorite" %}");
+            $("#favoriteLink").html("{% trans "favorite" %}");
             favoriteCurrentUrl = favoriteAddUrl;
         }
     }
