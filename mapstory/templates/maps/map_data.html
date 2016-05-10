@@ -49,35 +49,7 @@
           {% endfor %}
         </div>
       </div>
-      <div class="tab-pane" id="Related">
-        <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-          {% if resource.category %}
-          <!-- TODO: Did this ever work? Not sure where the results came from... query_category? Check ng-apps -->
-            {% verbatim %}
-            <div ng-hide="results.length">
-              No related mapstories found...
-            </div>
-            <div ng-show="results.length">
-              <div class="col-sm-12" ng-repeat="item in results">
-                <div class="row boxFeature">
-                  <div class="col-xs-3">
-                    <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
-                  </div>
-                  <div class="col-xs-9">
-                    <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
-                    <p>{{ item.abstract|limitTo:"250"  }}<a href="{{ item.detail_url}}"><i>...read more</i></a></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {% endverbatim %}
-          {% else %}
-            <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-              No related mapstories found...
-            </div>
-          {% endif %}
-        </div>
-      </div>
+      {% include "branding/maps_map_data_related.html" %}
     </div>
   </div>
 </div>

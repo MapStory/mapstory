@@ -122,7 +122,5 @@ angular and jquery were moved to the _map_view_common.html template
 <script type="text/javascript" src="{{STATIC_URL}}maploom/templates-common.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}maploom/templates-app.js"></script>
 
-{% comment %}
-dependencies introduced by mapstory work
-{% endcomment %}
+{% include "branding/maps_composer_scripts_comment.html" %}
 <script src="{{STATIC_URL}}vendor/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>

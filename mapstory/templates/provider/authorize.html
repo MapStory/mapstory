@@ -8,14 +8,7 @@
 {% block header %}
 {% include 'mapstory/_header.html'  with hide_menu=True %}
         <div class="oauth-body">
-            <h2>Login with MapStory</h2>
-            {% if not error %}
-            <p>{{ client.name }} would like to access the following information:</p>
-            <ul>
-                <li>
-                    Your MapStory user profile (including username and email address)
-                </li>
-            </ul>
+			{% include "branding/provider_authorize.html" %}
             <form method="post" action="{% url "oauth2:authorize" %}">
             {% csrf_token %}
             {{ form.errors }}

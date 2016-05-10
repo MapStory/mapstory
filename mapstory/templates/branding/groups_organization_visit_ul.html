@@ -1,0 +1,30 @@
+<ul>
+	<!-- TODO: Figure out how to filter by mapstory -->
+      {% for layer in maps %}
+				<li class="col-md-4">
+					<div style="text-align: left;">
+						<a href="{{ layer.detail_url}}"><img class="thumb img-responsive" src="{{ layer.thumbnail_url}}"/></a>
+						<h3><a href="{{ layer.detail_url}}">{{ layer.title}}</a></h3>
+						{% include "branding/groups_organization_visit_group.html" %}
+						<h4><span class="owner"><i class="fa fa-user"></i>{{ layer.owner.first_name }} {{ layer.owner.last_name }}</span></h4>
+				<h4><span><i class="fa fa-flag-o"></i></span>{{ layer.category.gn_description}}</h4>
+				<!-- TODO: Hook in the edits -->
+				<h4><a href="{{ layer.detail_url}}"><i class="fa fa-pencil"></i> edits</a></h4>
+				<h4><a href="{{ layer.detail_url}}#rate"><i class="fa fa-star"></i> {{ layer.rating}}</a></h4>
+				<div><h5 class="abstract"><a href="#">{{ layer.abstract|slice:"70" }}<i>...read more</i></a></h5></div>
+				<div class="btn-toolbar">
+					<h4>
+                <!-- goes to composer -->
+                <a href="{% url "new_map" %}?layer={{ layer.detail_url|slice:"8:" }}"><button class="btn btn-primary btn-xs"><i class="fa fa-play"></i> use</button></a>
+                <!-- goes to layer edit -->
+                <a href='{% url "map-edit" %}?layer={{layer.service_typename}}'><button class="btn btn-primary btn-xs"><i class="fa fa-share-alt"></i> edit</button></a>
+                <!-- TODO: Hook in favorites functionality -->
+                <button class="btn btn-primary btn-xs"><i class="fa fa-heart-o"></i> favorite</button>
+					</h4>
+				</div>
+					</div>
+				</li>
+				{% empty %}
+				There are no mapstories made by this group.
+				{% endfor %}
+</ul>

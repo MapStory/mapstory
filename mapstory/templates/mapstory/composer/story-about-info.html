@@ -1,0 +1,29 @@
+<div>
+    <div class="input-group">
+        <label for="title">Title</label>
+        <input id="title" class="form-control" type="text" ng-model="choice.title"/>
+    </div>
+
+    <div class="input-group">
+        <label for="abstract">Abstract</label>
+        <textarea id="abstract" class="form-control" type="text" ng-model="choice.abstract"></textarea>
+    </div>
+
+    <!-- Temporarily removing this as it is not wired up -->
+    <!--
+    <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <input id="published" name="published" ng-model="choice.publish" type="checkbox">
+            </span>
+            <span class="form-control">
+				{% include "branding/mapstory_composer_story-about-info.html %}
+            </span>
+        </div>
+    </div>
+    -->
+    Your map's thumbnail will be generated based on the view you are currently focused on. When you are ready, click Save.
+    <div class="input-group">
+        <button ng-disabled="!choice.title" class="btn btn-primary pull-right" ng-click="saveMap(choice);"><span ng-if="loading">Saving...</span><span ng-if="loading != true">Save</span></button>
+    </div>
+</div>
