@@ -247,7 +247,7 @@
   })
 
 .controller('profile_search_controller', function($injector, $scope, $location, $http, Configs,
-                                                          UploadedData, $rootScope){
+                                                          UploadedData, $rootScope, $sce){
     $scope.query = $location.search();
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
@@ -257,6 +257,10 @@
     $scope.currentPage = 0;
     $scope.offset = 0;
     $scope.limit = 10;
+
+    $scope.trustSrc = function(src) {
+      return $sce.trustAsResourceUrl(src);
+    }
 
     // For some reason it gets it all as a string, so parse for the ' and grab the content in between them
     keyword_list = keyword_list.split('\'');

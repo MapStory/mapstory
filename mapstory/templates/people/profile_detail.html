@@ -286,7 +286,7 @@
                                             <div class="layer-upload-counts">Showing uploads {{offset}}-{{offset+uploads.length}} of {{totalItems}}.</div>
                                             {% endverbatim %}
                                             <div ng-repeat="upload in uploads">
-                                                <upload upload-object="upload" i="$index" static-url="{{STATIC_URL}}" template-url="{{ STATIC_URL }}osgeo_importer/partials/upload.html"></upload>
+                                                <upload upload-object="upload" i="$index" static-url="{{STATIC_URL}}" template-url="trustSrc({{ STATIC_URL }}osgeo_importer/partials/upload.html)"></upload>
                                             </div>
                                             <uib-pagination total-items="totalItems" ng-init="init('{{user.username}}')" ng-change="pageChanged()" max-size="7" class="pagination-sm" items-per-page="limit" ng-model="currentPage"></uib-pagination>
                                         </div>
