@@ -83,7 +83,7 @@
                         <li><a href="{% url "admin:index" %}"><i class="fa fa-cog"></i> {% trans "Admin" %}</a></li>
                         {% endif %}
                         <li class="divider"></li>
-                        <li><a title="Help" rel="tooltip" href="http://help.mapstory.org"><i class="fa fa-question-circle"></i> {% trans "Help" %}</a></li>
+                        <li><a title="Help" rel="tooltip" href="{% url 'getpage' 'started' %}"><i class="fa fa-question-circle"></i> {% trans "Help" %}</a></li>
                         <li class="divider"></li>
                         <li>
                             <form action="{% url "account_logout" %}" id="logout_form" method="post">
