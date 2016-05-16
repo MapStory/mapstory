@@ -20,3 +20,12 @@ uploaded
 .idea
 mapstory/importer/test_ogr
 mapstory/importer/static/importer/bower_components
+mapstory/static/maploom/fonts
+mapstory/static/maploom/index-lite.html
+mapstory/static/maploom/index.html
+mapstory/static/maploom/maploom-lite.html
+mapstory/static/maploom/maploom.html
+mapstory/static/maploom/src
+mapstory/static/maploom/templates-app.js
+mapstory/static/maploom/templates-common.js
+mapstory/static/maploom/vendor
