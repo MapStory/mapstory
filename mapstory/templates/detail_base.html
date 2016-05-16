@@ -211,11 +211,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <i class="fa fa-heart"></i>
-                                {% include "favorite/_favorite.html" with span_style="font-size:18px;color:#333" btn_style="font-size:18px;color:#333;border:none;background:none" %}
+                                <li>
+                                    <i class="fa fa-heart"></i>{% include "favorite/_favorite.html" with span_style="font-size:18px;color:#333" btn_style="font-size:18px;color:#333;border:none;background:none" %}
+                                </li>
                                 {% else %}
                             {% endifequal %}
                         {% endifequal %}
+                        <li><a href="{% url "message_create" resource.owner.pk %}"><span style="color:orange">message</span></a></li>
                     </ul>
                     <div class="side-column-header">Usage Summary</div>
                     <ul class="side-column-items">
