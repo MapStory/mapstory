@@ -225,7 +225,7 @@
                                 {% else %}
                             {% endifequal %}
                         {% endifequal %}
-                        <li><a href="{% url "message_create" resource.owner.pk %}"><span style="color:orange">message</span></a></li>
+                        <li><i class="fa fa-envelope-o"></i> <a href="{% url "message_create" resource.owner.pk %}">Message</span></a></li>
                     </ul>
                     <div class="side-column-header">Usage Summary</div>
                     <ul class="side-column-items">
