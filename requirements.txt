@@ -2,7 +2,7 @@
 
 -e git://github.com/pinax/django-mailer.git#egg=django-mailer
 -e git://github.com/MapStory/icon-commons.git#egg=icon-commons
--e git://github.com/ProminentEdge/django-osgeo-importer.git@667f1874b845236f0aaf4c4819b218db23053955#egg=osgeo_importer
+-e git://github.com/ProminentEdge/django-osgeo-importer.git@5b79344be4be24ae8614d18ef740ef52e805bcfa#egg=osgeo_importer
 
 docutils
 textile

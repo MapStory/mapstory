@@ -136,12 +136,13 @@ USE_AWS_S3_MEDIA = False
 
 IMPORT_HANDLERS = (
 'mapstory.import_handlers.TruncatedNameHandler',
-'osgeo_importer.handlers.FieldConverterHandler',
+'osgeo_importer.handlers.BigDateFieldConverterHandler',
 'osgeo_importer.handlers.geoserver.GeoserverPublishHandler',
 'osgeo_importer.handlers.geoserver.GeoServerBoundsHandler',
 'osgeo_importer.handlers.geoserver.GeoServerTimeHandler',
 'osgeo_importer.handlers.geoserver.GeoWebCacheHandler',
 'osgeo_importer.handlers.geonode.GeoNodePublishHandler',
+'osgeo_importer.handlers.geoserver.GenericSLDHandler',
 'mapstory.import_handlers.LayerAppendHandler'
 )
 
