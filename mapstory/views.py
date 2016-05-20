@@ -1106,12 +1106,12 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     shapefile_link = layer.link_set.download().filter(mime='SHAPE-ZIP').first()
     if shapefile_link is not None:
-        shapefile_link = shapefile_link.url + '&featureID=fakeID' + '&propertyName=' + layer_attrib_string
+        shapefile_link = shapefile_link.url + '&featureID=fakeID'
         context_dict["shapefile_link"] = shapefile_link
 
     csv_link = layer.link_set.download().filter(mime='csv').first()
     if csv_link is not None:
-        csv_link = csv_link.url + '&featureID=fakeID' + '&propertyName=' + layer_attrib_string
+        csv_link = csv_link.url + '&featureID=fakeID'
         context_dict["csv_link"] = csv_link
 
     if settings.SOCIAL_ORIGINS:
