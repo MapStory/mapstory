@@ -351,6 +351,12 @@ if DATABASE_PASSWORD:
 
     GEOGIG_DATASTORE_NAME = 'geogig'
 
+SCHEMA_DOWNLOAD_EXCLUDE = [
+    'ogc_fid',
+    'date_xd',
+    'date_parsed',
+]
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
