@@ -1044,6 +1044,10 @@
       // Configure first search
       // Check the url for its search terms and apply the queries
       for (var item in $location.search()) {
+        // Check for quick search
+        if (item == 'q') {
+          $scope.text_query = item.replace(/\W+/g," ");
+        }
         // If we see type__in, we want to change the api query accordingly
         if (item == 'type__in') {
           if ($location.search()[item] == 'user') {
