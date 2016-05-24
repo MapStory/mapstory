@@ -1,5 +1,9 @@
+{% if user == profile %}
+    <li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4" ng-if="(item.type === 'mapstory' ||item.type === 'layer')">
+{% else %}
+    <li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4" ng-if="((item.type === 'mapstory' && item.is_published == true) || (item.type === 'layer' && item.is_published == true))">
+{% endif %}
 {% verbatim %}
-<li ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4" ng-if="(item.type === 'mapstory' ||item.type === 'layer')">
     <!-- We want the entire tile card to have a set size -->
     <div style="text-align: left; height: 500px;">
 
