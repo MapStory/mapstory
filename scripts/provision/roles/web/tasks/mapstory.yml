@@ -157,6 +157,14 @@
   tags: [update]
   when: use_aws_s3 is undefined or use_aws_s3 == False
 
+- name: mapstory grunt copy
+  shell: grunt copy:development
+  args:
+    chdir: '{{ project_path }}/mapstory/static'
+  sudo_user: '{{ application_user }}'
+  tags: [update]
+  when: use_aws_s3 is undefined or use_aws_s3 == False
+
 - name: collect-static local
   django_manage: app_path={{ project_path }} virtualenv={{ venv }} command='collectstatic --link --noinput --ignore node_modules'
   sudo_user: '{{ application_user }}'
