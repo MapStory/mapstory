@@ -30,10 +30,14 @@ class CustomSite(models.Model):
    class Meta:
        verbose_name = "Custom Site Property"
        verbose_name_plural = "Custom Site Properties"
-
+       
    def __unicode__(self):
        return 'Properties of {0}'.format(self.site.domain)
 
+   def save(self, *args, **kwargs):
+    super(CustomSite, self).save(*args, **kwargs)
+    # Cached information will likely be incorrect now.
+    Site.objects.clear_cache()
 
 
 def _stamp(data):
