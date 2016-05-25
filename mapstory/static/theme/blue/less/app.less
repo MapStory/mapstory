@@ -1,0 +1,54 @@
+/* Overrides
+Put any rules that we're modifiying to fix something inherited in this section
+with a comment about why.
+*/
+
+.ms-tool-mode {
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 500;
+    background: none;
+    width: 100%;
+
+    .panel-heading {
+        &:extend(#pulldown-content .panel-heading);
+    }
+
+    .panel-group .panel + .panel {
+        margin: 0;
+    }
+
+    .panel-group.col-sm-3 {
+        padding: 0;
+    }
+}
+
+#map-name {
+    font-style: normal;
+    font-weight: bolder;
+}
+
+/* hide gallery until we need it
+@todo it's CSS still needs to be pulled in for dev mode
+*/
+#blueimp-gallery {
+    display: none;
+}
+
+/* Additions
+Our own additional rules go in this section
+*/
+body, html {
+    height: 100%;
+    background-color: white;
+}
+
+.todo {
+    background: pink;
+}
+
+footer {
+  background:#162F43;
+}
+

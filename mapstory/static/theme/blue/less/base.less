@@ -1,4 +1,4 @@
-@geonode: '../../../../../geonode/';
+@geonode: '../../../../../../geonode/';
 @geonode-less: '@{geonode}geonode/static/geonode/less/';
 //@import '@{geonode-less}variables.less';
 @import 'base-variables.less';
@@ -80,7 +80,7 @@ a:hover, a:focus, a:active{
 
 footer {
   color:#777;
-  background:#EB7F37;
+  background:#162F43;
   border-top:1px solid #555s;
 }
 
@@ -93,7 +93,7 @@ p.credits {
   color:#555;
 }
 p.credits a {
-  color:#EB7F37;
+  color:#162F43;
 }
 
 /* ======== NAVBAR ======== */
@@ -115,7 +115,7 @@ p.credits a {
 }
 
 .navbar-inverse .navbar-nav > li > a:hover {
-  color: orange;
+  color: #333;
 }
 
 .navbar-nav > li > a{
@@ -140,11 +140,11 @@ p.credits a {
 }
 
 .navbar-nav > li > div > a:hover{
-  color: orange;
+  color: #333;
 }
 
 .nav .open>a, .nav .open>a:hover, .nav .open>a:focus{
-  color: orange;
+  color: #333;
   border-radius: 0px;
   box-shadow: none;
   background-color: white;
@@ -259,7 +259,7 @@ label.error {color:#fff;
 }
 
 .text-orange {
-  color: #EB7F37
+  color: #162F43
 }
 
 /*color1*/
@@ -276,7 +276,6 @@ label.error {color:#fff;
 
 /*color4*/
 .color4, .slice.color4, .bulle.color4, .ctaBox.color4{
-  background-color:#EB7F37;
   color:#fff;
 }
 
@@ -312,7 +311,7 @@ label.error {color:#fff;
 }
 
 .qlink-gen{
-  color: orange;
+  color: #333;
 }
 
 .qlink-wt{
@@ -369,7 +368,7 @@ label.error {color:#fff;
 }
 
 .bg-ms{
-  background-color: #e37236
+  background-color: #162F43
 }
 
 /*form controls*/
@@ -414,11 +413,11 @@ small {
 
 
 .mapstory-auth-btn {
-  background-color: #e37236;
+  background-color: #162F43;
   color: white;
 
   &:hover {
-    background-color: #e37236;
+    background-color: #162F43;
     color: black;
   }
 }
@@ -445,7 +444,7 @@ small {
 }
 
 .google-btn{
-  background-color: #F05A24;
+  background-color: #162F43;
   color:white;
 }
 
@@ -466,7 +465,7 @@ small {
   padding-top: 15px;
 }
 .oauth-body h2 {
-  color: #f47a20;
+  color: #162F43;
 }
 
 /* Layer Create
@@ -576,6 +575,27 @@ select {
 
 .details-tabs > li.active > a, .details-tabs > li.active > a:hover, .details-tabs > li.active > a:focus {
   border: 0;
-  border-bottom: 4px solid #f59620;
+  border-bottom: 4px solid #162F43;
   color: #444;
+}
+
+
+
+.pointer {
+    cursor: pointer;
+}
+
+#embedded_map {
+  width: 850px;
+  height: 450px;
+}
+
+#embedded_map:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+}
+
+/* Is there a better way to override the css applied by the library without having to rewrite the entire thing? */
+.token {
+  background-color: white !important;
 }

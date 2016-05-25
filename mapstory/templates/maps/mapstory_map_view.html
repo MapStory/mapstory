@@ -52,7 +52,7 @@ goog.object.extend( config, {{ config|safe }});
             rel : 'stylesheet', type: 'text/css', href: 'http://cdnjs.cloudflare.com/ajax/libs/hopscotch/0.2.0/css/hopscotch.min.css'
         }).appendTo('head');
         $('<link/>').attr({
-            rel : 'stylesheet', type: 'text/css', href: '{{STATIC_URL}}mapstory/css/tour.css'
+            rel : 'stylesheet', type: 'text/css', href: '{{STATIC_URL}}theme/{{THEME}}/css/tour.css'
         }).appendTo('head');
         $.get("{% url 'editor_tour' %}", function(h) {
            $('body').append(h);

@@ -11,5 +11,6 @@ def context(req):
         GOOGLE_ANALYTICS=getattr(settings, 'GOOGLE_ANALYTICS', None),
         ENABLE_SOCIAL_LOGIN=getattr(settings, 'ENABLE_SOCIAL_LOGIN', False),
         USER_SNAP=getattr(settings, 'USER_SNAP', False),
-        site=Site.objects.get_current()
+        site=Site.objects.get_current(),
+        THEME=getattr(settings, 'THEME', 'default')
     )

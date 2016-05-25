@@ -109,6 +109,7 @@ def collect():
             run('npm install')
             run('bower install --noinput')
             sudo('grunt less', user='mapstory')
+            sudo('grunt copy', user='mapstory')
 
         with cd('/srv/git/mapstory/mapstory-geonode'):
             sudo('python manage.py collectstatic --link --noinput --ignore node_modules', user='mapstory')

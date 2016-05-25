@@ -3,27 +3,6 @@
 {% load avatar_tags %}
 
 {% block extra_head %}
-		<!-- Bootstrap  -->
-		<link type="text/css" rel="stylesheet" href="bootstrap/css/bootstrap.css">
-		<!-- web font  -->
-		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800" rel="stylesheet" type="text/css">
-
-		<!-- icon fonts -->
-		<link type="text/css" rel="stylesheet" href="font-icons/custom-icons/custom-icons.css">
-		<link type="text/css" rel="stylesheet" href="font-icons/custom-icons/css/custom-icons-ie7.css">
-		<link href="font-icons/custom-icons/css/flags.css" media="screen" rel="stylesheet" type="text/css">
-		<!-- Custom css -->
-		<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}mapstory/css/layout.css">
-		<link type="text/css" id="colors" rel="stylesheet" href="{{ STATIC_URL }}mapstory/css/orange.css">
-		<!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
-		<!--script src="js/modernizr-2.6.1.min.js"></script-->
-		<!-- Favicons
-		================================================== -->
-		<link rel="shortcut icon" href="images/favicon.ico">
-		<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-		<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-		<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-		<link rel="apple-touch-icon" sizes="144x144" href="images/apple-touch-icon-144x144.png">
 	{% endblock %}
 
 
@@ -48,11 +27,11 @@
 								<hr/>
 							</div>
 							<div class="col-sm-3" style="text-align:center;padding-top:30px">
-								<img class="img-circle" src="{{ STATIC_URL }}mapstory/images/donate.jpg" width="75" height="75">
+								<img class="img-circle" src="{{ STATIC_URL }}mapstory/img/donate.jpg" width="75" height="75">
 								<h2><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=3FUCTKSH4R668">Donate Now</a></h2>
 
 								<hr>
-								<img class="img-circle" src="{{ STATIC_URL }}mapstory/images/org-donate.jpg" width="75" height="75">
+								<img class="img-circle" src="{{ STATIC_URL }}mapstory/img/org-donate.jpg" width="75" height="75">
 								<h2><a href="{% url 'getpage' 'involved' %}#Organization Pages">Sponsor an Organization Page</a></h2>
 
 							</div>

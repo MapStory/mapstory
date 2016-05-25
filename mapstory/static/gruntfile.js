@@ -20,18 +20,30 @@ module.exports = function(grunt) {
       development: {
         options: {
           paths: [
-            'mapstory/less'
+            'theme/default/less',
+            'theme/blue/less'
           ]
         },
         files: [
           {
-            'geonode/css/base.css': 'mapstory/less/base.less',
+            'geonode/css/base.css': 'theme/default/less/base.less',
+            'theme/default/css/font-awesome.css': 'vendor/fontawesome/css/font-awesome.css',
+            'theme/blue/css/font-awesome.css': 'vendor/fontawesome/css/font-awesome.css',
+            'theme/blue/fonts/lato_font.css': 'vendor/lato-font/css/lato-font.css',
+            'theme/default/fonts/lato_font.css': 'vendor/lato-font/css/lato-font.css'
           },
           {
             expand: true,
-            cwd: 'mapstory/less',
+            cwd: 'theme/default/less',
             src: ['*.less', '!*-variables.less', '!maploom.less'],
-            dest: 'mapstory/css/',
+            dest: 'theme/default/css/',
+            ext: '.css'
+          },
+          {
+            expand: true,
+            cwd: 'theme/blue/less',
+            src: ['*.less', '!*-variables.less', '!maploom.less'],
+            dest: 'theme/blue/css/',
             ext: '.css'
           }
         ]
@@ -48,15 +60,33 @@ module.exports = function(grunt) {
       }
     },
 
+    copy: {
+      development: {
+        files: [{
+          src: ['vendor/fontawesome/fonts/*'],
+          dest: 'theme/default/fonts/',
+          expand: true,
+          flatten: true,
+          filter: 'isFile'
+        },{
+          src: ['vendor/fontawesome/fonts/*'],
+          dest: 'theme/blue/fonts/',
+          expand: true,
+          flatten: true,
+          filter: 'isFile'
+        }]
+      }
+    },
+
     replace: {
       development: {
         src: ['lib/css/*.css'],
         overwrite: true,
-        replacements: [{ 
+        replacements: [{
           from: /url\((("?images\/)|('(?!(images|\.)))|(?!('|"))|('\.\.\/images\/))/g,
           to: 'url(\'../img/'
         }, {
-          from: /(png|gif|jpg)+(\)|'\)|"\))/g, 
+          from: /(png|gif|jpg)+(\)|'\)|"\))/g,
           to: '$1\')'
         }]
       }
@@ -69,7 +99,7 @@ module.exports = function(grunt) {
         livereload: 35730
       },
       less: {
-        files: ['mapstory/less/*.less'],
+        files: ['theme/default/less/*.less'],
         tasks: ['less:development']
       }
     },
@@ -95,6 +125,7 @@ module.exports = function(grunt) {
   // Load libs
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-text-replace');
@@ -107,9 +138,9 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['jshint']);
 
   // build development
-  grunt.registerTask('default', ['jshint', 'less:development', 'replace']);
+  grunt.registerTask('default', ['jshint', 'less:development', 'replace', 'copy:development']);
 
   // build production
-  grunt.registerTask('production', ['jshint', 'less:production', 'replace' ]);
+  grunt.registerTask('production', ['jshint', 'less:production', 'replace', 'copy:development' ]);
 
 };

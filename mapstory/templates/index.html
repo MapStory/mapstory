@@ -9,7 +9,7 @@
 
 {% block extra_head %}
 <!--<link href="{{ STATIC_URL }}vendor/isotope/css/style.css" rel="stylesheet" />-->
-<link href="{{ STATIC_URL }}mapstory/css/index.css" rel="stylesheet" />
+<link href="{{ STATIC_URL }}theme/{{THEME}}/css/index.css" rel="stylesheet" />
 {% endblock %}
 
 {% block extra_script %}
@@ -56,6 +56,8 @@
                </div>
             </div>
             <div class="row links" style="padding-top:15px;padding-bottom:5px;">
+            {% with colsm3=REGISTRATION_OPEN %}
+             {% if colsm3 %}
                 <div class="col-sm-3">
                     <h3>
                         <a href="#" data-toggle="modal" data-target="#loginModal">
@@ -63,7 +65,8 @@
                         </a>
                     </h3>
                 </div>
-                <div class="col-sm-3">
+             {% endif %}
+                <div class="col-sm-{% if colsm3 %}3{% else %}4{% endif %}">
 
                     <h3>
                         {% if user.is_authenticated %}
@@ -75,26 +78,27 @@
                         </a>
                     </h3>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-{% if colsm3 %}3{% else %}4{% endif %}">
                     <h3>
                         <a href="{% url 'new_map' %}?tour">
                             {% trans "Compose MapStory" %}
                         </a>
                     </h3>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-{% if colsm3 %}3{% else %}4{% endif %}">
                     <h3>
                         <a href="{% url 'getpage' 'started' %}">
                             {% trans "Learn more" %}
                         </a>
                     </h3>
                 </div>
+            {% endwith %}
             </div>
             <div class="row" style="padding-bottom:5px;">
                 <div class="localscroll" style="text-align:center">
-                    <!-- TODO: Link to mapstories is the section that doesn't exist yet -->
-                    <a href="#mapstories" class="btn btn-circle btn-sm btn-default" style="background-color:#BD5E1B;color:white;border:1px solid transparent;border-radius:25%">
-                    <i class="icon-down" id="mapstories"></i></a>
+                    <!-- TODO: Link to stories is the section that doesn't exist yet -->
+                    <a href="#stories" class="btn btn-circle btn-sm btn-default" style="color:white;border:1px solid transparent;border-radius:25%">
+                    <i class="icon-down" id="stories"></i></a>
                 </div>
             </div>
         </div>
@@ -150,7 +154,7 @@
                 <div class="col-sm-4">
                     <div class="csection-text">
                         <h1><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></h1>
-                        <h3>{% trans "MapStory is an open platform for organizing our knowledge about how the world changes over time and space. Click on a link to the right, and learn how you can start contributing observations of your own." %}
+                        <h3>{{ SITE_NAME }} {% trans "is an open platform for organizing our knowledge about how the world changes over time and space. Click on a link to the right, and learn how you can start contributing observations of your own." %}
                         </h3>
                     </div>
                 </div>
@@ -222,18 +226,18 @@
     <section class="slice" id="getskills">
         <div class="container">
                 <h1>{% trans "Get Skills" %}</h1>
-                <h3>{% trans "MapStory is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed." %}
+                <h3>{{ SITE_NAME }} {% trans "is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed." %}
                 </h3>
             <br/>
             <div class="row">
                 <div class="col-sm-4">
                     <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/101.png">
-                    <a href="{% url 'getpage' 'skills' %}"><h2>1. {% trans "MapStory 101" %}</h2></a>
+                    <a href="{% url 'getpage' 'skills' %}"><h2>1. {{ SITE_NAME }} 101</h2></a>
                     <h5>{% trans "Learn all the basic skills you need to start collecting data and creating MapStories of your own." %}</h5>
                 </div>
                 <div class="col-sm-4">
                     <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/wiki.png">
-                    <a href="http://wiki.mapstory.org"><h2>2. {% trans "MapStory Wiki" %}</h2></a>
+                    <a href="http://wiki.mapstory.org"><h2>2. {{ SITE_NAME }} {% trans "Wiki" %}</h2></a>
                     <h5>{% trans "Find and share more resources alongside the global MapStory community." %}</h5>
                 </div>
                 <div class="col-sm-4">
@@ -286,7 +290,7 @@
     <section class="slice" id="news">
         <div class="csection">
             <div class="row">
-                <h1 class="text-center">{% trans "MapStory projects making the news" %}</h1>
+                <h1 class="text-center">{{ SITE_NAME }} {% trans "projects making the news" %}</h1>
             </div>
             <div class="row">
                 <div class="col-sm-4">

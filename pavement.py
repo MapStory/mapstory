@@ -76,6 +76,7 @@ def static():
         sh('npm install')
         sh('bower install')
         sh('grunt less')
+        sh('grunt copy')
 
 
 @task

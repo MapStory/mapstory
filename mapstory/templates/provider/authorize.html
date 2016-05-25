@@ -3,7 +3,7 @@
 {% load scope %}
 
 {% block extra_head %}
-<link href="{{ STATIC_URL }}mapstory/css/app.css" rel="stylesheet" />
+<link href="{{ STATIC_URL }}theme/{{THEME}}/css/app.css" rel="stylesheet" />
 {% endblock %}
 {% block header %}
 {% include 'mapstory/_header.html'  with hide_menu=True %}
