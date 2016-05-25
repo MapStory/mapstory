@@ -230,7 +230,7 @@
 
 # Install RabbitMQ
 - name: Add the RabbitMQ public GPG key to the apt repo
-  apt_key: url=http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+  apt_key: url=https://www.rabbitmq.com/rabbitmq-release-signing-key.asc
            state=present
   tags: [rabbitmq]
 
