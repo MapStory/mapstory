@@ -3,7 +3,7 @@
 {% load staticfiles %}
 
 {% block head %}
-<link rel="shortcut icon" href="{% static 'mapstory/img/favicon.ico' %}">
+<link rel="shortcut icon" href="/uploaded/{{ site.assets.favicon.name }}">
 {% include "mapstory/google_analytics.html" %}
 {{ block.super }}
 
