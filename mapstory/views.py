@@ -930,6 +930,7 @@ def layer_append_minimal(source, target):
         'xmlns:gml="http://www.opengis.net/gml/3.2"',
         'xmlns:wfs="http://www.opengis.net/wfs/2.0"',
         'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
+        'handle="{handle}"',
         'xsi:schemaLocation="',
         'http://www.opengis.net/wfs/2.0',
         'http://schemas.opengis.net/wfs/2.0/wfs.xsd',
@@ -940,7 +941,7 @@ def layer_append_minimal(source, target):
         '</wfs:Insert>',
         '</wfs:Transaction>'
     ))
-    insert_tasks = group(tasks.append_feature_chunks.subtask((features,wfst_insert_template,get_features_request)) for features in features_chunks)
+    insert_tasks = group(tasks.append_feature_chunks.subtask((features,wfst_insert_template,get_features_request,target)) for features in features_chunks)
     results = insert_tasks.apply_async()
     insert_summary = results.join()
 
