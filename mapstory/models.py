@@ -14,10 +14,27 @@ from geonode.layers.models import Layer
 from geonode.groups.models import GroupProfile
 from geonode.maps.models import Map
 from guardian.shortcuts import get_objects_for_user
+from django.contrib.sites.models import Site
 
 from mapstory.notifications import set_mapstory_notifications
 
 set_mapstory_notifications()
+
+class CustomSite(models.Model):
+   site = models.OneToOneField(Site, null=True, related_name='assets')
+   subtitle = models.CharField(max_length=100)
+   logo = models.ImageField(blank=False, upload_to='customsite')
+   favicon = models.ImageField(blank=False, upload_to='customsite')
+   footer_text = models.TextField()
+
+   class Meta:
+       verbose_name = "Custom Site Property"
+       verbose_name_plural = "Custom Site Properties"
+
+   def __unicode__(self):
+       return 'Properties of {0}'.format(self.site.domain)
+
+
 
 def _stamp(data):
     s = hashlib.sha1()

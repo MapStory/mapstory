@@ -11,6 +11,7 @@ from mapstory.models import GetPageContent
 from mapstory.models import Leader
 from mapstory.models import ParallaxImage
 from mapstory.models import Task
+from mapstory.models import CustomSite
 
 from mapstory.export import export_via_model
 
@@ -147,6 +148,10 @@ flag_admin.register_group_to_flag_types(
     ('content_moderator', 'inappropriate')
 )
 
+
+class CustomSiteAdmin(admin.ModelAdmin):
+    model = CustomSite
+
 admin.site.register(GetPage, GetPageAdmin)
 admin.site.register(GetPageContent, GetPageContentAdmin)
 admin.site.register(Sponsor, SponsorAdmin)
@@ -155,3 +160,4 @@ admin.site.register(NewsItem, NewsItemAdmin)
 admin.site.register(DiaryEntry, DiaryEntryAdmin)
 admin.site.register(Leader, LeaderAdmin)
 admin.site.register(ParallaxImage, ParallaxImageAdmin)
+admin.site.register(CustomSite, CustomSiteAdmin)
