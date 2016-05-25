@@ -4,10 +4,11 @@ import requests
 from celery import app
 
 @app.task(name="tasks.append_feature_chunks")
-def append_feature_chunks(features, wfst_insert_template,get_features_request):
+def append_feature_chunks(features, wfst_insert_template,get_features_request,target):
     summary = None
+    handle = 'added {0} features to {1} via append'.format(len(features),target)
     wfs_transaction_payload = wfst_insert_template.format(features=''.join(features), workspace='geonode',
-                                                                  workspace_uri='http://www.geonode.org/')
+                                                          workspace_uri='http://www.geonode.org/', handle=handle)
 
     insert_features_request = requests.post(
             '{}/wfs/WfsDispatcher'.format(ogc_server_settings.public_url),
