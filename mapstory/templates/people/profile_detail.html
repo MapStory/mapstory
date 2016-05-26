@@ -138,10 +138,10 @@
                 <a href="{% url "account_password" %}">{% trans "change password" %}</a>
             </div>
             <div class="sidebar-content">
-                <a ng-controller="ImportController"  style="cursor: pointer" ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "upload storylayer" %}</a>
+                <a ng-controller="ImportController"  style="cursor: pointer" ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "upload layer" %}</a>
             </div>
             <div class="sidebar-content">
-                <a href="{% url "new_map" %}">{% trans "compose a mapstory" %}</a>
+                <a href="{% url "new_map" %}">{% trans "compose a story" %}</a>
             </div>
             <div>
                 <a href="#" class="sidebar-content" data-toggle="modal" data-target="#notifications">notifications settings</a>
@@ -206,14 +206,14 @@
                 <div class="tabbable-line">
                     <ul class="nav nav-tabs ">
                         <li class="active">
-                            <a href="#mapstories_list" data-toggle="tab" ng-click="query={q: query.q}; query.type__in='mapstory'; query.owner__username__in='{{profile.username}}'; search();">
+                            <a href="#stories_list" data-toggle="tab" ng-click="query={q: query.q}; query.type__in='mapstory'; query.owner__username__in='{{profile.username}}'; search();">
                                 <div class="counter"><span ng-bind="total_maps"></span></div>
-                                MapStories </a>
+                                {% trans "Stories" %} </a>
                         </li>
                         <li>
-                            <a href="#storylayers_list" data-toggle="tab" ng-click="query={q: query.q}; query.type__in='layer'; query.owner__username__in='{{profile.username}}'; search();">
+                            <a href="#layers_list" data-toggle="tab" ng-click="query={q: query.q}; query.type__in='layer'; query.owner__username__in='{{profile.username}}'; search();">
                                 <div class="counter"><span ng-bind="total_layers"></span></div>
-                                StoryLayers </a>
+                                {% trans "Layers" %} </a>
                         </li>
                         {% if user == profile %}
                         <li>
@@ -247,10 +247,10 @@
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane active" id="mapstories_list">
+                        <div class="tab-pane active" id="stories_list">
                             <div class="no-content" ng-if="results == null">
                                 <h2>No MapStories.</h2>
-                                <h4>Create your first MapStory now.</h4>
+                                <h4>Create your first {% trans "Story" %} now.</h4>
                             </div>
                             <div class="clearfix search-results">
                                 <ul>
@@ -258,10 +258,10 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="tab-pane" id="storylayers_list">
+                        <div class="tab-pane" id="layers_list">
                             <div class="no-content" ng-if="results == null">
-                                <h2>No StoryLayers.</h2>
-                                <h4>Upload your first StoryLayer now.</h4>
+                                <h2>{% trans "No Layers" %}.</h2>
+                                <h4>Upload your first {% trans "Layer" %} now.</h4>
                             </div>
                             <div class="clearfix search-results">
                                 <ul>
@@ -321,7 +321,7 @@
                             {% if action_list.count == 0 %}
                             <div class="no-content">
                                 <h2>No activities.</h2>
-                                <h4>Explore MapStory now.</h4>
+                                <h4>Explore {{ SITE_NAME }} now.</h4>
                             </div>
                             {% endif %}
                             <div class="row">

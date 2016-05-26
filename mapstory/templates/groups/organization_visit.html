@@ -85,14 +85,14 @@
             	</div>
             	<div class="col-lg-9">
 								<ul class="nav nav-tabs">
-  									<li class="active"><a href="#mapstories" data-toggle="tab">MapStories</a></li>
-  									<li><a href="#storylayers" data-toggle="tab">StoryLayers</a></li>
-  									<li><a href="#storytellers" data-toggle="tab">StoryTellers</a></li>
-  									<li><a href="#blogs" data-toggle="tab">Journal</a></li>
-  									<li><a href="#favorites" data-toggle="tab">Favorites</a></li>
+  									<li class="active"><a href="#stories" data-toggle="tab">{% trans "Stories" %}</a></li>
+  									<li><a href="#storylayers" data-toggle="tab">{% trans "Layers" %}</a></li>
+  									<li><a href="#storytellers" data-toggle="tab">{% trans "StoryTellers" %}</a></li>
+  									<li><a href="#blogs" data-toggle="tab">{% trans "Journal" %}</a></li>
+  									<li><a href="#favorites" data-toggle="tab">{% trans "Favorites" %}</a></li>
 								</ul>
 								<div class="tab-content">
-									<div class="tab-pane active" id="mapstories">
+									<div class="tab-pane active" id="stories">
 										<div class="col-lg-12">
 											<div class="clearfix search-results">
 						            <ul>
@@ -102,7 +102,7 @@
 														<div style="text-align: left;">
 															<a href="{{ layer.detail_url}}"><img class="thumb img-responsive" src="{{ layer.thumbnail_url}}"/></a>
 															<h3><a href="{{ layer.detail_url}}">{{ layer.title}}</a></h3>
-															<div><p><i>MapStory</p></i></div>
+															<div><p><i>{% trans "Story" %}</p></i></div>
 															<h4><span class="owner"><i class="fa fa-user"></i>{{ layer.owner.first_name }} {{ layer.owner.last_name }}</span></h4>
 		        									<h4><span><i class="fa fa-flag-o"></i></span>{{ layer.category.gn_description}}</h4>
 		        									<!-- TODO: Hook in the edits -->
@@ -122,7 +122,7 @@
 														</div>
 													</li>
 													{% empty %}
-													There are no mapstories made by this group.
+													There are no {% trans "stories" %} made by this group.
 													{% endfor %}
 						            </ul>
 							        </div>
@@ -146,7 +146,7 @@
 														<div style="text-align: left;">
 															<a href="{{ layer.detail_url}}"><img class="thumb img-responsive" src="{{ layer.thumbnail_url}}"/></a>
 															<h3><a href="{{ layer.detail_url}}">{{ layer.title}}</a></h3>
-															<div><p><i>StoryLayer</p></i></div>
+															<div><p><i>{% trans "Layer" %}</p></i></div>
 															<h4><span class="owner"><i class="fa fa-user"></i>{{ layer.owner.first_name }} {{ layer.owner.last_name }}</span></h4>
 		        									<h4><span><i class="fa fa-flag-o"></i></span>{{ layer.category.gn_description}}</h4>
 		        									<!-- TODO: Hook in the edits -->
@@ -166,7 +166,7 @@
 														</div>
 													</li>
 													{% empty %}
-													There are no layers made by this group.
+													There are no {% trans "layers" %} made by this group.
 													{% endfor %}
 						            </ul>
 							        </div>

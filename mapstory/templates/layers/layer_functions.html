@@ -4,9 +4,7 @@
 <div class="col-sm-3" style="border-left:1px solid gainsboro">
   <div style="text-align:right">
     <a href="{% url "new_map" %}?layer={{resource.service_typename}}" >
-      <span style="font-size:1.3em;color:gainsboro">compose</span>
-      <br>
-      <span style="font-size:1.3em;color:gainsboro">mapstory</span>
+      <span style="font-size:1.3em;color:gainsboro">{% trans "compose story" %}</span>
     </a>
   </div>
   {% if GEOGIG_ENABLED and resource.link_set.geogig %}
@@ -14,7 +12,6 @@
   <div style="text-align:right">
     <a title="" href="#" target="blank">
       <a href='{% url "map-edit" %}?layer={{resource.service_typename}}&mode=edit'><span style="font-size:1.3em;color:gainsboro">edit</span></a>
-      <!-- <span style="font-size:1.3em;color:gainsboro">edit</span> -->
     </a>
   </div>
   {% endif %}

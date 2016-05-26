@@ -41,16 +41,16 @@
                 <div class="col-lg-3" style="padding:15px">
                     {% ifequal page "layer" %}
                         <a href="{% url "new_map" %}?layer={{ resource.service_typename }}" target="_blank">
-                            <button class="btn btn-block btn-detailpage">Compose a mapstory</button>
+                            <button class="btn btn-block btn-detailpage">{% trans "Compose Story" %}</button>
                         </a>
                         <a href='{% url "map-edit" %}?layer={{ resource.service_typename }}&mode=edit' target="_blank">
-                            <button class="btn btn-block btn-detailpage">Edit this storylayer</button>
+                            <button class="btn btn-block btn-detailpage">{% trans "Edit this layer" %}</button>
                         </a>
-                        <div class="side-column-header">StoryLayer Metadata</div>
+                        <div class="side-column-header">{% trans "Layer Metadata" %}</div>
                         {% else %}
                         {% ifequal page "map" %}
                             <button class="btn btn-block btn-detailpage">play fullscreen</button>
-                            <div class="side-column-header">MapStory Properties</div>
+                            <div class="side-column-header">{% trans "Story Properties" %}</div>
                             {% else %}
                         {% endifequal %}
                     {% endifequal %}

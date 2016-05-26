@@ -44,9 +44,9 @@
                     <form action="{% url "search" %}">
                         <div class="input-group">
                         {% if HAYSTACK_SEARCH %}
-                        <input class="form-control" id="homepage_search" type="text" name="q" style="color:chocolate;background-color:whitesmoke;border:1px solid white" placeholder="{% trans "Explore MapStories and StoryLayers" %}">
+                        <input class="form-control" id="homepage_search" type="text" name="q" style="color:chocolate;background-color:whitesmoke;border:1px solid white" placeholder="{% trans "Explore Stories and Layers" %}">
                         {% else %}
-                        <input class="form-control" id="homepage_search" type="text" name="keywords__slug__in" style="color:chocolate;background-color:whitesmoke;border:1px solid white" placeholder="{% trans "Explore MapStories and StoryLayers" %}">
+                        <input class="form-control" id="homepage_search" type="text" name="keywords__slug__in" style="color:chocolate;background-color:whitesmoke;border:1px solid white" placeholder="{% trans "Explore Stories and Layers" %}">
                         {% endif %}
                         <span class="input-group-btn">
                           <button class="btn btn-primary" type="submit" style="background-color:chocolate;color:white;border:1px solid white"><i class="fa fa-search"></i></button>
@@ -74,14 +74,14 @@
                         {% else %}
                             <a class="pointer" data-toggle="modal" data-target="#loginModal">
                         {% endif %}
-                            {% trans "Upload StoryLayers" %}
+                            {% trans "Upload Layers" %}
                         </a>
                     </h3>
                 </div>
                 <div class="col-sm-{% if colsm3 %}3{% else %}4{% endif %}">
                     <h3>
                         <a href="{% url 'new_map' %}?tour">
-                            {% trans "Compose MapStory" %}
+                            {% trans "Compose Story" %}
                         </a>
                     </h3>
                 </div>
@@ -307,11 +307,6 @@
                     {% endfor %}
                 </div>
             </div>
-            <!-- TODO: What was this supposed to be?
-            <div class="row">
-                <div class="qlink-right qlink-fb">[p_a_g_i_n_a_t_i_o_n l_i_n_k_s h_e_r_e]</div>
-            </div>
-            -->
         </div>
     </section>
 

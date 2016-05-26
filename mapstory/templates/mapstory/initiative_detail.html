@@ -77,12 +77,12 @@
               </div>
               <div class="col-lg-9" style="border-left:1px solid darkgray">
                 <ul class="nav nav-tabs">
-                    <li  class="active"><a href="#guidelines" data-toggle="tab">Overview &<br/> Guidelines</a></li>
-                    <li><a href="#tasks" data-toggle="tab">Tasks &<br/> Milestones</a></li>
-                    <li><a href="#storylayers" data-toggle="tab">StoryLayers<br/>List</a></li>
-                    <li><a href="#mapstories" data-toggle="tab">Favorited<br/>MapStories</a></li>
-                    <li><a href="#leads" data-toggle="tab">Initiative <br/>Leads</a></li>
-                    <li><a href="#blogs" data-toggle="tab">Journal<br/>Entries</a></li>
+                    <li  class="active"><a href="#guidelines" data-toggle="tab">{% trans "Overview" %} &<br/> {% trans "Guidelines" %}</a></li>
+                    <li><a href="#tasks" data-toggle="tab">{% trans "Tasks" %} &<br/> {% trans "Milestones" %}</a></li>
+                    <li><a href="#layers" data-toggle="tab">{% trans "Layers" %}<br/>{% trans "List" %}</a></li>
+                    <li><a href="#stories" data-toggle="tab">{% trans "Favorited" %}<br/>{% trans "Stories" %}</a></li>
+                    <li><a href="#leads" data-toggle="tab">{% trans "Initiatives" %} <br/>{% trans "Leads" %}</a></li>
+                    <li><a href="#blogs" data-toggle="tab">{% trans "Journal" %}<br/>{% trans "Entries" %}</a></li>
                 </ul>
                 <div class="tab-content">
                   <div class="tab-pane" id="tasks">
@@ -90,7 +90,7 @@
                       <!-- TODO: This is supposed to be a list of many text items... but why? Some interaction here? -->
                       {% verbatim %}
                       <p>{{ tasks }}</p>
-                      <p ng-if="!tasks">There are no tasks for this initiative.</p>
+                      <p ng-if="!tasks">There are no tasks for this {% trans "initiative" %}.</p>
                       {% endverbatim %}
                     </div>
                   </div>
@@ -99,7 +99,7 @@
                       {{ summary }}
                     {% endverbatim %}
                   </div>
-                  <div class="tab-pane" id="storylayers">
+                  <div class="tab-pane" id="layers">
                     <div class="col-lg-12">
                       <div class="clearfix search-results">
                         <ul>
@@ -110,7 +110,7 @@
                                 <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
                                 <div>
                                   <p>
-                                    <i>StoryLayer</i>
+                                    <i>{% trans "Layer" %}</i>
                                   </p>
                                 </div>
                                 <h4> Created {{ item.date|date }}</h4>
@@ -131,7 +131,7 @@
                                 </div>
                             </div>
                           </li>
-                          <p ng-if="layers.length == 0">There are no layers made by this initiative.</p>
+                          <p ng-if="layers.length == 0">There are no {% trans "layers" %} made by this {% trans "initiative" %}.</p>
                           {% endverbatim %}
                         </ul>
                       </div>
@@ -145,7 +145,7 @@
                       <a href><strong ng-click="paginate_up()">&raquo;</strong></a>
                     </div>
                   </div>
-                  <div class="tab-pane" id="mapstories">
+                  <div class="tab-pane" id="stories">
                     <div class="col-lg-12">
                       <div class="clearfix search-results">
                         <ul>
@@ -156,7 +156,7 @@
                                 <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
                                 <div>
                                   <p>
-                                    <i>MapStory</i>
+                                    <i>{% trans "Story" %}</i>
                                   </p>
                                 </div>
                                 <h4> Created {{ item.date|date }}</h4>
@@ -178,7 +178,7 @@
                             </div>
                           </li>
                         </ul>
-                        <p ng-if="maps.length == 0">There are no mapstories made by this initiative.</p>
+                        <p ng-if="maps.length == 0">There are no {% trans "stories" %} made by this {% trans "initiative" %}.</p>
                         {% endverbatim %}
                       </div>
                       <span>Total: </span>
@@ -198,7 +198,7 @@
                           {% for manager in managers %}
                             <li class="col-md-4">
                               <div style="text-align: left;">
-                                  <a href="{{ manager.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ manager.avatar_100}}" src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100"/></a>
+                                  <a href="{{ manager.profile_detail_url}}"><img class="thumb img-responsive img-circle" ng-src="{{ manager.avatar_100}}" src="https://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100"/></a>
                                   <h3><a href="{{ manager.profile_detail_url}}">{{ manager.first_name }} {{ manager.last_name }}</a></h3>
                                   <!-- If both exist, comma separated... otherwise no comma separation -->
                                   {% if manager.position and manager.organization %}
@@ -219,12 +219,12 @@
                                   <h4>{{ manager.profile }}</h4>
                                   {% endif %}
  
-                                  <a href="{{ manager.profile_detail_url }}"><button class="btn btn-primary btn-xs"><i class="fa fa-user"></i> view profile</button></a>
-                                  <a><button class="btn btn-primary btn-xs"><i class="fa fa-envelope"></i> message</button></a>
+                                  <a href="{{ manager.profile_detail_url }}"><button class="btn btn-primary btn-xs"><i class="fa fa-user"></i> {% trans "view profile" %}</button></a>
+                                  <a><button class="btn btn-primary btn-xs"><i class="fa fa-envelope"></i> {% trans "message" %}</button></a>
                               </div>
                             </li>
                           {% empty %}
-                          <p>There are no leads for this initiative.</p>
+                          <p>{% trans "There are no leads for this initiative" %}.</p>
                           {% endfor %}
                         </ul>
                       </div>
@@ -232,7 +232,7 @@
                   </div>
                   <div class="tab-pane" id="blogs">
                     {% if not journals %}
-                    <p>There are no journals for this initiative.</p>
+                    <p>{%  trans "There are no journals for this initiative" %}.</p>
                     {% endif %}
                     {% for entry in journals %}
                     <div class="row blog-panel">

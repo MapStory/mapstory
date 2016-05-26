@@ -3,11 +3,11 @@
 <div class="row">
     <div class="col-sm-12">
         <ul class="nav nav-tabs details-tabs">
-            <li class="active"><a href="#Summary" data-toggle="tab">Summary</a></li>
-            <li><a href="#Related" data-toggle="tab" ng-click="query_category('{{ resource.category }}', 'map');">Related</a>
+            <li class="active"><a href="#Summary" data-toggle="tab">{% trans "Summary" %}</a></li>
+            <li><a href="#Related" data-toggle="tab" ng-click="query_category('{{ resource.category }}', 'map');">{% trans "Related" %}</a>
             </li>
-            <li><a href="#Chapters" data-toggle="tab">Chapters</a></li>
-            <li><a href="#StoryLayers" data-toggle="tab">StoryLayers Used</a></li>
+            <li><a href="#Chapters" data-toggle="tab">{% trans "Chapters" %}</a></li>
+            <li><a href="#Layers" data-toggle="tab">{% trans "Layers" %} Used</a></li>
             <li><a href="#Share" data-toggle="tab">Share</a></li>
         </ul>
         <div class="tab-content">
@@ -35,7 +35,7 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="tab-pane" id="StoryLayers">
+            <div class="tab-pane" id="Layers">
                 <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
                     {% for item in layers %}
                         <div class="col-sm-12">
@@ -59,7 +59,7 @@
                         <!-- TODO: Did this ever work? Not sure where the results came from... query_category? Check ng-apps -->
                         {% verbatim %}
                             <div ng-hide="results.length">
-                                No related mapstories found...
+                                No related {% endverbatim %}{% trans "stories" %}{% verbatim %} found...
                             </div>
                             <div ng-show="results.length">
                                 <div class="col-sm-12" ng-repeat="item in results">
@@ -78,7 +78,7 @@
                         {% endverbatim %}
                     {% else %}
                         <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
-                            No related mapstories found...
+                            No related {% trans "stories" %} found...
                         </div>
                     {% endif %}
                 </div>

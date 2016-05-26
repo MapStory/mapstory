@@ -42,7 +42,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label label-font-sm"></label>
                                 <div class="col-md-8">
-                                    <button class="mapstory-auth-btn btn btn-md bg-ms btn-block">Sign in to MapStory</button>
+                                    <button class="mapstory-auth-btn btn btn-md bg-ms btn-block">Sign in to {{ SITE_NAME }}</button>
                                 </div>
                             </div>
 
@@ -109,8 +109,8 @@
                                 <label class="col-md-3 control-label label-font-sm"></label>
                                 <div class="col-md-8">
                                     {% verbatim %}
-                                    <button ng-if="agreed && password.length >= 8" id="join-mapstory-button" class="mapstory-auth-btn btn btn-md bg-ms btn-block">Join MapStory</button>
-                                    <button ng-if="!agreed || password.length < 8" id="join-mapstory-button" class="btn btn-md bg-ms btn-block" disabled>Join MapStory</button>
+                                    <button ng-if="agreed && password.length >= 8" id="join-mapstory-button" class="mapstory-auth-btn btn btn-md bg-ms btn-block">Join {{ SITE_NAME }}</button>
+                                    <button ng-if="!agreed || password.length < 8" id="join-mapstory-button" class="btn btn-md bg-ms btn-block" disabled>Join {{ SITE_NAME }}</button>
                                     {% endverbatim %}
                                 </div>
                             </div>

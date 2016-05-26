@@ -70,11 +70,11 @@
       <hr/>
 
         <div ng-show="time.type === 'simple' || time.type == 'startEnd'">
-           <h3>Configure <span ng-if="time.type == 'startEnd'">the start </span>time in your StoryLayer</h3>
+           <h3>Configure <span ng-if="time.type == 'startEnd'">the start </span>time in your {% trans "Layer" %}</h3>
            <div class="radio">
                <label for="time-attribute-select" ng-if="time_attributes.length > 0">
                     <input id="time-attribute-select" type="radio" ng-model="time.attributeType"  value="timeAttribute">
-                     My StoryLayer already has a time attribute.
+                     My {% trans "Layer" %} already has a time attribute.
                <br/>
                </label>
 
@@ -91,7 +91,7 @@
 
                <label ng-if="text_attributes.length > 0">
                     <input type="radio" ng-model="time.attributeType" value="textAttribute">
-                     My StoryLayer has a text attribute that I want to convert to time.
+                     My {% trans "Layer" %} has a text attribute that I want to convert to time.
                <br/>
                </label>
 
@@ -112,7 +112,7 @@
 
                <label>
                     <input type="radio" ng-model="time.attributeType" value="numberAttribute">
-                     My StoryLayer has a numeric attribute that I want to use as a year.
+                     My {% trans "Layer" %} has a numeric attribute that I want to use as a year.
                </label>
 
                <div ng-show="time.attributeType === 'numberAttribute'" class="row">
@@ -142,11 +142,11 @@
 
 
         <div ng-show="time.type == 'startEnd'">
-           <h3>Configure the end time in your StoryLayer</h3>
+           <h3>Configure the end time in your {% trans "Layer" %}</h3>
            <div class="radio">
                <label ng-if="time_attributes.length > 0">
                     <input type="radio" ng-model="time.endAttributeType" value="timeAttribute">
-                     My StoryLayer already has a time attribute.
+                     My {% trans "Layer" %} already has a time attribute.
                <br/>
                </label>
 
@@ -163,7 +163,7 @@
 
                <label  ng-if="text_attributes.length > 0">
                     <input type="radio" ng-model="time.endAttributeType" value="textAttribute">
-                     My StoryLayer has a text attribute that I want to convert to time.
+                     My {% trans "Layer" %} has a text attribute that I want to convert to time.
                 <br/>
                </label>
 
@@ -184,7 +184,7 @@
 
                <label>
                     <input type="radio" ng-model="time.endAttributeType" value="numberAttribute">
-                     My StoryLayer has a numeric attribute that I want to use as a year.
+                     My {% trans "Layer" %} has a numeric attribute that I want to use as a year.
                </label>
 
                <div ng-show="time.endAttributeType === 'numberAttribute'" class="row">
@@ -202,7 +202,7 @@
 
 
        <div ng-show="false">
-       <h3>How should time be presented in your StoryLayer?</h3>
+       <h3>How should time be presented in your {% trans "Layer" %}?</h3>
            <div class="radio">
               <label>
                 <input type="radio" ng-model="time.presentation_strategy" value="LIST" name="presentation_strategy">
