@@ -170,10 +170,10 @@
                             </div>
                             <!-- If the owner is this user, or it is a content moderator, make a button visible which spawns a modal to modify the metadata -->
                             {% if content_moderators in user.groups.all or user == resource.owner %}
-                                <li><i class="fa fa-edit"></i> <a href="#metaForm" data-toggle="modal">{% trans "Update StoryLayer Settings" %}</a>
+                                <li><i class="fa fa-edit"></i> <a href="#metaForm" data-toggle="modal">{% trans "Update Layer Settings" %}</a>
                                 </li>
                                 <li><i class="fa fa-edit"></i> <a
-                                        href="{% url "layer_remove" resource.service_typename %}">{% trans "Delete StoryLayer" %}</a></li>
+                                        href="{% url "layer_remove" resource.service_typename %}">{% trans "Delete Layer" %}</a></li>
                                 <div id="metaForm" class="modal fade" tabindex="-1" role="dialog">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
