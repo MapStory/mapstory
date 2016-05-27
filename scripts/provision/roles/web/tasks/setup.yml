@@ -125,12 +125,12 @@
   file: path=/etc/supervisor/conf.d/supervisor-jetty.conf state=absent
 
 - name: nginx-crt
-  copy: src=roles/web/files/nginx.crt dest=/etc/nginx/ssl
+  copy: src=roles/web/files/nginx.crt dest=/etc/nginx/ssl/
   notify: restart nginx
   tags: [config, nginx]
 
 - name: nginx-key
-  copy: src=roles/web/files/nginx.key dest=/etc/nginx/ssl
+  copy: src=roles/web/files/nginx.key dest=/etc/nginx/ssl/
   notify: restart nginx
   tags: [config, nginx]
 
