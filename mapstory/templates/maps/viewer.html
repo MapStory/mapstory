@@ -16,39 +16,45 @@
 <script src="{{ STATIC_URL }}vendor/story-tools/dist/ows.js"></script>
 <script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-mapstory.js"></script>
 
+
 {% include 'maps/viewer.js' %}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}theme/{{ THEME }}/css/viewer.css"/>
 <div ng-app="viewer" ng-controller="viewerController as viewer" class="story-viewer">
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         {% verbatim %}
-            <div id="title">
-                <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id') }}/viewer">
-                    <h1 ng-bind="mapManager.title"></h1>
-                </a>
+            <i class="fa fa-bars pull-right" ng-click="toggleSidebar()"></i>
+            <a href="/mapstory/{{ mapManager.storyMap.get('id') - 1 }}" target="_self"><i class="fa fa-sign-out pull-right"></i></a>
+            <div id="content">
+                <div id="title">
+                    <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id') }}/viewer">
+                        <h1 ng-bind="mapManager.title"></h1>
+                    </a>
+                </div>
+
+                <div id="author">
+                    <a target="_blank" href="/people/profile/{{ mapManager.username }}">
+                        <h3 ng-bind="mapManager.owner"></h3>
+                    </a>
+                </div>
+
+                <h3 ng-bind="mapManager.storyMap.getStoryTitle()"></h3>
+                <p ng-bind="mapManager.storyMap.getStoryAbstract()"></p>
+
+
+                <button class="btn ng-scope"  ng-click="previousChapter()" ng-disabled="mapManager.storyChapter == 1"
+                        tooltip-placement="top" tooltip-append-to-body="true" tooltip="Previous Chapter"><i
+                        class="glyphicon glyphicon-step-backward"></i></button>
+                <div>Chapter {{ mapManager.storyChapter }} of {{ mapManager.chapterCount }}</div>
+                <button class="btn ng-scope" ng-click="nextChapter()"
+                        ng-disabled="mapManager.storyChapter == mapManager.chapterCount" tooltip-placement="top" tooltip-append-to-body="true"
+                        tooltip="Next Chapter"><i class="glyphicon glyphicon-step-forward"></i></button>
             </div>
-
-            <div id="author">
-                <a target="_blank" href="/people/profile{{ mapManager.owner }}">
-                    <h3 ng-bind="mapManager.owner"></h3>
-                </a>
-            </div>
-
-            <h3 ng-bind="mapManager.storyMap.getStoryTitle()"></h3>
-            <p ng-bind="mapManager.storyMap.getStoryAbstract()"></p>
-
-            <div>Chapter {{ mapManager.storyChapter }} of {{ mapManager.chapterCount }}</div>
-            <button class="btn ng-scope" style="float: left;" ng-click="previousChapter()" ng-disabled="mapManager.storyChapter == 1"
-                    tooltip-placement="top" tooltip-append-to-body="true" tooltip="Previous Chapter"><i
-                    class="glyphicon glyphicon-step-backward"></i></button>
-            <button class="btn ng-scope" style="float: right;" ng-click="nextChapter()"
-                    ng-disabled="mapManager.storyChapter == mapManager.chapterCount" tooltip-placement="top" tooltip-append-to-body="true"
-                    tooltip="Next Chapter"><i class="glyphicon glyphicon-step-forward"></i></button>
         {% endverbatim %}
     </div>
-    <div class="map">
+    <div class="map" id="mapContainer">
         <div id="map"></div>
         <div id="footer" class="footer">
-            <div id="time-controls-panel2" ng-show="timeControlsManager.timeControls">
+            <div id="time-controls-panel2" ng-show="timeControlsManager.timeControls" class="floating-below">
                 <div class="navbar" ng-controller="tileProgressController">
                     <st-playback-controls class="pull-left"
                                           time-controls="timeControlsManager.timeControls"></st-playback-controls>

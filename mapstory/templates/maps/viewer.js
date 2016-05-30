@@ -75,6 +75,7 @@
 
             self.title = config.about.title;
             self.owner = config.about.owner;
+            self.username = config.about.owner.substring(config.about.owner.indexOf('(') + 1, config.about.owner.indexOf(')'));
         };
 
         this.loadMap = function(options) {
@@ -209,6 +210,24 @@ module.controller('viewerController', function($scope, $location, $injector, $lo
     $scope.playbackOptions = {
         mode: 'instant',
         fixed: false
+    };
+    
+    $scope.toggleSidebar = function() {
+        console.log('Toggle Sidebar');
+        $scope.isShown = !$scope.isShown;
+        var map = document.querySelector('#mapContainer');
+        var sidebar = document.querySelector('#sidebar');
+        var content = document.querySelector('#content');
+        if ($scope.isShown) {
+            sidebar.className = "sidebarHidden";
+            map.className = "fullMap";
+            content.className = "contentHidden";
+        }
+        if ($scope.isShown == false) {
+            sidebar.className = "sidebar";
+            map.className = "map";
+            content.className = "content"
+        }
     };
 
 });

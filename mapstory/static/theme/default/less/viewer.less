@@ -12,26 +12,53 @@ html, body {
   margin: 0;
   padding: 10px;
   color: #444;
+  overflow: scroll;
+}
+
+.sidebarHidden {
+  display: block;
+  position: absolute;
+  background: #eee;
+  width: 20%;
+  height: 100%;
+  margin: 0;
+  padding: 10px;
+  color: #444;
+  left: -17.5%;
+  z-index: 1;
+}
+
+.contentHidden {
+  display: none;
 }
 
 .map {
   display: block;
   position: absolute;
-  width: 80%;
+  width: 100%;
   left: 20%;
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
+}
+
+.fullMap {
+  display: block;
+  position: absolute;
+  left: 2.5%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 0;
 }
 
 .footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-}
-
-.floating-below * {
-  z-index: 400;
+  z-index: 2;
 }
 
 #slider {
@@ -93,6 +120,7 @@ div.navbar > st-playback-controls {
   width: 85%;
   white-space: nowrap;
   overflow: hidden;
+  z-index: 2;
 }
 
 div.navbar > st-playback-controls > button {
