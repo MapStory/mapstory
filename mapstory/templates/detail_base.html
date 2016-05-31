@@ -20,9 +20,9 @@
                 <div class="col-lg-9" style="padding-right:15px;">
                     <h2 class="page-title">{{ resource.title }}</h2>
                     {% if resource.owner.first_name != '' %}
-                        <small>Uploaded by: <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">{{ resource.owner.first_name }} {{ resource.owner.last_name }}</a></small>
+                        <small>Created by: <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">{{ resource.owner.first_name }} {{ resource.owner.last_name }}</a></small>
                     {% else %}
-                        <small>Uploaded by: <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">{{ resource.owner.username }}</a></small>
+                        <small>Created by: <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">{{ resource.owner.username }}</a></small>
                     {% endif %}
                     <br>
                     <div id="embedded_map" class="mrg-btm">

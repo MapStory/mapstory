@@ -23,7 +23,7 @@
     <div class="sidebar" id="sidebar">
         {% verbatim %}
             <i class="fa fa-bars pull-right" ng-click="toggleSidebar()"></i>
-            <a href="/mapstory/{{ mapManager.storyMap.get('id') - 1 }}" target="_self"><i class="fa fa-sign-out pull-right"></i></a>
+            <a href="/story/{{ mapManager.storyMap.get('id') - 1 }}" target="_self"><i class="fa fa-sign-out pull-right"></i></a>
             <div id="content">
                 <div id="title">
                     <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id') }}/viewer">
@@ -40,7 +40,7 @@
                 <h3 ng-bind="mapManager.storyMap.getStoryTitle()"></h3>
                 <p ng-bind="mapManager.storyMap.getStoryAbstract()"></p>
 
-
+                <div class="floating-below">
                 <button class="btn ng-scope"  ng-click="previousChapter()" ng-disabled="mapManager.storyChapter == 1"
                         tooltip-placement="top" tooltip-append-to-body="true" tooltip="Previous Chapter"><i
                         class="glyphicon glyphicon-step-backward"></i></button>
@@ -48,6 +48,7 @@
                 <button class="btn ng-scope" ng-click="nextChapter()"
                         ng-disabled="mapManager.storyChapter == mapManager.chapterCount" tooltip-placement="top" tooltip-append-to-body="true"
                         tooltip="Next Chapter"><i class="glyphicon glyphicon-step-forward"></i></button>
+                </div>
             </div>
         {% endverbatim %}
     </div>
@@ -62,7 +63,7 @@
                         <b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad"></b>
                     </progressbar>
                 </div>
-                <div id="playback-settings" class="panel-collapse collapse" style="height: 0px; color:white">
+                <div id="playback-settings" class="panel-collapse collapse">
                     <div class="panel-heading">Playback Options</div>
                     <st-playback-settings playback-options="playbackOptions"
                                           time-controls="timeControlsManager.timeControls"></st-playback-settings>

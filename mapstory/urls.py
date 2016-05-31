@@ -71,10 +71,10 @@ urlpatterns = patterns('',
     url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
 
     url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
-    url(r'^story/(?P<storyid>[^/]+)$', 'mapstory.views.mapstory_view', name='mapstory_view'),
-    url(r'^mapstory/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'),
-    url(r'^mapstory/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
 
+    url(r'^mapstory/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'),
+    url(r'^story/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
+    url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
     # MapLoom
 
     url(r'^maps/new$',
@@ -89,7 +89,7 @@ urlpatterns = patterns('',
         'geonode.maps.views.map_view', {'template': 'maps/_map_view_maploom.html'},
         name='map-view'),
 
-    url(r'^mapstory/(?P<storyid>[^/]+)/draft$',
+    url(r'^story/(?P<storyid>[^/]+)/draft$',
         'mapstory.views.mapstory_draft', {'template': 'maps/_map_view_maploom.html'},
         name='mapstory-draft'),
 
@@ -101,7 +101,7 @@ urlpatterns = patterns('',
     url(r'^maps/(?P<mapid>\d+)/embed$',
         'geonode.maps.views.map_view', {'template': 'maps/mapstory_map_viewer.html'},
         name='map-viewer'),
-    url(r'^mapstory/(?P<mapid>\d+)/embed$',
+    url(r'^story/(?P<mapid>\d+)/embed$',
         'geonode.maps.views.mapstory_view', {'template': 'maps/mapstory_map_viewer.html'},
         name='mapstory-viewer'),
 
