@@ -1,7 +1,11 @@
+@import 'app-variables.less';
+
 html, body {
   margin: 0;
   padding: 0;
 }
+
+/* Sidebar Related Styles */
 
 .sidebar {
   display: block;
@@ -34,6 +38,64 @@ html, body {
   font-size: 14px;
   text-align: justify;
   padding: 5px;
+}
+
+.sidebar a {
+  color: @baseGray;
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  outline: 0;
+  overflow: hidden;
+  padding: 6px;
+  text-decoration: none;
+}
+
+.sidebar i {
+  color: @lightGray;
+  float: right;
+  font-size: 15px;
+  padding: 3px 10px 0;
+}
+
+.viewerTopNav {
+  background:@baseGray;
+  height: 40px;
+  padding: 3px 5px;
+}
+
+.viewerTopNav a {
+  display: inline;
+}
+
+.topText {
+  color: @baseGray;
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 10px;
+  margin: 0;
+  padding: 10px 10px 5px;
+}
+
+.bottomText {
+  color: @baseGray;
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 20px;
+  margin: 0;
+  padding: 0 10px 5px;
+}
+
+.menuItem {
+  background: @background;
+  border-radius: 4px;
+  border-top: 1px solid @accentWhite;
+  display: block;
+  margin: 10px;
+  padding: 6px;
 }
 
 .contentHidden {

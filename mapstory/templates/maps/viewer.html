@@ -22,35 +22,44 @@
 <div ng-app="viewer" ng-controller="viewerController as viewer" class="story-viewer">
     <div class="sidebar" id="sidebar">
         {% verbatim %}
-            <i class="fa fa-bars pull-right" ng-click="toggleSidebar()"></i>
-            <a href="/story/{{ mapManager.storyMap.get('id') - 1 }}" target="_self"><i class="fa fa-sign-out pull-right"></i></a>
-            <div id="content">
-                <div id="title">
-                    <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id') }}/viewer">
-                        <h1 ng-bind="mapManager.title"></h1>
-                    </a>
-                </div>
-
-                <div id="author">
-                    <a target="_blank" href="/people/profile/{{ mapManager.username }}">
-                        <h3 ng-bind="mapManager.owner"></h3>
-                    </a>
-                </div>
-
-                <h3 ng-bind="mapManager.storyMap.getStoryTitle()"></h3>
-                <p ng-bind="mapManager.storyMap.getStoryAbstract()"></p>
-
-                <div class="floating-below">
-                <button class="btn ng-scope"  ng-click="previousChapter()" ng-disabled="mapManager.storyChapter == 1"
-                        tooltip-placement="top" tooltip-append-to-body="true" tooltip="Previous Chapter"><i
-                        class="glyphicon glyphicon-step-backward"></i></button>
-                <div>Chapter {{ mapManager.storyChapter }} of {{ mapManager.chapterCount }}</div>
-                <button class="btn ng-scope" ng-click="nextChapter()"
-                        ng-disabled="mapManager.storyChapter == mapManager.chapterCount" tooltip-placement="top" tooltip-append-to-body="true"
-                        tooltip="Next Chapter"><i class="glyphicon glyphicon-step-forward"></i></button>
-                </div>
+            <div class="viewerTopNav">
+                <img src="https://res.cloudinary.com/dw1zyrzc5/image/upload/v1461606100/ms_logo_white_pot8b9.png" id="sidebarDropdown" width="35px" height="35px"/>
+                <i class="fa fa-bars" ng-click="toggleSidebar()"></i>
+                <a href="/story/{{ mapManager.storyMap.get('id') - 1 }}" target="_self"><i class="fa fa-sign-out"></i></a>
             </div>
         {% endverbatim %}
+        <div id="content">
+            <div id="brand" class="topText">
+                {{ SITE_NAME }}
+            </div>
+            {% verbatim %}
+                <div id="title">
+                    <a target="_blank" href="/maps/{{ mapManager.storyMap.get('id') }}/viewer">
+                        <div class="bottomText" ng-bind="mapManager.title"></div>
+                    </a>
+                </div>
+                <small id="author">
+                    <a target="_blank" href="/people/profile/{{ mapManager.username }}">
+                        <small ng-bind="mapManager.owner"></small>
+                    </a>
+                </div>
+                <div id="summary" class="menuItem">
+                    <h5>Chapter {{ mapManager.storyChapter }}</h5>
+                    <h3 ng-bind="mapManager.storyMap.getStoryTitle()"></h3>
+                    <p ng-bind="mapManager.storyMap.getStoryAbstract()"></p>
+                </div>
+                <div class="floating-below">
+                    <div class="menuItem">
+                        <i class="fa fa-step-backward pull-right"></i>
+                        <a class="pointer" ng-click="previousChapter()" ng-disabled="mapManager.storyChapter == 1">Previous Chapter</a>
+                    </div>
+                    <div class="menuItem">
+                        <i class="fa fa-step-forward pull-right"></i>
+                        <a class="pointer" ng-click="nextChapter()" ng-disabled="mapManager.storyChapter == mapManager.chapterCount">Next Chapter</a>
+                    </div>
+                </div>
+                </div>
+            {% endverbatim %}
     </div>
     <div class="map" id="mapContainer">
         <div id="map"></div>
