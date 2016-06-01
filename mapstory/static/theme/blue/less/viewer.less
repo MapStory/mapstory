@@ -1,7 +1,11 @@
+@import 'app-variables.less';
+
 html, body {
   margin: 0;
   padding: 0;
 }
+
+/* Sidebar Related Styles */
 
 .sidebar {
   display: block;
@@ -10,16 +14,9 @@ html, body {
   width: 20%;
   height: 100%;
   margin: 0;
-  padding: 10px;
   color: #444;
   overflow: scroll;
-  border-right: 2px solid rgba(0, 0, 0, 0.8);
-}
-
-.sidebar p {
-  font-size: 14px;
-  text-align: justify;
-  padding: 5px;
+  z-index: 2;
 }
 
 .sidebarHidden {
@@ -32,8 +29,100 @@ html, body {
   padding: 10px;
   color: #444;
   left: -17.5%;
-  z-index: 1;
+  z-index: 2;
   border-right: 2px solid rgba(0, 0, 0, 0.8);
+}
+
+.sidebar p {
+  font-size: 12px;
+  padding: 6px 0;
+  max-height: 350px;
+  overflow-y: scroll;
+}
+
+.sidebar a {
+  color: @baseGray;
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  outline: 0;
+  overflow: hidden;
+  padding: 6px;
+  text-decoration: none;
+}
+
+.sidebar i {
+  color: @lightGray;
+  float: right;
+  font-size: 15px;
+  padding: 3px 10px 0;
+}
+
+.sidebarHidden i {
+  color: @lightGray;
+  float: right;
+  font-size: 15px;
+  padding: 3px 10px 0;
+}
+
+.viewerTopNav {
+  background: @baseGray;
+  height: 40px;
+  padding: 3px 5px;
+}
+
+.viewerTopNav a {
+  display: inline;
+}
+
+.topText {
+  color: @baseGray;
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 10px;
+  margin: 0;
+  padding: 10px 10px 5px;
+}
+
+.bottomText {
+  color: @baseGray;
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 0;
+  padding: 0 10px;
+}
+
+.menuItem {
+  display: block;
+  padding: 10px;
+  margin: 10px;
+  font-family: 'Open Sans', sans-serif !important;
+  background: #ddd;
+  border-top: 1px solid whitesmoke;
+  border-radius: 4px;
+}
+
+.menuItem h5 {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 10px;
+  font-weight: normal;
+  line-height: 16px;
+  color: #666
+}
+
+.menuItem h3 {
+  padding-left: 0;
+  font-family: 'Open Sans' !important;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 20px;
+  margin: 0;
+  color: #555;
 }
 
 .contentHidden {
@@ -44,7 +133,6 @@ html, body {
   display: block;
   position: absolute;
   width: 100%;
-  left: 20%;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -114,14 +202,14 @@ html, body {
   box-shadow: none;
 }
 
-#timeline {
-    background-color: white;
-    opacity: 0.58;
-}
-
 #time-controls-panel2 {
   padding: 0px 5px;
   background: rgba(0, 0, 0, 0.8);
+}
+
+#timeline {
+  background-color: white;
+  opacity: 0.58;
 }
 
 div.navbar {
@@ -151,11 +239,6 @@ div.navbar > st-playback-controls > span {
   color: white;
 }
 
-#playback-settings {
-  height: 0px;
-  color:white
-}
-
 div.progress-bar {
   background-color: #e36325;
 }
@@ -168,4 +251,10 @@ div.progress {
   overflow: hidden;
   background-color: #f5f5f5;
   border-radius: 0px;
+}
+
+@media (min-width: 300px) and (max-width: 900px) {
+  .sidebar {
+    width: 30%;
+  }
 }
