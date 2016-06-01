@@ -14,10 +14,8 @@ html, body {
   width: 20%;
   height: 100%;
   margin: 0;
-  padding: 10px;
   color: #444;
   overflow: scroll;
-  border-right: 2px solid rgba(0, 0, 0, 0.8);
 }
 
 .sidebarHidden {
@@ -35,9 +33,10 @@ html, body {
 }
 
 .sidebar p {
-  font-size: 14px;
-  text-align: justify;
-  padding: 5px;
+  font-size: 12px;
+  padding: 6px 0;
+  max-height: 350px;
+  overflow-y: scroll;
 }
 
 .sidebar a {
@@ -60,7 +59,7 @@ html, body {
 }
 
 .viewerTopNav {
-  background:@baseGray;
+  background: @baseGray;
   height: 40px;
   padding: 3px 5px;
 }
@@ -84,18 +83,38 @@ html, body {
   display: block;
   font-size: 18px;
   font-weight: 700;
-  line-height: 20px;
+  line-height: 24px;
   margin: 0;
-  padding: 0 10px 5px;
+  padding: 0 10px;
 }
 
 .menuItem {
-  background: @background;
-  border-radius: 4px;
-  border-top: 1px solid @accentWhite;
   display: block;
+  padding: 10px;
   margin: 10px;
-  padding: 6px;
+  font-family: 'Open Sans', sans-serif !important;
+  background: #ddd;
+  border-top: 1px solid whitesmoke;
+  border-radius: 4px;
+}
+
+.menuItem h5 {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 10px;
+  font-weight: normal;
+  line-height: 16px;
+  color: #666
+}
+
+.menuItem h3 {
+  padding-left: 0;
+  font-family: 'Open Sans' !important;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 20px;
+  margin: 0;
+  color: #555;
 }
 
 .contentHidden {
@@ -182,10 +201,9 @@ html, body {
 }
 
 #timeline {
-    background-color: white;
-    opacity: 0.58;
+  background-color: white;
+  opacity: 0.58;
 }
-
 
 div.navbar {
   margin: 0px 0 0;
