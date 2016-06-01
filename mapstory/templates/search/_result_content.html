@@ -7,13 +7,13 @@
         <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
         </div>
         <div ng-if="item.type === 'mapstory'">
-        <a href="/mapstory/{{ item.id }}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
+        <a href="/story/{{ item.id }}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}"/></a>
         </div>
         <h3 ng-if="item.type === 'layer'" ng-init="truncated=true" ng-mouseover="truncated=false" ng-mouseleave="truncated=true">
             <a href="{{ item.detail_url}}"><p ng-show="truncated">{{ item.title | limitTo:25}}</p><p ng-hide="truncated">{{ item.title }}</p></a>
         </h3>
         <h3 ng-if="item.type === 'mapstory'" ng-init="truncated=true" ng-mouseover="truncated=false" ng-mouseleave="truncated=true">
-            <a href="/mapstory/{{ item.id }}"><p ng-show="truncated">{{ item.title | limitTo:25}}</p><p ng-hide="truncated">{{ item.title }}</p></a>
+            <a href="/story/{{ item.id }}"><p ng-show="truncated">{{ item.title | limitTo:25}}</p><p ng-hide="truncated">{{ item.title }}</p></a>
         </h3>
         <!-- item.is_published for public or not -->
         <div>
