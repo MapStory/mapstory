@@ -19,7 +19,7 @@ Ext.onReady(function() {
 
     $('<iframe>', {
    {% if resource.chapters %}
-   src: '/story/{{ resource.id }}',
+   src: '/story/{{ resource.id }}/view',
    {% else %}
    src: '/maps/{{ resource.id }}/viewer',
    {% endif %}
