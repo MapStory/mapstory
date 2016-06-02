@@ -49,7 +49,7 @@
                         <div class="side-column-header">{% trans "Layer Metadata" %}</div>
                         {% else %}
                         {% ifequal page "map" %}
-                            <button class="btn btn-block btn-detailpage">play fullscreen</button>
+                            <button class="btn btn-block btn-detailpage" onclick="toggleFullScreen(); return false;">play fullscreen</button>
                             <div class="side-column-header">{% trans "Story Properties" %}</div>
                             {% else %}
                         {% endifequal %}
@@ -259,4 +259,21 @@
         </div>
     </section>
 </div>
+<script>
+function toggleFullScreen() {
+  var elem = document.getElementById('embedded_map');
+  if (!document.webkitFullScreen || !document.mozFullScreen ||
+    !document.msFullscreenElement || !document.fullscreenElement) {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      elem.msRequestFullscreen();
+    } else if (elem.mozRequestFullScreen) {
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullScreen) {
+      elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    }
+  }
+};
+</script>
 {% include "favorite/_favorite_js.html" %}
