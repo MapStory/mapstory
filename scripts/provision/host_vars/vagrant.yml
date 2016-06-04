@@ -31,9 +31,9 @@ setup_dblink: yes
 
 nginx_server_name: "{{ inventory_hostname }}"
 nginx_client_max_body_size: '500m'
-ssl_src_dir: ssl_self_signed
-ssl_dest_dir: /etc/ssl
-ssl_key_password: password
+ssl_crt: nginx.crt
+ssl_key: nginx.key
+ssl_dest_dir: "/etc/nginx/certs/"
 
 allowed_hosts: ['{{inventory_hostname}}', 'localhost']
 
