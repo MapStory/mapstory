@@ -23,7 +23,8 @@
     <div class="sidebar" id="sidebar">
         {% verbatim %}
             <div class="viewerTopNav">
-                <img src="https://res.cloudinary.com/dw1zyrzc5/image/upload/v1461606100/ms_logo_white_pot8b9.png" id="sidebarDropdown" width="35px" height="35px"/>
+                <img src="https://res.cloudinary.com/dw1zyrzc5/image/upload/v1461606100/ms_logo_white_pot8b9.png" id="sidebarDropdown" width="35px"
+                     height="35px"/>
                 <i class="fa fa-bars" ng-click="toggleSidebar()"></i>
                 <a href="/story/{{ mapManager.storyMap.get('id') - 1 }}" target="_self"><i class="fa fa-sign-out"></i></a>
             </div>
@@ -36,10 +37,10 @@
                     </a>
                 </div>
                 <div id="author">
-                    <a target="_blank" href="/people/profile/{{ mapManager.username }}">
-                        {% endverbatim %}
-                        <div class="topText">{{ SITE_NAME }} {% verbatim %}by {{ mapManager.owner }}</div>
-                    </a>
+                <a target="_blank" href="/people/profile/{{ mapManager.username }}">
+            {% endverbatim %}
+            <div class="topText">{{ SITE_NAME }} {% verbatim %}by {{ mapManager.owner }}</div>
+                </a>
                 </div>
                 <div id="summary" class="menuItem">
                     <h5>Chapter {{ mapManager.storyChapter }}</h5>
@@ -78,5 +79,9 @@
                 <div id="timeline" style="display:none;"></div>
             </div>
         </div>
+    </div>
+
+    <div style="display: none;">
+        <div id="story-pin-popup"></div>
     </div>
 </div>
