@@ -38,7 +38,7 @@
                     {% endifequal %}
                     <br>
                 </div>
-                <div class="col-lg-3" style="padding:15px">
+                <div class="col-lg-3 side-column" style="padding:15px">
                     {% ifequal page "layer" %}
                         <a href="{% url "new_map" %}?layer={{ resource.service_typename }}" target="_blank">
                             <button class="btn btn-block btn-detailpage">{% trans "Compose Story" %}</button>

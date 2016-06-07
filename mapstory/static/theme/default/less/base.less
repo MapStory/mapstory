@@ -72,7 +72,7 @@ a {
 
 a:hover, a:focus, a:active{
   color: darkgray;
-  text-decoration: none
+  text-decoration: underline;
 }
 
 
@@ -386,7 +386,6 @@ label.error {color:#fff;
 
 .btn {
   background: transparent;
-  color: gainsboro;
   border: 1px solid gainsboro;
 }
 
@@ -521,6 +520,7 @@ select {
   white-space: nowrap;
   font-weight: 600;
   margin: 0;
+  line-height: 1.2em;
 }
 
 .btn-detailpage {
@@ -534,28 +534,45 @@ select {
   margin: 10px;
 }
 
+.btn-detailpage:hover, .btn-detailpage:active {
+  background-color: #333;
+  color: #eee;
+}
+
 .side-column-header {
   display: block;
   padding: 5px 15px;
-  margin: 10px;
+  margin: 40px 10px 10px 10px;
   background-color: #ddd;
   color: #444;
   font-size: 0.8em;
   border-radius: 4px;
   width: 100%;
   font-weight: 700;
-  margin-top: 40px;
+}
+
+.side-column a:hover {
+  color: #333;
+  text-decoration: underline;
 }
 
 .side-column-items li {
-  color: #555;
+  color: #666;
   margin: 1px 15px;
   font-size: 0.7em;
   font-weight: 600;
+
 }
 
 .side-column-items li i{
   margin: 5px;
+}
+
+.details-tab-content {
+  padding: 10px;
+  color: #444;
+  font-size: 15px;
+  font-weight: 300;
 }
 
 .details-tabs {
@@ -587,6 +604,7 @@ select {
 #embedded_map {
   width: 850px;
   height: 450px;
+  padding: 20px 0;
 }
 
 #embedded_map:-webkit-full-screen {
