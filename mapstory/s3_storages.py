@@ -3,8 +3,8 @@ from storages.backends.s3boto import S3BotoStorage
 
 
 class StaticStorage(S3BotoStorage):
-    location = settings.STATICFILES_LOCATION
+    location = getattr(settings, 'STATICFILES_LOCATION', None)
 
 
 class MediaStorage(S3BotoStorage):
-    location = settings.MEDIAFILES_LOCATION
+    location = getattr(settings, 'MEDIAFILES_LOCATION', None)
