@@ -161,15 +161,16 @@
       }else{
         $('body').find("[data-filter='type__in'][data-value="+types+"]").addClass('active');
       }
-    }
+    }*/
 
     // Activate the sort filter if in the url
     if($location.search().hasOwnProperty('order_by')){
-      var sort = $location.search()['order_by'];
-      $('body').find("[data-filter='order_by']").removeClass('selected');
-      $('body').find("[data-filter='order_by'][data-value="+sort+"]").addClass('selected');
+      console.dir($location.search());
+      //console.log('HAS ORDER BY');
+      //var sort = $location.search()['order_by'];
+      //$('body').find("[data-filter='order_by']").removeClass('selected');
+      //$('body').find("[data-filter='order_by'][data-value="+sort+"]").addClass('selected');
     }
-*/
   });
 
   /*
@@ -1182,6 +1183,15 @@
         });
       });
     }
+
+    // Set the default orderMethod for when a user first hits the Explore page to be descending dates.
+    $scope.orderMethod = '-date';
+    // Allow the user to choose an order method using the What's Hot section.
+    $scope.orderMethodUpdate = function(orderMethod) {
+      $scope.orderMethod = orderMethod;
+      $scope.refreshItems();
+    };
+
   });
 
   // add filter to decode uri
