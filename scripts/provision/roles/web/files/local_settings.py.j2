@@ -6,6 +6,7 @@ DATABASE_PASSWORD = '{{ db_password }}'
 DATABASE_HOST = '{{ db_host }}'
 OGC_SERVER['default']['PASSWORD'] = '{{ geoserver_password }}'
 OGC_SERVER['default']['PUBLIC_LOCATION'] = 'http://{{ geoserver_host }}/geoserver/'
+OGC_SERVER['default']['LOCATION'] = 'http://{{ geoserver_host }}/geoserver/'
 LOCAL_CONTENT = False
 
 {% if site_id is defined %}
