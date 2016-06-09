@@ -116,7 +116,7 @@ email_host_user:
 email_host_password:
 email_port:
 email_use_tls:
-email_backend: 'mailer.backend.DbBackend'
+email_backend: 'django.core.mail.backends.console.EmailBackend'
 
 # Slack Settings
 
