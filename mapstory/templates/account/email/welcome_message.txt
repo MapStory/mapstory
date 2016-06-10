@@ -12,7 +12,7 @@ Learn
 MapStorytelling involves using open data, maps and your own reflection to illuminate change in place over time. It's something anyone can learn, and your peers are adding more resources all the time to help you along.
 
 Learn the basics:
-http://mapstory.org/getskills
+{% current_domain %}/getskills
 
 ------------------
 
@@ -21,7 +21,7 @@ Share What You Know
 There's three ways to share on MapStory. Just remember A, B, C. First, you can add new spatially and temporally enabled datasets, which we call StoryLayers. Second, you can build MapStories using StoryLayers and other narrative elements that you would like. Finally, you can curate content that appears on MapStory to improve its quality and accuracy.
 
 Start sharing on MapStory:
-http://mapstory.org/
+{% current_domain %}
 
 ------------------
 
