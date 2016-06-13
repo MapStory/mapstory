@@ -1,0 +1,61 @@
+{% extends "view_base.html" %}
+
+{% load i18n %}
+
+{% block title %} {% trans "Viewer" %} - {{ block.super }} {% endblock %}
+
+{% block head %}
+{{ block.super }}
+{% include "mapstory/ext_header.html" %}
+{% include "mapstory/app_header.html" %}
+{% include "mapstory/geo_header.html" %}
+<link rel="stylesheet" href="{{ STATIC_URL }}theme/{{ THEME }}/css/ol.css" type="text/css">
+<link rel="stylesheet" href="{{ STATIC_URL }}theme/vis.min.css" type="text/css"/>
+<link rel="stylesheet" href="{{ STATIC_URL }}vendor/nouislider/distribute/jquery.nouislider.min.css" type="text/css">
+
+<script src="{{ STATIC_URL }}vendor/jquery/dist/jquery.min.js"></script>
+<script src="{{ STATIC_URL }}vendor/angular/angular.js"></script>
+
+<script src="{{ STATIC_URL }}vendor/nouislider/distribute/jquery.nouislider.min.js" type="text/javascript"></script>
+<script src="{{ STATIC_URL }}vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="{{ STATIC_URL }}vendor/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.js"></script>
+
+<script src="{{ STATIC_URL }}mapstory/js/ol.js"></script>
+<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-core-tpls.js"></script>
+<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-core.js"></script>
+<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-core-ng.js"></script>
+<script src="{{ STATIC_URL }}vendor/story-tools/dist/ows.js"></script>
+<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-mapstory.js"></script>
+
+
+{% include 'layers/viewer.js' %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}theme/{{ THEME }}/css/viewer.css"/>
+<div ng-app="viewer" ng-controller="viewerController as viewer" id="story-viewer">
+    <div class="map" id="mapContainer">
+        <div id="map"></div>
+        <div id="footer" class="footer">
+            <div id="time-controls-panel2" ng-show="timeControlsManager.timeControls" class="floating-below">
+                <div class="navbar" ng-controller="tileProgressController">
+                    <st-playback-controls class="pull-left"
+                                          time-controls="timeControlsManager.timeControls"></st-playback-controls>
+                    <progressbar animate="false" class="navbar-nav navbar-right" value="tilesLoadedProgress">
+                        <b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad"></b>
+                    </progressbar>
+                </div>
+                <div id="playback-settings" class="panel-collapse collapse">
+                    <div class="panel-heading">Playback Options</div>
+                    <st-playback-settings playback-options="playbackOptions"
+                                          time-controls="timeControlsManager.timeControls"></st-playback-settings>
+                </div>
+                <div id="timeline" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{% block footer %}{% endblock %}
