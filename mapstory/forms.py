@@ -113,6 +113,7 @@ class MetadataForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MetadataForm, self).__init__(*args, **kwargs)
         self.fields['distribution_url'].label = "Data Source"
+        self.fields['abstract'].label = "Summary"
 
     class Meta:
         model = ResourceBase
@@ -120,6 +121,7 @@ class MetadataForm(forms.ModelForm):
             'title',
             'category',
             'language',
+            'abstract',
             'distribution_url',
             'data_quality_statement',
             'purpose',
