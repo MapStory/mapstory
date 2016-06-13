@@ -2,7 +2,7 @@
 
 - name: Install Supervisor
   apt: name=supervisor state=installed
-  sudo: yes
+  become: yes
   tags:
     - celery
 

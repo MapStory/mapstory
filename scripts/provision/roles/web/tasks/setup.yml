@@ -83,7 +83,7 @@
 
 - name: update security packages
   command: unattended-upgrade
-  sudo: yes
+  become: yes
   tags: [install]
 
 - name: Ensure bash, OpenSSl, and libssl are the latest versions
@@ -224,8 +224,8 @@
 
 - name: reload supervisor
   shell: /usr/bin/supervisorctl reread && /usr/bin/supervisorctl update
-  sudo: yes
-  sudo_user: root
+  become: yes
+  become_user: root
   tags: [elasticsearch]
 
 # Install RabbitMQ

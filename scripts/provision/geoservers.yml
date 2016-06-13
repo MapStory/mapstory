@@ -2,8 +2,8 @@
 
 - name: Provision a {{ application_name }} Geoserver Server
   hosts: mapstory
-  sudo: yes
-  sudo_user: root
+  become: yes
+  become_user: root
   remote_user: vagrant
   vars:
     - update_apt_cache: yes
