@@ -941,11 +941,30 @@ def layer_append_minimal(source, target):
         '</wfs:Insert>',
         '</wfs:Transaction>'
     ))
-    insert_tasks = group(tasks.append_feature_chunks.subtask((features,wfst_insert_template,get_features_request,target)) for features in features_chunks)
-    results = insert_tasks.apply_async()
-    insert_summary = results.join()
 
-    return insert_summary
+    summary_aggregate = []
+    summary = None
+    for features in features_chunks:
+        handle = 'added {0} features to {1} via append'.format(len(features), target)
+        wfs_transaction_payload = wfst_insert_template.format(features=''.join(features), workspace='geonode',
+                                                              workspace_uri='http://www.geonode.org/', handle=handle)
+        insert_features_request = requests.post(
+            '{}/wfs/WfsDispatcher'.format(ogc_server_settings.public_url),
+            auth=ogc_server_settings.credentials,
+            headers={'Content-Type': 'application/xml'},
+            data=wfs_transaction_payload
+        )
+
+        if has_exception(insert_features_request.content) is False:
+            print_exception(insert_features_request.content)
+        else:
+            summary = parse_wfst_response(insert_features_request.content)
+            summary_aggregate.append(summary)
+    #insert_tasks = group(tasks.append_feature_chunks.subtask((features,wfst_insert_template,get_features_request,target)) for features in features_chunks)
+    #results = insert_tasks.apply_async()
+    #insert_summary = results.join()
+
+    return summary_aggregate
 
 @login_required
 def layer_append(request, layername, template='upload/layer_append.html'):

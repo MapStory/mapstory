@@ -6,7 +6,7 @@ Mostly this assumes a deployment for the purposes of development to a VirtualBox
 
 Provisioning uses a complex stack of automation tools including:
 * Vagrant
-* Ansible
+* Ansible 1.9
 * apt-get
 * Paver
 * NPM

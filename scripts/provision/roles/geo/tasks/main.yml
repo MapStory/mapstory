@@ -58,7 +58,7 @@
 
 - name: move postgresql-9.4-1201-jdbc41.jar
   command: mv /var/lib/tomcat7/webapps/geoserver/WEB-INF/lib/postgresql-9.4-1201-jdbc41.jar /usr/share/tomcat7/lib/
-  sudo: yes
+  become: yes
   when: postgresql_source.stat.exists and not postgresql_target.stat.exists
   tags: [geoserver]
 

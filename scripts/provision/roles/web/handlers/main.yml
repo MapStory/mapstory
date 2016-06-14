@@ -5,11 +5,11 @@
 
 - name: reload supervisor
   shell: /usr/bin/supervisorctl reload
-  sudo: yes
+  become: yes
 
 - name: restart django
   supervisorctl: name=gunicorn-django state=started
-  sudo: yes
+  become: yes
   notify: check django running
   ignore_errors: True
 

@@ -2,4 +2,4 @@
 
 - name: restart geoserver
   service: name=tomcat7 state=restarted
-  sudo: yes
+  become: yes
