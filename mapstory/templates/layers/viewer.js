@@ -13,27 +13,81 @@
     'ui.bootstrap'
   ]);
 
-  function MapManager($rootScope,
-                      StoryMap, stEditableStoryMapBuilder) {
+  function MapManager($rootScope, StoryMap, stStoryMapBaseBuilder, stEditableLayerBuilder, $modal, $log) {
     this.storyMap = new StoryMap({target: 'map'});
-    var _config = {};
     var self = this;
-    this.loadConfig = function(config){
-      _config = config;
-      self.loadMap(config);
-    };
 
     this.loadMap = function(options) {
       options = options || {};
-
-      stEditableStoryMapBuilder.modifyStoryMap(self.storyMap, options);
-
-      this.currentMapOptions = options;
-
+      stStoryMapBaseBuilder.defaultMap(this.storyMap);
+      stStoryMapBaseBuilder.setBaseLayer(this.storyMap, options);
     };
+
+    this.addLayer = function(name, asVector, server, fitExtent, styleName, title) {
+      if (fitExtent === undefined) {
+        fitExtent = true;
+      }
+      if (angular.isString(server)) {
+        server = { path: server}
+      }
+      var workspace = 'geonode';
+      var parts = name.split(':');
+      if (parts.length > 1) {
+        workspace = parts[0];
+        name = parts[1];
+      }
+      var url = server.path + workspace + '/' + name + '/wms';
+      var id = workspace + ":" + name;
+      var options = {
+        id: id,
+        name: name,
+        title: title || name,
+        url: url,
+        path: server.path,
+        type: (asVector === true) ? 'VECTOR': 'WMS'
+      };
+      return stEditableLayerBuilder.buildEditableLayer(options, self.storyMap.getMap()).then(function(a) {
+        self.storyMap.addStoryLayer(a);
+        if (fitExtent === true) {
+          a.get('latlonBBOX');
+          var extent = ol.proj.transformExtent(
+                a.get('latlonBBOX'),
+                'EPSG:4326',
+                self.storyMap.getMap().getView().getProjection()
+          );
+          // prevent getting off the earth
+          extent[1] = Math.max(-20037508.34, Math.min(extent[1], 20037508.34));
+          extent[3] = Math.max(-20037508.34, Math.min(extent[3], 20037508.34));
+          self.storyMap.getMap().getView().fitExtent(extent, self.storyMap.getMap().getSize());
+        }
+      });
+    };
+
+
     $rootScope.$on('$locationChangeSuccess', function() {
-      var config = {% autoescape off %}{{ viewer|safe }};{% endautoescape%}
-      self.loadConfig(config);
+      self.loadMap({title: 'OpenStreetMap', type: 'OSM'});
+
+      //scope.loading = true;
+      self.addLayer('{{resource.typename}}', true, '/geoserver/').then(function() {
+        // pass
+      }, function(problems) {
+        var msg = 'Something went wrong:';
+        if (problems[0].status == 404 || problems[0].status == 502) {
+          msg ="<div class='alert alert-danger' style='margin-bottom:0'>" +
+          "<span class='glyphicon glyphicon-exclamation-sign' style='padding-right: 6px;' aria-hidden='true'></span>" +
+          "<span>" +
+          "The mapping server did not respond properly. It is likely temporarily down, " +
+          "but should be up soon. If this problem persists please let the administrators know." +
+          "</span></div>";
+        }
+        $modal.open({
+          template: msg
+        });
+        $log.warn(problems);
+      }).finally(function() {
+        // scope.loading = false;
+      });
+      // scope.layerName = null;
     });
   }
 
