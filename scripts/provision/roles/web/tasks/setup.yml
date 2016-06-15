@@ -204,7 +204,6 @@
 # set limits.conf
 - name: limits.conf tuning
   lineinfile: dest=/etc/security/limits.conf line="{{ item }}"
-  tags: elasticsearch
   with_items:
     - 'elasticsearch soft nofile 32000'
     - 'elasticsearch hard nofile 32000'
