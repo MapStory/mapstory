@@ -837,6 +837,9 @@ def layer_create(request, template='upload/layer_create.html'):
         if not configuration_options.get('layer_owner'):
             configuration_options['layer_owner'] = request.user
 
+        if configuration_options['featureType'].get('editable') is True:
+            configuration_options['storeCreateGeogig'] = True
+
         creator = GeoServerLayerCreator()
         try:
             layers = creator.handle(configuration_options=configuration_options)
