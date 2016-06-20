@@ -16,6 +16,7 @@
             <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;"
                    ng-click="query_category('{{ resource.category }}', 'layer');">Related</a></li>
             <li><a href="#Comments" data-toggle="tab" style="font-size:0.8em;">Comments</a></li>
+            <li><a href="#Share" data-toggle="tab" style="font-size:0.8em;">Share</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="Abstract">
@@ -108,6 +109,23 @@
                     {% render_comment_form for resource %}
                 {% endif %}
                 {% render_comment_list for resource %}
+            </div>
+            <div class="tab-pane" id="Share">
+                <h3>Map Services</h3>
+                <div class="embed">WMS 
+                    <i class="fa fa-question-circle ng-scope" tooltip-append-to-body="true" tooltip-placement="top" tooltip="OpenGIS® Web Map Service Interface Standard"></i>
+                  
+                    <input id="shareWMS" value ="http://{{ request.get_host }}/geoserver/geonode/{{ resource }}/wms?REQUEST=GetCapabilities&SERVICE=WMS&TILED=true&VERSION=1.1.1">
+                  
+                    <button class="copyclip btn" data-clipboard-target="#shareWMS"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
+                </div>
+
+                <div class="embed"> WFS
+                    <i class="fa fa-question-circle ng-scope" tooltip-append-to-body="true" tooltip-placement="top" tooltip="OGC® Web Feature Service"></i>
+                    <input id="shareWFS" value ="http://{{ request.get_host }}/geoserver/geonode/{{ resource }}/wfs?REQUEST=GetCapabilities&SERVICE=WFS&VERSION=2.0.0">
+                    <button  class="copyclip btn" data-clipboard-target="#shareWFS"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
+                  
+                </div>
             </div>
         </div>
     </div>
