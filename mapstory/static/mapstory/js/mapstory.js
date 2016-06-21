@@ -123,7 +123,7 @@
 
        $scope.layer.configuration_options.permissions = {'users': {'AnonymousUser': ['download_resourcebase', 'view_resourcebase']}};
 
-       if(goog.isDefAndNotNull(edit) && edit === true) {
+       if(edit === true) {
          $scope.layer.configuration_options.permissions = {'users': {'AnonymousUser': ['change_resourcebase', 'download_resourcebase', 'view_resourcebase']}};
        }
 
