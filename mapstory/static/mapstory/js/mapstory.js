@@ -83,7 +83,7 @@
                  nativeCRS: 'EPSG:4326',
                  srs: 'EPSG:4326',
                  store: {name: 'mapstory_data'},
-                 namespace: {'name': 'geonode'}
+                 namespace: {'name': 'geonode'},
                 }
             };
 
@@ -108,6 +108,7 @@
      $scope.createLayer = function() {
         $scope.processing = true;
         $scope.errors = [];
+        $scope.setDefaultPermissions($scope.layer.configuration_options.editable);
         $http.post('/layers/create', {'featureType': $scope.layer.configuration_options}).then(function(response){
             $scope.processing = false;
             $scope.success = true;
@@ -116,6 +117,18 @@
             $scope.processing = false;
             $scope.errors = response['data']['errors'];
         })
+     };
+
+     $scope.setDefaultPermissions = function(edit) {
+
+       $scope.layer.configuration_options.permissions = {'users': {'AnonymousUser': ['download_resourcebase', 'view_resourcebase']}};
+
+       if(edit === true) {
+         $scope.layer.configuration_options.permissions = {'users': {'AnonymousUser': ['change_resourcebase', 'download_resourcebase', 'view_resourcebase']}};
+       }
+
+       $scope.layer.configuration_options.storeCreateGeogig = true;
+
      };
 
      $scope.addDefaultAttribute = function() {

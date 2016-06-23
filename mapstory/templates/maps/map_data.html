@@ -87,7 +87,7 @@
                 <!-- share -->
 
                 <div id="share">Share link: <textarea
-                        style="color:#00CC99; width:100%;">http://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}</textarea>
+                        style="color:#00CC99; width:100%;">https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}</textarea>
                 </div>
                 <!-- embed -->
                 {% if resource.chapters %}
