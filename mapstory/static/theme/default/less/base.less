@@ -616,9 +616,12 @@ select {
     margin: 8px;
 }
 
-.embed > input{
-    width: 80%;
-    color:#00CC99;
+.embed > input, .embed > textarea {
+  width: 80%;
+  color: #00CC99;
+  border-style: ridge;
+  border-width: 1px;
+  vertical-align: middle;
 }
 
 /* Is there a better way to override the css applied by the library without having to rewrite the entire thing? */
