@@ -368,56 +368,6 @@
         </div>
     </div>
 </article>
-
-
-
-{% comment %}
-<!--  WHAT IS THIS PART?!?
-
-{% if user.is_authenticated %}
-<div class="col-md-8">
-  <h3>Groups</h3>
-  {% if user == profile %}
-    {% for group in profile.group_list_all %}
-      <article>
-        <div class="row">
-           <div ng-if="group.logo != ''" class="col-md-2">
-             <a href="{{ group.get_absolute_url }}" ><img src="/uploaded/{{ group.logo }}" alt="{{ group.title }}" class="group-logo" /></a>
-           </div>
-           <div class="col-md-10">
-             <h5>
-               <i class="fa fa-group"></i> <a href="{{ group.get_absolute_url }}">{{ group.title }}</a>
-               {% if group.email %} <a href="mailto:{{ group.email }}"><i class="fa fa-envelope-o"></i></a>{% endif %}
-             </h5>
-             <p>{{ group.description}}</p>
-           </div>
-         </div>
-     </article>
-    {% endfor %}
-  {% else %}
-    {% for group in profile.group_list_public %}
-      <article>
-        <div class="row">
-           <div ng-if="group.logo != ''" class="col-md-2">
-             <a href="{{ group.get_absolute_url }}" ><img src="/uploaded/{{ group.logo }}" alt="{{ group.title }}" class="group-logo" /></a>
-           </div>
-           <div class="col-md-10">
-             <h5>
-               <i class="fa fa-group"></i> <a href="{{ group.get_absolute_url }}">{{ group.title }}</a>
-               {% if group.email %} <a href="mailto:{{ group.email }}"><i class="fa fa-envelope-o"></i></a>{% endif %}
-             </h5>
-             <p>{{ group.description}}</p>
-           </div>
-         </div>
-     </article>
-    {% endfor %}
-  {% endif %} 
-</div>
-{% endif %}
-
-WHAT IS THIS PART?!-->
-
-        {% endcomment %}
 </div>
 <div id="notifications" class="modal fade col-md-8">
     <div class="modal-content">
