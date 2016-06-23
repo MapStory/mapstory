@@ -74,7 +74,7 @@
       self.loadMap({title: 'OpenStreetMap', type: 'OSM'});
 
       //scope.loading = true;
-      self.addLayer('{{resource.typename}}', true, '/geoserver/').then(function() {
+      self.addLayer('{{resource.typename}}', false, '/geoserver/').then(function() {
         // pass
       }, function(problems) {
         var msg = 'Something went wrong:';
