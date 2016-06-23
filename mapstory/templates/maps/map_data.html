@@ -84,23 +84,27 @@
                 </div>
             </div>
             <div class="tab-pane" id="Share">
-                <!-- share -->
-
-                <div id="share">Share link: <textarea
-                        style="color:#00CC99; width:100%;">https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}</textarea>
-                </div>
-                <!-- embed -->
                 {% if resource.chapters %}
 
-                <div id="embed">Embed link: <textarea style="color:#00CC99; width:100%;"><iframe
-                        style="border: none;" height="400" width="600"
-                        src="http://{{ request.get_host }}/story/{{ resource.id }}/embed"></iframe></textarea></div>
-                {% else %}
-                <div style="display:none;" id="embed">Embed link: <textarea style="color:#00CC99; width:100%;"><iframe
-                        style="border: none;" height="400" width="600"
-                        src="http://{{ request.get_host }}{% url 'geonode.maps.views.map_embed' resource.id %}"></iframe></textarea>
-                    {% endif %}
+                <div class="embed">
+                    Embed: 
+                    <textarea id="embedLink"><iframe style="border: none;" height="400" width="600" src="https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}/embed"></iframe></textarea>
+                    <button class="copyclip btn" data-clipboard-target="#embedLink"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
                 </div>
+                {% else %}
+                <div style="display:none;">
+                   <strong> Embed: </strong>
+                    <textarea><iframe style="border: none;" height="400" width="600" src="http://{{ request.get_host }}{% url 'geonode.maps.views.map_embed' resource.id %}"></iframe></textarea>
+                </div>
+                {% endif %}
+                <div class="embed">
+                    Share: 
+                    <input id="shareLink" value="https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}">
+                    <button class="copyclip btn" data-clipboard-target="#shareLink"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
+                </div>
+
             </div>
+                  
         </div>
     </div>
+</div>
