@@ -1,7 +1,7 @@
 -e ../geonode
 
 -e git://github.com/pinax/django-mailer.git#egg=django-mailer
--e git://github.com/MapStory/icon-commons.git@fc03fd1357811a3540812135aace06b31908bd8c#egg=icon-commons
+-e git://github.com/MapStory/icon-commons.git#egg=icon-commons
 -e git://github.com/ProminentEdge/django-osgeo-importer.git@511900361f6b20d8e200fc7da8f01cfe996b94db#egg=osgeo_importer
 
 docutils
