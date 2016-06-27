@@ -1,0 +1,14 @@
+<div class="modal fade" id="iconUploadModal">
+    <div class="modal-dialog" style="width:1000px;margin:50px auto">
+        <div class="modal-content">
+            <div class="container">
+                <h1>Upload Icons</h1>
+                <form name="icon_form" method="POST" action="#" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ icon_form }}
+                    <input class="btn btn-primary" id="icon_submit_btn" type="submit" value="Upload"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
