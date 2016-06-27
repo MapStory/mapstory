@@ -121,10 +121,10 @@
 
      $scope.setDefaultPermissions = function(edit) {
 
-       $scope.layer.configuration_options.permissions = {'users': {'AnonymousUser': ['download_resourcebase', 'view_resourcebase']}};
+       $scope.layer.configuration_options.permissions = {'users': {'AnonymousUser': ['change_resourcebase', 'download_resourcebase', 'view_resourcebase']}};
 
-       if(edit === true) {
-         $scope.layer.configuration_options.permissions = {'users': {'AnonymousUser': ['change_resourcebase', 'download_resourcebase', 'view_resourcebase']}};
+       if(edit === false) {
+         $scope.layer.configuration_options.permissions = {'users': {'AnonymousUser': ['download_resourcebase', 'view_resourcebase']}};
        }
 
        $scope.layer.configuration_options.storeCreateGeogig = true;
