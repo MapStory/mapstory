@@ -24,7 +24,12 @@ PROFILE_NOTICE_SETTINGS = ['layer_comment', 'layer_rated', 'layer_favorited', 'l
     'map_flagged', 'map_featured', 'message_received', 'journal_comment', 'password_updated'] 
 
 def send_notification(notice_type_label, user, extra_content=None):
-    send = user.noticesetting_set.get(notice_type__label=notice_type_label).send
+    send = None
+    try:
+        send = user.noticesetting_set.get(notice_type__label=notice_type_label).send
+    except:
+        pass
+
     if send:
         notification.send([user], notice_type_label, {"extra_content": extra_content})
         send_queued_notifications.delay()
