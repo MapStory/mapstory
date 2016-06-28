@@ -1,7 +1,7 @@
 {% load mapstory_tags %}
 
 {{ signup_code.inviter }} ({{signup_code.inviter.email}}) has
-invited you to join MapStory ( http://{{ current_site.domain }} )!
+invited you to join MapStory ( {{ current_site.domain }} )!
 
 Just click this <a href="{{ signup_url }}">link</a> to get started.
 
