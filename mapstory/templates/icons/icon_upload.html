@@ -1,0 +1,22 @@
+{% extends "site_base.html" %}
+
+{% load avatar_tags %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block middle %}
+    <div class="container">
+        <h1>Upload Icons</h1>
+        <form name="icon_form" method="POST" action="#" enctype="multipart/form-data">
+            <div class="form-group">
+                {% csrf_token %}
+                    <div>Tags: {{ icon_form.tags }}</div><br />
+                    <div>Collection: {{ icon_form.collection }}</div><br/>
+                    <div>SVG File or Zip: {{ icon_form.svg }}</div>
+                </ul>
+                <input class="btn btn-primary" id="icon_submit_btn" type="submit" value="Upload"/>
+            </div>
+        </form>
+    </div>
+{% endblock %}

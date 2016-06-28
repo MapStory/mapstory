@@ -18,9 +18,11 @@
                         {% if user.is_authenticated %}
                             <li><a class="pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "Upload Layer" %}</a></li>
                             <li><a class="pointer" ng-controller="createLayerCtrl" ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "Create Layer" %}</a></li>
+                            <li><a class="pointer" href="/icons/">{% trans "Upload Icons" %}</a></li>
                         {% else %}
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Upload Layer" %}</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Create Layer" %}</a></li>
+                            <li><a class="pointer" href="/icons/">{% trans "Upload Icons" %}</a></li>
                         {% endif %}
                         <li><a href="{% url 'new_map' %}?tour">{% trans "Compose MapStory" %}</a></li>
                     </ul>
@@ -109,5 +111,6 @@
 {% if not hide_menu %}
 
 {% include 'mapstory/_login_register.html' %}
+{% include 'upload.html' %}
 
 {% endif %}
