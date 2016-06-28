@@ -64,7 +64,7 @@ from geonode.utils import default_map_config
 from django.db.models import F
 from django.contrib.auth.models import Group
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login
 from geonode.layers.views import _resolve_layer
 from geonode.tasks.deletion import delete_mapstory, delete_layer
 from provider.oauth2.models import AccessToken
@@ -658,10 +658,6 @@ class MapStoryConfirmEmailView(ConfirmEmailView):
         confirmation.confirm()
         ctx = self.get_context_data()
         self.after_confirmation(confirmation, ctx)
-        redirect_url = self.get_redirect_url()
-        if not redirect_url:
-            ctx = self.get_context_data()
-            return self.render_to_response(ctx)
         if self.messages.get("email_confirmed"):
             messages.add_message(
                 self.request,
@@ -670,7 +666,12 @@ class MapStoryConfirmEmailView(ConfirmEmailView):
                     "email": confirmation.email_address.email
                 })
             )
-        return redirect(redirect_url)
+        # sign in to the user and redirect them to their profile page
+        username = confirmation.email_address.user.username
+        user = Profile.objects.filter(username__iexact=username).first()
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
+        return redirect("profile_detail", slug=username)
 
     def after_confirmation(self, confirmation, ctx):
         """
