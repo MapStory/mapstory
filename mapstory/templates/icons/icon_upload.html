@@ -11,10 +11,9 @@
         <form name="icon_form" method="POST" action="#" enctype="multipart/form-data">
             <div class="form-group">
                 {% csrf_token %}
-                    <div>Tags: {{ icon_form.tags }}</div><br />
-                    <div>Collection: {{ icon_form.collection }}</div><br/>
-                    <div>SVG File or Zip: {{ icon_form.svg }}</div>
-                </ul>
+                <div>Tags: <br/>{{ icon_form.tags }}</div>
+                <div>Collection: <br/>{{ icon_form.collection }}</div>
+                <div>SVG File or Zip: {{ icon_form.svg }}</div> <br/>
                 <input class="btn btn-primary" id="icon_submit_btn" type="submit" value="Upload"/>
             </div>
         </form>
