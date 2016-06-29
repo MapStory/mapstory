@@ -8,12 +8,13 @@
 {% block middle %}
     <div class="container">
         <h1>Upload Icons</h1>
-        <form name="icon_form" method="POST" action="#" enctype="multipart/form-data">
+        <form name="icon_form" method="POST" action="" enctype="multipart/form-data">
             <div class="form-group">
                 {% csrf_token %}
-                <div>Tags: <br/>{{ icon_form.tags }}</div>
-                <div>Collection: <br/>{{ icon_form.collection }}</div>
-                <div>SVG File or Zip: {{ icon_form.svg }}</div> <br/>
+                <div>Tags: <br/>{{ icon_form.tags }}{{ icon_form.tags.errors.as_text }}</div>
+                <div>Collection: <br/>{{ icon_form.collection }}{{ icon_form.collection.errors.as_text }}</div>
+                <div>SVG File or Zip: {{ icon_form.svg }}{{ icon_form.svg.errors.as_text }}</div>
+                <br/>
                 <input class="btn btn-primary" id="icon_submit_btn" type="submit" value="Upload"/>
             </div>
         </form>
