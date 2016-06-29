@@ -179,15 +179,3 @@
 
 - name: create temp folder for icons
   file: state=directory path=/tmp/{{ application_name }} owner={{ application_user }}
-
-- name: download the icons source
-  get_url: url={{ icons_commons_download }} dest=/tmp/
-
-- name: unzip icons
-  unarchive: copy=no src=/tmp/iconcommons-master.zip dest=/tmp/{{ application_name }} owner={{ application_user }}
-  tags: [iconscommons]
-
-- name: ingest icons
-  django_manage: app_path={{ project_path }} virtualenv={{ venv }} command='ingest /tmp/{{ application_name }}/iconcommons-master/svg'
-  become_user: '{{ application_user }}'
-  tags: [iconscommons]
