@@ -1,0 +1,23 @@
+<div class="twocol">
+    <table id="iconList" class="table">
+        <thead>
+        <th>Name</th>
+        <th>Last Modified</th>
+        <th>&nbsp;</th>
+        </thead>
+        {% for icon in icons %}
+            <tr>
+                <td>{{ icon.name }}</td>
+                <td>{{ icon.modified }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td>You haven't uploaded any icons.</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+
+
