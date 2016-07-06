@@ -1,22 +1,21 @@
-<div class="twocol">
-    <table id="iconList" class="table">
-        <thead>
-        <th>Name</th>
-        <th>Last Modified</th>
-        <th>&nbsp;</th>
-        </thead>
+<div id="profile-icon-list">
+    {% if not icons %}
+        <div class="no-content">
+            <h2>No icons.</h2>
+            <h4><a href="/icons/">Upload icons now.</a></h4>
+        </div>
+    {% else %}
         {% for icon in icons %}
-            <tr>
-                <td>{{ icon.name }}</td>
-                <td>{{ icon.modified }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td>You haven't uploaded any icons.</td>
-            </tr>
+            <div class="profile-icon-list-item">
+                <div class="profile-icon-list-image">{{ icon.current_icon_data.svg | safe }}</div>
+                <div class="profile-icon-list-name">{{ icon.name }}
+                    <br/>last modified on {{ icon.modified | date:"F d Y"}}
+                </div>
+            </div>
         {% endfor %}
-    </table>
+    {% endif %}
 </div>
+
 
 
 
