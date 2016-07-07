@@ -15,7 +15,6 @@
                     <div class="alert alert-{{ message.tags }}">{{ message }}</div>
                 {% endfor %}
                 <div>Tags: <br/>{{ icon_form.tags }}{{ icon_form.tags.errors.as_text }}</div>
-                <div>Collection: <br/>{{ icon_form.collection }}{{ icon_form.collection.errors.as_text }}</div>
                 <div>SVG File or Zip: {{ icon_form.svg }}{{ icon_form.svg.errors.as_text }}</div>
                 <br/>
                 <input class="btn btn-primary" id="icon_submit_btn" type="submit" value="Upload"/>
