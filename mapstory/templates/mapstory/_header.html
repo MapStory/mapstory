@@ -2,7 +2,9 @@
 <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header col-md-2">
-            <a class="navbar-brand" style="background:url('/uploaded/{{ site.assets.logo.name }}') no-repeat; background-size:100%;" href="{% url "home" %}">{{ SITE_NAME }}</a>
+            {% if site.assets.logo %}
+                <a class="navbar-brand"  style="background:url('/uploaded/{{ site.assets.logo.name }}') no-repeat; background-size:100%;" href="{% url "home" %}">{{ SITE_NAME }}</a>
+            {% endif %}
         </div>
 
         {% if not hide_menu %}
@@ -16,8 +18,8 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">{% trans 'Create' %}</a>
                     <ul class="dropdown-menu">
                         {% if user.is_authenticated %}
-                            <li><a class="pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "Upload Layer" %}</a></li>
-                            <li><a class="pointer" ng-controller="createLayerCtrl" ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "Create Layer" %}</a></li>
+                            <li><a class="pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')">{% trans "Upload Layer" %}</a></li>
+                            <li><a class="pointer" ng-controller="createLayerCtrl" ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')">{% trans "Create Layer" %}</a></li>
                             <li><a class="pointer" href="{% url 'upload' %}">{% trans "Upload Icons" %}</a></li>
                         {% else %}
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Upload Layer" %}</a></li>

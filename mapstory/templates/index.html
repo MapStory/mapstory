@@ -70,7 +70,7 @@
 
                     <h3>
                         {% if user.is_authenticated %}
-                            <a class="pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')" target="_self">
+                            <a class="pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')" target="_self">
                         {% else %}
                             <a class="pointer" data-toggle="modal" data-target="#loginModal">
                         {% endif %}
