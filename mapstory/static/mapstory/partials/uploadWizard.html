@@ -1,138 +1,153 @@
 <div class="modal-header">
-        <h3 class="modal-title">{{appending() === true ? "Append data to layer" : "Create a layer"}}<img class="import-wizard-icon" ng-src="{{modalImage}}"/></h3>
+    <h3 class="modal-title">{{ appending() === true ? "Append data to layer" : "Create a layer"}}<img class="import-wizard-icon"
+                                                                                                      ng-src="{{ modalImage }}"/></h3>
 </div>
 <div class="modal-body row">
     <div class="col-sm-12 col-md-12 col-lg-12 import-wizard-modal">
         <wizard on-finish="importLayer()">
 
-        <wz-step title="Add Data" wz-disabled="{{appending() === true ? false : 'true'}}" class="row">
-            <h3><strong>Add Data</strong></h3>
-            <p>Instead of adding edits to data one-by-one, with Append you can bulk upload a set of edits all at once. To Append, download a blank schema below, add your features to it, and proceed with your upload here</p>
+            <wz-step title="Add Data" wz-disabled="{{ appending() === true ? false : 'true'}}" class="row">
+                <h3><strong>Add Data</strong></h3>
+                <p>Instead of adding edits to data one-by-one, with Append you can bulk upload a set of edits all at once. To Append, download a blank
+                    schema below, add your features to it, and proceed with your upload here</p>
 
-            <a class="btn-link" style="display: block" href="{{shapefile_link}}" target="_self">Download Shape-file schema</a>
-            <a class="btn-link" style="display: block" href="{{csv_link}}"  target="_self">Download csv schema</a>
+                <a class="btn-link" style="display: block" href="{{ shapefile_link }}" target="_self">Download Shape-file schema</a>
+                <a class="btn-link" style="display: block" href="{{ csv_link }}" target="_self">Download csv schema</a>
 
-            <div class="import-wizard-button">
-                <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
-            </div>
-        </wz-step>
-
-        <wz-step title="Upload" wz-disabled="{{layerSet}}" canexit="layer != null" class="row">
-            <div class="col-sm-8 col-md-8 col-lg-8 col-md-offset-2" style="padding-top: 5px; padding-left: 2px;" ng-controller="UploaderController">
-
-                <h3 ng-show="appending() === false"><strong>Upload your data.</strong></h3>
-                <p ng-show="appending() === false ">You can upload data in .csv, .geojson, .gpx, .kml, .tif, and zipped shapefile formats.</p>
-
-                <h3 ng-show="appending()"><strong>Upload your feature edits.</strong></h3>
-                <p ng-show="appending()">Upload the blank file you downloaded earlier that now has your new feature edits added. Once your append is complete, you should see all of your new features added as edits to this layer.</p>
-
-
-
-                <div style="margin: 23px 0 10px 0;">
-                    <input type="file" nv-file-select uploader="uploader"/>
-                    </div>
-
-                <div style="margin: 20px 0 10px 0;">
-
-                    <uib-progressbar type="success" ng-show="uploader.progress > 0 && uploader.progress < 100" value="uploader.progress">{{uploader.progress}}%</uib-progressbar>
-
-                    <div ng-repeat="fields in errors" class="clrs-red">
-                        <div ng-repeat="error in fields" class="clrs-red">
-                            <i class="fa fa-warning" ng-show="error"></i> {{ error }}
-                    </div>
+                <div class="import-wizard-button">
+                    <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
                 </div>
+            </wz-step>
+
+            <wz-step title="Upload" wz-disabled="{{ layerSet }}" canexit="layer != null" class="row">
+                <div class="col-sm-8 col-md-8 col-lg-8 col-md-offset-2" style="padding-top: 5px; padding-left: 2px;"
+                     ng-controller="UploaderController">
+
+                    <h3 ng-show="appending() === false"><strong>Upload your data.</strong></h3>
+                    <p ng-show="appending() === false ">You can upload data in .csv and zipped shapefile formats.</p>
+
+                    <h3 ng-show="appending()"><strong>Upload your feature edits.</strong></h3>
+                    <p ng-show="appending()">Upload the blank file you downloaded earlier that now has your new feature edits added. Once your append
+                        is complete, you should see all of your new features added as edits to this layer.</p>
+
+                    <label class="btn btn-primary" for="my-file-selector">
+                        <input id="my-file-selector" type="file" style="display:none;" nv-file-select uploader="uploader"
+                               onchange="$('#upload-file-info').html($(this).val().substring(12));">
+                        Browse
+                    </label>
+                    <span class='label label-info' id="upload-file-info"></span>
+
+                    <div style="margin: 20px 0 10px 0;">
+
+                        <uib-progressbar type="success" ng-show="uploader.progress > 0 && uploader.progress < 100"
+                                         value="uploader.progress">{{ uploader.progress }}%
+                        </uib-progressbar>
+
+                        <div ng-repeat="fields in errors" class="clrs-red">
+                            <div ng-repeat="error in fields" class="clrs-red">
+                                <i class="fa fa-warning" ng-show="error"></i> {{ error }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="import-wizard-button">
+                        <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+                    </div>
+
+                </div>
+            </wz-step>
+
+
+            <wz-step title="Name">
+                <h3><strong>Name your Layer</strong></h3>
+                <form name="importOptionsForm" class="form-horizontal import-options-form">
+                    <div class="form-group">
+                        <input id="layerName" type="text" class=input-lg ng-model="layer.configuration_options.name">
+                    </div>
+
+                    <div class="import-wizard-button">
+                        <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+                    </div>
+                </form>
+            </wz-step>
+
+            <wz-step title="Enable Time?">
+                <img class="import-wizard-image" ng-src="{{ staticUrl }}mapstory/img/time.png"/>
+                <h3><strong>Does the dataset have time attributes?</strong></h3>
+
+                <div class="btn-group">
+                    <label class="btn" ng-model="layer.configuration_options.configureTime" uib-btn-radio="true">Yes</label>
+                    <label class="btn" ng-model="layer.configuration_options.configureTime" uib-btn-radio="false">No</label>
                 </div>
 
                 <div class="import-wizard-button">
                     <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
                 </div>
 
-            </div>
-        </wz-step>
+            </wz-step>
 
-
-        <wz-step title="Name">
-            <h3><strong>Name your Layer</strong></h3>
-            <form name="importOptionsForm" class="form-horizontal import-options-form">
-                <div class="form-group">
-                    <input id="layerName" type="text" class=input-lg ng-model="layer.configuration_options.name">
-                </div>
-
-                <div class="import-wizard-button">
-                    <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
-                </div>
-            </form>
-        </wz-step>
-
-        <wz-step title="Enable Time?">
-            <img class="import-wizard-image" ng-src="{{ staticUrl }}/mapstory/img/time.png"/>
-            <h3><strong>Does the dataset has time attributes?</strong></h3>
-
-            <div class="btn-group">
-                <label class="btn btn-success" ng-model="layer.configuration_options.configureTime" uib-btn-radio="true">Yes</label>
-                <label class="btn" ng-model="layer.configuration_options.configureTime" uib-btn-radio="false">No</label>
-            </div>
-
-            <div class="import-wizard-button">
-                <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
-            </div>
-
-        </wz-step>
-
-        <wz-step title="Configure time" wz-disabled="{{timeEnabled(true)}}">
-            <h3><strong>Configure your time attributes:</strong></h3>
-            <form name="importOptionsForm" class="form-horizontal import-options-form">
+            <wz-step title="Configure time" wz-disabled="{{ timeEnabled(true) }}">
+                <h3><strong>Configure your time attributes:</strong></h3>
+                <form name="importOptionsForm" class="form-horizontal import-options-form">
                     <div class="form-group">
                         <label for="start_date" class="col-sm-4 col-xs-4 col-md-4 control-label">Date field (start date):</label>
-                        <select ng-model="layer.configuration_options.start_date" class="col-md-5 col-xs-5 col-sm-5 input-md" id="start_date" ng-required='layer.configuration_options'>
+                        <select ng-model="layer.configuration_options.start_date" class="col-md-5 col-xs-5 col-sm-5 input-md" id="start_date"
+                                ng-required='layer.configuration_options'>
                             <option value="" ng-selected="'' == layer.configuration_options.start_date">--Please select a field--</option>
-                            <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.start_date" value="{{option.name}}">{{option.name}}</option>
+                            <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.start_date"
+                                    value="{{ option.name }}">{{ option.name }}</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="end_date" class="col-sm-4 col-xs-4 col-md-4 control-label">Optional end date field:</label>
                         <select ng-model="layer.configuration_options.end_date" class="col-md-5 col-xs-5 col-sm-5 input-md" id="end_date">
                             <option value="" ng-selected="'' == layer.configuration_options.end_date">--Please select a field--</option>
-                            <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.end_date" value="{{option.name}}">{{option.name}}</option>
+                            <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.end_date"
+                                    value="{{ option.name }}">{{ option.name }}</option>
                         </select>
                     </div>
+                    <div class="import-wizard-button">
+                        <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+                    </div>
+                </form>
+            </wz-step>
+            <wz-step title="Permissions" wz-disabled="{{ appending(true) }}">
+                <img class="import-wizard-image" ng-src="{{ staticUrl }}mapstory/img/edit.png"/>
+                <h3><strong>Do you want to allow other storytellers to edit your layer?</strong></h3>
+                <div class="btn-group">
+                    <label class="btn" ng-model='layer.configuration_options.editable' uib-btn-radio="true">Yes</label>
+                    <label class="btn" ng-model='layer.configuration_options.editable' uib-btn-radio="false">No</label>
+                </div>
                 <div class="import-wizard-button">
-                <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
-            </div>
-            </form>
-        </wz-step>
-        <wz-step title="Permissions" wz-disabled="{{appending(true)}}">
-            <img class="import-wizard-image" ng-src="{{ staticUrl }}/mapstory/img/edit.png"/>
-            <h3><strong>Enable version history?</strong></h3>
-            <div class="btn-group">
-                <label class="btn btn-success"  ng-model='layer.configuration_options.editable' uib-btn-radio="true">Yes</label>
-                <label class="btn" ng-model='layer.configuration_options.editable' uib-btn-radio="false">No</label>
-            </div>
-            <div class="import-wizard-button">
-                <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
-            </div>
-        </wz-step>
-        <wz-step title="{{appending() === true ? 'Append' : 'Import'}}">
-            <h3><strong>Ok, we're ready to create the layer!</strong></h3>
-            <p ng-hide="success">Click below to import your layer.</p>
-            <div>
-                <div class="clrs-green fnt-weight-400" ng-show="success"> The import has finished successfully. View the <a href="{{layer.geonode_layer.url}}?showMetadata=true" class="fnt-weight-600" target="_self">layer</a>. </div>
-                <div class="clrs-red fnt-weight-400" ng-show="errors">Layer creation has failed.  Please adjust your configuration and try again.</div>
-            </div>
-            <div class="import-wizard-button">
-                <i class="fa fa-spinner fa-spin fa-3x" ng-show="processing"></i>
-                <button class="btn" ng-show="!processing && !success" type="submit" wz-next value="Continue">Create my layer <i class="fa fa-arrow-circle-right"></i></button>
-            </div>
-            <div>
-                <ul class="import-wizard-error-list" ng-show="errorMessages">
-                    <li class="clrs-red" style="" ng-repeat="error in errorMessages">{{error}}</li>
-                </ul>
-            </div>
+                    <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+                </div>
+            </wz-step>
+            <wz-step title="{{ appending() === true ? 'Append' : 'Import'}}">
+                <h3><strong>Ok, we're ready to create the layer!</strong></h3>
+                <p ng-hide="success">Click below to import your layer.</p>
+                <div>
+                    <div class="clrs-green fnt-weight-400" ng-show="success"> The import has finished successfully. <a
+                            href="{{ layer.geonode_layer.url }}?showMetadata=true" class="fnt-weight-600" target="_self">Click here to view your layer</a>.
+                    </div>
+                    <div class="clrs-red fnt-weight-400" ng-show="errors">Layer creation has failed. Please adjust your configuration and try again.
+                    </div>
+                </div>
+                <div class="import-wizard-button">
+                    <i class="fa fa-spinner fa-spin fa-3x" ng-show="processing"></i>
+                    <button class="btn" ng-show="!processing && !success" type="submit" wz-next value="Continue">Create my layer <i
+                            class="fa fa-arrow-circle-right"></i></button>
+                </div>
+                <div>
+                    <ul class="import-wizard-error-list" ng-show="errorMessages">
+                        <li class="clrs-red" style="" ng-repeat="error in errorMessages">{{ error }}</li>
+                    </ul>
+                </div>
 
-        </wz-step>
-    </wizard>
+            </wz-step>
+        </wizard>
     </div>
 </div>
 <div class="modal-footer">
     <span class="pull-left modal-footer-help"><button class="btn btn-primary" type="button" ng-click="ok()">Close</button></span>
+    <span class="pull-right modal-footer-help">Learn more about<a href="/getskills" target="_blank">uploading data.</a></span>
 </div>
