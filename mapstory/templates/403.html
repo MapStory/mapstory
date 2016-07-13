@@ -1,3 +1,21 @@
-<h1>403 Forbidden</h1>
+{% extends "site_base.html" %}
 
-<h5>Sorry you do not have permission to access this page.  Visit our <a href="{{ current_site.domain }}">home page</a> and try another page.</h5>
+{% load i18n %}
+
+{% block middle %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Permission Denied</h1>
+                <h2>Sorry, you don't have permission to view this page.</h2>
+                <small>Error Code: 403</small>
+                <p>Here are some helpful links instead:</p>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="{% url "search" %}">{% trans "Explore" %}</a></li>
+                    <li><a href="{% url 'getpage' 'skills' %}">{% trans "Get Skills" %}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

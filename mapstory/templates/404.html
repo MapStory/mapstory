@@ -1,1 +1,21 @@
-<img class="center-block" src="{{ STATIC_URL }}mapstory/img/error_template.jpg"/>
+{% extends "site_base.html" %}
+
+{% load i18n %}
+
+{% block middle %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Oops!</h1>
+                <h2>We can't seem to find the page you're looking for.</h2>
+                <small>Error Code: 404</small>
+                <p>Here are some helpful links instead:</p>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="{% url "search" %}">{% trans "Explore" %}</a></li>
+                    <li><a href="{% url 'getpage' 'skills' %}">{% trans "Get Skills" %}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
