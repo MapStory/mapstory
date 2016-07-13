@@ -13,7 +13,7 @@
     'ui.bootstrap'
   ]);
 
-  function MapManager($rootScope, StoryMap, stStoryMapBaseBuilder, stEditableLayerBuilder, $modal, $log) {
+  function MapManager($rootScope, StoryMap, stStoryMapBaseBuilder, stEditableLayerBuilder, $log) {
     this.storyMap = new StoryMap({target: 'map'});
     var self = this;
 
@@ -68,33 +68,6 @@
         }
       });
     };
-
-
-    $rootScope.$on('$locationChangeSuccess', function() {
-      self.loadMap({title: 'OpenStreetMap', type: 'OSM'});
-
-      //scope.loading = true;
-      self.addLayer('{{resource.typename}}', false, '/geoserver/').then(function() {
-        // pass
-      }, function(problems) {
-        var msg = 'Something went wrong:';
-        if (problems[0].status == 404 || problems[0].status == 502) {
-          msg ="<div class='alert alert-danger' style='margin-bottom:0'>" +
-          "<span class='glyphicon glyphicon-exclamation-sign' style='padding-right: 6px;' aria-hidden='true'></span>" +
-          "<span>" +
-          "The mapping server did not respond properly. It is likely temporarily down, " +
-          "but should be up soon. If this problem persists please let the administrators know." +
-          "</span></div>";
-        }
-        $modal.open({
-          template: msg
-        });
-        $log.warn(problems);
-      }).finally(function() {
-        // scope.loading = false;
-      });
-      // scope.layerName = null;
-    });
   }
 
   module.service('MapManager', function($injector) {
@@ -122,9 +95,33 @@
     });
   });
 
-  module.controller('viewerController', function($scope, $location, $injector, $log, MapManager, TimeControlsManager) {
+  module.controller('viewerController', function($scope, $location, $injector, $modal, $log, MapManager, TimeControlsManager) {
     $scope.timeControlsManager = $injector.instantiate(TimeControlsManager);
     $scope.mapManager = MapManager;
+
+
+    $scope.mapManager.loadMap({title: 'OpenStreetMap', type: 'OSM'});
+
+    $scope.loading = true;
+    $scope.mapManager.addLayer('{{resource.typename}}', false, '/geoserver/').then(function() {
+      // pass
+    }, function(problems) {
+      var msg = 'Something went wrong:';
+      if (problems[0].status == 404 || problems[0].status == 502 || problems[0].status == 500) {
+        msg = "<div class='alert alert-danger' style='margin-bottom:0'>" +
+              "<span class='glyphicon glyphicon-exclamation-sign' style='padding-right: 6px;' aria-hidden='true'></span>" +
+              "<span>" +
+              "The mapping server did not respond properly. It is likely temporarily down, " +
+              "but should be up soon. If this problem persists please let the administrators know." +
+              "</span></div>";
+      }
+      $modal.open({
+        template: msg
+      });
+      $log.warn(problems);
+    }).finally(function() {
+      $scope.loading = false;
+    });
 
     $scope.playbackOptions = {
       mode: 'instant',

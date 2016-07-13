@@ -6,9 +6,6 @@
 
 {% block head %}
     {{ block.super }}
-    {% include "mapstory/ext_header.html" %}
-    {% include "mapstory/app_header.html" %}
-    {% include "mapstory/geo_header.html" %}
     <link rel="stylesheet" href="{{ STATIC_URL }}theme/{{ THEME }}/css/ol.css" type="text/css">
     <link rel="stylesheet" href="{{ STATIC_URL }}theme/vis.min.css" type="text/css"/>
     <link rel="stylesheet" href="{{ STATIC_URL }}vendor/nouislider/distribute/jquery.nouislider.min.css" type="text/css">
@@ -38,8 +35,12 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            border: 1px solid #ccc;
+            border: 0px solid #ccc;
             background-color: white;
+        }
+
+        #playback-settings{
+            color: white;
         }
 
     </style>
@@ -48,6 +49,7 @@
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}theme/{{ THEME }}/css/viewer.css"/>
     <div ng-app="viewer" ng-controller="viewerController as viewer" id="story-viewer">
         <div class="map" id="mapContainer">
+            <span ng-if="loading">Loading...</span>
             <div id="map"></div>
             <div id="footer" class="footer">
                 <div id="time-controls-panel2" ng-show="timeControlsManager.timeControls" class="floating-below">
