@@ -138,7 +138,7 @@
                 <a href="{% url "account_password" %}">{% trans "change password" %}</a>
             </div>
             <div class="sidebar-content">
-                <a ng-controller="ImportController"  style="cursor: pointer" ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">{% trans "upload layer" %}</a>
+                <a ng-controller="ImportController"  style="cursor: pointer" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')">{% trans "upload layer" %}</a>
             </div>
             <div class="sidebar-content">
                 <a href="{% url "new_map" %}">{% trans "compose a story" %}</a>
@@ -279,7 +279,7 @@
                         <div class="tab-pane" id="uploads_list">
                             <div class="no-content" ng-hide="uploads.length">
                                 <h2>No Uploads.</h2>
-                                <h4><a style="cursor: pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}')">Click here</a> to upload your data!.</h4>
+                                <h4><a style="cursor: pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')">Click here</a> to upload your data!.</h4>
                             </div>
                             <div class="" ng-show="uploads.length">
                                 <div class="container">
