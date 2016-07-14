@@ -18,7 +18,7 @@
     {% if request.user.is_authenticated and GEOGIG_ENABLED and resource.link_set.geogig %}
   <div style="text-align:right">
     <hr style="margin:5px">
-    <a ng-controller="ImportController"  style="cursor: pointer" ng-click="open(null, '{{ STATIC_URL }}osgeo_importer/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{STATIC_URL}}', '{{resource.typename}}', '{{ shapefile_link }}','{{ csv_link }}')"><span style="font-size:1.3em;color:gainsboro">append</span></a>
+    <a ng-controller="ImportController"  style="cursor: pointer" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}', '{{resource.typename}}', '{{ shapefile_link }}','{{ csv_link }}')"><span style="font-size:1.3em;color:gainsboro">append</span></a>
   </div>
     {% endif %}
   <hr style="margin:5px">
