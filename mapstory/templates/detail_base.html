@@ -43,9 +43,15 @@
                         <a href="{% url "new_map" %}?layer={{ resource.service_typename }}" target="_blank">
                             <button class="btn btn-block btn-detailpage">{% trans "Compose Story" %}</button>
                         </a>
-                        <a href='{% url "map-edit" %}?layer={{ resource.service_typename }}&mode=edit' target="_blank">
-                            <button class="btn btn-block btn-detailpage">{% trans "Edit this layer" %}</button>
-                        </a>
+                        {% if request.user.is_authenticated %}
+                            {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
+                            {% if "change_resourcebase" in perms %}
+                                <a href='{% url "map-edit" %}?layer={{ resource.service_typename }}&mode=edit'
+                                   target="_blank">
+                                    <button class="btn btn-block btn-detailpage">{% trans "Edit this layer" %}</button>
+                                </a>
+                            {% endif %}
+                        {% endif %}
                         <div class="side-column-header">{% trans "Layer Metadata" %}</div>
                         {% else %}
                         {% ifequal page "map" %}
