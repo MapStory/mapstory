@@ -148,6 +148,9 @@
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
     </section>
 
+    {# TODO: Refactor index page to be truly configurable. This is temp fix to hide sections if THEME is default #}
+    {% if THEME == 'default' %}
+
     <section class="slice" id="getstarted">
         <div class="container">
             <div class="row">
@@ -352,6 +355,8 @@
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
     </section>
 
+    {% endif %}
+
     <section class="slice" id="sponsors">
         <div class="container">
             <div class="row">
@@ -376,8 +381,11 @@
         </div>
     </section>
 
+{# TODO: Refactor index page to be truly configurable. This is temp fix to hide sections if THEME is default #}
+  {% if THEME == 'default' %}
     <section class="parallax" style="margin-bottom:-40px;">
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
     </section>
+ {% endif %}
 </div></div>
 {% endblock %}
