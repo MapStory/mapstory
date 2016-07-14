@@ -19,7 +19,7 @@
                     <ul class="dropdown-menu">
                         {% if user.is_authenticated %}
                             <li><a class="pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')">{% trans "Upload Layer" %}</a></li>
-                            <li><a class="pointer" ng-controller="createLayerCtrl" ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')">{% trans "Create Layer" %}</a></li>
+                            <!--<li><a class="pointer" ng-controller="createLayerCtrl" ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')">{% trans "Create Layer" %}</a></li> -->
                             <li><a class="pointer" href="{% url 'upload' %}">{% trans "Upload Icons" %}</a></li>
                         {% else %}
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Upload Layer" %}</a></li>

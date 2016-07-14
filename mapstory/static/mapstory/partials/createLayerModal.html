@@ -1,107 +1,122 @@
 <div class="modal-header">
-        <h3 class="modal-title">Create a new StoryLayer<img class="import-wizard-icon" ng-src="{{modalImage}}"/></h3>
+    <h3 class="modal-title">Create a new StoryLayer<img class="import-wizard-icon" ng-src="{{ modalImage }}"/></h3>
 </div>
 <div class="modal-body row">
     <div class="col-sm-12 col-md-12 col-lg-12 import-wizard-modal">
         <wizard on-finish="createLayer()">
 
-        <wz-step title="Name" canexit="nameValid">
-            <h3><strong>Name your StoryLayer</strong></h3>
-            <p>Descriptive layer names make it easy for others to find your data.</p>
-            <form name="importOptionsForm" class="form-horizontal import-options-form">
-                <div class="form-group">
-                    <input id="layerName" placeholder="My StoryLayer" type="text" class=input-lg ng-model="layer.configuration_options.name">
-                </div>
-
-                <div class="import-wizard-button">
-                    <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
-                </div>
-            </form>
-        </wz-step>
-
-        <wz-step title="Type" canexit="true">
-            <h3><strong>Choose Type of StoryLayer</strong></h3>
-            <p>Next, lets determine what kind of StoryLayer you want to create. Here is a list of each kind of StoryLayer you can make, and a link to an example so you can see what they look like:</p>
-            <form name="importOptionsForm" class="form-horizontal import-options-form">
-                <div class="form-group">
-                    <label for="geometry_type" class="col-sm-4 col-xs-4 col-md-4 control-label">Geometry Type:</label>
-                    <select ng-model="layer.configuration_options.attributes.attribute[0].binding" class="col-md-5 col-xs-5 col-sm-5 input-md" id="geometry_type">
-                        <option value="" >--Please select a geometry--</option>
-                        <option ng-repeat="option in geometryTypes" ng-selected="option.value == layer.configuration_options.geom_type" value="{{option.value}}">{{option.label}}</option>
-                    </select>
-                    <a ng-href="layer.configuration_options.attributes.attribute[0].binding.example">Example</a>
+            <wz-step title="Name" canexit="nameValid">
+                <h3><strong>Name your StoryLayer</strong></h3>
+                <p>Descriptive layer names make it easy for others to find your data.</p>
+                <form name="importOptionsForm" class="form-horizontal import-options-form">
+                    <div class="form-group">
+                        <input id="layerName" placeholder="My StoryLayer" type="text" class=input-lg ng-model="layer.configuration_options.name">
                     </div>
-            </form>
 
                     <div class="import-wizard-button">
                         <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
                     </div>
-        </wz-step>
+                </form>
+            </wz-step>
 
-        <wz-step title="Add Attributes">
-            <h3><strong>Add attributes</strong></h3>
-            <form name="attributes" class="form-horizontal import-options-form">
-                <p>Next you'll need to define the attributes you have for the features in your StoryLayer Attributes are just the pieces of information you have for features. For example, if you are mapping the spread of libraries in the world, your attributes might be "Library Name" and "Date Built". The "Location" attribute will be added automatically when you start creating features so don't worry about that now, but be sure to add all other attributes now because after you set your attributes here you won't be able to change them later. So think hard!</p>
-                <div style="padding-top: 10px" class="col-md-offset-9">
-                    <button class="btn btn-default btn-xs" ng-click="addDefaultAttribute()"><i class="fa fa-plus-circle"></i> Add Field</button>
+            <wz-step title="Type" canexit="true">
+                <h3><strong>Choose Type of StoryLayer</strong></h3>
+                <p>Next, lets determine what kind of StoryLayer you want to create. Here is a list of each kind of StoryLayer you can make, and a link
+                    to an example so you can see what they look like:</p>
+                <form name="importOptionsForm" class="form-horizontal import-options-form">
+                    <div class="form-group">
+                        <label for="geometry_type" class="col-sm-4 col-xs-4 col-md-4 control-label">Geometry Type:</label>
+                        <select ng-model="layer.configuration_options.attributes.attribute[0].binding" class="col-md-5 col-xs-5 col-sm-5 input-md"
+                                id="geometry_type">
+                            <option value="">--Please select a geometry--</option>
+                            <option ng-repeat="option in geometryTypes" ng-selected="option.value == layer.configuration_options.geom_type"
+                                    value="{{ option.value }}">{{ option.label }}</option>
+                        </select>
+                        <a ng-href="layer.configuration_options.attributes.attribute[0].binding.example">Example</a>
+                    </div>
+                </form>
+
+                <div class="import-wizard-button">
+                    <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
                 </div>
-                    <div class="form-group" style="padding-top: 15px" ng-repeat="field in layer.configuration_options.attributes.attribute | filter: {name:'!geometry'} ">
+            </wz-step>
+
+            <wz-step title="Add Attributes">
+                <h3><strong>Add attributes</strong></h3>
+                <form name="attributes" class="form-horizontal import-options-form">
+                    <p>Next you'll need to define the attributes you have for the features in your StoryLayer Attributes are just the pieces of
+                        information you have for features. For example, if you are mapping the spread of libraries in the world, your attributes might
+                        be "Library Name" and "Date Built". The "Location" attribute will be added automatically when you start creating features so
+                        don't worry about that now, but be sure to add all other attributes now because after you set your attributes here you won't
+                        be able to change them later. So think hard!</p>
+                    <div style="padding-top: 10px" class="col-md-offset-9">
+                        <button class="btn btn-default btn-xs" ng-click="addDefaultAttribute()"><i class="fa fa-plus-circle"></i> Add Field</button>
+                    </div>
+                    <div class="form-group" style="padding-top: 15px"
+                         ng-repeat="field in layer.configuration_options.attributes.attribute | filter: {name:'!geometry'} ">
                         <label for="fieldName-{{$index}}" class="col-sm-4 col-xs-4 col-md-4 control-label">Field name:</label>
                         <input id="fieldName-{{$index}}" class="pull-left" placeholder="Field name" ng-model="field.name" value="field.name"/>
                         <label for="fieldType-{{$index}}" class="col-sm-4 col-xs-4 col-md-4 control-label">Field type:</label>
                         <select ng-model="field.binding" id="fieldType-{{$index}}" class="col-md-5 col-xs-5 col-sm-5 input-md">
                             <option value="" ng-selected="!field.binding">--Please select a field--</option>
-                            <option ng-repeat="option in attributeTypes" ng-selected="field.binding === option.value" value="{{option.value}}">{{option.label}}</option>
+                            <option ng-repeat="option in attributeTypes" ng-selected="field.binding === option.value"
+                                    value="{{ option.value }}">{{ option.label }}</option>
                         </select>
                         <label for="fieldNillable-{{$index}}" class="col-sm-4 col-xs-4 col-md-4 control-label">Required:</label>
-                        <input type="checkbox" class="pull-left" id="fieldNillable-{{$index}}" ng-model="field.nillable" ng-true-value="false" ng-false-value="true">
+                        <input type="checkbox" class="pull-left" id="fieldNillable-{{$index}}" ng-model="field.nillable" ng-true-value="false"
+                               ng-false-value="true">
                         <div style="clear:left;">
                             <a ng-click="remove(field)" href="#">Delete this Field</a>
                         </div>
                     </div>
+                    <div class="import-wizard-button">
+                        <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+                    </div>
+                </form>
+            </wz-step>
+
+            <wz-step title="Permissions" wz-disabled="{{ appending(true) }}">
+                <img class="import-wizard-image" ng-src="{{ staticUrl }}mapstory/img/edit.png"/>
+                <h3><strong>Allow other users to edit this data?</strong></h3>
+                <p>StoryLayers are better when multiple authors work together. Would you like to enable editing?</p>
+                <div class="btn-group">
+                    <label class="btn btn-success" ng-model="layer.configuration_options.editable" uib-btn-radio="true">Yes</label>
+                    <label class="btn" ng-model="layer.configuration_options.editable" uib-btn-radio="false">No</label>
+                </div>
                 <div class="import-wizard-button">
-                <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
-            </div>
-            </form>
-        </wz-step>
+                    <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
+                </div>
+            </wz-step>
+            <wz-step title="Create">
+                <h3><strong>Ok, we're ready to create the StoryLayer!</strong></h3>
+                <p>Click below to create your StoryLayer</p>
+                <div>
+                    <div class="clrs-green fnt-weight-400" ng-show="success">Your new StoryLayer<span ng-show="created_layers.length > 1">s are</span><span
+                            ng-show="created_layers.length > 1"> is</span> ready.
+                    </div>
+                    <div class="clrs-green fnt-weight-400" ng-repeat="created_layer in created_layers" ng-show="success">View the <a
+                            href="{{ created_layer.url }}?showMetadata=true" class="fnt-weight-600" target="_self">StoryLayer</a>.
+                    </div>
+                    <div class="clrs-red fnt-weight-400" ng-show="errors.length">StoryLayer creation has failed.</div>
+                    <div class="clrs-red fnt-weight-400" ng-repeat="error in errors" ng-show="errors.length"><span
+                            style="font-weight: 600">{{ error[0] }}:</span> {{ error[1] }}</div>
+                </div>
+                <div class="import-wizard-button">
+                    <i class="fa fa-spinner fa-spin fa-3x" ng-show="processing"></i>
+                    <button class="btn" ng-show="!processing && !success" type="submit" wz-next value="Continue">Create my StoryLayer <i
+                            class="fa fa-arrow-circle-right"></i></button>
+                </div>
+                <div>
+                    <ul class="import-wizard-error-list" ng-show="errorMessages">
+                        <li class="clrs-red" style="" ng-repeat="error in errorMessages">{{ error }}</li>
+                    </ul>
+                </div>
 
-        <wz-step title="Permissions" wz-disabled="{{appending(true)}}">
-            <img class="import-wizard-image" ng-src="{{staticUrl}}mapstory/img/edit.png"/>
-            <h3><strong>Allow other users to edit this data?</strong></h3>
-            <p>StoryLayers are better when multiple authors work together.  Would you like to enable editing?</p>
-            <div class="btn-group">
-                <label class="btn btn-success" ng-model="layer.configuration_options.editable" uib-btn-radio="true">Yes</label>
-                <label class="btn" ng-model="layer.configuration_options.editable" uib-btn-radio="false">No</label>
-            </div>
-            <div class="import-wizard-button">
-                <button class="btn" type="submit" wz-next value="Continue">Continue <i class="fa fa-arrow-circle-right"></i></button>
-            </div>
-        </wz-step>
-        <wz-step title="Create">
-            <h3><strong>Ok, we're ready to create the StoryLayer!</strong></h3>
-            <p>Click below to create your StoryLayer</p>
-            <div>
-                <div class="clrs-green fnt-weight-400" ng-show="success">Your new StoryLayer<span ng-show="created_layers.length > 1">s are</span><span ng-show="created_layers.length > 1"> is</span> ready.</div>
-                <div class="clrs-green fnt-weight-400" ng-repeat="created_layer in created_layers" ng-show="success">View the <a href="{{created_layer.url}}?showMetadata=true" class="fnt-weight-600" target="_self">StoryLayer</a>.</div>
-                <div class="clrs-red fnt-weight-400" ng-show="errors.length">StoryLayer creation has failed.</div>
-                <div class="clrs-red fnt-weight-400" ng-repeat="error in errors" ng-show="errors.length"><span style="font-weight: 600">{{error[0]}}:</span> {{error[1]}}</div>
-            </div>
-            <div class="import-wizard-button">
-                <i class="fa fa-spinner fa-spin fa-3x" ng-show="processing"></i>
-                <button class="btn" ng-show="!processing && !success" type="submit" wz-next value="Continue">Create my StoryLayer <i class="fa fa-arrow-circle-right"></i></button>
-            </div>
-            <div>
-                <ul class="import-wizard-error-list" ng-show="errorMessages">
-                    <li class="clrs-red" style="" ng-repeat="error in errorMessages">{{error}}</li>
-                </ul>
-            </div>
-
-        </wz-step>
-    </wizard>
+            </wz-step>
+        </wizard>
     </div>
 </div>
 <div class="modal-footer">
-    <span class="pull-left modal-footer-help">
-        <a href="//help.mapstory.org">Ask for help</a> &#0149; <a href="http://wiki.mapstory.org/wiki/MapStory_Uploader">Example Data</a> &#0149; <a href="//wiki.mapstory.org/wiki/Data_Repositories">Find Data</a></span>
-    <button class="btn btn-primary" type="button" ng-click="ok()">Close</button>
+    <span class="pull-left modal-footer-help"><button class="btn btn-primary" type="button" ng-click="ok()">Close</button></span>
+    <span class="pull-right modal-footer-help">Learn more about<a href="/getskills" target="_blank">creating data.</a></span>
 </div>
