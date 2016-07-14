@@ -7,10 +7,6 @@
 
 {% block body_class %}search{% endblock %}
 
-{% block extra_head %}
-<link href="{{ STATIC_URL }}theme/{{THEME}}/css/search.css" rel="stylesheet" />
-{% endblock %}
-
 {% block body_outer %}
     <div ng-controller="geonode_search_controller">
         {% include 'search/_header.html' %}

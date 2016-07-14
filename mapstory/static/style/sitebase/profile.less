@@ -1,34 +1,34 @@
-/* ===BANNER ==== */
+/* --- Profile ---*/
 #profile-banner{
     padding: 50px 0px 10px;
-    background: orange;
-    color: white;
+    background: @gray30;
+    color: @white;
 }
 
 .profile-title {
     font-size: 2.5em;
     font-weight: 300;
     padding: 20px 0px 5px;
-    color: white;
+    color: @white;
 }
 
 .profile-subtitle {
     font-size: 1.2em;
     font-weight: 100;
     padding: 10px 0px 0px;
-    color: white;
+    color: @white;
 }
 
 .sidebar-header {
-    color: orange;
+    color: @gray30;
     padding: 15px 0px 0px;
-    border-bottom: 1px solid gainsboro;
+    border-bottom: 1px solid @gray80;
 }
 
 .sidebar-content{
     font-size: 16px;
     padding: 2px 0px;
-    border-bottom: 1px solid #f8f8f8;
+    border-bottom: 1px solid @gray90;
     font-weight: 100;
 }
 
@@ -38,7 +38,7 @@
 }
 
 .label-tags {
-    background-color: darkgray;
+    background-color: @gray55;
     display: inline-block;
 }
 
@@ -46,17 +46,16 @@
     height: 800px;
     width: 100%;
     text-align: center;
-    background-color: #f1f1f1;
-    color: darkgray;
+    background-color: @gray90;
+    color: @gray55;
     padding-top: 100px;
     border-radius: 4px;
 }
 
-/* TO BE TRANSFERRED TO A BASE LESS FILE AS THIS WILL ALSO BE USED IN ORG AND INITITATIVE PAGES */
+/* --- Profile - Tabs Panel --- */
 
-/* Tabs panel */
 .tabbable-panel {
-    border:1px solid #eee;
+    border:1px solid @gray90;
     padding: 10px;
 }
 
@@ -66,12 +65,12 @@
     margin: 0px;
 }
 .tabbable-line > .nav-tabs > li {
-    border-right: 1px solid #fafafa;
+    border-right: 1px solid @gray90;
 }
 .tabbable-line > .nav-tabs > li > a {
     border: 0;
     margin-right: 0;
-    color: #737373;
+    color: @gray55;
     font-size: 16px;
     padding: 7px 10px;
 }
@@ -82,42 +81,75 @@
 }
 
 .tabbable-line > .nav-tabs > li > a > i {
-    color: orange;
+    color: @gray30;
 }
 .tabbable-line > .nav-tabs > li.open, .tabbable-line > .nav-tabs > li:hover {
-    border-bottom: 4px solid orange;
+    border-bottom: 4px solid @primary;
 }
 .tabbable-line > .nav-tabs > li.open > a, .tabbable-line > .nav-tabs > li:hover > a {
     border: 0;
     background: none !important;
-    color: #333333;
+    color: @gray30;
 }
 .tabbable-line > .nav-tabs > li.open > a > i, .tabbable-line > .nav-tabs > li:hover > a > i {
-    color: orange;
+    color: @gray30;
 }
 .tabbable-line > .nav-tabs > li.open .dropdown-menu, .tabbable-line > .nav-tabs > li:hover .dropdown-menu {
     margin-top: 0px;
 }
 .tabbable-line > .nav-tabs > li.active {
-    border-bottom: 4px solid orange;
+    border-bottom: 4px solid #162F43;
     position: relative;
-    background-color: gainsboro
+    background-color: @gray80;
 }
 .tabbable-line > .nav-tabs > li.active > a {
     border: 0;
-    color: #333333;
-    background-color: gainsboro
+    color: @gray30;
+    background-color: @gray80;
 }
 .tabbable-line > .nav-tabs > li.active > a > i {
-    color: #404040;
+    color: @gray30;
 }
 .tabbable-line > .tab-content {
     margin-top: -3px;
-    background-color: #fff;
+    background-color: @white;
     border: 0;
-    border-top: 1px solid #eee;
+    border-top: 1px solid @gray90;
     padding: 15px 0;
 }
 .portlet .tabbable-line > .tab-content {
     padding-bottom: 0;
+}
+
+/*--- Profile - Detail list icons ---*/
+
+.profile-icon-list-item {
+  display: inline-block;
+  width:31%;
+  vertical-align: top;
+  text-align:center;
+}
+.profile-icon-list-name {
+  display: inline;
+}
+.profile-icon-list-image {
+  width: 100%;
+  display: block;
+}
+.profile-icon-list-image svg {
+  width: 100px;
+  height: 100px;
+}
+
+/* --- Groups --- */
+//geonode group_detail & _group_list_item
+.group-logo {
+  img {
+    width: 100%;
+  }
+}
+.group-details {
+  i {
+    margin-right: 0.5em;
+  }
 }

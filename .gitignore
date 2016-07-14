@@ -2,12 +2,10 @@ development.db
 downloaded
 geoserver
 local_settings.py
-mapstory/static/geonode/css/base.css
-mapstory/static/mapstory/css
-mapstory/static/theme/default/css
-mapstory/static/theme/blue/css
-mapstory/static/theme/default/fonts
-mapstory/static/theme/blue/fonts
+mapstory/static/style/fonts
+mapstory/static/style/sitebase/font-awesome.css
+mapstory/static/style/map/css
+mapstory/static/style/themes/*.css
 mapstory/static/vendor/
 mapstory/settings/local_key.py
 celerybeat-schedule
