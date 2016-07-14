@@ -1139,8 +1139,6 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         csv_link = csv_link.url + '&featureID=fakeID'  + '&propertyName=' + layer_attrib_string
         context_dict["csv_link"] = csv_link
 
-    context_dict["append_cookies"] = json.dumps(request.COOKIES)
-
     if settings.SOCIAL_ORIGINS:
         context_dict["social_links"] = build_social_links(request, layer)
 
