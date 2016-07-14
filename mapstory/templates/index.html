@@ -361,7 +361,7 @@
         <div class="container">
             <div class="row">
                 <h1 class="text-center">{% trans "Our Sponsors" %}</h1>
-                <h3 class="text-center">{% trans "Learning institutions like these drive innovation in the MapStory codebase, content and community." %} <a href="{% url 'donate' %}">{% trans "Join them." %}</a>
+                <h3 class="text-center">Organizations like these drive innovation in the {{ SITE_NAME }} codebase, content and community.   {% if THEME == 'default' %} <a href="{% url 'donate' %}">{% trans "Join them." %}</a> {% endif %}
                 </h3>
             </div>
             <hr/>
