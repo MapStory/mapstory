@@ -21,7 +21,7 @@ class LayerAppendHandler(ImportHandlerMixin):
         """
         Appends data from Geoserver layer into another.
         """
-        return layer_append_minimal(layer, layer_config.get('appendTo'))
+        return layer_append_minimal(layer, layer_config.get('appendTo'), kwargs.get('request_cookies'))
 
 
 class TruncatedNameHandler(ImportHandlerMixin):

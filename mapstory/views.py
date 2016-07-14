@@ -864,7 +864,7 @@ def layer_create(request, template='upload/layer_create.html'):
     return render_to_response(template, RequestContext(request, {}))
 
 
-def layer_append_minimal(source, target):
+def layer_append_minimal(source, target, request_cookies):
     """
     The main layer_append logic that can run outside of a request.
     """
@@ -955,7 +955,7 @@ def layer_append_minimal(source, target):
                                                               workspace_uri='http://www.geonode.org/', handle=handle)
         insert_features_request = requests.post(
             '{}/wfs/WfsDispatcher'.format(ogc_server_settings.public_url),
-            auth=ogc_server_settings.credentials,
+            cookies=request_cookies,
             headers={'Content-Type': 'application/xml'},
             data=wfs_transaction_payload
         )
@@ -1138,6 +1138,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     if csv_link is not None:
         csv_link = csv_link.url + '&featureID=fakeID'  + '&propertyName=' + layer_attrib_string
         context_dict["csv_link"] = csv_link
+
+    context_dict["append_cookies"] = json.dumps(request.COOKIES)
 
     if settings.SOCIAL_ORIGINS:
         context_dict["social_links"] = build_social_links(request, layer)

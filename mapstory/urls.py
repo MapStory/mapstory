@@ -35,7 +35,12 @@ from mapstory.views import organization_create, organization_edit, organization_
 from mapstory.views import organization_invite, organization_members_add, organization_member_remove
 from mapstory.views import initiative_create, initiative_edit, initiative_detail, initiative_members
 from mapstory.views import initiative_invite, initiative_members_add, initiative_member_remove
+from tastypie.api import Api
+from mapstory.api import UploadedLayerResource
 
+
+importer_api = Api(api_name='importer-api')
+importer_api.register(UploadedLayerResource())
 # -- Deprecated url routes for Geoserver authentication -- remove after GeoNode 2.1
 # -- Use /gs/acls, gs/resolve_user/, gs/download instead
 if 'geonode.geoserver' in settings.INSTALLED_APPS:
@@ -151,7 +156,12 @@ urlpatterns = patterns('',
 ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 
 urlpatterns += maploom_urls
+
+urlpatterns += patterns("",
+                        url(r'', include(importer_api.urls)))
+
 urlpatterns += importer_urlpatterns
+
 
 if settings.DEBUG:
     urlpatterns = urlpatterns + patterns('',
