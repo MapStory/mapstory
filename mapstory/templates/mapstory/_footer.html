@@ -24,7 +24,7 @@
                         {% get_current_language as LANGUAGE %}
                         <form class="form-inline" action="/i18n/setlang/" method="post">
                             {% csrf_token %}
-                            <select class="col-md-6 pull-right" name="language" onchange="javascript:form.submit()">
+                            <select class="col-md-6 pull-right" name="language" style="background-color: transparent; color: white;" onchange="javascript:form.submit()">
                                 {% for lang in LANGUAGES %}
                                     <option value="{{ lang.0 }}" {% ifequal LANGUAGE_CODE lang.0 %} selected="selected"{% endifequal %}>
                                         {{ lang.1 }}
