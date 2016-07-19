@@ -6,114 +6,86 @@
 {% load mapstory_tags %}
 {% load cache %}
 {% load avatar_tags %}
-
 {% block extra_script %}
 {{ block.super }}
-<script type="text/javascript" src="{{ STATIC_URL }}vendor/modernizr/modernizr.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}vendor/isotope/jquery.isotope.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}mapstory/js/index.js"></script>
+<script src="{{ STATIC_URL }}vendor/modernizr/modernizr.js"></script>
+<script src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>
+<script src="{{ STATIC_URL }}vendor/isotope/jquery.isotope.min.js"></script>
+<script src="{{ STATIC_URL }}mapstory/js/index.js"></script>
 <script type="text/javascript">
-    // Fix placeholder text for Home Page Search
+    /* Fix placeholder text for Home Page Search */
     HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
     HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
     CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
 </script>
 {% endblock %}
-
 {% block middle %}
 <div ng-controller="search_controller">
-    <section id="topParallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }}); height: 600px;"></div>
+    <section class="parallax splash">
+        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" 
+        style="background-image: url({{ images|by_name:'Africa' }});"></div>
     </section>
-
-    <section class="slice" id="welcome" style="margin-top:-250px;">
+    <section class="slice welcome">
         <div class="container">
-            <div class="row" style="padding-top:-10px;">
-                <div class="col-sm-12">
-                    <h1 class="text-center">{{ site.assets.subtitle }}</h1>
-                </div>
+            <div class="row col-sm-12">
+                <h1 class="text-center">{{ site.assets.subtitle }} </h1>
             </div>
-            <div class="row" style="padding-top: 5px;">
-                <div class="input-group col-sm-6 col-sm-offset-3">
-                    <form action="{% url "search" %}">
+            <div class="row search">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <form action="{% url 'search' %}">
                         <div class="input-group">
-                        {% if HAYSTACK_SEARCH %}
-                        <input class="form-control" id="homepage_search" type="text" name="q" style="color:chocolate;background-color:whitesmoke;border:1px solid white" placeholder="{% trans "Explore Stories and Layers" %}">
-                        {% else %}
-                        <input class="form-control" id="homepage_search" type="text" name="keywords__slug__in" style="color:chocolate;background-color:whitesmoke;border:1px solid white" placeholder="{% trans "Explore Stories and Layers" %}">
-                        {% endif %}
-                        <span class="input-group-btn">
-                          <button class="btn btn-primary" type="submit" style="background-color:chocolate;color:white;border:1px solid white"><i class="fa fa-search"></i></button>
-                        </span>
+                            {% if HAYSTACK_SEARCH %}
+                                <input class="form-control" id="homepage_search" type="text" name="q" placeholder="{% trans "Explore Stories and Layers" %}">
+                            {% else %}
+                               <input class="form-control" id="homepage_search" type="text" name="keywords__slug__in" placeholder="{% trans "Explore Stories and Layers" %}">
+                            {% endif %}
+                            <span class="input-group-btn">
+                              <button class="btn btn-primary" type="submit">
+                              <i class="fa fa-search"></i></button>
+                            </span>
                         </div>
                     </form>
                </div>
             </div>
-            <div class="row links" style="padding-top:15px;padding-bottom:5px;">
+            <div class="row links">
             {% with colsm3=REGISTRATION_OPEN %}
              {% if colsm3 and not user.is_authenticated %}
                 <div class="col-sm-3">
-                    <h3>
-                        <a href="#" data-toggle="modal" data-target="#loginModal">
-                            {% trans "Sign up now" %}
-                        </a>
-                    </h3>
+                    <a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Sign up now" %}</a>
                 </div>
              {% endif %}
                 <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}">
-
-                    <h3>
-                        {% if user.is_authenticated %}
-                            <a class="pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}', null, null, null, true)" target="_self">
-                        {% else %}
-                            <a class="pointer" data-toggle="modal" data-target="#loginModal">
-                        {% endif %}
-                            {% trans "Upload Layers" %}
-                        </a>
-                    </h3>
+                    {% if user.is_authenticated %}
+                        <a ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}', null, null, null, true)" target="_self">
+                    {% else %}
+                        <a data-toggle="modal" data-target="#loginModal">
+                    {% endif %}
+                    {% trans "Upload Layers" %}
+                    </a>
                 </div>
                 <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}">
-                    <h3>
-                        <a href="{% url 'new_map' %}?tour">
-                            {% trans "Compose Story" %}
-                        </a>
-                    </h3>
+                    <a href="{% url 'new_map' %}?tour">{% trans "Compose Story" %}</a>
                 </div>
                 <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}">
-                    <h3>
-                        <a href="{% url 'getpage' 'started' %}">
-                            {% trans "Learn more" %}
-                        </a>
-                    </h3>
+                    <a href="{% url 'getpage' 'started' %}">{% trans "Learn more" %}</a>
                 </div>
             {% endwith %}
             </div>
-            <div class="row" style="padding-bottom:5px;">
-                <div class="localscroll" style="text-align:center">
-                    <!-- TODO: Link to stories is the section that doesn't exist yet -->
-                    <a href="#stories" class="btn btn-circle btn-sm btn-default" style="color:white;border:1px solid transparent;border-radius:25%">
-                    <i class="icon-down" id="stories"></i></a>
-                </div>
-            </div>
         </div>
     </section>
-
-    <!-- TODO: New categories must be implemented or the button queries will just return nothing -->
-    <section class="slice">
+    <section class="slice category">
         <div class="container">
-            <nav id="filter" class="col-md-12 text-center" style="left: -20px;">
-                <ul class="nav nav-tabs" style="padding-left: 50px;">
-                    <!-- NOTE: The specific category names for querying may need to be updated -->
-                    <li><a ng-click="query_category();" class="btn btn-filter btn-sm sectionTab">{% trans "All MapStories" %}</a></li>
-                    <li><a ng-click="query_category('crisis');" class="btn btn-filter btn-sm sectionTab">{% trans "Crisis" %}</a></li>
-                    <li><a ng-click="query_category('geopolitics');" class="btn btn-filter btn-sm sectionTab">{% trans "Geopolitics" %}</a></li>
-                    <li><a ng-click="query_category('scienceIndustry');" class="btn btn-filter btn-sm sectionTab">{% trans "Science & Industry" %}</a></li>
-                    <li><a ng-click="query_category('humanSettlement');" class="btn btn-filter btn-sm sectionTab">{% trans "Human Settlement" %}</a></li>
-                    <li><a ng-click="query_category('cultureIdeas');" class="btn btn-filter btn-sm sectionTab">{% trans "Culture & Ideas" %}</a></li>
-                    <li><a ng-click="query_category('natureEnvironment');" class="btn btn-filter btn-sm sectionTab">{% trans "Nature & Environment" %}</a></li>
-                    <li><a ng-click="query_category('health');" class="btn btn-filter btn-sm sectionTab">{% trans "Health" %}</a></li>
-                    <li><a ng-click="query_category('biography');" class="btn btn-filter btn-sm sectionTab">{% trans "Biography" %}</a></li>
+            <nav id="filter" class="col-md-12 text-center">
+                <ul class="nav nav-tabs">
+                    <li><a ng-click="query_category();" class="btn btn-filter btn-sm">{% trans "All MapStories" %}</a></li>
+                    <li><a ng-click="query_category('crisis');" class="btn btn-filter btn-sm">{% trans "Crisis" %}</a></li>
+                    <li><a ng-click="query_category('geopolitics');" class="btn btn-filter btn-sm">{% trans "Geopolitics" %}</a></li>
+                    <li><a ng-click="query_category('scienceIndustry');" class="btn btn-filter btn-sm">{% trans "Science & Industry" %}</a></li>
+                    <li><a ng-click="query_category('humanSettlement');" class="btn btn-filter btn-sm">{% trans "Human Settlement" %}</a></li>
+                    <li><a ng-click="query_category('cultureIdeas');" class="btn btn-filter btn-sm">{% trans "Culture & Ideas" %}</a></li>
+                    <li><a ng-click="query_category('natureEnvironment');" class="btn btn-filter btn-sm">{% trans "Nature & Environment" %}</a></li>
+                    <li><a ng-click="query_category('health');" class="btn btn-filter btn-sm">{% trans "Health" %}</a></li>
+                    <li><a ng-click="query_category('biography');" class="btn btn-filter btn-sm">{% trans "Biography" %}</a></li>
                 </ul>
             </nav>
             <div class="row">
@@ -121,16 +93,26 @@
             </div>
         </div>
     </section>
-
-    <section class="slice">
+    <section class="slice results">
         <div class="container">
             <div ng-if="results.length">
                 <slick infinite="true" slides-to-show="4" autoplay="true" init-onload="true" data="results">
-                    <div class="col-md-3" ng-repeat="item in results" style="right: -5px;">
+                    <div class="col-md-3" ng-repeat="item in results">
                         {% verbatim %}
-                        <a href="{{ item.detail_url}}"><img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}" style="border-width:1px; border-style:solid; border-color:grey;"/></a>
-                        <h3><a href="{{ item.detail_url}}">{{ item.title}}</a></h3>
-                        <h5 class="abstract">{{ item.abstract|limitTo:250  }}<a href="{{ item.detail_url}}"><i>...{% endverbatim %}{% trans "read more" %}{% verbatim %}</i></a></h5>
+                        <a href="{{ item.detail_url}}">
+                            <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url}}"/>
+                        </a>
+                        <h3>
+                            <a href="{{ item.detail_url}}">{{ item.title}}</a>
+                        </h3>
+                        <h5 class="abstract">{{ item.abstract|limitTo:250  }}
+                            <a href="{{ item.detail_url}}">
+                            <i>...
+                        {% endverbatim %}
+                            {% trans "read more" %}
+                        {% verbatim %}</i>
+                            </a>
+                        </h5>
                         <h4><span class="owner">{{ item.owner.username}}</span></h4>
                         {% endverbatim %}
                     </div>
@@ -138,225 +120,19 @@
             </div>
         </div>
     </section>
-
     <section class="parallax">
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
     </section>
-
-    {# TODO: Refactor index page to be truly configurable. This is temp fix to hide sections if THEME is default #}
-    {% if THEME == 'default' %}
-
-    <section class="slice" id="getstarted">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4">
-                    <div>
-                        <h1><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></h1>
-                        <h3>{{ SITE_NAME }} {% trans "is an open platform for organizing our knowledge about how the world changes over time and space. Click on a link to the right, and learn how you can start contributing observations of your own." %}
-                        </h3>
-                    </div>
-                </div>
-                <div class="col-sm-8">
-                    <div class="row" style="padding:20px">
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Students"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/students.png"></a>
-                            <h5 class="text-center">{% trans "Students" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Educators"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/teachers.png"></a>
-                            <h5 class="text-center">{% trans "Educators" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Humanitarians"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/humanitarians.png"></a>
-                            <h5 class="text-center">{% trans "Humanitarians" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Businesspeople"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/business.png"></a>
-                            <h5 class="text-center">{% trans "Businesspeople" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Librarians"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/librarians.png"></a>
-                            <h5 class="text-center">{% trans "Librarians" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Researchers"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/researchers.png"></a>
-                            <h5 class="text-center">{% trans "Researchers" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Policymakers"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/policy.png"></a>
-                            <h5 class="text-center">{% trans "Policy Makers" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Journalists"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/journalist.png"></a>
-                            <h5 class="text-center">{% trans "Journalists" %}</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
-    </section>
-
-    <section class="slice" id="getinvolved">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-8">
-                    <img class="img-responsive" src="{% remote_content 'static_img/get-involved-cropped.jpg' %}" style="border-radius: 2%; width: 90%; height: 90%; margin: auto;"/>
-                </div>
-                <div class="col-sm-4">
-                    <div class="csection-text">
-                        <h1><a href="{% url 'getpage' 'involved' %}">{% trans "Get Involved" %}</a></h1>
-                        <h3>{% trans "Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company." %}
-                        </h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax2' }});"></div>
-    </section>
-
-    <section class="slice" id="getskills">
-        <div class="container">
-                <h1>{% trans "Get Skills" %}</h1>
-                <h3>{{ SITE_NAME }} {% trans "is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed." %}
-                </h3>
-            <br/>
-            <div class="row">
-                <div class="col-sm-4">
-                    <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/101.png">
-                    <a href="{% url 'getpage' 'skills' %}"><h2>1. {{ SITE_NAME }} 101</h2></a>
-                    <h5>{% trans "Learn all the basic skills you need to start collecting data and creating MapStories of your own." %}</h5>
-                </div>
-                <div class="col-sm-4">
-                    <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/wiki.png">
-                    <a href="http://wiki.mapstory.org"><h2>2. {{ SITE_NAME }} {% trans "Wiki" %}</h2></a>
-                    <h5>{% trans "Find and share more resources alongside the global MapStory community." %}</h5>
-                </div>
-                <div class="col-sm-4">
-                    <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/Help.png">
-                    <a href="{% url 'getpage' 'started' %}"><h2>3. {% trans "Help Center" %}</h2></a>
-                    <h5>{% trans "Ask questions, find answers, and help others." %}</h5>
-                </div>
-                </div>
-        </div>
-    </section>
-
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
-    </section>
-
-    <section class="slice" id="thinkers">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-8">
-                        {% for item in diary_entries %}
-                        {% if forloop.counter0|divisibleby:4 %}<div class="row" style="padding:20px">{% endif %}
-                            <div class="col-sm-3 photobox">
-                                <a href="{% url "diary-detail" item.pk %}">
-                                    <img class="img-circle" src="{% avatar_url item.author 150 %}" width="150" height="150"/>
-                                    <h5 class="text-center">
-                                        <strong>{{ item.title|truncatechars:48 }}</strong>
-                                        <br/>
-                                        {% include "people/_profile_name_display.html" with profile=item.author only %}
-                                    </h5>
-                                </a>
-                            </div>
-                        {% if forloop.counter|divisibleby:4 or forloop.last %}</div>{% endif %}
-                        {% empty %}
-                        <p>{% trans "No Featured Thinkers and Thoughts" %}...</p>
-                        {% endfor %}
-                </div>
-                <div class="col-sm-4">
-                    <h1>{% trans "Thinkers and Thoughts" %}</h1>
-                    <h3>{% trans "The latest insights from leading MapStorytellers. For more, visit the" %} <a href="{% url 'diary' %}">{% trans "Community Journal" %}</a>
-                    </h3>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
-    </section>
-
-    <section class="slice" id="news">
-        <div class="csection">
-            <div class="row">
-                <h1 class="text-center">{{ SITE_NAME }} {% trans "projects making the news" %}</h1>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <a class="twitter-timeline" href="https://twitter.com/MapStory" data-widget-id="517343764738621440">Tweets by @MapStory</a>
-                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-                </div>
-                <div class="col-sm-8">
-                    {% for item in news_items %}
-                    <h3><strong>{{ item.title }}</strong> <small class="pull-right">{{ item.date }}</small></h3>
-                    <hr>
-                    {{ item.html|safe  }}
-                    {% empty %}
-                    <p>{% trans "No News Items" %}. {% trans "Add" %} <a href="{% url 'admin:mapstory_newsitem_add' %}">{% trans "some" %}</a></p>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax2' }});"></div>
-    </section>
-
-    <section class="slice" id="community">
-        <div class="container">
-            <div class="row">
-                <h1 class="text-center">{% trans "Community Initiatives" %}</h1>
-                <h3 class="text-center">{% trans "Our Community Initiative leads are taking on huge data collection tasks, like mapping the history of human settlement and country borders. Click on one below, and start contributing" %}...
-                </h3>
-            </div>
-            <hr/>
-            <div class="row">
-                <slice infinite="true" slides-to-show="6" autoplay="true">
-                    {% for community in communities %}
-                    <div class="col-sm-2">
-                        {% ifequal community.profile_type 'org' %}
-                        <a href="{% url "organization_detail" community.slug %}">
-                            {% if community.logo %}
-                            <img class="rdphoto" src="{{ community.logo.url }}" alt="{{ community.title }} - {{ community.description }}">
-                            {% endif %}
-                        </a>
-                        {% else %}
-                        <a href="{% url "initiative_detail" community.slug %}">
-                            {% if community.logo %}
-                            <img class="rdphoto" src="{{ community.logo.url }}" alt="{{ community.title }} - {{ community.description }}">
-                            {% endif %}
-                        </a>
-                        {% endifequal %}
-                    </div>
-                    {% empty %}
-                    <p>{% trans "No Community Initiatives." %} {% trans "Add" %} <a href="{% url 'initiative_create' %}">{% trans "some" %}</a></p>
-                    {% endfor %}
-                </slice>
-            </div>
-        </div>
-    </section>
-
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
-    </section>
-
-    {% endif %}
-
-    <section class="slice" id="sponsors">
+    {% if THEME == 'orange' %}{% include "extended_index.html" %}{% endif %}
+    <section class="slice sponsors">
         <div class="container">
             <div class="row">
                 <h1 class="text-center">{% trans "Our Sponsors" %}</h1>
-                <h3 class="text-center">Organizations like these drive innovation in the {{ SITE_NAME }} codebase, content and community.   {% if THEME == 'default' %} <a href="{% url 'donate' %}">{% trans "Join them." %}</a> {% endif %}
+                <h3 class="text-center">Organizations like these drive innovation in the {{ SITE_NAME }} codebase, content and community.   
+                {% if THEME == 'orange' %} 
+                    <a href="{% url 'donate' %}">
+                    {% trans "Join them." %}</a> 
+                {% endif %}
                 </h3>
             </div>
             <hr/>
@@ -375,12 +151,8 @@
             </div>
         </div>
     </section>
-
-{# TODO: Refactor index page to be truly configurable. This is temp fix to hide sections if THEME is default #}
-  {% if THEME == 'default' %}
-    <section class="parallax" style="margin-bottom:-40px;">
+    {% if THEME == 'orange' %} <section class="parallax last">
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
-    </section>
- {% endif %}
-</div></div>
+    </section>{% endif %}
+</div>
 {% endblock %}

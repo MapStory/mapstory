@@ -113,11 +113,7 @@ a:hover, a:focus, a:active{
   margin: 0;
   border: 0;
   background-color: @white;
-}
-.slice {
-    position: relative;
-    padding-top: 20px;
-    padding-bottom: 20px;
+  position: relative;
 }
 .banner {
   text-align: center;
@@ -179,12 +175,6 @@ form {
 }
 
 /* --- BASE - Buttons --- */
-
-.btn {
-  background: transparent;
-  //color: @gray80;
-  border: 1px solid @gray80;
-}
 
 .btn-sm, .btn-group-sm>.btn {
   padding: 10px 13px;
@@ -303,4 +293,29 @@ nav.filter {
 }
 .comment-list-wrapper {
     list-style-type: none;
+}
+
+/*--- Paralax---*/
+.maskParent {
+    position: relative; 
+    height:100%;
+    width:100%
+}
+
+.paralaxText {
+  padding: 20px 0;
+  text-align:center;
+  position: relative;
+}
+
+.paralaxMask {
+    width:100%; 
+    height:100%;
+    overflow:hidden;
+    position:absolute;
+    background:rgba(0,0,0,0.15);
+}
+
+.paralaxText blockquote:before, .paralaxText blockquote:after {
+  color:@white;
 }

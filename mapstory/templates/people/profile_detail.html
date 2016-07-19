@@ -6,94 +6,45 @@
 {% load pagination_tags %}
 
 {% block title %} {% trans "Profile of " %}{{ profile.first_name|default_if_none:profile.username }}{% endblock %}
-
 {% block body_class %}people explore{% endblock %}
-
 {% block extra_head %}
-<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}importer/css/angular-wizard.min.css">
-<style>
-.glyphicon { margin-right:5px;}
-.section-box h2 { margin-top:0px;}
-.section-box h2 a { font-size:15px; }
-.glyphicon-heart { color:#e74c3c;}
-.glyphicon-comment { color:#27ae60;}
-.separator { padding-right:5px;padding-left:5px; }
-.section-box hr {margin-top: 0;margin-bottom: 5px;border: 0;border-top: 1px solid rgb(199, 199, 199);}
-</style>
-
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}osgeo_importer/css/angular-wizard.min.css">
+<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}osgeo_importer/css/importer.css" />
 {% endblock %}
-
 {% block body %}
 <div ng-controller="profile_search_controller">
-        <div id="paralaxSlice1" data-stellar-background-ratio="0.5" style="background-position: 50% 25px;">
-<div class="maskParent">
-    <div class="paralaxMask"></div>
-    <div class="paralaxText container" style="text-align:left;padding-bottom:0">
-        <div class="row">
+    <div class="container">
+        <div class="row profile-banner">
             <div class="col-sm-1">
-              <img class="img-circle" src="{% avatar_url profile 75 %}" width="75" height="75" style="margin-top:55px;margin-bottom:0px"/>
+                <img class="img-circle" src="{% avatar_url profile 75 %}" width="75" height="75"/>
             </div>
             <div class="col-sm-6">
-                <div style="padding:60px 0px 0px 10px;">
-                    <h1 style="font-size:3em">{{ profile.name_long }}</h1>
-                    <h1 style="font-size:1.1em;">
-                    {% if profile.position %}
-                        <span>{{ profile.position }}, </span>
-                    {% endif %}
-                    {% if profile.organization %}
-                        <span>{{ profile.organization }}</span>
-                    {% endif %}
-
-                    {% if profile.location %}
-                        <span>{{ profile.location }}</span>
-                    {% endif %}
+                <div class="user-info">
+                    <h1 class="name">{{ profile.name_long }}</h1>
+                    <h1 class="details">
+                        {% if profile.position %}<span>{{ profile.position }}, </span> {% endif %}
+                        {% if profile.organization %}<span>{{ profile.organization }}</span>{% endif %}
+                        {% if profile.location %}<span>{{ profile.location }}</span>{% endif %}
                     </h1>
                 </div>
             </div>
-
         </div>
     </div>
-</div>
-<!--article id="profile-banner">
-    <div class="row">
-        <div class="col-sm-2">
-            {% avatar profile 140 %}
-        </div>
-        <div class="col-sm-8">
-            <div class="profile-title">{{ profile.name_long }}</div>
-            <div class="profile-subtitle">
-                {% if profile.position %}
-                <span>{{ profile.position }}, </span>
-                {% endif %}
-                {% if profile.organization %}
-                <span>{{ profile.organization }}</span>
-                {% endif %}
-            </div>
-            <div class="profile-subtitle">
-                {% if profile.location %}
-                <span>{{ profile.location }}</span>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</article-->
-
 <article class="slice">
     <div class="container">
         <div class="col-sm-2">
-
             <div class="sidebar-header"><h3>user info</h3></div>
-            {% if profile.profile %}
-            <div class="sidebar-content">{{ profile.profile }}</div>
-            {% endif %}
+            {% if profile.profile %}<div class="sidebar-content">{{ profile.profile }}</div>{% endif %}
             {% if profile.city or profile.country %}
-            <div class="sidebar-header"><h5>location</h5></div>
-            {% if profile.city %}
-            <a href="/search/?limit=100&offset=0&type__in=user&city={{ profile.city }}"><div class="sidebar-content">{{ profile.city }}</div></a>
-            {% endif %}
-            {% if profile.country %}
-            <a href="/search/?limit=100&offset=0&type__in=user&country={{ profile.country }}"><div class="sidebar-content">{{ profile.country }}</div></a>
-            {% endif %}
+                <div class="sidebar-header"><h5>location</h5></div>
+                {% if profile.city %}
+                    <a href="/search/?limit=100&offset=0&type__in=user&city={{ profile.city }}">
+                    <div class="sidebar-content">{{ profile.city }}</div></a>
+                {% endif %}
+                {% if profile.country %}
+                    <a href="/search/?limit=100&offset=0&type__in=user&country={{ profile.country }}">
+                    <div class="sidebar-content">{{ profile.country }}</div></a>
+                {% endif %}
             {% endif %}
             {% if profile.education %}
             <div class="sidebar-header"><h5>education</h5></div>
@@ -103,21 +54,6 @@
             <div class="sidebar-header"><h5>expertise</h5></div>
             <div class="sidebar-content">{{ profile.expertise }}</div>
             {% endif %}
-            <!-- Getting rid of this as it is replaced by the keywords field for profiles -->
-            {% comment %}
-            <!--
-            {% if profile.interest_list|length > 0 %}
-            
-            <div class="sidebar-content"><h3>Interests</h3></div><br>
-                {% for interest in profile.interest_list|slice:"10" %}
-                  <span class="label label-default">{{ interest }}</span>
-                {% endfor %}
-                {% if profile.interest_list|length > 10 %}
-                  <span class="label label-default">{{ profile.interest_list|length|add:"-10" }} more</span>
-                {% endif %}
-            {% endif %}
-            -->
-            {% endcomment %}
             {% if user.Volunteer_Technical_Community %}
             <div class="sidebar-content"><h5 style="font-weight: bold;">Volunteer Technical Community Member</h5></div>
             {% endif %}
@@ -135,7 +71,7 @@
                 <a href="{% url "account_password" %}">{% trans "change password" %}</a>
             </div>
             <div class="sidebar-content">
-                <a ng-controller="ImportController"  style="cursor: pointer" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')">{% trans "upload layer" %}</a>
+                <a ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')" target="_self">{% trans "upload layer" %}</a>
             </div>
             <div class="sidebar-content">
                 <a href="{% url "new_map" %}">{% trans "compose a story" %}</a>
@@ -143,23 +79,8 @@
             <div>
                 <a href="#" class="sidebar-content" data-toggle="modal" data-target="#notifications">notifications settings</a>
             </div>
-            {% if_has_tag if_relationship %}
-            <div class="sidebar-content">
-                {% include "relationships/_manage_connections.html" %}
-            </div>
-            {% endif_has_tag %}
-            {% else %}<a href="{% actor_url profile %}">{% trans "user activities" %}</a>
-            {% if_has_tag if_relationship %}
-            {% include "relationships/_profile_follow.html" %}
-            {% endif_has_tag %}
             {% endif %}
-            {% if_has_tag if_relationship %}
-            {% include "relationships/_list_connections.html" %}
-            {% endif_has_tag %}
-
             <!-- contact profile -->
-            {% if user == profile %}
-            {% else %}
                 <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
                 <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary" >message</a>
                 {% if profile.email %}
@@ -187,12 +108,11 @@
                     <a href="{{ profile.social_linkedin }}"><i class="fa fa-linkedin"></i>linkedin</a>
                 </div>
                 {% endif %}
-            {% endif %}
 
             <!-- tags and interests -->
             {% if profile.keyword_list %}
                 <div class="sidebar-header"><h3>tags & interests </h3></div>
-                <div style="padding-top: 5px;">
+                <div>
                     <input type="text" class="form-control" id="tokenfield-interests"/>
                 </div>
             {% endif %}
@@ -256,9 +176,7 @@
                                 <h4>Create your first {% trans "Story" %} now.</h4>
                             </div>
                             <div class="clearfix search-results">
-                                <ul>
-                                    {% include 'people/_result_content.html' %}
-                                </ul>
+                                <ul>{% include 'people/_result_content.html' %}</ul>
                             </div>
                         </div>
                         <div class="tab-pane" id="layers_list">
@@ -267,9 +185,7 @@
                                 <h4>Upload your first {% trans "Layer" %} now.</h4>
                             </div>
                             <div class="clearfix search-results">
-                                <ul>
-                                    {% include 'people/_result_content.html' %}
-                                </ul>
+                                <ul>{% include 'people/_result_content.html' %}</ul>
                             </div>
                         </div>
 
@@ -299,7 +215,6 @@
                         </div>
 
                         <div class="tab-pane" id="messages_list">
-
                             {% if not inbox_count %}
                             <div class="no-content">
                                 <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
@@ -401,17 +316,13 @@
     </div>
   </div>
 </div>
-
-
 {% include "_bulk_permissions_form.html" %}
 {% endblock %}
-
 {% block extra_script %}
 {{ block.super }}
   {% if GEONODE_SECURITY_ENABLED %}
     {% include "_permissions_form_js.html" %}
   {% endif %}
-
 {% include 'favorite/_favorite_list_js.html' %}
 <script type="text/javascript">
     PROFILE_USERNAME ="{{ profile.username }}";
@@ -434,9 +345,5 @@
       alert('There was an error saving your setting');
     });
   });
-
 </script>
-
 {% endblock %}
-
-
