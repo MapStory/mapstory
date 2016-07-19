@@ -124,6 +124,10 @@ a:hover, a:focus, a:active{
   border-left: 1px solid @gray80;
 }
 
+.border-right {
+  border-right:1px solid darkgray;
+}
+
 hr { //overwritten often w inline styles
   padding:0;
   margin:10px 0;
@@ -318,4 +322,14 @@ nav.filter {
 
 .paralaxText blockquote:before, .paralaxText blockquote:after {
   color:@white;
+}
+
+#loginModal {
+  .modal-dialog{
+    width: 1000px;
+    margin: 50px auto;
+  }
+  .modal-body {
+    padding: 20px 30px;
+  }
 }

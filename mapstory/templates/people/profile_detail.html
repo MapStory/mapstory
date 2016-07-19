@@ -59,8 +59,8 @@
             {% endif %}
 
             <!-- notifications -->
-            <div class="sidebar-header"><h3>user actions</h3></div>
             {% if user == profile %}
+            <div class="sidebar-header"><h3>user actions</h3></div>
             <div class="sidebar-content">
                 <a href="{% url "edit_profile" user.username %}">{% trans "edit profile" %}</a>
             </div>
@@ -70,44 +70,41 @@
             <div class="sidebar-content">
                 <a href="{% url "account_password" %}">{% trans "change password" %}</a>
             </div>
-            <div class="sidebar-content">
-                <a ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')" target="_self">{% trans "upload layer" %}</a>
-            </div>
-            <div class="sidebar-content">
-                <a href="{% url "new_map" %}">{% trans "compose a story" %}</a>
-            </div>
             <div>
                 <a href="#" class="sidebar-content" data-toggle="modal" data-target="#notifications">notifications settings</a>
             </div>
             {% endif %}
+        
             <!-- contact profile -->
-                <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
-                <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary" >message</a>
-                {% if profile.email %}
-                <div class="sidebar-content">
-                    <a href="mailto:{{ profile.email }}"><i class="fa fa-envelope-o"></i>email {{ profile.first_name|default_if_none:profile.username }}</a>
-                </div>
-                {% endif %}
-                {% if profile.social_facebook %}
-                <div class="sidebar-content">
-                    <a href="{{ profile.social_facebook }}"><i class="fa fa-facebook"></i>facebook</a>
-                </div>
-                {% endif %}
-                {% if profile.social_twitter %}
-                <div class="sidebar-content">
-                    <a href="{{ profile.social_twitter }}"><i class="fa fa-twitter"></i>twitter</a>
-                </div>
-                {% endif %}
-                {% if profile.social_github %}
-                <div class="sidebar-content">
-                    <a href="{{ profile.social_github }}"><i class="fa fa-github"></i>github</a>
-                </div>
-                {% endif %}
-                {% if profile.social_linkedin %}
-                <div class="sidebar-content">
-                    <a href="{{ profile.social_linkedin }}"><i class="fa fa-linkedin"></i>linkedin</a>
-                </div>
-                {% endif %}
+            <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
+            {% if user != profile %}
+            <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary" >message</a>
+            {% endif %}
+            {% if profile.email %}
+            <div class="sidebar-content">
+                <a href="mailto:{{ profile.email }}"><i class="fa fa-envelope-o"></i>email {{ profile.first_name|default_if_none:profile.username }}</a>
+            </div>
+            {% endif %}
+            {% if profile.social_facebook %}
+            <div class="sidebar-content">
+                <a href="{{ profile.social_facebook }}"><i class="fa fa-facebook"></i>facebook</a>
+            </div>
+            {% endif %}
+            {% if profile.social_twitter %}
+            <div class="sidebar-content">
+                <a href="{{ profile.social_twitter }}"><i class="fa fa-twitter"></i>twitter</a>
+            </div>
+            {% endif %}
+            {% if profile.social_github %}
+            <div class="sidebar-content">
+                <a href="{{ profile.social_github }}"><i class="fa fa-github"></i>github</a>
+            </div>
+            {% endif %}
+            {% if profile.social_linkedin %}
+            <div class="sidebar-content">
+                <a href="{{ profile.social_linkedin }}"><i class="fa fa-linkedin"></i>linkedin</a>
+            </div>
+            {% endif %}
 
             <!-- tags and interests -->
             {% if profile.keyword_list %}

@@ -1,8 +1,10 @@
-<div class="row" style="border-bottom:1px solid darkgray">
-  <div class="row" style="margin:20px 0 30px">
+<div class="row search-head">
     <div class="input-group col-sm-6 col-sm-offset-3">
-      <span id="content-search" class="input-group-addon" style="font-size:1.3em;background-color:gainsboro;border:1px solid gainsboro; cursor:pointer" ng-click="toggle_user(); search();"><a> <i class="fa fa-cubes"></i> Search for Content </a></span>
-      <span id="user-search" class="input-group-addon" style="font-size:1.3em;background-color:white;border:1px solid gainsboro; cursor:pointer" ng-click="toggle_content(); search();"><a> <i class="fa fa-users"></i> Search for Storytellers </a></span>
+      <span id="content-search" class="input-group-addon"  ng-click="toggle_user(); search();">
+      	<a> <i class="fa fa-cubes"></i> Search for Content </a>
+      	</span>
+      <span id="user-search" class="input-group-addon" ng-click="toggle_content(); search();">
+      	<a> <i class="fa fa-users"></i> Search for Storytellers </a>
+      </span>
     </div>
-  </div>
-</div>
+ </div>
