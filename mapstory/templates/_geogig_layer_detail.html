@@ -1,8 +1,6 @@
 {% load dialogos_tags %}
 {% load bootstrap_tags %}
 {% load i18n %}
-
-
 {% verbatim %}
 <div id="geogig" ng-controller="geogigController">
     <div id="geogig-tab">
@@ -16,7 +14,6 @@
                   <td class="table-center">
                       <div class="stat-title">total edits</div>
                       <div class="stat-value">{{ stats.totalCommits | number}}</div>
-
                   </td>
                   <td class="table-center">
                       <div class="stat-title">total contributors</div>
@@ -25,22 +22,16 @@
               </tr>
           </table>
           <dt>Recent Edits</dt>
-
           <div ng-repeat-start="commit in commits">
              <div class="commit" id="commit-{{ commit.id }}">
                  <span class="label label-primary pull-right">{{ commit.id | limitTo: 10 }}</span>
                  <h4 class="commit-message">{{ commit.message }}</h4>
                  <span class="commit-timestamp">Authored <span class="gray">{{ commit.commitTimeSince }}</span> by: </span>
                  <span class="commit-author">{{ commit.author.name || 'Unknown' }}</span>
-
-             </div>
-
-
-
+              </div>
           </div>
           <span ng-repeat-end></span>
         </div>
     </div>
-
 </div>
 {% endverbatim %}

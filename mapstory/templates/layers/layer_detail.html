@@ -10,10 +10,8 @@
 {% friendly_load avatar_tags %}
 
 {% block title %}{{ resource.title|default:resource.typename }} — {{ block.super }}{% endblock %}
-
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css" />
-<link href="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css" rel="stylesheet" />
 {% include "mapstory/ext_header.html" %}
 {% include "mapstory/app_header.html" %}
 {% include "mapstory/geo_header.html" %}
@@ -35,22 +33,14 @@
 {{ block.super }}
 {% endblock %}
 
-
 {% block body_class %}layers{% endblock %}
-
-{% block body_outer %}
-    {% include "detail_base.html" with page="layer" %}
-
-{% endblock %}
-
+{% block body_outer %}{% include "detail_base.html" with page="layer" %}{% endblock %}
 {% block extra_script %}
-    <script type="text/javascript" src="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js"></script>
     {% if GEOGIG_ENABLED and resource.link_set.geogig %}
         {% with "_geogig_scripts.html" as geogig_scripts_template %}
             {% include  geogig_scripts_template %}
         {% endwith %}
     {% endif %}
-
     {% if request.user.is_authenticated %}
         {% user_rating_js request.user resource "layer" %}
     {% else %}
@@ -72,14 +62,12 @@
             });
             return false;
         });
-
         {% if request.GET.showMetadata == 'true'%}
             // prompt user to fill out metadata if the showMetadata GET param is true
             $(window).load(function(){
                 $('#metaForm').modal('show');
             });
         {% endif %}
-
         {% if resource.get_legend.link_type == 'json' %}
             $.getJSON('{{resource.get_legend_url}}', function (data) {
                 var legend = data.layers[0].legend;
@@ -87,13 +75,10 @@
                 $.each(legend, function (key, dvalue) {
                     items.push('<li><img src="data:image/png;base64,' + dvalue.imageData + '">'+dvalue.label+'</li>');
                 });
-
                 $('<ul/>', {
                     'class': 'arcgis-legend',
                     html: items.join('')
-
                 }).appendTo('#legend_placeholder');
-
             });
         {% endif %}
     </script>
@@ -106,35 +91,15 @@
     {% if GEONODE_SECURITY_ENABLED %}
         {% include "_permissions_form_js.html" %}
     {% endif %}
+    <script src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
     <script type="text/javascript">
-        HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
-        HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
-        CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
-        {% if HAYSTACK_SEARCH %}
-            SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}';
-        {% else %}
-            SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}';
-        {% endif %}
-    </script>
-
-    {% include "osgeo_importer/_importer_scripts.html" %}
-
-    {% comment %}
-        {% with include_spatial='true' %}
-            {% include 'search/search_scripts.html' %}
-        {% endwith %}
-    {% endcomment %}
-
-
-    <script type="text/javascript" src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
-
-    <script type="text/javascript">
-        $('.download-link').click(function(event){
+        $('.download-link').click(function(event) {
             var extension = $(event.target).attr('data-extension');
             var id = $(event.target).attr('data-id');
             $.ajax({
                 method: 'POST',
-                url: "{% url "notify-layer-download" %}",
+                url: "{% url "
+                notify - layer - download " %}",
                 data: {
                     extension: extension,
                     id: id
