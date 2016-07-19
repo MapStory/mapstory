@@ -26,7 +26,8 @@ module.exports = function(grunt) {
           ]
         },
         files: [
-          { 
+          {
+            'style/themes/default.css':'style/themes/default.less',
             'style/themes/blue.css':'style/themes/blue.less',
             'style/themes/orange.css':'style/themes/orange.less',
             //font-awesome.css must be in a niece directory from its files due to vendor code
