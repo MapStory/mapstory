@@ -1,4 +1,4 @@
-/* ======== NAVBAR ======== */
+/*--- NavBar ---*/
 
 .navbar-brand {
   background-size: 100%;
@@ -7,29 +7,15 @@
   text-indent: -9999em;
 }
 
-.navbar-collapse {
-  max-height: none;
-}
-
-.navbar-form {
-  margin-top: 8px;
-  .fa {
-    margin-right: 0;
-  }
-}
-
-.navbar-nav > li > a{
+.navbar-nav> li> a {
   font-weight: 500;
-  padding-top:25px;
-}
-
-.navbar-right > li > a {
-  padding: 15px 15px;
+  padding-top: 25px;
+  cursor: pointer;
 }
 
 .navbar .search {
-    width: 285px;
-    margin-top: 10px;
+  width: 285px;
+  margin-top: 10px;
 }
 
 .dropdown-menu {
@@ -38,31 +24,16 @@
   padding: 8px 15px;
 }
 
-.dropdown-toggle {
-  img {
-   margin-right: 8px;
-  }
+.nav-icon {
+  font-size: 1.3em;
 }
 
-#admin-icon {
-  padding-top: 25px;
-}
-
-#login-icon {
-  padding-top: 25px;
-  font-size:1.3em;
-  cursor:pointer
-}
-
-.user-avatar {
+.nav-avatar {
   padding: 15px 5px 0 5px;
   margin-top: 5px;
-}
-
-.avatar {
-  padding: 3px;
-  img {
-   border-radius: 3px;
+  & img {
+    height: 30px;
+    width: 30px;
   }
 }
 
@@ -70,12 +41,17 @@
 
 footer {
   color: @gray55;
-  background:@primary;
-  border-top:1px solid @gray40;
+  background: @primary;
+  border-top: 1px solid @gray40;
   padding: 20px 10px;
   width: 100%;
 }
 
-.footerWidget{
+.footerWidget {
+  color: @white;
+}
+
+select .lang{
+  background-color: transparent;
   color: @white;
 }

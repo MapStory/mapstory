@@ -3,16 +3,14 @@
 {% load staticfiles %}
 
 {% block head %}
-    {% if site.assets.favicon %}
-<link rel="shortcut icon" href="/uploaded/{{ site.assets.favicon.name }}">
-    {% endif %}
+{% if site.assets.favicon %}
+    <link rel="shortcut icon" href="/uploaded/{{ site.assets.favicon.name }}">
+{% endif %}
 {% include "mapstory/google_analytics.html" %}
 {{ block.super }}
-
 {% endblock head %}
 
 {% block extra_script %}
-
 <script type="text/javascript">
 /* Script for keywords autocomplete */
     {% if AUTOCOMPLETE_QUICK_SEARCH %}

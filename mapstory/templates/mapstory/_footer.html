@@ -1,7 +1,7 @@
 {% load i18n %}
-<footer>
-    <section id="mainFooter">
-        <div class="container" id="footer">
+<footer id="sitebase_footer">
+    <section>
+        <div class="container">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="footerWidget">
@@ -13,7 +13,7 @@
     </section>
     <section>
         <div class="container">
-            <hr style="margin:10px 0 10px 0">
+            <hr>
             <div class="row">
                 <div class="col-sm-8">
                     {% trans "version" %} {{ VERSION }}
@@ -24,7 +24,7 @@
                         {% get_current_language as LANGUAGE %}
                         <form class="form-inline" action="/i18n/setlang/" method="post">
                             {% csrf_token %}
-                            <select class="col-md-6 pull-right" name="language" style="background-color: transparent; color: white;" onchange="javascript:form.submit()">
+                            <select class="lang col-md-6 pull-right" name="language" onchange="javascript:form.submit()">
                                 {% for lang in LANGUAGES %}
                                     <option value="{{ lang.0 }}" {% ifequal LANGUAGE_CODE lang.0 %} selected="selected"{% endifequal %}>
                                         {{ lang.1 }}
