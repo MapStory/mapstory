@@ -5,100 +5,13 @@ d{% load webdesign %}
 {% load mapstory_tags %}
 {% load cache %}
 {% load avatar_tags %}
-    <section class="slice getstarted">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4">
-                    <div>
-                        <h1><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></h1>
-                        <h3>{{ SITE_NAME }} {% trans "is an open platform for organizing our knowledge about how the world changes over time and space. Click on a link to the right, and learn how you can start contributing observations of your own." %}
-                        </h3>
-                    </div>
-                </div>
-                <div class="col-sm-8">
-                    <div class="row" >
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Students"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/students.png"></a>
-                            <h5 class="text-center">{% trans "Students" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Educators"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/teachers.png"></a>
-                            <h5 class="text-center">{% trans "Educators" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Humanitarians"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/humanitarians.png"></a>
-                            <h5 class="text-center">{% trans "Humanitarians" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Businesspeople"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/business.png"></a>
-                            <h5 class="text-center">{% trans "Businesspeople" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Librarians"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/librarians.png"></a>
-                            <h5 class="text-center">{% trans "Librarians" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Researchers"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/researchers.png"></a>
-                            <h5 class="text-center">{% trans "Researchers" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Policymakers"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/policy.png"></a>
-                            <h5 class="text-center">{% trans "Policy Makers" %}</h5>
-                        </div>
-                        <div class="col-sm-3 photobox">
-                            <a href="{% url 'getpage' 'started' %}#Journalists"><img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/journalist.png"></a>
-                            <h5 class="text-center">{% trans "Journalists" %}</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     <section class="parallax">
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
-    </section>
-    <section class="slice getinvolved">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-8">
-                    <img class="img-responsive" src="{% remote_content 'static_img/get-involved-cropped.jpg' %}"/>
-                </div>
-                <div class="col-sm-4">
-                        <h1><a href="{% url 'getpage' 'involved' %}">{% trans "Get Involved" %}</a></h1>
-                        <h3>{% trans "Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company." %}
-                        </h3>
-                </div>
-            </div>
-        </div>
     </section>
     <section class="parallax">
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax2' }});"></div>
     </section>
-    <section class="slice getskills">
-        <div class="container">
-                <h1>{% trans "Get Skills" %}</h1>
-                <h3>{{ SITE_NAME }} {% trans "is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed." %}
-                </h3>
-            <br/>
-            <div class="row">
-                <div class="col-sm-4">
-                    <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/101.png">
-                    <a href="{% url 'getpage' 'skills' %}"><h2>1. {{ SITE_NAME }} 101</h2></a>
-                    <h5>{% trans "Learn all the basic skills you need to start collecting data and creating MapStories of your own." %}</h5>
-                </div>
-                <div class="col-sm-4">
-                    <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/wiki.png">
-                    <a href="http://wiki.mapstory.org"><h2>2. {{ SITE_NAME }} {% trans "Wiki" %}</h2></a>
-                    <h5>{% trans "Find and share more resources alongside the global MapStory community." %}</h5>
-                </div>
-                <div class="col-sm-4">
-                    <img class="rdphoto" src="{{ STATIC_URL }}mapstory/img/Help.png">
-                    <a href="{% url 'getpage' 'started' %}"><h2>3. {% trans "Help Center" %}</h2></a>
-                    <h5>{% trans "Ask questions, find answers, and help others." %}</h5>
-                </div>
-                </div>
-        </div>
-    </section>
+    <!-- TODO: Add new MapStory How To Section -->
     <section class="parallax">
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
     </section>
