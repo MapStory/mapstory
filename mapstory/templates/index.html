@@ -8,10 +8,6 @@
 {% load avatar_tags %}
 {% block extra_script %}
     {{ block.super }}
-    <script src="{{ STATIC_URL }}vendor/modernizr/modernizr.js"></script>
-    <script src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>
-    <script src="{{ STATIC_URL }}vendor/isotope/jquery.isotope.min.js"></script>
-    <script src="{{ STATIC_URL }}mapstory/js/index.js"></script>
     <script type="text/javascript">
         /* Fix placeholder text for Home Page Search */
         HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
