@@ -4,11 +4,16 @@
   div {
     background-size: 101% auto;
     height: 300px;
+    display: none;
+    @media @tablets, @desktops {
+      display: block;
+    }
   }
   &.splash {
     div {
       height: 600px;
       background-position: 0% -30px;
+      display: block;
     }
   }
   .last {
