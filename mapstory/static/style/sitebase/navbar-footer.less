@@ -7,7 +7,7 @@
   text-indent: -9999em;
 }
 
-.navbar-nav> li> a {
+.navbar-nav > li > a {
   font-weight: 500;
   padding-top: 25px;
   cursor: pointer;
@@ -37,6 +37,15 @@
   }
 }
 
+#createDropdown {
+  display: none;
+
+  @media @desktops {
+    display: block;
+  }
+
+}
+
 /*--- Footer ---*/
 
 footer {
@@ -51,7 +60,7 @@ footer {
   color: @white;
 }
 
-select .lang{
+select .lang {
   background-color: transparent;
   color: @white;
 }

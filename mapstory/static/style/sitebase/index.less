@@ -1,98 +1,97 @@
 /*--- Index ---*/
 
 .parallax {
+  div {
+    background-size: 101% auto;
+    height: 300px;
+  }
+  &.splash {
     div {
-        background-size: 101% auto;
-        height: 300px;
+      height: 600px;
+      background-position: 0% -30px;
     }
-    &.splash {
-        div {
-            height: 600px;
-            background-position: 0% -30px;
-        }
-    }
-    .last {
-        margin-bottom: -40px;
-    }
+  }
+  .last {
+    margin-bottom: -40px;
+  }
 }
 
 .welcome {
-    margin-top: -250px;
-    padding: 10px 0 50px;
-    background-color: @secondary;
-    opacity: 0.8;
-    height: 240px;
-    color: @white;
-    .search {
-        padding-top: 5px;
-        input,
-        button {
-            border: 1px solid @white;
-        }
+  margin-top: -250px;
+  padding: 10px 0 50px;
+  background-color: @secondary;
+  opacity: 0.8;
+  height: 240px;
+  color: @white;
+  .search {
+    padding-top: 5px;
+    input,
+    button {
+      border: 1px solid @white;
     }
-    .links {
-        text-align: center;
-        padding: 30px 0 5px;
-        > div {
-            border-right: 1px solid @secondary-shadow;
-        }
-        > div:last-child {
-            border: none;
-        }
-        a {
-            font-size: 20px;
-            font-weight: 100;
-            cursor: pointer;
-        }
+  }
+  .links {
+    text-align: center;
+    padding: 30px 0 5px;
+    > div {
+      border-right: 1px solid @secondary-shadow;
     }
+    > div:last-child {
+      border: none;
+    }
+    a {
+      font-size: 20px;
+      font-weight: 100;
+      cursor: pointer;
+    }
+  }
 }
 
 .category {
-    padding: 20px 0;
-    ul {
-        padding-left: 50px;
-        li> a {
-            background: @gray90;
-        }
+  display: none;
+  padding: 20px 0;
+  ul {
+    padding-left: 50px;
+    li > a {
+      background: @gray90;
     }
+  }
 }
 
 .results img {
-    border-width: 1px;
-    border-style: solid;
-    border-color: grey;
-}
-
-.getstarted {
-    text-align: right;
-    .row>.photobox {
-        padding: 20px;
-    }
+  border-width: 1px;
+  border-style: solid;
+  border-color: grey;
 }
 
 .rdphoto {
-    width: 120px;
-    height: 120px;
-    border: 0;
-    border-radius: 30%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto
+  width: 120px;
+  height: 120px;
+  border: 0;
+  border-radius: 30%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto
 }
 
 .photobox {
-    padding: 10px 5px;
+  padding: 10px 5px;
 }
 
-.getinvolved {
-    img {
-        border-radius: 2%;
-        width: 90%;
-        height: 90%;
-        margin: auto;
-    }
+#composeStory {
+  display: none;
+
+    @media @desktops {
+    display: block;
+  }
+
 }
 
-.getskills {
-    text-align: center;
+#uploadLayers {
+  display: none;
+
+    @media @desktops {
+    display: block;
+  }
+
 }

@@ -3,130 +3,133 @@
     <div class="container">
         <div class="navbar-header col-md-2">
             {% if site.assets.logo %}
-            <a class="navbar-brand" style="background:url('/uploaded/{{ site.assets.logo.name }}') no-repeat; background-size:100%;" href="{% url " home " %}">{{ SITE_NAME }}</a> 
+                <a class="navbar-brand" style="background:url('/uploaded/{{ site.assets.logo.name }}') no-repeat; background-size:100%;"
+                   href="{% url " home " %}">{{ SITE_NAME }}</a>
             {% endif %}
         </div>
         {% if not hide_menu %}
-        <div class="pull-right">
-            <ul class="nav navbar-nav">
-                <li><a href="{% url 'search' %}">{% trans "Explore" %}</a></li>
-                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">{% trans 'Create' %}</a>
-                    <ul class="dropdown-menu">
-                        {% if user.is_authenticated %}
-                        <li>
-                            <a ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}', null, null, null, true)">{% trans "Upload Layer" %}</a>
-                        </li>
-                        <li>
-                            <a ng-controller="createLayerCtrl" ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')">{% trans "Create Layer" %}</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'upload' %}">{% trans "Upload Icons" %}</a>
-                        </li>
-                        {% else %}
-                        <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Upload Layer" %}</a></li>
-                        <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Create Layer" %}</a></li>
-                        <li><a href="{% url 'upload' %}">{% trans "Upload Icons" %}</a></li>
-                        {% endif %}
-                        <li><a href="{% url 'new_map' %}?tour">{% trans "Compose Story" %}</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">{% trans 'How To' %}</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></li>
-                        <li><a href="{% url 'getpage' 'skills' %}">{% trans "Get Skills" %}</a></li>
-                        <li><a href="{% url 'getpage' 'involved' %}">{% trans "Get Involved" %}</a></li>
-                    </ul>
-                </li>
-                <li><a href="{% url 'diary' %}">{% trans "Journal" %}</a></li>
-                <li>
-                    <form class="navbar-form" id="search" action="{% url 'search' %}">
-                        <div class="col-md-3 search">
-                            <div class="input-group">
-                                {% if HAYSTACK_SEARCH %}
-                                <input id="quicksearch" type="text" class="form-control" name="q"> 
+            <div class="pull-right">
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url 'search' %}">{% trans "Explore" %}</a></li>
+                        <li id="createDropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">{% trans 'Create' %}</a>
+                            <ul class="dropdown-menu">
+                                {% if user.is_authenticated %}
+                                    <li>
+                                        <a ng-controller="ImportController"
+                                           ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', null, null, null, true)">{% trans "Upload Layer" %}</a>
+                                    </li>
+                                    <li>
+                                        <a ng-controller="createLayerCtrl"
+                                           ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}')">{% trans "Create Layer" %}</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'upload' %}">{% trans "Upload Icons" %}</a>
+                                    </li>
                                 {% else %}
-                                <input id="quicksearch" type="text" class="form-control" name="keywords__slug__in"> 
+                                    <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Upload Layer" %}</a></li>
+                                    <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Create Layer" %}</a></li>
+                                    <li><a href="{% url 'upload' %}">{% trans "Upload Icons" %}</a></li>
                                 {% endif %}
-                                <span class="input-group-btn">
+                                <li><a href="{% url 'new_map' %}?tour">{% trans "Compose Story" %}</a></li>
+                            </ul>
+                        </li>
+                    <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">{% trans 'How To' %}</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></li>
+                            <li><a href="{% url 'getpage' 'skills' %}">{% trans "Get Skills" %}</a></li>
+                            <li><a href="{% url 'getpage' 'involved' %}">{% trans "Get Involved" %}</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{% url 'diary' %}">{% trans "Journal" %}</a></li>
+                    <li>
+                        <form class="navbar-form quicksearchcontainer" id="search" action="{% url 'search' %}">
+                            <div class="col-md-3 search">
+                                <div class="input-group">
+                                    {% if HAYSTACK_SEARCH %}
+                                        <input id="quicksearch" type="text" class="form-control" name="q">
+                                    {% else %}
+                                        <input id="quicksearch" type="text" class="form-control" name="keywords__slug__in">
+                                    {% endif %}
+                                    <span class="input-group-btn">
                                 <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
                             </span>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if user.is_authenticated %}
-                <li class="nav-avatar"><img class="img-circle" src="{% avatar_url user 35 %}" /></li>
-                <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="{% url 'profile_detail' slug=user.username %}">
-                                <i class="fa fa-cloud-upload"></i>{% trans "Your Data" %}</a>
+                        </form>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+                        <li class="nav-avatar"><img class="img-circle" src="{% avatar_url user 35 %}"/></li>
+                        <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{% url 'profile_detail' slug=user.username %}">
+                                        <i class="fa fa-cloud-upload"></i>{% trans "Your Data" %}</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="{% url 'profile_detail' slug=user.username %}">
+                                        <i class="fa fa-user"></i> {% trans "Profile" %}</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'recent-activity' %}">
+                                        <i class="fa fa-fire"></i> {% trans "Recent Activity" %}</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'messages_inbox' %}">
+                                        <i class="fa fa-inbox"></i> {% trans "Inbox" %}</a>
+                                </li>
+                                {% if perms.announcements.can_manage %}
+                                    <li>
+                                        <a href="{% url 'announcements_list' %}">
+                                            <i class="fa fa-bullhorn"></i> {% trans "Announcements" %}</a>
+                                    </li>
+                                {% endif %} {% if user.is_superuser %}
+                                <li>
+                                    <a href="{% url 'services' %}">
+                                        <i class="fa fa-globe"></i> {% trans "Remote Services" %}</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'account_invite_user' %}">
+                                        <i class="fa fa-edit"></i> {% trans "Invite User" %}</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="{{ GEOSERVER_BASE_URL }}">
+                                        <i class="fa fa-gears"></i> {% trans "GeoServer" %}</a>
+                                </li>
+                            {% endif %} {% if user.is_staff %}
+                                <li>
+                                    <a href="{% url 'admin:index' %}">
+                                        <i class="fa fa-cog"></i> {% trans "Admin" %}</a>
+                                </li>
+                            {% endif %}
+                                <li class="divider"></li>
+                                <li>
+                                    <a title="Help" rel="tooltip" href="{% url 'getpage' 'started' %}">
+                                        <i class="fa fa-question-circle"></i> {% trans "Help" %}</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <form action="{% url 'account_logout' %}" id="logout_form" method="post">
+                                        {% csrf_token %}
+                                        <a href="javascript:{}" onclick="document.getElementById('logout_form').submit();">
+                                            <i class="fa fa-sign-out"></i> {% trans "Log out" %}</a>
+                                    </form>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="divider"></li>
+                    {% else %}
                         <li>
-                            <a href="{% url 'profile_detail' slug=user.username %}">
-                                <i class="fa fa-user"></i> {% trans "Profile" %}</a>
+                            <a role="button" class="nav-icon" data-toggle="modal" data-target="#loginModal">
+                                <i class="fa fa-user"></i>
+                            </a>
                         </li>
-                        <li>
-                            <a href="{% url 'recent-activity' %}">
-                                <i class="fa fa-fire"></i> {% trans "Recent Activity" %}</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'messages_inbox' %}">
-                                <i class="fa fa-inbox"></i> {% trans "Inbox" %}</a>
-                        </li>
-                        {% if perms.announcements.can_manage %}
-                        <li>
-                            <a href="{% url 'announcements_list' %}">
-                                <i class="fa fa-bullhorn"></i> {% trans "Announcements" %}</a>
-                        </li>
-                        {% endif %} {% if user.is_superuser %}
-                        <li>
-                            <a href="{% url 'services' %}">
-                                <i class="fa fa-globe"></i> {% trans "Remote Services" %}</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'account_invite_user' %}">
-                                <i class="fa fa-edit"></i> {% trans "Invite User" %}</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="{{ GEOSERVER_BASE_URL }}">
-                                <i class="fa fa-gears"></i> {% trans "GeoServer" %}</a>
-                        </li>
-                        {% endif %} {% if user.is_staff %}
-                        <li>
-                            <a href="{% url 'admin:index' %}">
-                                <i class="fa fa-cog"></i> {% trans "Admin" %}</a>
-                        </li>
-                        {% endif %}
-                        <li class="divider"></li>
-                        <li>
-                            <a title="Help" rel="tooltip" href="{% url 'getpage' 'started' %}">
-                                <i class="fa fa-question-circle"></i> {% trans "Help" %}</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <form action="{% url 'account_logout' %}" id="logout_form" method="post">
-                                {% csrf_token %}
-                                <a href="javascript:{}" onclick="document.getElementById('logout_form').submit();">
-                                    <i class="fa fa-sign-out"></i> {% trans "Log out" %}</a>
-                            </form>
-                        </li>
-                    </ul>
-                </li>
-                {% else %}
-                <li>
-                    <a role="button" class="nav-icon" data-toggle="modal" data-target="#loginModal">
-                        <i class="fa fa-user"></i>
-                    </a>
-                </li>
-                {% endif %}
-                </li>
-            </ul>
-        </div>
+                    {% endif %}
+                    </li>
+                </ul>
+            </div>
         {% endif %}
     </div>
 </div>

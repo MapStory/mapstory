@@ -1,110 +1,37 @@
-d{% load webdesign %}
+{% load webdesign %}
 {% load i18n %}
 {% load staticfiles %}
 {% load base_tags %}
 {% load mapstory_tags %}
 {% load cache %}
 {% load avatar_tags %}
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
-    </section>
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax2' }});"></div>
-    </section>
-    <!-- TODO: Add new MapStory How To Section -->
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
-    </section>
-    <section class="slice thinkers">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-8">
-                        {% for item in diary_entries %}
-                        {% if forloop.counter0|divisibleby:4 %}
-                            <div class="row" style="padding:20px">
-                        {% endif %}
-                            <div class="col-sm-3 photobox">
-                                <a href="{% url "diary-detail" item.pk %}">
-                                    <img class="img-circle" src="{% avatar_url item.author 150 %}" width="150" height="150"/>
-                                    <h5 class="text-center">
-                                        <strong>{{ item.title|truncatechars:48 }}</strong>
-                                        <br/>
-                                        {% include "people/_profile_name_display.html" with profile=item.author only %}
-                                    </h5>
-                                </a>
-                            </div>
-                        {% if forloop.counter|divisibleby:4 or forloop.last %}</div>{% endif %}
-                        {% empty %}
-                        <p>{% trans "No Featured Thinkers and Thoughts" %}...</p>
-                        {% endfor %}
-                </div>
-                <div class="col-sm-4">
-                    <h1>{% trans "Thinkers and Thoughts" %}</h1>
-                    <h3>{% trans "The latest insights from leading MapStorytellers. For more, visit the" %} <a href="{% url 'diary' %}">{% trans "Community Journal" %}</a>
-                    </h3>
-                </div>
-            </div>
+<section class="slice howto">
+    <div class="container">
+        <div class="row">
+            <h1 class="text-center">{% trans "MapStory How-To" %}</h1>
+            <h3 class="text-center">Organizations like these drive innovation in the {{ SITE_NAME }} codebase, content and community.
+                {% if THEME == 'orange' %}
+                    <a href="{% url 'donate' %}">
+                        {% trans "Join them." %}</a>
+                {% endif %}
+            </h3>
         </div>
-    </section>
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
-    </section>
-    <section class="slice news">
-            <div class="row">
-                <h1 class="text-center">{{ SITE_NAME }} {% trans "projects making the news" %}</h1>
-            </div>
-            <div class="row">
-                <div class="col-sm-4">
-                    <a class="twitter-timeline" href="https://twitter.com/MapStory" data-widget-id="517343764738621440">Tweets by @MapStory</a>
-                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-                </div>
-                <div class="col-sm-8">
-                    {% for item in news_items %}
-                    <h3><strong>{{ item.title }}</strong> <small class="pull-right">{{ item.date }}</small></h3>
-                    <hr>
-                    {{ item.html|safe  }}
-                    {% empty %}
-                    <p>{% trans "No News Items" %}. {% trans "Add" %} <a href="{% url 'admin:mapstory_newsitem_add' %}">{% trans "some" %}</a></p>
-                    {% endfor %}
-                </div>
-            </div>
-    </section>
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax2' }});"></div>
-    </section>
-    <section class="slice community">
-        <div class="container">
-            <div class="row">
-                <h1 class="text-center">{% trans "Community Initiatives" %}</h1>
-                <h3 class="text-center">{% trans "Our Community Initiative leads are taking on huge data collection tasks, like mapping the history of human settlement and country borders. Click on one below, and start contributing" %}...
-                </h3>
-            </div>
-            <hr/>
-            <div class="row">
-                <slice infinite="true" slides-to-show="6" autoplay="true">
-                    {% for community in communities %}
+        <hr/>
+        <div class="row">
+            <slice infinite="true" slides-to-show="6" autoplay="true">
+                {% for sponsor in sponsors %}
                     <div class="col-sm-2">
-                        {% ifequal community.profile_type 'org' %}
-                        <a href="{% url "organization_detail" community.slug %}">
-                            {% if community.logo %}
-                            <img class="rdphoto" src="{{ community.logo.url }}" alt="{{ community.title }} - {{ community.description }}">
-                            {% endif %}
+                        <a href="{{ sponsor.link }}">
+                            <img src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
                         </a>
-                        {% else %}
-                        <a href="{% url "initiative_detail" community.slug %}">
-                            {% if community.logo %}
-                            <img class="rdphoto" src="{{ community.logo.url }}" alt="{{ community.title }} - {{ community.description }}">
-                            {% endif %}
-                        </a>
-                        {% endifequal %}
                     </div>
                     {% empty %}
-                    <p>{% trans "No Community Initiatives." %} {% trans "Add" %} <a href="{% url 'initiative_create' %}">{% trans "some" %}</a></p>
-                    {% endfor %}
-                </slice>
-            </div>
+                    <p>{% trans "No Sponsors." %} {% trans "Add" %} <a href="{% url 'admin:mapstory_sponsor_add' %}">{% trans "some" %}</a></p>
+                {% endfor %}
+            </slice>
         </div>
-    </section>
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax3' }});"></div>
-    </section>
+    </div>
+</section>
+<section class="parallax">
+    <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Parallax2' }});"></div>
+</section>
