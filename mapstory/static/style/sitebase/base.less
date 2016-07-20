@@ -5,13 +5,13 @@
   width: 100%;
 }
 
-[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){
-  display:none !important;
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide:not(.ng-hide-animate) {
+  display: none !important;
 }
 
 /* --- BASE - Text --- */
 body {
-  font-size:16px;
+  font-size: 16px;
   line-height: 22px;
   font-family: "Open Sans", Helvetica, sans-serif;
   padding-top: 40px;
@@ -22,7 +22,7 @@ body {
 
 h1, h2, h3, h4, h5, h6, legend {
   font-style: normal;
-  text-transform:none;
+  text-transform: none;
 }
 
 h1 {
@@ -31,7 +31,7 @@ h1 {
 }
 
 h2 {
-  font-size:30px;
+  font-size: 30px;
   font-weight: 200;
 }
 
@@ -42,7 +42,7 @@ h3, legend {
 
 h4 {
   font-size: 16px;
-  font-weight:100;
+  font-weight: 100;
 }
 
 h5 {
@@ -73,14 +73,14 @@ small {
 }
 
 strong {
-  font-weight:600
+  font-weight: 600
 }
 
 a {
   color: inherit;
 }
 
-a:hover, a:focus, a:active{
+a:hover, a:focus, a:active {
   color: @gray60;
   text-decoration: none
 }
@@ -91,7 +91,7 @@ a:hover, a:focus, a:active{
   padding: 20px 0 0 0;
 }
 
-.label-font-sm {//_login_register.html
+.label-font-sm { //_login_register.html
   font-size: 15px;
   font-weight: 100;
 }
@@ -108,13 +108,15 @@ a:hover, a:focus, a:active{
 /* --- BASE - Slices, Sections, Spacing --- */
 
 .slice {
-  padding:33px 20px;
+  padding: 33px 20px;
   width: 100%;
   margin: 0;
   border: 0;
   background-color: @white;
   position: relative;
+  text-align: center;
 }
+
 .banner {
   text-align: center;
   padding: 50px 0 10px 0;
@@ -125,12 +127,12 @@ a:hover, a:focus, a:active{
 }
 
 .border-right {
-  border-right:1px solid darkgray;
+  border-right: 1px solid darkgray;
 }
 
 hr { //overwritten often w inline styles
-  padding:0;
-  margin:10px 0;
+  padding: 0;
+  margin: 10px 0;
 }
 
 .grid-spacer {
@@ -167,32 +169,32 @@ form {
 .form-control {
   color: @gray30;
   background-color: @gray90;
-  border:none;
-  
-  &:focus{
+  border: none;
+
+  &:focus {
     border: none;
     background-color: @gray90;
-    box-shadow:none;
-    -webkit-box-shadow:none;
-    -moz-box-shadow:none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
   }
 }
 
 /* --- BASE - Buttons --- */
 
-.btn-sm, .btn-group-sm>.btn {
+.btn-sm, .btn-group-sm > .btn {
   padding: 10px 13px;
   font-size: 12px;
   line-height: 1.5;
   border-radius: 3px;
 }
 
-.facebook-btn{
+.facebook-btn {
   background-color: @facebook;
   color: @white;
 }
 
-.google-btn{
+.google-btn {
   background-color: @google;
   color: @white;
 }
@@ -213,7 +215,7 @@ form {
 }
 
 .controls, .controls > select, .controls > textarea, .controls > input, .controls > div {
- width: 320px;
+  width: 320px;
 }
 
 .layer-actions, .map-actions, .documents-actions {
@@ -240,10 +242,10 @@ nav.filter {
 //used in geonode social recent activity list
 .rotate-45 {
   -webkit-transform: rotate(45deg);
-     -moz-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
-       -o-transform: rotate(45deg);
-          transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
   /*filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);*/
 }
 
@@ -260,33 +262,34 @@ nav.filter {
   font-weight: bold;
   color: @gray55;
 }
+
 .comment-list-wrapper {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 /*--- Paralax---*/
 .maskParent {
-    position: relative; 
-    height:100%;
-    width:100%
+  position: relative;
+  height: 100%;
+  width: 100%
 }
 
 .paralaxText {
   padding: 20px 0;
-  text-align:center;
+  text-align: center;
   position: relative;
 }
 
 .paralaxMask {
-    width:100%; 
-    height:100%;
-    overflow:hidden;
-    position:absolute;
-    background:rgba(0,0,0,0.15);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .paralaxText blockquote:before, .paralaxText blockquote:after {
-  color:@white;
+  color: @white;
 }
 
 #loginModal {
@@ -297,9 +300,4 @@ nav.filter {
   .modal-body {
     padding: 20px 30px;
   }
-}
-
-.quicksearchcontainer {
-  display: none;
-
 }

@@ -56,6 +56,9 @@
       background: @gray90;
     }
   }
+  @media @tablets, @desktops {
+    display: block;
+  }
 }
 
 .results img {
@@ -81,7 +84,7 @@
 #composeStory {
   display: none;
 
-    @media @desktops {
+  @media @tablets, @desktops {
     display: block;
   }
 
@@ -90,7 +93,7 @@
 #uploadLayers {
   display: none;
 
-    @media @desktops {
+  @media @tablets, @desktops {
     display: block;
   }
 
