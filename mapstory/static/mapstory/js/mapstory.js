@@ -90,7 +90,7 @@
      $scope.defaultAttribute = {'name':'', 'binding':'', nillable: true, minOccurs: 0};
      $scope.geometryTypes = [
          {'label': 'Point', 'value': 'com.vividsolutions.jts.geom.Point'},
-         {'label': 'Line', 'value': 'com.vividsolutions.jts.geom.Line'},
+         {'label': 'Line', 'value': 'com.vividsolutions.jts.geom.LineString'},
          {'label': 'Polygon', 'value': 'com.vividsolutions.jts.geom.Polygon'},
          {'label': 'Geometry', 'value': 'com.vividsolutions.jts.geom.Geometry'},
          {'label': 'Multi-Point', 'value': 'com.vividsolutions.jts.geom.MultiPoint'},
