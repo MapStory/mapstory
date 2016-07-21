@@ -247,17 +247,6 @@ MAP_BASELAYERS = [
     },
     {
         'source': {
-            'ptype': 'gxp_mapquestsource',
-            'hidden': True
-        },
-        'visibility': False,
-        'name': 'naip',
-        'title': 'Satellite Imagery',
-        'group': 'background',
-        'args': ['Satellite Imagery']
-    },
-    {
-        'source': {
             'ptype': 'gxp_mapboxsource',
             'hidden': True
         },
