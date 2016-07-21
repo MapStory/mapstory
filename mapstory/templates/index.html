@@ -96,8 +96,8 @@
     <section class="slice results">
         <div class="container">
             <div ng-if="results.length">
-                <slick infinite="true" slides-to-show="4" autoplay="true" init-onload="true" data="results">
-                    <div class="col-md-3" ng-repeat="item in results">
+                <slick infinite="true" slides-to-show="3" autoplay="true" init-onload="true" data="results">
+                    <div class="col-md-4" ng-repeat="item in results">
                         {% verbatim %}
                             <a href="{{ item.detail_url }}">
                                 <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url }}"/>

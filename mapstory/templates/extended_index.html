@@ -8,27 +8,38 @@
 <section class="slice howto">
     <div class="container">
         <div class="row">
-            <h1 class="text-center">{% trans "MapStory How-To" %}</h1>
-            <h3 class="text-center">Organizations like these drive innovation in the {{ SITE_NAME }} codebase, content and community.
-                {% if THEME == 'orange' %}
-                    <a href="{% url 'donate' %}">
-                        {% trans "Join them." %}</a>
-                {% endif %}
-            </h3>
-        </div>
-        <hr/>
-        <div class="row">
-            <slice infinite="true" slides-to-show="6" autoplay="true">
-                {% for sponsor in sponsors %}
-                    <div class="col-sm-2">
-                        <a href="{{ sponsor.link }}">
-                            <img src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
-                        </a>
-                    </div>
-                    {% empty %}
-                    <p>{% trans "No Sponsors." %} {% trans "Add" %} <a href="{% url 'admin:mapstory_sponsor_add' %}">{% trans "some" %}</a></p>
-                {% endfor %}
-            </slice>
+            <div class="col-md-4">
+                <h2>Get Started</h2>
+                <p>MapStory is an open platform for organizing our knowledge about how the world changes over time and space. Click on a link to the right, and learn how you can start contributing observations of your own.</p>
+                <ul>
+                    <li>Students</li>
+                    <li>Educators</li>
+                    <li>Humanitarians</li>
+                    <li>Businesspeople</li>
+                    <li>Librarians</li>
+                    <li>Researchers</li>
+                    <li>Policy Makers</li>
+                    <li>Journalists</li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h2>Get Involved</h2>
+                <p>Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.</p>
+                <ul>
+                    <li>Community Initiatives</li>
+                    <li>MapStory Projects</li>
+                    <li>Thinkers and Thoughts</li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h2>Get Skills</h2>
+                <p>MapStory is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed.</p>
+                <ul>
+                    <li>MapStory 101</li>
+                    <li>MapStory Wiki</li>
+                    <li>Help Center</li>
+                </ul>
+            </div>
         </div>
     </div>
 </section>
