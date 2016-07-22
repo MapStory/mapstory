@@ -79,7 +79,7 @@
                 <img class="import-wizard-image" ng-src="{{ staticUrl }}mapstory/img/edit.png"/>
                 <h3><strong>Allow other users to edit this data?</strong></h3>
                 <p>StoryLayers are better when multiple authors work together. Would you like to enable editing?</p>
-                <div class="btn-group">
+                <div class="btn-group" ng-init="layer.configuration_options.editable = true">
                     <label class="btn btn-success" ng-model="layer.configuration_options.editable" uib-btn-radio="true">Yes</label>
                     <label class="btn" ng-model="layer.configuration_options.editable" uib-btn-radio="false">No</label>
                 </div>
