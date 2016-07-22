@@ -216,9 +216,9 @@ MAP_BASELAYERS = [
         "source": {"ptype":"gxp_osmsource"},
         "type":"OpenLayers.Layer.OSM",
         "args":["Humanitarian OpenStreetMap", [
-            "http://a.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
-            "http://b.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
-            "http://c.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png"
+            "//a.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
+            "//b.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
+            "//c.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png"
           ], {"tileOptions": {"crossOriginKeyword": None}}
         ],
         'title': 'Humanitarian OpenStreetMap',
@@ -235,7 +235,7 @@ MAP_BASELAYERS = [
         "fixed": True,
         "args":[
             "Naked Earth",
-            "http://maps.opengeo.org/geowebcache/service/wms",
+            "//maps.opengeo.org/geowebcache/service/wms",
             {
                 "layers":["Wayne"],
                 "format":"image/png",
