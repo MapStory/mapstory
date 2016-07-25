@@ -14,6 +14,9 @@
 - file: path=/tmp/{{ application_name }} state=directory
   tags: [setup, geoserver]
 
+- file: path=/tmp/{{ application_name }}/geoserver state=directory
+  tags: [setup, geoserver]
+
 - name: make geoserver dirs
   file: path=/var/lib/geoserver/geoserver state=directory
   tags: [geoserver]
@@ -62,10 +65,14 @@
   when: postgresql_source.stat.exists and not postgresql_target.stat.exists
   tags: [geoserver]
 
-#- name: copy geoserver wps classify libs
-#  shell: sudo unzip -j -o classify.zip "*.jar" -d {{ geoserver_lib_dir }} && sudo chown -R tomcat7:tomcat7 {{ geoserver_lib_dir }} chdir=/tmp/{{ application_name }}/geoserver
-#  notify: restart geoserver
-#  tags: [geoserver, wps]
+- name: fetch geoserver wps libs
+  get_url: url={{ geoserver_wps_classify }} dest=/tmp/{{ application_name }}/geoserver/classify.zip
+  tags: [geoserver]
+
+- name: copy geoserver wps classify libs
+  shell: sudo unzip -j -o classify.zip "*.jar" -d {{ geoserver_lib_dir }} && sudo chown -R tomcat7:tomcat7 {{ geoserver_lib_dir }} chdir=/tmp/{{ application_name }}/geoserver
+  notify: restart geoserver
+  tags: [geoserver, wps]
 
 - name: geogig global config
   copy: src=roles/geo/files/geogigconfig dest=/var/lib/geoserver/geoserver/.geogigconfig mode=0775 owner=tomcat7 group=tomcat7
