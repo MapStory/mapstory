@@ -1,0 +1,116 @@
+/* --- Detail Pages --- */
+.btn-detailpage {
+  background-color: @gray30;
+  color: @white;
+  font-size: 0.8em;
+  font-weight: 700;
+  border: 1px solid @gray30;
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px;
+  &:hover, &:active{
+    background-color: @gray20;
+    color: @white;
+  }
+}
+
+.side-column-header {
+  display: block;
+  padding: 5px 15px;
+  margin: 10px;
+  background-color: @gray80;
+  color: @gray30;
+  font-size: 0.8em;
+  border-radius: 4px;
+  width: 100%;
+  font-weight: 700;
+}
+
+.side-column a:hover {
+  color: @gray20;
+  text-decoration: underline;
+}
+
+.side-column-items li {
+  color: @gray40;
+  margin: 1px 15px;
+  font-size: 0.7em;
+  font-weight: 600;
+}
+
+.side-column-items li i{
+  margin: 5px;
+}
+
+.details-tab-content {
+  padding: 10px;
+  color: @gray30;
+  font-size: 15px;
+  font-weight: 300;
+}
+
+.details-tabs {
+  border-bottom: 2px solid @gray60;
+  color: @gray60;
+  font-weight: 600;
+}
+
+.details-tabs > li > a, .details-tabs > li > a:hover, .details-tabs > li > a:focus {
+  padding: 10px 40px;
+  border: 0;
+}
+
+.details-tabs > li > a:hover, .details-tabs > li > a:focus {
+  color: @gray40;
+}
+
+.details-tabs > li.active > a, .details-tabs > li.active > a:hover, .details-tabs > li.active > a:focus {
+  border: 0;
+  border-bottom: 4px solid @gray30;
+  color: @gray30;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.embed {
+    margin: 8px;
+}
+
+.embed > input, .embed > textarea {
+  width: 80%;
+  color: @gray20;
+  border-style: ridge;
+  border-width: 1px;
+  vertical-align: middle;
+}
+
+#embedded_map {
+  width: 850px;
+  height: 450px;
+}
+
+#embedded_map:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+}
+
+.arcgis-legend > li {
+  text-align:right;
+}
+
+.arcgis-legend > li > img {
+    padding-right: 25px;
+}
+
+.edit-modal {
+  text-align: center;
+}
+
+.layer-actions, .map-actions, .documents-actions {
+  margin-top: 20px;
+  i {
+    padding-right: 3px;
+  }
+}

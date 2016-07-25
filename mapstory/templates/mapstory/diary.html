@@ -4,11 +4,6 @@
 {% load fluent_comments_tags %}
 {% load mapstory_tags %}
 {% load avatar_tags %}
-
-{% block extra_head %}
-    <link href="{{ STATIC_URL }}theme/{{THEME}}/css/diary.css" rel="stylesheet" />
-{% endblock %}
-
 {% block extra_script %}
     <script type="text/javascript" src="{{ STATIC_URL }}vendor/jquery.stellar/jquery.stellar.min.js"></script>
     {{ block.super }}

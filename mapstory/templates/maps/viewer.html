@@ -1,5 +1,5 @@
-<link rel="stylesheet" href="{{ STATIC_URL }}theme/{{ THEME }}/css/ol.css" type="text/css">
-<link rel="stylesheet" href="{{ STATIC_URL }}theme/vis.min.css" type="text/css"/>
+<link rel="stylesheet" href="{{ STATIC_URL }}style/map/css/ol.css" type="text/css">
+<link rel="stylesheet" href="{{ STATIC_URL }}style/vis.min.css" type="text/css"/>
 <link rel="stylesheet" href="{{ STATIC_URL }}vendor/nouislider/distribute/jquery.nouislider.min.css" type="text/css">
 
 <script src="{{ STATIC_URL }}vendor/jquery/dist/jquery.min.js"></script>
@@ -18,7 +18,7 @@
 
 
 {% include 'maps/viewer.js' %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}theme/{{ THEME }}/css/viewer.css"/>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style/themes/{{ THEME }}.css"/>
 <div ng-app="viewer" ng-controller="viewerController as viewer" id="story-viewer">
     <div class="sidebar" id="sidebar">
         {% verbatim %}

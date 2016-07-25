@@ -11,7 +11,6 @@
 {% load mapstory_tags %}
 {% load flag_tags %}
 {% friendly_load avatar_tags %}
-
 <div ng-controller="detail_page_controller">
     <section class="slice" id="dashboard">
         <div class="container">
@@ -30,10 +29,10 @@
                     </div>
                     {% ifequal page "layer" %}
                         {% include "layers/layer_data.html" %}
-                        {% else %}
+                    {% else %}
                         {% ifequal page "map" %}
                             {% include "maps/map_data.html" %}
-                            {% else %}
+                        {% else %}
                         {% endifequal %}
                     {% endifequal %}
                     <br>
@@ -176,7 +175,7 @@
                             </div>
                             <!-- If the owner is this user, or it is a content moderator, make a button visible which spawns a modal to modify the metadata -->
                             {% if content_moderators in user.groups.all or user == resource.owner %}
-                                <li><i class="fa fa-edit"></i> <a href="#metaForm" data-toggle="modal">{% trans "Update Layer Settings" %}</a>
+                                <li><i class="fa fa-edit"></i> <a href="#metaForm" data-toggle="modal">{% trans "Update Layer Metadata" %}</a>
                                 </li>
                                 <li><i class="fa fa-edit"></i> <a
                                         href="{% url "layer_remove" resource.service_typename %}">{% trans "Delete Layer" %}</a></li>
@@ -244,18 +243,13 @@
                                         <div style="display:inline" id="user_rating" class="category-layer"
                                              data-score="{{ user_layer_rating }}"></div>
                                     </li>
-
                                 {% endif %}
                             </article>
                             <li>{% trans "Average:" %} {% if resource.rating %}{{ resource.rating }}/5{% else %}Not yet rated{% endif %}</li>
                             <li><i class="fa fa-eye"></i> {{ resource.popular_count }} views</li>
-                            <!--<li><i class="fa fa-heart"></i> {{ resource.favorites }} favorites</li>-->
-                            <!--<li><i class="fa fa-pencil"></i> community edits</li>-->
                             {% else %}
                             {% ifequal page "map" %}
-                                <!--<li>Rating</li>-->
                                 <li><i class="fa fa-eye"></i> {{ resource.popular_count }} {% trans 'views' %}</li>
-                                <!--<li><i class="fa fa-heart"></i> favorites</li>-->
                                 {% else %}
                             {% endifequal %}
                         {% endifequal %}

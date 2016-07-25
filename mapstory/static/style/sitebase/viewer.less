@@ -1,0 +1,255 @@
+/* === VIEWER ==== */
+@import '../map/less/app-variables.less';
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Sidebar Related Styles */
+
+.sidebar {
+  display: block;
+  position: absolute;
+  background: @gray97;
+  width: 20%;
+  height: 100%;
+  margin: 0;
+  color: @gray40;
+  overflow: scroll;
+  z-index: 2;
+}
+
+.sidebarHidden {
+  display: block;
+  position: absolute;
+  background: @gray97;
+  width: 20%;
+  height: 100%;
+  margin: 0;
+  color: @gray40;
+  left: -17.25%;
+  z-index: 2
+}
+
+.sidebar p {
+  font-size: 12px;
+  padding: 6px 0;
+  max-height: 350px;
+  overflow-y: scroll;
+}
+
+.sidebar a {
+  color: @gray55;
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 20px;
+  outline: 0;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.sidebar i {
+  color: @gray97;
+  float: right;
+  font-size: 15px;
+  padding: 3px 10px 0;
+}
+
+.sidebarHidden i {
+  color: @gray97;
+  float: right;
+  font-size: 15px;
+  padding: 3px 10px 0;
+}
+
+.viewerTopNav {
+  background: @primary;
+  height: 40px;
+  padding: 3px;
+}
+
+.viewerTopNav a {
+  display: inline;
+}
+
+.topText {
+  color: @gray55;
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 10px;
+  margin: 0;
+  padding: 5px 10px;
+}
+
+.bottomText {
+  color: @gray55;
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 0;
+  padding: 10px 10px 0px;
+}
+
+.menuItem {
+  display: block;
+  padding: 10px;
+  margin: 10px;
+  background: @gray90;
+  border-top: 1px solid @white;
+  border-radius: 4px;
+}
+
+.menuItem h5 {
+  margin: 0;
+  font-size: 10px;
+  font-weight: normal;
+  line-height: 16px;
+  color: @gray40;
+}
+
+.menuItem h3 {
+  padding-left: 0;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 20px;
+  margin: 0;
+  color: @gray30;
+}
+
+.contentHidden {
+  display: none;
+}
+
+.map {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.fullMap {
+  display: block;
+  position: absolute;
+  left: 2.5%;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  z-index: 0;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  z-index: 2;
+}
+
+#slider {
+  width: 40%;
+  margin: 0px 10px 0px 10px;
+  display: inline-block;
+  background-color: @white;
+}
+
+.noUi-handle {
+  background-color: @white;
+  border: 0px;
+  box-shadow: none;
+  border-radius: 0px;
+}
+
+.noUi-active {
+  box-shadow: inset 0 0 1px @white, inset 0 1px 7px @gray90, 0 3px 6px -3px @gray97;
+}
+
+.noUi-horizontal {
+  height: 10px;
+}
+
+.noUi-handle:after,
+.noUi-handle:before {
+  top: 3px;
+  left: 9px;
+  background-color: @black;
+}
+
+.noUi-handle:after {
+  left: 5px;
+}
+
+.noUi-horizontal .noUi-handle {
+  width: 15px;
+  height: 20px;
+  left: -4px;
+  top: -6px;
+}
+
+.noUi-target {
+  border-radius: 0px;
+  box-shadow: none;
+}
+
+#time-controls-panel2 {
+  padding: 0px 5px;
+  background: @secondary;
+}
+
+#timeline {
+  background-color: @white;
+  opacity: 0.58;
+}
+
+div.navbar {
+  margin: 0px 0 0;
+  min-height: auto;
+}
+
+div.navbar > st-playback-controls {
+  width: 85%;
+  white-space: nowrap;
+  overflow: hidden;
+  z-index: 2;
+}
+
+div.navbar > st-playback-controls > button {
+  background-color: transparent;
+  border: 0;
+}
+
+div.navbar > st-playback-controls > button i {
+  font-size: 12px;
+  color: white;
+  background-color: transparent;
+}
+
+div.navbar > st-playback-controls > span {
+  color: white;
+}
+
+div.progress-bar {
+  background-color: @primary;
+}
+
+div.progress {
+  width: 15%;
+  font-size: 14px;
+  height: 4px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  background-color: @gray90;
+  border-radius: 0px;
+}
+
+@media (min-width: 300px) and (max-width: 900px) {
+  .sidebar {
+    width: 30%;
+  }
+}

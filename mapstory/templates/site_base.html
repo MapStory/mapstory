@@ -1,47 +1,19 @@
 {% extends "base.html" %}
-
 {% load staticfiles %}
-
 {% block head %}
-    {% if site.assets.favicon %}
-<link rel="shortcut icon" href="/uploaded/{{ site.assets.favicon.name }}">
-    {% endif %}
-{% include "mapstory/google_analytics.html" %}
+  {% if DEBUG_STATIC %}
+    <link href="{{ STATIC_URL }}lib/css/jquery.dataTables.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}lib/css/select2.css" rel="stylesheet"/>
+    <link href="{{ STATIC_URL }}lib/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="{{ STATIC_URL }}lib/css/jquery-ui.css" rel="stylesheet"/>
+    <link href="{{ STATIC_URL }}lib/css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+  {% else %}<link href="{{ STATIC_URL }}lib/css/assets.min.css" rel="stylesheet"/>{% endif %}
+    <link href="{{ STATIC_URL }}geonode/css/ext-compatibility.css" rel="stylesheet" />
+    <link href="{{ STATIC_URL }}style/themes/{{THEME}}.css" rel="stylesheet" />
+  {% include "osgeo_importer/_importer_styles.html" %}
+  {% if site.assets.favicon %}<link rel="shortcut icon" href="/uploaded/{{ site.assets.favicon.name }}">{% endif %}
+{% if GOOGLE_ANALYTICS %}{% include "mapstory/google_analytics.html" %}{% endif %}
 {{ block.super }}
-
 {% endblock head %}
-
-{% block extra_script %}
-
-<script type="text/javascript">
-/* Script for keywords autocomplete */
-    {% if AUTOCOMPLETE_QUICK_SEARCH %}
-    var quicksearch_autocomplete = $('#quicksearch').yourlabsAutocomplete({
-          url: '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}',
-          choiceSelector: 'span',
-          hideAfter: 200,
-          minimumCharacters: 1,
-          appendAutocomplete: $('#quicksearch'),
-          placeholder: gettext('Enter keyword here ...')
-    });
-    $('#quicksearch').bind('selectChoice', function(e, choice, quicksearch_autocomplete) {
-          if(choice[0].children[0] == undefined) {
-              $('#quicksearch').val(choice[0].innerHTML);
-              $scope.keyword_query = choice[0].innerHTML;
-          }
-    });
-    {% endif %}
-    // Fix placeholder text for Quick Search
-    $(function() {
-        $('#quicksearch').attr('placeholder','Quick Search');
-    });
-</script>
-{% endblock %}
-
-{% block header %}
-{% include 'mapstory/_header.html' %}
-{% endblock %}
-
-{% block footer %}
-{% include 'mapstory/_footer.html' %}
-{% endblock %}
+{% block header %}{% include 'mapstory/_header.html' %}{% endblock %}
+{% block footer %}{% include 'mapstory/_footer.html' %}{% endblock %}

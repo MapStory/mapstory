@@ -1,0 +1,75 @@
+/*--- NavBar ---*/
+
+.navbar-brand {
+  background-size: 100%;
+  width: 196px;
+  margin-top: 10px;
+  text-indent: -9999em;
+}
+
+.navbar-nav > li > a {
+  font-weight: 500;
+  padding-top: 25px;
+  cursor: pointer;
+}
+
+.navbar .search {
+  width: 285px;
+  margin-top: 10px;
+}
+
+.dropdown-menu {
+  border-radius: 4px;
+  border: none;
+  padding: 8px 15px;
+}
+
+.nav-icon {
+  font-size: 1.3em;
+}
+
+.nav-avatar {
+  padding: 15px 5px 0 5px;
+  margin-top: 5px;
+  & img {
+    height: 30px;
+    width: 30px;
+  }
+}
+
+#createDropdown {
+  display: none;
+
+  @media @tablets, @desktops {
+    display: block;
+  }
+
+}
+
+.quicksearchcontainer {
+  display: none;
+
+  @media @tablets, @desktops {
+    display: block;
+  }
+
+}
+
+/*--- Footer ---*/
+
+footer {
+  color: @gray55;
+  background: @primary;
+  border-top: 1px solid @gray40;
+  padding: 20px 10px;
+  width: 100%;
+}
+
+.footerWidget {
+  color: @white;
+}
+
+select .lang {
+  background-color: transparent;
+  color: @white;
+}

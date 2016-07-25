@@ -9,10 +9,6 @@
 {% load threadedcomments_tags %}
 {% load fluent_comments_tags %}
 
-{% block extra_head %}
-<link href="{{ STATIC_URL }}theme/{{THEME}}/css/search.css" rel="stylesheet" />
-{% endblock %}
-
 {% block middle %}
 <div ng-controller="collection_controller">
         <div ng-init="query({{id}})">

@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load bootstrap_tags %}
-<div class="row">
+<div ng-controller="geonode_search_controller" class="row">
     <div class="col-sm-12">
         <ul class="nav nav-tabs details-tabs">
             <li class="active"><a href="#Summary" data-toggle="tab">{% trans "Summary" %}</a></li>
@@ -56,7 +56,6 @@
             <div class="tab-pane" id="Related">
                 <div style="max-height:500px; overflow-y:scroll; overflow-x:hidden">
                     {% if resource.category %}
-                        <!-- TODO: Did this ever work? Not sure where the results came from... query_category? Check ng-apps -->
                         {% verbatim %}
                             <div ng-hide="results.length">
                                 No related {% endverbatim %}{% trans "stories" %}{% verbatim %} found...

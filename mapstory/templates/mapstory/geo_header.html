@@ -1,30 +1,14 @@
 {% load staticfiles %}
 {% load mapstory_tags %}
-
-
+    {% if GEOGIG_ENABLED and resource.link_set.geogig %}
+        {% with "_geogig_scripts.html" as geogig_scripts_template %}
+	            {% include  geogig_scripts_template %}
+ {% endwith %}
+ {% endif %}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}geoexplorer/externals/openlayers/theme/default/style.css"/>
-
-
-
 <script type="text/javascript" src="//www.youtube.com/iframe_api"></script>
-<script type="text/javascript">
-    var SimileAjax = {
-        urlPrefix: "{{ STATIC_URL}}timeline/timeline_ajax/",
-        Platform: {}
-    };
-    var Timeline = {
-        clientLocale: "en",
-        urlPrefix: "{{ STATIC_URL}}timeline/timeline_js/"
-    };
-</script>
-<script src="{{ STATIC_URL}}mapstory/script/timeline.js" type="text/javascript"></script>
-<script type="text/javascript">
-    Timeline.DateTime = SimileAjax.DateTime;
-</script>
-<link type="text/css" rel="stylesheet" href="{{ STATIC_URL}}timeline/timeline_js/timeline-bundle.css">
-<link type="text/css" rel="stylesheet" href="{{ STATIC_URL}}timeline/timeline_ajax/styles/graphics.css">
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}geoexplorer/externals/geoext/resources/css/geoext-all.css"/>
-<link rel="stylesheet" href="{{ STATIC_URL}}geoexplorer/externals/gxp/src/theme/all.css"/>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}geoexplorer/externals/gxp/src/theme/all.css"/>
 <script src="{{ STATIC_URL}}mapstory/script/MapStory.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}mapstory/geoexplorer/theme/app/geoexplorer.css"/>
 <!--[if IE]><link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}geonode/theme/app/ie.css"/><![endif]-->
@@ -32,4 +16,3 @@
 <script type="text/javascript">
 OpenLayers.ImgPath = "{{ STATIC_URL}}geonode/externals/openlayers/img/";
 </script>
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}theme/temporal_controls.css" media="screen" />

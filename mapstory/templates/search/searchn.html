@@ -4,18 +4,13 @@
 {% load url from future %}
 
 {% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
-
 {% block body_class %}search{% endblock %}
-
-{% block extra_head %}
-<link href="{{ STATIC_URL }}theme/{{THEME}}/css/search.css" rel="stylesheet" />
-{% endblock %}
 
 {% block body_outer %}
     <div ng-controller="geonode_search_controller">
         {% include 'search/_header.html' %}
         <div ng-show="api_endpoint == '/api/base/search/'">
-            <div class="col-lg-3" style="border-right:1px solid darkgray">
+            <div class="col-lg-3 border-right">
                 {% include 'search/_whats_hot_content.html' %}
                 {% include 'search/_refine_content.html' %}
                 {% include 'search/_trending_tags.html' %}
@@ -30,24 +25,17 @@
                     </span>
                 </div>
             </nav>
-
                 {% include 'search/_sort_filters_content.html' %}
-
             <div class="clearfix search-results">
-                <ul>
-                {% include 'search/_result_content.html' %}
-                </ul>
+                <ul>{% include 'search/_result_content.html' %}</ul>
             </div>
             {% include 'search/_pagination.html' %}
             </div>
         </div>
         <div ng-show="api_endpoint == '/api/owners/'">
-            <div class="col-lg-3" style="border-right:1px solid darkgray">
+            <div class="col-lg-3 border-right">
                 {% include 'search/_refine_profiles.html' %}
-                {% comment %}
-                {% include 'search/_whats_hot_users.html' %}
-                {% include 'search/_refine_users.html' %}
-                {% endcomment %}
+                {% comment %}{% include 'search/_whats_hot_users.html' %}{% include 'search/_refine_users.html' %}{% endcomment %}
             </div>
             <div class="col-lg-9">
                 <nav class="filter">
@@ -59,28 +47,18 @@
                     </span>
                 </div>
             </nav>
-
             {% include 'search/_sort_filters_users.html' %}
-
             <div class="clearfix search-results">
-                <ul>
-                {% include 'search/_result_users.html' %}
-                </ul>
+                <ul>{% include 'search/_result_users.html' %}</ul>
             </div>
             {% include 'search/_pagination.html' %}
             </div>
         </div>
     </div>
 {% endblock %}
-
 {% block extra_script %}
   {{ block.super }}
   <script type="text/javascript">
-    {% if HAYSTACK_SEARCH %}
-    SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}'
-    {% else %}
-    SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'
-    {% endif %}
     $(function() {
         $('#text_search_input').attr('placeholder','Search for {% trans "Stories" %} or {% trans "Layers" %} ...');
         $('#keyword_search_input').attr('placeholder','Search for keyword ...');
@@ -90,7 +68,5 @@
         $('#interest_search_input').attr('placeholder', 'Search for interest ...');
     });
   </script>
-
-  {% include 'search/_spatial_tags.html' %}
-
+{% include 'search/_spatial_tags.html' %}
 {% endblock extra_script %}

@@ -1,0 +1,303 @@
+#wrap {
+  padding-top: 20px;
+  background: @white;
+  padding-bottom: 40px;
+  width: 100%;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide:not(.ng-hide-animate) {
+  display: none !important;
+}
+
+/* --- BASE - Text --- */
+body {
+  font-size: 16px;
+  line-height: 22px;
+  font-family: "Open Sans", Helvetica, sans-serif;
+  padding-top: 40px;
+  background: @gray90;
+  -webkit-font-smoothing: antialiased; /* Fix for webkit rendering */
+  -webkit-text-size-adjust: 100%;
+}
+
+h1, h2, h3, h4, h5, h6, legend {
+  font-style: normal;
+  text-transform: none;
+}
+
+h1 {
+  font-size: 40px;
+  font-weight: 300;
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: 200;
+}
+
+h3, legend {
+  font-size: 20px;
+  font-weight: 100;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: 100;
+}
+
+h5 {
+  font-size: 14px;
+  font-weight: 100;
+}
+
+h6 {
+  font-size: 10px;
+  font-weight: 100;
+}
+
+select {
+  background: @white;
+  color: @black;
+  border: 1px solid @gray60;
+  height: 30px;
+  line-height: 30px;
+}
+
+p, ul {
+  font-size: 18px;
+  font-weight: 100;
+}
+
+small {
+  font-size: 80%;
+}
+
+strong {
+  font-weight: 600
+}
+
+a {
+  color: inherit;
+}
+
+a:hover, a:focus, a:active {
+  color: @gray60;
+  text-decoration: none
+}
+
+.label-font { //diary_edit.html
+  font-size: 23px;
+  font-weight: 100;
+  padding: 20px 0 0 0;
+}
+
+.label-font-sm { //_login_register.html
+  font-size: 15px;
+  font-weight: 100;
+}
+
+.page-title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* --- BASE - Slices, Sections, Spacing --- */
+
+.slice {
+  padding: 33px 20px;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background-color: @white;
+  position: relative;
+  text-align: center;
+}
+
+.banner {
+  text-align: center;
+  padding: 50px 0 10px 0;
+}
+
+.blog-content {
+  border-left: 1px solid @gray80;
+}
+
+.border-right {
+  border-right: 1px solid darkgray;
+}
+
+hr { //overwritten often w inline styles
+  padding: 0;
+  margin: 10px 0;
+}
+
+.grid-spacer {
+  margin-top: 30px;
+}
+
+article.tab-pane {
+  padding: 20px 0;
+}
+
+.no-style-list {
+  list-style-type: none;
+  margin-top: 20px;
+}
+
+.dl-horizontal dt {
+  text-overflow: clip;
+  white-space: normal;
+  overflow: hidden;
+}
+
+/* --- BASE - Form Components --- */
+
+form {
+  label {
+    margin-right: 2.5em;
+  }
+  input {
+    border: 1px solid @gray90;
+    padding: 5px;
+  }
+}
+
+.form-control {
+  color: @gray30;
+  background-color: @gray90;
+  border: none;
+
+  &:focus {
+    border: none;
+    background-color: @gray90;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+  }
+}
+
+/* --- BASE - Buttons --- */
+
+.btn-sm, .btn-group-sm > .btn {
+  padding: 10px 13px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+
+.facebook-btn {
+  background-color: @facebook;
+  color: @white;
+}
+
+.google-btn {
+  background-color: @google;
+  color: @white;
+}
+
+.mapstory-auth-btn {
+  background-color: @google;
+  color: @white;
+}
+
+/* --- BASE - Misc --- */
+.oauth-body {
+  width: 800px;
+  margin: 15px auto;
+  padding-top: 15px;
+  .h2 {
+    color: @secondary;
+  }
+}
+
+.controls, .controls > select, .controls > textarea, .controls > input, .controls > div {
+  width: 320px;
+}
+
+.layer-actions, .map-actions, .documents-actions {
+  margin-top: 20px;
+  i {
+    padding-right: 3px;
+  }
+}
+
+nav.filter {
+  .active {
+    color: @secondary;
+  }
+  .closed {
+    display: none;
+  }
+  li a {
+    border-bottom: 1px solid @gray90;
+    cursor: pointer;
+    padding: 5px 10px;
+  }
+}
+
+//used in geonode social recent activity list
+.rotate-45 {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+  /*filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);*/
+}
+
+.comment {
+  padding-bottom: 11px;
+}
+
+.comment-description {
+  margin-bottom: 0;
+}
+
+.comment-author {
+  font-size: 11px;
+  font-weight: bold;
+  color: @gray55;
+}
+
+.comment-list-wrapper {
+  list-style-type: none;
+}
+
+/*--- Paralax---*/
+.maskParent {
+  position: relative;
+  height: 100%;
+  width: 100%
+}
+
+.paralaxText {
+  padding: 20px 0;
+  text-align: center;
+  position: relative;
+}
+
+.paralaxMask {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.paralaxText blockquote:before, .paralaxText blockquote:after {
+  color: @white;
+}
+
+#loginModal {
+  .modal-dialog {
+    width: 1000px;
+    margin: 50px auto;
+  }
+  .modal-body {
+    padding: 20px 30px;
+  }
+}

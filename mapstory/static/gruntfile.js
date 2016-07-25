@@ -20,57 +20,37 @@ module.exports = function(grunt) {
       development: {
         options: {
           paths: [
-            'theme/default/less',
-            'theme/blue/less'
+            'style/themes/',
+            'style/fonts/',
+            'style/map/'
           ]
         },
         files: [
           {
-            'geonode/css/base.css': 'theme/default/less/base.less',
-            'theme/default/css/font-awesome.css': 'vendor/fontawesome/css/font-awesome.css',
-            'theme/blue/css/font-awesome.css': 'vendor/fontawesome/css/font-awesome.css',
-            'theme/blue/fonts/lato_font.css': 'vendor/lato-font/css/lato-font.css',
-            'theme/default/fonts/lato_font.css': 'vendor/lato-font/css/lato-font.css'
+            'style/themes/default.css':'style/themes/default.less',
+            'style/themes/blue.css':'style/themes/blue.less',
+            'style/themes/orange.css':'style/themes/orange.less',
+            //font-awesome.css must be in a niece directory from its files due to vendor code
+            'style/sitebase/font-awesome.css':'vendor/fontawesome/css/font-awesome.css',
+            'style/fonts/lato_font.css':'vendor/lato-font/css/lato-font.css'
           },
           {
             expand: true,
-            cwd: 'theme/default/less',
-            src: ['*.less', '!*-variables.less', '!maploom.less'],
-            dest: 'theme/default/css/',
+            cwd: 'style/map/less',
+            src: ['*.less', '!*-variables.less'],
+            dest: 'style/map/css/',
             ext: '.css'
-          },
-          {
-            expand: true,
-            cwd: 'theme/blue/less',
-            src: ['*.less', '!*-variables.less', '!maploom.less'],
-            dest: 'theme/blue/css/',
-            ext: '.css'
-          }
-        ]
-      },
-      production: {
-        options: {
-          yuicompress: true
-        },
-        files: [
-          {
-            'geonode/css/base.css': 'geonode/less/base.less'
           }
         ]
       }
+      //TODO, PRODUCTION, minification, less linting
     },
 
     copy: {
       development: {
         files: [{
           src: ['vendor/fontawesome/fonts/*'],
-          dest: 'theme/default/fonts/',
-          expand: true,
-          flatten: true,
-          filter: 'isFile'
-        },{
-          src: ['vendor/fontawesome/fonts/*'],
-          dest: 'theme/blue/fonts/',
+          dest: 'style/fonts/',
           expand: true,
           flatten: true,
           filter: 'isFile'
@@ -99,7 +79,11 @@ module.exports = function(grunt) {
         livereload: 35730
       },
       less: {
-        files: ['theme/default/less/*.less'],
+        files: [
+          'style/sitebase/*.less',
+          'style/themes/*.less',
+          'style/map/less/*.less'
+          ],
         tasks: ['less:development']
       }
     },
@@ -121,7 +105,6 @@ module.exports = function(grunt) {
       }
     }
   });
-
   // Load libs
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-less');

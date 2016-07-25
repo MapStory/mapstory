@@ -7,11 +7,11 @@
 {% load url from future %}
 {% load base_tags %}
 {% load guardian_tags %}
-<div class="row">
+<div ng-controller="geonode_search_controller" class="row">
     <div class="col-sm-12">
         <ul class="nav nav-tabs details-tabs">
-            <li class="active"><a href="#Abstract" data-toggle="tab" style="font-size:0.8em;">Abstract</a></li>
-            <!--<li><a href="#Metadata" data-toggle="tab" style="font-size:0.8em;">Meta</a></li>-->
+            <li class="active"><a href="#Abstract" data-toggle="tab" style="font-size:0.8em;">Summary</a></li>
+            <li><a href="#Metadata" data-toggle="tab" style="font-size:0.8em;">Metadata</a></li>
             <li><a href="#Edits" data-toggle="tab" style="font-size:0.8em;">Edits</a></li>
             <li><a href="#Related" data-toggle="tab" style="font-size:0.8em;"
                    ng-click="query_category('{{ resource.category }}', 'layer');">Related</a></li>
