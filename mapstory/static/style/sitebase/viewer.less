@@ -1,5 +1,5 @@
 /* === VIEWER ==== */
-@import 'app-variables.less';
+@import '../map/less/app-variables.less';
 
 html, body {
   margin: 0;
@@ -11,11 +11,11 @@ html, body {
 .sidebar {
   display: block;
   position: absolute;
-  background: #eee;
+  background: @gray97;
   width: 20%;
   height: 100%;
   margin: 0;
-  color: #444;
+  color: @gray40;
   overflow: scroll;
   z-index: 2;
 }
@@ -23,11 +23,11 @@ html, body {
 .sidebarHidden {
   display: block;
   position: absolute;
-  background: #eee;
+  background: @gray97;
   width: 20%;
   height: 100%;
   margin: 0;
-  color: #444;
+  color: @gray40;
   left: -17.25%;
   z-index: 2
 }
@@ -40,7 +40,7 @@ html, body {
 }
 
 .sidebar a {
-  color: @baseGray;
+  color: @gray55;
   display: block;
   font-size: 12px;
   font-weight: 700;
@@ -51,21 +51,21 @@ html, body {
 }
 
 .sidebar i {
-  color: @lightGray;
+  color: @gray97;
   float: right;
   font-size: 15px;
   padding: 3px 10px 0;
 }
 
 .sidebarHidden i {
-  color: @lightGray;
+  color: @gray97;
   float: right;
   font-size: 15px;
   padding: 3px 10px 0;
 }
 
 .viewerTopNav {
-  background: @baseGray;
+  background: @primary;
   height: 40px;
   padding: 3px;
 }
@@ -75,7 +75,7 @@ html, body {
 }
 
 .topText {
-  color: @baseGray;
+  color: @gray55;
   display: block;
   font-size: 10px;
   font-weight: 700;
@@ -85,7 +85,7 @@ html, body {
 }
 
 .bottomText {
-  color: @baseGray;
+  color: @gray55;
   display: block;
   font-size: 18px;
   font-weight: 700;
@@ -98,29 +98,26 @@ html, body {
   display: block;
   padding: 10px;
   margin: 10px;
-  font-family: 'Open Sans', sans-serif !important;
-  background: #ddd;
-  border-top: 1px solid whitesmoke;
+  background: @gray90;
+  border-top: 1px solid @white;
   border-radius: 4px;
 }
 
 .menuItem h5 {
   margin: 0;
-  font-family: 'Open Sans', sans-serif !important;
   font-size: 10px;
   font-weight: normal;
   line-height: 16px;
-  color: #666
+  color: @gray40;
 }
 
 .menuItem h3 {
   padding-left: 0;
-  font-family: 'Open Sans' !important;
   font-size: 13px;
   font-weight: 700;
   line-height: 20px;
   margin: 0;
-  color: #555;
+  color: @gray30;
 }
 
 .contentHidden {
@@ -159,18 +156,18 @@ html, body {
   width: 40%;
   margin: 0px 10px 0px 10px;
   display: inline-block;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: @white;
 }
 
 .noUi-handle {
-  background-color: white;
+  background-color: @white;
   border: 0px;
   box-shadow: none;
   border-radius: 0px;
 }
 
 .noUi-active {
-  box-shadow: inset 0 0 1px #ffffff, inset 0 1px 7px #dddddd, 0 3px 6px -3px #bbbbbb;
+  box-shadow: inset 0 0 1px @white, inset 0 1px 7px @gray90, 0 3px 6px -3px @gray97;
 }
 
 .noUi-horizontal {
@@ -181,7 +178,7 @@ html, body {
 .noUi-handle:before {
   top: 3px;
   left: 9px;
-  background-color: #000000;
+  background-color: @black;
 }
 
 .noUi-handle:after {
@@ -202,11 +199,11 @@ html, body {
 
 #time-controls-panel2 {
   padding: 0px 5px;
-  background: rgba(22, 47, 67, 0.8);
+  background: @secondary;
 }
 
 #timeline {
-  background-color: white;
+  background-color: @white;
   opacity: 0.58;
 }
 
@@ -238,7 +235,7 @@ div.navbar > st-playback-controls > span {
 }
 
 div.progress-bar {
-  background-color: #e36325;
+  background-color: @primary;
 }
 
 div.progress {
@@ -247,7 +244,7 @@ div.progress {
   height: 4px;
   margin-bottom: 20px;
   overflow: hidden;
-  background-color: #f5f5f5;
+  background-color: @gray90;
   border-radius: 0px;
 }
 
