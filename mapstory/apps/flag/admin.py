@@ -70,6 +70,7 @@ class FlaggedContentForm(forms.ModelForm):
         Profile.objects.filter(groups__name__in=_group_to_flag_type.keys()))
     class Meta:
         model = FlaggedContent
+        fields = '__all__'
 
     def __init__(self, *args, **kw):
         super(FlaggedContentForm, self).__init__(*args, **kw)
