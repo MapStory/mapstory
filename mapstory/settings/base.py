@@ -65,7 +65,6 @@ DATABASES = {
 INSTALLED_APPS += (
     'mapstory',
     'django.contrib.webdesign',
-    'django.contrib.sites',
     'geonode.contrib.geogig',
     'geonode.contrib.collections',
     'geonode.contrib.favorite',
@@ -78,7 +77,6 @@ INSTALLED_APPS += (
     'crispy_forms',
     'threadedcomments',
     'django_comments',
-    'djcelery',
     'osgeo_importer'
 )
 
