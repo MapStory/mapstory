@@ -59,16 +59,6 @@ footer {
     background: @primary;
 }
 
-.modal-header {
-       padding: 15px;
-    color: #ccc;
-    text-align: center;
-    background-color: @primary;
-    border-bottom: 0;
-    border-top-right-radius: 4px;
-    border-top-left-radius: 4px;
-}
-
 #composerIconNav {
     display: block;
     height: 40px;
@@ -298,20 +288,17 @@ style-editor button {
 }
 
 .modal .modal-header,.loom-dialog.dialog-warning .modal-header {
-    padding: 15px;
-    color: #ccc;
+    color: @white;
     text-align: center;
-    background-color: @primary !important;
+    background-color: @primary;
     border-bottom: 0;
     border-top-right-radius: 4px;
     border-top-left-radius: 4px
 }
 
 .loom-dialog.dialog-warning .modal-body,.modal .modal-body,.loom-dialog.dialog-warning .modal-footer {
-    max-height: 60vh;
-    padding: 20px 30px;
+    max-height: 70vh;
     overflow-y: auto;
-    background-color: #bbb
 }
 
 .loom-dialog {
@@ -327,26 +314,21 @@ style-editor button {
     border: 0;
 }
 
-.btn-profile {
-    color: #444 !important;
-    background: #fff !important;
-}
-
 .modal .modal-footer {
     margin-top: 0;
     background-color: #fff;
     border: 0;
     -webkit-box-shadow: none;
-    box-shadow: none
+    box-shadow: none;
 }
 
 .modal-title {
     padding: 0;
-    margin: 0;
     font-family: 'Open Sans';
     font-size: 18px;
     font-weight: 700;
-    line-height: 20px
+    line-height: 20px;
+    color: @white;
 }
 
 .modal-body label {
