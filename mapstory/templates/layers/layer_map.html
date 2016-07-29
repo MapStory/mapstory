@@ -46,7 +46,7 @@
     </style>
 
     {% include 'layers/viewer.js' %}
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style/map/css/viewer.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style/themes/{{ THEME }}.css"/>
     <div ng-app="viewer" ng-controller="viewerController as viewer" id="story-viewer">
         <div class="map" id="mapContainer">
             <span ng-if="loading">Loading...</span>
