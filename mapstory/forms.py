@@ -96,8 +96,8 @@ class UploadLayerForm(ResourceBaseForm):
             'is_published',
             'featured'
         )
-
-        widgets = autocomplete_light.get_widgets_dict(Layer)
+        # TODO: Refactor this for the latest version of Autocomplete Light.
+        # widgets = autocomplete_light.get_widgets_dict(Layer)
 
 # A form for just keywords
 class KeywordsForm(forms.ModelForm):
