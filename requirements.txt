@@ -14,6 +14,7 @@ https://github.com/MapStory/django-maploom/archive/composer.zip
 django-haystack==2.4.0
 elasticsearch==1.6.0
 django-slack==4.1.0
+celery==3.1.23
 
 #specific dependency versions from mapstory v1 to support oauth and social authnz
 django-oauth2-provider==0.2.6.1
