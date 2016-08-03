@@ -1,17 +1,13 @@
+// Extra small devices (phones, less than 768px)
+// No media query since this is the default in Bootstrap
 
-/* === default VARIABLES GO HERE ====*/
+// Small devices (tablets, 768px and up)
+@tablets: ~"only screen and (min-width: 768px) and (max-width: 991px)";
 
-@primary: #333333;
-@primary-highlight: lighten(@primary, 10%);
-@primary-shadow: darken(@primary, 10%);
+// Medium devices (desktops, 992px and up)
+@desktops: ~"only screen and (min-width: 992px)";
 
-@secondary: #444444;
-@secondary-highlight: lighten(@secondary, 10%);
-@secondary-shadow: darken(@secondary, 10%);
-
-//@success: #5cb85c;
-//@danger: #d9534f;
-//@error: ;
+@bs-blue: #428bca;
 @facebook: #1E90FF;
 @google: #162F43;
 
@@ -28,5 +24,3 @@
 @gray30: mix(@black, @white, 70%);
 @gray20: mix(@black, @white, 80%);
 @gray10: mix(@black, @white, 90%);
-
-@import '../sitebase/site.less';

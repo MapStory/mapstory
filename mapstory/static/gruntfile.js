@@ -21,25 +21,21 @@ module.exports = function(grunt) {
         options: {
           paths: [
             'style/themes/',
-            'style/fonts/',
-            'style/map/'
+            'style/fonts/'
           ]
         },
         files: [
           {
-            'style/themes/default.css':'style/themes/default.less',
-            'style/themes/blue.css':'style/themes/blue.less',
-            'style/themes/orange.css':'style/themes/orange.less',
             //font-awesome.css must be in a niece directory from its files due to vendor code
-            'style/sitebase/font-awesome.css':'vendor/fontawesome/css/font-awesome.css',
+            'style/site/font-awesome.css':'vendor/fontawesome/css/font-awesome.css',
             'style/fonts/lato_font.css':'vendor/lato-font/css/lato-font.css'
           },
           {
             expand: true,
-            cwd: 'style/map/less',
-            src: ['*.less', '!*-variables.less'],
-            dest: 'style/map/css/',
-            ext: '.css'
+            cwd: 'style/themes',
+            src: ['orange/**.less', 'blue/**.less', 'default/**.less', '!*/brandcolors.less'],
+            dest: 'style/themes/',
+            ext: '-theme.css'
           }
         ]
       }
@@ -80,9 +76,9 @@ module.exports = function(grunt) {
       },
       less: {
         files: [
-          'style/sitebase/*.less',
-          'style/themes/*.less',
-          'style/map/less/*.less'
+          'style/site/*.less',
+          'style/maps/*.less',
+          'style/themes/**/*.less'  
           ],
         tasks: ['less:development']
       }
