@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="{{ STATIC_URL }}style/map/css/ol.css" type="text/css">
 <link rel="stylesheet" href="{{ STATIC_URL }}style/vis.min.css" type="text/css"/>
 <link rel="stylesheet" href="{{ STATIC_URL }}vendor/nouislider/distribute/jquery.nouislider.min.css" type="text/css">
 
@@ -18,7 +17,7 @@
 
 
 {% include 'maps/viewer.js' %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}style/themes/{{ THEME }}.css"/>
+<link href="{{ STATIC_URL }}style/themes/{{THEME}}/maps-theme.css" rel="stylesheet" />
 <div ng-app="viewer" ng-controller="viewerController as viewer" id="story-viewer">
     <div class="sidebar" id="sidebar">
         {% verbatim %}

@@ -80,11 +80,6 @@
             {% if user != profile %}
             <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary" >message</a>
             {% endif %}
-            {% if profile.email %}
-            <div class="sidebar-content">
-                <a href="mailto:{{ profile.email }}"><i class="fa fa-envelope-o"></i>email {{ profile.first_name|default_if_none:profile.username }}</a>
-            </div>
-            {% endif %}
             {% if profile.social_facebook %}
             <div class="sidebar-content">
                 <a href="{{ profile.social_facebook }}"><i class="fa fa-facebook"></i>facebook</a>
