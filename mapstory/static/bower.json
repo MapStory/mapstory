@@ -15,7 +15,6 @@
     "ogc-schemas": "highsource/ogc-schemas#master",
     "w3c-schemas": "highsource/w3c-schemas#master",
     "angular-sortable-view": "0.0.13",
-    "angular-slick": "https://github.com/MapStory/angular-slick.git#dynamic-data",
     "jquery.cookie": "1.4.1",
     "story-tools": "https://github.com/MapStory/story-tools.git#master",
     "bootstrap-tokenfield": "0.12.0",

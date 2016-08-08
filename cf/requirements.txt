@@ -39,7 +39,6 @@ django-guardian==1.2.0
 django-haystack==2.4.0
 #-e git://github.com/MapStory/icon-commons.git@f21c39c4bd8513a92c2725a132969e23268ae29e#egg=django_icon_commons
 django-jsonfield==0.9.12
-django-leaflet==0.13.7
 #-e git://github.com/pinax/django-mailer.git@410673ff1f9df8f52062a5d2455521db536d59af#egg=django_mailer
 django-maploom==1.0
 django-modeltranslation==0.8

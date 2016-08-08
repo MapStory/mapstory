@@ -1144,46 +1144,6 @@
       
     }, true);
 
-    /*
-    * Spatial search
-    */
-    if ($('.leaflet_map').length > 0) {
-      angular.extend($scope, {
-        layers: {
-          baselayers: {
-            stamen: {
-              name: 'Toner Lite',
-              type: 'xyz',
-              url: 'http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png',
-              layerOptions: {
-                subdomains: ['a', 'b', 'c'],
-                attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>',
-                continuousWorld: true
-              }
-            }
-          }
-        },
-        map_center: {
-          lat: 5.6,
-          lng: 3.9,
-          zoom: 1
-        },
-        defaults: {
-          zoomControl: false
-        }
-      });
-
-      var leafletData = $injector.get('leafletData'),
-          map = leafletData.getMap('filter-map');
-
-      map.then(function(map){
-        map.on('moveend', function(){
-          $scope.query['extent'] = map.getBounds().toBBoxString();
-          query_api($scope.query);
-        });
-      });
-    }
-
     // Set the default orderMethod for when a user first hits the Explore page to be descending dates.
     $scope.orderMethod = '-date';
     // Allow the user to choose an order method using the What's Hot section.
