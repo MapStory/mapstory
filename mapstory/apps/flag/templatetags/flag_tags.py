@@ -10,7 +10,7 @@ register = template.Library()
 def flag(context, content_object, creator_field):
     content_type = ContentType.objects.get(
         app_label=content_object._meta.app_label,
-        model=content_object._meta.module_name
+        model=content_object._meta.model_name
     )
     request = context["request"]
     return {

@@ -85,6 +85,7 @@ class GetPageContentForm(forms.ModelForm):
     page = GetPageChoiceField()
     class Meta:
         model = GetPageContent
+        fields = '__all__'
 
 
 class GetPageContentAdmin(admin.ModelAdmin):

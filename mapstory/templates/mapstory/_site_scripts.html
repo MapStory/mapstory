@@ -1,79 +1,60 @@
-{% load leaflet_tags %}
 {% load staticfiles %}
 {% load i18n %}
-{% if DEBUG_STATIC %}
-  <script src="{{ STATIC_URL }}lib/js/jquery.min.js"></script>
-  <script src="{{ STATIC_URL }}lib/js/jquery.dataTables.js"></script>
-  <script src="{{ STATIC_URL }}lib/js/jquery.timeago.js"></script>
-  <script src="{{ STATIC_URL }}lib/js/jquery.ajaxprogress.js"></script>
-  <script src="{{ STATIC_URL }}lib/js/jquery.ajaxQueue.js"></script>
-  <script src="{{ STATIC_URL }}lib/js/jquery-ui.custom.js"></script>
-  <script src="{{ STATIC_URL }}lib/js/jquery.raty.js"></script>
-  <script src="{{ STATIC_URL }}lib/js/bootstrap.min.js"></script>
-  <script src="{{ STATIC_URL }}lib/js/moment-with-locales.min.js"></script>
-  <script src="{{ STATIC_URL }}lib/js/bootstrap-datetimepicker.min.js"></script>
-  <script src="{{ STATIC_URL }}lib/js/json2.js"></script>
-  <script src="{{ STATIC_URL }}lib/js/select2.js"></script>
-  <script src="{{ STATIC_URL }}lib/js/waypoints.js"></script>
-{% else %}
-  <script src="{{ STATIC_URL }}lib/js/assets.min.js"></script>
-{% endif %}
-<script src="{{STATIC_URL}}lib/js/angular.js"></script>
-{% include "osgeo_importer/_importer_scripts.html" %}
+
+<script src="{{ STATIC_URL }}vendor/jquery/dist/jquery.min.js"></script>
+<script src="{{ STATIC_URL }}vendor/jquery-ui/jquery-ui.min.js"></script>
+<script src="{{ STATIC_URL }}vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="{{ STATIC_URL }}lib/js/moment-with-locales.min.js"></script>
+<script src="{{ STATIC_URL }}lib/js/bootstrap-datetimepicker.min.js"></script>
+<script src="{{ STATIC_URL }}lib/js/select2.js"></script>
+<script src="{{ STATIC_URL }}vendor/angular/angular.min.js"></script>
 <script src="{{ STATIC_URL }}geonode/js/search/explore.js"></script>
 <script src="{{ STATIC_URL }}mapstory/js/search.js"></script>
 <script type="text/javascript">
-  CATEGORIES_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='categories' %}';
-  KEYWORDS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='keywords' %}';
-  REGIONS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='regions' %}';
-  HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
-  HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
-  CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
-  AUTOCOMPLETE_URL_RESOURCEBASE = '{% url "autocomplete_light_autocomplete" "ResourceBaseAutocomplete" %}';
-  AUTOCOMPLETE_URL_REGION = '{% url "autocomplete_light_autocomplete" "RegionAutocomplete" %}';
-  AUTOCOMPLETE_URL_KEYWORD = '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}';
-  {% if HAYSTACK_SEARCH %}
-    SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}'
-  {% else %}
-    SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'
-  {% endif %}
+    CATEGORIES_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='categories' %}';
+    KEYWORDS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='keywords' %}';
+    REGIONS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='regions' %}';
+    HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
+    HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
+    CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
+    AUTOCOMPLETE_URL_RESOURCEBASE = '{% url "autocomplete_light_autocomplete" "ResourceBaseAutocomplete" %}';
+    AUTOCOMPLETE_URL_REGION = '{% url "autocomplete_light_autocomplete" "RegionAutocomplete" %}';
+    AUTOCOMPLETE_URL_KEYWORD = '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}';
+    {% if HAYSTACK_SEARCH %}
+        SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}'
+    {% else %}
+        SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'
+    {% endif %}
 </script>
-<link href="{{ STATIC_URL }}vendor/slick-carousel/slick/slick.css" rel="stylesheet" />
-<link href="{{ STATIC_URL }}vendor/slick-carousel/slick/slick-theme.css" rel="stylesheet" />
-<link href="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.min.css" rel="stylesheet" />
-<script src="{{ STATIC_URL }}vendor/slick-carousel/slick/slick.js"></script>
-<script src="{{ STATIC_URL }}vendor/angular-slick/dist/slick.js"></script>
 <script src="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js"></script>
-<script src="{{ STATIC_URL }}lib/js/angular-leaflet-directive.min.js"></script>
 <script src="{{ STATIC_URL }}mapstory/js/mapstory.js"></script>
 <script src="{{ STATIC_URL }}vendor/clipboard/dist/clipboard.min.js"></script>
-<script> new Clipboard('.copyclip'); </script>
-<script src="{{ STATIC_URL }}geonode/js/utils/utils.js"></script>
-<script src="{{ STATIC_URL }}geonode/js/base/base.js"></script>
+{% include "osgeo_importer/_importer_scripts.html" %}
 {% include 'autocomplete_light/static.html' %}
+{% include "favorite/_favorite_js.html" %}
 <script src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
-{% block extra_script %}{% endblock extra_script %}
+
 <script type="text/javascript">
-  {% if AUTOCOMPLETE_QUICK_SEARCH %}
-  /* Script for keywords autocomplete */
-    var quicksearch_autocomplete = $('#quicksearch').yourlabsAutocomplete({
-      url: '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}',
-      choiceSelector: 'span',
-      hideAfter: 200,
-      minimumCharacters: 1,
-      appendAutocomplete: $('#quicksearch'),
-      placeholder: gettext('Enter keyword here ...')
-    });
-    $('#quicksearch').bind('selectChoice', function(e, choice, quicksearch_autocomplete) {
-      if (choice[0].children[0] == undefined) {
-        $('#quicksearch').val(choice[0].innerHTML);
-        $scope.keyword_query = choice[0].innerHTML;
-      }
-    });
+    {% if AUTOCOMPLETE_QUICK_SEARCH %}
+        /* Script for keywords autocomplete */
+        var quicksearch_autocomplete = $('#quicksearch').yourlabsAutocomplete({
+            url: '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}',
+            choiceSelector: 'span',
+            hideAfter: 200,
+            minimumCharacters: 1,
+            appendAutocomplete: $('#quicksearch'),
+            placeholder: gettext('Enter keyword here ...')
+        });
+        $('#quicksearch').bind('selectChoice', function (e, choice, quicksearch_autocomplete) {
+            if (choice[0].children[0] == undefined) {
+                $('#quicksearch').val(choice[0].innerHTML);
+                $scope.keyword_query = choice[0].innerHTML;
+            }
+        });
     {% endif %}
     /* Fix placeholder text for Quick Search */
-    $(function() {
-        $('#quicksearch').attr('placeholder','Quick Search');
+    $(function () {
+        $('#quicksearch').attr('placeholder', 'Quick Search');
     });
 </script>
 <script type="text/javascript">
@@ -85,8 +66,8 @@
         placeholder: '{% trans 'Type your search here ...' %}',
         appendAutocomplete: $('#search_input')
     });
-    $('#search_input').bind('selectChoice', function(e, choice, autocomplete) {
-        if(choice[0].children[0] == undefined) {
+    $('#search_input').bind('selectChoice', function (e, choice, autocomplete) {
+        if (choice[0].children[0] == undefined) {
             $('#search_input').val(choice[0].innerHTML);
             $('#search').submit();
         }
@@ -94,49 +75,50 @@
 </script>
 <script>
     /* Workaround to fix the autocomplete box positions */
-    yourlabs.Autocomplete.prototype.fixPosition = function(html) {
-      this.input.parents().filter(function() {
-        return $(this).css('overflow') === 'hidden';
-      }).first().css('overflow', 'visible');
-      if (this.input.attr('name') !== 'resource-keywords') {
-        this.box.insertAfter(this.input).css({
-          top: 0,
-          left: 0
-        });
-      }
-      else {
-        var pos = $.extend({}, this.input.position(), {
-          height: this.input.outerHeight()
-        });
-        this.box.insertAfter(this.input).css({
-          top: pos.top + pos.height,
-          left: pos.left
-        });
-      }
+    yourlabs.Autocomplete.prototype.fixPosition = function (html) {
+        this.input.parents().filter(function () {
+            return $(this).css('overflow') === 'hidden';
+        }).first().css('overflow', 'visible');
+        if (this.input.attr('name') !== 'resource-keywords') {
+            this.box.insertAfter(this.input).css({
+                top: 0,
+                left: 0
+            });
+        }
+        else {
+            var pos = $.extend({}, this.input.position(), {
+                height: this.input.outerHeight()
+            });
+            this.box.insertAfter(this.input).css({
+                top: pos.top + pos.height,
+                left: pos.left
+            });
+        }
     };
 </script>
 <script type="text/javascript" src="{% url "lang" %}"></script>
 {% if  USER_SNAP %}
-<script type="text/javascript">
-  (function() {
-    var s = document.createElement("script");
-    s.type = "text/javascript";
-    s.async = true;
-    s.src = '//api.usersnap.com/load/' +
-      'bbadd6c6-bbf7-4426-a52c-965ebb008963.js';
-    var x = document.getElementsByTagName('script')[0];
-    x.parentNode.insertBefore(s, x);
-  })();
-</script>
+    <script type="text/javascript">
+        (function () {
+            var s = document.createElement("script");
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = '//api.usersnap.com/load/' +
+                    'bbadd6c6-bbf7-4426-a52c-965ebb008963.js';
+            var x = document.getElementsByTagName('script')[0];
+            x.parentNode.insertBefore(s, x);
+        })();
+    </script>
 {% endif %}
+<script> new Clipboard('.copyclip'); </script>
 <script>
-// enable hard linking to tabs
-  var hash = document.location.hash;
-  var prefix = "-";
-  if (hash) {
-      $('.nav-tabs a[href="'+hash.replace(prefix,"")+'"]').tab('show');
-  } 
-  $('.nav-tabs a').on('shown', function (e) {
-    window.location.hash = e.target.hash.replace("#", "#" + prefix);
-});
+    // enable hard linking to tabs
+    var hash = document.location.hash;
+    var prefix = "-";
+    if (hash) {
+        $('.nav-tabs a[href="' + hash.replace(prefix, "") + '"]').tab('show');
+    }
+    $('.nav-tabs a').on('shown', function (e) {
+        window.location.hash = e.target.hash.replace("#", "#" + prefix);
+    });
 </script>

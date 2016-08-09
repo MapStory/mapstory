@@ -1,10 +1,5 @@
 {% load staticfiles %}
 {% load mapstory_tags %}
-    {% if GEOGIG_ENABLED and resource.link_set.geogig %}
-        {% with "_geogig_scripts.html" as geogig_scripts_template %}
-	            {% include  geogig_scripts_template %}
- {% endwith %}
- {% endif %}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}geoexplorer/externals/openlayers/theme/default/style.css"/>
 <script type="text/javascript" src="//www.youtube.com/iframe_api"></script>
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL}}geoexplorer/externals/geoext/resources/css/geoext-all.css"/>

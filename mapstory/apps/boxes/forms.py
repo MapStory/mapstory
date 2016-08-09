@@ -73,3 +73,4 @@ class StoryBoxForm(forms.ModelForm):
 
     class Meta:
         model = StoryBox
+        fields = '__all__'

@@ -1,4 +1,5 @@
 {% extends "layers/layer_base.html" %}
+{% load staticfiles %}
 {% load i18n %}
 {% load dialogos_tags %}
 {% load agon_ratings_tags %}
@@ -11,100 +12,86 @@
 
 {% block title %}{{ resource.title|default:resource.typename }} — {{ block.super }}{% endblock %}
 {% block head %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css" />
-{% include "mapstory/ext_header.html" %}
-{% include "mapstory/app_header.html" %}
-{% include "mapstory/geo_header.html" %}
-<script type="text/javascript">
-    var app;
-    Ext.onReady(function() {
-        {% autoescape off %}
-        $('<iframe>', {
-            src: '{%  url 'layer_viewer' resource.typename %}',
-            id:  'myFrame',
-            allowfullscreen: 'true',
-            frameborder: 0,
-            style:'width: 100%; height: 100%;',
-            scrolling: 'no'
-        }).appendTo('#embedded_map');
-        {% endautoescape %}
-    });
-</script>
-{{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css"/>
+    {% include "mapstory/ext_header.html" %}
+    {% include "mapstory/geo_header.html" %}
+    {{ block.super }}
 {% endblock %}
 
 {% block body_class %}layers{% endblock %}
 {% block body_outer %}{% include "detail_base.html" with page="layer" %}{% endblock %}
 {% block extra_script %}
-    {% if GEOGIG_ENABLED and resource.link_set.geogig %}
-        {% with "_geogig_scripts.html" as geogig_scripts_template %}
-            {% include  geogig_scripts_template %}
-        {% endwith %}
-    {% endif %}
-    {% if request.user.is_authenticated %}
-        {% user_rating_js request.user resource "layer" %}
-    {% else %}
-        {% overall_rating resource 'layer' as the_layer_rating %}
-    {% endif %}
-    {% include 'rating.html' %}
-    {% include 'request_download.html' %}
-    <script type="text/javascript">
-        $("#comment_submit_btn").click(function(event) {
-            $.ajax({
-                type: "POST",
-                url: $("#form_post_comment").attr('action'),
-                data: $("#form_post_comment").serialize(),
-                success: function() {
-                    $('#form_post_comment_div').modal('hide');
-                    $('#comments_section').load(window.location.pathname + ' #comments_section',
-                            function(){$(this).children().unwrap()})
-                }
-            });
-            return false;
+{% if GEOGIG_ENABLED and resource.link_set.geogig %}
+    {% with "_geogig_scripts.html" as geogig_scripts_template %}
+        {% include  geogig_scripts_template %}
+    {% endwith %}
+{% endif %}
+<script type="text/javascript">
+    var app;
+    Ext.onReady(function () {
+        {% autoescape off %}
+        $('<iframe>', {
+            src: '{%  url 'layer_viewer' resource.typename %}',
+            id: 'myFrame',
+            allowfullscreen: 'true',
+            frameborder: 0,
+            style: 'width: 100%; height: 100%;',
+            scrolling: 'no'
+        }).appendTo('#embedded_map');
+        {% endautoescape %}
+    });
+</script>
+
+{% if request.user.is_authenticated %}
+    {% user_rating_js request.user resource "layer" %}
+{% else %}
+    {% overall_rating resource 'layer' as the_layer_rating %}
+{% endif %}
+
+<script type="text/javascript">
+    $("#comment_submit_btn").click(function (event) {
+        $.ajax({
+            type: "POST",
+            url: $("#form_post_comment").attr('action'),
+            data: $("#form_post_comment").serialize(),
+            success: function () {
+                $('#form_post_comment_div').modal('hide');
+                $('#comments_section').load(window.location.pathname + ' #comments_section',
+                        function () {
+                            $(this).children().unwrap()
+                        })
+            }
         });
-        {% if request.GET.showMetadata == 'true'%}
-            // prompt user to fill out metadata if the showMetadata GET param is true
-            $(window).load(function(){
-                $('#metaForm').modal('show');
-            });
-        {% endif %}
-        {% if resource.get_legend.link_type == 'json' %}
-            $.getJSON('{{resource.get_legend_url}}', function (data) {
-                var legend = data.layers[0].legend;
-                var items = [];
-                $.each(legend, function (key, dvalue) {
-                    items.push('<li><img src="data:image/png;base64,' + dvalue.imageData + '">'+dvalue.label+'</li>');
-                });
-                $('<ul/>', {
-                    'class': 'arcgis-legend',
-                    html: items.join('')
-                }).appendTo('#legend_placeholder');
-            });
-        {% endif %}
-    </script>
-    <script type="text/javascript">
-        $('#set_thumbnail').click(function(){
-            createMapThumbnail();
-            $('#edit-layer').modal('toggle');
+        return false;
+    });
+    {% if request.GET.showMetadata == 'true'%}
+        // prompt user to fill out metadata if the showMetadata GET param is true
+        $(window).load(function () {
+            $('#metaForm').modal('show');
         });
-    </script>
-    {% if GEONODE_SECURITY_ENABLED %}
-        {% include "_permissions_form_js.html" %}
     {% endif %}
-    <script src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
-    <script type="text/javascript">
-        $('.download-link').click(function(event) {
-            var extension = $(event.target).attr('data-extension');
-            var id = $(event.target).attr('data-id');
-            $.ajax({
-                method: 'POST',
-                url: "{% url "
-                notify - layer - download " %}",
-                data: {
-                    extension: extension,
-                    id: id
-                }
-            })
+    {% if resource.get_legend.link_type == 'json' %}
+        $.getJSON('{{resource.get_legend_url}}', function (data) {
+            var legend = data.layers[0].legend;
+            var items = [];
+            $.each(legend, function (key, dvalue) {
+                items.push('<li><img src="data:image/png;base64,' + dvalue.imageData + '">' + dvalue.label + '</li>');
+            });
+            $('<ul/>', {
+                'class': 'arcgis-legend',
+                html: items.join('')
+            }).appendTo('#legend_placeholder');
         });
-    </script>
+    {% endif %}
+</script>
+<script type="text/javascript">
+    $('#set_thumbnail').click(function () {
+        createMapThumbnail();
+        $('#edit-layer').modal('toggle');
+    });
+</script>
+{% if GEONODE_SECURITY_ENABLED %}
+    {% include "_permissions_form_js.html" %}
+{% endif %}
+<script src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
 {% endblock extra_script %}

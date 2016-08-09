@@ -83,8 +83,43 @@
   notify: restart django
   tags: [settings]
 
-- name: syncdb
-  django_manage: command="syncdb --noinput --no-initial-data" virtualenv={{ venv }} app_path={{ project_path }}
+- name: make migrations initial
+  django_manage: command="makemigrations sites people notification maps groups" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [update, syncdb]
+
+- name: make migrations
+  django_manage: command="makemigrations" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [update, syncdb]
+
+- name: migrate sites
+  django_manage: command="migrate sites --noinput --fake-initial" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [update, syncdb]
+
+- name: migrate notification
+  django_manage: command="migrate notification --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [update, syncdb]
+
+- name: migrate people
+  django_manage: command="migrate people --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [update, syncdb]
+
+- name: migrate maps
+  django_manage: command="migrate maps --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [update, syncdb]
+
+- name: migrate groups
+  django_manage: command="migrate groups --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [update, syncdb]
+
+- name: migrate
+  django_manage: command="migrate --noinput" virtualenv={{ venv }} app_path={{ project_path }}
   become_user: '{{ application_user }}'
   tags: [update, syncdb]
 
@@ -98,7 +133,7 @@
   shell: >
     PYTHONPATH=. DJANGO_SETTINGS_MODULE={{ application_name }}.settings
     {{ venv }}/bin/python -c
-    "from geonode.people.models import Profile; p,_ = Profile.objects.get_or_create(username='admin'); p.is_staff=p.is_superuser=True; p.set_password('{{django_su_pass}}'); p.save()"
+    "import django; from geonode.people.models import Profile; django.setup(); p,_ = Profile.objects.get_or_create(username='admin'); p.is_staff=p.is_superuser=True; p.set_password('{{django_su_pass}}'); p.save()"
     chdir={{ project_path }}
   tags: [superuser]
 

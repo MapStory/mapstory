@@ -4,9 +4,7 @@
     angular.module('mapstory', [
         'mapstory.uploader',
         'ui.bootstrap',
-        'geonode_main_search',
-        'leaflet-directive',
-        'slick'
+        'geonode_main_search'
     ], function($locationProvider) {
          if (window.navigator.userAgent.indexOf("MSIE") == -1){
           $locationProvider.html5Mode({
@@ -249,15 +247,6 @@
         };
       }
     })
-
-// this is from geonode it is at least used on the search page.
-.controller('leaflet_hack', function($scope, leafletData) {
-    $('#regions').on('shown.bs.collapse', function() {
-        leafletData.getMap().then(function(map) {
-            map.invalidateSize();
-        });
-    });
-  })
 
 .controller('profile_search_controller', function($injector, $scope, $location, $http, Configs,
                                                           UploadedData, $rootScope){

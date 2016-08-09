@@ -1,19 +1,17 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block head %}
-  {% if DEBUG_STATIC %}
-    <link href="{{ STATIC_URL }}lib/css/jquery.dataTables.css" rel="stylesheet" />
-    <link href="{{ STATIC_URL }}lib/css/select2.css" rel="stylesheet"/>
     <link href="{{ STATIC_URL }}lib/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="{{ STATIC_URL }}lib/css/jquery-ui.css" rel="stylesheet"/>
     <link href="{{ STATIC_URL }}lib/css/bootstrap-datetimepicker.css" rel="stylesheet"/>
-  {% else %}<link href="{{ STATIC_URL }}lib/css/assets.min.css" rel="stylesheet"/>{% endif %}
-    <link href="{{ STATIC_URL }}geonode/css/ext-compatibility.css" rel="stylesheet" />
-    <link href="{{ STATIC_URL }}style/themes/{{THEME}}/site-theme.css" rel="stylesheet" />
-  {% include "osgeo_importer/_importer_styles.html" %}
-  {% if site.assets.favicon %}<link rel="shortcut icon" href="/uploaded/{{ site.assets.favicon.name }}">{% endif %}
-{% if GOOGLE_ANALYTICS %}{% include "mapstory/google_analytics.html" %}{% endif %}
-{{ block.super }}
+    <link href="{{ STATIC_URL }}lib/css/assets.min.css" rel="stylesheet"/>
+    <link href="{{ STATIC_URL }}geonode/css/ext-compatibility.css" rel="stylesheet"/>
+    <link href="{{ STATIC_URL }}style/themes/{{ THEME }}/site-theme.css" rel="stylesheet"/>
+    {% include "osgeo_importer/_importer_styles.html" %}
+    {% if site.assets.favicon %}
+        <link rel="shortcut icon" href="/uploaded/{{ site.assets.favicon.name }}">{% endif %}
+    {% if GOOGLE_ANALYTICS %}{% include "mapstory/google_analytics.html" %}{% endif %}
+    {{ block.super }}
 {% endblock head %}
 {% block header %}{% include 'mapstory/_header.html' %}{% endblock %}
 {% block footer %}{% include 'mapstory/_footer.html' %}{% endblock %}
