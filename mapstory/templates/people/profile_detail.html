@@ -7,336 +7,349 @@
 
 {% block title %} {% trans "Profile of " %}{{ profile.first_name|default_if_none:profile.username }}{% endblock %}
 {% block body_class %}people explore{% endblock %}
-{% block extra_head %}
-<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}osgeo_importer/css/angular-wizard.min.css">
-<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}osgeo_importer/css/importer.css" />
-{% endblock %}
 {% block body %}
-<div ng-controller="profile_search_controller">
-    <div class="container">
-        <div class="row profile-banner">
-            <div class="col-sm-1">
-                <img class="img-circle" src="{% avatar_url profile 75 %}" width="75" height="75"/>
-            </div>
-            <div class="col-sm-6">
-                <div class="user-info">
-                    <h1 class="name">{{ profile.name_long }}</h1>
-                    <h1 class="details">
-                        {% if profile.position %}<span>{{ profile.position }}, </span> {% endif %}
-                        {% if profile.organization %}<span>{{ profile.organization }}</span>{% endif %}
-                        {% if profile.location %}<span>{{ profile.location }}</span>{% endif %}
-                    </h1>
+    <div ng-controller="profile_search_controller">
+        <div class="container">
+            <div class="row profile-banner">
+                <div class="col-sm-1">
+                    <img class="img-circle" src="{% avatar_url profile 75 %}" width="75" height="75"/>
                 </div>
-            </div>
-        </div>
-    </div>
-<article class="slice">
-    <div class="container">
-        <div class="col-sm-2">
-            <div class="sidebar-header"><h3>user info</h3></div>
-            {% if profile.profile %}<div class="sidebar-content">{{ profile.profile }}</div>{% endif %}
-            {% if profile.city or profile.country %}
-                <div class="sidebar-header"><h5>location</h5></div>
-                {% if profile.city %}
-                    <a href="/search/?limit=100&offset=0&type__in=user&city={{ profile.city }}">
-                    <div class="sidebar-content">{{ profile.city }}</div></a>
-                {% endif %}
-                {% if profile.country %}
-                    <a href="/search/?limit=100&offset=0&type__in=user&country={{ profile.country }}">
-                    <div class="sidebar-content">{{ profile.country }}</div></a>
-                {% endif %}
-            {% endif %}
-            {% if profile.education %}
-            <div class="sidebar-header"><h5>education</h5></div>
-            <div class="sidebar-content">{{ profile.education }}</div>
-            {% endif %}
-            {% if profile.expertise %}
-            <div class="sidebar-header"><h5>expertise</h5></div>
-            <div class="sidebar-content">{{ profile.expertise }}</div>
-            {% endif %}
-            {% if user.Volunteer_Technical_Community %}
-            <div class="sidebar-content"><h5 style="font-weight: bold;">Volunteer Technical Community Member</h5></div>
-            {% endif %}
-
-            <!-- notifications -->
-            {% if user == profile %}
-            <div class="sidebar-header"><h3>user actions</h3></div>
-            <div class="sidebar-content">
-                <a href="{% url "edit_profile" user.username %}">{% trans "edit profile" %}</a>
-            </div>
-            <div class="sidebar-content">
-                <a href="{% url "profile_delete" user.username %}">{% trans "delete profile" %}</a>
-            </div>
-            <div class="sidebar-content">
-                <a href="{% url "account_password" %}">{% trans "change password" %}</a>
-            </div>
-            <div>
-                <a href="#" class="sidebar-content" data-toggle="modal" data-target="#notifications">notifications settings</a>
-            </div>
-            {% endif %}
-        
-            <!-- contact profile -->
-            <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
-            {% if user != profile %}
-            <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary" >message</a>
-            {% endif %}
-            {% if profile.social_facebook %}
-            <div class="sidebar-content">
-                <a href="{{ profile.social_facebook }}"><i class="fa fa-facebook"></i>facebook</a>
-            </div>
-            {% endif %}
-            {% if profile.social_twitter %}
-            <div class="sidebar-content">
-                <a href="{{ profile.social_twitter }}"><i class="fa fa-twitter"></i>twitter</a>
-            </div>
-            {% endif %}
-            {% if profile.social_github %}
-            <div class="sidebar-content">
-                <a href="{{ profile.social_github }}"><i class="fa fa-github"></i>github</a>
-            </div>
-            {% endif %}
-            {% if profile.social_linkedin %}
-            <div class="sidebar-content">
-                <a href="{{ profile.social_linkedin }}"><i class="fa fa-linkedin"></i>linkedin</a>
-            </div>
-            {% endif %}
-
-            <!-- tags and interests -->
-            {% if profile.keyword_list %}
-                <div class="sidebar-header"><h3>tags & interests </h3></div>
-                <div>
-                    <input type="text" class="form-control" id="tokenfield-interests"/>
-                </div>
-            {% endif %}
-        </div>
-
-        <div class="col-sm-10" style="border-left: 1px solid gainsboro">
-            <div class="tabbable-panel">
-                <div class="tabbable-line">
-                    <ul class="nav nav-tabs">
-                        <li class="active">
-                            <a href="#stories_list" data-toggle="tab" ng-click="query={q: query.q}; query.type__in='mapstory'; query.owner__username__in='{{profile.username}}'; search();">
-                                <div class="counter"><span ng-bind="total_maps"></span></div>
-                                {% trans "Stories" %} </a>
-                        </li>
-                        <li>
-                            <a href="#layers_list" data-toggle="tab" ng-click="query={q: query.q}; query.type__in='layer'; query.owner__username__in='{{profile.username}}'; search();">
-                                <div class="counter"><span ng-bind="total_layers"></span></div>
-                                {% trans "Layers" %} </a>
-                        </li>
-                        {% if user == profile %}
-                        <li>
-                            <a href="#uploads_list" data-toggle="tab">
-                                <div class="counter"><span ng-bind="totalItems"></span></div>
-                                Uploads
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#messages_list" data-toggle="tab">
-                                <div class="counter">{{ inbox_count }}</div>
-                                Messages </a>
-                        </li>
-
-                        {% endif %}
-                        <li>
-                            <a href="#user_activities" data-toggle="tab">
-                                <div class="counter">{{ action_list.count }}</div>
-                                Activity Feed </a>
-                        </li>
-                        <li>
-                            <a href="#diary_entries" data-toggle="tab">
-                                <div class="counter">{{diary_entries.count}}</div>
-                                Journal Entr{{diary_entries|pluralize:"y,ies"}} </a>
-                        </li>
-                        <li>
-                            <a href="#favorite_list" data-toggle="tab">
-                                <div class="counter">{{ favorites.count }}</div>
-                                Favorite{{favorites|pluralize}}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#icon_list" data-toggle="tab">
-                                <div class="counter">{{ icons.count }}</div>
-                                Icon{{icons|pluralize}}
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="stories_list">
-                            <div class="no-content" ng-if="results == null">
-                                <h2>No MapStories.</h2>
-                                <h4>Create your first {% trans "Story" %} now.</h4>
-                            </div>
-                            <div class="clearfix search-results">
-                                <ul>{% include 'people/_result_content.html' %}</ul>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="layers_list">
-                            <div class="no-content" ng-if="results == null">
-                                <h2>{% trans "No Layers" %}.</h2>
-                                <h4>Upload your first {% trans "Layer" %} now.</h4>
-                            </div>
-                            <div class="clearfix search-results">
-                                <ul>{% include 'people/_result_content.html' %}</ul>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane" id="uploads_list">
-                            <div class="no-content" ng-hide="uploads.length">
-                                <h2>No Uploads.</h2>
-                                <h4><a style="cursor: pointer" ng-controller="ImportController" ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{STATIC_URL}}')">Click here</a> to upload your data!.</h4>
-                            </div>
-                            <div class="" ng-show="uploads.length">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <div ng-show="loading" style="margin-right: 50%; margin-left: 50%; margin-top: 30px; margin-bottom: 30px">
-                                                <i class="fa fa-spinner fa-spin fa-3x"></i>
-                                            </div>
-                                            {% verbatim %}
-                                            <div class="layer-upload-counts">Showing uploads {{offset}}-{{offset+uploads.length}} of {{totalItems}}.</div>
-                                            {% endverbatim %}
-                                            <div ng-repeat="upload in uploads">
-                                                <upload upload-object="upload" i="$index" static-url="{{STATIC_URL}}" template-url="{{ STATIC_URL }}osgeo_importer/partials/upload.html"></upload>
-                                            </div>
-                                            <uib-pagination total-items="totalItems" ng-init="init('{{user.username}}')" ng-change="pageChanged()" max-size="7" class="pagination-sm" items-per-page="limit" ng-model="currentPage"></uib-pagination>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane" id="messages_list">
-                            {% if not inbox_count %}
-                            <div class="no-content">
-                                <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
-                                <h4>Compose a new message now.</h4>
-                            </div>
-                            {% else %}
-                            <div class="tab-content">
-                              <article id="inbox" class="tab-pane">
-                                {% with threads_unread as threads %}
-                                    {% include "user_messages/_message_snippet.html" %}
-                                {% endwith %}
-                              </article>
-                              <article id="all" class="tab-pane">
-                                {% with threads_all as threads %}
-                                    {% include "user_messages/_message_snippet.html" %}
-                                {% endwith %}
-                              </article>
-                            </div>
-                            {% endif %}
-                        </div>
-                        <div class="tab-pane" id="user_activities">
-                            {% if action_list.count == 0 %}
-                            <div class="no-content">
-                                <h2>No activities.</h2>
-                                <h4>Explore {{ SITE_NAME }} now.</h4>
-                            </div>
-                            {% endif %}
-                            <div class="row">
-                              <div class="col-md-12">
-                                <ul class="no-style-list">
-                                  {% for action in action_list %}
-                                  {% activity_item action %}
-                                  {% endfor %}
-                                </ul>
-                              </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="diary_entries">
-                            {% if not diary_entries %}
-                            <div class="no-content">
-                                <h2>No entries.</h2>
-                                <h4>Write your first journal entry now.</h4>
-                            </div>
-                            {% else %}
-                                {% for entry in diary_entries %}
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="row">
-                                                <div class="col-lg-12  col-xs-12">
-                                                    <h3><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h3>
-                                                    <h6>{{ entry.date }}</h6>
-                                                    <div>
-                                                    {{ entry.html|safe }}
-                                                </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr/>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                        <div class="tab-pane" id="favorite_list">
-                            {% include "favorite/_favorite_list.html" %}
-                        </div>
-                        <div class="tab-pane" id="icon_list">
-                            {% include "icons/_profile_icon_list.html" %}
-                        </div>
+                <div class="col-sm-6">
+                    <div class="user-info">
+                        <h1 class="name">{{ profile.name_long }}</h1>
+                        <h1 class="details">
+                            {% if profile.position %}<span>{{ profile.position }}, </span> {% endif %}
+                            {% if profile.organization %}<span>{{ profile.organization }}</span>{% endif %}
+                            {% if profile.location %}<span>{{ profile.location }}</span>{% endif %}
+                        </h1>
                     </div>
                 </div>
             </div>
         </div>
+        <article class="slice">
+            <div class="container">
+                <div class="col-sm-2">
+                    <div class="sidebar-header"><h3>user info</h3></div>
+                    {% if profile.profile %}
+                        <div class="sidebar-content">{{ profile.profile }}</div>{% endif %}
+                    {% if profile.city or profile.country %}
+                        <div class="sidebar-header"><h5>location</h5></div>
+                        {% if profile.city %}
+                            <a href="/search/?limit=100&offset=0&type__in=user&city={{ profile.city }}">
+                                <div class="sidebar-content">{{ profile.city }}</div>
+                            </a>
+                        {% endif %}
+                        {% if profile.country %}
+                            <a href="/search/?limit=100&offset=0&type__in=user&country={{ profile.country }}">
+                                <div class="sidebar-content">{{ profile.country }}</div>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                    {% if profile.education %}
+                        <div class="sidebar-header"><h5>education</h5></div>
+                        <div class="sidebar-content">{{ profile.education }}</div>
+                    {% endif %}
+                    {% if profile.expertise %}
+                        <div class="sidebar-header"><h5>expertise</h5></div>
+                        <div class="sidebar-content">{{ profile.expertise }}</div>
+                    {% endif %}
+                    {% if user.Volunteer_Technical_Community %}
+                        <div class="sidebar-content"><h5 style="font-weight: bold;">Volunteer Technical Community Member</h5></div>
+                    {% endif %}
+
+                    <!-- notifications -->
+                    {% if user == profile %}
+                        <div class="sidebar-header"><h3>user actions</h3></div>
+                        <div class="sidebar-content">
+                            <a href="{% url "edit_profile" user.username %}">{% trans "edit profile" %}</a>
+                        </div>
+                        <div class="sidebar-content">
+                            <a href="{% url "profile_delete" user.username %}">{% trans "delete profile" %}</a>
+                        </div>
+                        <div class="sidebar-content">
+                            <a href="{% url "account_password" %}">{% trans "change password" %}</a>
+                        </div>
+                        <div>
+                            <a href="#" class="sidebar-content" data-toggle="modal" data-target="#notifications">notifications settings</a>
+                        </div>
+                    {% endif %}
+
+                    <!-- contact profile -->
+                    <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
+                    {% if user != profile %}
+                        <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary">message</a>
+                    {% endif %}
+                    {% if profile.social_facebook %}
+                        <div class="sidebar-content">
+                            <a href="{{ profile.social_facebook }}"><i class="fa fa-facebook"></i>facebook</a>
+                        </div>
+                    {% endif %}
+                    {% if profile.social_twitter %}
+                        <div class="sidebar-content">
+                            <a href="{{ profile.social_twitter }}"><i class="fa fa-twitter"></i>twitter</a>
+                        </div>
+                    {% endif %}
+                    {% if profile.social_github %}
+                        <div class="sidebar-content">
+                            <a href="{{ profile.social_github }}"><i class="fa fa-github"></i>github</a>
+                        </div>
+                    {% endif %}
+                    {% if profile.social_linkedin %}
+                        <div class="sidebar-content">
+                            <a href="{{ profile.social_linkedin }}"><i class="fa fa-linkedin"></i>linkedin</a>
+                        </div>
+                    {% endif %}
+
+                    <!-- tags and interests -->
+                    {% if profile.keyword_list %}
+                        <div class="sidebar-header"><h3>tags & interests </h3></div>
+                        <div>
+                            <input type="text" class="form-control" id="tokenfield-interests"/>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-sm-10" style="border-left: 1px solid gainsboro">
+                    <div class="tabbable-panel">
+                        <div class="tabbable-line">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#stories_list" data-toggle="tab"
+                                       ng-click="query={q: query.q}; query.type__in='mapstory'; query.owner__username__in='{{ profile.username }}'; search();">
+                                        <div class="counter"><span ng-bind="total_maps"></span></div>
+                                        {% trans "Stories" %} </a>
+                                </li>
+                                <li>
+                                    <a href="#layers_list" data-toggle="tab"
+                                       ng-click="query={q: query.q}; query.type__in='layer'; query.owner__username__in='{{ profile.username }}'; search();">
+                                        <div class="counter"><span ng-bind="total_layers"></span></div>
+                                        {% trans "Layers" %} </a>
+                                </li>
+                                {% if user == profile %}
+                                    <li>
+                                        <a href="#uploads_list" data-toggle="tab">
+                                            <div class="counter"><span ng-bind="totalItems"></span></div>
+                                            Uploads
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#messages_list" data-toggle="tab">
+                                            <div class="counter">{{ inbox_count }}</div>
+                                            Messages </a>
+                                    </li>
+
+                                {% endif %}
+                                <li>
+                                    <a href="#user_activities" data-toggle="tab">
+                                        <div class="counter">{{ action_list.count }}</div>
+                                        Activity Feed </a>
+                                </li>
+                                <li>
+                                    <a href="#diary_entries" data-toggle="tab">
+                                        <div class="counter">{{ diary_entries.count }}</div>
+                                        Journal Entr{{ diary_entries|pluralize:"y,ies"}} </a>
+                                </li>
+                                <li>
+                                    <a href="#favorite_list" data-toggle="tab">
+                                        <div class="counter">{{ favorites.count }}</div>
+                                        Favorite{{ favorites|pluralize }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#icon_list" data-toggle="tab">
+                                        <div class="counter">{{ icons.count }}</div>
+                                        Icon{{ icons|pluralize }}
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="stories_list">
+                                    <div class="no-content" ng-if="results == null">
+                                        <h2>No MapStories.</h2>
+                                        <h4>Create your first {% trans "Story" %} now.</h4>
+                                    </div>
+                                    <div class="clearfix search-results">
+                                        <ul>{% include 'people/_result_content.html' %}</ul>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="layers_list">
+                                    <div class="no-content" ng-if="results == null">
+                                        <h2>{% trans "No Layers" %}.</h2>
+                                        <h4>Upload your first {% trans "Layer" %} now.</h4>
+                                    </div>
+                                    <div class="clearfix search-results">
+                                        <ul>{% include 'people/_result_content.html' %}</ul>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane" id="uploads_list">
+                                    <div class="no-content" ng-hide="uploads.length">
+                                        <h2>No Uploads.</h2>
+                                        <h4><a style="cursor: pointer" ng-controller="ImportController"
+                                               ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}')">Click
+                                            here</a> to upload your data!.</h4>
+                                    </div>
+                                    <div class="" ng-show="uploads.length">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-8">
+                                                    <div ng-show="loading"
+                                                         style="margin-right: 50%; margin-left: 50%; margin-top: 30px; margin-bottom: 30px">
+                                                        <i class="fa fa-spinner fa-spin fa-3x"></i>
+                                                    </div>
+                                                    {% verbatim %}
+                                                        <div class="layer-upload-counts">Showing uploads {{ offset }}-{{ offset+uploads.length }}
+                                                            of {{ totalItems }}.
+                                                        </div>
+                                                    {% endverbatim %}
+                                                    <div ng-repeat="upload in uploads">
+                                                        <upload upload-object="upload" i="$index" static-url="{{ STATIC_URL }}"
+                                                                template-url="{{ STATIC_URL }}osgeo_importer/partials/upload.html"></upload>
+                                                    </div>
+                                                    <uib-pagination total-items="totalItems" ng-init="init('{{ user.username }}')"
+                                                                    ng-change="pageChanged()" max-size="7" class="pagination-sm"
+                                                                    items-per-page="limit" ng-model="currentPage"></uib-pagination>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane" id="messages_list">
+                                    {% if not inbox_count %}
+                                        <div class="no-content">
+                                            <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
+                                            <h4>Compose a new message now.</h4>
+                                        </div>
+                                    {% else %}
+                                        <div class="tab-content">
+                                            <article id="inbox" class="tab-pane">
+                                                {% with threads_unread as threads %}
+                                                    {% include "user_messages/_message_snippet.html" %}
+                                                {% endwith %}
+                                            </article>
+                                            <article id="all" class="tab-pane">
+                                                {% with threads_all as threads %}
+                                                    {% include "user_messages/_message_snippet.html" %}
+                                                {% endwith %}
+                                            </article>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="tab-pane" id="user_activities">
+                                    {% if action_list.count == 0 %}
+                                        <div class="no-content">
+                                            <h2>No activities.</h2>
+                                            <h4>Explore {{ SITE_NAME }} now.</h4>
+                                        </div>
+                                    {% endif %}
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <ul class="no-style-list">
+                                                {% for action in action_list %}
+                                                    {% activity_item action %}
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="diary_entries">
+                                    {% if not diary_entries %}
+                                        <div class="no-content">
+                                            <h2>No entries.</h2>
+                                            <h4>Write your first journal entry now.</h4>
+                                        </div>
+                                    {% else %}
+                                        {% for entry in diary_entries %}
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <div class="row">
+                                                        <div class="col-lg-12  col-xs-12">
+                                                            <h3><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h3>
+                                                            <h6>{{ entry.date }}</h6>
+                                                            <div>
+                                                                {{ entry.html|safe }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <div class="tab-pane" id="favorite_list">
+                                    {% include "favorite/_favorite_list.html" %}
+                                </div>
+                                <div class="tab-pane" id="icon_list">
+                                    {% include "icons/_profile_icon_list.html" %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
     </div>
-</article>
-</div>
-<div id="notifications" class="modal fade col-md-8">
-    <div class="modal-content">
-      <h2 style="display:inline">Notifications settings</h2>
-      <a class="btn pull-right" data-dismiss="modal">Close</a>
-      <table class="table table-striped notice_settings">
-        <tr>
-            <th>{% trans "Notification Type" %}</th>
-            <th>{% trans "Activate" %}</th>
-        </tr>
-        {% for settings in notice_settings %}
-            <tr class="notice-row">
-                <td>
-                  <strong>{{ settings.notice_type.display }}</strong><br/>
-                  <span class="notice_type_description">
+    <div id="notifications" class="modal fade col-md-8">
+        <div class="modal-content">
+            <h2 style="display:inline">Notifications settings</h2>
+            <a class="btn pull-right" data-dismiss="modal">Close</a>
+            <table class="table table-striped notice_settings">
+                <tr>
+                    <th>{% trans "Notification Type" %}</th>
+                    <th>{% trans "Activate" %}</th>
+                </tr>
+                {% for settings in notice_settings %}
+                    <tr class="notice-row">
+                        <td>
+                            <strong>{{ settings.notice_type.display }}</strong><br/>
+                            <span class="notice_type_description">
                       {{ settings.notice_type.description }}
                   </span>
-                </td>
-                <td>
-                  <input class="notice_setting" type="checkbox" name="{{ settings.notice_type.label }}" {% if settings.send %}checked="yes"{% endif %} />
-                </td>
-            </tr>
-        {% endfor %}
-      </table>
+                        </td>
+                        <td>
+                            <input class="notice_setting" type="checkbox" name="{{ settings.notice_type.label }}"
+                                   {% if settings.send %}checked="yes"{% endif %}/>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
-  </div>
-</div>
-{% include "_bulk_permissions_form.html" %}
-
-
-{{ block.super }}
-  {% if GEONODE_SECURITY_ENABLED %}
-    {% include "_permissions_form_js.html" %}
-  {% endif %}
-{% include 'favorite/_favorite_list_js.html' %}
-<script type="text/javascript">
-    PROFILE_USERNAME ="{{ profile.username }}";
-    // Pass the keyword list from the django template into the javascript
-    keyword_list = "{{profile.keyword_list|escapejs}}";
-</script>
-<script type="text/javascript">
-  $('.notice_setting').change(function(event){
-    var element = event.target;
-    var send = element.checked;
-    var notice_type = element.name;
-    $.post(
-      "{% url "set_profile_notification" user.get_username %}",
-      {
-        send: send,
-        notice_type: notice_type,
-        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]')[0].value
-      }
-    ).fail(function(data) {
-      alert('There was an error saving your setting');
-    });
-  });
-</script>
+    </div>
+    {% include "_bulk_permissions_form.html" %}
 
 {% endblock %}
+
+{% block extra_script %}
+
+    {{ block.super }}
+    {% if GEONODE_SECURITY_ENABLED %}
+        {% include "_permissions_form_js.html" %}
+    {% endif %}
+    {% include 'favorite/_favorite_list_js.html' %}
+    <script type="text/javascript">
+        PROFILE_USERNAME = "{{ profile.username }}";
+        // Pass the keyword list from the django template into the javascript
+        keyword_list = "{{profile.keyword_list|escapejs}}";
+    </script>
+    <script type="text/javascript">
+        $('.notice_setting').change(function (event) {
+            var element = event.target;
+            var send = element.checked;
+            var notice_type = element.name;
+            $.post(
+                    "{% url "set_profile_notification" user.get_username %}",
+                    {
+                        send: send,
+                        notice_type: notice_type,
+                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]')[0].value
+                    }
+            ).fail(function (data) {
+                alert('There was an error saving your setting');
+            });
+        });
+    </script>
+
+{% endblock extra_script %}
