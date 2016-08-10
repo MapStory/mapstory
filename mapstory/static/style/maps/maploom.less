@@ -1,3 +1,28 @@
 /* === MAPLOOM ==== */
 //Put any maploom rules that we're modifiying to change inherited styles in this section
 //with a comment about why. 
+
+a#start-tour:hover, a#start-composing:hover{
+	color: @gray30;
+}
+
+.btn-profile{
+	background: @gray60;
+}
+
+.btn-composer:hover{
+	background: @gray30;
+}
+
+.menu i:hover{
+	color: @gray90;
+}
+
+.selectedRow, .selectedRow>td{
+	background-color: @gray80 !important;
+	//have !important tags in maploom1.2.0.css
+}
+
+.loom-dialog.dialog-warning .modal-footer{
+	border-top: none;
+}
