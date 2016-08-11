@@ -76,7 +76,7 @@
                                 var keyword_list = "{{resource.keyword_list|escapejs}}";
                                 var url = "{{ resource.detail_url }}";
                             </script>
-                            {% ifequal resource.owner request.user %}
+                            {% if user.is_authenticated %}
                                 <input type="text" class="form-control" id="tokenfield-tags"/>
                                 {% verbatim %}
                                     <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
