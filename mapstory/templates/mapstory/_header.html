@@ -93,11 +93,11 @@
                     <ul class="dropdown-menu">
                         {% if user.is_authenticated %}
                             <li>
-                                <a ng-controller="ImportController"
+                                <a class="pointer" ng-controller="ImportController"
                                    ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', null, null, null, true)">{% trans "Upload Layer" %}</a>
                             </li>
                             <li style="display: none">
-                                <a ng-controller="createLayerCtrl"
+                                <a class="pointer" ng-controller="createLayerCtrl"
                                    ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}')">{% trans "Create Layer" %}</a>
                             </li>
                             <li>
