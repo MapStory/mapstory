@@ -329,11 +329,9 @@
       $scope.query.owner__username__in = PROFILE_USERNAME;
       $scope.search().then(function(result) {
         $scope.total_layers = $scope.total_counts;
-        $scope.query.type__in = 'map';
+        $scope.query.type__in = 'mapstory';
         $scope.search().then(function(result) {
           $scope.total_maps = $scope.total_counts;
-          //$scope.query.type__in = null;
-          //$scope.query.owner__username__in = null;
         });
       });
     };
