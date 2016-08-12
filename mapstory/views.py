@@ -230,7 +230,7 @@ def profile_edit(request, username=None):
                 messages.success(request, "Profile profile updated.")
                 return redirect(
                     reverse(
-                        'profile_detail',
+                        'storyteller_detail',
                         args=[
                             request.user.username]))
         else:

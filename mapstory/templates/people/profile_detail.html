@@ -219,7 +219,6 @@
                                     {% if not inbox_count %}
                                         <div class="no-content">
                                             <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
-                                            <h4>Compose a new message now.</h4>
                                         </div>
                                     {% else %}
                                         <div class="tab-content">
@@ -240,7 +239,7 @@
                                     {% if action_list.count == 0 %}
                                         <div class="no-content">
                                             <h2>No activities.</h2>
-                                            <h4>Explore {{ SITE_NAME }} now.</h4>
+                                            <h4><a href="{% url "home" %}">Explore {{ SITE_NAME }} now.</a></h4>
                                         </div>
                                     {% endif %}
                                     <div class="row">
@@ -257,7 +256,7 @@
                                     {% if not diary_entries %}
                                         <div class="no-content">
                                             <h2>No entries.</h2>
-                                            <h4>Write your first journal entry now.</h4>
+                                            <h4><a href="{% url "diary-create" %}">{% trans "Write your first journal entry now." %}</a></h4>
                                         </div>
                                     {% else %}
                                         {% for entry in diary_entries %}

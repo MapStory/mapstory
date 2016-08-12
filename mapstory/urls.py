@@ -103,6 +103,7 @@ urlpatterns = patterns('',
         'geonode.maps.views.mapstory_view', {'template': 'maps/mapstory_map_viewer.html'},
         name='mapstory-viewer'),
 
+    url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="storyteller_detail"),
     url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
     url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
