@@ -752,7 +752,8 @@
       // clear the user search
       $('#tokenfield-interest').tokenfield('setTokens', []);
       $scope.api_endpoint = '/api/base/search/';
-      $scope.query = {is_published: 'true', limit: 100, offset: 0, q: $scope.query.q};
+      //removed is_published: true for a user's drafts to appear in their search
+      $scope.query = {limit: 100, offset: 0, q: $scope.query.q};
     };
 
     // Configure new autocomplete

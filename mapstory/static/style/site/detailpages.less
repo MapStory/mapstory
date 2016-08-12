@@ -31,6 +31,10 @@
   text-decoration: underline;
 }
 
+.side-column.details{
+  padding-top: 45px;
+}
+
 .side-column-items li {
   color: @gray40;
   margin: 1px 15px;
@@ -42,17 +46,17 @@
   margin: 5px;
 }
 
-.details-tab-content {
-  padding: 10px;
-  color: @gray30;
-  font-size: 15px;
-  font-weight: 300;
+.tab-content.details > .tab-pane > div{
+  max-height:500px; 
+  overflow-y:scroll; 
+  overflow-x:hidden;
 }
 
 .details-tabs {
   border-bottom: 2px solid @gray60;
   color: @gray60;
   font-weight: 600;
+  font-size:0.8em;
 }
 
 .details-tabs > li > a, .details-tabs > li > a:hover, .details-tabs > li > a:focus {
@@ -113,4 +117,8 @@
   i {
     padding-right: 3px;
   }
+}
+
+img.thumb.img-responsive.details {
+  border: 1px solid @gray60;
 }

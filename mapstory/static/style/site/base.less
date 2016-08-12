@@ -72,6 +72,10 @@ small {
   font-size: 80%;
 }
 
+.tiny {
+  font-size: 70%;
+}
+
 strong {
   font-weight: 600
 }
@@ -199,9 +203,13 @@ form {
   color: @white;
 }
 
-.mapstory-auth-btn {
+.login-auth-btn {
   background-color: @primary-shadow;
   color: @white;
+  &:hover{
+    background-color: @primary;
+    color: @white;
+  }
 }
 
 /* --- BASE - Misc --- */
@@ -237,16 +245,6 @@ nav.filter {
     cursor: pointer;
     padding: 5px 10px;
   }
-}
-
-//used in geonode social recent activity list
-.rotate-45 {
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-  /*filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);*/
 }
 
 .comment {

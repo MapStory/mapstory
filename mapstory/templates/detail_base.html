@@ -15,75 +15,77 @@
     <section class="slice" id="dashboard">
         <div class="container">
             <div class="row">
-                {{ resource.tags }}
-                <div class="col-lg-9" style="padding-right:15px;">
+            {{ resource.tags }}
+                <div class="col-lg-9">
                     <h2 class="page-title">{{ resource.title }}</h2>
-                    {% if resource.owner.first_name != '' %}
-                        <small>Created by: <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">{{ resource.owner.first_name }} {{ resource.owner.last_name }}</a></small>
-                    {% else %}
-                        <small>Created by: <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">{{ resource.owner.username }}</a></small>
-                    {% endif %}
-                    <br>
+                    <small>Created by: 
+                        <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">
+                        {% if resource.owner.first_name != '' %}
+                            {{ resource.owner.first_name }} {{ resource.owner.last_name }}
+                        {% else %}
+                            {{ resource.owner.username }}
+                        {% endif %}
+                        </a>
+                    </small>
                     <div id="embedded_map" class="mrg-btm">
                         <div id="preview_map"></div>
                     </div>
-                    {% ifequal page "layer" %}
-                        {% include "layers/layer_data.html" %}
-                    {% else %}
-                        {% ifequal page "map" %}
-                            {% include "maps/map_data.html" %}
-                        {% else %}
-                        {% endifequal %}
-                    {% endifequal %}
-                    <br>
+                    {% include "detail_data.html" with page=page %}
                 </div>
-                <div class="col-lg-3 side-column" style="padding:15px">
-                    {% ifequal page "layer" %}
-                        <a href="{% url "new_map" %}?layer={{ resource.service_typename }}" target="_blank">
-                            <button class="btn btn-block btn-detailpage">{% trans "Compose Story" %}</button>
-                        </a>
-                        {% if request.user.is_authenticated %}
-                            {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
-                            {% if "change_resourcebase" in perms %}
-                                <a href='{% url "map-edit" %}?layer={{ resource.service_typename }}&mode=edit'
-                                   target="_blank">
-                                    <button class="btn btn-block btn-detailpage">{% trans "Edit this layer" %}</button>
-                                </a>
-                            {% endif %}
+                <div class="col-lg-3 side-column details">
+                
+                {% ifequal page "layer" %}
+                    <a href="{% url "new_map" %}?layer={{ resource.service_typename }}" target="_blank">
+                        <button class="btn btn-block btn-detailpage">{% trans "Compose Story" %}</button>
+                    </a>
+
+                    {% if request.user.is_authenticated %}
+                        {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
+                        {% if "change_resourcebase" in perms %}
+                            <a href='{% url "map-edit" %}?layer={{ resource.service_typename }}&mode=edit' target="_blank">
+                                <button class="btn btn-block btn-detailpage">
+                                    {% trans "Edit this layer" %}
+                                </button>
+                            </a>
                         {% endif %}
-                        <div class="side-column-header">{% trans "Layer Metadata" %}</div>
-                        {% else %}
-                        {% ifequal page "map" %}
-                            <button class="btn btn-block btn-detailpage" onclick="toggleFullScreen(); return false;">play fullscreen</button>
-                            <div class="side-column-header">{% trans "Story Properties" %}</div>
-                            {% else %}
-                        {% endifequal %}
-                    {% endifequal %}
-                    <ul class="side-column-items">
-                    {% if resource.owner.first_name != '' %}
-                        <li><i class="fa fa-user"></i> <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">{{ resource.owner.first_name }} {{ resource.owner.last_name }}</a></li>
-                    {% else %}
-                        <li><i class="fa fa-user"></i> <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">{{ resource.owner.username }}</a></li>
                     {% endif %}
+
+                    <div class="side-column-header">{% trans "StoryLayer Properties" %}</div>
+                {% endifequal %}
+
+                {% ifequal page "map" %}
+                    <button class="btn btn-block btn-detailpage" onclick="toggleFullScreen(); return false;"> play fullscreen </button>
+                    <div class="side-column-header">{% trans "Story Properties" %}</div>
+                {% endifequal %}
+                    
+                    <ul class="side-column-items">
+                        <li>
+                            <i class="fa fa-user"></i>
+                            <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">
+                                {% if resource.owner.first_name != '' %}
+                                    {{ resource.owner.first_name }} {{ resource.owner.last_name }}
+                                {% else %}
+                                    {{ resource.owner.username }}
+                                {% endif %}
+                            </a>
+                        </li>
                         <li><i class="fa fa-plus"></i> {% trans "Uploaded on" %} {{ resource.date|date }}</li>
-                        {% if resource.region_name_list|length > 0 %}
-                            <li><i class="fa fa-globe"></i> {{ resource.region_name_list.0 }}</li>
-                        {% endif %}
                         <li><i class="fa fa-book"></i> {{ resource.category }}</li>
                         <li><i class="fa fa-tags"></i>Tags:
                             <script type="text/javascript">
                                 // Pass the keyword list from the django template into the javascript
-                                var keyword_list = "{{resource.keyword_list|escapejs}}";
+                                var keyword_list = "{{ resource.keyword_list|escapejs }}";
                                 var url = "{{ resource.detail_url }}";
                             </script>
                             {% if user.is_authenticated %}
                                 <input type="text" class="form-control" id="tokenfield-tags"/>
-                                {% verbatim %}
+                                    {% verbatim %}
                                     <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
-                                {% endverbatim %}
+                                    {% endverbatim %}
                                 <!-- TODO: Bug with this where the AJAX updates no longer match the keywords_form -->
-                                <a href="#addTag" role="button" data-toggle="modal" style="hover: cursor;" ng-show="tags.length >= 10"><span
-                                        class="label label-default">+ add more tags</span></a>
+                                <a href="#addTag" role="button" data-toggle="modal" style="hover: cursor;" ng-show="tags.length >= 10">
+                                    <span class="label label-default">+ add more tags</span>
+                                </a>
                                 <div id="addTag" class="modal fade" tabindex="-1" role="dialog">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -91,168 +93,116 @@
                                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                                 <h4 class="modal-title">{% trans 'Add Tag' %}</h4>
                                             </div>
+                                            
                                             <form name="keywords_form" method="POST" id="form_post_tag" action="{{ resource.detail_url }}">
                                                 <div class="modal-body">
                                                     {% csrf_token %}
                                                     {{ keywords_form|as_bootstrap }}
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
-                                                    <button class="btn btn-primary" aria-hidden="true" id="tag_submit_btn"
-                                                            type="submit">{% trans "Add Tags" %}</button>
+                                                    <button class="btn" data-dismiss="modal" aria-hidden="true">
+                                                        {% trans "Cancel" %}
+                                                    </button>
+                                                    <button class="btn btn-primary" aria-hidden="true" id="tag_submit_btn" type="submit">
+                                                    {% trans "Add Tags" %}
+                                                    </button>
                                                 </div>
                                             </form>
+                                        
                                         </div>
                                     </div>
                                 </div>
                                 {% else %}
                                 <input type="text" class="form-control" id="tokenfield-tags-readonly"/>
-                                {% verbatim %}
+                                    {% verbatim %}
                                     <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
-                                {% endverbatim %}
+                                    {% endverbatim %}
                             {% endif %}
                         </li>
                     </ul>
                     <div class="side-column-header">User Actions</div>
                     <ul class="side-column-items">
-                        {% ifequal page "layer" %}
-                            <li><i class="fa fa-paste"></i> <a ng-controller="ImportController" style="cursor: pointer"
-                                                               ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{ STATIC_URL }}', '{{ default_layer_config }}', '{{ resource.typename }}', '{{ shapefile_link }}','{{ csv_link }}')">{% trans 'Append Data' %}</a>
-                            </li>
-                            <div>
-                                <li><i class="fa fa-flag"></i> <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">Flag
-                                    content</a></li>
-                                <div id="flag" class="modal fade" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title">{% trans 'Flag Content' %}</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                {% flag resource 'owner' %}
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <li>
-                                <i class="fa fa-heart"></i>{% include "favorite/_favorite.html" with span_style="font-size:18px;color:#333" btn_style="font-size:18px;color:#333;border:none;background:none" %}
-                            </li>
-                            {% if resource.storeType != "remoteStore" %}
-                                {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
-                                {% if links %}
-                                    <li><i class="fa fa-download"></i> <a href="#" data-toggle="modal"
-                                                                          data-target="#download-layer">{% trans "Download Layer" %}</a></li>
-                                {% endif %}
+                        <li><i class="fa fa-flag"></i> 
+                            <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">Flag content</a>
+                        </li>
+                        {% include '_flag_content.html' %}
+                    {% ifequal page "layer" %}
+                        <li><i class="fa fa-heart"></i>{% include "favorite/_favorite.html" %}
+                        {% if resource.storeType != "remoteStore" %}
+                        {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
+                            {% if links %}
+                        <li><i class="fa fa-download"></i> 
+                            <a href="#" data-toggle="modal" data-target="#download-layer">{% trans "Download Layer" %}</a>
+                        </li>
                             {% endif %}
-                            <div class="modal fade" id="download-layer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                                 aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                            <h4 class="modal-title" id="myModalLabel">{% trans "Download Layer" %}</h4>
-                                        </div>
-                                        <div class="modal-body">
-                                            {% if links %}
-                                                <ul>
-                                                    {% for link in links %}
-                                                        <li><a href="{{ link.url }}" class="download-link" data-extension="{{ link.name }}"
-                                                               data-id="{{ resource.id }}">{% trans link.name %}</a></li>
-                                                    {% endfor %}
-                                                </ul>
-                                            {% endif %}
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- If the owner is this user, or it is a content moderator, make a button visible which spawns a modal to modify the metadata -->
-                            {% if content_moderators in user.groups.all or user == resource.owner %}
-                                <li><i class="fa fa-edit"></i> <a href="#metaForm" data-toggle="modal">{% trans "Update Layer Metadata" %}</a>
-                                </li>
-                                <li><i class="fa fa-edit"></i> <a
-                                        href="{% url "layer_remove" resource.service_typename %}">{% trans "Delete Layer" %}</a></li>
-                                <div id="metaForm" class="modal fade" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                <h4 class="modal-title">{% trans 'Edit Metadata' %}</h4>
-                                            </div>
-                                            <form name="metadata_form" method="POST" id="form_post_metadata"
-                                                  action="{{ resource.detail_url }}">
-                                                <div class="modal-body">
-                                                    {% csrf_token %}
-                                                    {{ metadata_form|as_bootstrap }}
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
-                                                    <button class="btn btn-primary" aria-hidden="true" id="metadata_submit_btn"
-                                                            type="submit">{% trans "Save" %}</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endif %}
-                            {% else %}
-                            {% ifequal page "map" %}
-                                <div>
-                                    <li><i class="fa fa-flag"></i> <a href="#flag" role="button" data-toggle="modal"
-                                                                      style="hover: cursor;">{% trans 'Flag Content' %}</a></li>
-                                    <div id="flag" class="modal fade" tabindex="-1" role="dialog">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                                    <h4 class="modal-title">{% trans 'Flag Content' %}</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    {% flag resource 'owner' %}
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans "Cancel" %}</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <li>
-                                    <i class="fa fa-heart"></i>{% include "favorite/_favorite.html" with span_style="font-size:18px;color:#333" btn_style="font-size:18px;color:#333;border:none;background:none" %}
-                                </li>
-                                {% else %}
-                            {% endifequal %}
-                        {% endifequal %}
-                        <li><i class="fa fa-envelope-o"></i> <a href="{% url "message_create" resource.owner.pk %}">Message</span></a></li>
+                            {% include "layers/_download_modal.html" %}
+                        {% endif %}     
+                        <li><i class="fa fa-paste"></i> <a ng-controller="ImportController" style="cursor: pointer"
+                                                           ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{ STATIC_URL }}', '{{ default_layer_config }}', '{{ resource.typename }}', '{{ shapefile_link }}','{{ csv_link }}')">{% trans 'Append Data' %}</a>
+                        </li>
+                        <!-- If the owner is this user, or it is a content moderator, make a button visible which spawns a modal to modify the metadata -->
+                        {% if content_moderators in user.groups.all or user == resource.owner %}
+                        <li>
+                            <i class="fa fa-edit"></i> 
+                            <a href="#metaForm" data-toggle="modal">
+                                {% trans "Edit Metadata" %}
+                            </a>
+                        </li>
+                        {% include "layers/_meta_modal.html" %}                 
+                        <li>
+                            <i class="fa fa-trash"></i>
+                            <a href="{% url "layer_remove" resource.service_typename %}">
+                                {% trans "Delete Layer" %}
+                            </a>
+                        </li>
+                        {% endif %}
+                    {% endifequal %}
+                    {% ifequal page "map" %}
+                        {% if content_moderators in user.groups.all or user == resource.owner %}              
+                        <li>
+                            <i class="fa fa-trash"></i>
+                            <a href="{% url "mapstory.views.map_remove" resource.id %}">
+                                {% trans "Delete Story" %}
+                            </a>
+                        </li>
+                        {% endif %}
+                         <!--   Stashing favorites until impletmented for story types -->
+                        {% if THEME == 'orange' %}
+                        <li><i class="fa fa-heart"></i>{% include "favorite/_favorite.html" %}</li>
+                        {% endif %}
+                    {% endifequal %}
+                    <!--   Stashing messaging until profile redirect is solved -->
+                     {% if THEME == 'orange' %}
+                        <li>
+                            <i class="fa fa-envelope-o"></i> 
+                            <a href="{% url "message_create" resource.owner.pk %}">
+                                Message
+                            </a>
+                        </li>
+                    {% endif %}
                     </ul>
                     <div class="side-column-header">Usage Summary</div>
                     <ul class="side-column-items">
-                        {% ifequal page "layer" %}
-                            <article id="rate">
-                                {% if request.user.is_authenticated %}
-                                    <li>
-                                        {% trans "Rate:" %} {% user_rating request.user resource "layer" as user_layer_rating %}
-                                        {% user_rating request.user resource "layer" as user_layer_rating %}
-                                        <div style="display:inline" id="user_rating" class="category-layer"
-                                             data-score="{{ user_layer_rating }}"></div>
-                                    </li>
-                                {% endif %}
-                            </article>
-                            <li>{% trans "Average:" %} {% if resource.rating %}{{ resource.rating }}/5{% else %}Not yet rated{% endif %}</li>
-                            <li><i class="fa fa-eye"></i> {{ resource.popular_count }} views</li>
+                    {% ifequal page "layer" %}
+                        <article id="rate">
+                        {% if request.user.is_authenticated %}
+                            <li>
+                                {% trans "Rate:" %} {% user_rating request.user resource "layer" as user_layer_rating %}
+                                {% user_rating request.user resource "layer" as user_layer_rating %}
+                                <div style="display:inline" id="user_rating" class="category-layer" data-score="{{ user_layer_rating }}"></div>
+                            </li>
+                        {% endif %}
+                        </article>
+                        <li>
+                            {% trans "Average Rating:" %} 
+                            {% if resource.rating %}
+                                {{ resource.rating }}/5 stars
                             {% else %}
-                            {% ifequal page "map" %}
-                                <li><i class="fa fa-eye"></i> {{ resource.popular_count }} {% trans 'views' %}</li>
-                                {% else %}
-                            {% endifequal %}
-                        {% endifequal %}
+                                Not yet rated
+                            {% endif %}
+                        </li>
+                    {% endifequal %}
+                        <li><i class="fa fa-eye"></i> {{ resource.popular_count }} {% trans 'views' %}</li>
                     </ul>
                 </div>
             </div>

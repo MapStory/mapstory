@@ -5,17 +5,16 @@
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="active"><a href="#login" role="tab" data-toggle="tab">Log In</a></li>
                     {% if REGISTRATION_OPEN %}
-                        <li><a href="#signup" role="tab" data-toggle="tab">Sign Up</a></li>
+                    <li><a href="#signup" role="tab" data-toggle="tab">Sign Up</a></li>
                     {% endif %}
                     <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true">&times;</button>
-
                 </ul>
                 <div class="tab-content">
+                    {% comment %} Log In {% endcomment %}
                     <div class="tab-pane active" id="login">
                         <br/>
-                        <form class="form form-horizontal" method="post" action="{% url 'account_login' %}?next={{ request.path }}"
-                              accept-charset="UTF-8">
-                            {% csrf_token %}
+                        <form class="form form-horizontal" method="post" action="{% url 'account_login' %}?next={{ request.path }}" accept-charset="UTF-8">
+                        {% csrf_token %}
                             <div class="form-group">
                                 <label class="col-md-3 control-label label-font-sm" for="username">Username</label>
                                 <div class="col-md-8">
@@ -29,41 +28,32 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="col-md-8 col-md-offset-3">
-                                    <div class="checkbox">
-                                        <h4>
-                                            <a href="/account/password/reset/">Forgot password?</a>
-                                        </h4>
-                                        <h4>
-                                            <input type="checkbox" value="">
-                                            Remember me
-                                        </h4>
-                                    </div>
+                                <div class="col-md-6 col-md-offset-4">
+                                    <input  type="checkbox" value=""> Remember me
+                                    <a class="pull-right" href="/account/password/reset/">Forgot password?</a>
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label class="col-md-3 control-label label-font-sm"></label>
                                 <div class="col-md-8">
-                                    <button class="mapstory-auth-btn btn btn-md btn-block">Sign in to {{ SITE_NAME }}</button>
+                                    <button class="login-auth-btn btn btn-md btn-block">
+                                        Sign in to {{ SITE_NAME }}
+                                    </button>
                                 </div>
                             </div>
-
                         </form>
                     </div>
-                    {% if REGISTRATION_OPEN %}
+                    {% comment %} Register {% endcomment %}
                     <div class="tab-pane" id="signup">
                         <br/>
                         <form class="form form-horizontal" method="post" action="{% url 'account_signup' %}" accept-charset="UTF-8">
                             {% csrf_token %}
-
                             <div class="form-group">
                                 <label class="col-md-3 control-label label-font-sm" for="id_username">Username</label>
                                 <div class="col-md-8">
                                     <input class="form-control" name="username" id="id_username" placeholder="username" type="text">
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label class="col-md-3 control-label label-font-sm" for="id_firstname">Name</label>
                                 <div class="col-md-4">
@@ -73,7 +63,6 @@
                                     <input class="form-control" id="id_lastname" name="lastname" placeholder="Last" type="text">
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label class="col-md-3 control-label label-font-sm" for="id_email">Email</label>
                                 <div class="col-md-8">
@@ -83,55 +72,41 @@
                             <div class="form-group" ng-init="password = ''">
                                 <label class="col-md-3 control-label label-font-sm" for="id_password">Password</label>
                                 <div class="col-md-8">
-                                    <input class="form-control" id="id_password" name="password" placeholder="(minimum of 8 characters)"
-                                           type="password" ng-model="password">
+                                    <input class="form-control" id="id_password" name="password" placeholder="(minimum of 8 characters)" type="password" ng-model="password">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-3 control-label label-font-sm" for="password_confirm">Confirm Password</label>
                                 <div class="col-md-8">
-                                    <input class="form-control" id="password_confirm" name="password_confirm" placeholder="(minimum of 8 characters)"
-                                           type="password">
+                                    <input class="form-control" id="password_confirm" name="password_confirm" placeholder="(minimum of 8 characters)" type="password">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-3"></div>
                                 <div class="col-md-8 checkbox under-form-area">
-                                    <h4>
-                                        <a href="/getinvolved#Organization Pages" style="font-weight:400">Signing up as an organization? Click
-                                            here.</a>
-                                    </h4>
-                                    <h4>
-                                        <input type="checkbox" value="" name="digest" checked>
-                                        Receive the monthly digest of cool projects and community updates.
-                                    </h4>
-                                    <h4>
-                                        <input type="checkbox" value="" ng-model="agreed">
-                                        I agree with the <a href="http://wiki.mapstory.org/wiki/Terms_of_Service" target="_blank" class="new-tab">Terms
-                                        and Conditions</a>.
-                                    </h4>
+                                    <a href="/getinvolved#Organization Pages">Signing up as an organization? Click here.</a>
+                                    <p><input type="checkbox" value="" name="digest" checked> Receive the monthly digest of cool projects and community updates.</p>
+                                    <p><input type="checkbox" value="" ng-model="agreed">I agree with the <a href="http://wiki.mapstory.org/wiki/Terms_of_Service" target="_blank" class="new-tab">Terms and Conditions</a>.</p>
                                 </div>
                             </div>
-
                             <div class="form-group">
                                 <label class="col-md-3 control-label label-font-sm"></label>
                                 <div class="col-md-8">
                                     {% verbatim %}
-                                        <button ng-if="agreed && password.length >= 8" id="join-mapstory-button"
-                                                class="mapstory-auth-btn btn btn-md bg-ms btn-block">Join {{ SITE_NAME }}</button>
-                                        <button ng-if="!agreed || password.length < 8" id="join-mapstory-button" class="btn btn-md bg-ms btn-block"
-                                                disabled>Join {{ SITE_NAME }}</button>
+                                    <button ng-if="agreed && password.length >= 8" id="join-mapstory-button" class="login-auth-btn btn btn-md bg-ms btn-block">
+                                        Join {{ SITE_NAME }}
+                                    </button>
+                                    <button ng-if="!agreed || password.length < 8" id="join-mapstory-button" class="btn btn-md bg-ms btn-block" disabled>
+                                        Join {{ SITE_NAME }}
+                                    </button>
                                     {% endverbatim %}
                                 </div>
                             </div>
-
                         </form>
                     </div>
-                    {% endif %}
                 </div>
                 <hr/>
                 {% if ENABLE_SOCIAL_LOGIN %}
-
                     <div class="row">
                         <div class="col-sm-4">
                             <a href="{% url 'socialauth_begin' 'facebook' %}">
@@ -147,14 +122,10 @@
                                 </div>
                             </a>
                         </div>
-                        <div class="col-sm-4">
-                            &nbsp;
-                        </div>
+                        <div class="col-sm-4"> &nbsp; </div>
                     </div>
-
                 {% endif %}
-
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        </div><!-- /login.modal-content -->
+    </div><!-- /login.modal-dialog -->
 </div>

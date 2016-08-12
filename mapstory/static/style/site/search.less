@@ -1,7 +1,7 @@
 /* --- Search --- */
 .panel-group{
     margin: 0;
-    padding: 0px;
+    padding: 0;
 }
 
 .panel-default {
@@ -27,7 +27,7 @@
 }
 
 .search-bar {
-    padding: 20px 0px;
+    padding: 20px 0;
 }
 
 .whats-hot {
@@ -52,19 +52,24 @@
         border: 1px solid @gray90;
     }
     li > div {
+        height: 400px;
         background: @gray90;
-        text-align: center;
+        text-align: left;
         padding: 20px;
         border: 1px solid @gray90;
     }
-    padding:20px 0px;
+    padding:20px 0;
+}
+
+.search-results-min{
+    min-height: 200px;
 }
 
 #content-search{
     background-color:gainsboro;
 }
 
-.search-head {
+.explore-header {
     &.row{
         border-bottom:1px solid darkgray;
         padding:20px 0 30px;
@@ -75,20 +80,57 @@
         border:1px solid gainsboro; 
         cursor:pointer;
     }
-    
 }
 
-.card-info {
-    color: @gray90;
-    display: inline-block;
-    text-align: center;
-    border: 1px solid @gray90;
-    border-radius: 4px;
-    padding: 10px;
-}
-
-.resource_selected{
+.resource_selected {
   -moz-box-shadow: 0 0 5px @secondary;
   -webkit-box-shadow: 0 0 5px @secondary;
   box-shadow: 0 0 5px @secondary;
+}
+
+.result-title h3 {
+   text-transform: capitalize;
+}
+
+.result-category {
+    margin-left: 10px;
+    text-transform: capitalize;
+}
+
+.result-date {
+    margin-left: 10px;
+}
+
+.result-abstract {
+    padding: 5px 0;
+}
+
+.unpublished {
+    position:absolute;
+    top:10px;
+    right:20px;
+    opacity: .6;
+}
+
+.result-stats{
+    border-top: 1px lightgrey solid;
+    padding: 10px;
+    a, span {
+        border-right: 1px lightgrey solid;
+        padding: 0 15px;
+        &:last-child {
+            border: none;
+        }
+    }  
+}
+
+.result-type span {
+    background: @primary-shadow;
+    border-radius: 25px;
+    color: white;
+    padding: 3 20px 3 15px;
+    font-size: 70%;
+    font-weight: 600;
+    margin-top: 20px;
+    text-align: center;
 }

@@ -29,152 +29,12 @@
         <article class="slice">
             <div class="container">
                 <div class="col-sm-2 sidebar">
-                    <div class="sidebar-header"><h3>user info</h3></div>
-                    {% if profile.profile %}
-                        <div class="sidebar-content">{{ profile.profile }}</div>{% endif %}
-                    {% if profile.city or profile.country %}
-                        <div class="sidebar-header"><h5>location</h5></div>
-                        {% if profile.city %}
-                            <a href="/search/?limit=100&offset=0&type__in=user&city={{ profile.city }}">
-                                <div class="sidebar-content">{{ profile.city }}</div>
-                            </a>
-                        {% endif %}
-                        {% if profile.country %}
-                            <a href="/search/?limit=100&offset=0&type__in=user&country={{ profile.country }}">
-                                <div class="sidebar-content">{{ profile.country }}</div>
-                            </a>
-                        {% endif %}
-                    {% endif %}
-                    {% if profile.education %}
-                        <div class="sidebar-header"><h5>education</h5></div>
-                        <div class="sidebar-content">{{ profile.education }}</div>
-                    {% endif %}
-                    {% if profile.expertise %}
-                        <div class="sidebar-header"><h5>expertise</h5></div>
-                        <div class="sidebar-content">{{ profile.expertise }}</div>
-                    {% endif %}
-                    {% if user.Volunteer_Technical_Community %}
-                        <div class="sidebar-content"><p>Volunteer Technical Community Member</p></div>
-                    {% endif %}
-
-                    <!-- notifications -->
-                    {% if user == profile %}
-                        <div class="sidebar-header"><h3>user actions</h3></div>
-                        <div class="sidebar-content">
-                            <a href="{% url "edit_profile" user.username %}">{% trans "edit profile" %}</a>
-                        </div>
-                        <div class="sidebar-content">
-                            <a href="{% url "profile_delete" user.username %}">{% trans "delete profile" %}</a>
-                        </div>
-                        <div class="sidebar-content">
-                            <a href="{% url "account_password" %}">{% trans "change password" %}</a>
-                        </div>
-                        <div>
-                            <a href="#" class="sidebar-content" data-toggle="modal" data-target="#notifications">notifications settings</a>
-                        </div>
-                    {% endif %}
-
-                    <!-- contact profile -->
-                    <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
-                    {% if user != profile %}
-                        <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary">message</a>
-                    {% endif %}
-                    {% comment %} 
-                    TODO: change help text in /geonode/geonode/people/models.py to encourage correct format of handle for each link 
-                    {% endcomment %}
-                    {% if profile.social_twitter %}
-                        <div class="sidebar-content">
-                            <a href="https://twitter.com/{{ profile.social_twitter }}"><i class="fa fa-twitter"></i> {{ profile.social_twitter }}
-                            </a>
-                        </div>
-                    {% endif %}
-                    {% if profile.social_facebook %}
-                        <div class="sidebar-content">
-                            <a href="https://www.facebook.com/{{ profile.social_facebook }}"><i class="fa fa-facebook"></i> {{ profile.social_facebook }}</a>
-                        </div>
-                    {% endif %}
-                    {% if profile.social_linkedin %}
-                        <div class="sidebar-content">
-                            <a href="https://www.linkedin.com/in/{{ profile.social_linkedin }}"><i class="fa fa-linkedin"></i> {{ profile.social_linkedin }}</a>
-                        </div>
-                    {% endif %}
-                    {% if profile.social_github %}
-                        <div class="sidebar-content">
-                            <a href="https://github.com/{{ profile.social_github }}"><i class="fa fa-github"></i> {{ profile.social_github }}</a>
-                        </div>
-                    {% endif %}
-                    <!-- tags and interests -->
-                    {% if profile.keyword_list %}
-                        <div class="sidebar-header"><h3>tags & interests </h3></div>
-                        <div>
-                            <input type="text" class="form-control" id="tokenfield-interests"/>
-                        </div>
-                    {% endif %}
+                {% include 'people/_sidebar.html' %}
                 </div>
-
                 <div class="col-sm-10">
                     <div class="tabbable-panel">
                         <div class="tabbable-line">
-                            <ul class="nav nav-tabs">
-                                <li class="active">
-                                    <a href="#stories_list" data-toggle="tab"
-                                       ng-click="query={q: query.q}; query.type__in='mapstory'; query.owner__username__in='{{ profile.username }}'; search();">
-                                        <div class="counter">
-                                            <span ng-bind="total_maps"></span>
-                                        </div>
-                                        {% trans "Stories" %} 
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#layers_list" data-toggle="tab"
-                                       ng-click="query={q: query.q}; query.type__in='layer'; query.owner__username__in='{{ profile.username }}'; search();">
-                                        <div class="counter">
-                                            <span ng-bind="total_layers"></span>
-                                        </div>
-                                        {% trans "Layers" %} 
-                                    </a>
-                                </li>
-                                {% if user == profile %}
-                                    <li>
-                                        <a href="#uploads_list" data-toggle="tab">
-                                            <div class="counter">
-                                                <span ng-bind="totalItems"></span>
-                                            </div>
-                                            Uploads
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#messages_list" data-toggle="tab">
-                                            <div class="counter">{{ inbox_count }}</div>
-                                            Messages 
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                <li>
-                                    <a href="#user_activities" data-toggle="tab">
-                                        <div class="counter">{{ action_list.count }}</div>
-                                        Activity Feed 
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#diary_entries" data-toggle="tab">
-                                        <div class="counter">{{ diary_entries.count }}</div>
-                                        Journal Entr{{ diary_entries|pluralize:"y,ies"}} 
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#favorite_list" data-toggle="tab">
-                                        <div class="counter">{{ favorites.count }}</div>
-                                        Favorite{{ favorites|pluralize }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#icon_list" data-toggle="tab">
-                                        <div class="counter">{{ icons.count }}</div>
-                                        Icon{{ icons|pluralize }}
-                                    </a>
-                                </li>
-                            </ul>
+                        {% include 'people/_profile_tabs.html' %}
                             <div class="tab-content">
                                 <div class="tab-pane active" id="stories_list">
                                     <div class="no-content" ng-if="results == null">
@@ -182,7 +42,18 @@
                                         <h4>Create your first {% trans "Story" %} now.</h4>
                                     </div>
                                     <div class="clearfix search-results">
-                                        <ul>{% include 'people/_result_content.html' %}</ul>
+                                        <ul>
+                                        {% if user == profile %}
+                                            {% verbatim %}
+                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4">
+                                            {% endverbatim %}
+                                        {% else %}
+                                            {% verbatim %}
+                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4" ng-if="item.is_published == true">
+                                            {% endverbatim %}
+                                        {% endif %}
+                                        {% include 'search/_result_content.html' %}
+                                        </ul>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="layers_list">
@@ -191,7 +62,17 @@
                                         <h4>Upload your first {% trans "Layer" %} now.</h4>
                                     </div>
                                     <div class="clearfix search-results">
-                                        <ul>{% include 'people/_result_content.html' %}</ul>
+                                        <ul>
+                                        {% if user == profile %}
+                                            {% verbatim %}
+                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4">
+                                            {% endverbatim %}
+                                        {% else %}
+                                            {% verbatim %}
+                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4" ng-if="item.is_published == true">
+                                            {% endverbatim %}
+                                        {% endif %}
+                                        {% include 'search/_result_content.html' %}</ul>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="uploads_list">

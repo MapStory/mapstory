@@ -29,7 +29,7 @@
             <div class="row search">
                 <div class="col-sm-6 col-sm-offset-3">
                     <form action="{% url 'search' %}">
-                        <div class="input-group">
+                        <div class="input-group homepage_search">
                             {% if HAYSTACK_SEARCH %}
                                 <input class="form-control" id="homepage_search" type="text" name="q"
                                        placeholder="{% trans "Explore Stories and Layers" %}">

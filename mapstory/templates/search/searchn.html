@@ -2,22 +2,30 @@
 {% load i18n %}
 {% load staticfiles %}
 {% load url from future %}
-
 {% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
 {% block body_class %}search{% endblock %}
-
 {% block body_outer %}
-    <div ng-controller="geonode_search_controller">
-        {% include 'search/_header.html' %}
-        <div ng-show="api_endpoint == '/api/base/search/'">
-            <div class="col-lg-3 border-right">
-                {% include 'search/_whats_hot_content.html' %}
-                {% include 'search/_refine_content.html' %}
-                {% include 'search/_trending_tags.html' %}
-            </div>
-            <div class="col-lg-9">
-                <nav class="filter">
-                    <div class="input-group search-bar">
+<div ng-controller="geonode_search_controller">
+    <div class="row explore-header">
+        <div class="input-group col-sm-6 col-sm-offset-3">
+          <span id="content-search" class="input-group-addon"  ng-click="toggle_user(); search();">
+            <a> <i class="fa fa-cubes"></i> Search for Content </a>
+          </span>
+          <span id="user-search" class="input-group-addon" ng-click="toggle_content(); search();">
+            <a> <i class="fa fa-users"></i> Search for Storytellers </a>
+          </span>
+        </div>
+     </div>
+    {% comment %} Search for Content {% endcomment %}
+    <div ng-show="api_endpoint == '/api/base/search/'">
+        <div class="col-lg-3 border-right">
+            {% include 'search/_whats_hot_content.html' %}
+            {% include 'search/_refine_content.html' %}
+            {% include 'search/_trending_tags.html' %}
+        </div>
+        <div class="col-lg-9">
+            <nav class="filter">
+                <div class="input-group search-bar">
                     <input name="text_search_input" id="text_search_input" ng-model="query.q" type="text"
                         class="form-control" ng-enter="search()">
                     <span class="input-group-btn">
@@ -25,21 +33,26 @@
                     </span>
                 </div>
             </nav>
-                {% include 'search/_sort_filters_content.html' %}
+            {% include 'search/_sort_filters_content.html' %}
             <div class="clearfix search-results">
-                <ul>{% include 'search/_result_content.html' %}</ul>
+                <ul>
+                    {% verbatim %}
+                    <li ng-repeat="item in results | orderBy: orderMethod" resource-id="{{ item.id }}" class="col-md-4" ng-if="((item.type === 'mapstory' && item.is_published == true) || (item.type === 'layer' && item.is_published == true))">
+                    {% endverbatim %}
+                    {% include 'search/_result_content.html' %}
+                </ul>
             </div>
             {% include 'search/_pagination.html' %}
-            </div>
         </div>
-        <div ng-show="api_endpoint == '/api/owners/'">
-            <div class="col-lg-3 border-right">
-                {% include 'search/_refine_profiles.html' %}
-                {% comment %}{% include 'search/_whats_hot_users.html' %}{% include 'search/_refine_users.html' %}{% endcomment %}
-            </div>
-            <div class="col-lg-9">
-                <nav class="filter">
-                    <div class="input-group search-bar">
+    </div>
+    {% comment %} Search for Storytellers {% endcomment %}
+    <div ng-show="api_endpoint == '/api/owners/'">
+        <div class="col-lg-3 border-right">
+            {% include 'search/_refine_profiles.html' %}
+        </div>
+        <div class="col-lg-9">
+            <nav class="filter">
+                <div class="input-group search-bar">
                     <input name="user_search_input" id="user_search_input" ng-model="query.q" type="text"
                         class="form-control" ng-enter="search()">
                     <span class="input-group-btn">
@@ -52,20 +65,7 @@
                 <ul>{% include 'search/_result_users.html' %}</ul>
             </div>
             {% include 'search/_pagination.html' %}
-            </div>
         </div>
     </div>
+</div>
 {% endblock %}
-{% block extra_script %}
-  {{ block.super }}
-  <script type="text/javascript">
-    $(function() {
-        $('#text_search_input').attr('placeholder','Search for {% trans "Stories" %} or {% trans "Layers" %} ...');
-        $('#keyword_search_input').attr('placeholder','Search for keyword ...');
-        $('#region_search_input').attr('placeholder','Search for country or continent ...');
-        $('#user_search_input').attr('placeholder', 'Search for StoryTellers or Organizations ...');
-        $('#location_search_input').attr('placeholder', 'Search for city or country ...');
-        $('#interest_search_input').attr('placeholder', 'Search for interest ...');
-    });
-  </script>
-{% endblock extra_script %}

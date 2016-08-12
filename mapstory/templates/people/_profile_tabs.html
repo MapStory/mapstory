@@ -1,0 +1,73 @@
+{% load static %}
+{% load activity_tags social_tags i18n %}
+{% load friendly_loader %}
+{% friendly_load i18n avatar_tags relationship_tags activity_tags %}
+{% load pagination_tags %}
+
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="#stories_list" data-toggle="tab"
+        {% if user == profile %}
+           ng-click="query={q: query.q}; query.type__in='mapstory'; query.owner__username__in='{{ profile.username }}'; search();"
+        {% else %}
+            ng-click="query={q: query.q}; query.type__in='mapstory'; query.owner__username__in='{{ profile.username }}'; query.is_published__in=true; search();"
+        {% endif %}
+        >
+            <div class="counter">
+                <span ng-bind="total_maps"></span>
+            </div>
+            {% trans "Stories" %} 
+        </a>
+    </li>
+    <li>
+        <a href="#layers_list" data-toggle="tab"
+           ng-click="query={q: query.q}; query.type__in='layer'; query.owner__username__in='{{ profile.username }}'; search();">
+            <div class="counter">
+                <span ng-bind="total_layers"></span>
+            </div>
+            {% trans "Layers" %} 
+        </a>
+    </li>
+    {% if user == profile %}
+        <li>
+            <a href="#uploads_list" data-toggle="tab">
+                <div class="counter">
+                    <span ng-bind="totalItems"></span>
+                </div>
+                Uploads
+            </a>
+        </li>
+    {% endif %}{% comment %}
+        <li>
+            <a href="#messages_list" data-toggle="tab">
+                <div class="counter">{{ inbox_count }}</div>
+                Messages 
+            </a>
+        </li>
+    {% endif %}
+    <li>
+        <a href="#user_activities" data-toggle="tab">
+            <div class="counter">{{ action_list.count }}</div>
+            Activity Feed 
+        </a>
+    </li>
+    {% endcomment %}
+    <li>
+        <a href="#diary_entries" data-toggle="tab">
+            <div class="counter">{{ diary_entries.count }}</div>
+            Journal Entr{{ diary_entries|pluralize:"y,ies"}} 
+        </a>
+    </li>
+    <li>
+        <a href="#favorite_list" data-toggle="tab">
+            <div class="counter">{{ favorites.count }}</div>
+            Favorite{{ favorites|pluralize }}
+        </a>
+    </li>
+    <li>
+        <a href="#icon_list" data-toggle="tab">
+            <div class="counter">{{ icons.count }}</div>
+            Icon{{ icons|pluralize }}
+        </a>
+    </li>
+</ul>

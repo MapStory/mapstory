@@ -1,0 +1,32 @@
+{% load i18n %}
+{% load dialogos_tags %}
+{% load url from future %}
+{% load base_tags %}
+{% load guardian_tags %}
+{% load friendly_loader %}
+{% load mapstory_tags %}
+{% load flag_tags %}
+{% friendly_load avatar_tags %}
+
+<div class="modal fade" id="download-layer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">{% trans "Download Layer" %}</h4>
+        </div>
+        <div class="modal-body">
+            {% if links %}
+                <ul>
+                {% for link in links %}
+                    <li><a href="{{ link.url }}" class="download-link" data-extension="{{ link.name }}" data-id="{{ resource.id }}">{% trans link.name %}</a></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+        </div>
+    </div>
+</div>
+</div>

@@ -1,5 +1,4 @@
 {% load i18n %}
-<hr>
 <h3><i class="fa fa-filter"></i> Refine Search</h3>
 <div class="panel-group" id="accordion2">
     <div class="panel panel-default">
@@ -34,11 +33,10 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-sm-12">
-                        <ul id="categories" class="nav">
-                            
+                        <ul id="categories" class="nav">   
                             {% verbatim %}
                             <li ng-repeat="category in categories">
-                                <a ng-init="toggle=true" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle; active=category.id" ng-class="{active: (!toggle && (active == category.id))}">{{ category.gn_description}}
+                                <a ng-init="toggle=true" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle; active=category.id" ng-class="{active: (!toggle && (active == category.id))}">{{ category.gn_description }}
                                     <span ng-show="!toggle" class="pull-right"><i class="fa fa-check"></i></span>
                                 </a>                                
                             </li>
@@ -49,7 +47,7 @@
             </div>
         </nav>
     </div>
-<!--
+{% comment %}
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title clearfix">
@@ -69,8 +67,6 @@
             </div>
         </div>
     </div>
--->
-<!--
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title clearfix">
@@ -94,12 +90,11 @@
             </div>
         </div>
     </div>
--->
+{% endcomment %}
     <div class="panel-heading">
         <div class="panel-title clearfix">
             <a data-toggle="collapse" data-parent="#accordion2" href="#keyword-tab">
                 <span class="pull-left">Keywords</span>
-                <span class="pull-right"></span>
             </a>
         </div>
     </div>

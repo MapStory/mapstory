@@ -1,0 +1,91 @@
+{% load static %}
+{% load activity_tags social_tags i18n %}
+{% load friendly_loader %}
+{% friendly_load i18n avatar_tags relationship_tags activity_tags %}
+{% load pagination_tags %}
+
+
+<div class="sidebar-header"><h3>user info</h3></div>
+{% if profile.profile %}
+    <div class="sidebar-content">{{ profile.profile }}</div>{% endif %}
+{% if profile.city or profile.country %}
+    <div class="sidebar-header"><h5>location</h5></div>
+    {% if profile.city %}
+        <a href="/search/?limit=100&offset=0&type__in=user&city={{ profile.city }}">
+            <div class="sidebar-content">{{ profile.city }}</div>
+        </a>
+    {% endif %}
+    {% if profile.country %}
+        <a href="/search/?limit=100&offset=0&type__in=user&country={{ profile.country }}">
+            <div class="sidebar-content">{{ profile.country }}</div>
+        </a>
+    {% endif %}
+{% endif %}
+{% if profile.education %}
+    <div class="sidebar-header"><h5>education</h5></div>
+    <div class="sidebar-content">{{ profile.education }}</div>
+{% endif %}
+{% if profile.expertise %}
+    <div class="sidebar-header"><h5>expertise</h5></div>
+    <div class="sidebar-content">{{ profile.expertise }}</div>
+{% endif %}
+{% if user.Volunteer_Technical_Community %}
+    <div class="sidebar-content"><p>Volunteer Technical Community Member</p></div>
+{% endif %}
+
+<!-- notifications -->
+{% if user == profile %}
+    <div class="sidebar-header"><h3>user actions</h3></div>
+    <div class="sidebar-content">
+        <a href="{% url "edit_profile" user.username %}">{% trans "edit profile" %}</a>
+    </div>
+    <div class="sidebar-content">
+        <a href="{% url "profile_delete" user.username %}">{% trans "delete profile" %}</a>
+    </div>
+    <div class="sidebar-content">
+        <a href="{% url "account_password" %}">{% trans "change password" %}</a>
+    </div>
+    <div>
+        <a href="#" class="sidebar-content" data-toggle="modal" data-target="#notifications">notifications settings</a>
+    </div>
+{% endif %}
+
+<!-- contact profile -->
+<div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
+<!--   Stashing messaging until profile redirect is solved -->
+{% if THEME == 'orange' %}
+    {% if user != profile %}
+    <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary">message</a>
+    {% endif %}
+{% endif %}
+{% comment %} 
+TODO: change help text in /geonode/geonode/people/models.py to encourage correct format of handle for each link 
+{% endcomment %}
+{% if profile.social_twitter %}
+    <div class="sidebar-content">
+        <a href="https://twitter.com/{{ profile.social_twitter }}"><i class="fa fa-twitter"></i> {{ profile.social_twitter }}
+        </a>
+    </div>
+{% endif %}
+{% if profile.social_facebook %}
+    <div class="sidebar-content">
+        <a href="https://www.facebook.com/{{ profile.social_facebook }}"><i class="fa fa-facebook"></i> {{ profile.social_facebook }}</a>
+    </div>
+{% endif %}
+{% if profile.social_linkedin %}
+    <div class="sidebar-content">
+        <a href="https://www.linkedin.com/in/{{ profile.social_linkedin }}"><i class="fa fa-linkedin"></i> {{ profile.social_linkedin }}</a>
+    </div>
+{% endif %}
+{% if profile.social_github %}
+    <div class="sidebar-content">
+        <a href="https://github.com/{{ profile.social_github }}"><i class="fa fa-github"></i> {{ profile.social_github }}</a>
+    </div>
+{% endif %}
+<!-- tags and interests -->
+{% if profile.keyword_list %}
+    <div class="sidebar-header"><h3>tags & interests </h3></div>
+    <div>
+        <input type="text" class="form-control" id="tokenfield-interests"/>
+    </div>
+{% endif %}

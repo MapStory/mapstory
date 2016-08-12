@@ -1,18 +1,16 @@
 {% verbatim %}
-    <div ng-repeat="item in results" resource_id="{{ item.id}}" class="col-md-4">
-        <div class="box">
-            <div class="box-content box-statistic" style="min-height:200px;">
-                <a target="_blank" href="{{ item.detail_url}}"><img class="thumb img-responsive" check-image ng-src="{{ item.thumbnail_url}}"/></a>
-                <span class="title text-primary">{{ item.title|limitTo:25 }}</span>
-                <p>{{ item.owner__username}}</p>
-                <div class="btn-toolbar">
-                    {% endverbatim %}
-                    {% if request.user.is_authenticated %}
-                        <button class="btn btn-xs" ng-class="selected ? 'btn-primary' : 'btn-success'" style="width:100%;" ng-click="result_select($event, item); selected = !selected;">Select</button>
-                    {% endif %}
-                    {% verbatim %}
-                </div>
+<div ng-repeat="item in results" resource_id="{{ item.id }}" class="col-md-4">
+    <div class="box">
+        <div class="box-content box-statistic search-results-min">
+            <a target="_blank" href="{{ item.detail_url}}"><img class="thumb img-responsive" check-image ng-src="{{ item.thumbnail_url}}"/></a>
+            <span class="title text-primary">{{ item.title|limitTo:25 }}</span>
+            <p>{{ item.owner__username }}</p>
+            <div class="btn-toolbar">
+                {% endverbatim %}
+                {% if request.user.is_authenticated %}
+                    <button class="btn btn-xs" ng-class="selected ? 'btn-primary' : 'btn-success'" style="width:100%;" ng-click="result_select($event, item); selected = !selected;">Select</button>
+                {% endif %}
             </div>
         </div>
     </div>
-{% endverbatim %}
+</div>
