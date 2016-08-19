@@ -70,7 +70,7 @@ urlpatterns = patterns('',
     url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
     url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
 
-    url(r'^mapstory/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'),
+    url(r'^story/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'),
     url(r'^story/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
     url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
     # MapLoom

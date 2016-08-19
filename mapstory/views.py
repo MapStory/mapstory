@@ -1201,6 +1201,9 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         elif 'remove_keyword' in request.POST:
             map_obj.keywords.remove(request.POST['remove_keyword'])
             map_obj.save()
+        else:
+            keywords_form = KeywordsForm(instance=map_obj)
+            published_form = PublishStatusForm(instance=map_obj)
     else:
         keywords_form = KeywordsForm(instance=map_obj)
         published_form = PublishStatusForm(instance=map_obj)
