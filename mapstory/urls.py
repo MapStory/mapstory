@@ -6,27 +6,20 @@ from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from geonode.urls import urlpatterns
-from mapstory.views import layer_metadata
 from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstory.views import IndexView
-from mapstory.views import DiaryDetailView
-from mapstory.views import DiaryListView
-from mapstory.views import DiaryCreateView
-from mapstory.views import DiaryUpdateView
+from mapstory.views import DiaryDetailView, DiaryListView, DiaryCreateView, DiaryUpdateView
 from mapstory.views import GetPageView
-from mapstory.views import ProfileDetail
-from mapstory.views import profile_delete, profile_edit
+from mapstory.views import ProfileDetail, profile_delete, profile_edit
 from mapstory.views import SearchView
 from mapstory.views import LeaderListView
 from mapstory.views import proxy
 from mapstory.views import MapStorySignup
 from mapstory.views import map_detail
 from mapstory.views import layer_detail, layer_detail_id
-from mapstory.views import layer_create, layer_append
 from mapstory.views import layer_remove, map_remove
 from mapstory.views import MapStoryConfirmEmailView
 from mapstory.notifications import notify_download, set_profile_notification
-from geonode.layers.views import layer_replace, layer_thumbnail, layer_upload
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
@@ -140,18 +133,11 @@ urlpatterns = patterns('',
     url(r'^proxy/', proxy),
     url(r'^favorite/', include('geonode.contrib.favorite.urls')),
     url(r'^notifications/', include('notification.urls')),
-    url(r'^layers/(?P<layername>[^/]*)/upload/metadata$', layer_metadata, name="layer_upload_metadata", kwargs={'template':'upload/layer_upload_metadata.html'}),
 
     url(r"^flag/", include('mapstory.apps.flag.urls')),
 
-    url(r'^layers/upload$', layer_upload, name='layer_upload'),
-    url(r'^layers/create$', layer_create, name='layer_create'),
-    url(r'^layers/append$', layer_append, name='layer_append'),
     url(r'^layers/(?P<layername>[^/]*)/viewer$', layer_detail, {'template': 'layers/layer_map.html'}, name="layer_viewer"),
-    url(r'^layers/(?P<layername>[^/]*)/metadata$', layer_metadata, name="layer_metadata"),
     url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
-    url(r'^layers/(?P<layername>[^/]*)/replace$', layer_replace, name="layer_replace"),
-    url(r'^layers/(?P<layername>[^/]*)/thumbnail$', layer_thumbnail, name='layer_thumbnail'),
     url(r'^layers/notify-download$', notify_download, name='notify-layer-download'),
 
 ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns

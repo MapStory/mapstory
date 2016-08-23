@@ -23,7 +23,6 @@ from geonode.base.forms import CategoryForm
 from geonode.base.models import TopicCategory
 from geonode.layers.models import Layer
 from geonode.layers.views import _PERMISSION_MSG_METADATA, _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
-from geonode.people.forms import ProfileForm
 from geonode.people.models import Profile
 from geonode.maps.views import snapshot_config
 from geonode.upload.utils import create_geoserver_db_featurestore
@@ -687,110 +686,6 @@ class MapStoryConfirmEmailView(ConfirmEmailView):
         msg.send()
         super(MapStoryConfirmEmailView, self).after_confirmation(confirmation)
 
-
-@login_required
-def layer_metadata(request, layername, template='upload/layer_upload_metadata.html'):
-    layer = _resolve_layer(
-        request,
-        layername,
-        'base.change_resourcebase_metadata',
-        _PERMISSION_MSG_METADATA)
-    topic_category = layer.category
-
-    poc = layer.poc or layer.owner
-    metadata_author = layer.metadata_author
-
-    if request.method == "POST":
-        layer_form = UploadLayerForm(request.POST, instance=layer, prefix="resource")
-        category_form = CategoryForm(
-            request.POST,
-            prefix="category_choice_field",
-            initial=int(
-                request.POST["category_choice_field"]) if "category_choice_field" in request.POST else None)
-    else:
-        layer_form = UploadLayerForm(instance=layer, prefix="resource")
-        category_form = CategoryForm(
-            prefix="category_choice_field",
-            initial=topic_category.id if topic_category else None)
-
-    if request.method == "POST" and layer_form.is_valid(
-    ) and category_form.is_valid():
-        new_poc = layer_form.cleaned_data['poc']
-        new_author = layer_form.cleaned_data['metadata_author']
-        new_keywords = layer_form.cleaned_data['keywords']
-
-        if new_poc is None:
-            if poc is None:
-                poc_form = ProfileForm(
-                    request.POST,
-                    prefix="poc",
-                    instance=poc)
-            else:
-                poc_form = ProfileForm(request.POST, prefix="poc")
-            if poc_form.has_changed and poc_form.is_valid():
-                new_poc = poc_form.save()
-
-        else:
-            if not isinstance(new_poc, Profile):
-                new_poc = Profile.objects.get(id=new_poc)
-
-        if new_author is None:
-            if metadata_author is None:
-                author_form = ProfileForm(request.POST, prefix="author",
-                                          instance=metadata_author)
-            else:
-                author_form = ProfileForm(request.POST, prefix="author")
-            if author_form.has_changed and author_form.is_valid():
-                new_author = author_form.save()
-
-        else:
-            if not isinstance(new_author, Profile):
-                new_author = Profile.objects.get(id=new_author)
-
-        new_category = TopicCategory.objects.get(
-            id=category_form.cleaned_data['category_choice_field'])
-
-        if new_poc is not None and new_author is not None:
-            new_keywords = layer_form.cleaned_data['keywords']
-            layer.keywords.clear()
-            layer.keywords.add(*new_keywords)
-            the_layer = layer_form.save()
-            the_layer.poc = new_poc
-            the_layer.metadata_author = new_author
-            Layer.objects.filter(id=the_layer.id).update(
-                category=new_category
-                )
-
-            return HttpResponseRedirect(
-                reverse(
-                    'layer_detail',
-                    args=(
-                        layer.service_typename,
-                    )))
-
-    if poc is None:
-        poc_form = ProfileForm(instance=poc, prefix="poc")
-    else:
-        layer_form.fields['poc'].initial = poc.id
-        poc_form = ProfileForm(prefix="poc")
-        poc_form.hidden = True
-
-    if metadata_author is None:
-        author_form = ProfileForm(instance=metadata_author, prefix="author")
-    else:
-        layer_form.fields['metadata_author'].initial = metadata_author.id
-        author_form = ProfileForm(prefix="author")
-        author_form.hidden = True
-
-    return render_to_response(template, RequestContext(request, {
-        "layer": layer,
-        "layer_form": layer_form,
-        "poc_form": poc_form,
-        "author_form": author_form,
-        "category_form": category_form,
-    }))
-
-
 @login_required
 def new_map_json(request):
     from geonode.maps.views import new_map_json
@@ -822,47 +717,6 @@ def mapstory_draft(request, storyid, template):
 def new_map(request, template):
     from geonode.maps.views import new_map
     return new_map(request, template)
-
-@login_required
-def layer_create(request, template='upload/layer_create.html'):
-    if request.method == 'POST':
-        errors = False
-        error_messages = []
-        if request.is_ajax():
-            configuration_options = json.loads(request.body)
-        else:
-            configuration_options = request.POST
-            if isinstance(configuration_options.get('featureType', {}), str) \
-                    or isinstance(configuration_options.get('featureType', {}), unicode):
-                configuration_options['featureType'] = json.loads(configuration_options['featureType'])
-
-        if not configuration_options.get('layer_owner'):
-            configuration_options['layer_owner'] = request.user
-
-        if configuration_options['featureType'].get('editable') is True:
-            configuration_options['storeCreateGeogig'] = True
-
-        creator = GeoServerLayerCreator()
-        try:
-            layers = creator.handle(configuration_options=configuration_options)
-
-        except UploadError as e:
-            errors = True
-            error_messages.append((configuration_options['featureType']['name'], e.message))
-
-        if request.is_ajax():
-            if errors:
-                return HttpResponse(json.dumps({'status': 'failure', 'errors': error_messages}), status=400,
-                                    content_type='application/json')
-            if layers:
-                layer_names = map(lambda layer: {'name': layer.name, 'url': layer.get_absolute_url()},
-                                  Layer.objects.filter(name__in=[n[0] for n in layers]))
-
-                return HttpResponse(json.dumps({'status': 'success', 'layers': layer_names}), status=201,
-                                    content_type='application/json')
-
-    return render_to_response(template, RequestContext(request, {}))
-
 
 def layer_append_minimal(source, target, request_cookies):
     """
@@ -970,33 +824,6 @@ def layer_append_minimal(source, target, request_cookies):
     #insert_summary = results.join()
 
     return summary_aggregate
-
-@login_required
-def layer_append(request, layername, template='upload/layer_append.html'):
-    print 'layer append'
-    context = {}
-    layer_destination = _resolve_layer(
-        request,
-        layername,
-        'base.change_resourcebase_metadata',
-        _PERMISSION_MSG_METADATA)
-
-    def parse_layers(get_capabilities_xml_str):
-        xml = etree.XML(get_capabilities_xml_str)
-        tree = etree.ElementTree(xml)
-        root = tree.getroot()
-        # BUG with lxml? When elements do not have a prefix, even if None:'{http://www.opengis.net/wms}' is set as a namespace,
-        # namespace elements are not resolved. xpath doesn't work and findXXX needs the namespace for wms to work: {http://www.opengis.net/wms}Layer
-        # no luck getting tree.xpath('//WMS_Capabilities/Capability/Layer/Layer') or variation to work
-        layer_elements = root.findall('.//{http://www.opengis.net/wms}Layer')
-        layers = {}
-        for layer in layer_elements:
-            name_element = layer.find('{http://www.opengis.net/wms}Name')
-            if name_element is not None and name_element.text:
-                layers[name_element.text] = name_element.text
-        return layers
-
-    return render_to_response(template, context, context_instance=RequestContext(request),)
 
 
 def layer_detail(request, layername, template='layers/layer_detail.html'):
