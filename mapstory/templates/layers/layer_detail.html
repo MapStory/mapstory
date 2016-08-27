@@ -22,7 +22,7 @@
 {% block body_outer %}{% include "detail_base.html" with page="layer" %}{% endblock %}
 {% block extra_script %}
 {% if GEOGIG_ENABLED and resource.link_set.geogig %}
-    {% with "_geogig_scripts.html" as geogig_scripts_template %}
+    {% with "layers/_geogig_scripts.html" as geogig_scripts_template %}
         {% include  geogig_scripts_template %}
     {% endwith %}
 {% endif %}
