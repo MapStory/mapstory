@@ -1,5 +1,5 @@
 import datetime
-from account.views import SignupView, ConfirmEmailView
+from account.views import ConfirmEmailView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
@@ -7,76 +7,61 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.http.request import validate_host
-from django.shortcuts import render_to_response
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render_to_response, render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from django.views.generic.edit import ModelFormMixin
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, ModelFormMixin, UpdateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView
 from django.views.generic.list import ListView
 from django.template import RequestContext
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext as _
-from django.utils.text import slugify
-from geonode.base.forms import CategoryForm
-from geonode.base.models import TopicCategory
+from geonode.base.models import TopicCategory, Region
 from geonode.layers.models import Layer
-from geonode.layers.views import _PERMISSION_MSG_METADATA, _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
+from geonode.layers.views import _resolve_layer
+from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
 from geonode.people.models import Profile
 from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
-from geonode.upload.utils import create_geoserver_db_featurestore
-from httplib import HTTPConnection, HTTPSConnection, NOT_ACCEPTABLE, INTERNAL_SERVER_ERROR, FORBIDDEN
-from mapstory.forms import UploadLayerForm, DeactivateProfileForm, EditProfileForm
+from geonode.maps.models import Map, MapStory
+from httplib import HTTPConnection, HTTPSConnection
 from mapstory import tasks
-from mapstory.utils import has_exception, error_response, parse_schema, parse_wfst_response, print_exception
-from mapstory.models import get_sponsors
-from mapstory.models import get_images
-from mapstory.models import get_group_layers
-from mapstory.models import get_group_maps
+from mapstory.utils import has_exception, parse_wfst_response, print_exception
+from mapstory.models import get_sponsors, get_images, get_featured_groups, get_group_journals
 from mapstory.models import GetPage
 from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
 from mapstory.models import Leader
 from icon_commons.models import Icon
-from mapstory.models import Community
-from mapstory.models import get_featured_groups
-from mapstory.importers import GeoServerLayerCreator
-from geonode.base.models import Region
 from geonode.contrib.favorite.models import Favorite
+from geonode.contrib.collections.models import Collection
 from geonode.geoserver.helpers import ogc_server_settings
 from urlparse import urlsplit
 from user_messages.models import Thread
-from .forms import MapStorySignupForm
-from geonode.groups.models import GroupProfile
-
 from actstream.models import actor_stream
 
-from geonode.maps.models import Map, MapLayer, MapStory
-from geonode.utils import GXPLayer
-from geonode.utils import GXPMap
-from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm
+from geonode.utils import GXPLayer, GXPMap
 from geonode.utils import resolve_object
-from geonode.security.views import _perms_info_json
-from geonode.documents.models import get_related_documents
 from geonode.utils import build_social_links
 from geonode.utils import default_map_config
+from mapstory.forms import DeactivateProfileForm, EditProfileForm
+from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm
+from mapstory.forms import OrganizationForm, OrganizationUpdateForm
+from geonode.security.views import _perms_info_json
+from geonode.documents.models import get_related_documents
+
 from django.db.models import F
 from django.contrib.auth.models import Group
 from django.contrib import messages
 from django.contrib.auth import logout
-from geonode.layers.views import _resolve_layer
+from django.contrib.auth import get_user_model
+
 from geonode.tasks.deletion import delete_mapstory, delete_layer
 from provider.oauth2.models import AccessToken
 from django.utils.timezone import now as provider_now
-from django.core.mail import send_mail
 from account.conf import settings as account_settings
-from account.models import EmailConfirmation
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from osgeo_importer.forms import UploadFileForm
 from celery import group
-from osgeo_importer.utils import UploadError
 from lxml import etree
 from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 
@@ -86,11 +71,6 @@ import json
 import requests
 from geonode.groups.models import GroupProfile, GroupMember
 from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
-from geonode.contrib.collections.models import Collection
-
-from mapstory.models import get_group_journals
-from django.contrib.auth import get_user_model
-from mapstory.forms import OrganizationForm, OrganizationUpdateForm
 
 
 class IndexView(TemplateView):
@@ -630,22 +610,6 @@ def proxy(request):
         response['www-authenticate'] = "GeoNode"
 
     return response
-
-
-class MapStorySignup(SignupView):
-    """
-    Extends the SignupView to include the user's first and last name.
-    """
-    form_class = MapStorySignupForm
-
-    def create_account(self, form):
-        """
-        Save the users first and last name.
-        """
-        self.created_user.first_name = form.cleaned_data['firstname']
-        self.created_user.last_name = form.cleaned_data['lastname']
-        self.created_user.save()
-        return super(MapStorySignup, self).create_account(form)
 
 
 class MapStoryConfirmEmailView(ConfirmEmailView):

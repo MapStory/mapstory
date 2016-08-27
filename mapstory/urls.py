@@ -14,7 +14,6 @@ from mapstory.views import ProfileDetail, profile_delete, profile_edit
 from mapstory.views import SearchView
 from mapstory.views import LeaderListView
 from mapstory.views import proxy
-from mapstory.views import MapStorySignup
 from mapstory.views import map_detail
 from mapstory.views import layer_detail, layer_detail_id
 from mapstory.views import layer_remove, map_remove
@@ -56,7 +55,6 @@ urlpatterns = patterns('',
 
     url(r'^$', IndexView.as_view(), name="index_view"),
     url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))), #temp fix for social auth redirect
-    url(r"^account/signup/$", MapStorySignup.as_view(), name="account_signup"),
     url(r'^accounts/verify/$', 'mapstory.views.account_verify',  name='account_verify'),
     url(r"^account/confirm_email/(?P<key>\w+)/$", MapStoryConfirmEmailView.as_view(), name="account_confirm_email"),
 
