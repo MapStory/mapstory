@@ -66,35 +66,17 @@ urlpatterns = patterns('',
     url(r'^story/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'),
     url(r'^story/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
     url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
+    
     # MapLoom
-
-    url(r'^maps/new$',
-        'mapstory.views.new_map', {'template': 'maps/_map_view_maploom.html'},
-        name='map-new'),
-
-    url(r'^maps/edit$',
-        'geonode.maps.views.new_map', {'template': 'maps/_map_view_maploom.html'},
-        name='map-edit'),
-
-    url(r'^maps/(?P<mapid>\d+)/view$',
-        'geonode.maps.views.map_view', {'template': 'maps/_map_view_maploom.html'},
-        name='map-view'),
-
-    url(r'^story/(?P<storyid>[^/]+)/draft$',
-        'mapstory.views.mapstory_draft', {'template': 'maps/_map_view_maploom.html'},
-        name='mapstory-draft'),
+    url(r'^maps/new$', 'mapstory.views.new_map', {'template': 'maps/_map_view_maploom.html'}, name='map-new'),
+    url(r'^maps/edit$', 'geonode.maps.views.new_map', {'template': 'maps/_map_view_maploom.html'}, name='map-edit'),
+    url(r'^maps/(?P<mapid>\d+)/view$', 'geonode.maps.views.map_view', {'template': 'maps/_map_view_maploom.html'}, name='map-view'),
+    url(r'^story/(?P<storyid>[^/]+)/draft$', 'mapstory.views.mapstory_draft', {'template': 'maps/_map_view_maploom.html'}, name='mapstory-draft'),
 
     # StoryTools
-
-    url(r'^maps/(?P<mapid>\d+)/viewer$',
-        'geonode.maps.views.map_view', {'template': 'maps/mapstory_map_viewer.html'},
-        name='map-viewer'),
-    url(r'^maps/(?P<mapid>\d+)/embed$',
-        'geonode.maps.views.map_view', {'template': 'maps/mapstory_map_viewer.html'},
-        name='map-viewer'),
-    url(r'^story/(?P<mapid>\d+)/embed$',
-        'geonode.maps.views.mapstory_view', {'template': 'maps/mapstory_map_viewer.html'},
-        name='mapstory-viewer'),
+    url(r'^maps/(?P<mapid>\d+)/viewer$', 'geonode.maps.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
+    url(r'^maps/(?P<mapid>\d+)/embed$', 'geonode.maps.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
+    url(r'^story/(?P<mapid>\d+)/embed$', 'geonode.maps.views.mapstory_view', {'template': 'viewer/story_viewer.html'}, name='mapstory-viewer'),
 
     url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="storyteller_detail"),
     url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
@@ -114,8 +96,7 @@ urlpatterns = patterns('',
     url(r'^organizations/members/(?P<slug>[^/]*)$', organization_members, name='organization_members'),
     url(r'^organizations/invite/(?P<slug>[^/]*)$', organization_invite, name='organization_invite'),
     url(r'^organizations/(?P<slug>[^/]*)/members_add/$', organization_members_add, name='organization_members_add'),
-    url(r'^organizations/(?P<slug>[^/]*)/member_remove/(?P<username>.+)$', organization_member_remove,
-        name='organization_member_remove'),
+    url(r'^organizations/(?P<slug>[^/]*)/member_remove/(?P<username>.+)$', organization_member_remove, name='organization_member_remove'),
     url(r'^initiatives/create/$', initiative_create, name='initiative_create'),
     url(r'^initiatives/(?P<slug>[^/]*)$', initiative_detail, name='initiative_detail'),
     url(r'^initiatives/edit/(?P<slug>[^/]*)$', initiative_edit, name='initiative_edit'),
@@ -136,7 +117,7 @@ urlpatterns = patterns('',
 
     url(r"^flag/", include('mapstory.apps.flag.urls')),
 
-    url(r'^layers/(?P<layername>[^/]*)/viewer$', layer_detail, {'template': 'layers/layer_map.html'}, name="layer_viewer"),
+    url(r'^layers/(?P<layername>[^/]*)/viewer$', layer_detail, {'template': 'viewer/layer_viewer.html'}, name="layer_viewer"),
     url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
     url(r'^layers/notify-download$', notify_download, name='notify-layer-download'),
 

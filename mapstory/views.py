@@ -691,7 +691,7 @@ def new_map_json(request):
     from geonode.maps.views import new_map_json
     return new_map_json(request)
 
-def mapstory_view(request, storyid, snapshot=None, template='maps/mapstory_map_viewer.html'):
+def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer.html'):
     """
     The view that returns the map viewer opened to
     the mapstory with the given ID.

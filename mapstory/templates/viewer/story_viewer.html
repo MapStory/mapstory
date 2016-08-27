@@ -1,3 +1,12 @@
+{% extends "view_base.html" %}
+
+{% load i18n %}
+
+{% block title %} {% trans "Viewer" %} - {{ block.super }} {% endblock %}
+
+{% block head %}
+{{ block.super }}
+
 <link rel="stylesheet" href="{{ STATIC_URL }}style/vis.min.css" type="text/css"/>
 <link rel="stylesheet" href="{{ STATIC_URL }}vendor/nouislider/distribute/jquery.nouislider.min.css" type="text/css">
 
@@ -15,7 +24,7 @@
 <script src="{{ STATIC_URL }}vendor/story-tools/dist/ows.js"></script>
 <script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-mapstory.js"></script>
 
-{% include 'maps/viewer.js' %}
+{% include 'viewer/story_viewer.js' %}
 <link href="{{ STATIC_URL }}style/themes/{{THEME}}/maps-theme.css" rel="stylesheet" />
 <div ng-app="viewer" ng-controller="viewerController as viewer" id="story-viewer">
     <div class="sidebar" id="sidebar">
@@ -85,3 +94,9 @@
         <div id="story-pin-popup"></div>
     </div>
 </div>
+{% endblock head %}
+{% block header %}
+{# include 'mapstory/_header.html' #}
+{% endblock %}
+
+{% block footer %}{% endblock %}
