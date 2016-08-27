@@ -68,10 +68,11 @@ urlpatterns = patterns('',
     url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
     
     # MapLoom
-    url(r'^maps/new$', 'mapstory.views.new_map', {'template': 'maps/_map_view_maploom.html'}, name='map-new'),
-    url(r'^maps/edit$', 'geonode.maps.views.new_map', {'template': 'maps/_map_view_maploom.html'}, name='map-edit'),
-    url(r'^maps/(?P<mapid>\d+)/view$', 'geonode.maps.views.map_view', {'template': 'maps/_map_view_maploom.html'}, name='map-view'),
-    url(r'^story/(?P<storyid>[^/]+)/draft$', 'mapstory.views.mapstory_draft', {'template': 'maps/_map_view_maploom.html'}, name='mapstory-draft'),
+    url(r'^maps/new$', 'mapstory.views.new_map', {'template': 'composer/composer_maploom.html'}, name='map-new'),
+    url(r'^maps/edit$', 'geonode.maps.views.new_map', {'template': 'composer/composer_maploom.html'}, name='map-edit'),
+    url(r'^maps/(?P<mapid>\d+)/view$', 'geonode.maps.views.map_view', {'template': 'composer/composer_maploom.html'}, name='map-view'),
+    url(r'^story/(?P<storyid>[^/]+)/draft$', 'mapstory.views.draft_view', {'template': 'composer/composer_maploom.html'}, name='mapstory-draft'),
+    url(r'^frame/(?P<storyid>[^/]+)/draft','mapstory.views.draft_view',name='draft_view'),
 
     # StoryTools
     url(r'^maps/(?P<mapid>\d+)/viewer$', 'geonode.maps.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),

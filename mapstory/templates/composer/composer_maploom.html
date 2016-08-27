@@ -12,5 +12,4 @@ body{
     padding:0;
 }
 </style>
-<link rel="stylesheet" type="text/css" href="{{STATIC_URL}}style/themes/{{THEME}}/maps-theme.css"/>
 <iframe src="{% if story %}{% url 'draft_view' story.id %}{% else %}{% url 'maploom-map-new' %}{% if request.GET.urlencode %}?{{ request.GET.urlencode }}{% endif %}{% endif %}" allowFullScreen="true" scrolling="auto" class="maploom"></iframe>

@@ -24,7 +24,7 @@ from geonode.base.models import TopicCategory
 from geonode.layers.models import Layer
 from geonode.layers.views import _PERMISSION_MSG_METADATA, _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
 from geonode.people.models import Profile
-from geonode.maps.views import snapshot_config
+from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
 from geonode.upload.utils import create_geoserver_db_featurestore
 from httplib import HTTPConnection, HTTPSConnection, NOT_ACCEPTABLE, INTERNAL_SERVER_ERROR, FORBIDDEN
 from mapstory.forms import UploadLayerForm, DeactivateProfileForm, EditProfileForm
@@ -708,10 +708,33 @@ def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer
         'config': json.dumps(config)
     }))
 
+def _resolve_story(request, id, permission='base.change_resourcebase',
+                 msg=_PERMISSION_MSG_GENERIC, **kwargs):
+    '''
+    Resolve the Map by the provided typename and check the optional permission.
+    '''
+    if id.isdigit():
+        key = 'pk'
+    else:
+        key = 'urlsuffix'
+    return resolve_object(request, MapStory, {key: id}, permission=permission,
+                          permission_msg=msg, **kwargs)
+
+def draft_view(request, storyid, template='composer/maploom.html'):
+
+    story_obj = _resolve_story(request, storyid, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
+
+    config = story_obj.viewer_json(request.user)
+
+    return render_to_response(template, RequestContext(request, {
+        'config': json.dumps(config),
+        'story': story_obj
+    }))
+
 @login_required
 def mapstory_draft(request, storyid, template):
-    from geonode.maps.views import draft_view
     return draft_view(request, storyid, template)
+
 
 @login_required
 def new_map(request, template):

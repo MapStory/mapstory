@@ -53,8 +53,8 @@ def map_loom_django_dev():
     """
     sudo('rm -rf /srv/git/mapstory/mapstory-geonode/mapstory/static/maploom/*')
     sudo('ln -s /srv/git/mapstory/MapLoom/build/* /srv/git/mapstory/mapstory-geonode/mapstory/static/maploom/')
-    sudo('rm /srv/git/mapstory/mapstory-geonode/mapstory/templates/maps/maploom.html')
-    sudo('ln -s /srv/git/mapstory/MapLoom/build/maploom.html /srv/git/mapstory/mapstory-geonode/mapstory/templates/maps/maploom.html')
+    sudo('rm /srv/git/mapstory/mapstory-geonode/mapstory/templates/composer/maploom.html')
+    sudo('ln -s /srv/git/mapstory/MapLoom/build/maploom.html /srv/git/mapstory/mapstory-geonode/mapstory/templates/composer/maploom.html')
 
 
 def update(branch='master'):
