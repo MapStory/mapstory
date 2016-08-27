@@ -110,7 +110,7 @@ class IndexView(TemplateView):
 
 
 class DiaryListView(ListView):
-    template_name = 'mapstory/diary.html'
+    template_name = 'journal/diary.html'
     context_object_name = 'entries'
     paginate_by = 10
 
@@ -142,7 +142,7 @@ class DiaryPermissionMixin(object):
 
 
 class DiaryDetailView(DiaryPermissionMixin, DetailView):
-    template_name = 'mapstory/diary_detail.html'
+    template_name = 'journal/diary_detail.html'
     model = DiaryEntry
     need_publish = True
     context_object_name = 'entry'
@@ -154,7 +154,7 @@ class DiaryDetailView(DiaryPermissionMixin, DetailView):
 
 
 class DiaryEditMixin(object):
-    template_name = 'mapstory/diary_edit.html'
+    template_name = 'journal/diary_edit.html'
     model = DiaryEntry
     fields = ['title', 'content', 'publish']
 
