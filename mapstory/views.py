@@ -278,7 +278,7 @@ def organization_detail(request, slug):
     if not group.profile_type == 'org':
         return HttpResponse(status=404)
 
-    return render_to_response("mapstory/organization_detail.html", {
+    return render_to_response("groups/organization_detail.html", {
         "id": group.id,
         "images": get_images(),
         "journals": get_group_journals(group),
@@ -291,7 +291,7 @@ def initiative_detail(request, slug):
     if not group.profile_type == 'ini':
         return HttpResponse(status=404)
 
-    return render_to_response("mapstory/initiative_detail.html", {
+    return render_to_response("groups/initiative_detail.html", {
         "id": group.id,
         "images": get_images(),
         "journals": get_group_journals(group),
@@ -440,7 +440,7 @@ def organization_members(request, slug):
         "is_manager": group.user_is_role(request.user, "manager"),
     })
     ctx = RequestContext(request, ctx)
-    return render_to_response("mapstory/organization_members.html", ctx)
+    return render_to_response("groups/organization_members.html", ctx)
 
 @require_POST
 @login_required
@@ -513,7 +513,7 @@ def initiative_members(request, slug):
         "is_manager": group.user_is_role(request.user, "manager"),
     })
     ctx = RequestContext(request, ctx)
-    return render_to_response("mapstory/initiative_members.html", ctx)
+    return render_to_response("groups/initiative_members.html", ctx)
 
 @require_POST
 @login_required
