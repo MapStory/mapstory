@@ -16,13 +16,13 @@
     <link href="{{ STATIC_URL }}style/themes/{{ THEME }}/site-theme.css" rel="stylesheet"/>
     {% if site.assets.favicon %}
         <link rel="shortcut icon" href="/uploaded/{{ site.assets.favicon.name }}">{% endif %}
-    {% if GOOGLE_ANALYTICS %}{% include "mapstory/google_analytics.html" %}{% endif %}
+    {% if GOOGLE_ANALYTICS %}{% include "mapstory/_google_analytics.html" %}{% endif %}
     {% block extra_head %}{% endblock %}
 {% endblock head %}
 </head>
 <body class="{% block body_class %}{% endblock %}" ng-cloak>
 {% block header %}
-{% include 'mapstory/_header.html' %}
+{% include '_header.html' %}
 {% block extra_tab %}{% endblock %}
 {% endblock header %}
 <div class="alert alert-danger alert-dismissible" role="alert" id="ieflag" style="display:none">
@@ -49,8 +49,8 @@
         </div>
     {% endblock middle %}
 </div>
-{% block footer %}{% include 'mapstory/_footer.html' %}{% endblock footer%}
-{% include "mapstory/_site_scripts.html" %}
+{% block footer %}{% include '_footer.html' %}{% endblock footer%}
+{% include "_site_scripts.html" %}
 {% block extra_script %}{% endblock extra_script %}
 </body>
 </html>
