@@ -3,11 +3,12 @@ import re
 from geonode.contrib.favorite.utils import get_favorite_info as geonode_get_favorite_info
 from geonode.layers.models import Layer
 from geonode.maps.models import Map
-
+from geonode.maps.models import MapStory
 
 # based on urls.py
 layer_detail_path = re.compile('/layers/[^/]*$')
 map_detail_path = re.compile('/maps/\d+$')
+story_detail_path = re.compile('/story/\d+$')
 
 
 def get_favorite_info(request):
@@ -43,7 +44,15 @@ def get_object_of_interest(request):
             return None
         except Map.MultipleObjectsReturned:
             return None
-
+    # if identify as mapstory detail request.
+    if re.match(story_detail_path, request.path):
+        story_id = request.path.split('/')[2]
+        try:
+            return MapStory.objects.get(id=story_id)
+        except MapStory.DoesNotExist:
+            return None
+        except MapStory.MultipleObjectsReturned:
+            return None
     # if identify as layer detail request.
     elif re.match(layer_detail_path, request.path):
         layer_info = request.path.split('/')[2]
