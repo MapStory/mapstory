@@ -2,7 +2,7 @@
 
 (function() {
     angular.module('mapstory', [
-        'mapstory.uploader',
+        'osgeoImporter.uploader',
         'ui.bootstrap',
         'geonode_main_search'
     ], function($locationProvider) {

@@ -55,7 +55,7 @@
                     <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}" id="uploadLayers">
                         {% if user.is_authenticated %}
                             <a ng-controller="ImportController"
-                               ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', null, null, null, true)"
+                               ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', '{{ default_layer_config }}', null, null, null)"
                                target="_self">
                         {% else %}
                             <a data-toggle="modal" data-target="#loginModal">

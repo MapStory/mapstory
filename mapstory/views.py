@@ -85,6 +85,7 @@ class IndexView(TemplateView):
         ctx['images'] = get_images()
         # for now, limit to max of 8.
         ctx['diary_entries'] = DiaryEntry.objects.filter(publish=True,show_on_main=True)[:8]
+        ctx['default_layer_config'] = json.dumps(settings.DEFAULT_IMPORTER_CONFIG)
 
         return ctx
 
@@ -935,6 +936,9 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             links = layer.link_set.download().filter(
                 name__in=settings.DOWNLOAD_FORMATS_RASTER)
         context_dict["links"] = links
+
+    if settings.DEFAULT_IMPORTER_CONFIG:
+        context_dict["default_layer_config"] = json.dumps(settings.DEFAULT_IMPORTER_CONFIG)
 
     layer_property_names = []
     for attrib in layer.attributes:

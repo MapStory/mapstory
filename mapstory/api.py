@@ -40,7 +40,7 @@ class UploadedLayerResource(UploadedLayerResource):
 
         request_cookies = request.COOKIES
         uploaded_file = obj.upload.uploadfile_set.first()
-        import_result = import_object.delay(uploaded_file.id, configuration_options=configuration_options, request_cookies=request_cookies)
+        import_result = import_object.delay(uploaded_file.id, configuration_options=configuration_options, request_cookies=request_cookies, request_user=request.user)
 
         # query the db again for this object since it may have been updated during the import
         obj = self.obj_get(b, pk=kwargs.get('pk'))

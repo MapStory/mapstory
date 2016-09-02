@@ -117,7 +117,7 @@
                     <ul class="side-column-items">
                         {% ifequal page "layer" %}
                             <li><i class="fa fa-paste"></i> <a ng-controller="ImportController" style="cursor: pointer"
-                                                               ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{ STATIC_URL }}', '{{ resource.typename }}', '{{ shapefile_link }}','{{ csv_link }}', true)">{% trans 'Append Data' %}</a>
+                                                               ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{ STATIC_URL }}', '{{ default_layer_config }}', '{{ resource.typename }}', '{{ shapefile_link }}','{{ csv_link }}')">{% trans 'Append Data' %}</a>
                             </li>
                             <div>
                                 <li><i class="fa fa-flag"></i> <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">Flag

@@ -109,7 +109,8 @@ OGC_SERVER = {
         # Set to name of database in DATABASES dictionary to enable
         'DATASTORE': '', #'datastore',
         'TIMEOUT': 10,  # number of seconds to allow for HTTP requests,
-        'GEOGIG_DATASTORE_DIR': '/var/lib/geoserver/data/geogig'
+        'GEOGIG_DATASTORE_DIR': '/var/lib/geoserver/data/geogig',
+        'PG_GEOGIG': True
     }
 }
 
