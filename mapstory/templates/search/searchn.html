@@ -37,7 +37,7 @@
             <div class="clearfix search-results">
                 <ul>
                     {% verbatim %}
-                    <li ng-repeat="item in results | orderBy: orderMethod" resource-id="{{ item.id }}" class="col-md-4" ng-if="((item.type === 'mapstory' && item.is_published == true) || (item.type === 'layer' && item.is_published == true))">
+                    <li ng-repeat="item in results | orderBy: orderMethod" resource-id="{{ item.id }}" class="col-md-4" ng-if="((item.type === 'mapstory' || item.type === 'layer') && (item.is_published == true || item.owner__username  == django.user))">
                     {% endverbatim %}
                     {% include 'search/_result_content.html' %}
                 </ul>

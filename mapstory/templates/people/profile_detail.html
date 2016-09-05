@@ -43,16 +43,10 @@
                                     </div>
                                     <div class="clearfix search-results">
                                         <ul>
-                                        {% if user == profile %}
                                             {% verbatim %}
-                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4">
+                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4" ng-if="(item.is_published == true || item.owner__username == django.user)">
                                             {% endverbatim %}
-                                        {% else %}
-                                            {% verbatim %}
-                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4" ng-if="item.is_published == true">
-                                            {% endverbatim %}
-                                        {% endif %}
-                                        {% include 'search/_result_content.html' %}
+                                            {% include 'search/_result_content.html' %}
                                         </ul>
                                     </div>
                                 </div>
@@ -63,16 +57,10 @@
                                     </div>
                                     <div class="clearfix search-results">
                                         <ul>
-                                        {% if user == profile %}
                                             {% verbatim %}
-                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4">
+                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4" ng-if="(item.is_published == true || item.owner__username == django.user)">
                                             {% endverbatim %}
-                                        {% else %}
-                                            {% verbatim %}
-                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4" ng-if="item.is_published == true">
-                                            {% endverbatim %}
-                                        {% endif %}
-                                        {% include 'search/_result_content.html' %}</ul>
+                                            {% include 'search/_result_content.html' %}</ul>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="uploads_list">

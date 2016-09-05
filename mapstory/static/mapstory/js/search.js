@@ -178,12 +178,13 @@
   * Load data from api and defines the multiple and single choice handlers
   * Syncs the browser url with the selections
   */
-  module.controller('geonode_search_controller', function($injector, $scope, $location, $http, $q, Configs){
+  module.controller('geonode_search_controller', function($injector, $scope, $location, $http, $q, Configs, Django){
     $scope.query = $location.search();
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
     $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
     $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
+    $scope.django = Django.all();
 
     $scope.search = function() {
       $scope.query.limit = 100;

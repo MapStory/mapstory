@@ -122,3 +122,11 @@
         window.location.hash = e.target.hash.replace("#", "#" + prefix);
     });
 </script>
+
+
+<script type="text/javascript">
+//add any django values you'd like to use in angular to this object
+  angular.module('mapstory').constant("DjangoConstants", {
+    user: '{{ user }}'
+  });
+</script>

@@ -18,6 +18,18 @@
           angular.element(document.getElementsByClassName("new-tab")).prop("target", "_blank");
       }
     })
+    
+// enables angular access to select django values (passed in _site_scripts.html)
+.factory('Django', function(DjangoConstants) {
+  return {
+    get: function(key) {
+      return DjangoConstants[key];
+    },
+    all: function() {
+      return DjangoConstants;
+    }
+  };
+})
 
 .config(function($httpProvider, $sceDelegateProvider) {
         // this makes request.is_ajax() == True in Django
@@ -248,7 +260,7 @@
       }
     })
 
-.controller('profile_search_controller', function($injector, $scope, $location, $http, Configs,
+.controller('profile_search_controller', function($injector, $scope, $location, $http, Configs, Django,
                                                           UploadedData, $rootScope){
     $scope.query = $location.search();
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
@@ -259,6 +271,7 @@
     $scope.currentPage = 0;
     $scope.offset = 0;
     $scope.limit = 10;
+    $scope.django = Django.all();
 
     // For some reason it gets it all as a string, so parse for the ' and grab the content in between them
     keyword_list = keyword_list.split('\'');
@@ -323,15 +336,18 @@
     };
 
     // Here we want to grab the number of layers and number of maps
+    // total_ is all items returned by query, public_ is those with is_published = true
     // query={q: query.q}; query.type__in='map'; search();
     $scope.calculate_maps_layers = function() {
       $scope.query.type__in = 'layer';
       $scope.query.owner__username__in = PROFILE_USERNAME;
       $scope.search().then(function(result) {
         $scope.total_layers = $scope.total_counts;
+        $scope.public_layers = $scope.public_counts;
         $scope.query.type__in = 'mapstory';
         $scope.search().then(function(result) {
           $scope.total_maps = $scope.total_counts;
+          $scope.public_maps = $scope.public_counts;
         });
       });
     };
@@ -362,6 +378,8 @@
       return $http.get('/api/base/search/', {params: data || {}}).success(function(data){
         $scope.results = data.objects;
         $scope.total_counts = data.meta.total_count;
+        //public count reverts to total count if not integrated into geonode resourcebase api yet
+        $scope.public_counts = data.meta.public_count || data.meta.total_count; 
         $scope.$root.query_data = data;
         if (HAYSTACK_SEARCH) {
           if ($location.search().hasOwnProperty('q')){

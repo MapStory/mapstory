@@ -7,14 +7,10 @@
 <ul class="nav nav-tabs">
     <li class="active">
         <a href="#stories_list" data-toggle="tab"
-        {% if user == profile %}
-           ng-click="query={q: query.q}; query.type__in='mapstory'; query.owner__username__in='{{ profile.username }}'; search();"
-        {% else %}
-            ng-click="query={q: query.q}; query.type__in='mapstory'; query.owner__username__in='{{ profile.username }}'; query.is_published__in=true; search();"
-        {% endif %}
-        >
+            ng-click="query={q: query.q}; query.type__in='mapstory'; query.owner__username__in='{{ profile.username }}'; search();">
             <div class="counter">
-                <span ng-bind="total_maps"></span>
+            {% if user == profile %} <span ng-bind="total_maps"></span>
+            {% else %} <span ng-bind="public_maps"></span>{% endif %}
             </div>
             {% trans "Stories" %} 
         </a>
@@ -23,11 +19,12 @@
         <a href="#layers_list" data-toggle="tab"
            ng-click="query={q: query.q}; query.type__in='layer'; query.owner__username__in='{{ profile.username }}'; search();">
             <div class="counter">
-                <span ng-bind="total_layers"></span>
+            {% if user == profile %} <span ng-bind="total_layers"></span>
+            {% else %} <span ng-bind="public_layers"></span>{% endif %}
             </div>
             {% trans "Layers" %} 
         </a>
-    </li>
+    </li> 
     {% if user == profile %}
         <li>
             <a href="#uploads_list" data-toggle="tab">
@@ -37,21 +34,23 @@
                 Uploads
             </a>
         </li>
-    {% endif %}{% comment %}
+        {% if THEME == 'orange' %}
         <li>
             <a href="#messages_list" data-toggle="tab">
                 <div class="counter">{{ inbox_count }}</div>
                 Messages 
             </a>
         </li>
+        {% endif %}
     {% endif %}
+    {% if THEME == 'orange' %}
     <li>
         <a href="#user_activities" data-toggle="tab">
             <div class="counter">{{ action_list.count }}</div>
             Activity Feed 
         </a>
     </li>
-    {% endcomment %}
+    {% endif %} 
     <li>
         <a href="#diary_entries" data-toggle="tab">
             <div class="counter">{{ diary_entries.count }}</div>
