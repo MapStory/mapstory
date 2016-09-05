@@ -27,7 +27,7 @@
                  <span class="label label-primary pull-right">{{ commit.id | limitTo: 10 }}</span>
                  <h4 class="commit-message">{{ commit.message }}</h4>
                  <span class="commit-timestamp">Authored <span class="gray">{{ commit.commitTimeSince }}</span> by: </span>
-                 <span class="commit-author">{{ commit.author.name || 'Unknown' }}</span>
+                 <span class="commit-author">{{ commit.author.name || commit.committer.name || 'Unknown' }}</span>
               </div>
           </div>
           <span ng-repeat-end></span>
