@@ -872,8 +872,9 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         name__in=settings.DOWNLOAD_FORMATS_METADATA)
 
     if request.method == "POST":
+        keywords_form = KeywordsForm(request.POST, instance=layer)
+        metadata_form = MetadataForm(instance=layer)
         if 'keywords' in request.POST:
-            keywords_form = KeywordsForm(request.POST, instance=layer)
             if keywords_form.is_valid():
                 keywords_form.save()
                 new_keywords = keywords_form.cleaned_data['keywords']
@@ -994,8 +995,9 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
 
     print layers
     if request.method == "POST":
+        keywords_form = KeywordsForm(request.POST, instance=map_obj)
+        published_form = PublishStatusForm(instance=map_obj)
         if 'keywords' in request.POST:
-            keywords_form = KeywordsForm(request.POST, instance=map_obj)
             if keywords_form.is_valid():
                 keywords_form.save()
                 new_keywords = keywords_form.cleaned_data['keywords']
@@ -1015,9 +1017,6 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         elif 'remove_keyword' in request.POST:
             map_obj.keywords.remove(request.POST['remove_keyword'])
             map_obj.save()
-        else:
-            keywords_form = KeywordsForm(instance=map_obj)
-            published_form = PublishStatusForm(instance=map_obj)
     else:
         keywords_form = KeywordsForm(instance=map_obj)
         published_form = PublishStatusForm(instance=map_obj)
