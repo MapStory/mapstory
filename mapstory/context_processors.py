@@ -3,6 +3,8 @@ from django.conf import settings
 from .context_processors_favorite import get_favorite_info
 from django.contrib.sites.models import Site
 
+import json
+
 
 def context(req):
     return dict(
@@ -12,5 +14,6 @@ def context(req):
         ENABLE_SOCIAL_LOGIN=getattr(settings, 'ENABLE_SOCIAL_LOGIN', False),
         USER_SNAP=getattr(settings, 'USER_SNAP', False),
         site=Site.objects.get_current(),
-        THEME=getattr(settings, 'THEME', 'default')
+        THEME=getattr(settings, 'THEME', 'default'),
+        default_layer_config=json.dumps(getattr(settings,'DEFAULT_IMPORTER_CONFIG'))
     )
