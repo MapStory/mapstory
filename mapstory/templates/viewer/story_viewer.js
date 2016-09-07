@@ -74,8 +74,8 @@
             }
 
             self.title = config.about.title;
+            self.username = config.about.username;
             self.owner = config.about.owner;
-            self.username = config.about.owner.substring(config.about.owner.indexOf('(') + 1, config.about.owner.indexOf(')'));
         };
 
         this.loadMap = function(options) {
