@@ -379,7 +379,7 @@
         $scope.results = data.objects;
         $scope.total_counts = data.meta.total_count;
         //public count reverts to total count if not integrated into geonode resourcebase api yet
-        $scope.public_counts = data.meta.public_count || data.meta.total_count; 
+        $scope.public_counts = data.meta.public_count; 
         $scope.$root.query_data = data;
         if (HAYSTACK_SEARCH) {
           if ($location.search().hasOwnProperty('q')){

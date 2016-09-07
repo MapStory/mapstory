@@ -29,7 +29,6 @@ class MetadataForm(forms.ModelForm):
         fields = [
             'title',
             'category',
-            'language',
             'abstract',
             'distribution_url',
             'data_quality_statement',

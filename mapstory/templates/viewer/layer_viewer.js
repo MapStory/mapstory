@@ -70,10 +70,11 @@
     };
   }
 
+/* EXACTLY THE SAME AS STORY VIEWER */
   module.service('MapManager', function($injector) {
     return $injector.instantiate(MapManager);
   });
-
+/* EXACTLY THE SAME AS STORY VIEWER */
   module.controller('tileProgressController', function($scope) {
     $scope.tilesToLoad = 0;
     $scope.tilesLoadedProgress = 0;
@@ -95,10 +96,9 @@
     });
   });
 
-  module.controller('viewerController', function($scope, $location, $injector, $modal, $log, MapManager, TimeControlsManager) {
+  module.controller('viewerController', function($scope, $location, $injector, $log, MapManager, TimeControlsManager, $modal) {
     $scope.timeControlsManager = $injector.instantiate(TimeControlsManager);
     $scope.mapManager = MapManager;
-
 
     $scope.mapManager.loadMap({title: 'OpenStreetMap', type: 'OSM'});
 

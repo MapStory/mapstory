@@ -18,7 +18,9 @@
             </div>
         </div>
         <div class="result-type">
-            <span ng-if="item.type === 'mapstory'"><i class="fa fa-comments-o"></i> MapStory</span>
+            <span ng-if="item.type === 'mapstory'"><i class="fa fa-comments-o"></i> 
+                {% endverbatim %}{{SITE_NAME}}{% verbatim %}
+            </span>
             <span ng-if="item.type === 'layer'"><i class="fa fa-comment-o"></i> StoryLayer</span>
         </div>
         <div class="result-title">

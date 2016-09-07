@@ -19,9 +19,7 @@
     {% comment %} Search for Content {% endcomment %}
     <div ng-show="api_endpoint == '/api/base/search/'">
         <div class="col-lg-3 border-right">
-            {% include 'search/_whats_hot_content.html' %}
-            {% include 'search/_refine_content.html' %}
-            {% include 'search/_trending_tags.html' %}
+            {% include 'search/_sidebar_bestof.html' %}
         </div>
         <div class="col-lg-9">
             <nav class="filter">
@@ -42,7 +40,7 @@
                     {% include 'search/_result_content.html' %}
                 </ul>
             </div>
-            {% include 'search/_pagination.html' %}
+            <div class="pull-right">{% include 'search/_pagination.html' %}</div>
         </div>
     </div>
     {% comment %} Search for Storytellers {% endcomment %}

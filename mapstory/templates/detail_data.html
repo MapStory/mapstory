@@ -22,7 +22,9 @@
             <li><a href="#Layers" data-toggle="tab">{% trans "Layers" %} Used</a></li>
             <li><a href="#ShareStory" data-toggle="tab">Share</a></li>
             {% endifequal %}
+            {% if resource.category %}
             <li><a href="#Related" data-toggle="tab" ng-click="query_category('{{ resource.category }}', '{{page}}');">Related</a></li>
+            {% endif %}
         </ul>
         <div class="tab-content details">
             <div class="tab-pane active" id="Summary">
@@ -31,25 +33,12 @@
             <div class="tab-pane" id="Metadata">
                 <table class="table table-condensed table-hover">
                     <tr>
-                        <td width="35%">Topic</td>
+                        <td width="35%">Category</td>
                         <td width="65%">{{ resource.category }}</td>
                     </tr>
                     <tr>
-                        <td width="35%">Time Range</td>
-                        {% if resource.temporal_extent_start and resource.temporal_extent_end %}
-                            <td width="65%">{{ resource.temporal_extent_start }} - {{ resource.temporal_extent_end }}</td>
-                        {% else %}
-                            <td width="65%">No time information.</td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <td width="35%">Language</td>
-                        <td width="65%"><i class="flag flag-us"></i>
-                        {% if resource.language %}
-                            {{ resource.language_title }}
-                        {% else %}
-                            No languageinformation.
-                        {% endif %}</td>
+                        <td width="35%">Purpose</td>
+                        <td width="65%">{{ resource.purpose }}</td>
                     </tr>
                     <tr>
                         <td width="35%">Data Source</td>
@@ -58,10 +47,6 @@
                     <tr>
                         <td width="35%">Data Quality Statement</td>
                         <td width="65%">{{ resource.data_quality_statement }}</td>
-                    </tr>
-                    <tr>
-                        <td width="35%">Purpose</td>
-                        <td width="65%">{{ resource.purpose }}</td>
                     </tr>
                 </table>
             </div>
@@ -79,7 +64,7 @@
                 </div>
             </div>
             <div class="tab-pane" id="Related">
-                <div>{% if resource.category %}
+                <div>
                     {% verbatim %}
                     <div ng-hide="results.length">No related content found...</div>
                     <div ng-show="results.length">
@@ -104,9 +89,6 @@
                         </div>
                     </div>
                     {% endverbatim %}
-                    {% else %}
-                    <div>No related content found...</div>
-                    {% endif %}
                 </div>
             </div>
             <div class="tab-pane" id="Comments">

@@ -17,6 +17,7 @@
 {% endblock %}
 {% block middle %}
 <div ng-controller="search_controller">
+<!-- <div ng-controller="geonode_search_controller"> -->
     <section class="parallax splash">
         <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0"
              style="background-image: url({{ images|by_name:'Africa' }});"></div>
@@ -60,7 +61,7 @@
                         {% else %}
                             <a data-toggle="modal" data-target="#loginModal">
                         {% endif %}
-                        {% trans "Upload Layers" %}
+                        {% trans "Import Layers" %}
                         </a>
                     </div>
                     <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}" id="composeStory">
@@ -77,7 +78,7 @@
         <div class="container">
             <nav id="filter" class="col-md-12 text-center">
                 <ul class="nav nav-tabs">
-                    <li><a ng-click="query_category();" class="btn btn-filter btn-sm">{% trans "All MapStories" %}</a></li>
+                    <li><a ng-click="query_category();" class="btn btn-filter btn-sm">{% trans "All Stories" %}</a></li>
                     <li><a ng-click="query_category('crisis');" class="btn btn-filter btn-sm">{% trans "Crisis" %}</a></li>
                     <li><a ng-click="query_category('geopolitics');" class="btn btn-filter btn-sm">{% trans "Geopolitics" %}</a></li>
                     <li><a ng-click="query_category('scienceIndustry');" class="btn btn-filter btn-sm">{% trans "Science & Industry" %}</a></li>
@@ -100,7 +101,7 @@
                     <div class="col-md-4" ng-repeat="item in results">
                         {% verbatim %}
                             <a href="{{ item.detail_url }}">
-                                <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url }}"/>
+                                <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url }}" style="margin: auto;"/>
                             </a>
                             <h3>
                                 <a href="{{ item.detail_url }}">{{ item.title }}</a>
@@ -119,10 +120,6 @@
                 </slick>
             </div>
         </div>
-    </section>
-    <section class="parallax">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0"
-             style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
     </section>
     {% if THEME == 'orange' %}{% include "mapstory/_extended_index.html" %}{% endif %}
     <section class="slice sponsors">

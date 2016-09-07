@@ -152,10 +152,12 @@
     });
 }
 
+/* EXACTLY THE SAME AS LAYER VIEWER */
 module.service('MapManager', function($injector) {
     return $injector.instantiate(MapManager);
 });
 
+/* EXACTLY THE SAME AS LAYER VIEWER */
 module.controller('tileProgressController', function($scope) {
     $scope.tilesToLoad = 0;
     $scope.tilesLoadedProgress = 0;
@@ -192,7 +194,6 @@ module.controller('viewerController', function($scope, $location, $injector, $lo
         }else{
             $location.path('');
         }
-
     };
 
     $scope.previousChapter = function(){
@@ -204,7 +205,6 @@ module.controller('viewerController', function($scope, $location, $injector, $lo
         }else{
             $location.path('');
         }
-
     };
 
     $scope.playbackOptions = {
@@ -213,23 +213,10 @@ module.controller('viewerController', function($scope, $location, $injector, $lo
     };
     
     $scope.toggleSidebar = function() {
-        console.log('Toggle Sidebar');
         $scope.isShown = !$scope.isShown;
-        var map = document.querySelector('#mapContainer');
         var sidebar = document.querySelector('#sidebar');
-        var content = document.querySelector('#content');
-        if ($scope.isShown) {
-            sidebar.className = "sidebarHidden";
-            map.className = "fullMap";
-            content.className = "contentHidden";
-        }
-        if ($scope.isShown == false) {
-            sidebar.className = "sidebar";
-            map.className = "map";
-            content.className = "content"
-        }
+        $scope.isShown ? sidebar.className = "sidebarHidden" : sidebar.className = "sidebar";
     };
-
 });
 })();
 </script>

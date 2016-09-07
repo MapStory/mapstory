@@ -17,16 +17,18 @@
             <div class="row">
                 {{ resource.tags }}
                 <div class="col-lg-9">
-                    <h2 class="page-title">{{ resource.title }}</h2>
-                    <small>Created by:
-                        <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">
+                    <!-- <div class="pull-left">
+                        <h3 class="page-title">{{ resource.title }}</h3>
+                        <small class="by-line">Created by: 
+                            <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">
                             {% if resource.owner.first_name != '' %}
                                 {{ resource.owner.first_name }} {{ resource.owner.last_name }}
                             {% else %}
                                 {{ resource.owner.username }}
                             {% endif %}
-                        </a>
-                    </small>
+                            </a>
+                        </small>
+                    </div> -->
                     <div id="embedded_map" class="mrg-btm">
                         <div id="preview_map"></div>
                     </div>
@@ -148,7 +150,7 @@
                                 <li>
                                     <i class="fa fa-edit"></i>
                                     <a href="#metaForm" data-toggle="modal">
-                                        {% trans "Edit Metadata" %}
+                                        {% trans "Update Metadata" %}
                                     </a>
                                 </li>
                                 {% include "layers/_meta_modal.html" %}

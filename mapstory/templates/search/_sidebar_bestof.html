@@ -1,0 +1,24 @@
+{% load i18n %}
+{%comment%}
+    Condensed sidebar. Best of: _refine_content, _whats_hot_content, and _trending_tags.
+{%endcomment%}
+<h3><i class="fa fa-filter"></i> Refine Search</h3>
+<div class="whats-hot">
+    <ul id="categories">   
+    {% verbatim %}
+        <li ng-repeat="category in categories"> 
+            <a href="" ng-init="toggle=true" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle; active=category.id" ng-class="{active: (!toggle && (active == category.id))}">{{ category.gn_description }}
+                <span ng-show="!toggle" class="pull-left"><i class="fa fa-check"></i></span>
+            </a>                                
+        </li>
+    {% endverbatim %}                       
+    </ul>
+    <h3><i class="fa fa-signal"></i> Trending Tags</h3>
+    <ul>{% verbatim %} 
+        <li ng-repeat="item in trending">
+            <a href="" ng-init="toggle=true" ng-click="toggle_query(toggle, 'keywords__slug__in', item); toggle=!toggle;" ng-class="{active: !toggle}">#{{ item }}
+                <span ng-show="!toggle" class="pull-left"><i class="fa fa-check"></i></span>
+            </a>                                
+        </li>                         
+    </ul>{% endverbatim %}
+</div>
