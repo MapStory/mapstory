@@ -116,13 +116,14 @@
             <wz-step title="Add File" wz-disabled="{{ appending(true) }}" canexit="layer != null" class="row">
                 <div class="modal-content-inner" ng-controller="UploaderController">
                     <div class="gray-container">
-                        <div class="step-title">Upload your data.</div>
+                        <div class="step-title">Add your data.</div>
                         <p class="smText">You can upload data in .csv and zipped shapefile formats.</p>
-
+                        <p class="smText" ng-show="layer.file_type">{{ layer.file_type}}({{layer.file_size}})</p>
+                        <p class="smText" ng-show="layer.state">Status: {{ layer.state }}</P>
                         <div class="row">
                             <div id="upload-file-info">No file selected...</div>
                         </div>
-                        <div class="row">
+                        <div ng-hide="layer.state=='UPLOADED'" class="row">
                             <label class="btn bt-large btn-brand" for="my-file-selector">
                                 <input id="my-file-selector" type="file" style="display:none;" nv-file-select uploader="uploader"
                                        onchange="$('#upload-file-info').html($(this).val().substring(12));">
@@ -179,7 +180,7 @@
                         <div class="step-title">Configure Time</div>
                         <div>All datasets uploaded must contain time information. If the dataset contains only one timeslice, add a column
                             indicating
-                            the timeslice. Learn more about Time Attributes.</div>
+                            the timeslice.</div>
                         <form name="importOptionsForm" class="form-horizontal import-options-form">
                             <div class="form-group">
                                 <label for="start_date" class="col-sm-4 col-xs-4 col-md-4 control-label">Start Time</label>
@@ -245,8 +246,8 @@
             <wz-step title="Import" wz-disabled="{{ appending(true) }}" class="row">
                 <div class="modal-content-inner">
                     <div class="gray-container">
-                        <div class="step-title" ng-hide="success">Configuration Done!</div>
-                        <div ng-hide="success">Click the button below to begin the upload.</div>
+                        <div class="step-title" ng-hide="success">We've got your data!</div>
+                        <div ng-hide="success">Click the button below to begin the import of {{ layer.feature_count | number }} features from your {{ layer.file_type }}.</div><p ng-hide="layer.feature_count < 70000">It looks like your data contains quite a few features. Awesome! This import may take awhile. We'll email you when it is ready for use. Feel free to stick around but it is safe to close this modal and continue using the site.</p>
                         <div>
                             <div class="step-title" ng-show="success">Congratulations! Click below to view your new Layer.</div>
                             <div ng-show="errors">Layer creation has failed. Please adjust your configuration and
