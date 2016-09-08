@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <div class="modal-title text-center lgText">{{ appending() === true ? "Append Wizard" : "Upload Layer Wizard"}}<i
+    <div class="modal-title text-center lgText">{{ appending() === true ? "Append Wizard" : "Import Layer Wizard"}}<i
             class="fa fa-times pointer import-wizard-icon"
             ng-click="ok()"></i></div>
 </div>
@@ -242,7 +242,7 @@
                 </div>
             </wz-step>
 
-            <wz-step title="Upload" wz-disabled="{{ appending(true) }}" class="row">
+            <wz-step title="Import" wz-disabled="{{ appending(true) }}" class="row">
                 <div class="modal-content-inner">
                     <div class="gray-container">
                         <div class="step-title" ng-hide="success">Configuration Done!</div>
@@ -254,7 +254,7 @@
                                 again.
                             </div>
                             <div class="import-wizard-button">
-                                <button class="btn btn-lg btn-brand" ng-show="!processing && !success" type="submit" wz-next value="Continue">Upload Layer</button>
+                                <button class="btn btn-lg btn-brand" ng-show="!processing && !success" type="submit" wz-next value="Continue">Import Layer</button>
                             </div>
                             <div ng-show="processing">
                                 <div class="row">
@@ -262,7 +262,7 @@
                                 </div>
                                 <div class="row">
                                     <a href="{{ layer.geonode_layer.url }}?showMetadata=true" class="btn" target="_self">
-                                        <button class="btn btn-lg" disabled>Uploading Layer...</button>
+                                        <button class="btn btn-lg" disabled>Importing Layer...</button>
                                     </a>
                                 </div>
                             </div>
