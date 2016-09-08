@@ -247,7 +247,8 @@
                 <div class="modal-content-inner">
                     <div class="gray-container">
                         <div class="step-title" ng-hide="success">We've got your data!</div>
-                        <div ng-hide="success">Click the button below to begin the import of {{ layer.feature_count | number }} features from your {{ layer.file_type }}.</div><p ng-hide="layer.feature_count < 70000">It looks like your data contains quite a few features. Awesome! This import may take awhile. We'll email you when it is ready for use. Feel free to stick around but it is safe to close this modal and continue using the site.</p>
+                        <div ng-hide="success">Click the button below to begin the import of {{ layer.feature_count | number }} features from your {{ layer.file_type }}.</div>
+                        <div ng-if="layer.feature_count > 70000 && processing">It looks like your data contains quite a few features. Awesome! This import may take awhile. We'll email you when it is ready for use. Feel free to stick around but it is safe to close this modal and continue using the site.</div>
                         <div>
                             <div class="step-title" ng-show="success">Congratulations! Click below to view your new Layer.</div>
                             <div ng-show="errors">Layer creation has failed. Please adjust your configuration and
@@ -259,11 +260,8 @@
                             </div>
                             <div ng-show="processing">
                                 <div class="row">
-                                    <i class="fa fa-spinner fa-spin fa-3x"></i>
-                                </div>
-                                <div class="row">
                                     <a href="{{ layer.geonode_layer.url }}?showMetadata=true" class="btn" target="_self">
-                                        <button class="btn btn-lg" disabled>Importing Layer...</button>
+                                        <button class="btn btn-lg" disabled><i class="fa fa-spinner fa-spin fa-3x"></i>&nbsp;Importing Layer...</button>
                                     </a>
                                 </div>
                             </div>
