@@ -115,19 +115,18 @@
 
             <wz-step title="Add File" wz-disabled="{{ appending(true) }}" canexit="layer != null" class="row">
                 <div class="modal-content-inner" ng-controller="UploaderController">
-                    <div class="gray-container">
+                    <div class="gray-container" ng-hide="layer.state=='UPLOADED'">
                         <div class="step-title">Add your data.</div>
                         <p class="smText">You can upload data in .csv and zipped shapefile formats.</p>
-                        <p class="smText" ng-show="layer.file_type">{{ layer.file_type}}({{layer.file_size}})</p>
-                        <p class="smText" ng-show="layer.state">Status: {{ layer.state }}</P>
                         <div class="row">
                             <div id="upload-file-info">No file selected...</div>
                         </div>
-                        <div ng-hide="layer.state=='UPLOADED'" class="row">
+                        <div class="row">
                             <label class="btn bt-large btn-brand" for="my-file-selector">
                                 <input id="my-file-selector" type="file" style="display:none;" nv-file-select uploader="uploader"
                                        onchange="$('#upload-file-info').html($(this).val().substring(12));">
-                                Select File...
+                                <span ng-show="uploadInProgress">{{ uploadProgressText }}</span>
+                                <span ng-show="!uploadInProgress">Select File...</span>
                             </label>
                         </div>
 
@@ -138,6 +137,14 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="gray-container" ng-show="layer.state=='UPLOADED'">
+                        <div class="step-title">Great, We've got your data!</div>
+                        <p class="smText">Proceed to the next step to configure your layer.</p>
+                        <p class="smText" ng-show="layer.file_type">{{ layer.file_type}} ({{layer.file_size}})</p>
+                        <p class="smText" ng-show="layer.feature_count">Features: {{ layer.feature_count | number }}</p>
+                        <p class="smText" ng-show="layer.feature_count">Attributes: {{ layer.fields.length | number }}</p>
+                        <p class="smText" ng-show="layer.state">Status: {{ layer.state }}</P>
                     </div>
                 </div>
                 <div class="row modal-content-footer">
@@ -246,7 +253,7 @@
             <wz-step title="Import" wz-disabled="{{ appending(true) }}" class="row">
                 <div class="modal-content-inner">
                     <div class="gray-container">
-                        <div class="step-title" ng-hide="success">We've got your data!</div>
+                        <div class="step-title" ng-hide="success">Ready to Import!</div>
                         <div ng-hide="success">Click the button below to begin the import of {{ layer.feature_count | number }} features from your {{ layer.file_type }}.</div>
                         <div ng-if="layer.feature_count > 70000 && processing">It looks like your data contains quite a few features. Awesome! This import may take awhile. We'll email you when it is ready for use. Feel free to stick around but it is safe to close this modal and continue using the site.</div>
                         <div>
