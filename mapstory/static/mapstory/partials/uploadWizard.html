@@ -251,12 +251,9 @@
                         <div ng-if="layer.feature_count > 70000 && processing">It looks like your data contains quite a few features. Awesome! This import may take awhile. We'll email you when it is ready for use. Feel free to stick around but it is safe to close this modal and continue using the site.</div>
                         <div>
                             <div class="step-title" ng-show="success">Congratulations! Click below to view your new Layer.</div>
-                            <div ng-show="errors">Layer creation has failed. Please adjust your configuration and
-                                try
-                                again.
-                            </div>
+                            <div ng-show="errors">We're sorry but our import service is currently unavailable.  Please try again later.</div>
                             <div class="import-wizard-button">
-                                <button class="btn btn-lg btn-brand" ng-show="!processing && !success" type="submit" wz-next value="Continue">Import Layer</button>
+                                <button class="btn btn-lg btn-brand" ng-show="!processing && !success && !errors" type="submit" wz-next value="Continue">Import Layer</button>
                             </div>
                             <div ng-show="processing">
                                 <div class="row">
