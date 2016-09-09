@@ -254,7 +254,7 @@
                 <div class="modal-content-inner">
                     <div class="gray-container">
                         <div class="step-title" ng-hide="success">Ready to Import!</div>
-                        <div ng-hide="success">Click the button below to begin the import of {{ layer.feature_count | number }} features from your {{ layer.file_type }}.</div>
+                        <div ng-hide="success || errors">Click the button below to begin the import of {{ layer.feature_count | number }} features from your {{ layer.file_type }}.</div>
                         <div ng-if="layer.feature_count > 70000 && processing">It looks like your data contains quite a few features. Awesome! This import may take awhile. We'll email you when it is ready for use. Feel free to stick around but it is safe to close this modal and continue using the site.</div>
                         <div>
                             <div class="step-title" ng-show="success">Congratulations! Click below to view your new Layer.</div>
