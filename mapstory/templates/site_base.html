@@ -15,7 +15,7 @@
     {% include "osgeo_importer/_importer_styles.html" %}
     <link href="{{ STATIC_URL }}style/themes/{{ THEME }}/site-theme.css" rel="stylesheet"/>
     {% if site.assets.favicon %}
-        <link rel="shortcut icon" href="{{ MEDIA_URL }}customsite/{{ site.assets.favicon.name }}">{% endif %}
+        <link rel="shortcut icon" href="{{ MEDIA_URL }}{{ site.assets.favicon.name }}">{% endif %}
     {% if GOOGLE_ANALYTICS %}{% include "mapstory/_google_analytics.html" %}{% endif %}
     {% block extra_head %}{% endblock %}
 {% endblock head %}
