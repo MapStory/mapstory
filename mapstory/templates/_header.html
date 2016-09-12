@@ -10,7 +10,7 @@
                 <span class="icon-bar"></span>
             </button>
             {% if site.assets.logo %}
-                <a class="navbar-brand" style="background:url('{{ MEDIA_URL }}/customsite/{{ site.assets.logo.name }}') no-repeat; background-size:100%;"
+                <a class="navbar-brand" style="background:url('{{ MEDIA_URL }}customsite/{{ site.assets.logo.name }}') no-repeat; background-size:100%;"
                    href="{% url "home" %}">{{ SITE_NAME }}</a>
             {% endif %}
         </div>
