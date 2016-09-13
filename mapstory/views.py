@@ -24,6 +24,7 @@ from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
 from geonode.maps.models import Map, MapStory
 from httplib import HTTPConnection, HTTPSConnection
 from mapstory import tasks
+from mapstory.importers import GeoServerLayerCreator
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
 from mapstory.models import get_sponsors, get_images, get_featured_groups, get_group_journals
 from mapstory.models import GetPage
@@ -38,6 +39,7 @@ from geonode.geoserver.helpers import ogc_server_settings
 from urlparse import urlsplit
 from user_messages.models import Thread
 from actstream.models import actor_stream
+
 
 from geonode.utils import GXPLayer, GXPMap
 from geonode.utils import resolve_object
@@ -67,6 +69,7 @@ from lxml import etree
 from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 
 from .notifications import PROFILE_NOTICE_SETTINGS
+from osgeo_importer.utils import UploadError
 
 import json
 import os
@@ -708,6 +711,48 @@ def mapstory_draft(request, storyid, template):
 def new_map(request, template):
     from geonode.maps.views import new_map
     return new_map(request, template)
+
+@login_required
+def layer_create(request, template='upload/layer_create.html'):
+    if request.method == 'POST':
+        errors = False
+        error_messages = []
+        import ipdb; ipdb.set_trace()
+        if request.is_ajax():
+            configuration_options = json.loads(request.body)
+        else:
+            configuration_options = request.POST
+            if isinstance(configuration_options.get('featureType', {}), str) \
+                    or isinstance(configuration_options.get('featureType', {}), unicode):
+                configuration_options['featureType'] = json.loads(configuration_options['featureType'])
+
+        if not configuration_options.get('layer_owner'):
+            configuration_options['layer_owner'] = request.user
+
+        if configuration_options['featureType'].get('editable') is True:
+            configuration_options['storeCreateGeogig'] = True
+
+        creator = GeoServerLayerCreator()
+        try:
+            layers = creator.handle(configuration_options=configuration_options)
+
+        except UploadError as e:
+            errors = True
+            error_messages.append((configuration_options['featureType']['name'], e.message))
+
+        if request.is_ajax():
+            if errors:
+                return HttpResponse(json.dumps({'status': 'failure', 'errors': error_messages}), status=400,
+                                    content_type='application/json')
+            if layers:
+                layer_names = map(lambda layer: {'name': layer.name, 'url': layer.get_absolute_url()},
+                                  Layer.objects.filter(name__in=[n[0] for n in layers]))
+
+                return HttpResponse(json.dumps({'status': 'success', 'layers': layer_names}), status=201,
+                                    content_type='application/json')
+
+    return render_to_response(template, RequestContext(request, {}))
+
 
 def layer_append_minimal(source, target, request_cookies):
     """
