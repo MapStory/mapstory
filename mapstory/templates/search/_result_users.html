@@ -1,15 +1,17 @@
 {% verbatim %}
 <div>
-    <li ng-repeat="item in results | filter:itemFilter" resource_id="{{ item.id }}" class="col-md-3">
-        <div style="text-align: left;">
+    <li ng-repeat="item in results | filter:itemFilter" resource-id="{{ item.id }}" class="col-md-3">
+        <div style="text-align: center;">
             <a href="/storyteller/{{ item.username }}">
                 <img class="thumb img-responsive img-circle" src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100" ng-src="{{ item.avatar_100 }}"/>
             </a>
-             <a href="/storyteller/{{ item.username }}">
-                {{ item.first_name ?
-                     item.first_name + ' ' + item.last_name 
-                     : item.username }}
-                </a>
+            <div>{{ item.first_name ?
+                 item.first_name + ' ' + item.last_name 
+                 : item.username }}
+            </div>
+            {% endverbatim %}
+            
+            {% comment %} Stashing content for clean appearance before implementing next mock up 
             <!-- If both exist, comma separated... otherwise no comma separation -->
             <div ng-if="item.position || item.organization">
                 <p ng-show="item.position && item.organization">
@@ -31,21 +33,20 @@
                     {{ item.city }} {{ item.country }}
                 </p>
             </div>
-            <p>{{ item.profile | limitTo:200 }}</p>
-            <a href="/storyteller/{{ item.username }}">
-                <button class="btn btn-primary btn-xs">
-                    <i class="fa fa-user"></i> view profile
-                </button>
-            </a>
-            {% endverbatim %}
-            {% if THEME == 'orange' %}
+            <p style="font-size:10px">{{ item.profile | limitTo:50 }}</p>
             <a href="/messages/create/{{ item.id }}/">
                 <button class="btn btn-primary btn-xs">
                     <i class="fa fa-envelope"></i> message
                 </button>
             </a>
-            {% endif %}
+            {% endcomment %}
+            
             {% verbatim %}
+            <div class="profile-view">
+                <a href="/storyteller/{{ item.username }}">
+                    <button class="btn"> View Profile </button>
+                </a>
+            </div>
         </div>
     </li>
 </div>

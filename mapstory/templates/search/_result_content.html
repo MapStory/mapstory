@@ -6,11 +6,10 @@
                 <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}" />
             </a>
 <!-- If a private item, add respective red badge. 
-    Draft links to resume draft, 'Private' will link to detail page metadata modal once implemented -->
+    Draft links to resume draft, 'Private' will link to detail page metadata modal once access is implemented -->
             <div ng-if="item.is_published === false">
                 <a href="{{item.type === 'mapstory' ? item.detail_url +'/draft' : item.detail_url }}">
-                    <div class="btn btn-danger unpublished"> 
-                        <i class="fa fa-lock"> </i> 
+                    <div class="btn btn-danger unpublished">  
                         <span ng-if="item.type === 'mapstory'">Draft</span>
                         <span ng-if="item.type === 'layer'">Private</span>
                     </div>
@@ -25,27 +24,11 @@
         </div>
         <div class="result-title">
             <a href="{{ item.detail_url }}">
-                <h3>{{ item.title.toLowerCase() | limitTo:25 }}</h3>
+                <h3>{{ item.title.toLowerCase() | limitTo:19 }}</h3>
             </a>
         </div>
-        <div class="result-category small">
-            <span><i class="fa fa-flag-o"></i></span> 
-            <span>{{ item.category ? item.category : 'Uncategorized' }}</span>
-        </div>
-        <div class="result-date small"><i class="fa fa-clock-o"></i><span> Created {{ item.date|date }}</span></div>
-        <div>
-            <span ng-if="item.abstract" class="result-abstract small">{{ item.abstract|limitTo:70 }}
-                <a href="{{ item.detail_url }}"> 
-                    <i>...read more</i>
-        
-                </a>
-            </span>
-            <span ng-if="!item.abstract" class="small">
-                No abstract provided. <!--<a href="{{ item.detail_url }}#metaForm" ng-if="item.owner === user">..add one!</a> -->
-            </span>
-        </div>
-        <p>
-            <span class="owner">
+        <div class="owner">
+            <span>
                 <i class="fa fa-user"></i>
                 {% endverbatim %} {% comment %}
                 <!-- stashing avatar until django access to item.owner__username -->
@@ -57,7 +40,12 @@
                      : item.owner__username }}
                 </a>
             </span>
-        </p>
+        </div>
+        <div class="result-category">
+            <span><i class="fa fa-flag-o"></i></span> 
+            <span class="result-category">{{ item.category ? item.category : 'Uncategorized' }}</span>
+        </div>
+        <div class="result-date"><i class="fa fa-clock-o"></i><span> Created {{ item.date|date }}</span></div>
         {% endverbatim %}{% if THEME == 'orange' %}{% verbatim %} 
         <!-- stashing favorites, rating, and views until functional for both layers & stories -->
         <div class="result-stats">
@@ -75,6 +63,18 @@
                 {{ item.popular_count }}
             </a>
         </div>
-        {% endverbatim %}{% endif %}
+        {% endverbatim %}
+        {% else %}
+        {% verbatim %}
+        <div class="result-view">
+            <a href="{{ item.detail_url }}">
+                <button class="btn"> View this              
+                    <span ng-if="item.type === 'mapstory'"> {% endverbatim %}{{SITE_NAME}}{% verbatim %}</span>
+                    <span ng-if="item.type === 'layer'">StoryLayer</span>
+                </button>
+            </a>
+        </div>
+        {% endverbatim %}
+        {% endif %}
     </div>
 </li>

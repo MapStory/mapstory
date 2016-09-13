@@ -27,7 +27,7 @@
                     <input name="text_search_input" id="text_search_input" ng-model="query.q" type="text"
                         class="form-control" ng-enter="search()">
                     <span class="input-group-btn">
-                        <button class="btn btn-primary" ng-click="search()" ng-class="{'disabled': !query.q}" type="submit" id="text_search_btn"><i class="fa fa-search"></i> Search</button>
+                        <button class="btn" ng-click="search()" type="submit" id="text_search_btn"><i class="fa fa-search"></i> Search</button>
                     </span>
                 </div>
             </nav>
@@ -59,7 +59,7 @@
                 </div>
             </nav>
             {% include 'search/_sort_filters_users.html' %}
-            <div class="clearfix search-results">
+            <div class="clearfix user search-results">
                 <ul>{% include 'search/_result_users.html' %}</ul>
             </div>
             {% include 'search/_pagination.html' %}

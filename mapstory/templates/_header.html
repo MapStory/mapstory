@@ -113,18 +113,21 @@
                         <li><a href="{% url 'new_map' %}?tour">{% trans "Compose Story" %}</a></li>
                     </ul>
                 </li>
+                {% if THEME == 'orange' %}
+    {% comment %}Display dropdown HowTo Get for Orange, otherwise just GetStarted{% endcomment %}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">{% trans 'How To' %}<span
                             class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></li>
-                        {% if THEME == 'orange' %}
-                            <li><a href="{% url 'getpage' 'skills' %}">{% trans "Get Skills" %}</a></li>
-                            <li><a href="{% url 'getpage' 'involved' %}">{% trans "Get Involved" %}</a></li>
-                        {% endif %}
+                        <li><a href="{% url 'getpage' 'skills' %}">{% trans "Get Skills" %}</a></li>
+                        <li><a href="{% url 'getpage' 'involved' %}">{% trans "Get Involved" %}</a></li>
                     </ul>
                 </li>
+                {% else %}
+                <li><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></li>
+                {% endif %}
                 <li><a href="{% url 'diary' %}">{% trans "Journal" %}</a></li>
                 <li>
                     <form class="navbar-form quicksearchcontainer" id="search" action="{% url 'search' %}">
