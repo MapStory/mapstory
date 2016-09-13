@@ -30,6 +30,7 @@ from mapstory.models import GetPage
 from mapstory.models import NewsItem
 from mapstory.models import DiaryEntry
 from mapstory.models import Leader
+from mapstory.models import ThumbnailImage, ThumbnailImageForm
 from icon_commons.models import Icon
 from geonode.contrib.favorite.models import Favorite
 from geonode.contrib.collections.models import Collection
@@ -68,9 +69,12 @@ from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 from .notifications import PROFILE_NOTICE_SETTINGS
 
 import json
+import os
 import requests
 from geonode.groups.models import GroupProfile, GroupMember
 from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
+from mapstory.search.utils import update_es_index
+
 
 
 class IndexView(TemplateView):
@@ -910,6 +914,36 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     content_moderators = Group.objects.filter(name='content_moderator').first()
 
+    thumbnail_dir = os.path.join(settings.MEDIA_ROOT, 'thumbs')
+    default_thumbnail_array = layer.get_thumbnail_url().split('/')
+    default_thumbnail_name = default_thumbnail_array[
+        len(default_thumbnail_array) - 1
+    ]
+    default_thumbnail = os.path.join(thumbnail_dir, default_thumbnail_name)
+
+    if request.method == 'POST':
+        thumb_form = ThumbnailImageForm(request.POST, request.FILES)
+        if thumb_form.is_valid():
+            new_img = ThumbnailImage(
+                thumbnail_image=request.FILES['thumbnail_image']
+            )
+            new_img.save()
+            user_upload_thumbnail = ThumbnailImage.objects.all()[0]
+            user_upload_thumbnail_filepath = str(
+                user_upload_thumbnail.thumbnail_image
+            )
+
+            # only create backup for original thumbnail
+            if os.path.isfile(default_thumbnail + '.bak') is False:
+                os.rename(default_thumbnail, default_thumbnail + '.bak')
+
+            os.rename(user_upload_thumbnail_filepath, default_thumbnail)
+
+    else:
+        thumb_form = ThumbnailImageForm()
+
+    thumbnail = layer.get_thumbnail_url
+
     context_dict = {
         "resource": layer,
         "permissions_json": _perms_info_json(layer),
@@ -920,6 +954,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "keywords_form": keywords_form,
         "metadata_form": metadata_form,
         "content_moderators": content_moderators,
+        "thumbnail": thumbnail,
+        "thumb_form": thumb_form
     }
 
     context_dict["viewer"] = json.dumps(
@@ -1021,6 +1057,35 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         keywords_form = KeywordsForm(instance=map_obj)
         published_form = PublishStatusForm(instance=map_obj)
 
+    map_thumbnail_dir = os.path.join(settings.MEDIA_ROOT, 'thumbs')
+    map_default_thumbnail_array = map_obj.get_thumbnail_url().split('/')
+    map_default_thumbnail_name = 'map' + str(mapid) + '.jpg'
+    map_default_thumbnail = os.path.join(map_thumbnail_dir,
+                                         map_default_thumbnail_name)
+
+    # TODO: create function to handle map and layer thumbs
+    if request.method == 'POST':
+        map_thumb_form = ThumbnailImageForm(request.POST, request.FILES)
+        if map_thumb_form.is_valid():
+            map_new_img = ThumbnailImage(
+                thumbnail_image=request.FILES['thumbnail_image']
+            )
+            map_new_img.save()
+            map_obj.save_thumbnail(map_default_thumbnail_name, map_new_img)
+            map_user_upload_thumbnail = ThumbnailImage.objects.all()[0]
+            map_user_upload_thumbnail_filepath = str(
+                map_user_upload_thumbnail.thumbnail_image
+            )
+
+            os.rename(map_user_upload_thumbnail_filepath,
+                      map_default_thumbnail)
+
+    else:
+        map_thumb_form = ThumbnailImageForm()
+
+    map_thumbnail = map_obj.get_thumbnail_url
+    update_es_index(MapStory, MapStory.objects.get(id=map_obj.id))
+
     context_dict = {
         'config': config,
         'resource': map_obj,
@@ -1029,6 +1094,8 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         'documents': get_related_documents(map_obj),
         'keywords_form': keywords_form,
         'published_form': published_form,
+        'thumbnail': map_thumbnail,
+        'thumb_form': map_thumb_form
     }
 
     if settings.SOCIAL_ORIGINS:
