@@ -53,6 +53,7 @@
     }
     li > div {
         height: 380px;
+        width: 245px;
         border-radius: 5px;
         background: #eaeaea;
         text-align: left;
@@ -81,6 +82,7 @@
 .search-results.user{
     li > div{
         height: 250px;
+        width: 190px;
         border-radius: 5px;
     }
     .profile-view{
@@ -126,6 +128,7 @@
 
 .result-title h3 {
    text-transform: capitalize;
+   overflow-wrap: break-word;
 }
 
 .result-category {
@@ -136,8 +139,11 @@
     padding-bottom: 10px;
 }
 
-.result-abstract {
-    padding: 5px 0;
+.result-region, .result-tags{
+    height: 40px;
+}
+.result-summary {
+    height: 180px;
 }
 
 .unpublished {
@@ -169,4 +175,57 @@
     font-weight: 600;
     margin-top: 20px;
     text-align: center;
+}
+
+/* entire container, keeps perspective */
+.flip-container {
+    perspective: 1000px;
+}
+    /* flip the pane when hovered */
+.flip-container.flip .flipper {
+    transform: rotateY(180deg);
+}
+
+/* flip speed goes here */
+.flipper {
+    transition: 0.6s;
+    transform-style: preserve-3d;
+
+    position: relative;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+    backface-visibility: hidden;
+    padding: inherit;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+    display: inline;
+    z-index: 2;
+    /* for firefox 31 */
+    transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.back {
+    display: inline;
+    transform: rotateY(180deg);
+    .result-title h3{
+        margin: auto;
+        padding-bottom: 7px;
+        margin-bottom: 3px;
+        border-bottom: 1px lightgrey solid;
+    }
+}
+
+.turn {
+    position: absolute;
+    bottom: 15px;
+    right: 18px;
+    color: gray;
 }

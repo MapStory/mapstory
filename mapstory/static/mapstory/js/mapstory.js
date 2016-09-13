@@ -410,6 +410,10 @@
         }
       });
     };
+
+    $scope.flip = function(id){
+       $('.resource-'+id).toggleClass('flip');
+    };
   })
 
 .controller('collection_controller', function($http, $scope) {

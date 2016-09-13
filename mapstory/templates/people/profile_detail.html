@@ -12,7 +12,7 @@
         <div class="container">
             <div class="row profile-banner">
                 <div class="col-sm-1">
-                    <img class="img-circle" src="{% avatar_url profile 75 %}" width="75" height="75"/>
+                    <img class="img-circle" src="{% avatar_url profile 75 %}"/>
                 </div>
                 <div class="col-sm-6">
                     <div class="user-info">
@@ -44,7 +44,7 @@
                                     <div class="clearfix search-results">
                                         <ul>
                                             {% verbatim %}
-                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4" ng-if="(item.is_published == true || item.owner__username == django.user)">
+                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4 flip-container resource-{{ item.id }}" ng-if="(item.is_published == true || item.owner__username == django.user)">
                                             {% endverbatim %}
                                             {% include 'search/_result_content.html' %}
                                         </ul>
@@ -58,7 +58,7 @@
                                     <div class="clearfix search-results">
                                         <ul>
                                             {% verbatim %}
-                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4" ng-if="(item.is_published == true || item.owner__username == django.user)">
+                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4 flip-container resource-{{ item.id }}" ng-if="(item.is_published == true || item.owner__username == django.user)">
                                             {% endverbatim %}
                                             {% include 'search/_result_content.html' %}</ul>
                                     </div>

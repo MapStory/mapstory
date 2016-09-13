@@ -1154,6 +1154,13 @@
       $scope.refreshItems();
     };
 
+    /*
+    * Result Content Card flip!
+    */
+    $scope.flip = function(id){
+       $('.resource-'+id).toggleClass('flip');
+    };
+
   });
 
   // add filter to decode uri
