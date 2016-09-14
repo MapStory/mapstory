@@ -7,18 +7,21 @@
     <ul id="categories">   
     {% verbatim %}
         <li ng-repeat="category in categories"> 
-            <a href="" ng-init="toggle=true" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle; active=category.id" ng-class="{active: (!toggle && (active == category.id))}">{{ category.gn_description }}
+            <a href="" ng-init="toggle=!category.active" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle;" ng-class="{active: (!toggle )}"> {{ category.gn_description }}
                 <span ng-show="!toggle" class="pull-left"><i class="fa fa-check"></i></span>
             </a>                                
         </li>
+<!--         <li><a href="" ng-click="delete_query('category__identifier__in')">Clear Categories</li> -->
+        <!--    TODO: bind category toggle display and active query -->
     {% endverbatim %}                       
     </ul>
     <h3><i class="fa fa-signal"></i> Trending Tags</h3>
-    <ul>{% verbatim %} 
+    <ul id="keywords">{% verbatim %} 
         <li ng-repeat="item in trending">
-            <a href="" ng-init="toggle=true" ng-click="toggle_query(toggle, 'keywords__slug__in', item); toggle=!toggle;" ng-class="{active: !toggle}">#{{ item }}
+            <a href="" ng-init="toggle=!item.active" ng-click="toggle_query(toggle, 'keywords__slug__in', item.slug); toggle=!toggle;" ng-class="{active: !toggle}">#{{ item.name }}
                 <span ng-show="!toggle" class="pull-left"><i class="fa fa-check"></i></span>
-            </a>                                
+            </a>                        
         </li>                         
-    </ul>{% endverbatim %}
-</div>
+    </ul>
+<!--  <li><a href="" ng-click="remove_all_queries()">Clear All</li> -->
+</div>{% endverbatim %}
