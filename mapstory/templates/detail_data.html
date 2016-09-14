@@ -79,8 +79,11 @@
                                     <div class="col-xs-9">
                                         <h3><a href="{{ item.detail_url }}">{{ item.title }}</a></h3>
                                         <p>{{ item.abstract|limitTo:"250"  }}
+                                            {% endverbatim %}
                                             {% if item.abstract != 'No abstract provided' %}
+                                            {% verbatim %}
                                             <a href="{{ item.detail_url }}"><i>...read more</i></a>
+                                            {% endverbatim %}
                                             {% endif %}
                                         </p>
                                     </div>
@@ -88,7 +91,6 @@
                             </div>
                         </div>
                     </div>
-                    {% endverbatim %}
                 </div>
             </div>
             <div class="tab-pane" id="Comments">
@@ -130,6 +132,7 @@
                             <div class="col-xs-9">
                                 <h3><a href="{{ item.detail_url }}">{{ item.title }}</a></h3>
                                 <p>{{ item.abstract|slice:"250"  }}
+
                                     {% if item.abstract != 'No abstract provided' %}
                                     <a href="{{ item.detail_url }}"><i>...read more</i></a>
                                     {% endif %}
