@@ -51,7 +51,8 @@
                 data.objects = module.set_initial_filters_from_query(data.objects,
                     $location.search()['category__identifier__in'], 'identifier');
             }
-            $rootScope.categories = data.objects;
+            //front end filtering to avoid reprovision, geonode's initial_data.json pulls in categories we don't want
+            $rootScope.categories = _.where(data.objects,{'description': ''});
             if (HAYSTACK_FACET_COUNTS && $rootScope.query_data) {
                 module.haystack_facets($http, $rootScope, $location);
             }
