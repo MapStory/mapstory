@@ -4,174 +4,87 @@
 
   var module = angular.module('geonode_main_search', [], function($locationProvider) {
       if (window.navigator.userAgent.indexOf("MSIE") == -1){
-          $locationProvider.html5Mode({
-            enabled: true,
-            requireBase: false
+        $locationProvider.html5Mode({
+          enabled: true,
+          requireBase: false
+        });
+        // make sure that angular doesn't intercept the page links
+        angular.element("a").prop("target", "_self");
+      }
+    });
+
+  module.directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+      element.bind("keydown keypress", function (event) {
+        if(event.which === 13) {
+          scope.$apply(function (){
+            scope.$eval(attrs.ngEnter);
           });
+          event.preventDefault();
+        }
+      });
+    };
+  });
 
-          // make sure that angular doesn't intercept the page links
-          angular.element("a").prop("target", "_self");
+    // watch for change in location
+    // for property in location.search, 
+      // set active property
+      // set active class..... (can I simply have the class watch the property?) ng-class="-item-.active"
+
+  // set active class of a filter based on the url parameters
+  module.set_active_filters = function (data, url_query, filter_param){
+    for(var i=0;i<data.length;i++){
+      if( url_query == data[i][filter_param] || url_query.indexOf(data[i][filter_param] ) != -1){
+          data[i].active = 'active';
+      }else{
+          data[i].active = '';
       }
-    });
-
-    module.directive('ngEnter', function () {
-        return function (scope, element, attrs) {
-            element.bind("keydown keypress", function (event) {
-                if(event.which === 13) {
-                    scope.$apply(function (){
-                        scope.$eval(attrs.ngEnter);
-                    });
-
-                    event.preventDefault();
-                }
-            });
-        };
-    });
-
-    // Used to set the class of the filters based on the url parameters
-    module.set_initial_filters_from_query = function (data, url_query, filter_param){
-        for(var i=0;i<data.length;i++){
-            if( url_query == data[i][filter_param] || url_query.indexOf(data[i][filter_param] ) != -1){
-                data[i].active = 'active';
-            }else{
-                data[i].active = '';
-            }
-        }
-        return data;
     }
-
-  // Load categories, keywords, and regions
-  module.load_categories = function ($http, $rootScope, $location){
-        var params = typeof FILTER_TYPE == 'undefined' ? {} : {'type': FILTER_TYPE};
-        if ($location.search().hasOwnProperty('title__icontains')){
-          params['title__icontains'] = $location.search()['title__icontains'];
-        }
-        $http.get(CATEGORIES_ENDPOINT, {params: params}).success(function(data){
-            if($location.search().hasOwnProperty('category__identifier__in')){
-                data.objects = module.set_initial_filters_from_query(data.objects,
-                    $location.search()['category__identifier__in'], 'identifier');
-            }
-            //front end filtering to avoid reprovision, geonode's initial_data.json pulls in categories we don't want
-            $rootScope.categories = _.where(data.objects,{'description': ''});
-            if (HAYSTACK_FACET_COUNTS && $rootScope.query_data) {
-                module.haystack_facets($http, $rootScope, $location);
-            }
-        });
-    }
-    
-  module.load_keywords = function ($http, $rootScope, $location){
-        var params = typeof FILTER_TYPE == 'undefined' ? {} : {'type': FILTER_TYPE};
-        if ($location.search().hasOwnProperty('title__icontains')){
-          params['title__icontains'] = $location.search()['title__icontains'];
-        }
-        $http.get(KEYWORDS_ENDPOINT, {params: params}).success(function(data){
-            if($location.search().hasOwnProperty('keywords__slug__in')){
-                data.objects = module.set_initial_filters_from_query(data.objects,
-                    $location.search()['keywords__slug__in'], 'slug');
-            }
-            $rootScope.keywords = data.objects;
-            if (HAYSTACK_FACET_COUNTS && $rootScope.query_data) {
-                module.haystack_facets($http, $rootScope, $location);
-            }
-        });
-    }
-    
-  module.load_regions = function ($http, $rootScope, $location){
-        var params = typeof FILTER_TYPE == 'undefined' ? {} : {'type': FILTER_TYPE};
-        if ($location.search().hasOwnProperty('title__icontains')){
-          params['title__icontains'] = $location.search()['title__icontains'];
-        }
-        $http.get(REGIONS_ENDPOINT, {params: params}).success(function(data){
-            if($location.search().hasOwnProperty('regions__name__in')){
-                data.objects = module.set_initial_filters_from_query(data.objects,
-                    $location.search()['regions__name__in'], 'name');
-            }
-            $rootScope.regions = data.objects;
-            if (HAYSTACK_FACET_COUNTS && $rootScope.query_data) {
-                module.haystack_facets($http, $rootScope, $location);
-            }
-        });
-    }
-
-  // Update facet counts for categories and keywords
-  module.haystack_facets = function($http, $rootScope, $location) {
-      var data = $rootScope.query_data;
-      if ("categories" in $rootScope) {
-          $rootScope.category_counts = data.meta.facets.category;
-          for (var id in $rootScope.categories) {
-              var category = $rootScope.categories[id];
-              if (category.identifier in $rootScope.category_counts) {
-                  category.count = $rootScope.category_counts[category.identifier]
-              } else {
-                  category.count = 0;
-              }
-          }
-      }
-
-      if ("keywords" in $rootScope) {
-          $rootScope.keyword_counts = data.meta.facets.keywords;
-          for (var id in $rootScope.keywords) {
-              var keyword = $rootScope.keywords[id];
-              if (keyword.slug in $rootScope.keyword_counts) {
-                  keyword.count = $rootScope.keyword_counts[keyword.slug]
-              } else {
-                  keyword.count = 0;
-              }
-          }
-      } 
-
-      if ("regions" in $rootScope) {
-          $rootScope.regions_counts = data.meta.facets.regions;
-          for (var id in $rootScope.regions) {
-              var region = $rootScope.regions[id];
-              if (region.name in $rootScope.region_counts) {
-                  region.count = $rootScope.region_counts[region.name]
-              } else {
-                  region.count = 0;
-              }
-          }
-      }
+    return data;
   }
+  // grab & prep categories, keywords, and regions from endpoints with 'active' queries noted
+  // each only called if element with corresponding id is on html page
+  module.load_active_list = function ($http, $rootScope, $location, api, endpoint, filter, value){
+      var params = typeof FILTER_TYPE == 'undefined' ? {} : {'type': FILTER_TYPE};
+      $http.get(endpoint, {params: params}).success(function(data){
+        //sets an active property if category already selected in a url query
+        if($location.search().hasOwnProperty(filter)){
+            data.objects = module.set_active_filters(data.objects,
+                $location.search()[filter], value);
+          }
+        //front-end filtering  of categories to avoid reprovision, 
+        if (api === 'categories'){
+          //geonode's initial_data.json pulls in categories we don't want
+          data.objects = _.where(data.objects,{'description': ''});
+        }
+        $rootScope[api]= data.objects;
+      });
+    }
 
   /*
-  * Load categories and keywords
+  * Load categories and keywords if the filter is available in the page
+  * set active class if needed, update here for facet counts if enabled in settings
   */
   module.run(function($http, $rootScope, $location){
-    /*
-    * Load categories and keywords if the filter is available in the page
-    * and set active class if needed
-    */
     if ($('#categories').length > 0){
-       module.load_categories($http, $rootScope, $location);
+      module.load_active_list($http, $rootScope, $location, 'categories',
+        CATEGORIES_ENDPOINT,'category__identifier__in', 'identifier');
     }
     if ($('#keywords').length > 0){
-       module.load_keywords($http, $rootScope, $location);
+      module.load_active_list($http, $rootScope, $location, 'keywords',
+        KEYWORDS_ENDPOINT,'keywords__slug__in', 'slug');
     }
     if ($('#regions').length > 0){
-       module.load_regions($http, $rootScope, $location);
+      module.load_active_list($http, $rootScope, $location, 'regions',
+        REGIONS_ENDPOINT,'regions__name__in', 'name');
     }
-
-    // Activate the type filters if in the url
-    /*
-    if($location.search().hasOwnProperty('type__in')){
-      var types = $location.search()['type__in'];
-      if(types instanceof Array){
-        for(var i=0;i<types.length;i++){
-          $('body').find("[data-filter='type__in'][data-value="+types[i]+"]").addClass('active');
-        }
-      }else{
-        $('body').find("[data-filter='type__in'][data-value="+types+"]").addClass('active');
-      }
-    }*/
-
-    // Activate the sort filter if in the url
-    if($location.search().hasOwnProperty('order_by')){
-      console.dir($location.search());
-      //console.log('HAS ORDER BY');
-      //var sort = $location.search()['order_by'];
-      //$('body').find("[data-filter='order_by']").removeClass('selected');
-      //$('body').find("[data-filter='order_by'][data-value="+sort+"]").addClass('selected');
-    }
+    //note: we don't load #owners like in geonode/search.js, grab it if ya need it
+    //insert module.haystack_facets() from geonode/search.js & un-comment this if we turn on HAYSTACK_FACET_COUNTS
+    /* 
+    if (HAYSTACK_FACET_COUNTS && $rootScope.query_data) {
+         module.haystack_facets($http, $rootScope, $location);
+    } 
+    */
   });
 
   /*
@@ -180,9 +93,11 @@
   * Syncs the browser url with the selections
   */
   module.controller('geonode_search_controller', function($injector, $scope, $location, $http, $q, Configs, Django){
+    $scope.api_endpoint = '/api/base/search/';
     $scope.query = $location.search();
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
+    $scope.trending = [];
     $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
     $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
     $scope.django = Django.all();
@@ -194,6 +109,13 @@
         return result;
       });
     };
+
+    if (!Configs.hasOwnProperty("disableQuerySync")) {
+      // Keep in sync the page location with the query object
+      $scope.$watch('query', function(){
+        $location.search($scope.query);
+      }, true);
+    } 
 
     $scope.showUserGroup = function() {
         if ($location.search().hasOwnProperty('type__in')) {
@@ -210,14 +132,12 @@
                 };
             }
           }
-
         return false;
     };
 
-    $scope.api_endpoint = '/api/base/search/';
-
     //Get data from apis and make them available to the page
     function query_api(data){
+
       return $http.get($scope.api_endpoint, {params: data || {}}).success(function(data){
         $scope.results = data.objects;
         $scope.total_counts = data.meta.total_count;
@@ -227,7 +147,7 @@
             $scope.text_query = $location.search()['q'].replace(/\W+/g," ");
           }
           if ($location.search().hasOwnProperty('type__in')){
-            // TODO: Take into account multiple values for 'type__in'
+            // TODO Apr 27 2016: Take into account multiple values for 'type__in'
             //$scope.type__in = $location.search()['type__in'].replace(/\W+/g," ");
           }
         } else {
@@ -235,48 +155,40 @@
             $scope.text_query = $location.search()['title__icontains'].replace(/\W+/g," ");
           }
         }
-
-        //Update facet/keyword/category counts from search results
-        if (HAYSTACK_FACET_COUNTS){
-            module.haystack_facets($http, $scope.$root, $location);
-            $("#types").find("a").each(function(){
-                if ($(this)[0].id in data.meta.facets.subtype) {
-                    $(this).find("span").text(data.meta.facets.subtype[$(this)[0].id]);
-                }
-                else if ($(this)[0].id in data.meta.facets.type) {
-                    $(this).find("span").text(data.meta.facets.type[$(this)[0].id]);
-                } else {
-                    $(this).find("span").text("0");
-                }
-            });
-        }
+        //pull in $("#types") for subtype&type from geonode/search.js if HAYSTACK_FACET_COUNTS enabled
+        //to Update facet/keyword/category counts from search results
       });
     };
 
     // Grab the keywords and sort them by 'count' to determine the trending tags
     function trending_keywords_query(data) {
       return $http.get('/api/keywords', {params: data || {}}).success(function(data){
+        if($location.search().hasOwnProperty('keywords__slug__in')){
+            data.objects = module.set_active_filters(data.objects,
+                $location.search()['keywords__slug__in'], 'slug');
+        }
+
         var results = data.objects;
         // Sort them by count in order from highest to lowest
         results.sort(function(kw1, kw2) {
           return kw2.count - kw1.count;
         });
-        // Grab the top 8
+        // Grab the top 8 // or change the # displaying here
         var num_trending = (results.length > 8) ? 8 : results.length;
         for (var i = 0; i < num_trending; i++) {
-          $scope.trending.push(results[i].slug);
+          if (results[i].count > 0) $scope.trending.push(results[i]);
         }
       });
     };
-    $scope.trending = [];
     trending_keywords_query();
 
+    //used in detail page 'related' tab and featured content on index page
     $scope.query_category = function(category, type) {
-      $scope.query.type__in = type;
+      $scope.query.type__in = type; //only needed for detail page
       $scope.query.category__identifier__in = category;
       $scope.search();
     };
-
+    //used in what's-hot for switching to featured and profile
     $scope.change_api = function(api_endpoint) {
       Configs.url = "/api/" + api_endpoint + "/";
       $scope.query.limit = 100;
@@ -331,63 +243,10 @@
     * End pagination
     */
 
-
-    if (!Configs.hasOwnProperty("disableQuerySync")) {
-        // Keep in sync the page location with the query object
-        $scope.$watch('query', function(){
-          $location.search($scope.query);
-        }, true);
-    }
-
-    /*
+    /*$scope.multiple_choice_listener from geonode/search.js used to:
     * Add the selection behavior to the element, it adds/removes the 'active' class
     * and pushes/removes the value of the element from the query object
     */
-    $scope.multiple_choice_listener = function($event){    
-      var element = $($event.target);
-      var query_entry = [];
-      var data_filter = element.attr('data-filter');
-      var value = element.attr('data-value');
-
-      // If the query object has the record then grab it 
-      if ($scope.query.hasOwnProperty(data_filter)){
-
-        // When in the location are passed two filters of the same
-        // type then they are put in an array otherwise is a single string
-        if ($scope.query[data_filter] instanceof Array){
-          query_entry = $scope.query[data_filter];
-        }else{
-          query_entry.push($scope.query[data_filter]);
-        }     
-      }
-
-      // If the element is active active then deactivate it
-      if(element.hasClass('active')){
-        // clear the active class from it
-        element.removeClass('active');
-
-        // Remove the entry from the correct query in scope
-        
-        query_entry.splice(query_entry.indexOf(value), 1);
-      }
-      // if is not active then activate it
-      else if(!element.hasClass('active')){
-        // Add the entry in the correct query
-        if (query_entry.indexOf(value) == -1){
-          query_entry.push(value);  
-        }         
-        element.addClass('active');
-      }
-
-      //save back the new query entry to the scope query
-      $scope.query[data_filter] = query_entry;
-
-      //if the entry is empty then delete the property from the query
-      if(query_entry.length == 0){
-        delete($scope.query[data_filter]);
-      }
-      query_api($scope.query);
-    }
 
     /*
     * Setting the query to a single element - replaces single_choice_listener
@@ -400,6 +259,7 @@
 
     /*
     * Add the query, replacing any current query
+    * Good for mutually exclusive types
     */
     $scope.add_single_query = function(filter, value) {
       $scope.query[filter] = value;
@@ -412,6 +272,7 @@
     $scope.add_query = function(filter, value) {
       var query_entry = [];
       if ($scope.query.hasOwnProperty(filter)) {
+        //if theres a list of items, grab them. otherwise, add the only value to empty list
         if ($scope.query[filter] instanceof Array) {
           query_entry = $scope.query[filter];
         } else {
@@ -487,254 +348,20 @@
       }
     }
 
-
-    var location_promise = function() {
-      var highest = 1;
-      var popular = {};
-      // Query the users
-      Configs.url = '/api/profiles/';
+    $scope.remove_all_queries = function(){
       $scope.query = {limit: 100, offset: 0};
-      return query_api($scope.query).then(function() {
-        var results = $scope.results;
-        results.forEach(function(element) {
-          if (popular[element.city] != null) {
-            popular[element.city]++;
-            if (highest < popular[element.city]) {
-              highest = popular[element.city];
-              $scope.most_popular_location = element.city;
-            }
-          } else {
-            if (element.city != "" && element.city != null) {
-              popular[element.city] = 1;
-              if (highest == 1) {
-                $scope.most_popular_location = element.city;
-              }
-            }
-          }
-        });
-        // Query the groups
-        Configs.url = '/api/groups/';
-        $scope.query = {limit: 100, offset: 0};
-        return query_api($scope.query).then(function() {
-          var results = $scope.results;
-          results.forEach(function(element) {
-            if (popular[element.city] != null) {
-              popular[element.city]++;
-              if (highest < popular[element.city]) {
-                highest = popular[element.city];
-                $scope.most_popular_location = element.city;
-              }
-            } else {
-              if (element.city != "" && element.city != null) {
-                popular[element.city] = 1;
-                if (highest == 1) {
-                  $scope.most_popular_location = element.city;
-                }
-              }
-            }
-          });
-          return results;
-        });
-      });
+      console.log($scope.query);
+      query_api($scope.query);
     }
+    // If the below functions & promises are needed, find them in geonode/search.js,
+    // don't think we need to implement most popular tallies this way
+    // if we have elastic search facets, etc. Note: this wasn't even used.
 
-    // Need to use both the users and groups api
-    var calculate_most_popular_location = function() {
-      // Store the current api requests
-      var url = Configs.url;
-      var query = $scope.query;
+    // $scope.calculate_popular_items = function() {
+    //   calculate_most_popular_interest();
+    //   calculate_most_popular_location();
+    // }
 
-      // Calculate it and then return things to normal
-      location_promise().then(function() {
-        Configs.url = url;
-        $scope.query = query;
-        query_api($scope.query);
-      });
-    }
-
-    var interest_promise = function() {
-      var highest = 1;
-      var popular = {};
-      // Query the users
-      Configs.url = '/api/profiles/';
-      $scope.query = {limit: 100, offset: 0};
-      return query_api($scope.query).then(function() {
-        var results = $scope.results;
-        results.forEach(function(element) {
-          if (element.interests != null) {
-            element.interests.forEach(function(interest) {
-              if (popular[interest] != null) {
-                popular[interest]++;
-                if (highest < popular[interest]) {
-                  highest = popular[interest]
-                  $scope.most_popular_interest = interest;
-                }
-              } else {
-                if (interest != "" && interest != null) {
-                  popular[interest] = 1;
-                  if (highest == 1) {
-                    $scope.most_popular_interest = interest;
-                  }
-                }
-              }
-            });
-          }
-        });
-        // Query the groups
-        Configs.url = '/api/groups/';
-        $scope.query = {limit: 100, offset: 0};
-        return query_api($scope.query).then(function() {
-          var results = $scope.results;
-          results.forEach(function(element) {
-            if (element.interests != null) {
-              element.interests.forEach(function(interest) {
-                if (popular[interest] != null) {
-                  popular[interest]++;
-                  if (highest < popular[interest]) {
-                    highest = popular[interest]
-                    $scope.most_popular_interest = interest;
-                  }
-                } else {
-                  if (interest != "" && interest != null) {
-                    popular[interest] = 1;
-                    if (highest == 1) {
-                      $scope.most_popular_interest = interest;
-                    }
-                  }
-                }
-              });
-            }
-          });
-          return results;
-        });
-      });      
-    }
-
-    var calculate_most_popular_interest = function() {
-      // Store the current api requests
-      var url = Configs.url;
-      var query = $scope.query;
-
-      interest_promise().then(function() {
-        Configs.url = url;
-        $scope.query = query;
-        query_api($scope.query);
-      });
-    }
-
-    $scope.calculate_popular_items = function() {
-      calculate_most_popular_interest();
-      calculate_most_popular_location();
-    }
-
-    /*
-    * Text search management
-    */
-    /*
-    var text_autocomplete = $('#text_search_input').yourlabsAutocomplete({
-          url: AUTOCOMPLETE_URL_RESOURCEBASE,
-          choiceSelector: 'span',
-          hideAfter: 200,
-          minimumCharacters: 1,
-          appendAutocomplete: $('#text_search_input'),
-          placeholder: gettext('Enter your text here ...')
-    });
-    $('#text_search_input').bind('selectChoice', function(e, choice, text_autocomplete) {
-          if(choice[0].children[0] == undefined) {
-
-              var term = choice[0].innerHTML;
-
-              $('#text_search_input').val(term);
-
-              //ng-model is not updating when using jquery element.val()
-              //This will force update the scope to keep in sync
-
-               var model = $('#text_search_input').attr("ng-model");
-                $scope[model] = term;
-                $scope.$apply();
-
-                $('#text_search_btn').click();
-          }
-    });
-*/
-    /*$('#text_search_btn').click(function(){
-        if (HAYSTACK_SEARCH)
-            $scope.query['q'] = $('#text_search_input').val();
-        else
-            $scope.query['title__icontains'] = $('#text_search_input').val();
-        query_api($scope.query);
-    });*/
-
-    /*
-    * User search management
-    */
-    /*
-    $('#user_search_input').bind('selectChoice', function(e, choice, text_autocomplete) {
-          if(choice[0].children[0] == undefined) {
-
-              var term = choice[0].innerHTML;
-
-              $('#user_search_input').val(term);
-
-              //ng-model is not updating when using jquery element.val()
-              //This will force update the scope to keep in sync
-
-               var model = $('#user_search_input').attr("ng-model");
-                $scope[model] = term;
-                $scope.$apply();
-
-                $('#user_search_btn').click();
-          }
-    });
-
-    $('#user_search_btn').click(function(){
-        if (HAYSTACK_SEARCH)
-            $scope.query['q'] = $('#user_search_input').val();
-        else
-            $scope.query['username'] = $('#user_search_input').val();
-        query_api($scope.query);
-    });
-*/
-
-    /*
-    * Region search management
-    */
-    /*
-    var region_autocomplete = $('#region_search_input').yourlabsAutocomplete({
-          url: AUTOCOMPLETE_URL_REGION,
-          choiceSelector: 'span',
-          hideAfter: 200,
-          minimumCharacters: 1,
-          appendAutocomplete: $('#region_search_input'),
-          placeholder: gettext('Enter region here ...')
-    });*/
-/*
-    $('#region_search_input').bind('selectChoice', function(e, choice, region_autocomplete) {
-          if(choice[0].children[0] == undefined) {
-              $('#region_search_input').val(choice[0].innerHTML);
-              $scope.region_query = choice[0].innerHTML;
-          }
-    });
-*/
-    /*
-    * Keyword search management
-    */
-    /*
-    var keyword_autocomplete = $('#keyword_search_input').yourlabsAutocomplete({
-          url: AUTOCOMPLETE_URL_KEYWORD,
-          choiceSelector: 'span',
-          hideAfter: 200,
-          minimumCharacters: 1,
-          appendAutocomplete: $('#keyword_search_input'),
-          placeholder: gettext('Enter keyword here ...')
-    });
-    $('#keyword_search_input').bind('selectChoice', function(e, choice, keyword_autocomplete) {
-          if(choice[0].children[0] == undefined) {
-              $('#keyword_search_input').val(choice[0].innerHTML);
-              $scope.keyword_query = choice[0].innerHTML;
-          }
-    });
-*/
     // Toggle the background of the header buttons to indicate which one is active
     // Make the content one active, user inactive
     $scope.toggle_content = function() {
@@ -745,7 +372,9 @@
       $('#tokenfield-region').tokenfield('setTokens', []);
       $('#tokenfield-keyword').tokenfield('setTokens', []);
       $scope.api_endpoint = '/api/owners/';
-      $scope.query = {limit: 100, offset: 0};
+      //stash filters for toggle-back
+      $scope.content_stash = $scope.query;
+      $scope.query = {limit: 100, offset: 0, q: $scope.query.q};
     };
     // Make the user one active, content inactive
     $scope.toggle_user = function() {
@@ -755,28 +384,33 @@
       $('#tokenfield-interest').tokenfield('setTokens', []);
       $scope.api_endpoint = '/api/base/search/';
       //removed is_published: true for a user's drafts to appear in their search
-      $scope.query = {limit: 100, offset: 0, q: $scope.query.q};
+      
+      //$scope.content_stash.q = $scope.query.q
+      $scope.query = $scope.content_stash || {limit: 100, offset: 0};
     };
 
-    // Configure new autocomplete
-    var profile_autocompletes = [];
-    var region_autocompletes = [];
-    var keyword_autocompletes = [];
-    var city_autocompletes = [];
-    var usernames = [];
-    var regions = [];
-    var keywords = [];
-    var cities = [];
-    var countries = [];
-    // This will contain the country code, i.e. Canada's code is CAN, at the same index location
-    // as region_autocompletes stores the country name.
-    var country_codes = [];
+// Configure new autocomplete
+var profile_autocompletes = [];
+var region_autocompletes = [];
+var keyword_autocompletes = [];
+var city_autocompletes = [];
+var usernames = [];
+var regions = [];
+var keywords = [];
+var cities = [];
+var countries = [];
+// This will contain the country code, i.e. Canada's code is CAN, at the same index location
+// as region_autocompletes stores the country name.
+var country_codes = [];
 
-    function init_tokenfields() {
-      var deferred = $q.defer();
-      var promises = [];
-      promises.push(profile_autocomplete().then(function() {
-        $('#tokenfield-profile').tokenfield({
+function init_tokenfields() {
+  var deferred = $q.defer();
+  var promises = [];
+  promises.push(
+    profile_autocomplete()
+    .then(function() {
+      $('#tokenfield-profile')
+        .tokenfield({
           autocomplete: {
             source: profile_autocompletes,
             delay: 100,
@@ -810,7 +444,8 @@
           $scope.remove_search('owner__username__in', e.attrs.value, usernames);
         });
 
-        $('#tokenfield-city').tokenfield({
+      $('#tokenfield-city')
+        .tokenfield({
           autocomplete: {
             source: city_autocompletes,
             delay: 100,
@@ -837,9 +472,14 @@
         .on('tokenfield:removedtoken', function(e) {
           $scope.remove_search('city', e.attrs.value, cities);
         });
-      }));
-      promises.push(region_autocomplete().then(function() {
-        $('#tokenfield-region').tokenfield({
+    })
+  );
+  
+  promises.push(
+    region_autocomplete()
+    .then(function() {
+      $('#tokenfield-region')
+        .tokenfield({
           autocomplete: {
             source: region_autocompletes,
             delay: 100,
@@ -867,7 +507,8 @@
           $scope.remove_search('regions__name__in', e.attrs.value, regions);
         });
 
-        $('#tokenfield-country').tokenfield({
+      $('#tokenfield-country')
+        .tokenfield({
           autocomplete: {
             source: region_autocompletes,
             delay: 100,
@@ -899,9 +540,14 @@
             $scope.remove_search('country', country_codes[region_autocompletes.indexOf(e.attrs.value)], countries);
           }
         });
-      }));
-      promises.push(keyword_autocomplete().then(function() {
-        $('#tokenfield-keyword').tokenfield({
+    })
+  );
+
+  promises.push(
+    keyword_autocomplete()
+    .then(function() {
+      $('#tokenfield-keyword')
+        .tokenfield({
           autocomplete: {
             source: keyword_autocompletes,
             delay: 100,
@@ -929,7 +575,8 @@
           $scope.remove_search('keywords__slug__in', e.attrs.value, keywords);
         });
 
-        $('#tokenfield-interest').tokenfield({
+      $('#tokenfield-interest')
+        .tokenfield({
           autocomplete: {
             source: keyword_autocompletes,
             delay: 100,
@@ -956,138 +603,107 @@
         .on('tokenfield:removedtoken', function(e) {
           $scope.remove_search('interest_list', e.attrs.value, keywords);
         });
-      }));
+    })
+  );
 
-      $q.all(promises).then(function() {
-        deferred.resolve();
-      }, function() {
-        deferred.reject('Some tokenization field initializations failed');
-      });
-
-      return deferred.promise;
+  $q.all(promises)
+    .then(function() {
+      deferred.resolve();
+    }, function() {
+      deferred.reject('Some tokenization field initializations failed');
     }
+  );
 
-    function profile_autocomplete() {
-      return $http.get('/api/owners/').success(function(data){
-        var results = data.objects;
-        // Here we have first name, last name, and username
-        // append them all together to be used in the profile autocomplete
-        for (var i = 0; i < results.length; i++) {
-          profile_autocompletes.push(results[i].first_name);
-          profile_autocompletes.push(results[i].last_name);
-          profile_autocompletes.push(results[i].username);
-          if (results[i].city != null) {
-            city_autocompletes.push(results[i].city);
-          }
+  return deferred.promise;
+}
+
+function profile_autocomplete() {
+  return $http.get('/api/owners/')
+    .success(function(data){
+      var results = data.objects;
+      // Here we have first name, last name, and username
+      // append them all together to be used in the profile autocomplete
+      for (var i = 0; i < results.length; i++) {
+        profile_autocompletes.push(results[i].first_name);
+        profile_autocompletes.push(results[i].last_name);
+        profile_autocompletes.push(results[i].username);
+        if (results[i].city != null) {
+          city_autocompletes.push(results[i].city);
         }
-      });
-    };
+      }
+    });
+};
 
-    function possible_profiles(token) {
-      var promises = [];
-      var profiles = [];
-      var query = {};
-      var deferred = $q.defer();
-      // Count spaces in token
-      var num_spaces = (token.match(/ /g)||[]).length;
-      // If there's no spaces, we might be directly searching a username
-      if (num_spaces == 0) {
-        profiles.push(token);
-      }
-      for (var i = 0; i < num_spaces; i++) {
-        // split at ith instance of space in token
-        // grab first and last name
-        query['first_name'] = token.split(' ').slice(0, (i + 1)).join(' ');
-        query['last_name'] = token.split(' ').slice(i + 1).join(' ');
-        // query api w/query
-        promises[i] = $http.get('/api/profiles/', {params: query}).success(function(data) {
-          var results = data.objects;
-          for (var j = 0; j < results.length; j++) {
-            profiles.push(results[j].username);
-          }
-        });
-      }
-      query['first_name'] = token;
-      query['last_name'] = null;
-      promises.push($http.get('/api/profiles/', {params: query}).success(function(data) {
+function possible_profiles(token) {
+  var promises = [];
+  var profiles = [];
+  var query = {};
+  var deferred = $q.defer();
+  // Count spaces in token
+  var num_spaces = (token.match(/ /g)||[]).length;
+  // If there's no spaces, we might be directly searching a username
+  if (num_spaces == 0) {
+    profiles.push(token);
+  }
+  for (var i = 0; i < num_spaces; i++) {
+    // split at ith instance of space in token
+    // grab first and last name
+    query['first_name'] = token.split(' ').slice(0, (i + 1)).join(' ');
+    query['last_name'] = token.split(' ').slice(i + 1).join(' ');
+    // query api w/query
+    promises[i] = $http.get('/api/profiles/', {params: query})
+      .success(function(data) {
         var results = data.objects;
         for (var j = 0; j < results.length; j++) {
           profiles.push(results[j].username);
         }
-      }));
-
-      $q.all(promises).then(function() {
-        deferred.resolve(profiles);
-      }, function() {
-        deferred.reject('Some HTTP requests failed');
       });
-
-      return deferred.promise;
-    };
-
-    function region_autocomplete() {
-      return $http.get('/api/regions/').success(function(data){
-        var results = data.objects;
-        for (var i = 0; i < results.length; i++) {
-          region_autocompletes.push(results[i].name);
-          country_codes.push(results[i].code);
-        }
-      });
-    };
-
-    function keyword_autocomplete() {
-      return $http.get('/api/keywords/').success(function(data){
-        var results = data.objects;
-        for (var i = 0; i < results.length; i++) {
-          keyword_autocompletes.push(results[i].slug);
-        }
-      });
-    };
-    // Only after the tokenfields are initialized, create the tokens based on the URL
-    init_tokenfields().then(function() {
-      // Configure first search
-      // Check the url for its search terms and apply the queries
-      for (var item in $location.search()) {
-        // Check for quick search
-        if (item == 'q') {
-          $scope.text_query = item.replace(/\W+/g," ");
-        }
-        // If we see type__in, we want to change the api query accordingly
-        if (item == 'type__in') {
-          if ($location.search()[item] == 'user') {
-            $scope.toggle_content();
-          }
-        } else {
-          $scope.toggle_user();
-        }
-        $scope.query[item] = $location.search()[item];
-        // if we have a "who" search, populate that
-        if (item == 'owner__username__in') {
-          $('#tokenfield-profile').tokenfield('createToken', $location.search()[item]);
-        }
-        // if we have a "region" search, populate that
-        if (item == 'regions__name__in') {
-          $('#tokenfield-region').tokenfield('createToken', $location.search()[item]);
-        }
-        // if we have a "keyword" search, populate that
-        if (item == 'keywords__slug__in') {
-          $('#tokenfield-keyword').tokenfield('createToken', $location.search()[item]);
-        }
-        // if we have a "interest" search, populate that
-        if (item == 'interest_list') {
-          $('#tokenfield-interest').tokenfield('createToken', $location.search()[item]);
-        }
-        // if we have a "city" search, populate that
-        if (item == 'city') {
-          $('#tokenfield-city').tokenfield('createToken', $location.search()[item]);
-        }
-        // if we have a "country" search, populate that
-        if (item == 'country') {
-          $('#tokenfield-country').tokenfield('createToken', $location.search()[item]);
-        }
+  }
+  query['first_name'] = token;
+  query['last_name'] = null;
+  
+  promises.push($http.get('/api/profiles/', {params: query})
+    .success(function(data) {
+      var results = data.objects;
+      for (var j = 0; j < results.length; j++) {
+        profiles.push(results[j].username);
       }
-      query_api($scope.query);
+    })
+  );
+
+  $q.all(promises)
+    .then(function() {
+      deferred.resolve(profiles);
+    }, function() {
+      deferred.reject('Some HTTP requests failed');
     });
+
+  return deferred.promise;
+};
+
+function region_autocomplete() {
+  return $http.get('/api/regions/')
+    .success(function(data){
+      var results = data.objects;
+      for (var i = 0; i < results.length; i++) {
+        region_autocompletes.push(results[i].name);
+        country_codes.push(results[i].code);
+      }
+    });
+};
+
+function keyword_autocomplete() {
+  return $http.get('/api/keywords/')
+    .success(function(data){
+      var results = data.objects;
+      for (var i = 0; i < results.length; i++) {
+        keyword_autocompletes.push(results[i].slug);
+      }
+    });
+};
+
+init_tokenfields()
+
 
     $scope.filterVTC = function() {
       // When VTC check box is clicked, also filter by VTC; when unchecked, reset it
@@ -1152,7 +768,6 @@
     // Allow the user to choose an order method using the What's Hot section.
     $scope.orderMethodUpdate = function(orderMethod) {
       $scope.orderMethod = orderMethod;
-      $scope.refreshItems();
     };
 
     /*
