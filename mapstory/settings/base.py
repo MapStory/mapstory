@@ -77,7 +77,9 @@ INSTALLED_APPS += (
     'crispy_forms',
     'threadedcomments',
     'django_comments',
-    'osgeo_importer'
+    'osgeo_importer',
+    'solo',
+    'resizeimage'
 )
 
 # Adding Threaded Comments app
