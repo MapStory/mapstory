@@ -499,6 +499,21 @@
         e.style.display = 'block';
   }
 
+  $scope.toggleFullScreen = function() {
+    var elem = document.getElementById('embedded_map');
+    if (!document.webkitFullScreen || !document.mozFullScreen || !document.msFullscreenElement || !document.fullscreenElement) {
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullScreen) {
+            elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+    }
+  }
+
   // For some reason it gets it all as a string, so parse for the ' and grab the content in between them
   keyword_list = keyword_list.split('\'');
   $scope.tags = [];
