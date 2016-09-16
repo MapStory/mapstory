@@ -46,36 +46,16 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4">
-                <h2>Get Started</h2>
+                <a href="{% url 'getpage' 'started' %}"><h2>Get Started</h2></a>
                 <p>MapStory is an open platform for organizing our knowledge about how the world changes over time and space. Click on a link to the right, and learn how you can start contributing observations of your own.</p>
-                <ul>
-                    <li>Students</li>
-                    <li>Educators</li>
-                    <li>Humanitarians</li>
-                    <li>Businesspeople</li>
-                    <li>Librarians</li>
-                    <li>Researchers</li>
-                    <li>Policy Makers</li>
-                    <li>Journalists</li>
-                </ul>
             </div>
             <div class="col-md-4">
-                <h2>Get Involved</h2>
-                <p>Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.</p>
-                <ul>
-                    <li>Community Initiatives</li>
-                    <li>MapStory Projects</li>
-                    <li>Thinkers and Thoughts</li>
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <h2>Get Skills</h2>
+                <a href="{% url 'getpage' 'skills' %}"><h2>Get Skills</h2></a>
                 <p>MapStory is for everyone, not just web developers and GIS experts. We work hard to get you the help you need to improve and succeed.</p>
-                <ul>
-                    <li>MapStory 101</li>
-                    <li>MapStory Wiki</li>
-                    <li>Help Center</li>
-                </ul>
+            </div>
+            <div class="col-md-4">
+                <a href="{% url 'getpage' 'involved' %}"><h2>Get Involved</h2></a>
+                <p>Join with your neighbors, or collaborators on another continent, to launch initiatives, help others, write code and govern the mapstory.org platform. We’re a community, not a company.</p>
             </div>
         </div>
     </div>
