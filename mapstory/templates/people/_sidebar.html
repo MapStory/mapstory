@@ -51,16 +51,18 @@
 {% endif %}
 
 <!-- contact profile -->
+{% if profile.social_github or  profile.social_linkedin or profile.social_facebook or profile.social_twitter %}
+<!-- the above heading conditional can be removed once site messaging is reinstated -->
 <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
+{% endif %}
 <!--   Stashing messaging until profile redirect is solved -->
-{% if THEME == 'orange' %}
+{% comment %}
     {% if user != profile %}
     <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary">message</a>
     {% endif %}
-{% endif %}
-{% comment %} 
-TODO: change help text in /geonode/geonode/people/models.py to encourage correct format of handle for each link 
 {% endcomment %}
+{% comment %} 
+TODO: change help text in /geonode/geonode/people/models.py to encourage correct format of handle for each link or init a controller that checks what is given and creates these links accordingly {% endcomment %}
 {% if profile.social_twitter %}
     <div class="sidebar-content">
         <a href="https://twitter.com/{{ profile.social_twitter }}"><i class="fa fa-twitter"></i> {{ profile.social_twitter }}
@@ -82,10 +84,13 @@ TODO: change help text in /geonode/geonode/people/models.py to encourage correct
         <a href="https://github.com/{{ profile.social_github }}"><i class="fa fa-github"></i> {{ profile.social_github }}</a>
     </div>
 {% endif %}
+{% comment %} 
+<!-- can be removed once tagging & keywords are functional -->
 <!-- tags and interests -->
 {% if profile.keyword_list %}
     <div class="sidebar-header"><h3>tags & interests </h3></div>
     <div>
-        <input type="text" class="form-control" id="tokenfield-interests"/>
+        <input type="text" class="form-control"/>
     </div>
 {% endif %}
+{% endcomment %}
