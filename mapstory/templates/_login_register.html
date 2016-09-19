@@ -109,14 +109,14 @@
                 {% if ENABLE_SOCIAL_LOGIN %}
                     <div class="row">
                         <div class="col-sm-4">
-                            <a href="{% url 'socialauth_begin' 'facebook' %}">
+                            <a href="{% url 'social:begin' 'facebook' %}">
                                 <div class="facebook-btn btn btn-md bg-ms btn-block">
                                     <i class="fa fa-facebook"></i> Log In with Facebook
                                 </div>
                             </a>
                         </div>
                         <div class="col-sm-4">
-                            <a href="{% url 'socialauth_begin' 'google-oauth2' %}">
+                            <a href="{% url 'social:begin' 'google-oauth2' %}">
                                 <div class="google-btn btn btn-md bg-ms btn-block">
                                     <i class="fa fa-google"></i> Log In with Google
                                 </div>

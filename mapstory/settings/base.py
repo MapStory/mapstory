@@ -157,14 +157,11 @@ if ENABLE_SOCIAL_LOGIN:
     SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/profiles/edit/'
 
     INSTALLED_APPS = INSTALLED_APPS + (
-        'social_auth',
-        'provider',
-        'provider.oauth2',
+        'social.apps.django_app.default',
     )
     AUTHENTICATION_BACKENDS = (
-        'social_auth.backends.twitter.TwitterBackend',
-        'social_auth.backends.facebook.FacebookBackend',
-        'social_auth.backends.google.GoogleOAuth2Backend',
+        'social.backends.google.GoogleOAuth2',
+        'social.backends.facebook.FacebookOAuth2',
     ) + AUTHENTICATION_BACKENDS
 
     SOCIAL_AUTH_PIPELINE = (
