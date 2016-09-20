@@ -87,9 +87,6 @@ es_manage_service: False
 # Social Authentication
 enable_social_login: False
 
-twitter_consumer_key:
-twitter_consumer_secret:
-
 facebook_app_id:
 facebook_api_secret:
 

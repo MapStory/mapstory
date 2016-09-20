@@ -47,15 +47,16 @@ MAPSTORY_APPS = (
 # Social Authentication Settings
 
 ENABLE_SOCIAL_LOGIN = {{ enable_social_login }}
-TWITTER_CONSUMER_KEY = '{{twitter_consumer_key }}'
-TWITTER_CONSUMER_SECRET = '{{ twitter_consumer_secret }}'
 
-FACEBOOK_APP_ID = '{{ facebook_app_id }}'
-FACEBOOK_API_SECRET = '{{ facebook_api_secret }}'
-FACEBOOK_EXTENDED_PERMISSIONS = ['email']
+SOCIAL_AUTH_FACEBOOK_KEY = '{{ facebook_app_id }}'
+SOCIAL_AUTH_FACEBOOK_SECRET = '{{ facebook_api_secret }}'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id,name,email',
+}
 
-GOOGLE_OAUTH2_CLIENT_ID = '{{ google_oauth2_client_id }}'
-GOOGLE_OAUTH2_CLIENT_SECRET = '{{ google_oauth2_client_secret }}'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '{{ google_oauth2_client_id }}'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '{{ google_oauth2_client_secret }}'
 
 # Registration Settings
 
