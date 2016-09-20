@@ -164,18 +164,6 @@ if ENABLE_SOCIAL_LOGIN:
         'social.backends.facebook.FacebookOAuth2',
     ) + AUTHENTICATION_BACKENDS
 
-    SOCIAL_AUTH_PIPELINE = (
-        'social_auth.backends.pipeline.social.social_auth_user',
-        'social_auth.backends.pipeline.associate.associate_by_email',
-        'social_auth.backends.pipeline.user.get_username',
-        'social_auth.backends.pipeline.user.create_user',
-        'social_auth.backends.pipeline.social.associate_user',
-        'social_auth.backends.pipeline.user.update_user_details',
-        #'mapstory.social_signals.get_user_avatar',
-        #'mapstory.social_signals.audit_user',
-    )
-
-
 #@todo remove this hack once maploom can deal with other config
 # have to put this after local_settings or any adjustments to OGC_SERVER will
 # not get picked up
