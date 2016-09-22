@@ -57,7 +57,6 @@
         StoryBoxLayerManager.map = self.storyMap;
         this.loadConfig = function(config, chapter){
             _config = config;
-
             if(config.chapters){
                 self.chapterCount = config.chapters.length;
                 if(chapter > 0 && chapter <= config.chapters.length) {
@@ -205,11 +204,6 @@ module.controller('viewerController', function($scope, $location, $injector, $lo
         }else{
             $location.path('');
         }
-    };
-
-    $scope.playbackOptions = {
-        mode: 'instant',
-        fixed: false
     };
     
     $scope.toggleSidebar = function() {
