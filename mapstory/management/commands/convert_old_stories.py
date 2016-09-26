@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from geonode.maps.models import Map,MapStory
 import re
 
@@ -30,13 +30,12 @@ class Command(BaseCommand):
                 # create the new story model object, populating it with data from old map in some cases.
                 new_story = MapStory(owner=old_story.owner,
                                      title=old_story.title,
-                                     name=launder(old_story.name),
                                      abstract=old_story.abstract)
                 if options['dry-run'] is False:
                     new_story.save()
                     new_story.set_default_permissions()
                 else:
-                    self.stdout.write('New Mapstory Object: {0}'.format(new_story.name))
+                    self.stdout.write('New Mapstory Object: {0}'.format(new_story.title))
                     self.stdout.write('Title: {0}'.format(new_story.title))
                     self.stdout.write('Abstract: {0}'.format(new_story.abstract))
 
@@ -49,9 +48,9 @@ class Command(BaseCommand):
 
                 stories_updated += 1
                 if options['dry-run'] is False:
-                    self.stdout.write('Converted old mapstory: {0}'.format(old_story.name))
+                    self.stdout.write('Converted old mapstory: {0}'.format(old_story.title))
                 else:
-                    self.stdout.write('Converted old mapstory: {0}, but did not save'.format(old_story.name))
+                    self.stdout.write('Converted old mapstory: {0}, but did not save'.format(old_story.title))
 
             self.stdout.write('{0} stories converted to new model'.format(stories_updated))
 
