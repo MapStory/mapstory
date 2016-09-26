@@ -3,11 +3,7 @@ from geonode.maps.models import Map,MapStory
 
 class Command(BaseCommand):
 
-    def add_arguments(self, parser):
-
-
     def handle(self, *args, **kwargs):
-
         old_stories = Map.objects.filter(story__isnull=True)
         stories_updated = 0
 
@@ -31,3 +27,6 @@ class Command(BaseCommand):
                 stories_updated += 1
 
             self.stdout.write('{0} stories converted to new model'.format(stories_updated))
+
+        else:
+            self.stdout.write('No Chapters found without a Mapstory')
