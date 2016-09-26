@@ -11,7 +11,7 @@
 {% block title %}{{ resource.title }} — {{ block.super }}{% endblock %}
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css" />
-{% include "maps/map_include.html" %}
+
 {{ block.super }}
 <style type="text/css">
 div.timeline-highlight-point-decorator {
@@ -39,6 +39,27 @@ body.ms-fullscreen .gxp-annotations-tip {
 {% block body_class %}maps{% endblock %}
 {% block body_outer %}{% include "detail_base.html" with page="map" %}{% endblock %}
 {% block extra_script %}
+
+<script type="text/javascript">
+var app;
+$(document).ready(function() {
+{% autoescape off %}
+    $('<iframe>', {
+   {% if resource.chapters %}
+   src: '{%  url 'mapstory_view' resource.id %}',
+   {% else %}
+   src: '{%  url 'map-viewer' resource.id %}',
+   {% endif %}
+   id:  'myFrame',
+   allowfullscreen: 'true',
+   frameborder: 0,
+   style:'width: 100%; height: 100%;',
+   scrolling: 'no'
+   }).appendTo('#embedded_map');
+{% endautoescape %}
+});
+</script>
+
 {% if SOCIAL_BUTTONS %}
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
@@ -55,38 +76,7 @@ body.ms-fullscreen .gxp-annotations-tip {
       {% overall_rating resource "map" as the_map_rating %}
 {% endif %}
 <script type="text/javascript">
- $(function() {
-  {% verbatim %}
-  // Publish layer group
-  // TODO: this should really not be inside a script tag...
-  var $wmsBtn = $(".layer-group .btn"),
-      layerGroupElTpl;
-  if ($wmsBtn.length > 0) {
-      $wmsBtn.on("click", function(event) {
-          event.preventDefault();
-          $.ajax({
-              type: "PUT",
-              url: $wmsBtn.attr("href")
-          })
-          .done(function(data) {
-              layerGroupElTpl = "<dt>WMS layer group for local map layers:</dt> \
-            <dd><em>{{layerGroupName}}</em> (on <a href='{{ows}}?request=GetCapabilities'>local OWS</a>)</dd>";
-              $.each(data, function(key, value) {
-                  // client-side template hack
-                  layerGroupElTpl = layerGroupElTpl.replace("{{" + key + "}}", value);
-              });
-          })
-          .fail(function() {
-              layerGroupElTpl = "<dt>Error:</dt> \
-            <dd>Layer group could not be created.</dd>";
-          })
-          .always(function() {
-              $(".layer-group dl").html(layerGroupElTpl);
-          });
-      });
-  };
-  {% endverbatim %}
- });
+
 {% if SOCIAL_BUTTONS %}
  (function() {
    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
@@ -109,11 +99,4 @@ body.ms-fullscreen .gxp-annotations-tip {
   });
 </script>
 {% include "_permissions_form_js.html" %}
-<script type="text/javascript" src="{{ STATIC_URL}}geonode/js/utils/thumbnail.js"></script>
-<script type="text/javascript">
-  $('#set_thumbnail').click(function(){
-    createMapThumbnail();
-    $('#edit-map').modal('toggle');
-  });
-</script>
 {% endblock %}

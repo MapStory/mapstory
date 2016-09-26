@@ -13,8 +13,6 @@
 {% block title %}{{ resource.title|default:resource.typename }} — {{ block.super }}{% endblock %}
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css"/>
-    {% include "mapstory/ext_header.html" %}
-    {% include "mapstory/geo_header.html" %}
     {{ block.super }}
 {% endblock %}
 
@@ -28,7 +26,7 @@
 {% endif %}
 <script type="text/javascript">
     var app;
-    Ext.onReady(function () {
+    $(document).ready(function () {
         {% autoescape off %}
         $('<iframe>', {
             src: '{%  url 'layer_viewer' resource.typename %}',
@@ -83,12 +81,6 @@
             }).appendTo('#legend_placeholder');
         });
     {% endif %}
-</script>
-<script type="text/javascript">
-    $('#set_thumbnail').click(function () {
-        createMapThumbnail();
-        $('#edit-layer').modal('toggle');
-    });
 </script>
 {% if GEONODE_SECURITY_ENABLED %}
     {% include "_permissions_form_js.html" %}
