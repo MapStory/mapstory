@@ -3,8 +3,18 @@ from geonode.maps.models import Map,MapStory
 import re
 
 class Command(BaseCommand):
+    help = 'This command looks for Map objects that are missing a associated MapStory and creates/links the new model'
 
-    def handle(self, *args, **kwargs):
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--dry-run',
+            action='store_true',
+            dest='dry-run',
+            default=False,
+            help='dont save changes to story objects and print more information about converted stories'
+        )
+
+    def handle(self, *args, **options):
         # private function to launder story name in case it contains special characters
         def launder(string):
 
@@ -22,16 +32,26 @@ class Command(BaseCommand):
                                      title=old_story.title,
                                      name=launder(old_story.name),
                                      abstract=old_story.abstract)
-                new_story.save()
-                new_story.set_default_permissions()
+                if options['dry-run'] is False:
+                    new_story.save()
+                    new_story.set_default_permissions()
+                else:
+                    self.stdout.write('New Mapstory Object: {0}'.format(new_story.name))
+                    self.stdout.write('Title: {0}'.format(new_story.title))
+                    self.stdout.write('Abstract: {0}'.format(new_story.abstract))
 
                 # create the foreign key link to the new story and set it to the first chapter
                 old_story.story = new_story
                 old_story.chapter_index = 0
-                old_story.save()
+                if options['dry-run'] is False:
+                    old_story.save()
+
 
                 stories_updated += 1
-                self.stdout.write('Converted old mapstory: {0}'.format(old_story.name))
+                if options['dry-run'] is False:
+                    self.stdout.write('Converted old mapstory: {0}'.format(old_story.name))
+                else:
+                    self.stdout.write('Converted old mapstory: {0}, but did not save'.format(old_story.name))
 
             self.stdout.write('{0} stories converted to new model'.format(stories_updated))
 
