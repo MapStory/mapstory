@@ -24,6 +24,8 @@
     <script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-core-ng.js"></script>
     <script src="{{ STATIC_URL }}vendor/story-tools/dist/ows.js"></script>
     <script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-mapstory.js"></script>
+    
+    <link href="{{ STATIC_URL }}style/themes/{{THEME}}/maps-theme.css" rel="stylesheet" />
     <style>
 
         .map {
@@ -37,15 +39,10 @@
             border: 0px solid #ccc;
             background-color: white;
         }
-
-        #playback-settings{
-            color: white;
-        }
-
     </style>
 
     {% include 'viewer/layer_viewer.js' %}
-    <link href="{{ STATIC_URL }}style/themes/{{THEME}}/maps-theme.css" rel="stylesheet" />
+
     <div ng-app="viewer" ng-controller="viewerController as viewer" id="story-viewer">
         <div class="map" id="mapContainer">
             <span ng-if="loading">Loading...</span>
