@@ -31,13 +31,13 @@ class Command(BaseCommand):
                 new_story = MapStory(owner=old_story.owner,
                                      title=old_story.title,
                                      abstract=old_story.abstract)
+                new_story_print = launder(new_story.title)
                 if options['dry-run'] is False:
                     new_story.save()
                     new_story.set_default_permissions()
                 else:
-                    self.stdout.write('New Mapstory Object: {0}'.format(new_story.title))
-                    self.stdout.write('Title: {0}'.format(new_story.title))
-                    self.stdout.write('Abstract: {0}'.format(new_story.abstract))
+                    self.stdout.write('New Mapstory Object: {0}'.format(new_story_print))
+                    self.stdout.write('Title: {0}'.format(new_story_print))
 
                 # create the foreign key link to the new story and set it to the first chapter
                 old_story.story = new_story
@@ -48,9 +48,9 @@ class Command(BaseCommand):
 
                 stories_updated += 1
                 if options['dry-run'] is False:
-                    self.stdout.write('Converted old mapstory: {0}'.format(old_story.title))
+                    self.stdout.write('Converted old mapstory: {0}'.format(new_story_print))
                 else:
-                    self.stdout.write('Converted old mapstory: {0}, but did not save'.format(old_story.title))
+                    self.stdout.write('Converted old mapstory: {0}, but did not save'.format(new_story_print))
 
             self.stdout.write('{0} stories converted to new model'.format(stories_updated))
 
