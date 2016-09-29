@@ -51,7 +51,7 @@ class MapStoryTestMixin(TestCase):
         self.assertTrue('login' in response.url)
 
     def assertHasGoogleAnalytics(self, response):
-        self.assertTrue('mapstory/google_analytics.html' in [t.name for t in response.templates])
+        self.assertTrue('mapstory/_google_analytics.html' in [t.name for t in response.templates])
 
     def create_user(self, username, password, **kwargs):
         """
@@ -75,16 +75,6 @@ class MapStoryTests(MapStoryTestMixin):
         self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
         self.non_admin_username, self.non_admin_password = self.create_user('non_admin', 'non_admin')
 
-    def test_home_renders(self):
-        """
-        Ensure the home page returns a 200.
-        """
-
-        c = Client()
-        response = c.get(reverse('index_view'))
-        self.assertEqual(response.status_code, 200)
-        self.assertHasGoogleAnalytics(response)
-
     @override_settings(GOOGLE_ANALYTICS='testing')
     def test_google_analytics(self):
         """
@@ -95,6 +85,16 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertTrue("_gaq.push(['_setAccount', 'testing']);" in response.content)
 
+    def test_home_renders(self):
+        """
+        Ensure the home page returns a 200.
+        """
+
+        c = Client()
+        response = c.get(reverse('index_view'))
+        self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
+
     def test_search_renders(self):
         """
         Ensure the search page returns a 200.
@@ -104,18 +104,6 @@ class MapStoryTests(MapStoryTestMixin):
         response = c.get(reverse('search'))
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
-
-    def test_csv_user_export(self):
-        """
-        Ensure export model returns a csv file
-        """
-        c = Client()
-
-        request = c.get(reverse('index_view'))
-
-        response = export_via_model(User, request, User.objects.all(), exclude=['password'])
-
-        self.assertEqual(response['Content-Type'], 'text/csv')
 
     def test_journal_renders(self):
         """
@@ -351,6 +339,22 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(mail.outbox[1].subject, "Welcome to MapStory!")
         # Regardless of email content used, ensure it personally addresses the user
         self.assertTrue(user.username in mail.outbox[1].body or user.first_name in mail.outbox[1].body)
+
+
+class MapStoryAdminTests(MapStoryTestMixin):
+
+    def test_csv_user_export(self):
+        """
+        Ensure export model returns a csv file
+        """
+        c = Client()
+
+        request = c.get(reverse('index_view'))
+
+        response = export_via_model(User, request, User.objects.all(), exclude=['password'])
+
+        self.assertEqual(response['Content-Type'], 'text/csv')
+
 
 class Oauth2ProviderTest(TestCase):
 
@@ -698,10 +702,8 @@ class LayersCreateTest(MapStoryTestMixin):
         self.assertEqual(layer.title, 'This is a test.')
         self.assertEqual(layer.owner, owner)
         self.assertTrue('xsd:dateTime' or 'xsd:date' in [n.attribute_type for n in layer.attributes.all()])
-        #import ipdb; ipdb.set_trace()
         self.assertEqual(layer.geographic_bounding_box, 'SRID=EPSG:4326;POLYGON((-180.0000000000 -90.0000000000,-180.0000000000 90.0000000000,180.0000000000 90.0000000000,180.0000000000 -90.0000000000,-180.0000000000 -90.0000000000))')
 
         with self.assertRaises(UploadError):
             response = creater.handle(configuration_options=[{'featureType': js, 'layer_owner': owner}])
-
 
