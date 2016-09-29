@@ -79,7 +79,8 @@ INSTALLED_APPS += (
     'django_comments',
     'osgeo_importer',
     'solo',
-    'resizeimage'
+    'resizeimage',
+    'coverage'
 )
 
 # Adding Threaded Comments app
@@ -434,3 +435,34 @@ DEFAULT_APPEND_CONFIG = {
     'always_geogig': False,
     'index': 0
 }
+#Automated Testing Settings
+
+class DisableMigrations(object):
+
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return "notmigrations"
+
+# Disable migrations only on tests
+TESTS_IN_PROGRESS = False
+if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
+    logging.disable(logging.CRITICAL)
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    )
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+    TESTS_IN_PROGRESS = True
+    MIGRATION_MODULES = DisableMigrations()
+
+# Setup django-nose as our test runner and have it provide us with HTML coverage reports generated in the cover folder.
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=mapstory',
+    '--cover-inclusive',
+    '--cover-html',
+]
