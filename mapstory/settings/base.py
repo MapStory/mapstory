@@ -437,8 +437,9 @@ DEFAULT_APPEND_CONFIG = {
     'always_geogig': False,
     'index': 0
 }
-#Automated Testing Settings
 
+
+# Automated Testing Settings
 class DisableMigrations(object):
 
     def __contains__(self, item):
@@ -468,3 +469,4 @@ NOSE_ARGS = [
     '--cover-inclusive',
     '--cover-html',
 ]
+
