@@ -120,12 +120,4 @@ CELERY_ALWAYS_EAGER = {{ celery_always_eager }}  # False makes tasks run asynchr
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 CELERY_IGNORE_RESULT=False
 
-DEFAULT_IMPORTER_CONFIG = {
-    'configureTime': True,
-    'editable': True,
-    'convert_to_date': [],
-    'always_geogig': True,
-    'index': 0
-}
-
 OSGEO_DATASTORE = 'datastore'
