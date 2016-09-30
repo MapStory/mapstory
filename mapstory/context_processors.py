@@ -7,6 +7,8 @@ import json
 
 
 def context(req):
+    default_config = getattr(settings,'DEFAULT_IMPORTER_CONFIG')
+    append_config = getattr(settings,'DEFAULT_APPEND_CONFIG')
     return dict(
         AUTOCOMPLETE_QUICK_SEARCH=getattr(settings, 'AUTOCOMPLETE_QUICK_SEARCH', False),
         favorite_info=get_favorite_info(req),
@@ -15,5 +17,6 @@ def context(req):
         USER_SNAP=getattr(settings, 'USER_SNAP', False),
         site=Site.objects.get_current(),
         THEME=getattr(settings, 'THEME', 'default'),
-        default_layer_config=json.dumps(getattr(settings,'DEFAULT_IMPORTER_CONFIG'))
+        default_layer_config=json.dumps(default_config),
+        default_append_config=json.dumps(append_config)
     )

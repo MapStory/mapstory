@@ -421,8 +421,25 @@ ALLOWED_DATASTORE_LAYER_CREATE = ('*',)
 # Gravatar Settings
 AVATAR_GRAVATAR_SSL = True
 
-#Automated Testing Settings
+DEFAULT_IMPORTER_CONFIG = {
+    'configureTime': True,
+    'editable': True,
+    'convert_to_date': [],
+    'always_geogig': True,
+    'index': 0
+}
 
+# append only needs to import to temporarily store changes, so we turn off editable and the geogig history.
+DEFAULT_APPEND_CONFIG = {
+    'configureTime': True,
+    'editable': False,
+    'convert_to_date': [],
+    'always_geogig': False,
+    'index': 0
+}
+
+
+# Automated Testing Settings
 class DisableMigrations(object):
 
     def __contains__(self, item):
@@ -452,3 +469,4 @@ NOSE_ARGS = [
     '--cover-inclusive',
     '--cover-html',
 ]
+
