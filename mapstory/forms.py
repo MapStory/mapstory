@@ -30,6 +30,7 @@ class MetadataForm(forms.ModelForm):
             'title',
             'category',
             'abstract',
+            'language',
             'distribution_url',
             'data_quality_statement',
             'purpose',
