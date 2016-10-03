@@ -147,7 +147,6 @@
     chdir: '{{ top_project }}/geonode/geonode/static/'
   become_user: '{{ application_user }}'
   tags: [update]
-  when: use_aws_s3 is undefined or use_aws_s3 == False
 
 - name: geonode bower install
   shell: bower install
@@ -155,7 +154,6 @@
     chdir: '{{ top_project }}/geonode/geonode/static/'
   become_user: '{{ application_user }}'
   tags: [update]
-  when: use_aws_s3 is undefined or use_aws_s3 == False
 
 - name: geonode grunt copy
   shell: grunt copy
@@ -163,7 +161,6 @@
     chdir: '{{ top_project }}/geonode/geonode/static/'
   become_user: '{{ application_user }}'
   tags: [update]
-  when: use_aws_s3 is undefined or use_aws_s3 == False
 
 - name: mapstory npm install
   shell: npm install
@@ -171,7 +168,6 @@
     chdir: '{{ project_path }}/mapstory/static'
   become_user: '{{ application_user }}'
   tags: [update]
-  when: use_aws_s3 is undefined or use_aws_s3 == False
 
 - name: mapstory bower install
   shell: bower install
@@ -179,7 +175,6 @@
     chdir: '{{ project_path }}/mapstory/static'
   become_user: '{{ application_user }}'
   tags: [update]
-  when: use_aws_s3 is undefined or use_aws_s3 == False
 
 - name: mapstory grunt less
   shell: grunt less:development
@@ -187,7 +182,6 @@
     chdir: '{{ project_path }}/mapstory/static'
   become_user: '{{ application_user }}'
   tags: [update]
-  when: use_aws_s3 is undefined or use_aws_s3 == False
 
 - name: mapstory grunt copy
   shell: grunt copy:development
@@ -195,7 +189,6 @@
     chdir: '{{ project_path }}/mapstory/static'
   become_user: '{{ application_user }}'
   tags: [update]
-  when: use_aws_s3 is undefined or use_aws_s3 == False
 
 - name: collect-static local
   django_manage: app_path={{ project_path }} virtualenv={{ venv }} command='collectstatic --link --noinput --ignore node_modules'
