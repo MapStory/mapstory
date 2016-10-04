@@ -22,3 +22,5 @@ uploaded
 .idea
 mapstory/importer/test_ogr
 mapstory/importer/static/importer/bower_components
+cover
+.coverage
