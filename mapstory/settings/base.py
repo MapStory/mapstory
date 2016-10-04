@@ -22,6 +22,7 @@
 import os
 from geonode.settings import *
 import sys
+import logging
 #
 # General Django development settings
 #
