@@ -59,12 +59,12 @@
   become_user: '{{ application_user }}'
   tags: [setup, media]
 
-#- name: compile python
-#  shell: '{{ venv }}/bin/python -m compileall -f {{ top_project }}/geonode -f {{ project_path }}'
-#  become_user: '{{ application_user }}'
-#  tags: [update]
-#  notify: restart django
-#  when: env != 'vagrant'
+- name: compile python
+  shell: '{{ venv }}/bin/python -m compileall -f {{ top_project }}/geonode -f {{ project_path }}'
+  become_user: '{{ application_user }}'
+  tags: [update]
+  notify: restart django
+  when: env != 'vagrant'
 
 - name: generate django secret key
   shell: python -c 'import random;print "".join(random.sample("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)",50))'
@@ -86,6 +86,11 @@
 
 - name: make migrations
   django_manage: command="makemigrations --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [update, syncdb]
+
+- name: migrate people
+  django_manage: command="migrate people" virtualenv={{ venv }} app_path={{ project_path }}
   become_user: '{{ application_user }}'
   tags: [update, syncdb]
 
@@ -204,3 +209,7 @@
 
 - name: create temp folder for icons
   file: state=directory path=/tmp/{{ application_name }} owner={{ application_user }}
+
+- name: restart nginx
+  shell: 'sudo service nginx restart'
+
