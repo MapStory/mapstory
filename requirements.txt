@@ -40,3 +40,6 @@ django-fluent-comments==1.0.5
 #custom thumb dependencies
 django-solo==1.1.2
 python-resize-image==1.1.10 
+
+# Testing dependencies
+coverage
