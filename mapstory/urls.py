@@ -14,6 +14,7 @@ from mapstory.views import ProfileDetail, profile_delete, profile_edit
 from mapstory.views import SearchView
 from mapstory.views import LeaderListView
 from mapstory.views import proxy
+from mapstory.views import health_check
 from mapstory.views import map_detail
 from mapstory.views import layer_detail, layer_detail_id, layer_create
 from mapstory.views import layer_remove, map_remove
@@ -49,6 +50,8 @@ layer_detail_patterns = patterns('',
     )
 
 urlpatterns = patterns('',
+
+    url(r'^ht/', health_check, name="health_check"),
     # Adding Threaded Comments app
     url(r'^articles/comments/', include('django_comments.urls')),
     url(r'^blog/comments/', include('fluent_comments.urls')),

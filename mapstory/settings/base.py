@@ -80,6 +80,11 @@ INSTALLED_APPS += (
     'osgeo_importer',
     'solo',
     'resizeimage'
+    'health_check',
+    'health_check_celery3',
+    'health_check_db',
+    'health_check_storage',
+    'mapstory.apps.health_check_geoserver',
 )
 
 # Adding Threaded Comments app
