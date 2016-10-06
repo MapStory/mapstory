@@ -55,12 +55,9 @@
 <!-- the above heading conditional can be removed once site messaging is reinstated -->
 <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
 {% endif %}
-<!--   Stashing messaging until profile redirect is solved -->
-{% comment %}
     {% if user != profile %}
     <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary">message</a>
     {% endif %}
-{% endcomment %}
 {% comment %} 
 TODO: change help text in /geonode/geonode/people/models.py to encourage correct format of handle for each link or init a controller that checks what is given and creates these links accordingly {% endcomment %}
 {% if profile.social_twitter %}

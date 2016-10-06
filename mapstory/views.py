@@ -216,7 +216,7 @@ def profile_edit(request, username=None):
                 messages.success(request, "Profile profile updated.")
                 return redirect(
                     reverse(
-                        'storyteller_detail',
+                        'profile_detail',
                         args=[
                             request.user.username]))
         else:
@@ -1191,7 +1191,7 @@ def map_remove(request, mapid, template='maps/map_remove.html'):
 
     elif request.method == 'POST':
         delete_mapstory.delay(object_id=map_obj.id)
-        return HttpResponseRedirect(reverse("storyteller_detail", kwargs={'slug': map_obj.owner}))
+        return HttpResponseRedirect(reverse("profile_detail", kwargs={'slug': map_obj.owner}))
 
 
 def account_verify(request):

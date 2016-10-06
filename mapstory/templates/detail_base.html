@@ -193,15 +193,12 @@
                               </form>
                             </li>
                         {% endif %}
-                        <!--   Stashing messaging until profile redirect is solved -->
-                        {% if THEME == 'orange' %}
-                            <li>
-                                <i class="fa fa-envelope-o"></i>
-                                <a href="{% url "message_create" resource.owner.pk %}">
-                                    Message
-                                </a>
-                            </li>
-                        {% endif %}
+                        <li>
+                            <i class="fa fa-envelope-o"></i>
+                            <a href="{% url "message_create" resource.owner.pk %}">
+                                Message
+                            </a>
+                        </li>
                     </ul>
                     <div class="side-column-header">Usage Summary</div>
                     <ul class="side-column-items">

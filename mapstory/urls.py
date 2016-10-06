@@ -79,8 +79,6 @@ urlpatterns = patterns('',
     url(r'^maps/(?P<mapid>\d+)/embed$', 'geonode.maps.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
     url(r'^story/(?P<mapid>\d+)/embed$', 'geonode.maps.views.mapstory_view', {'template': 'viewer/story_viewer.html'}, name='mapstory-viewer'),
 
-    url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="storyteller_detail"),
-    url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
     url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/set-notification$", set_profile_notification, name="set_profile_notification"),
@@ -131,6 +129,9 @@ urlpatterns += patterns("",
                         url(r'', include(importer_api.urls)))
 
 urlpatterns += importer_urlpatterns
+
+#this is last to catch reverse lookup from geonode views
+urlpatterns += patterns("",url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"))
 
 
 if settings.DEBUG:
