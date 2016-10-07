@@ -84,7 +84,7 @@
                              "nillable": true
                          },
                          {name: 'time',
-                             binding: 'org.geotools.data.postgis.PostGISDialect$XDate',
+                             binding: 'org.geotools.data.postgis.BigDate',
                              nillable: true,
                              minOccurs: 0
                          }
@@ -112,7 +112,7 @@
      $scope.attributeTypes = [
          {'label': 'Text', 'value': 'java.lang.String'},
          {'label': 'Number', 'value': 'java.lang.Double'},
-         {'label': 'Date', 'value': 'org.geotools.data.postgis.PostGISDialect$XDate'},
+         {'label': 'Date', 'value': 'org.geotools.data.postgis.BigDate'},
      ];
 
      $scope.createLayer = function() {
