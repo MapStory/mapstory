@@ -51,10 +51,7 @@
 {% endif %}
 
 <!-- contact profile -->
-{% if profile.social_github or  profile.social_linkedin or profile.social_facebook or profile.social_twitter %}
-<!-- the above heading conditional can be removed once site messaging is reinstated -->
 <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
-{% endif %}
     {% if user != profile %}
     <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary">message</a>
     {% endif %}

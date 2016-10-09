@@ -1,0 +1,217 @@
+{% load i18n %}
+{% load threadedcomments_tags %}
+{% load fluent_comments_tags %}
+{% load dialogos_tags %}
+{% load agon_ratings_tags %}
+{% load bootstrap_tags %}
+{% load url from future %}
+{% load base_tags %}
+{% load guardian_tags %}
+{% load friendly_loader %}
+{% load mapstory_tags %}
+{% load flag_tags %}
+{% friendly_load avatar_tags %}
+<div ng-controller="detail_page_controller">
+    <section class="slice" id="dashboard">
+        <div class="container">
+            <div class="row">
+                {{ resource.tags }}
+                <div class="col-7 fixed-aspect">
+                    <div id="embedded_map" class="mrg-btm story">
+                        <div id="preview_map"></div>
+                    </div>
+                </div>
+                <div class="mobile-thumb">
+                    <img ng-src="{{ thumbnail }}" src="{{ thumbnail }}">
+                </div>
+                {% if user == resource.owner %}
+                <a href="/story/{{ resource.id }}/draft">
+                    <button class="btn btn-danger resume-edit">
+                        <i class="fa fa-pencil"></i>
+                        {% if resource.is_published %} Change Published {{SITE_NAME}} 
+                        {% else %} Resume Draft 
+                        {% endif %}
+                    </button>
+                </a>
+                <a href="/story/{{ resource.id }}/embed">
+                    <button class="btn btn-detail mobile-play">
+                        <i class="fa fa-play"></i> Play {{SITE_NAME}}  
+                    </button>
+                </a>
+                {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-sm-11">
+                    <div class="overview">
+                        <h2> {{resource.title}} </h2>
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <a href="{% url 'profile_detail' slug=resource.owner.username %}">
+                                    <img class="img-circle" src="{% avatar_url resource.owner.username 45 %}" />
+                                </a>
+                                 <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank" style="font-size: larger;">
+                                    {% if resource.owner.first_name != '' %}
+                                        {{ resource.owner.first_name }} {{ resource.owner.last_name }}
+                                    {% else %}
+                                        {{ resource.owner.username }}
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="col-sm-2">
+                                <p class="views">{{ resource.popular_count }} {% trans 'views' %}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <p class="pull-right" ng-click="showShare()">Share <i class="fa fa-share"></i></p>
+                        <!-- insert story rating here -->
+                    </div>
+                    <div id="shareLinks" ng-show="sharing">
+                        <div class="embed">Share 
+                            <input id="shareStory" value ="https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}">
+                            <button class="copyclip btn" data-clipboard-target="#shareStory">
+                                <i class="fa fa-clipboard" aria-hidden="true"></i>
+                            </button>  
+                        </div>
+                        {% if resource.chapters %}
+                        <div class="embed"> Embed
+                            <input id="embedStory" value="<iframe style='border: none;' height='400' width='600' src='http://{{ request.get_host }}/story/{{ resource.id }}/embed'></iframe>">
+                            <button  class="copyclip btn" data-clipboard-target="#embedStory">
+                                <i class="fa fa-clipboard" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="col-sm-11">            
+                    <div class="Summary">
+                        <div><h3>Summary</h3></div>
+                        <hr>
+                        <div>
+                            {% if resource.abstract != '' %}
+                                {{ resource.abstract }}
+                            {% else %}
+                                <div class="no-chapter-summary"> Unfortunately, no summary has been provided for this {{SITE_NAME}}.</div>
+                            {% endif %}
+                        </div>
+                        {% if resource.chapters.count = 1 %}
+                            {% for item in resource.chapters %}
+                                {% if item.abstract != '' %}
+                                <div class="short-abstract">
+                                    <h4>{{ item.title }}</h4>
+                                    <hr>
+                                    {{ item.abstract  }}
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <br>
+                        <div>Category: {{ resource.category }}</div>
+                        <!-- <div>Region: Placeholder {{ resource.region.name }}</div> -->
+                        <div class="story-tags">Tags: 
+                            <script type="text/javascript">
+                                // Pass the keyword list from the django template into the javascript
+                                var keyword_list = "{{ resource.keyword_list|escapejs }}";
+                                var url = "{{ resource.detail_url }}";
+                            </script>
+                            {% if user.is_authenticated %}
+                                <input type="text" class="form-control" id="tokenfield-tags"/>
+                                {% verbatim %}
+                                    <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+                                {% endverbatim %}
+                            {% else %}
+                                <input type="text" class="form-control" id="tokenfield-tags-readonly"/>
+                                {% verbatim %}
+                                    <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+                                {% endverbatim %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if resource.chapters.count > 1 %}
+                    <div class="chapters">
+                        <div><h3> Chapters </h3></div>
+                        <hr>
+                        <div class='row'>
+                            <div class="col-sm-3 chapter-tabs">
+                                <ul class="nav nav-pills nav-stacked">
+                                {% for item in resource.chapters %}
+                                {% if forloop.first %}
+                                <li class="active"><a href="#ch-{{ item.id }}" data-toggle="tab">
+                                    {% if item.title != '' %}
+                                        {{ item.title }}
+                                    {% else %}
+                                        Chapter {{forloop.counter}}
+                                    {% endif %}
+                                </a></li>
+                                {% else %}
+                                <li><a href="#ch-{{ item.id }}" data-toggle="tab">
+                                    {% if item.title != '' %}
+                                        {{ item.title }}
+                                    {% else %}
+                                        Chapter {{forloop.counter}}
+                                    {% endif %}
+                                </a></li>
+                                {% endif %}
+                                {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-sm-9 tab-content">
+                                {% for item in resource.chapters %}
+                                {% if forloop.first %}
+                                <div class="tab-pane active" id="ch-{{ item.id }}">
+                                {% else %}
+                                <div class="tab-pane" id="ch-{{ item.id }}">
+                                {% endif %}
+                                    {% if item.abstract != '' %}
+                                    <h3>Chapter {{forloop.counter}}: {{ item.title }}</h3>
+                                    <p>{{ item.abstract  }}</p>
+                                    {% else %}
+                                       <div class="no-chapter-summary"> Unfortunately, there are no details provided for Chapter {{forloop.counter}}.</div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>    
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="layers">
+                        <div><h3> Layers </h3></div>
+                        <hr>
+                        <div class='row'>
+                            <div class="col-sm-3 layer-tabs">
+                                <ul class="nav nav-pills nav-stacked">
+                                {% for item in layers %}                  
+                                    {% if forloop.first %}
+                                    <li class="active"><a href="#layer-{{ item.id }}" data-toggle="tab">{{ item.title }}</a></li>
+                                    {% else %}
+                                    <li><a href="#layer-{{ item.id }}" data-toggle="tab">{{ item.title }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-sm-9 tab-content">
+                                {% for item in layers %}
+                                {% if forloop.first %}
+                                <div class="tab-pane active" id="layer-{{ item.id }}">
+                                {% else %}
+                                <div class="tab-pane" id="layer-{{ item.id }}">
+                                {% endif %}
+                                    <div class="col-sm-5">
+                                        <a href="{{ item.detail_url }}">
+                                            <img class="thumb img-responsive details" ng-src="{{ item.thumbnail_url }}"/>
+                                        </a>
+                                        <p> {{item.title}}</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p>{{ item.abstract  }}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

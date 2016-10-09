@@ -5,12 +5,20 @@ html, body {
   padding: 0;
 }
 
+@media (min-width: 300px) and (max-width: 900px) {
+  .sidebar {
+    width: 20%;
+  }
+}
+
 .sidebar {
   position: absolute;
   background: @gray97;
   height: 100%;
+  width: 20%;
   overflow: scroll;
   z-index: 2;
+  opacity: .8;
 }
 
 .sidebarHidden {
@@ -212,8 +220,4 @@ div.progress {
   border-radius: 0px;
 }
 
-@media (min-width: 300px) and (max-width: 900px) {
-  .sidebar {
-    width: 30%;
-  }
-}
+

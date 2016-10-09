@@ -1077,7 +1077,6 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     for chapter in chapters:
         layers = layers + list(chapter.local_layers)
 
-    print layers
     if request.method == "POST":
         keywords_form = KeywordsForm(request.POST, instance=map_obj)
         published_form = PublishStatusForm(instance=map_obj)
@@ -1148,7 +1147,6 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
 
     if settings.SOCIAL_ORIGINS:
         context_dict["social_links"] = build_social_links(request, map_obj)
-
     return render_to_response(template, RequestContext(request, context_dict))
 
 @login_required

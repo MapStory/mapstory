@@ -36,7 +36,7 @@
                 watchers = 0;
                 f(root);
                 if (watchers != last) {
-                    console.log(watchers);
+                    // console.log(watchers);
                 }
                 last = watchers;
             }, 1000);
@@ -178,6 +178,7 @@ module.controller('tileProgressController', function($scope) {
     });
 });
 
+
 module.controller('viewerController', function($scope, $location, $injector, $log, MapManager, TimeControlsManager) {
     $scope.timeControlsManager = $injector.instantiate(TimeControlsManager);
     $scope.mapManager = MapManager;
@@ -211,6 +212,7 @@ module.controller('viewerController', function($scope, $location, $injector, $lo
         var sidebar = document.querySelector('#sidebar');
         $scope.isShown ? sidebar.className = "sidebarHidden" : sidebar.className = "sidebar";
     };
+
 });
 })();
 </script>
