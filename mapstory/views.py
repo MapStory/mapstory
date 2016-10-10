@@ -79,6 +79,9 @@ from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, Gr
 from mapstory.search.utils import update_es_index
 
 
+from django.http import HttpResponse, HttpResponseServerError
+from django.template import loader
+from health_check.plugins import plugin_dir
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -228,6 +231,22 @@ def profile_edit(request, username=None):
     else:
         return HttpResponseForbidden(
             'You are not allowed to edit other users profile')
+
+@login_required
+def health_check(request):
+    plugins = []
+    working = True
+    for plugin_class, plugin in plugin_dir._registry.items():
+        plugin = plugin_class()
+        if not plugin.status:  # Will return True or None
+            working = False
+        plugins.append(plugin)
+    plugins.sort(key=lambda x: x.identifier())
+
+    if working:
+        return HttpResponse(loader.render_to_string("health_check/dashboard.html", {'plugins': plugins}))
+    else:
+        return HttpResponseServerError(loader.render_to_string("health_check/dashboard.html", {'plugins': plugins}))
 
 
 @login_required
