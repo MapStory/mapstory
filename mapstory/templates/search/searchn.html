@@ -18,10 +18,10 @@
      </div>
     {% comment %} Search for Content {% endcomment %}
     <div ng-show="api_endpoint == '/api/base/search/'">
-        <div class="col-lg-3 border-right">
+        <div class="col-sm-3 border-right search-side">
             {% include 'search/_sidebar_bestof.html' %}
         </div>
-        <div class="col-lg-9">
+        <div class="col-sm-9">
             <nav class="filter">
                 <div class="input-group search-bar">
                     <input name="text_search_input" id="text_search_input" ng-model="query.q" type="text"
@@ -35,7 +35,7 @@
             <div class="clearfix search-results">
                 <ul>
                     {% verbatim %}
-                    <li ng-repeat="item in results | orderBy: orderMethod" resource-id="{{ item.id }}" class="col-md-4 flip-container resource-{{ item.id }}" ng-if="((item.type === 'mapstory' || item.type === 'layer') && (item.is_published == true || item.owner__username  == django.user))">
+                    <li ng-repeat="item in results | orderBy: orderMethod" resource-id="{{ item.id }}" class="col-lg-4 col-sm-6 flip-container resource-{{ item.id }}" ng-if="((item.type === 'mapstory' || item.type === 'layer') && (item.is_published == true || item.owner__username  == django.user))">
                     {% endverbatim %}
                     {% include 'search/_result_content.html' %}
                 </ul>
@@ -45,10 +45,10 @@
     </div>
     {% comment %} Search for Storytellers {% endcomment %}
     <div ng-show="api_endpoint == '/api/owners/'">
-        <div class="col-lg-3 border-right">
+        <div class="col-sm-3 border-right search-side">
             {% include 'search/_refine_profiles.html' %}
         </div>
-        <div class="col-lg-9">
+        <div class="col-sm-9">
             <nav class="filter">
                 <div class="input-group search-bar">
                     <input name="user_search_input" id="user_search_input" ng-model="query.q" type="text"

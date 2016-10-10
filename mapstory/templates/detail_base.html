@@ -17,7 +17,7 @@
             <div class="row">
                 {{ resource.tags }}
                 <div class="col-lg-9">
-                    <div id="embedded_map" class="mrg-btm">
+                    <div id="embedded_map" class="mrg-btm layer">
                         <div id="preview_map"></div>
                     </div>
                     {% include "detail_data.html" with page=page %}
@@ -193,15 +193,12 @@
                               </form>
                             </li>
                         {% endif %}
-                        <!--   Stashing messaging until profile redirect is solved -->
-                        {% if THEME == 'orange' %}
-                            <li>
-                                <i class="fa fa-envelope-o"></i>
-                                <a href="{% url "message_create" resource.owner.pk %}">
-                                    Message
-                                </a>
-                            </li>
-                        {% endif %}
+                        <li>
+                            <i class="fa fa-envelope-o"></i>
+                            <a href="{% url "message_create" resource.owner.pk %}">
+                                Message
+                            </a>
+                        </li>
                     </ul>
                     <div class="side-column-header">Usage Summary</div>
                     <ul class="side-column-items">

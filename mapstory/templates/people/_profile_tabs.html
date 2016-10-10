@@ -34,23 +34,19 @@
                 Uploads
             </a>
         </li>
-        {% if THEME == 'orange' %}
         <li>
             <a href="#messages_list" data-toggle="tab">
                 <div class="counter">{{ inbox_count }}</div>
                 Messages 
             </a>
         </li>
-        {% endif %}
     {% endif %}
-    {% if THEME == 'orange' %}
     <li>
         <a href="#user_activities" data-toggle="tab">
             <div class="counter">{{ action_list.count }}</div>
             Activity Feed 
         </a>
     </li>
-    {% endif %} 
     <li>
         <a href="#diary_entries" data-toggle="tab">
             <div class="counter">{{ diary_entries.count }}</div>

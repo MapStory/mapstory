@@ -19,6 +19,9 @@ django-slack==4.1.0
 celery==3.1.23
 django-celery==3.1.16
 
+SQLAlchemy==1.0.14
+django-health-check==1.1.2
+
 #specific dependency versions from mapstory v1 to support oauth and social authnz
 django-oauth2-provider==0.2.6.1
 django-social-auth==0.7.22

@@ -14,6 +14,7 @@ from mapstory.views import ProfileDetail, profile_delete, profile_edit
 from mapstory.views import SearchView
 from mapstory.views import LeaderListView
 from mapstory.views import proxy
+from mapstory.views import health_check
 from mapstory.views import map_detail
 from mapstory.views import layer_detail, layer_detail_id, layer_create
 from mapstory.views import layer_remove, map_remove
@@ -49,6 +50,8 @@ layer_detail_patterns = patterns('',
     )
 
 urlpatterns = patterns('',
+
+    url(r'^ht/', health_check, name="health_check"),
     # Adding Threaded Comments app
     url(r'^articles/comments/', include('django_comments.urls')),
     url(r'^blog/comments/', include('fluent_comments.urls')),
@@ -79,8 +82,6 @@ urlpatterns = patterns('',
     url(r'^maps/(?P<mapid>\d+)/embed$', 'geonode.maps.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
     url(r'^story/(?P<mapid>\d+)/embed$', 'geonode.maps.views.mapstory_view', {'template': 'viewer/story_viewer.html'}, name='mapstory-viewer'),
 
-    url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="storyteller_detail"),
-    url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
     url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/set-notification$", set_profile_notification, name="set_profile_notification"),
@@ -130,6 +131,9 @@ urlpatterns += patterns("",
                         url(r'', include(importer_api.urls)))
 
 urlpatterns += importer_urlpatterns
+
+#this is last to catch reverse lookup from geonode views
+urlpatterns += patterns("",url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"))
 
 
 if settings.DEBUG:

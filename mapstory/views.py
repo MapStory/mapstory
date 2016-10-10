@@ -79,6 +79,9 @@ from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, Gr
 from mapstory.search.utils import update_es_index
 
 
+from django.http import HttpResponse, HttpResponseServerError
+from django.template import loader
+from health_check.plugins import plugin_dir
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -216,7 +219,7 @@ def profile_edit(request, username=None):
                 messages.success(request, "Profile profile updated.")
                 return redirect(
                     reverse(
-                        'storyteller_detail',
+                        'profile_detail',
                         args=[
                             request.user.username]))
         else:
@@ -228,6 +231,22 @@ def profile_edit(request, username=None):
     else:
         return HttpResponseForbidden(
             'You are not allowed to edit other users profile')
+
+@login_required
+def health_check(request):
+    plugins = []
+    working = True
+    for plugin_class, plugin in plugin_dir._registry.items():
+        plugin = plugin_class()
+        if not plugin.status:  # Will return True or None
+            working = False
+        plugins.append(plugin)
+    plugins.sort(key=lambda x: x.identifier())
+
+    if working:
+        return HttpResponse(loader.render_to_string("health_check/dashboard.html", {'plugins': plugins}))
+    else:
+        return HttpResponseServerError(loader.render_to_string("health_check/dashboard.html", {'plugins': plugins}))
 
 
 @login_required
@@ -1077,7 +1096,6 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     for chapter in chapters:
         layers = layers + list(chapter.local_layers)
 
-    print layers
     if request.method == "POST":
         keywords_form = KeywordsForm(request.POST, instance=map_obj)
         published_form = PublishStatusForm(instance=map_obj)
@@ -1148,7 +1166,6 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
 
     if settings.SOCIAL_ORIGINS:
         context_dict["social_links"] = build_social_links(request, map_obj)
-
     return render_to_response(template, RequestContext(request, context_dict))
 
 @login_required
@@ -1191,7 +1208,7 @@ def map_remove(request, mapid, template='maps/map_remove.html'):
 
     elif request.method == 'POST':
         delete_mapstory.delay(object_id=map_obj.id)
-        return HttpResponseRedirect(reverse("storyteller_detail", kwargs={'slug': map_obj.owner}))
+        return HttpResponseRedirect(reverse("profile_detail", kwargs={'slug': map_obj.owner}))
 
 
 def account_verify(request):

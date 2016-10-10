@@ -84,7 +84,7 @@
                              "nillable": true
                          },
                          {name: 'time',
-                             binding: 'org.geotools.data.postgis.PostGISDialect$XDate',
+                             binding: 'org.geotools.data.postgis.BigDate',
                              nillable: true,
                              minOccurs: 0
                          }
@@ -112,7 +112,7 @@
      $scope.attributeTypes = [
          {'label': 'Text', 'value': 'java.lang.String'},
          {'label': 'Number', 'value': 'java.lang.Double'},
-         {'label': 'Date', 'value': 'org.geotools.data.postgis.PostGISDialect$XDate'},
+         {'label': 'Date', 'value': 'org.geotools.data.postgis.BigDate'},
      ];
 
      $scope.createLayer = function() {
@@ -491,13 +491,6 @@
 })
 
 .controller('detail_page_controller', function($compile, $scope, $http){
-  $scope.toggle_visibility = function(id) {
-     var e = document.getElementById(id);
-     if(e.style.display == 'block')
-        e.style.display = 'none';
-     else
-        e.style.display = 'block';
-  }
 
   $scope.toggleFullScreen = function() {
     var elem = document.getElementById('embedded_map');
@@ -514,6 +507,9 @@
     }
   }
 
+  $scope.showShare = function(){
+     $scope.sharing = $scope.sharing ? !$scope.sharing : true;
+  }
   // For some reason it gets it all as a string, so parse for the ' and grab the content in between them
   keyword_list = keyword_list.split('\'');
   $scope.tags = [];
@@ -580,7 +576,12 @@
       $('#tokenfield-tags-tokenfield').prop('placeholder', '');
     })
     .on('tokenfield:removedtoken', function(e) {
-      $scope.tags.remove(e.attrs.value);
+      //remove the tag from the input box
+      var index = $scope.tags.indexOf(e.attrs.value);
+      if (index > -1) {
+          $scope.tags.splice(index, 1);
+      }
+  
       if ($scope.tags.length >= MAX_TOKENS) {
         $('#tokenfield-tags').tokenfield('createToken', $scope.tags[MAX_TOKENS-1]);
       } else {
