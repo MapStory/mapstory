@@ -3,13 +3,16 @@ from django.conf import settings
 from .context_processors_favorite import get_favorite_info
 from django.contrib.sites.models import Site
 
+from mapstory.version import get_version
+
 import json
 
 
 def context(req):
-    default_config = getattr(settings,'DEFAULT_IMPORTER_CONFIG')
-    append_config = getattr(settings,'DEFAULT_APPEND_CONFIG')
+    default_config = getattr(settings, 'DEFAULT_IMPORTER_CONFIG')
+    append_config = getattr(settings, 'DEFAULT_APPEND_CONFIG')
     return dict(
+        VERSION=get_version(),
         AUTOCOMPLETE_QUICK_SEARCH=getattr(settings, 'AUTOCOMPLETE_QUICK_SEARCH', False),
         favorite_info=get_favorite_info(req),
         GOOGLE_ANALYTICS=getattr(settings, 'GOOGLE_ANALYTICS', None),
