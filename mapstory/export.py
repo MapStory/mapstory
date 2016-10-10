@@ -11,7 +11,7 @@ def export_via_model(model, request, queryset, fields=None, exclude=None):
             excludeset = set(exclude)
             field_names = field_names - excludeset
 
-        response = HttpResponse(mimetype='text/csv')
+        response = HttpResponse(content_type='text/csv')
 
         response['Content-Disposition'] = \
             'attachment; filename=%s.csv' % unicode(opts).replace('.', '_')

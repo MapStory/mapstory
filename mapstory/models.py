@@ -28,23 +28,23 @@ set_mapstory_notifications()
 
 
 class CustomSite(models.Model):
-   site = models.OneToOneField(Site, null=True, related_name='assets')
-   subtitle = models.CharField(max_length=100)
-   logo = models.ImageField(blank=False, upload_to='customsite')
-   favicon = models.ImageField(blank=False, upload_to='customsite')
-   footer_text = models.TextField()
+    site = models.OneToOneField(Site, null=True, related_name='assets')
+    subtitle = models.CharField(max_length=100)
+    logo = models.ImageField(blank=False, upload_to='customsite')
+    favicon = models.ImageField(blank=False, upload_to='customsite')
+    footer_text = models.TextField()
 
-   class Meta:
-       verbose_name = "Custom Site Property"
-       verbose_name_plural = "Custom Site Properties"
-       
-   def __unicode__(self):
-       return 'Properties of {0}'.format(self.site.domain)
+    class Meta:
+        verbose_name = "Custom Site Property"
+        verbose_name_plural = "Custom Site Properties"
 
-   def save(self, *args, **kwargs):
-    super(CustomSite, self).save(*args, **kwargs)
-    # Cached information will likely be incorrect now.
-    Site.objects.clear_cache()
+    def __unicode__(self):
+        return 'Properties of {0}'.format(self.site.domain)
+
+    def save(self, *args, **kwargs):
+        super(CustomSite, self).save(*args, **kwargs)
+        # Cached information will likely be incorrect now.
+        Site.objects.clear_cache()
 
 
 def _stamp(data):
@@ -70,7 +70,7 @@ class Sponsor(models.Model):
         super(Sponsor, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return 'Sponser - %s' % self.name
+        return 'Sponsor - %s' % self.name
 
     class Meta:
         ordering = ['order']
@@ -79,6 +79,7 @@ class Sponsor(models.Model):
         return u'<img src="%s" />' % self.url()
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
+
 
 class ContentMixin(models.Model):
     content = models.TextField(
@@ -95,6 +96,7 @@ class ContentMixin(models.Model):
         abstract = True
         ordering = ['-date']
 
+
 class DiaryEntry(ContentMixin):
     title = models.CharField(max_length=255)
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
@@ -108,6 +110,7 @@ class DiaryEntry(ContentMixin):
 
     class Meta:
         verbose_name_plural = 'DiaryEntries'
+
 
 class Community(models.Model):
     name = models.CharField(max_length=64, unique=True)
@@ -140,10 +143,12 @@ class Community(models.Model):
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
 
+
 class Task(models.Model):
     task = models.TextField(blank=True)
     community = models.ForeignKey(Community, related_name='tasks')
-    
+
+
 def name_post_save(instance, *args, **kwargs):
     Community.objects.filter(name=instance.name).update(slug=(slugify(instance.name)))
 
@@ -198,12 +203,14 @@ class Leader(models.Model):
     def html(self):
         return textile.textile(self.content)
 
+
 class ParallaxImage(models.Model):
     name = models.CharField(max_length=64, blank=True)
     image = models.ImageField(upload_to='parallax', max_length=255)
 
     def __unicode__(self):
         return self.image.url
+
 
 class ThumbnailImage(SingletonModel):
     thumbnail_image = models.ImageField(
@@ -238,14 +245,18 @@ class ThumbnailImageForm(forms.Form):
         label='Select a file',
     )
 
+
 def get_images():
     return ParallaxImage.objects.all()
+
 
 def get_sponsors():
     return Sponsor.objects.filter(order__gte=0)
 
+
 def get_featured_groups():
     return GroupProfile.objects.filter(featured=True)
+
 
 def get_group_layers(gProfile):
     users = gProfile.group.user_set.all()
@@ -255,6 +266,7 @@ def get_group_layers(gProfile):
 
     return [item for sublist in layers for item in sublist]
 
+
 def get_group_maps(gProfile):
     users = gProfile.group.user_set.all()
     maps = []
@@ -262,6 +274,7 @@ def get_group_maps(gProfile):
         maps.append(get_objects_for_user(user, 'base.view_resourcebase').instance_of(Map))
 
     return [item for sublist in maps for item in sublist]
+
 
 def get_group_journals(gProfile):
     users = gProfile.group.user_set.all()
