@@ -59,12 +59,12 @@
   become_user: '{{ application_user }}'
   tags: [setup, media]
 
-- name: compile python
-  shell: '{{ venv }}/bin/python -m compileall -f {{ top_project }}/geonode -f {{ project_path }}'
-  become_user: '{{ application_user }}'
-  tags: [update]
-  notify: restart django
-  when: env != 'vagrant'
+#- name: compile python
+#  shell: '{{ venv }}/bin/python -m compileall -f {{ top_project }}/geonode -f {{ project_path }}'
+#  become_user: '{{ application_user }}'
+#  tags: [update]
+#  notify: restart django
+#  when: env != 'vagrant'
 
 - name: generate django secret key
   shell: python -c 'import random;print "".join(random.sample("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)",50))'
@@ -84,21 +84,6 @@
   notify: restart django
   tags: [settings]
 
-- name: make migrations
-  django_manage: command="makemigrations --noinput" virtualenv={{ venv }} app_path={{ project_path }}
-  become_user: '{{ application_user }}'
-  tags: [update, syncdb]
-
-- name: migrate people
-  django_manage: command="migrate people" virtualenv={{ venv }} app_path={{ project_path }}
-  become_user: '{{ application_user }}'
-  tags: [update, syncdb]
-
-- name: migrate notification
-  django_manage: command="migrate notification" virtualenv={{ venv }} app_path={{ project_path }}
-  become_user: '{{ application_user }}'
-  tags: [update, syncdb]
-
 - name: migrate maps
   django_manage: command="migrate maps" virtualenv={{ venv }} app_path={{ project_path }}
   become_user: '{{ application_user }}'
@@ -115,7 +100,7 @@
   tags: [update, syncdb]
 
 - name: migrate
-  django_manage: command="migrate --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+  django_manage: command="migrate --noinput --verbosity 3" virtualenv={{ venv }} app_path={{ project_path }}
   become_user: '{{ application_user }}'
   tags: [update, syncdb]
 
