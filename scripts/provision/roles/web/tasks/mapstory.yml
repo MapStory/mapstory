@@ -84,21 +84,6 @@
   notify: restart django
   tags: [settings]
 
-- name: make migrations
-  django_manage: command="makemigrations --noinput" virtualenv={{ venv }} app_path={{ project_path }}
-  become_user: '{{ application_user }}'
-  tags: [update, syncdb]
-
-- name: migrate people
-  django_manage: command="migrate people" virtualenv={{ venv }} app_path={{ project_path }}
-  become_user: '{{ application_user }}'
-  tags: [update, syncdb]
-
-- name: migrate notification
-  django_manage: command="migrate notification" virtualenv={{ venv }} app_path={{ project_path }}
-  become_user: '{{ application_user }}'
-  tags: [update, syncdb]
-
 - name: migrate maps
   django_manage: command="migrate maps" virtualenv={{ venv }} app_path={{ project_path }}
   become_user: '{{ application_user }}'
