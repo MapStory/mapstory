@@ -24,6 +24,14 @@ mapstory_dbs:
     db_lc_ctype: 'en_US.UTF-8'
     db_template: 'template0'
     db_type: 'spatial'
+  mapstory_geogig:
+    db_password: '{{ db_password }}'
+    db_owner: '{{ db_user }}'
+    db_encoding: 'UTF-8'
+    db_lc_collate: 'en_US.UTF-8'
+    db_lc_ctype: 'en_US.UTF-8'
+    db_template: 'template0'
+    db_type: ''
 
 setup_dblink: yes
 

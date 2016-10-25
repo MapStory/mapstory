@@ -321,16 +321,24 @@ if DATABASE_PASSWORD:
             'NAME': 'mapstory',
             'USER': 'mapstory',
             'PASSWORD': DATABASE_PASSWORD,
-            'HOST' : DATABASE_HOST,
-            'PORT' : '5432',
+            'HOST': DATABASE_HOST,
+            'PORT': '5432',
         },
-        'datastore' : {
+        'datastore': {
             'ENGINE': 'django.contrib.gis.db.backends.postgis',
             'NAME': 'mapstory_data',
-            'USER' : 'mapstory',
-            'PASSWORD' : DATABASE_PASSWORD,
-            'HOST' : DATABASE_HOST,
-            'PORT' : '5432',
+            'USER': 'mapstory',
+            'PASSWORD': DATABASE_PASSWORD,
+            'HOST': DATABASE_HOST,
+            'PORT': '5432',
+        },
+        'geogig': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'mapstory_geogig',
+            'USER': 'mapstory',
+            'PASSWORD': DATABASE_PASSWORD,
+            'HOST': DATABASE_HOST,
+            'PORT': '5432',
         }
     }
 
