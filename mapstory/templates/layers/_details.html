@@ -1,0 +1,198 @@
+{% load i18n %}
+{% load threadedcomments_tags %}
+{% load fluent_comments_tags %}
+{% load dialogos_tags %}
+{% load agon_ratings_tags %}
+{% load bootstrap_tags %}
+{% load url from future %}
+{% load base_tags %}
+{% load guardian_tags %}
+{% load friendly_loader %}
+{% load mapstory_tags %}
+{% load flag_tags %}
+{% friendly_load avatar_tags %}
+
+{% get_comment_count for resource as num_comments %}
+<div ng-controller="detail_page_controller">
+    <section class="slice" id="dashboard">
+        <div class="container">
+            <div ng-controller="geonode_search_controller" class="row">
+                <div style="text-align: left">
+                        <div> <h2>{{resource.title}}</h2> </div> 
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <span class="small">{% trans "Imported by" %}                                          
+                                    <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">
+                                        {% if resource.owner.first_name != '' %}
+                                            {{ resource.owner.first_name }} {{ resource.owner.last_name }}
+                                        {% else %}
+                                            {{ resource.owner.username }}
+                                        {% endif %}
+                                    </a> on {{ resource.date|date }}
+                                </span>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                {{ resource.tags }}
+                <div class="col-lg-9">
+                    <div id="embedded_map" class="mrg-btm layer">
+                        <div id="preview_map"></div>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                    {% user_rating request.user resource "layer" as user_layer_rating %}
+                    <div id="user_rating" class="pull-right category-layer" data-score="{{ user_layer_rating }}"></div>
+                    {% endif %}
+                    <div  class="row">
+                        <div class="col-sm-12">
+                            <ul class="nav nav-tabs details-tabs" ng-controller="geogigController">
+                                <li class="active"><a href="#Metadata" data-toggle="tab">About this StoryLayer</a></li>
+                                <li><a href="#Edits" data-toggle="tab">Contributions ({% verbatim %}{{ stats.totalCommits| number}}{% endverbatim %})</a></li>
+                                <li><a href="#Comments" data-toggle="tab">Comments ({{ num_comments }})</a></li>
+                                <li><a href="#ShareLayer" data-toggle="tab">Share</a></li>
+                                {% comment %}{% if resource.category %}
+                                <li><a href="#Related" data-toggle="tab" ng-click="query_category('{{ resource.category }}', '{{page}}');">Related</a></li>
+                                {% endif %}{% endcomment %}
+                            </ul>
+
+                            <div class="tab-content details">
+                                <div class="tab-pane active" id="Metadata">
+                                    <table class="table table-condensed table-hover">
+                                        <tr>
+                                            <td width="35%">Category</td>
+                                            <td width="65%">{{ resource.category }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%">Summary</td>
+                                            <td width="65%">{{ resource.abstract }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%">Purpose</td>
+                                            <td width="65%">{{ resource.purpose }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%">Data Source</td>
+                                            <td width="65%">{{ resource.distribution_url }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%">Data Quality Statement</td>
+                                            <td width="65%">{{ resource.data_quality_statement }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%">Tags</td>
+                                            <td width="65%">
+                                                <script type="text/javascript">
+                                                    // Pass the keyword list from the django template into the javascript
+                                                    var keyword_list = "{{ resource.keyword_list|escapejs }}";
+                                                    var url = "{{ resource.detail_url }}";
+                                                </script>
+                                                {% if user.is_authenticated %}
+                                                    <input type="text" class="form-control" id="tokenfield-tags"/>
+                                                    {% verbatim %}
+                                                        <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+                                                    {% endverbatim %}
+                                                {% else %}
+                                                    <input type="text" class="form-control" id="tokenfield-tags-readonly"/>
+                                                    {% verbatim %}
+                                                        <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+                                                    {% endverbatim %}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>                                            
+                                            <td width="35%">Thumbnail</td>
+                                            <td width="35%">
+                                                <a href="{{ thumbnail }}"><img ng-src="{{ thumbnail }}" src="{{ thumbnail }}" id="change-thumbnail-image"></a>
+                                            {% if content_moderators in user.groups.all or user == resource.owner %}
+                                                <form action="" method="post" enctype="multipart/form-data">
+                                              {% csrf_token %}
+                                              <p>{{ thumb_form.non_field_errors }}</p>
+                                              <p>{{ thumb_form.docfile.label_tag }} </p>
+                                              <p>
+                                                  {{ thumb_form.thumbnail_image.errors }}
+                                                  {{ thumb_form.thumbnail_image }}
+                                              </p>
+                                              <button style="width:200px" class="btn btn-primary btn-md btn-block" type="submit">
+                                                Change Image
+                                              </button>
+                                          </form>
+                                          {% endif %}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="tab-pane" id="Edits">
+                                    <div>
+                                        {% if GEOGIG_ENABLED and resource.link_set.geogig %}
+                                            {% with "layers/_geogig_layer_detail.html" as geogig_template %}
+                                                <article id="geogig" class="tab-pane">
+                                                    {% with resource as obj %}
+                                                        {% include geogig_template %}
+                                                    {% endwith %}
+                                                </article>
+                                            {% endwith %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="Related">
+                                    <div>
+                                        {% verbatim %}
+                                        <div ng-hide="results.length">No related content found...</div>
+                                        <div ng-show="results.length">
+                                            <div class="col-sm-12" ng-repeat="item in results">
+                                                <div ng-show="{{ item.id }} != {% endverbatim %}{{ resource.id }}{% verbatim %}">
+                                                    <div class="row boxFeature">
+                                                        <div class="col-xs-3">
+                                                            <a href="{{ item.detail_url }}">
+                                                                <img class="thumb img-responsive details" ng-src="{{ item.thumbnail_url }}"/>
+                                                            </a>
+                                                        </div>
+                                                        <div class="col-xs-9">
+                                                            <h3><a href="{{ item.detail_url }}">{{ item.title }}</a></h3>
+                                                            <p>{{ item.abstract|limitTo:"250"  }}
+                                                                {% endverbatim %}
+                                                                {% if item.abstract != 'No abstract provided' %}
+                                                                {% verbatim %}
+                                                                <a href="{{ item.detail_url }}"><i>...read more</i></a>
+                                                                {% endverbatim %}
+                                                                {% endif %}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane layer-comments" id="Comments">
+                                    {% render_comment_list for resource %}
+                                    {% if user.is_authenticated %}
+                                        {% render_comment_form for resource %}
+                                    {% endif %}
+                                </div>
+                                <div class="tab-pane" id="ShareLayer">
+                                    <h3>Map Services</h3>
+                                    <div class="embed">WMS 
+                                        <i class="fa fa-question-circle ng-scope" tooltip-append-to-body="true" tooltip-placement="top" tooltip="OpenGIS® Web Map Service Interface Standard"></i>
+                                        <input id="shareWMS" value ="http://{{ request.get_host }}/geoserver/geonode/{{ resource }}/wms?REQUEST=GetCapabilities&SERVICE=WMS&TILED=true&VERSION=1.1.1">
+                                        <button class="copyclip btn" data-clipboard-target="#shareWMS">
+                                            <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div class="embed"> WFS
+                                        <i class="fa fa-question-circle ng-scope" tooltip-append-to-body="true" tooltip-placement="top" tooltip="OGC® Web Feature Service"></i>
+                                        <input id="shareWFS" value ="http://{{ request.get_host }}/geoserver/geonode/{{ resource }}/wfs?REQUEST=GetCapabilities&SERVICE=WFS&VERSION=2.0.0">
+                                        <button class="copyclip btn" data-clipboard-target="#shareWFS">
+                                            <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                        </button>        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% include 'layers/_sidebar.html' %}
+            </div>
+        </div>
+    </section>
+</div>

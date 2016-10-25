@@ -33,16 +33,14 @@
                                 <a href="{% url 'profile_detail' slug=user.username %}">
                                     <i class="fa fa-user"></i> {% trans "Profile" %}</a>
                             </li>
-                            {% comment %}
-                                <li>
-                                    <a href="{% url 'profile_detail' slug=user.username %}#-user_activities">
-                                        <i class="fa fa-fire"></i> {% trans "Recent Activity" %}</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'profile_detail' slug=user.username %}#-messages_list">
-                                        <i class="fa fa-inbox"></i> {% trans "Inbox" %}</a>
-                                </li>
-                            {% endcomment %}
+                            <li>
+                                <a href="{% url 'profile_detail' slug=user.username %}#-user_activities">
+                                    <i class="fa fa-fire"></i> {% trans "Recent Activity" %}</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'profile_detail' slug=user.username %}#-messages_list">
+                                    <i class="fa fa-inbox"></i> {% trans "Inbox" %}</a>
+                            </li>
                             {% if perms.announcements.can_manage %}
                                 <li>
                                     <a href="{% url 'announcements_list' %}">

@@ -1,0 +1,77 @@
+{% load i18n %}
+{% load threadedcomments_tags %}
+{% load fluent_comments_tags %}
+{% load dialogos_tags %}
+{% load agon_ratings_tags %}
+{% load bootstrap_tags %}
+{% load url from future %}
+{% load base_tags %}
+{% load guardian_tags %}
+{% load friendly_loader %}
+{% load mapstory_tags %}
+{% load flag_tags %}
+{% friendly_load avatar_tags %}
+<div class="col-md-2 side-column details">
+    <ul class="side-column-items layer-stats">
+        <li>
+            <i class="fa fa-star"></i>
+            {% if resource.rating %}
+                {{ resource.rating }} of 5 stars
+            {% else %}
+                Not yet rated
+            {% endif %}
+        </li>
+        <li><i class="fa fa-eye"></i> {{ resource.popular_count }} {% trans 'views' %}</li>
+    </ul>
+    <ul class="side-column-items layer-stats">
+        <li>{% include "favorite/_favorite.html" %}</li>
+        <li><i class="fa fa-flag"></i>
+            <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">Flag</a>
+        </li>
+        {% include '_flag_content.html' %}
+        {% if content_moderators in user.groups.all or user == resource.owner %}
+            {% include "layers/_meta_modal.html" %}
+        {% endif %}
+    </ul>
+    <div class="side-column-header">Edit this Layer</div>
+    {% if request.user.is_authenticated %}
+        {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
+        {% if "change_resourcebase" in perms %}
+            <a href='{% url "map-edit" %}?layer={{ resource.service_typename }}&mode=edit' target="_blank">
+                <button class="btn btn-block btn-detailpage">
+                    {% trans "Edit Features" %}
+                </button>
+            </a>
+        {% endif %}
+    {% endif %}
+    <a ng-controller="ImportController" style="cursor: pointer"
+       ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{ STATIC_URL }}', '{{ default_append_config }}', '{{ resource.typename }}', '{{ shapefile_link }}','{{ csv_link }}')">
+        <button class="btn btn-block btn-detailpage">
+            {% trans 'Append Data' %}
+        </button>
+    </a>
+    <a href="#metaForm" data-toggle="modal">
+        <button   class="btn btn-block btn-detailpage">
+            {% trans "Update Metadata" %}
+        </button>
+    </a>
+    <div class="side-column-header">Use this Layer</div>
+    <a href="{% url "new_map" %}?layer={{ resource.service_typename }}" target="_blank">
+        <button class="btn btn-block btn-detailpage">{% trans "Compose Story" %}</button>
+    </a> 
+    {% if resource.storeType != "remoteStore" %}
+        {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
+        {% if links %}
+            <a href="#" data-toggle="modal" data-target="#download-layer">
+                <button class="btn btn-block btn-detailpage">{% trans "Download Layer" %}
+                </button>
+            </a>   
+        {% endif %}
+        {% include "layers/_download_modal.html" %}
+    {% endif %}
+    <a href="{% url "layer_remove" resource.service_typename %}" class="">
+        <button class="btn btn-block btn-detailpage layer-delete">
+            <i class="fa fa-trash"></i> {% trans "Delete Layer" %}
+        </button>
+    </a>
+</div>

@@ -1,38 +1,26 @@
 /* --- Detail Pages --- */
 .btn-detailpage {
-  background-color: @gray30;
-  color: @white;
+  background-color: #f5f5f5;
+  color: #999;
   font-size: 0.8em;
   font-weight: 700;
-  border: 1px solid @gray30;
   border-radius: 4px;
   padding: 15px;
   margin: 10px;
-  &:hover, &:active{
-    background-color: @gray20;
-    color: @white;
-  }
 }
 
 .side-column-header {
   display: block;
-  padding: 5px 15px;
+  padding: 0 15px;
   margin: 10px;
-  background-color: @gray80;
-  color: @gray30;
   font-size: 0.8em;
-  border-radius: 4px;
+  border-bottom: 0.5px solid gainsboro;
   width: 100%;
   font-weight: 700;
 }
 
-.side-column a:hover {
-  color: @gray20;
-  text-decoration: underline;
-}
-
 ul.side-column-items {
-  padding-left: 0;
+  padding-left: 8px;
 }
 .details .side-column-items li {
   color: @gray40;
@@ -79,7 +67,7 @@ ul.side-column-items {
     cursor: pointer;
 }
 
-.overview, .summary, .Chapters, .Layers {
+.overview, .summary, .chapters, .story-layers {
     text-align: left;
     padding-bottom: 30px;
     .nav-pills>li.active>a{
@@ -94,7 +82,7 @@ ul.side-column-items {
   text-align: right;
 }
 
-.summary, .chapters, .layers{
+.summary, .chapters, .story-layers{
    @media @tablets, @desktops{
     border: 1px gainsboro solid;
     border-radius: 5px;
@@ -162,6 +150,7 @@ ul.side-column-items {
 #embedded_map.layer {
   width: 850px;
   height: 450px;
+  padding-top: 10px;
 }
 
 #embedded_map:-webkit-full-screen {
@@ -243,3 +232,26 @@ input[type=file]#id_thumbnail_image {
     color: grey;
     padding-top: 10px;
   }
+
+.layer-stats {
+  margin:  10px 0 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #eee;
+}
+
+.layer-delete {
+  margin-top: 40px;
+}
+
+.layer-comments .btn-primary {
+  background: #555;
+  border-color: #555;
+}
+
+#id_comment{
+  width: 90%;
+}
+
+input[name=post] {
+    margin-left: 95%;
+}
