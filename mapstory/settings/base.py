@@ -166,6 +166,8 @@ if ENABLE_SOCIAL_LOGIN:
 
     INSTALLED_APPS = INSTALLED_APPS + (
         'social.apps.django_app.default',
+        'provider',
+        'provider.oauth2',
     )
     AUTHENTICATION_BACKENDS = (
         'social.backends.google.GoogleOAuth2',
