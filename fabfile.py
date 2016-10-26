@@ -33,6 +33,19 @@ def dev():
     env.config = 'local'
 
 
+def demo():
+    """
+
+    Specifies the demo configuration
+
+    """
+
+    env.user = 'ubuntu'
+    env.hosts = ['demo.mapstory.org']
+    env.key_filename = '~/.ssh/mapstory-demo.pem'
+    env.config = 'demo'
+
+
 def beta():
 
     """
@@ -45,6 +58,19 @@ def beta():
     env.hosts = ['mapstory.beta.boundlessgeo.com']
     env.key_filename = '~/.ssh/mapstory-v2.pem'
     env.config = 'beta'
+
+
+def prod():
+    """
+
+    Specifies the prod configuration
+
+    """
+
+    env.user = 'ubuntu'
+    env.hosts = ['mapstory.org']
+    env.key_filename = '~/.ssh/mapstory-prod.pem'
+    env.config = 'prod'
 
 
 def map_loom_django_dev():
