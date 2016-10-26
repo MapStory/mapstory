@@ -103,8 +103,6 @@
     $scope.django = Django.all();
 
     $scope.search = function() {
-      $scope.query.limit = 100;
-      $scope.query.offset = 0;
       return query_api($scope.query).then(function(result) {
         return result;
       });

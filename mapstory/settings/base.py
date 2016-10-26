@@ -485,3 +485,6 @@ NOSE_ARGS = [
     '--cover-html',
 ]
 
+# Override number of results per page listed in the GeoNode search pages
+CLIENT_RESULTS_LIMIT = 30
+

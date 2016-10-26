@@ -176,8 +176,6 @@
     $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
 
     $scope.search = function() {
-      $scope.query.limit = 100;
-      $scope.query.offset = 0;
       return query_api($scope.query).then(function(result) {
         return result;
       });
@@ -330,8 +328,6 @@
     });
 
     $scope.search = function() {
-      $scope.query.limit = 100;
-      $scope.query.offset = 0;
       return query_api($scope.query).then(function(result) {
         return result;
       });
