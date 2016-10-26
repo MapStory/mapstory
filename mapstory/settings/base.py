@@ -344,7 +344,7 @@ if DATABASE_PASSWORD:
         }
     }
 
-    OGC_SERVER['default']['DATASTORE'] = 'datastore'
+    OGC_SERVER['default']['DATASTORE'] = 'geogig'
 
     UPLOADER = {
         'BACKEND': 'geonode.importer',
