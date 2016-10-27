@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.contrib.auth.models import Group
 from datetime import datetime
 from geonode.maps.models import Map, MapLayer
 import hashlib
@@ -13,6 +14,7 @@ from geonode.people.models import Profile
 from geonode.layers.models import Layer
 from geonode.groups.models import GroupProfile
 from geonode.maps.models import Map
+from geonode.people.models import profile_post_save
 from guardian.shortcuts import get_objects_for_user
 from django.contrib.sites.models import Site
 from PIL import Image
@@ -284,4 +286,12 @@ def get_group_journals(gProfile):
 
     return [item for sublist in journals for item in sublist]
 
+
+def mapstory_profile_post_save(instance, sender, **kwargs):
+    profile_post_save(instance, sender, **kwargs)
+    registered_group, created = Group.objects.get_or_create(name='registered')
+    instance.groups.add(registered_group)
+    Profile.objects.filter(id=instance.id).update()
+
 signals.post_save.connect(name_post_save, sender=Community)
+signals.post_save.connect(mapstory_profile_post_save, sender=Profile)
