@@ -80,12 +80,12 @@
              configuration_options: {
                  attributes: {
                      attribute: [
-                         {"name": "geometry",
+                         {   name: "geometry",
                              "binding": "com.vividsolutions.jts.geom.Point",
                              "minOccurs": 0,
                              "nillable": true
                          },
-                         {name: 'time',
+                         {   name: 'time',
                              binding: 'org.geotools.data.postgis.BigDate',
                              nillable: true,
                              minOccurs: 0
@@ -94,8 +94,9 @@
                  },
                  nativeCRS: 'EPSG:4326',
                  srs: 'EPSG:4326',
-                 store: {name: 'mapstory_data'},
+                 store: {name: 'mapstory_geogig'},
                  namespace: {'name': 'geonode'},
+                 configureTime: true
                 }
             };
 
@@ -133,10 +134,16 @@
 
      $scope.setDefaultPermissions = function(edit) {
 
-       $scope.layer.configuration_options.permissions = {'users': {'AnonymousUser': ['change_resourcebase', 'download_resourcebase', 'view_resourcebase']}};
+         $scope.layer.configuration_options.permissions = {
+             'users': {'AnonymousUser': ['change_layer_data', 'download_resourcebase', 'view_resourcebase']},
+             'groups': {'registered': ['change_layer_data', 'download_resourcebase', 'view_resourcebase']}
+         };
 
        if(edit === false) {
-         $scope.layer.configuration_options.permissions = {'users': {'AnonymousUser': ['download_resourcebase', 'view_resourcebase']}};
+           $scope.layer.configuration_options.permissions = {
+               'users': {'AnonymousUser': ['download_resourcebase', 'view_resourcebase']},
+               'groups': {'registered': ['download_resourcebase', 'view_resourcebase']}
+           };
        }
 
        $scope.layer.configuration_options.storeCreateGeogig = true;
