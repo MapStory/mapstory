@@ -97,6 +97,8 @@
     $scope.query = $location.search();
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
+    //remove is_published: true for a user's drafts to appear in their search
+    $scope.query.is_published = 'true';
     $scope.trending = [];
     $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
     $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
@@ -189,7 +191,7 @@
     //used in what's-hot for switching to featured and profile
     $scope.change_api = function(api_endpoint) {
       Configs.url = "/api/" + api_endpoint + "/";
-      $scope.query.limit = 100;
+      $scope.query.limit = CLIENT_RESULTS_LIMIT;
       $scope.query.offset = 0;
       return query_api($scope.query).then(function(result) {
         return result;
@@ -347,7 +349,6 @@
     }
 
     $scope.remove_all_queries = function(){
-      $scope.query = {limit: 100, offset: 0};
       console.log($scope.query);
       query_api($scope.query);
     }
@@ -370,9 +371,9 @@
       $('#tokenfield-region').tokenfield('setTokens', []);
       $('#tokenfield-keyword').tokenfield('setTokens', []);
       $scope.api_endpoint = '/api/owners/';
-      //stash filters for toggle-back
-      $scope.content_stash = $scope.query;
-      $scope.query = {limit: 100, offset: 0, q: $scope.query.q};
+      // //stash filters for toggle-back
+      // $scope.content_stash = $scope.query;
+      $scope.query = {limit: CLIENT_RESULTS_LIMIT, offset: 0, q: $scope.query.q};
     };
     // Make the user one active, content inactive
     $scope.toggle_user = function() {
@@ -381,10 +382,10 @@
       // clear the user search
       $('#tokenfield-interest').tokenfield('setTokens', []);
       $scope.api_endpoint = '/api/base/search/';
-      //removed is_published: true for a user's drafts to appear in their search
-      
+      // //stash filters for toggle-back
       //$scope.content_stash.q = $scope.query.q
-      $scope.query = $scope.content_stash || {limit: 100, offset: 0};
+      $scope.query = {is_published: true,limit: CLIENT_RESULTS_LIMIT, offset: 0, q: $scope.query.q};// set to $scope.content_stash;
+      //remove is_published: true for a user's drafts to appear in their search
     };
 
 // Configure new autocomplete
