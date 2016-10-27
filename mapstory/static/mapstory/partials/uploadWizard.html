@@ -99,12 +99,14 @@
                 <div class="modal-content-inner" ng-controller="UploaderController">
                     <div class="step-title">Before we begin</div>
                     <div class="smText text-center">Make sure that your dataset is ready to go.</div>
+                    <div class="smText text-center">Learn more about <a href="/getstarted">importing your data.</a></div>
+
                     <div class="row">
                         <div class="col-md-4 smText"><img ng-src="{{ staticUrl }}mapstory/img/file_types.png">Must be in CSV or zipped SHP format.
                         </div>
                         <div class="col-md-4 smText"><img ng-src="{{ staticUrl }}mapstory/img/clock.png">Must contain columns for time information.
                         </div>
-                        <div class="col-md-4 smText"><img ng-src="{{ staticUrl }}mapstory/img/table.png">Must have no blank cells.</div>
+                        <div class="col-md-4 smText"><img ng-src="{{ staticUrl }}mapstory/img/projection.png">Must be in a common projection such as 4326, 3857, or 900913.</div>
                     </div>
 
                     <div class="import-wizard-button">
