@@ -1,5 +1,6 @@
 import datetime
 from account.views import ConfirmEmailView
+from account.views import SignupView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.core.exceptions import PermissionDenied
@@ -48,6 +49,7 @@ from geonode.utils import default_map_config
 from mapstory.forms import DeactivateProfileForm, EditProfileForm
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm
 from mapstory.forms import OrganizationForm, OrganizationUpdateForm
+from mapstory.forms import SignupForm
 from geonode.security.views import _perms_info_json
 from geonode.documents.models import get_related_documents
 
@@ -83,6 +85,7 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.template import loader
 from health_check.plugins import plugin_dir
 
+
 class IndexView(TemplateView):
     template_name = 'index.html'
 
@@ -97,6 +100,21 @@ class IndexView(TemplateView):
         ctx['diary_entries'] = DiaryEntry.objects.filter(publish=True,show_on_main=True)[:8]
 
         return ctx
+
+
+class MapStorySignupView(SignupView):
+
+    form_class = SignupForm
+
+    def after_signup(self, form):
+        self.create_profile(form)
+        super(MapStorySignupView, self).after_signup(form)
+
+    def create_profile(self, form):
+        profile = self.created_user
+        profile.first_name = form.cleaned_data["first_name"]
+        profile.last_name = form.cleaned_data["last_name"]
+        profile.save()
 
 
 class DiaryListView(ListView):
