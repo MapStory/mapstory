@@ -1,7 +1,7 @@
 development.db
 downloaded
 geoserver
-# local_settings.py
+local_settings.py
 mapstory/static/maploom
 mapstory/static/style/fonts
 mapstory/static/style/site/font-awesome.css
