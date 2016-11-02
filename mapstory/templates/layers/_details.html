@@ -18,23 +18,22 @@
         <div class="container">
             <div ng-controller="geonode_search_controller" class="row">
                 <div style="text-align: left">
-                        <div> <h2>{{resource.title}}</h2> </div> 
-                        <div class="row">
-                            <div class="col-sm-9">
-                                <span class="small">{% trans "Imported by" %}                                          
-                                    <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">
-                                        {% if resource.owner.first_name != '' %}
-                                            {{ resource.owner.first_name }} {{ resource.owner.last_name }}
-                                        {% else %}
-                                            {{ resource.owner.username }}
-                                        {% endif %}
-                                    </a> on {{ resource.date|date }}
-                                </span>
-                            </div>
+                    <div> <h2>{{resource.title}}</h2> </div> 
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <span class="small">{% trans "Imported by" %}                                          
+                                <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">
+                                    {% if resource.owner.first_name != '' %}
+                                        {{ resource.owner.first_name }} {{ resource.owner.last_name }}
+                                    {% else %}
+                                        {{ resource.owner.username }}
+                                    {% endif %}
+                                </a> on {{ resource.date|date }}
+                            </span>
                         </div>
-                        <hr>
                     </div>
-                {{ resource.tags }}
+                    <hr>
+                </div>
                 <div class="col-lg-9">
                     <div id="embedded_map" class="mrg-btm layer">
                         <div id="preview_map"></div>
@@ -54,7 +53,6 @@
                                 <li><a href="#Related" data-toggle="tab" ng-click="query_category('{{ resource.category }}', '{{page}}');">Related</a></li>
                                 {% endif %}{% endcomment %}
                             </ul>
-
                             <div class="tab-content details">
                                 <div class="tab-pane active" id="Metadata">
                                     <table class="table table-condensed table-hover">
@@ -99,11 +97,12 @@
                                                 {% endif %}
                                             </td>
                                         </tr>
+                                        {% if content_moderators in user.groups.all or user == resource.owner %}
                                         <tr>                                            
                                             <td width="35%">Thumbnail</td>
                                             <td width="35%">
                                                 <a href="{{ thumbnail }}"><img ng-src="{{ thumbnail }}" src="{{ thumbnail }}" id="change-thumbnail-image"></a>
-                                            {% if content_moderators in user.groups.all or user == resource.owner %}
+
                                                 <form action="" method="post" enctype="multipart/form-data">
                                               {% csrf_token %}
                                               <p>{{ thumb_form.non_field_errors }}</p>
@@ -116,9 +115,9 @@
                                                 Change Image
                                               </button>
                                           </form>
-                                          {% endif %}
                                             </td>
                                         </tr>
+                                        {% endif %}
                                     </table>
                                 </div>
                                 <div class="tab-pane" id="Edits">
