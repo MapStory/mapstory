@@ -17,7 +17,11 @@
 {% endblock %}
 
 {% block body_class %}layers{% endblock %}
-{% block body_outer %}{% include "layers/_details.html" %}{% endblock %}
+
+{% block body_outer %}
+{% include "layers/_details.html" %}
+{% endblock %}
+
 {% block extra_script %}
 {% if GEOGIG_ENABLED and resource.link_set.geogig %}
     {% with "layers/_geogig_scripts.html" as geogig_scripts_template %}
@@ -38,50 +42,18 @@
         }).appendTo('#embedded_map');
         {% endautoescape %}
     });
-</script>
 
-{% if request.user.is_authenticated %}
-    {% user_rating_js request.user resource "layer" %}
-{% else %}
-    {% overall_rating resource 'layer' as the_layer_rating %}
-{% endif %}
-
-<script type="text/javascript">
-    $("#comment_submit_btn").click(function (event) {
-        $.ajax({
-            type: "POST",
-            url: $("#form_post_comment").attr('action'),
-            data: $("#form_post_comment").serialize(),
-            success: function () {
-                $('#form_post_comment_div').modal('hide');
-                $('#comments_section').load(window.location.pathname + ' #comments_section',
-                        function () {
-                            $(this).children().unwrap()
-                        })
-            }
-        });
-        return false;
-    });
     {% if request.GET.showMetadata == 'true'%}
         // prompt user to fill out metadata if the showMetadata GET param is true
         $(window).load(function () {
             $('#metaForm').modal('show');
         });
     {% endif %}
-    {% if resource.get_legend.link_type == 'json' %}
-        $.getJSON('{{resource.get_legend_url}}', function (data) {
-            var legend = data.layers[0].legend;
-            var items = [];
-            $.each(legend, function (key, dvalue) {
-                items.push('<li><img src="data:image/png;base64,' + dvalue.imageData + '">' + dvalue.label + '</li>');
-            });
-            $('<ul/>', {
-                'class': 'arcgis-legend',
-                html: items.join('')
-            }).appendTo('#legend_placeholder');
-        });
-    {% endif %}
 </script>
+{% if request.user.is_authenticated %}
+    {% user_rating_js request.user resource "layer" %}
+{% endif %}
+
 {% if GEONODE_SECURITY_ENABLED %}
     {% include "_permissions_form_js.html" %}
 {% endif %}

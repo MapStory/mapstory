@@ -1,9 +1,7 @@
 {% extends "site_base.html" %}
 
 {% block body_class %}diary{% endblock %}
-
 {% block middle %}
-
 <div class="container">
     <div class="row">
         {{ form.non_field_errors }}
@@ -30,13 +28,11 @@
         </form>
     </div>
 </div>
-
 {% endblock %}
-
 {% block extra_script %}
 {{ block.super }}
 <script>
-{# work-around django form output #}
-$("#entry-form .form-group.full input,textarea").addClass("form-control");
+    {# work-around django form output #}
+    $("#entry-form .form-group.full input,textarea").addClass("form-control");
 </script>
 {% endblock %}

@@ -138,9 +138,9 @@
                         <div class="col-md-3 search">
                             <div class="input-group">
                                 {% if HAYSTACK_SEARCH %}
-                                    <input id="quicksearch" type="text" class="form-control" name="q">
+                                    <input id="quicksearch" type="text" class="form-control" name="q" placeholder="Quick Search">
                                 {% else %}
-                                    <input id="quicksearch" type="text" class="form-control" name="keywords__slug__in">
+                                    <input id="quicksearch" type="text" class="form-control" name="keywords__slug__in" placeholder="Quick Search">
                                 {% endif %}
                                 <span class="input-group-btn">
                                 <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>

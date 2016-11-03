@@ -1,25 +1,17 @@
 {% extends "site_base.html" %}
-
 {% load mapstory_tags %}
-
 {% block body_class %}getpage{% endblock %}
-
 {% block middle %}
-
-
 <div class="row" style="text-align:center;padding:50px 0 10px 0">
     <h1 style="font-size:3em;text-align:center">{{ getpage.title }}</h1>
-
     <h3>{{ getpage.subtitle }} </h3>
     <hr>
 </div>
-
 
 {% for entry in getpage.published_entries %}
 <section class="slice" id="{{ entry.title }}"  onLoad="javascript:window.scrollBy(0, -50); console.log('hi');">
     <div class="container">
         <div class="row">
-
             <div class="col-sm-5">
                 {% if entry.video_embed_link %}
                 <iframe width="380" height="320" src="{{ entry.video_embed_link }}"></iframe>
@@ -28,7 +20,6 @@
                     <source src="/uploaded/{{ entry.video }}" type="video/{{ entry.extension }}">
                 </video>
                 {% endif %}
-
                 {# link entry.main_link entry.title 400 300 #}
             </div>
             <div class="col-sm-7">
@@ -36,23 +27,15 @@
                 <div>
                     <h2 style="font-size:14px;text-align:left;">
                         {{ entry.subtitle }} </h2>
-
                         {{ entry.html|safe }}
-
                     <hr style="margin-top:15px;margin-bottom:5px">
                     <h3 class="pull-right">
-
                         {% if entry.example_map %}
                             <a href="{% url 'map_detail' entry.example_map.id %}">{{ entry.example_map.title }}</a> |
-
                         {% endif %}
-
                         {% if entry.external_link %}
-
                             <a href="{{ entry.external_link }}">{{entry.external_link_title|default:"More"}}</a>
-
                         {% endif %}
-
                     </h3>
                 </div>
             </div>
@@ -62,11 +45,4 @@
 </section>
 <hr>
 {% endfor %}
-
-
-{% endblock %}
-{% block extra_script %}
-<script type="text/javascript">
-window.onload = setTimeout(function() {window.scrollBy(0, -50);},100);
-</script>
 {% endblock %}

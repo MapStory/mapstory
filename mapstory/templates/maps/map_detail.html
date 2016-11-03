@@ -9,94 +9,47 @@
 {% friendly_load avatar_tags %}
 
 {% block title %}{{ resource.title }} — {{ block.super }}{% endblock %}
-{% block head %}
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css" />
-
-{{ block.super }}
-<style type="text/css">
-div.timeline-highlight-point-decorator {
-    width: 10px;
-}
-#msmap .x-panel-tbar {
-    display: none;
-}
-.gxp-annotations-tip {
-    max-width: 200px;
-}
-.gxp-annotations-tip-body {
-    max-height: 375px;
-    max-width: 185px;
-    overflow-y: auto;
-}
-body.ms-fullscreen .gxp-annotations-tip-body {
-    max-width: 485px;
-}
-body.ms-fullscreen .gxp-annotations-tip {
-    max-width: 500px;
-}
-</style>
-{% endblock %}
 {% block body_class %}maps{% endblock %}
-{% block body_outer %}{% include "maps/_story_details.html" %}{% endblock %}
+{% block body_outer %}
+{% include "maps/_story_details.html" %}
+{% endblock %}
 {% block extra_script %}
-
 <script type="text/javascript">
-var app;
-$(document).ready(function() {
-{% autoescape off %}
-    $('<iframe>', {
-   {% if resource.chapters %}
-   src: '{%  url 'mapstory_view' resource.id %}',
-   {% else %}
-   src: '{%  url 'map-viewer' resource.id %}',
-   {% endif %}
-   id:  'myFrame',
-   allowfullscreen: 'true',
-   frameborder: 0,
-   style:'width: 100%; height: 100%;',
-   scrolling: 'no'
-   }).appendTo('#embedded_map');
-{% endautoescape %}
-});
-</script>
-
-{% if SOCIAL_BUTTONS %}
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-{% endif %}
-{% if request.user.is_authenticated %}
-      {% user_rating_js request.user resource "map" %}
-{% else %}
-      {% overall_rating resource "map" as the_map_rating %}
-{% endif %}
-<script type="text/javascript">
-
-{% if SOCIAL_BUTTONS %}
- (function() {
-   var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-   po.src = 'https://apis.google.com/js/plusone.js';
-   var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
- })();
-{% endif %}
-  $("#comment_submit_btn").click(function(event) {
-    $.ajax({
-      type: "POST",
-      url: $("#form_post_comment").attr('action'),
-      data: $("#form_post_comment").serialize(),
-      success: function() {
-        $('#form_post_comment_div').modal('hide');
-        $('#comments_section').load(window.location.pathname + ' #comments_section', 
-            function(){$(this).children().unwrap()})
-      }
-    });
-    return false;
+  var app;
+  $(document).ready(function() {
+  {% autoescape off %}
+      $('<iframe>', {
+     {% if resource.chapters %}
+     src: '{%  url 'mapstory_view' resource.id %}',
+     {% else %}
+     src: '{%  url 'map-viewer' resource.id %}',
+     {% endif %}
+     id:  'myFrame',
+     allowfullscreen: 'true',
+     frameborder: 0,
+     style:'width: 100%; height: 100%;',
+     scrolling: 'no'
+     }).appendTo('#embedded_map');
+  {% endautoescape %}
   });
 </script>
+{% if SOCIAL_BUTTONS %}
+  <div id="fb-root"></div>
+  <script>
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    (function() {
+       var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+       po.src = 'https://apis.google.com/js/plusone.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+     })();
+  </script>
+{% endif %}
 {% include "_permissions_form_js.html" %}
-{% endblock %}
+{% endblock extra_script %}

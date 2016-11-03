@@ -5,46 +5,45 @@
 {% load avatar_tags %}
 
 {% block middle %}
-
-    <section class="parallax">
-        <!-- TODO: This doesn't look very good -->
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});">
-            <div class="maskParent">
-                <div class="paralaxMask"></div>
-                <div class="paralaxText container" style="text-align:left;padding-bottom:0">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div style="padding:60px 0px 0px 10px; color:white;">
-                                <h4>{{ entry.date }}</h4>
-                                <h1>{{ entry.title }}</h1>
-                                <h4>by {{ entry.author.first_name }} {{ entry.author.last_name }}</h3>
-                            </div>
+<section class="parallax">
+    <!-- TODO: This doesn't look very good -->
+    <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0" style="background-image: url({{ images|by_name:'Africa' }});">
+        <div class="maskParent">
+            <div class="paralaxMask"></div>
+            <div class="paralaxText container" style="text-align:left;padding-bottom:0">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div style="padding:60px 0px 0px 10px; color:white;">
+                            <h4>{{ entry.date }}</h4>
+                            <h1>{{ entry.title }}</h1>
+                            <h4>by {{ entry.author.first_name }} {{ entry.author.last_name }}</h3>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-2 col-xs-6 qlink-right">
-            </div>
-            <div class="col-lg-10 col-xs-6 blog-content bl">
-                {{ entry.html|safe }}
-            </div>
-        </div>
     </div>
+</section>
+<div class="container">
     <div class="row">
-        <div class="col-sm-3"></div>
-        <div class="col-sm-6">
-            <article id="comments" class="tab-pane">
-                {% with entry as resource %}
-                    {% render_comment_list for resource %}
-                    {% if user.is_authenticated %}
-                        {% render_comment_form for resource %}
-                    {% endif %}
-                {% endwith %}
-            </article>
+        <div class="col-lg-2 col-xs-6 qlink-right">
+        </div>
+        <div class="col-lg-10 col-xs-6 blog-content bl">
+            {{ entry.html|safe }}
         </div>
     </div>
+</div>
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <article id="comments" class="tab-pane">
+            {% with entry as resource %}
+                {% render_comment_list for resource %}
+                {% if user.is_authenticated %}
+                    {% render_comment_form for resource %}
+                {% endif %}
+            {% endwith %}
+        </article>
+    </div>
+</div>
 {% endblock %}

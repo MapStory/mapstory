@@ -497,6 +497,22 @@
 
 .controller('detail_page_controller', function($compile, $scope, $http){
 
+  $("#comment_submit_btn").click(function (event) {
+      $.ajax({
+          type: "POST",
+          url: $("#form_post_comment").attr('action'),
+          data: $("#form_post_comment").serialize(),
+          success: function () {
+              $('#form_post_comment_div').modal('hide');
+              $('#comments_section').load(window.location.pathname + ' #comments_section',
+                      function () {
+                          $(this).children().unwrap()
+                      })
+          }
+      });
+      return false;
+    });
+
   $scope.toggleFullScreen = function() {
     var elem = document.getElementById('embedded_map');
     if (!document.webkitFullScreen || !document.mozFullScreen || !document.msFullscreenElement || !document.fullscreenElement) {
