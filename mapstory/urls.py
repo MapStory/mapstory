@@ -19,6 +19,7 @@ from mapstory.views import map_detail
 from mapstory.views import layer_detail, layer_detail_id, layer_create
 from mapstory.views import layer_remove, map_remove
 from mapstory.views import MapStoryConfirmEmailView
+from mapstory.views import MapStorySignupView
 from mapstory.notifications import notify_download, set_profile_notification
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
 from django.core.urlresolvers import reverse_lazy
@@ -57,6 +58,7 @@ urlpatterns = patterns('',
     url(r'^blog/comments/', include('fluent_comments.urls')),
 
     url(r'^$', IndexView.as_view(), name="index_view"),
+    url(r"^account/signup/$", MapStorySignupView.as_view(), name="account_signup"),
     url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))), #temp fix for social auth redirect
     url(r'^accounts/verify/$', 'mapstory.views.account_verify',  name='account_verify'),
     url(r"^account/confirm_email/(?P<key>\w+)/$", MapStoryConfirmEmailView.as_view(), name="account_confirm_email"),
