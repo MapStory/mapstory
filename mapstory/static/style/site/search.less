@@ -149,7 +149,7 @@
 .unpublished {
     position:absolute;
     top:10px;
-    right:20px;
+    right:45px;
     opacity: .6;
 }
 
@@ -178,57 +178,62 @@
 }
 
 /* entire container, keeps perspective */
-.flip-container {
-    perspective: 1000px;
-}
-    /* flip the pane when hovered */
-.flip-container.flip .flipper {
-    transform: rotateY(180deg);
-}
+// .flip-container {
+//     perspective: 1000px;
+// }
+
+/* flip the pane when hovered */
+// .flip-container.flip .flipper {
+//     transform: rotateY(180deg);
+// }
 
 /* flip speed goes here */
-.flipper {
-    transition: 0.6s;
-    transform-style: preserve-3d;
+// .flipper {
+//     transition: 0.6s;
+//     transform-style: preserve-3d;
 
-    position: relative;
-}
+//     position: relative;
+// }
 
 /* hide back of pane during swap */
-.front, .back {
-    backface-visibility: hidden;
-    padding: inherit;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
+// .front, .back {
+//     backface-visibility: hidden;
+//     padding: inherit;
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+// }
 
 /* front pane, placed above back */
-.front {
-    display: inline;
-    z-index: 2;
-    /* for firefox 31 */
-    transform: rotateY(0deg);
+// .front {
+//     display: inline;
+//     z-index: 2;
+//      //for firefox 31 
+//     transform: rotateY(0deg);
+// }
+
+.back{
+    display: none;
 }
 
-/* back, initially hidden pane */
-.back {
-    display: inline;
-    transform: rotateY(180deg);
-    .result-title h3{
-        margin: auto;
-        padding-bottom: 7px;
-        margin-bottom: 3px;
-        border-bottom: 1px lightgrey solid;
-    }
-}
+// /* back, initially hidden pane */
+// .back {
+//     display: inline;
+//     transform: rotateY(180deg);
+//     .result-title h3{
+//         margin: auto;
+//         padding-bottom: 7px;
+//         margin-bottom: 3px;
+//         border-bottom: 1px lightgrey solid;
+//     }
+// }
 
-.turn {
-    position: absolute;
-    bottom: 15px;
-    right: 18px;
-    color: gray;
-}
+// .turn {
+//     position: absolute;
+//     bottom: 15px;
+//     right: 18px;
+//     color: gray;
+// }
 
 .search-side {
     display:none;
