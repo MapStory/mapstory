@@ -33,22 +33,7 @@
     <div class="sidebar-content"><p>Volunteer Technical Community Member</p></div>
 {% endif %}
 
-<!-- notifications -->
-{% if user == profile %}
-    <div class="sidebar-header"><h3>user actions</h3></div>
-    <div class="sidebar-content">
-        <a href="{% url "edit_profile" user.username %}">{% trans "edit profile" %}</a>
-    </div>
-    <div class="sidebar-content">
-        <a href="{% url "profile_delete" user.username %}">{% trans "delete profile" %}</a>
-    </div>
-    <div class="sidebar-content">
-        <a href="{% url "account_password" %}">{% trans "change password" %}</a>
-    </div>
-    <div>
-        <a href="#" class="sidebar-content" data-toggle="modal" data-target="#notifications">notifications settings</a>
-    </div>
-{% endif %}
+
 
 <!-- contact profile -->
 <div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
@@ -88,3 +73,10 @@ TODO: change help text in /geonode/geonode/people/models.py to encourage correct
     </div>
 {% endif %}
 {% endcomment %}
+
+<!-- notifications -->
+{% if user == profile %}
+    <div style= "padding-top: 40px">
+        <button class="btn btn-danger"><a href="{% url "profile_delete" user.username %}">{% trans "delete profile" %}</a> </button>
+    </div>
+{% endif %}

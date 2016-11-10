@@ -6,21 +6,17 @@
 
 <ul class="nav nav-tabs">
     <li class="active">
-        <a href="#stories_list" data-toggle="tab"
-            ng-click="query={q: query.q}; query.type__in='mapstory'; query.owner__username__in='{{ profile.username }}'; search();">
+        <a href="#stories_list" data-toggle="tab">
             <div class="counter">
-            {% if user == profile %} <span ng-bind="total_maps"></span>
-            {% else %} <span ng-bind="public_maps"></span>{% endif %}
+            <span ng-bind="total_maps"></span>
             </div>
             {% trans "Stories" %} 
         </a>
     </li>
     <li>
-        <a href="#layers_list" data-toggle="tab"
-           ng-click="query={q: query.q}; query.type__in='layer'; query.owner__username__in='{{ profile.username }}'; search();">
+        <a href="#layers_list" data-toggle="tab">
             <div class="counter">
-            {% if user == profile %} <span ng-bind="total_layers"></span>
-            {% else %} <span ng-bind="public_layers"></span>{% endif %}
+            <span ng-bind="total_layers"></span>
             </div>
             {% trans "Layers" %} 
         </a>
