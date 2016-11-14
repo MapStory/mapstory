@@ -46,3 +46,6 @@ python-resize-image==1.1.10
 
 # Testing dependencies
 coverage
+
+# Security Updates
+pycsw==2.0.2
