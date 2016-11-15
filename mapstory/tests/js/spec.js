@@ -20,7 +20,6 @@ function elementFound(locator) {
 	return element(locator).isPresent();
 }
 
-
 var EC = protractor.ExpectedConditions;
 
 /**
@@ -47,7 +46,7 @@ describe('Mapstory Home', function() {
 		// Fetch the elements
 	});
 
-	xit('should check for "error #111"', function() {
+	xit('> should check for "error #111"', function() {
 		// Wait for login icon to show
 		expect(page.loginIcon.isDisplayed()).toBeTruthy();
 		page.loginIcon.click();
@@ -90,11 +89,11 @@ describe('Mapstory Home', function() {
 		page = require('./home.po');
 	});
 
-	it('should have a title', function() {
+	it('> should have a title', function() {
 		expect(browser.getTitle()).toEqual('MapStory');
 	});
 
-	it('should have an icon', function() {
+	it('> should have an icon', function() {
 		expect(page.loginIcon.isPresent()).toBeTruthy();
 		expect(page.loginIcon.isDisplayed()).toBeTruthy();
 	});
@@ -102,7 +101,7 @@ describe('Mapstory Home', function() {
 	/**
 	 * Login Button
 	 */
-	it('shows the Login Form', function() {
+	it('> shows the Login Form', function() {
 		page.loginIcon.isDisplayed().then(function(displayed){
 			if(displayed == false) {
 				page.logout();
@@ -138,8 +137,9 @@ describe('Mapstory Home', function() {
 				expect(elementFound(by.css('label[for="username"]'))).toBe(true);
 			});
 
-			it('should have a close button', function() {
-				expect(page.loginIcon.isDisplayed()).toBeTruthy();
+			it('> should have a close button', function() {
+				// expect(page.loginIcon.isDisplayed()).toBeTruthy();
+				expect(page.loginIcon.waitReady()).toBeTruthy();
 				page.loginIcon.click();
 				expect(page.loginForm.waitReady()).toBeTruthy();
 				expect(page.login_close_button.isDisplayed).toBeTruthy();
@@ -147,7 +147,7 @@ describe('Mapstory Home', function() {
 				// expect(element(by.css('label[for="username"]')).isDisplayed()).toBeFalsy();
 			});
 
-			it('should require a username and password', function() {
+			it('> should require a username and password', function() {
 				expect(page.loginIcon.isDisplayed()).toBeTruthy();
 				page.loginIcon.click();
 				expect(page.loginForm.waitReady()).toBeTruthy();
@@ -157,16 +157,16 @@ describe('Mapstory Home', function() {
 
 			});
 
-			xit('should deny wrong credentials', function() {});
+			xit('> should deny wrong credentials', function() {});
 
-			xit('should filter bad text input', function() {});
+			xit('> should filter bad text input', function() {});
 		});
 
 		/**
 		 * The Sign up Form
 		 */
 		describe('> The "Sign up" tab', function() {
-			it('changes to the signup form when clicked', function() {
+			it('> changes to the signup form when clicked', function() {
 				expect(page.loginIcon.isDisplayed()).toBeTruthy();
 				page.loginIcon.click();
 				expect(page.loginForm.waitReady()).toBeTruthy();
@@ -181,12 +181,12 @@ describe('Mapstory Home', function() {
 				// signupButton.click();
 			});
 
-			xit('requires the user to agree the terms and conditions', function() {
+			xit('> requires the user to agree the terms and conditions', function() {
 
 			});
 		});
 
-		it('should log in admin', function() {
+		it('> should log in admin', function() {
 
 			page.loginIcon.click();
 			expect(page.loginForm.isPresent()).toBe(true);
@@ -216,7 +216,7 @@ describe('Mapstory Home', function() {
 	 * Navigation Bar
 	 */
 	describe('> The "Navigation Menu"', function() {
-		it('should navigate to "Explore"', function() {
+		it('> should navigate to "Explore"', function() {
 			expect(element(by.linkText('Explore')).isDisplayed()).toBe(true);
 			element(by.linkText('Explore')).click();
 			expect(elementFound(by.css('#content-search'))).toBe(true);
@@ -228,19 +228,15 @@ describe('Mapstory Home', function() {
 		describe('> "Create" option', function() {
 			beforeEach(function() {});
 
-			it('has a dropdown', function() {
+			it('> has a dropdown', function() {
 				expect(page.isLoggedIn()).toBeTruthy();
 				expect(page.navBar.isDisplayed()).toBe(true);
 				page.menuCreate.click();
-				expect(element(by.linkText("Upload Layer")).isDisplayed()).toBe(true);
-				expect(element(by.linkText("Create Layer")).isDisplayed()).toBe(true);
-				expect(element(by.linkText("Upload Icons")).isDisplayed()).toBe(true);
-
-				var composeStory = page.navBar.element(by.linkText("Compose Story"));
-				expect(composeStory.isDisplayed()).toBe(true);
+				expect(page.importLayerLink.isDisplayed()).toBe(true);
+				expect(page.createLayerLink.isDisplayed()).toBe(true);
+				expect(page.uploadIconsLink.isDisplayed()).toBe(true);
+				expect(page.composeStoryLink.isDisplayed()).toBe(true);
 			});
-
-
 
 			/**
 			 * Upload Layer Form
@@ -249,11 +245,10 @@ describe('Mapstory Home', function() {
 
 				beforeEach(function() {
 					element(by.linkText('Create')).click();
-					var uploadLayerLink = element(by.linkText("Upload Layer"));
-					uploadLayerLink.click();
+					page.importLayerLink.click();
 				});
 
-				it("has a 'Close' button", function() {
+				it("> has a 'Close' button", function() {
 					var closeButton = element(by.css('i.fa.fa-times.pointer.import-wizard-icon'));
 					expect(closeButton.isDisplayed()).toBe(true);
 					closeButton.click();
@@ -263,18 +258,9 @@ describe('Mapstory Home', function() {
 				 * Step 1
 				 */
 				describe("> Step 1", function() {
-					it("> should have a Let's Begin button", function() {
-						expect(page.step1.waitReady()).toBeTruthy();
-
-						var title = page.step1.element(by.css('.step-title'));
-						title.getText().then(function(text) {
-							expect(text).toEqual('Before we begin');
-						});
-
-						var button = page.step1.element(by.buttonText("Let's Begin!"));
-						expect(button.isDisplayed()).toBeTruthy();
+					it("> should complete step 1", function() {
+						page.doStep1();
 					});
-
 
 					xit("> can close the form", function() {
 
@@ -288,36 +274,25 @@ describe('Mapstory Home', function() {
 				/**
 				 * Step 2
 				 */
-				xdescribe("> Step 2", function() {
-					it("follows step 1", function() {
+				describe("> Step 2", function() {
+					it("should complete step 2", function() {
+						page.doStep1();
+						page.doStep2();
+					});
+
+					it("> can go to next step", function() {
 
 					});
 
-					it("can go back", function() {
+					it("> can close form", function() {
 
 					});
 
-					it("can select a file", function() {
+					it("> highlights the correct step", function() {
 
 					});
 
-					it("can go to next step", function() {
-
-					});
-
-					it("can close form", function() {
-
-					});
-
-					it("highlights the correct step", function() {
-
-					});
-
-					it("should not continue without file", function() {
-
-					});
-
-					it("should upload a file", function() {
+					it("> should not continue without file", function() {
 
 					});
 				});
@@ -325,44 +300,63 @@ describe('Mapstory Home', function() {
 				/**
 				 * Step 3
 				 */
-				xdescribe("> Step 3", function() {
-					it("should edit title", function() {
+				describe("> Step 3", function() {
+					xit("should edit title", function() {
 
 					});
 
-					it("should continue to next step", function() {
-
+					it("> should complete step 3", function() {
+						page.doStep1();
+						page.doStep2();
+						page.doStep3();
 					});
 				});
 
 				/**
 				 * Step 4
 				 */
-				xdescribe("> Step 4", function() {
-					it("should configure time", function() {
-
+				describe("> Step 4", function() {
+					it("should complete step 4", function() {
+						page.doStep1();
+						page.doStep2();
+						page.doStep3();
+						page.doStep4();
 					});
 				});
 
 				/**
 				 * Step 5
 				 */
-				xdescribe("> Step 5", function() {
-					it("should set community settings", function() {
+				describe("> Step 5", function() {
+					xit("should set community settings", function() {
 
 					});
+
+					it("> should complete step 5", function() {
+						page.doStep1();
+						page.doStep2();
+						page.doStep3();
+						page.doStep4();
+						page.doStep5();
+					});
+
 				});
 
 				/**
 				 * Step 6
 				 */
-				xdescribe("> Step 6", function() {
-					it("should import layer", function() {
-
+				describe("> Step 6", function() {
+					it("> should complete step 6", function() {
+						page.doStep1();
+						page.doStep2();
+						page.doStep3();
+						page.doStep4();
+						page.doStep5();
+						page.doStep6();
 					});
 				});
 
-				xit('should show summary when succesful', function() {
+				xit('> should show summary when succesful', function() {
 
 				});
 			});
@@ -380,11 +374,11 @@ describe('Mapstory Home', function() {
 			});
 		});
 
-		it('should navigate to "Get Started"', function() {
+		it('> should navigate to "Get Started"', function() {
 			expect(element(by.linkText('Get Started')).isDisplayed()).toBe(true);
 		});
 
-		it('should navigate to "Journal"', function() {
+		it('> should navigate to "Journal"', function() {
 			expect(element(by.linkText('Journal')).isDisplayed()).toBe(true);
 		});
 	});
@@ -393,11 +387,11 @@ describe('Mapstory Home', function() {
 	 * The search bar
 	 */
 	xdescribe('> The "Search bar"', function() {
-		it("should show", function() {
+		it("> should show", function() {
 
 		});
 
-		it("has a button", function() {
+		it("> has a button", function() {
 
 		});
 

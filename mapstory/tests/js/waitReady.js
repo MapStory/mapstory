@@ -1,4 +1,6 @@
 /**
+ * Source: https://gist.github.com/elgalu/2939aad2b2e31418c1bb
+ *
  * Actively wait for an element present and displayed up to specTimeoutMs
  * ignoring useless webdriver errors like StaleElementError.
  *
