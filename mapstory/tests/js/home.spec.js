@@ -46,6 +46,9 @@ describe('Mapstory Home', function() {
 		// Fetch the elements
 	});
 
+	/**
+	 * Error 111 tests
+	 */
 	xit('> should check for "error #111"', function() {
 		// Wait for login icon to show
 		expect(page.loginIcon.isDisplayed()).toBeTruthy();
@@ -112,6 +115,7 @@ describe('Mapstory Home', function() {
 			waitFor(page.loginForm);
 		});
 	});
+
 	/**
 	 * The Auth Form
 	 */
@@ -222,26 +226,63 @@ describe('Mapstory Home', function() {
 			expect(elementFound(by.css('#content-search'))).toBe(true);
 		});
 
+		it('> should navigate to "Get Started"', function() {
+			expect(element(by.linkText('Get Started')).isDisplayed()).toBe(true);
+		});
+
+		it('> should navigate to "Journal"', function() {
+			expect(element(by.linkText('Journal')).isDisplayed()).toBe(true);
+		});
+
 		/**
 		 * Create
 		 */
-		describe('> "Create" option', function() {
+		describe('> "Create" menu option', function() {
 			beforeEach(function() {});
 
 			it('> has a dropdown', function() {
 				expect(page.isLoggedIn()).toBeTruthy();
 				expect(page.navBar.isDisplayed()).toBe(true);
 				page.menuCreate.click();
+
+				// The links inside the dropdown
 				expect(page.importLayerLink.isDisplayed()).toBe(true);
 				expect(page.createLayerLink.isDisplayed()).toBe(true);
 				expect(page.uploadIconsLink.isDisplayed()).toBe(true);
 				expect(page.composeStoryLink.isDisplayed()).toBe(true);
 			});
 
+			it("> should show 'Create Layer'", function() {
+				expect(page.isLoggedIn()).toBeTruthy();
+				expect(page.navBar.isDisplayed()).toBe(true);
+				page.menuCreate.click();
+
+				expect(page.createLayerLink.waitReady()).toBeTruthy();
+				page.createLayerLink.click();
+			});
+
+			it("> should show 'Upload Icons'", function() {
+				expect(page.isLoggedIn()).toBeTruthy();
+				expect(page.navBar.isDisplayed()).toBe(true);
+				page.menuCreate.click();
+
+				expect(page.uploadIconsLink.waitReady()).toBeTruthy();
+				page.uploadIconsLink.click();
+			});
+
+			it("> should show 'Compose Story'", function() {
+				expect(page.isLoggedIn()).toBeTruthy();
+				expect(page.navBar.isDisplayed()).toBe(true);
+				page.menuCreate.click();
+
+				expect(page.composeStoryLink.waitReady()).toBeTruthy();
+				page.composeStoryLink.click();
+			});
+
 			/**
-			 * Upload Layer Form
+			 * Import Layer Form
 			 */
-			describe('> Upload Layer form', function() {
+			describe('> Import Layer form', function() {
 
 				beforeEach(function() {
 					element(by.linkText('Create')).click();
@@ -360,26 +401,6 @@ describe('Mapstory Home', function() {
 
 				});
 			});
-
-			xit("should show 'Create Layer'", function() {
-
-			});
-
-			xit("should show 'Upload Icons'", function() {
-
-			});
-
-			xit("should show 'Compose Story'", function() {
-
-			});
-		});
-
-		it('> should navigate to "Get Started"', function() {
-			expect(element(by.linkText('Get Started')).isDisplayed()).toBe(true);
-		});
-
-		it('> should navigate to "Journal"', function() {
-			expect(element(by.linkText('Journal')).isDisplayed()).toBe(true);
 		});
 	});
 
