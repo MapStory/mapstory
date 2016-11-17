@@ -27,6 +27,7 @@
 {% include 'viewer/story_viewer.js' %}
 <link href="{{ STATIC_URL }}style/themes/{{THEME}}/maps-theme.css" rel="stylesheet" />
 <div ng-app="viewer" ng-controller="viewerController as viewer" id="story-viewer">
+    <div class="st-legend"></div>
     <div class="sidebar" id="sidebar">
         <div class="viewerTopNav">
             <a target="_blank" href="{% url "home" %}">
