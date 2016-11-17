@@ -339,17 +339,16 @@
   };
 
   function getUploads(query) {
-
-      if (query == null) {
-          query = {offset: $scope.offset, limit: $scope.limit, user__username: $scope.user}
-      }
-
-      UploadedData.query(query).$promise.then(function(data) {
-          $scope.uploads = data.objects;
-          $scope.offset = data.meta.offset;
-          $scope.totalItems = data.meta.total_count;
-          $scope.loading = false;
-      });
+    if (query == null) {
+      query = {offset: $scope.offset, limit: $scope.limit, user__username: $scope.user}
+    }
+    
+    UploadedData.query(query).$promise.then(function(data) {
+      $scope.uploads = data.objects;
+      $scope.offset = data.meta.offset;
+      $scope.totalItems = data.meta.total_count;
+      $scope.loading = false;
+    });
   }
 
   $rootScope.$on('upload:complete', function(event, args) {

@@ -16,13 +16,13 @@
 <div ng-controller="detail_page_controller">
     <section class="slice" id="dashboard">
         <div class="container">
-            <div ng-controller="geonode_search_controller" class="row">
+            <div class="row">
                 <div style="text-align: left">
                     <div> <h2>{{resource.title}}</h2> </div> 
                     <div class="row">
                         <div class="col-sm-9">
                             <span class="small">{% trans "Imported by" %}                                          
-                                <a ng-href="/storyteller/{{ resource.owner.username }}" target="_blank">
+                                <a ng-href="{% url 'profile_detail' slug=resource.owner.username %}" target="_blank">
                                     {% if resource.owner.first_name != '' %}
                                         {{ resource.owner.first_name }} {{ resource.owner.last_name }}
                                     {% else %}

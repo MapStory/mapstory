@@ -19,6 +19,7 @@
                     {% trans "version" %} {{ VERSION }}
                 </div>
                 <div class="col-sm-4">
+                {% comment %}
                     <label class="hidden">{% trans "Language" %}</label>
                     {% if csrf_token != "NOTPROVIDED" %}
                         {% get_current_language as LANGUAGE %}
@@ -33,6 +34,7 @@
                             </select>
                         </form>
                     {% endif %}
+                {% endcomment %}
                 </div>
             </div>
         </div>
