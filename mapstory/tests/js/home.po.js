@@ -157,6 +157,9 @@ var home_page = function() {
 		expect(importButton.waitReady()).toBeTruthy();
 		importButton.click();
 
+		// Wait about 7 secs
+		browser.driver.sleep(7233);
+
 		var finishButton = this.step6.element(by.buttonText('View Layer'));
 		expect(finishButton.waitReady()).toBeTruthy();
 
