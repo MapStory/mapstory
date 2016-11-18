@@ -66,7 +66,6 @@ urlpatterns = patterns('',
     url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
     url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
 
-    url(r'^story/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'),
     url(r'^story/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
     url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
 
@@ -135,7 +134,8 @@ urlpatterns += patterns("",
 urlpatterns += importer_urlpatterns
 
 #this is last to catch reverse lookup from geonode views
-urlpatterns += patterns("",url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"))
+urlpatterns += patterns("",url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
+                            url(r'^story/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'))
 
 
 if settings.DEBUG:

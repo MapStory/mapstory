@@ -60,6 +60,15 @@
           extent[1] = Math.max(-20037508.34, Math.min(extent[1], 20037508.34));
           extent[3] = Math.max(-20037508.34, Math.min(extent[3], 20037508.34));
 
+          var isInvalid = extent.some(function(a){
+            return isNaN(a);
+
+          });
+
+          if(isInvalid){
+            extent = a.get('latlonBBOX');
+          }
+
           map.getView().fitExtent(extent, map.getSize());
 
           self.storyMap.setCenter(map.getView().getCenter());

@@ -44,7 +44,7 @@
                                     <div class="clearfix search-results">
                                         <ul>
                                             {% verbatim %}
-                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4 flip-container resource-{{ item.id }}" ng-if="(item.is_published == true || item.owner__username == django.user)">
+                                            <li ng-repeat="item in stories" resource-id="{{ item.id }}" class="col-md-4 flip-container resource-{{ item.id }}">
                                             {% endverbatim %}
                                             {% include 'search/_result_content.html' %}
                                         </ul>
@@ -58,7 +58,7 @@
                                     <div class="clearfix search-results">
                                         <ul>
                                             {% verbatim %}
-                                            <li ng-repeat="item in results" resource-id="{{ item.id }}" class="col-md-4 flip-container resource-{{ item.id }}" ng-if="(item.is_published == true || item.owner__username == django.user)">
+                                            <li ng-repeat="item in layers" resource-id="{{ item.id }}" class="col-md-4 flip-container resource-{{ item.id }}" >
                                             {% endverbatim %}
                                             {% include 'search/_result_content.html' %}</ul>
                                     </div>
