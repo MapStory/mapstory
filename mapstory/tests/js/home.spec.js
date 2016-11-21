@@ -215,9 +215,10 @@ describe('Mapstory Home', function() {
 		});
 
 		it('> should log in admin', function() {
-
-			page.logout();
-
+			if(page.userAvatar.isPresent() == true) {
+				page.logout();
+			}
+			expect(page.loginIcon.waitReady()).toBeTruthy();
 			page.loginIcon.click();
 			expect(page.loginForm.isPresent()).toBe(true);
 			browser.wait(EC.visibilityOf(page.loginForm), 5000);

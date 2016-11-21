@@ -36,11 +36,8 @@ describe('Composer', function() {
 
 		expect(home.composeStoryLink.waitReady()).toBeTruthy();
 		home.composeStoryLink.click();
-
-
-
 		browser.wait(4000);
-		browser.pause();
+		// browser.pause();
 		// expect(browser.getCurrentUrl()).toContain(browser.baseUrl + '/maps/new');
 
 	});
@@ -51,7 +48,7 @@ describe('Composer', function() {
 		// browser.waitForAngular();
 		// browser.wait(4000);
 
-		browser.pause();
+		// browser.pause();
 		// var welcomeTour = element(by.css('#welcomeTour'));
 		// browser.wait(1000);
 		// expect(welcomeTour.waitReady()).toBeTruthy();
