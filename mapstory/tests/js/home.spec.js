@@ -20,6 +20,7 @@ function elementFound(locator) {
 	return element(locator).isPresent();
 }
 
+
 var EC = protractor.ExpectedConditions;
 
 /**
@@ -170,27 +171,52 @@ describe('Mapstory Home', function() {
 		 * The Sign up Form
 		 */
 		describe('> The "Sign up" tab', function() {
-			it('> changes to the signup form when clicked', function() {
+			xit('> changes to the signup form when clicked', function() {
+
+			});
+
+			xit('> requires the user to agree the terms and conditions', function() {
+
+			});
+
+			it('> should register a new user', function() {
 				expect(page.loginIcon.isDisplayed()).toBeTruthy();
 				page.loginIcon.click();
 				expect(page.loginForm.waitReady()).toBeTruthy();
 
 				var button = element(by.linkText('Sign Up'));
 				expect(button.waitReady()).toBeTruthy();
-				expect(button.isDisplayed()).toBeTruthy();
 				button.click();
 
-				expect(elementFound(by.css('#join-mapstory-button'))).toBe(true);
-				// var signupButton = element(by.partialButtonText('Sign in'));
-				// signupButton.click();
-			});
+				// Creates a random username
+				var userid = page.makeid(5);
+				var usernameInput = element(by.css('#id_username'));
+				var nameInput = element(by.css('#id_first_name'));
+				var lastNameInput = element(by.css('#id_last_name'));
+				var emailInput = element(by.css('#id_email'));
+				var passwordInput = element(by.css('#id_password'));
+				var confirmPasswordInput = element(by.css('#password_confirm'));
 
-			xit('> requires the user to agree the terms and conditions', function() {
+				expect(usernameInput.waitReady()).toBeTruthy();
 
+				usernameInput.sendKeys(userid);
+				nameInput.sendKeys('Moofasa');
+				lastNameInput.sendKeys('Test');
+				emailInput.sendKeys('josellausas+mapstory@gmail.com');
+				passwordInput.sendKeys('testPassword2001!');
+				confirmPasswordInput.sendKeys('testPassword2001!');
+
+				var termsCheckbox = element(by.model('agreed'));
+				termsCheckbox.click();
+
+				element(by.buttonText('Join')).click();
+				// TODO: Logout
 			});
 		});
 
 		it('> should log in admin', function() {
+
+			page.logout();
 
 			page.loginIcon.click();
 			expect(page.loginForm.isPresent()).toBe(true);
