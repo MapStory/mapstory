@@ -21,29 +21,15 @@ from socket import error as socket_error
 from geoserver.catalog import FailedRequestError
 from geonode.geoserver.helpers import gs_catalog
 from django import db
-from .importers import GeoServerLayerCreator
+from ..importers import GeoServerLayerCreator
 from osgeo_importer.utils import UploadError
 from geonode.groups.models import GroupProfile
 from geonode.contrib.collections.models import Collection
 from datetime import datetime
-from .models import Sponsor
+from ..models import Sponsor
+from .AdminClient import AdminClient
 
 User = get_user_model()
-
-
-class AdminClient(Client):
-
-    def login_as_admin(self, username='admin', password='admin'):
-        """
-        Convenience method to login admin.
-        """
-        return self.login(**{'username': username, 'password': password})
-
-    def login_as_non_admin(self, username='non_admin', password='non_admin'):
-        """
-        Convenience method to login a non-admin.
-        """
-        return self.login(**{'username': username, 'password': password})
 
 class MapStoryTestMixin(TestCase):
 
@@ -71,7 +57,6 @@ class MapStoryTests(MapStoryTestMixin):
     """
     Basic checks to make sure pages load, etc.
     """
-
     def setUp(self):
         self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
         self.non_admin_username, self.non_admin_password = self.create_user('non_admin', 'non_admin')
@@ -90,7 +75,6 @@ class MapStoryTests(MapStoryTestMixin):
         """
         Ensure the home page returns a 200.
         """
-
         c = Client()
         response = c.get(reverse('index_view'))
         self.assertEqual(response.status_code, 200)
@@ -100,7 +84,6 @@ class MapStoryTests(MapStoryTestMixin):
         """
         Ensure the search page returns a 200.
         """
-
         c = Client()
         response = c.get(reverse('search'))
         self.assertEqual(response.status_code, 200)
@@ -110,7 +93,6 @@ class MapStoryTests(MapStoryTestMixin):
         """
         Ensure the journal functionality works.
         """
-
         c = AdminClient()
         response = c.get(reverse('diary'))
         self.assertEqual(response.status_code, 200)
