@@ -606,7 +606,7 @@ msgstr ""
 msgid "Your Data"
 msgstr ""
 
-#: templates/mapstory/diary.html:96
+#: templates/mapstory/journal.html:96
 msgid "Edit"
 msgstr ""
 

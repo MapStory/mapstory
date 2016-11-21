@@ -3,14 +3,12 @@ from account.views import ConfirmEmailView
 from account.views import SignupView
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.http.request import validate_host
 from django.shortcuts import render_to_response, render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from django.views.generic.edit import CreateView, ModelFormMixin, UpdateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.template import RequestContext
@@ -27,10 +25,10 @@ from httplib import HTTPConnection, HTTPSConnection
 from mapstory import tasks
 from mapstory.importers import GeoServerLayerCreator
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
-from mapstory.models import get_sponsors, get_images, get_featured_groups, get_group_journals
+from mapstory.models import get_sponsors, get_images, get_featured_groups
 from mapstory.models import GetPage
 from mapstory.models import NewsItem
-from mapstory.models import DiaryEntry
+from journal.models import JournalEntry
 from mapstory.models import Leader
 from mapstory.models import ThumbnailImage, ThumbnailImageForm
 from icon_commons.models import Icon
@@ -85,6 +83,8 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.template import loader
 from health_check.plugins import plugin_dir
 
+from journal.models import get_group_journals
+
 
 class IndexView(TemplateView):
     template_name = 'index.html'
@@ -97,7 +97,7 @@ class IndexView(TemplateView):
         ctx['news_items'] = news_items[:3]
         ctx['images'] = get_images()
         # for now, limit to max of 8.
-        ctx['diary_entries'] = DiaryEntry.objects.filter(publish=True,show_on_main=True)[:8]
+        ctx['journal_entries'] = JournalEntry.objects.filter(publish=True, show_on_main=True)[:8]
 
         return ctx
 
@@ -115,72 +115,6 @@ class MapStorySignupView(SignupView):
         profile.first_name = form.cleaned_data["first_name"]
         profile.last_name = form.cleaned_data["last_name"]
         profile.save()
-
-
-class DiaryListView(ListView):
-    template_name = 'journal/diary.html'
-    context_object_name = 'entries'
-    paginate_by = 10
-
-    def get_queryset(self):
-        return DiaryEntry.objects.filter(publish=True).order_by('-date')
-
-    def get_context_data(self, **kwargs):
-        ctx = super(DiaryListView, self).get_context_data(**kwargs)
-        ctx['images'] = get_images()
-        user = self.request.user
-        if user.is_authenticated():
-            ctx['drafts'] = DiaryEntry.objects.filter(author=user, publish=False)
-        return ctx
-
-
-class DiaryPermissionMixin(object):
-    need_publish = False
-
-    def get_object(self, *args, **kwargs):
-        obj = super(DiaryPermissionMixin, self).get_object(*args, **kwargs)
-        user = self.request.user
-        if self.need_publish:
-            can_view = obj.publish
-        else:
-            can_view = user.is_superuser or obj.author == self.request.user
-        if not can_view:
-            raise PermissionDenied()
-        return obj
-
-
-class DiaryDetailView(DiaryPermissionMixin, DetailView):
-    template_name = 'journal/diary_detail.html'
-    model = DiaryEntry
-    need_publish = True
-    context_object_name = 'entry'
-
-    def get_context_data(self, **kwargs):
-        ctx = super(DiaryDetailView, self).get_context_data(**kwargs)
-        ctx['images'] = get_images()
-        return ctx
-
-
-class DiaryEditMixin(object):
-    template_name = 'journal/diary_edit.html'
-    model = DiaryEntry
-    fields = ['title', 'content', 'publish']
-
-    def get_success_url(self):
-        return reverse('diary')
-
-
-class DiaryCreateView(DiaryEditMixin, CreateView):
-
-    def form_valid(self, form):
-        self.object = form.save(commit=False)
-        self.object.author = self.request.user
-        self.object.save()
-        return super(ModelFormMixin, self).form_valid(form)
-
-
-class DiaryUpdateView(DiaryEditMixin, DiaryPermissionMixin, UpdateView):
-    pass
 
 
 class GetPageView(DetailView):
@@ -204,7 +138,9 @@ class ProfileDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ProfileDetail, self).get_context_data(**kwargs)
-        ctx['diary_entries'] = DiaryEntry.objects.filter(author=self.object).order_by('-date')
+        ctx['journal_entries'] = JournalEntry.objects.filter(author=self.object).order_by('-date')
+        ctx['journal_entries_total'] = JournalEntry.objects.filter(author=self.object).count()
+        ctx['journal_entries_published'] = JournalEntry.objects.filter(author=self.object, publish=True).count()
         ctx['favorites'] = Favorite.objects.filter(user=self.object).order_by('-created_on')
         ctx['icons'] = Icon.objects.filter(owner=self.object)
         ctx['threads_all'] = Thread.ordered(Thread.objects.inbox(self.object))

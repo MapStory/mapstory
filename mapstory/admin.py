@@ -5,7 +5,6 @@ from django import forms
 from mapstory.models import Sponsor
 from mapstory.models import Community
 from mapstory.models import NewsItem
-from mapstory.models import DiaryEntry
 from mapstory.models import GetPage
 from mapstory.models import GetPageContent
 from mapstory.models import Leader
@@ -130,12 +129,6 @@ class NewsItemAdmin(admin.ModelAdmin):
     form = NewsItemForm
 
 
-class DiaryEntryAdmin(admin.ModelAdmin):
-    model = DiaryEntry
-    list_display = 'title', 'author', 'publish', 'date'
-    list_editable = 'publish',
-
-
 class LeaderAdmin(admin.ModelAdmin):
     model = Leader
     list_display = 'user',
@@ -158,7 +151,6 @@ admin.site.register(GetPageContent, GetPageContentAdmin)
 admin.site.register(Sponsor, SponsorAdmin)
 admin.site.register(Community, CommunityAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
-admin.site.register(DiaryEntry, DiaryEntryAdmin)
 admin.site.register(Leader, LeaderAdmin)
 admin.site.register(ParallaxImage, ParallaxImageAdmin)
 admin.site.register(CustomSite, CustomSiteAdmin)

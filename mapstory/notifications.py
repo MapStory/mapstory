@@ -54,8 +54,8 @@ def favorite_post_save(instance, sender, **kwargs):
 
 
 def comment_post_save(instance, sender, **kwargs):
-    from mapstory.models import DiaryEntry
-    if isinstance(instance.content_object, DiaryEntry):
+    from journal.models import JournalEntry
+    if isinstance(instance.content_object, JournalEntry):
         author = instance.content_object.author
         notice_type_label = 'journal_comment'
         extra_content = {

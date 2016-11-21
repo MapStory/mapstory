@@ -23,6 +23,7 @@ from solo.models import SingletonModel
 from resizeimage import resizeimage
 from django.core.files.base import ContentFile
 from io import BytesIO
+from journal.models import JournalEntry
 
 from mapstory.notifications import set_mapstory_notifications
 
@@ -99,21 +100,6 @@ class ContentMixin(models.Model):
         ordering = ['-date']
 
 
-class DiaryEntry(ContentMixin):
-    title = models.CharField(max_length=255)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL)
-    show_on_main = models.BooleanField(default=False)
-
-    def __unicode__(self):
-        return u'%s' % (self.title)
-
-    def get_absolute_url(self):
-        return reverse('diary-detail', args=[self.pk])
-
-    class Meta:
-        verbose_name_plural = 'DiaryEntries'
-
-
 class Community(models.Model):
     name = models.CharField(max_length=64, unique=True)
     icon = models.ImageField(blank=False, upload_to='communities')
@@ -123,7 +109,7 @@ class Community(models.Model):
     slug = models.SlugField(max_length=64, unique=True, blank=True)
     layer = models.ManyToManyField(Layer, blank=True)
     leads = models.ManyToManyField(Profile, blank=True)
-    journals = models.ManyToManyField(DiaryEntry, blank=True)
+    journals = models.ManyToManyField(JournalEntry, blank=True)
 
     def url(self):
         return self.icon.url + "?" + self.stamp
@@ -276,15 +262,6 @@ def get_group_maps(gProfile):
         maps.append(get_objects_for_user(user, 'base.view_resourcebase').instance_of(Map))
 
     return [item for sublist in maps for item in sublist]
-
-
-def get_group_journals(gProfile):
-    users = gProfile.group.user_set.all()
-    journals = []
-    for user in users:
-        journals.append(DiaryEntry.objects.filter(author=user))
-
-    return [item for sublist in journals for item in sublist]
 
 
 def mapstory_profile_post_save(instance, sender, **kwargs):

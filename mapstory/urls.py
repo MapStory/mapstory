@@ -3,12 +3,9 @@ from django.conf.urls import patterns
 from django.conf.urls import url
 from django.conf.urls import include
 from django.conf.urls.static import static
-from django.contrib.auth.decorators import login_required
-from django.views.generic import TemplateView
 from geonode.urls import urlpatterns
 from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstory.views import IndexView
-from mapstory.views import DiaryDetailView, DiaryListView, DiaryCreateView, DiaryUpdateView
 from mapstory.views import GetPageView
 from mapstory.views import ProfileDetail, profile_delete, profile_edit
 from mapstory.views import SearchView
@@ -87,10 +84,6 @@ urlpatterns = patterns('',
     url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/set-notification$", set_profile_notification, name="set_profile_notification"),
 
-    url(r'^journal$', DiaryListView.as_view(), name='diary'),
-    url(r'^journal/(?P<pk>\d+)$', DiaryDetailView.as_view(), name='diary-detail'),
-    url(r'^journal/write$', login_required(DiaryCreateView.as_view()), name='diary-create'),
-    url(r'^journal/write/(?P<pk>\d+)$', login_required(DiaryUpdateView.as_view()), name='diary-update'),
 
     url(r'^organizations/create/$', organization_create, name='organization_create'),
     url(r'^organizations/(?P<slug>[^/]*)$', organization_detail, name='organization_detail'),
@@ -111,6 +104,7 @@ urlpatterns = patterns('',
     url(r'^search/$', SearchView.as_view(), name='search'),
     url(r'^about/leadership$', LeaderListView.as_view(template_name='mapstory/leaders.html'), name='about-leaders'),
     url(r'^icons/', include('icon_commons.urls')),
+    url(r'^journal/', include('mapstory.journal.urls')),
 
     url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
     url(r'^proxy/', proxy),

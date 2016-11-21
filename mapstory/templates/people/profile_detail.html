@@ -29,12 +29,12 @@
         <article class="slice">
             <div class="container">
                 <div class="col-sm-2 sidebar">
-                {% include 'people/_sidebar.html' %}
+                    {% include 'people/_sidebar.html' %}
                 </div>
                 <div class="col-sm-10">
                     <div class="tabbable-panel">
                         <div class="tabbable-line">
-                        {% include 'people/_profile_tabs.html' %}
+                            {% include 'people/_profile_tabs.html' %}
                             <div class="tab-content">
                                 <div class="tab-pane active" id="stories_list">
                                     <div class="no-content" ng-if="results == null">
@@ -44,7 +44,8 @@
                                     <div class="clearfix search-results">
                                         <ul>
                                             {% verbatim %}
-                                            <li ng-repeat="item in stories" resource-id="{{ item.id }}" class="col-md-4 flip-container resource-{{ item.id }}">
+                                                <li ng-repeat="item in stories" resource-id="{{ item.id }}"
+                                                    class="col-md-4 flip-container resource-{{ item.id }}">
                                             {% endverbatim %}
                                             {% include 'search/_result_content.html' %}
                                         </ul>
@@ -58,7 +59,8 @@
                                     <div class="clearfix search-results">
                                         <ul>
                                             {% verbatim %}
-                                            <li ng-repeat="item in layers" resource-id="{{ item.id }}" class="col-md-4 flip-container resource-{{ item.id }}" >
+                                                <li ng-repeat="item in layers" resource-id="{{ item.id }}"
+                                                    class="col-md-4 flip-container resource-{{ item.id }}">
                                             {% endverbatim %}
                                             {% include 'search/_result_content.html' %}</ul>
                                     </div>
@@ -100,23 +102,23 @@
                                         <div class="no-content">
                                             <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
                                         </div>
-                                    {% else %}        
-                                    <ul class="nav nav-tabs">
-                                        <li class="active"><a href="#inbox" data-toggle="tab"><i class=""></i>{% trans "Unread" %}</a></li>
-                                        <li><a href="#all" data-toggle="tab"><i class=""></i> {% trans "All" %}</a></li>
-                                    </ul>
-                                    <div class="tab-content">
-                                        <article id="inbox" class="tab-pane active">
-                                            {% with threads_unread as threads %}
-                                                {% include "user_messages/_message_snippet.html" %}
-                                            {% endwith %}
-                                        </article>
-                                        <article id="all" class="tab-pane">
-                                            {% with threads_all as threads %}
-                                                {% include "user_messages/_message_snippet.html" %}
-                                            {% endwith %}
-                                        </article>
-                                    </div>
+                                    {% else %}
+                                        <ul class="nav nav-tabs">
+                                            <li class="active"><a href="#inbox" data-toggle="tab"><i class=""></i>{% trans "Unread" %}</a></li>
+                                            <li><a href="#all" data-toggle="tab"><i class=""></i> {% trans "All" %}</a></li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <article id="inbox" class="tab-pane active">
+                                                {% with threads_unread as threads %}
+                                                    {% include "user_messages/_message_snippet.html" %}
+                                                {% endwith %}
+                                            </article>
+                                            <article id="all" class="tab-pane">
+                                                {% with threads_all as threads %}
+                                                    {% include "user_messages/_message_snippet.html" %}
+                                                {% endwith %}
+                                            </article>
+                                        </div>
                                     {% endif %}
                                 </div>
                                 <div class="tab-pane" id="user_activities">
@@ -136,23 +138,31 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="diary_entries">
-                                    {% if not diary_entries %}
+                                <div class="tab-pane" id="journal_entries">
+                                    {% if not journal_entries %}
                                         <div class="no-content">
                                             <h2>No entries.</h2>
-                                            <h4><a href="{% url "diary-create" %}">{% trans "Write your first journal entry now." %}</a></h4>
+                                            <h4><a href="{% url "journal-create" %}">{% trans "Write your first journal entry now." %}</a></h4>
                                         </div>
                                     {% else %}
-                                        {% for entry in diary_entries %}
+                                        {% for entry in journal_entries %}
                                             <div class="row">
                                                 <div class="col-sm-12">
                                                     <div class="row">
                                                         <div class="col-lg-12  col-xs-12">
-                                                            <h3><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h3>
-                                                            <h6>{{ entry.date }}</h6>
-                                                            <div>
-                                                                {{ entry.html|safe }}
-                                                            </div>
+                                                            {% if entry.publish %}
+                                                                <h3><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h3>
+                                                                <h6>{{ entry.date }}</h6>
+                                                                <div>
+                                                                    {{ entry.html|safe }}
+                                                                </div>
+                                                            {% elif entry.publish == False and request.user.get_username == profile.username %}
+                                                                <h3><a href="{% url 'journal-update' pk=entry.pk %}">{{ entry.title }} - Resume Draft</a></h3>
+                                                                <h6>{{ entry.date }}</h6>
+                                                                <div>
+                                                                    {{ entry.html|safe }}
+                                                                </div>
+                                                            {% endif %}
                                                         </div>
                                                     </div>
                                                 </div>
