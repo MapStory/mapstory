@@ -38,3 +38,56 @@ an automated virtual machine provisioning process using vagrant is documented in
 ## Styleguides: 
 * JS Styleguide
 * CSS/LESS Styleguide
+
+## End-to-end tests
+
+Instructions for running end-to-end tests for mapstory.
+
+#### 1: Install testing tools
+
+The following needs to be installed on your system for tests:
+
+- `protractor`
+- `webdriver-manager`
+
+**1.1** Go to http://protractor.org and follow the install instructions.
+
+**1.2** Run this to get latest webdriver for your browser:
+`webdriver-manager update`
+
+*Optional config*
+
+**1.3** To set the browser used for tests modify this line inside:
+ `tests/js/conf.js`
+
+`browserName: 'chrome'` or `browserName: 'firefox'`
+
+#### 2: Start the server
+
+Start the mapstory server with `vagrant up` or `vagrant reload` 
+
+#### 3: Start the webdriver
+
+On another shell `cd` into `mapstory/tests` and run the script 
+`./startWebDriver.sh`. Leave this running 
+
+#### 4: Run the tests with protractor
+
+On another shell `cd` into `mapstory/tests` and run the script `./runE2ETests.s`
+
+## Unit tests
+
+1. Start the vagrant machine with `vagrant reload` or `vagrant up` . 
+2. Start the vagrant shell with `vagrant ssh`
+
+```bash
+# Go to the working directory
+cd /srv/git/mapstory/mapstory-geonode/
+# Change users
+sudo su mapstory
+workon mapstory
+# Run tests
+python manage.py test mapstory.tests
+# Run box tests
+python manage.py test mapstory.apps.boxes.tests
+```
