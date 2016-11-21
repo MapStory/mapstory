@@ -53,6 +53,7 @@
         this.storyChapter = 1;
         this.chapterCount = 1;
         var self = this;
+        var stutils = storytools.core.time.utils;
         StoryPinLayerManager.map = self.storyMap;
         StoryBoxLayerManager.map = self.storyMap;
         this.loadConfig = function(config, chapter){
@@ -77,6 +78,39 @@
             self.owner = config.about.owner;
         };
 
+        this.displayPinInfo = function(pixel) {
+            var feature = self.storyMap.getMap().forEachFeatureAtPixel(pixel,
+                function (feature, layer) {
+                    return feature;
+                });
+            if (feature) {
+                var overlays = self.storyMap.getMap().getOverlays().getArray();
+                var popup = null;
+                var geometry = feature.getGeometry();
+                var coord = geometry.getCoordinates();
+                for (var iOverlay = 0; iOverlay < overlays.length; iOverlay += 1) {
+                    var overlay = overlays[iOverlay];
+                    if (overlay.getId() == 'popup-' + feature.id) {
+                        popup = overlay;
+                        break;
+                    }
+                }
+
+                if (popup == null) {
+                    var popupOptions = {
+                        insertFirst: false,
+                        id: 'popup-' + feature.id,
+                        positioning: 'bottom-center',
+                        stopEvent: false
+                    };
+                    popup = new ol.Overlay.Popup(popupOptions);
+                    self.storyMap.getMap().addOverlay(popup);
+                }
+                popup.setPosition(coord);
+                popup.show(coord, feature.get('content') + feature.get('media'));
+            }
+        };
+
         this.loadMap = function(options) {
             options = options || {};
             if (options.id) {
@@ -93,48 +127,26 @@
             }
             this.currentMapOptions = options;
 
-            var element = document.getElementById('story-pin-popup');
+            //var element = document.getElementById('story-pin-popup');
 
-            var popup = new ol.Overlay({
+            /*var popup = new ol.Overlay({
                 element: element,
                 positioning: 'bottom-center',
                 stopEvent: false
             });
-            self.storyMap.getMap().addOverlay(popup);
-
-            var displayPinInfo = function(pixel){
-                var feature = self.storyMap.getMap().forEachFeatureAtPixel(pixel,
-                      function(feature, layer) {
-                          return feature;
-                      });
-                if (feature) {
-                    var geometry = feature.getGeometry();
-                    var coord = geometry.getCoordinates();
-                    $(element).popover('destroy');
-                    popup.setPosition(coord);
-                    $(element).popover({
-                        'placement': 'right',
-                        'html': true,
-                        'title': feature.get('title'),
-                        'content': feature.get('content') + feature.get('media')
-                    });
-                    $(element).popover('show');
-                } else {
-                    $(element).popover('destroy');
-                }
-            };
+            self.storyMap.getMap().addOverlay(popup);*/
 
             // display popup on hover
             self.storyMap.getMap().on('pointermove', function(evt) {
                 if (evt.dragging){
                     return;
                 }
-                displayPinInfo(evt.pixel);
+                self.displayPinInfo(evt.pixel);
             });
 
             // display popup on click
             self.storyMap.getMap().on('click', function(evt) {
-                displayPinInfo(evt.pixel);
+                self.displayPinInfo(evt.pixel);
             });
         };
         $rootScope.$on('$locationChangeSuccess', function() {
@@ -149,6 +161,23 @@
 
         self.loadConfig(config, chapter);
     });
+        $rootScope.$on('rangeChange', function(range) {
+            var pinsToCheck = StoryPinLayerManager.storyPins.filter(function(pin) {
+                return pin.auto_show;
+            });
+
+            for(var iPin = 0; iPin < pinsToCheck.length; iPin += 1) {
+                var pin = pinsToCheck[iPin];
+                var pinRange = stutils.createRange(pin.start_time, pin.end_time);
+                if (pinRange.intersects(range)) {
+                    self.displayPinInfo(pin.geometry.getCoordinates());
+                }
+            }
+        });
+
+        $rootScope.$on('show-pin', function(pin) {
+            self.displayPinInfo(pin.getGeometry().getCoordinates());
+        });
 }
 
 /* EXACTLY THE SAME AS LAYER VIEWER */
