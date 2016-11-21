@@ -11,10 +11,11 @@ from django.core.urlresolvers import reverse, resolve
 from django.contrib.admin.sites import AdminSite
 from unittest import skip
 from mapstory import __version__ as version
-from ..admin import GetPageAdmin, GetPageChoiceField, GetPageContentForm, GetPageContentAdmin, SponsorAdmin, TaskInline, CommunityAdmin, NewsItemForm, DiaryEntryAdmin, LeaderAdmin, ParallaxImageAdmin, CustomSiteAdmin
+from ..admin import GetPageAdmin, GetPageChoiceField, GetPageContentForm, GetPageContentAdmin, SponsorAdmin, TaskInline, CommunityAdmin, NewsItemForm, LeaderAdmin, ParallaxImageAdmin, CustomSiteAdmin
 from ..models import GetPage, GetPageContent
 from ..views import IndexView
 from ..version import get_version
+from mapstory.journal.admin import JournalEntryAdmin
 
 
 class MockRequest(object):
@@ -62,11 +63,11 @@ class TestHomeView(TestCase):
         self.assertIsNotNone(context['communities'], "Communities was None")
         self.assertIsNotNone(context['news_items'], "News items was none")
         self.assertIsNotNone(context['images'], "Images was none")
-        self.assertIsNotNone(context['diary_entries'], "Diary entries was none")
+        self.assertIsNotNone(context['journal_entries'], "Journal entries was none")
 
-    def test_diary_list_view(self):
+    def test_journal_list_view(self):
         c = Client()
-        response = c.get(reverse('diary'))
+        response = c.get(reverse('journal'))
         self.assertEqual(response.status_code, 200)
 
 
@@ -101,7 +102,7 @@ class TestAdmin(TestCase):
         self.assertIsNotNone(TaskInline)
         self.assertIsNotNone(CommunityAdmin)
         self.assertIsNotNone(NewsItemForm)
-        self.assertIsNotNone(DiaryEntryAdmin)
+        self.assertIsNotNone(JournalEntryAdmin)
         self.assertIsNotNone(LeaderAdmin)
         self.assertIsNotNone(ParallaxImageAdmin)
         self.assertIsNotNone(CustomSiteAdmin)
@@ -135,7 +136,7 @@ class TestAdmin(TestCase):
         self.assertIsNotNone(TaskInline())
         self.assertIsNotNone(CommunityAdmin())
         self.assertIsNotNone(NewsItemForm())
-        self.assertIsNotNone(DiaryEntryAdmin())
+        self.assertIsNotNone(JournalEntryAdmin())
         self.assertIsNotNone(LeaderAdmin())
         self.assertIsNotNone(ParallaxImageAdmin())
         self.assertIsNotNone(CustomSiteAdmin())

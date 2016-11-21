@@ -44,9 +44,15 @@
         </a>
     </li>
     <li>
-        <a href="#diary_entries" data-toggle="tab">
-            <div class="counter">{{ diary_entries.count }}</div>
-            Journal Entr{{ diary_entries|pluralize:"y,ies"}} 
+        <a href="#journal_entries" data-toggle="tab">
+            <div class="counter">
+                {% if request.user.get_username == profile.username %}
+                {{ journal_entries_total }}
+                {% else %}
+                {{ journal_entries_published }}
+                {% endif %}
+            </div>
+            Journal Entr{{ journal_entries|pluralize:"y,ies"}}
         </a>
     </li>
     <li>

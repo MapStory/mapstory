@@ -288,62 +288,6 @@ class TestContentMixin(TestCase):
         self.assertTrue(self.contentMixin.html().endswith(">"))
 
 
-class TestDiaryEntry(TestCase):
-    """
-    DiaryEntry model tests
-    """
-    def setUp(self):
-        self.diaryEntry = DiaryEntry()
-        self.diaryEntry.title = "Test title"
-        self.diaryEntry.author = testUser
-        self.diaryEntry.show_on_main = False
-
-    def test_import(self):
-        """
-        Should import module
-        """
-        self.assertIsNotNone(DiaryEntry)
-
-
-    def test_unicode(self):
-        """
-        Should return unicode value
-        """
-        self.assertIsNotNone(unicode(self.diaryEntry))
-        self.assertTrue(unicode(self.diaryEntry).endswith(self.diaryEntry.title))
-
-    @skip("TODO: Fix this test")
-    def test_save_and_retrieve(self):
-        """
-        Should save and retrieve
-        """
-        self.assertEqual(0, DiaryEntry.objects.all().count(), "Should be empty")
-        self.diaryEntry.save()
-
-        allEntries = DiaryEntry.objects.all()
-        self.assertEqual(1, allEntries.count(), "Should have 1 entry")
-
-        entry = allEntries[0]
-        self.assertIsInstance(entry, DiaryEntry, "Should be an instance of DiaryEntry")
-
-        # Make sure the correct values have been saved
-        self.assertEqual(entry.title, self.diaryEntry.title, "Should have same title")
-        self.assertEqual(entry.author.name, 
-                         self.diaryEntry.author.name, 
-                         "Should have same authors")
-
-        self.assertEqual(entry.show_on_main, False)
-
-
-
-    @skip("TODO")
-    def test_get_absolute_url(self):
-        self.assertIsNotNone(self.diaryEntry.get_absolute_url())
-
-    def test_has_plural(self):
-        self.assertIsNotNone(DiaryEntry._meta.verbose_name_plural)
-
-
 class TestCommunity(TestCase):
     """
     Community model tests

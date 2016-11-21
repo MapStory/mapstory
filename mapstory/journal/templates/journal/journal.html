@@ -7,7 +7,7 @@
 
 {% block middle %}
 <section class="parallax">
-    <div data-stellar-background-ratio="0.5" style="background-image: url({{ images|by_name:'Africa' }}); background-size: 100%; background-position: 0% 20%;">
+    <div data-stellar-background-ratio="0.5" style="background-size: 100%; background-position: 0% 20%;">
         <div class="maskParent">
             <div class="paralaxMask"></div>
             <div class="paralaxText container" style="text-align:left;padding-bottom:0">
@@ -21,7 +21,7 @@
                     <div class="col-sm-3">
                         <div class="row"  style="padding:80px 0px 10px 10px;">
                             <div class="col-sm-8 col-sm-offset-4">
-                                <a class="btn btn-sm btn-block" style="font-size:1em;background-color:transparent;color:white;border:1px solid white;" title="" href="{% url 'diary-create' %}" target="blank">
+                                <a class="btn btn-sm btn-block" style="font-size:1em;background-color:transparent;color:white;border:1px solid white;" title="" href="{% url 'journal-create' %}" target="blank">
                                     write an entry
                                 </a>
                             </div>
@@ -32,7 +32,7 @@
         </div>
     </div>
 </section>
-<div class="container" id="diary-menu">
+<div class="container" id="journal-menu">
     {% if user.is_authenticated %}
         {% if drafts %}
             <span class="dropdown" id="draft-button">
@@ -42,7 +42,7 @@
 			<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                 {% for d in drafts %}
                     <li>
-                        <a href="{% url 'diary-update' pk=d.pk %}">
+                        <a href="{% url 'journal-update' pk=d.pk %}">
                             {{ d.title }} - {{ d.date }}
                         </a>
                     </li>
@@ -74,7 +74,7 @@
                     </div>
                     <div class="col-lg-2 col-xs-6">
                         {% ifequal entry.author request.user %}
-                            <a href="{% url 'diary-update' pk=entry.pk %}">
+                            <a href="{% url 'journal-update' pk=entry.pk %}">
                                 <button class="btn btn-primary" aria-hidden="true" id="published_submit_btn" type="submit">{% trans "Edit" %}</button>
                             </a>
                         {% endifequal %}
@@ -96,13 +96,13 @@
     {% endfor %}
     <div class="row pagination text-center">
         {% if page_obj.has_previous %}
-            <a href="{% url 'diary' %}?page={{ page_obj.previous_page_number }}">[ previous ]</a>
+            <a href="{% url 'journal' %}?page={{ page_obj.previous_page_number }}">[ previous ]</a>
         {% endif %}
         <span class="page-current">
         Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
     </span>
         {% if page_obj.has_next %}
-            <a href="{% url 'diary' %}?page={{ page_obj.next_page_number }}">[ next ]</a>
+            <a href="{% url 'journal' %}?page={{ page_obj.next_page_number }}">[ next ]</a>
         {% endif %}
     </div>
 </div>

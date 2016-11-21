@@ -266,7 +266,7 @@
                                 </div>
                                 <div class="col-lg-2 col-xs-6">
                                     {% ifequal entry.author request.user %}
-                                        <a href="{% url 'diary-update' pk=entry.pk %}">
+                                        <a href="{% url 'journal-update' pk=entry.pk %}">
                                             <button class="btn btn-primary" aria-hidden="true" id="published_submit_btn" type="submit">{% trans "Edit" %}</button>
                                         </a>
                                     {% endifequal %}

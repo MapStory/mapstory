@@ -12,7 +12,6 @@ from geonode.base.models import TopicCategory
 from geonode.base.populate_test_data import create_models
 from geonode.layers.models import Layer
 from geonode.layers.populate_layers_data import create_layer_data
-from mapstory.models import DiaryEntry
 from geonode.people.models import Profile
 import json
 from geonode.geoserver.helpers import gs_catalog
@@ -88,49 +87,6 @@ class MapStoryTests(MapStoryTestMixin):
         response = c.get(reverse('search'))
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
-
-    def test_journal_renders(self):
-        """
-        Ensure the journal functionality works.
-        """
-        c = AdminClient()
-        response = c.get(reverse('diary'))
-        self.assertEqual(response.status_code, 200)
-        self.assertHasGoogleAnalytics(response)
-
-        response = c.get(reverse('diary-create'))
-        self.assertLoginRequired(response)
-
-        c.login_as_non_admin()
-        response = c.get(reverse('diary-create'))
-        self.assertEqual(response.status_code, 200)
-        self.assertHasGoogleAnalytics(response)
-
-        response = c.get(reverse('diary-detail', args=[1]))
-        self.assertEqual(response.status_code, 404)
-
-        data = {'title': 'testing a new journal', 'content': 'This is test content'}
-        response = c.post(reverse('diary-create'), data=data, follow=True)
-        self.assertEqual(response.status_code, 200)
-        self.assertHasGoogleAnalytics(response)
-
-        journal = DiaryEntry.objects.get(title=data['title'])
-        self.assertEqual(journal.author, response.context['user'])
-        self.assertEqual(journal.content, data['content'])
-        self.assertFalse(journal.publish)
-        self.assertFalse(journal.show_on_main)
-
-        data['publish'] = True
-        data['show_on_main'] = True
-
-        response = c.post(reverse('diary-update', args=[journal.id]), data=data, follow=True)
-        self.assertEqual(response.status_code, 200)
-        journal = DiaryEntry.objects.get(title=data['title'])
-        self.assertTrue(journal.publish)
-        self.assertFalse(journal.show_on_main)
-
-        response = c.get(reverse('diary'))
-        self.assertIn(journal, response.context['object_list'])
 
     def test_sign_up_renders(self):
         """
