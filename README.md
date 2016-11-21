@@ -34,3 +34,7 @@ an automated virtual machine provisioning process using vagrant is documented in
 
 ## Production deployment: 
 **Todo**
+
+## Styleguides: 
+* JS Styleguide
+* CSS/LESS Styleguide
