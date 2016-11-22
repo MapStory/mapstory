@@ -36,4 +36,4 @@ an automated virtual machine provisioning process using vagrant is documented in
 **Todo**
 
 ## Styleguides & Best Practices
-You can find documentation about code styles and best practices on [https://github.com/MapStory/mapstory-geonode/wiki](our wiki).
+You can find documentation about code styles and best practices on [our wiki](https://github.com/MapStory/mapstory-geonode/wiki).
