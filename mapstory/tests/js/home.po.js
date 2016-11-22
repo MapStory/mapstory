@@ -8,7 +8,11 @@
 
 require('./waitReady.js');
 
-const testLayerFile = '/Users/pp/Desktop/lewisandclarktrail.csv';
+var path = require('path');
+
+// Upload paths need to be absolute or error.
+const testLayerFileRelative = '../test_assets/lewisandclarktrail.csv';
+const testLayerFile = path.resolve(__dirname, testLayerFileRelative);
 
 var home_page = function() {
 	this.loginIcon = element(by.css('.fa.fa-user'));
@@ -169,6 +173,17 @@ var home_page = function() {
 		});
 
 		finishButton.click();
+	};
+
+	this.makeid = function(length)
+	{
+		var text = "";
+		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+		for( var i=0; i < length; i++ )
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+		return text;
 	};
 
 };

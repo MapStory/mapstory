@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
+from unittest import skip
 from models import JournalEntry
 
 

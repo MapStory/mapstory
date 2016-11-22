@@ -3,7 +3,7 @@
  * ==================
  */
 
-xdescribe('Composer', function() {
+describe('Composer', function() {
 	// Our home page object
 	var page = null;
 
@@ -36,8 +36,8 @@ xdescribe('Composer', function() {
 
 		expect(home.composeStoryLink.waitReady()).toBeTruthy();
 		home.composeStoryLink.click();
-
-		// browser.wait(1000);
+		browser.wait(4000);
+		// browser.pause();
 		// expect(browser.getCurrentUrl()).toContain(browser.baseUrl + '/maps/new');
 
 	});
@@ -48,12 +48,13 @@ xdescribe('Composer', function() {
 		// browser.waitForAngular();
 		// browser.wait(4000);
 
-		var welcomeTour = element(by.css('#welcomeTour'));
+		// browser.pause();
+		// var welcomeTour = element(by.css('#welcomeTour'));
 		// browser.wait(1000);
 		// expect(welcomeTour.waitReady()).toBeTruthy();
 		// expect(welcomeTour.isPresent()).toBeTruthy();
-		var ok = welcomeTour.element(by.linkText('Compose Story'));
-		ok.click();
+		// var ok = welcomeTour.element(by.linkText('Compose Story'));
+		// ok.click();
 	});
 
 	it('> should go back to Home', function(){
