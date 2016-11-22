@@ -13,12 +13,10 @@ from geonode.base.populate_test_data import create_models
 from geonode.layers.models import Layer
 from geonode.layers.populate_layers_data import create_layer_data
 from geonode.people.models import Profile
-import json
 from geonode.geoserver.helpers import gs_catalog
 from mapstory.export import export_via_model
 from socket import error as socket_error
 from geoserver.catalog import FailedRequestError
-from geonode.geoserver.helpers import gs_catalog
 from django import db
 from ..importers import GeoServerLayerCreator
 from osgeo_importer.utils import UploadError
@@ -27,8 +25,8 @@ from geonode.contrib.collections.models import Collection
 from datetime import datetime
 from ..models import Sponsor
 from .AdminClient import AdminClient
-
 User = get_user_model()
+
 
 class MapStoryTestMixin(TestCase):
 
@@ -50,6 +48,7 @@ class MapStoryTestMixin(TestCase):
             user.save()
 
         return username, password
+
 
 
 class MapStoryTests(MapStoryTestMixin):

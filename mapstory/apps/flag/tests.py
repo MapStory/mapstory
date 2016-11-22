@@ -1,7 +1,9 @@
 
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
-from mapstory.tests import MapStoryTestMixin, AdminClient, User
+from mapstory.tests import AdminClient
+from mapstory.tests.testMapstory import MapStoryTestMixin
+from mapstory.tests.testMapstory import User
 from geonode.base.models import TopicCategory
 from geonode.base.populate_test_data import create_models
 from geonode.maps.models import Map

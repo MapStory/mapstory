@@ -1,6 +1,5 @@
 import datetime
 import json
-from mapstory.tests import MapStoryTestMixin, AdminClient
 from geonode.base.models import TopicCategory
 from geonode.base.populate_test_data import create_models
 from geonode.maps.models import Map
@@ -8,6 +7,7 @@ from django.core.urlresolvers import reverse
 from .forms import StoryBoxForm
 from .utils import parse_date_time, datetime_to_seconds, make_point
 from .models import StoryBox
+from mapstory.tests.testMapstory import MapStoryTestMixin, User
 
 
 class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
