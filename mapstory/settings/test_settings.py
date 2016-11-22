@@ -40,7 +40,7 @@ STATICFILES_DIRS = [
 ] + STATICFILES_DIRS
 
 STATIC_ROOT = os.path.join(LOCAL_ROOT, "static_root")
-MEDIA_ROOT = os.path.join(LOCAL_ROOT, "uploaded")
+MEDIA_ROOT = '/var/lib/mapstory/media/'
 
 # Note that Django automatically includes the "templates" dir in all the
 # INSTALLED_APPS, se there is no need to add maps/templates or admin/templates
@@ -506,3 +506,4 @@ HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
 
 ENABLE_SOCIAL_LOGIN = True
 USE_AWS_S3 = False
+GOOGLE_ANALYTICS = 'None'
