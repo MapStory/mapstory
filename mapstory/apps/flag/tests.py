@@ -1,13 +1,27 @@
-
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
-from mapstory.tests import AdminClient
+from django.test import Client
 from mapstory.tests.testMapstory import MapStoryTestMixin
 from mapstory.tests.testMapstory import User
 from geonode.base.models import TopicCategory
 from geonode.base.populate_test_data import create_models
 from geonode.maps.models import Map
 from .models import FlaggedContent
+
+
+# @TODO Replace this with something better that doesn't specify a username and password.
+class AdminClient(Client):
+    def login_as_admin(self, username='admin', password='admin'):
+        """
+        Convenience method to login admin.
+        """
+        return self.login(**{'username': username, 'password': password})
+
+    def login_as_non_admin(self, username='non_admin', password='non_admin'):
+        """
+        Convenience method to login a non-admin.
+        """
+        return self.login(**{'username': username, 'password': password})
 
 
 class FlagsTest(MapStoryTestMixin):

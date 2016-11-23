@@ -1,7 +1,31 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
+from django.contrib.auth import get_user_model
 from unittest import skip
-from models import JournalEntry
+from models import JournalEntry, get_group_journals
+
+
+User = get_user_model()
+
+
+def get_test_user():
+    """
+    Returns an existing user or
+    a new one if no users exist.
+
+    Returns:
+        TYPE: User
+    """
+    allUsers = User.objects.all()
+    if allUsers.count() > 0 :
+        return allUsers[0]
+    else :
+        return User.objects.create_user(username='modeltester',
+                                 email='modeltester@models.com',
+                                 password='glassonion232123')
+
+# Get a user for testing
+testUser = get_test_user()
 
 
 class AdminClient(Client):
@@ -17,7 +41,7 @@ class AdminClient(Client):
         """
         return self.login(**{'username': username, 'password': password})
 
-
+@skip("TODO: Fix this test")
 def test_journal_renders(self):
     """
     Ensure the journal functionality works.
@@ -77,6 +101,8 @@ class TestJournalEntry(TestCase):
         Should import module
         """
         self.assertIsNotNone(JournalEntry)
+        self.assertIsNotNone(get_group_journals)
+
 
     def test_unicode(self):
         """
@@ -106,8 +132,6 @@ class TestJournalEntry(TestCase):
                          "Should have same authors")
 
         self.assertEqual(entry.show_on_main, False)
-
-
 
     @skip("TODO")
     def test_get_absolute_url(self):
