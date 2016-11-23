@@ -28,7 +28,7 @@ before_script:
   - python manage.py migrate groups --noinput
   - python manage.py migrate --noinput
   - sudo mkdir -p /var/lib/mapstory/media/
-
+  - sudo chmod 775 /var/lib/mapstory/media/
 script:
   - python manage.py test mapstory.test
 
