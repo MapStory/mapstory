@@ -298,7 +298,7 @@ describe('Mapstory Home', function() {
 					expect(page.createLayerLink.waitReady()).toBeTruthy();
 					page.createLayerLink.click();
 
-					page.layerStep1();
+					page.createLayer_Step1();
 				});
 
 				it('> step 2', function() {
@@ -311,8 +311,8 @@ describe('Mapstory Home', function() {
 					expect(page.createLayerLink.waitReady()).toBeTruthy();
 					page.createLayerLink.click();
 
-					page.layerStep1();
-					page.layerStep2();
+					page.createLayer_Step1();
+					page.createLayer_Step2();
 				});
 
 				it('> step 3', function() {
@@ -325,9 +325,9 @@ describe('Mapstory Home', function() {
 					expect(page.createLayerLink.waitReady()).toBeTruthy();
 					page.createLayerLink.click();
 
-					page.layerStep1();
-					page.layerStep2();
-					page.layerStep3();
+					page.createLayer_Step1();
+					page.createLayer_Step2();
+					page.createLayer_Step3();
 				});
 
 				it('> step 4', function() {
@@ -340,10 +340,10 @@ describe('Mapstory Home', function() {
 					expect(page.createLayerLink.waitReady()).toBeTruthy();
 					page.createLayerLink.click();
 
-					page.layerStep1();
-					page.layerStep2();
-					page.layerStep3();
-					page.layerStep4();
+					page.createLayer_Step1();
+					page.createLayer_Step2();
+					page.createLayer_Step3();
+					page.createLayer_Step4();
 				});
 
 				it('> step 5', function() {
@@ -356,11 +356,29 @@ describe('Mapstory Home', function() {
 					expect(page.createLayerLink.waitReady()).toBeTruthy();
 					page.createLayerLink.click();
 
-					page.layerStep1();
-					page.layerStep2();
-					page.layerStep3();
-					page.layerStep4();
-					page.layerStep5();
+					page.createLayer_Step1();
+					page.createLayer_Step2();
+					page.createLayer_Step3();
+					page.createLayer_Step4();
+					page.createLayer_Step5();
+				});
+
+				it('> step 6', function() {
+					// Open the Create menu
+					expect(page.isLoggedIn()).toBeTruthy();
+					expect(page.navBar.isDisplayed()).toBe(true);
+					page.menuCreate.click();
+
+					// Click the create story layer link
+					expect(page.createLayerLink.waitReady()).toBeTruthy();
+					page.createLayerLink.click();
+
+					page.createLayer_Step1();
+					page.createLayer_Step2();
+					page.createLayer_Step3();
+					page.createLayer_Step4();
+					page.createLayer_Step5();
+					page.createLayer_Step6();
 				});
 			});
 
@@ -417,7 +435,7 @@ describe('Mapstory Home', function() {
 				 */
 				describe('> Step 1', function() {
 					it('> should complete step 1', function() {
-						page.doStep1();
+						page.uploadLayer_Step1();
 					});
 
 					xit('> can close the form', function() {
@@ -434,8 +452,8 @@ describe('Mapstory Home', function() {
 				 */
 				describe('> Step 2', function() {
 					it('should complete step 2', function() {
-						page.doStep1();
-						page.doStep2();
+						page.uploadLayer_Step1();
+						page.uploadLayer_Step2();
 					});
 
 					it('> can go to next step', function() {
@@ -464,9 +482,9 @@ describe('Mapstory Home', function() {
 					});
 
 					it('> should complete step 3', function() {
-						page.doStep1();
-						page.doStep2();
-						page.doStep3();
+						page.uploadLayer_Step1();
+						page.uploadLayer_Step2();
+						page.uploadLayer_Step3();
 					});
 				});
 
@@ -475,10 +493,10 @@ describe('Mapstory Home', function() {
 				 */
 				describe('> Step 4', function() {
 					it('should complete step 4', function() {
-						page.doStep1();
-						page.doStep2();
-						page.doStep3();
-						page.doStep4();
+						page.uploadLayer_Step1();
+						page.uploadLayer_Step2();
+						page.uploadLayer_Step3();
+						page.uploadLayer_Step4();
 					});
 				});
 
@@ -491,11 +509,11 @@ describe('Mapstory Home', function() {
 					});
 
 					it('> should complete step 5', function() {
-						page.doStep1();
-						page.doStep2();
-						page.doStep3();
-						page.doStep4();
-						page.doStep5();
+						page.uploadLayer_Step1();
+						page.uploadLayer_Step2();
+						page.uploadLayer_Step3();
+						page.uploadLayer_Step4();
+						page.uploadLayer_Step5();
 					});
 
 				});
@@ -505,12 +523,12 @@ describe('Mapstory Home', function() {
 				 */
 				describe('> Step 6', function() {
 					it('> should complete step 6', function() {
-						page.doStep1();
-						page.doStep2();
-						page.doStep3();
-						page.doStep4();
-						page.doStep5();
-						page.doStep6();
+						page.uploadLayer_Step1();
+						page.uploadLayer_Step2();
+						page.uploadLayer_Step3();
+						page.uploadLayer_Step4();
+						page.uploadLayer_Step5();
+						page.uploadLayer_Step6();
 					});
 				});
 
@@ -549,9 +567,9 @@ describe('Mapstory Home', function() {
 	it('should change languages', function() {
 		var languageDropdown = element(by.css('.lang.col-md-6.pull-right'));
 		expect(languageDropdown.waitReady()).toBeTruthy();
-		// Try Spanish!
+		// Try to select spanish
 		languageDropdown.$('[value="es"]').click();
-		// selectDate.$('[value="e_date"]').click();
+
 	});
 
 });
