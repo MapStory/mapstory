@@ -30,7 +30,7 @@ before_script:
   - sudo mkdir -p /var/lib/mapstory/media/
   - sudo chmod 775 /var/lib/mapstory/media/
   - sudo chown $USER /var/lib/mapstory/media/
-  
+
 script:
   - python manage.py test mapstory.test
 
