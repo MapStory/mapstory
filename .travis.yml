@@ -21,10 +21,13 @@ install:
   - sudo apt-get install -y python-virtualenv python-imaging python-lxml python-pyproj python-shapely python-nose python-httplib2 python-httplib2 gettext
   - sudo apt-get install -y --force-yes openjdk-6-jdk ant maven2 libjai-imageio-core-java --no-install-recommends
   - pip install -r requirements.txt
+  
+before_script:
   - python manage.py migrate maps --noinput
   - python manage.py migrate layers --noinput
   - python manage.py migrate groups --noinput
   - python manage.py migrate --noinput
+  - mkdir /var/lib/mapstory/media/
 
 script:
   - python manage.py test mapstory.test
