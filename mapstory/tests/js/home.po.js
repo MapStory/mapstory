@@ -86,7 +86,7 @@ var home_page = function() {
 			expect(text).toEqual('Before we begin');
 		});
 
-		var button = this.step1.element(by.buttonText("Let's Begin!"));
+		var button = this.step1.element(by.buttonText('Let\'s Begin!'));
 		expect(button.isDisplayed()).toBeTruthy();
 		button.click();
 		//------- End Step 1 -------------
@@ -177,13 +177,110 @@ var home_page = function() {
 
 	this.makeid = function(length)
 	{
-		var text = "";
-		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		var text = '';
+		var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 		for( var i=0; i < length; i++ )
 			text += possible.charAt(Math.floor(Math.random() * possible.length));
 
 		return text;
+	};
+
+	this.layerStep1 = function() {
+
+		// Step 1
+		// ------
+		var layerName = element(by.model('layer.configuration_options.name'));
+		expect(layerName.waitReady()).toBeTruthy();
+
+		layerName.sendKeys('testLayer00');
+
+		var currentSection = element(by.css('section.step.ng-isolate-scope.current'));
+		var continueButton = currentSection.$('.import-wizard-button').element(by.css('button.btn'));
+
+		// Continue to Step 2
+		continueButton.click();
+
+	};
+
+	this.layerStep2 = function() {
+		// Step 2
+		// ------
+		var geometryTypeDropdown = element(by.css('select#geometry_type'));
+		expect(geometryTypeDropdown.waitReady()).toBeTruthy();
+
+		// Select points
+		// Line : com.vividsolutions.jts.geom.LineString
+		// Polygon : com.vividsolutions.jts.geom.Polygon
+		// Geometry : com.vividsolutions.jts.geom.Geometry
+		geometryTypeDropdown.$('[value="com.vividsolutions.jts.geom.Point"]').click();
+
+		// Referesh current section var
+		var currentSection = element(by.css('section.step.ng-isolate-scope.current'));
+		currentSection.$('.btn[value="Continue"]').click();
+	};
+
+	this.layerStep3 = function() {
+		// Step 3
+		// ------
+		var requiredCheck = element(by.css('#fieldNillable-0'));
+		expect(requiredCheck.waitReady());
+		// var fieldTypeDropdown = element(by.model('field.binding'));
+		// fieldTypeDropdown.$('[value=""]')
+		// expect(fieldTypeDropdown.waitReady()).toBeTruthy();
+		var currentSection = element(by.css('section.step.ng-isolate-scope.current'));
+		currentSection.$('.btn[value="Continue"]').click();
+	};
+
+	this.layerStep4 = function() {
+		// Step 4
+		// ------
+		var startTimeDropdown = element(by.model('layer.configuration_options.start_date'));
+		expect(startTimeDropdown.waitReady()).toBeTruthy();
+		startTimeDropdown.$('[value="time"]').click();
+
+		var currentSection = element(by.css('section.step.ng-isolate-scope.current'));
+		var button = currentSection.$('.btn[value="Next Step"]');
+		button.click();
+	};
+
+	this.layerStep5 = function() {
+		// Step 5
+		// ------
+		var shareButton = element.all(by.css('.btn.ng-pristine.ng-untouched.ng-valid')).first();
+		expect(shareButton.waitReady()).toBeTruthy();
+
+		var currentSection = element(by.css('section.step.ng-isolate-scope.current'));
+		currentSection.$('.btn[type="submit"]').click();
+	};
+
+	this.layerStep6 = function() {
+		var currentSection = element(by.css('section[title="Create"]'));
+		var continueButton = currentSection.$('.btn[value="Continue"]');
+		expect(continueButton.waitReady()).toBeTruthy();
+		continueButton.click();
+
+		// Wait 5 seconds
+		browser.driver.sleep(5000);
+
+		var doneButton = element(by.linkText('StoryLayer'));
+		expect(doneButton.waitReady()).toBeTruthy();
+
+		doneButton.click();
+
+		browser.driver.sleep(3000);
+		var saveButton = element(by.partialButtonText('Save'));
+		expect(saveButton.waitReady()).toBeTruthy();
+		saveButton.click();
+
+	};
+
+	this.createStoryLayer = function() {
+		this.layerStep1();
+		this.layerStep2();
+		this.layerStep3();
+		this.layerStep4();
+		this.layerStep5();
 	};
 
 };

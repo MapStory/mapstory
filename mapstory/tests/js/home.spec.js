@@ -127,8 +127,8 @@ describe('Mapstory Home', function() {
 			page.loginIcon.click();
 			expect(page.loginModal.waitReady()).toBe(true);
 			// expect(page.navigationTabs.waitReady()).toBe(true);
-			expect(element(by.linkText("Log In")).isPresent()).toBe(true);
-			expect(element(by.linkText("Sign Up")).isPresent()).toBe(true);
+			expect(element(by.linkText('Log In')).isPresent()).toBe(true);
+			expect(element(by.linkText('Sign Up')).isPresent()).toBe(true);
 		});
 
 		/**
@@ -210,7 +210,6 @@ describe('Mapstory Home', function() {
 				termsCheckbox.click();
 
 				element(by.buttonText('Join')).click();
-				// TODO: Logout
 			});
 		});
 
@@ -279,7 +278,7 @@ describe('Mapstory Home', function() {
 				expect(page.composeStoryLink.isDisplayed()).toBe(true);
 			});
 
-			it("> should show 'Create Layer'", function() {
+			it('> should show "Create Layer"', function() {
 				expect(page.isLoggedIn()).toBeTruthy();
 				expect(page.navBar.isDisplayed()).toBe(true);
 				page.menuCreate.click();
@@ -288,7 +287,98 @@ describe('Mapstory Home', function() {
 				page.createLayerLink.click();
 			});
 
-			it("> should show 'Upload Icons'", function() {
+			describe('> Create Layer Wizard', function() {
+				it('> step 1', function() {
+					// Open the Create menu
+					expect(page.isLoggedIn()).toBeTruthy();
+					expect(page.navBar.isDisplayed()).toBe(true);
+					page.menuCreate.click();
+
+					// Click the create story layer link
+					expect(page.createLayerLink.waitReady()).toBeTruthy();
+					page.createLayerLink.click();
+
+					page.layerStep1();
+				});
+
+				it('> step 2', function() {
+					// Open the Create menu
+					expect(page.isLoggedIn()).toBeTruthy();
+					expect(page.navBar.isDisplayed()).toBe(true);
+					page.menuCreate.click();
+
+					// Click the create story layer link
+					expect(page.createLayerLink.waitReady()).toBeTruthy();
+					page.createLayerLink.click();
+
+					page.layerStep1();
+					page.layerStep2();
+				});
+
+				it('> step 3', function() {
+					// Open the Create menu
+					expect(page.isLoggedIn()).toBeTruthy();
+					expect(page.navBar.isDisplayed()).toBe(true);
+					page.menuCreate.click();
+
+					// Click the create story layer link
+					expect(page.createLayerLink.waitReady()).toBeTruthy();
+					page.createLayerLink.click();
+
+					page.layerStep1();
+					page.layerStep2();
+					page.layerStep3();
+				});
+
+				it('> step 4', function() {
+					// Open the Create menu
+					expect(page.isLoggedIn()).toBeTruthy();
+					expect(page.navBar.isDisplayed()).toBe(true);
+					page.menuCreate.click();
+
+					// Click the create story layer link
+					expect(page.createLayerLink.waitReady()).toBeTruthy();
+					page.createLayerLink.click();
+
+					page.layerStep1();
+					page.layerStep2();
+					page.layerStep3();
+					page.layerStep4();
+				});
+
+				it('> step 5', function() {
+					// Open the Create menu
+					expect(page.isLoggedIn()).toBeTruthy();
+					expect(page.navBar.isDisplayed()).toBe(true);
+					page.menuCreate.click();
+
+					// Click the create story layer link
+					expect(page.createLayerLink.waitReady()).toBeTruthy();
+					page.createLayerLink.click();
+
+					page.layerStep1();
+					page.layerStep2();
+					page.layerStep3();
+					page.layerStep4();
+					page.layerStep5();
+				});
+			});
+
+			it('> should create layer', function() {
+				// Open the Create menu
+				expect(page.isLoggedIn()).toBeTruthy();
+				expect(page.navBar.isDisplayed()).toBe(true);
+				page.menuCreate.click();
+
+				// Click the create story layer link
+				expect(page.createLayerLink.waitReady()).toBeTruthy();
+				page.createLayerLink.click();
+
+				// Do the thing
+				page.createStoryLayer();
+			});
+
+			it('> should show "Upload Icons"', function() {
 				expect(page.isLoggedIn()).toBeTruthy();
 				expect(page.navBar.isDisplayed()).toBe(true);
 				page.menuCreate.click();
@@ -297,7 +387,7 @@ describe('Mapstory Home', function() {
 				page.uploadIconsLink.click();
 			});
 
-			it("> should show 'Compose Story'", function() {
+			it('> should show "Compose Story"', function() {
 				expect(page.isLoggedIn()).toBeTruthy();
 				expect(page.navBar.isDisplayed()).toBe(true);
 				page.menuCreate.click();
@@ -316,7 +406,7 @@ describe('Mapstory Home', function() {
 					page.importLayerLink.click();
 				});
 
-				it("> has a 'Close' button", function() {
+				it('> has a "Close button"', function() {
 					var closeButton = element(by.css('i.fa.fa-times.pointer.import-wizard-icon'));
 					expect(closeButton.isDisplayed()).toBe(true);
 					closeButton.click();
@@ -325,16 +415,16 @@ describe('Mapstory Home', function() {
 				/**
 				 * Step 1
 				 */
-				describe("> Step 1", function() {
-					it("> should complete step 1", function() {
+				describe('> Step 1', function() {
+					it('> should complete step 1', function() {
 						page.doStep1();
 					});
 
-					xit("> can close the form", function() {
+					xit('> can close the form', function() {
 
 					});
 
-					xit("> highlights the correct step", function() {
+					xit('> highlights the correct step', function() {
 
 					});
 				});
@@ -342,25 +432,25 @@ describe('Mapstory Home', function() {
 				/**
 				 * Step 2
 				 */
-				describe("> Step 2", function() {
-					it("should complete step 2", function() {
+				describe('> Step 2', function() {
+					it('should complete step 2', function() {
 						page.doStep1();
 						page.doStep2();
 					});
 
-					it("> can go to next step", function() {
+					it('> can go to next step', function() {
 
 					});
 
-					it("> can close form", function() {
+					it('> can close form', function() {
 
 					});
 
-					it("> highlights the correct step", function() {
+					it('> highlights the correct step', function() {
 
 					});
 
-					it("> should not continue without file", function() {
+					it('> should not continue without file', function() {
 
 					});
 				});
@@ -368,12 +458,12 @@ describe('Mapstory Home', function() {
 				/**
 				 * Step 3
 				 */
-				describe("> Step 3", function() {
-					xit("should edit title", function() {
+				describe('> Step 3', function() {
+					xit('should edit title', function() {
 
 					});
 
-					it("> should complete step 3", function() {
+					it('> should complete step 3', function() {
 						page.doStep1();
 						page.doStep2();
 						page.doStep3();
@@ -383,8 +473,8 @@ describe('Mapstory Home', function() {
 				/**
 				 * Step 4
 				 */
-				describe("> Step 4", function() {
-					it("should complete step 4", function() {
+				describe('> Step 4', function() {
+					it('should complete step 4', function() {
 						page.doStep1();
 						page.doStep2();
 						page.doStep3();
@@ -395,12 +485,12 @@ describe('Mapstory Home', function() {
 				/**
 				 * Step 5
 				 */
-				describe("> Step 5", function() {
-					xit("should set community settings", function() {
+				describe('> Step 5', function() {
+					xit('should set community settings', function() {
 
 					});
 
-					it("> should complete step 5", function() {
+					it('> should complete step 5', function() {
 						page.doStep1();
 						page.doStep2();
 						page.doStep3();
@@ -413,8 +503,8 @@ describe('Mapstory Home', function() {
 				/**
 				 * Step 6
 				 */
-				describe("> Step 6", function() {
-					it("> should complete step 6", function() {
+				describe('> Step 6', function() {
+					it('> should complete step 6', function() {
 						page.doStep1();
 						page.doStep2();
 						page.doStep3();
@@ -435,19 +525,19 @@ describe('Mapstory Home', function() {
 	 * The search bar
 	 */
 	xdescribe('> The "Search bar"', function() {
-		it("> should show", function() {
+		it('> should show', function() {
 
 		});
 
-		it("> has a button", function() {
+		it('> has a button', function() {
 
 		});
 
-		it("searches for things", function() {
+		it('searches for things', function() {
 
 		});
 
-		it("filters bad test input", function() {
+		it('filters bad test input', function() {
 
 		});
 	});
@@ -455,4 +545,13 @@ describe('Mapstory Home', function() {
 	xit('should logout', function() {
 
 	});
+
+	it('should change languages', function() {
+		var languageDropdown = element(by.css('.lang.col-md-6.pull-right'));
+		expect(languageDropdown.waitReady()).toBeTruthy();
+		// Try Spanish!
+		languageDropdown.$('[value="es"]').click();
+		// selectDate.$('[value="e_date"]').click();
+	});
+
 });
