@@ -4,19 +4,11 @@ module.exports = {
         "commonjs": true,
         "es6": true,
         "node": true,
-        "jasmine": true
-    },
-    "globals": {
-        "element": true,
         "protractor": true,
-        "browser": true,
-        "by": true
+        "jasmine": true,
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
         "sourceType": "module"
     },
     "rules": {
@@ -27,6 +19,10 @@ module.exports = {
         "linebreak-style": [
             "error",
             "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
         ],
         "semi": [
             "error",
