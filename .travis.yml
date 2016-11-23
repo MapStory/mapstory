@@ -27,7 +27,7 @@ before_script:
   - python manage.py migrate layers --noinput
   - python manage.py migrate groups --noinput
   - python manage.py migrate --noinput
-  - mkdir -p /var/lib/mapstory/media/
+  - sudo mkdir -p /var/lib/mapstory/media/
 
 script:
   - python manage.py test mapstory.test
