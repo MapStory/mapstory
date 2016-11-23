@@ -22,8 +22,17 @@ install:
   - sudo apt-get install -y --force-yes openjdk-6-jdk ant maven2 libjai-imageio-core-java --no-install-recommends
   - pip install -r requirements.txt
 
+before_script:
+  - python manage.py migrate maps --noinput
+  - python manage.py migrate layers --noinput
+  - python manage.py migrate groups --noinput
+  - python manage.py migrate --noinput
+  - sudo mkdir -p /var/lib/mapstory/media/
+  - sudo chmod 775 /var/lib/mapstory/media/
+  - sudo chown $USER /var/lib/mapstory/media/
+
 script:
-  - python manage.py test
+  - python manage.py test mapstory.test
 
 notifications:
   slack: mapstory:E2W57xKNNOKDDqRmtQHNUlBK
