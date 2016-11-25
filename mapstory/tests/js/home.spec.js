@@ -57,11 +57,9 @@ describe('Mapstory Home', function() {
 
 		// Wait for login form
 		waitFor(page.loginForm);
-
 		page.loginForm.isDisplayed().then(function(displayed){
 			expect(displayed).toBe(true);
 		});
-
 
 		// Input username
 		page.usernameInput.isDisplayed().then(function(displayed){
@@ -89,6 +87,7 @@ describe('Mapstory Home', function() {
 		// Fetch the site
 		browser.get('http://192.168.56.151');
 		browser.waitForAngular();
+
 		// Fetch the elements
 		page = require('./home.po');
 	});
@@ -124,9 +123,9 @@ describe('Mapstory Home', function() {
 		it('should display "Log In" and "Sign up" tabs', function() {
 			expect(page.loginIcon.isDisplayed()).toBeTruthy();
 			expect(page.loginIcon.waitReady()).toBeTruthy();
+			// Click lgin
 			page.loginIcon.click();
 			expect(page.loginModal.waitReady()).toBe(true);
-			// expect(page.navigationTabs.waitReady()).toBe(true);
 			expect(element(by.linkText('Log In')).isPresent()).toBe(true);
 			expect(element(by.linkText('Sign Up')).isPresent()).toBe(true);
 		});
@@ -137,26 +136,30 @@ describe('Mapstory Home', function() {
 		describe('> the "Log In" tab', function() {
 			it('should show by default', function() {
 				expect(page.loginIcon.isDisplayed()).toBeTruthy();
+				// Click Login
 				page.loginIcon.click();
 				expect(page.loginForm.waitReady()).toBeTruthy();
 				expect(elementFound(by.css('label[for="username"]'))).toBe(true);
 			});
 
 			it('> should have a close button', function() {
-				// expect(page.loginIcon.isDisplayed()).toBeTruthy();
 				expect(page.loginIcon.waitReady()).toBeTruthy();
+				// Click Login
 				page.loginIcon.click();
 				expect(page.loginForm.waitReady()).toBeTruthy();
 				expect(page.login_close_button.isDisplayed).toBeTruthy();
+				// Click close
 				page.login_close_button.click();
-				// expect(element(by.css('label[for="username"]')).isDisplayed()).toBeFalsy();
 			});
 
 			it('> should require a username and password', function() {
 				expect(page.loginIcon.isDisplayed()).toBeTruthy();
+				// Click login
 				page.loginIcon.click();
 				expect(page.loginForm.waitReady()).toBeTruthy();
+				// Clock submit
 				element(by.css('.login-auth-btn.btn.btn-md.btn-block')).click();
+				// Expect error messages
 				expect(element(by.css('#div_id_username.form-group.has-error')).isDisplayed()).toBeTruthy();
 				expect(element(by.css('#div_id_password.form-group.has-error')).isDisplayed()).toBeTruthy();
 
@@ -181,14 +184,14 @@ describe('Mapstory Home', function() {
 
 			it('> should register a new user', function() {
 				expect(page.loginIcon.isDisplayed()).toBeTruthy();
+				// Click login
 				page.loginIcon.click();
 				expect(page.loginForm.waitReady()).toBeTruthy();
 
+				// Click signup
 				var button = element(by.linkText('Sign Up'));
 				expect(button.waitReady()).toBeTruthy();
 				button.click();
-
-				// Creates a random username
 				var userid = page.makeid(5);
 				var usernameInput = element(by.css('#id_username'));
 				var nameInput = element(by.css('#id_first_name'));
@@ -196,19 +199,23 @@ describe('Mapstory Home', function() {
 				var emailInput = element(by.css('#id_email'));
 				var passwordInput = element(by.css('#id_password'));
 				var confirmPasswordInput = element(by.css('#password_confirm'));
-
+				// Set username
 				expect(usernameInput.waitReady()).toBeTruthy();
-
 				usernameInput.sendKeys(userid);
+				// Set First Name
 				nameInput.sendKeys('Moofasa');
+				// Set Last name
 				lastNameInput.sendKeys('Test');
+				// Set email
 				emailInput.sendKeys('josellausas+mapstory@gmail.com');
+				// Set password
 				passwordInput.sendKeys('testPassword2001!');
+				// Confirm password
 				confirmPasswordInput.sendKeys('testPassword2001!');
-
+				// Accept terms
 				var termsCheckbox = element(by.model('agreed'));
 				termsCheckbox.click();
-
+				// Click Join
 				element(by.buttonText('Join')).click();
 			});
 		});
@@ -405,6 +412,55 @@ describe('Mapstory Home', function() {
 				page.uploadIconsLink.click();
 			});
 
+			it('should only upload svg files', function() {
+				expect(page.isLoggedIn()).toBeTruthy();
+				expect(page.navBar.isDisplayed()).toBe(true);
+				page.menuCreate.click();
+
+				expect(page.uploadIconsLink.waitReady()).toBeTruthy();
+				page.uploadIconsLink.click();
+
+				var tagsInput = element(by.css('#id_tags'));
+				expect(tagsInput.waitReady()).toBeTruthy();
+
+				tagsInput.sendKeys('testtag00');
+
+				// Send the file
+				var filePath = page.getPNGPath();
+
+				var fileInput = element(by.css('#id_svg'));
+				expect(fileInput.waitReady()).toBeTruthy();
+
+				fileInput.sendKeys(filePath);
+
+				// Press send
+				var uploadButton = element(by.css('#icon_submit_btn'));
+				expect(uploadButton.waitReady()).toBeTruthy();
+
+				uploadButton.click();
+
+				// Expect error message
+				// var errorMessage = element(by.css());
+				//
+				// browser.wait(1000);
+				// Button should still be there
+				// expect(uploadButton.waitReady()).toBeTruthy();
+			});
+
+			it('should upload icons', function() {
+				expect(page.isLoggedIn()).toBeTruthy();
+				expect(page.navBar.isDisplayed()).toBe(true);
+				page.menuCreate.click();
+
+				expect(page.uploadIconsLink.waitReady()).toBeTruthy();
+				page.uploadIconsLink.click();
+
+				var tagsInput = element(by.css('#id_tags'));
+				expect(tagsInput.waitReady()).toBeTruthy();
+
+				tagsInput.sendKeys('testtag00');
+			});
+
 			it('> should show "Compose Story"', function() {
 				expect(page.isLoggedIn()).toBeTruthy();
 				expect(page.navBar.isDisplayed()).toBe(true);
@@ -567,9 +623,8 @@ describe('Mapstory Home', function() {
 	it('should change languages', function() {
 		var languageDropdown = element(by.css('.lang.col-md-6.pull-right'));
 		expect(languageDropdown.waitReady()).toBeTruthy();
+
 		// Try to select spanish
 		languageDropdown.$('[value="es"]').click();
-
 	});
-
 });
