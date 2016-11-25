@@ -12,6 +12,9 @@ var path = require('path');
 const testLayerFileRelative = '../test_assets/lewisandclarktrail.csv';
 const testLayerFile = path.resolve(__dirname, testLayerFileRelative);
 
+const testPNGRelative = '../test_assets/icon.png';
+const testPNGFile = path.resolve(__dirname, testPNGRelative);
+
 /**
  * Home Page Object
  */
@@ -286,13 +289,8 @@ var home_page = function() {
 	 * Create Layer - Step 3
 	 */
 	this.createLayer_Step3 = function() {
-		// Step 3
-		// ------
 		var requiredCheck = element(by.css('#fieldNillable-0'));
 		expect(requiredCheck.waitReady());
-		// var fieldTypeDropdown = element(by.model('field.binding'));
-		// fieldTypeDropdown.$('[value=""]')
-		// expect(fieldTypeDropdown.waitReady()).toBeTruthy();
 		var currentSection = element(by.css('section.step.ng-isolate-scope.current'));
 		currentSection.$('.btn[value="Continue"]').click();
 	};
@@ -302,8 +300,6 @@ var home_page = function() {
 	 * Create Layer - Step 4
 	 */
 	this.createLayer_Step4 = function() {
-		// Step 4
-		// ------
 		var startTimeDropdown = element(by.model('layer.configuration_options.start_date'));
 		expect(startTimeDropdown.waitReady()).toBeTruthy();
 		startTimeDropdown.$('[value="time"]').click();
@@ -318,8 +314,6 @@ var home_page = function() {
 	 * Create Layer - Step 5
 	 */
 	this.createLayer_Step5 = function() {
-		// Step 5
-		// ------
 		var shareButton = element.all(by.css('.btn.ng-pristine.ng-untouched.ng-valid')).first();
 		expect(shareButton.waitReady()).toBeTruthy();
 
@@ -362,6 +356,14 @@ var home_page = function() {
 		this.createLayer_Step4();
 		this.createLayer_Step5();
 		this.createLayer_Step6();
+	};
+
+	/**
+	 * Returs the absolute path to a test PNG image.
+	 * @return {String} An absolute Path
+	 */
+	this.getPNGPath = function() {
+		return testPNGFile;
 	};
 
 
