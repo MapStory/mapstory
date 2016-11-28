@@ -2,6 +2,7 @@
  * Composer E2E Tests
  * ==================
  */
+'use strict';
 
 describe('Composer', function() {
 	// Our home page object
@@ -9,7 +10,6 @@ describe('Composer', function() {
 
 	beforeEach(function() {
 		page = require('./composer.po.js');
-		// page.get();
 	});
 
 	it('> should start logged in', function() {
@@ -19,15 +19,11 @@ describe('Composer', function() {
 		home.login();
 	});
 
-	it('> should open URL', function() {
-		// expect(browser.getTitle()).toEqual('MapStory');
+	pending('TODO').it('> should require login', function() {
+
 	});
 
-	xit('> should require login', function() {
-		pending();
-	});
-
-	xit('> should be accessed from home', function(){
+	pending('TODO').it('> should be accessed from home', function(){
 		browser.get('http://192.168.56.151');
 		browser.waitForAngular();
 
@@ -42,7 +38,7 @@ describe('Composer', function() {
 
 	});
 
-	it('> should display welcome modal', function() {
+	pending('TODO').it('> should display welcome modal', function() {
 
 		browser.get('http://192.168.56.151/maps/new?tour');
 		// browser.waitForAngular();
@@ -57,15 +53,15 @@ describe('Composer', function() {
 		// ok.click();
 	});
 
-	it('> should go back to Home', function(){
+	pending('TODO').it('> should go back to Home', function(){
 
 	});
 
-	it('> should give a tour', function() {
+	pending('TODO').it('> should give a tour', function() {
 
 	});
 
-	it('> should begin creating', function() {
+	pending('TODO').it('> should begin creating', function() {
 
 	});
 });

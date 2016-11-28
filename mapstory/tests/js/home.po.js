@@ -12,8 +12,6 @@ var path = require('path');
 const testLayerFileRelative = '../test_assets/lewisandclarktrail.csv';
 const testLayerFile = path.resolve(__dirname, testLayerFileRelative);
 
-const testPNGRelative = '../test_assets/icon.png';
-const testPNGFile = path.resolve(__dirname, testPNGRelative);
 
 /**
  * Home Page Object
@@ -357,16 +355,6 @@ var home_page = function() {
 		this.createLayer_Step5();
 		this.createLayer_Step6();
 	};
-
-	/**
-	 * Returs the absolute path to a test PNG image.
-	 * @return {String} An absolute Path
-	 */
-	this.getPNGPath = function() {
-		return testPNGFile;
-	};
-
-
 };
 
 module.exports = new home_page();
