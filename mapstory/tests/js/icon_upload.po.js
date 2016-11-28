@@ -21,6 +21,10 @@ var iconUploadWizard = function() {
 	this.getSVGPath = function() {
 		return testSVGFile;
 	};
+
+	this.getSuccessText = function() {
+		return 'Congratulations! Your upload was successful. You can see your icons on your profile page. When you\'re composing a story with point layers, you\'ll be able to style your points with any icons uploaded by any storyteller in the Icons Commons!';
+	};
 };
 
 module.exports = new iconUploadWizard();

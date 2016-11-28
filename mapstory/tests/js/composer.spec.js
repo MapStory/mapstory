@@ -39,11 +39,9 @@ describe('Composer', function() {
 	});
 
 	pending('TODO').it('> should display welcome modal', function() {
-
 		browser.get('http://192.168.56.151/maps/new?tour');
 		// browser.waitForAngular();
 		// browser.wait(4000);
-
 		// browser.pause();
 		// var welcomeTour = element(by.css('#welcomeTour'));
 		// browser.wait(1000);
