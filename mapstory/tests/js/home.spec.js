@@ -24,6 +24,7 @@ function elementFound(locator) {
 
 
 var EC = protractor.ExpectedConditions;
+const wait_times = require('./wait_times');
 
 
 /**
@@ -100,18 +101,17 @@ describe('Mapstory Home', function() {
 
 	it('> should have an icon', function() {
 		expect(page.loginIcon.isPresent()).toBeTruthy();
-		expect(page.loginIcon.isDisplayed()).toBeTruthy();
+		expect(page.loginIcon.waitReady()).toBeTruthy();
 	});
 
 	/**
 	 * Login Button
 	 */
-	it('> shows the Login Form', function() {
+	it('> should display a Login Form', function() {
 		page.loginIcon.isDisplayed().then(function(displayed){
 			if(displayed == false) {
 				page.logout();
 			}
-
 			waitFor(page.loginIcon);
 			page.loginIcon.click();
 			waitFor(page.loginForm);
@@ -121,8 +121,8 @@ describe('Mapstory Home', function() {
 	/**
 	 * The Auth Form
 	 */
-	describe('> The "Auth Form"', function() {
-		it('should display "Log In" and "Sign up" tabs', function() {
+	describe('> The "Login Form"', function() {
+		it('should have "Log In" and "Sign up" tabs', function() {
 			expect(page.loginIcon.isDisplayed()).toBeTruthy();
 			expect(page.loginIcon.waitReady()).toBeTruthy();
 			// Click lgin
@@ -135,9 +135,10 @@ describe('Mapstory Home', function() {
 		/**
 		 * The Log in Form
 		 */
-		describe('> the "Log In" tab', function() {
-			it('should show by default', function() {
+		describe('> The "Log In" tab', function() {
+			it('should be shown by default', function() {
 				expect(page.loginIcon.isDisplayed()).toBeTruthy();
+
 				// Click Login
 				page.loginIcon.click();
 				expect(page.loginForm.waitReady()).toBeTruthy();
@@ -560,7 +561,7 @@ describe('Mapstory Home', function() {
 
 				it('Can edit metadata', function() {
 					page.uploadLayer_Step6();
-					browser.sleep(2000);
+					browser.sleep(wait_times['metadata_load']);
 					var titleInput = element(by.css('#id_title'));
 					var categoryDropdown = element(by.css('#id_category'));
 					var summaryText = element(by.css('#id_abstract'));

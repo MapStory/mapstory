@@ -86,6 +86,4 @@ describe('Icon Upload Wizard', function() {
 			expect(visible).toBe(false);
 		});
 	});
-
-
 });

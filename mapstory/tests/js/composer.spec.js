@@ -32,7 +32,7 @@ describe('Composer', function() {
 
 		expect(home.composeStoryLink.waitReady()).toBeTruthy();
 		home.composeStoryLink.click();
-		browser.wait(4000);
+		browser.sleep(4000);
 		// browser.pause();
 		// expect(browser.getCurrentUrl()).toContain(browser.baseUrl + '/maps/new');
 

@@ -12,6 +12,8 @@ var path = require('path');
 const testLayerFileRelative = '../test_assets/lewisandclarktrail.csv';
 const testLayerFile = path.resolve(__dirname, testLayerFileRelative);
 
+var wait_times = require('./wait_times');
+
 
 /**
  * Home Page Object
@@ -227,8 +229,7 @@ var home_page = function() {
 		expect(importButton.waitReady()).toBeTruthy();
 		importButton.click();
 
-		// Wait about 7 secs
-		browser.driver.sleep(7233);
+		browser.driver.sleep(wait_times['layerUpload']);
 
 		var finishButton = this.step6.element(by.buttonText('View Layer'));
 		expect(finishButton.waitReady()).toBeTruthy();
@@ -330,14 +331,14 @@ var home_page = function() {
 		continueButton.click();
 
 		// Wait x seconds
-		browser.driver.sleep(4000);
+		browser.driver.sleep(wait_times['layerCreate']);
 
 		var doneButton = element(by.linkText('StoryLayer'));
 		expect(doneButton.waitReady()).toBeTruthy();
 
 		doneButton.click();
 
-		browser.driver.sleep(2000);
+		browser.driver.sleep(wait_times['newLayer']);
 		var saveButton = element(by.partialButtonText('Save'));
 		expect(saveButton.waitReady()).toBeTruthy();
 		saveButton.click();
