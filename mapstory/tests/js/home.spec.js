@@ -14,6 +14,8 @@
  * This is very handy for finding the right selectors: https://github.com/andresdominguez/elementor
  * After install run: `elementor http://192.168.56.151` to start the tool
  */
+'use strict';
+
 require('./waitReady.js');
 
 function elementFound(locator) {
@@ -22,6 +24,7 @@ function elementFound(locator) {
 
 
 var EC = protractor.ExpectedConditions;
+
 
 /**
  * Waits for an element to be visible
@@ -174,11 +177,11 @@ describe('Mapstory Home', function() {
 		 * The Sign up Form
 		 */
 		describe('> The "Sign up" tab', function() {
-			xit('> changes to the signup form when clicked', function() {
+			pending('TODO').it('> changes to the signup form when clicked', function() {
 
 			});
 
-			xit('> requires the user to agree the terms and conditions', function() {
+			pending('TODO').it('> requires the user to agree the terms and conditions', function() {
 
 			});
 
@@ -404,6 +407,8 @@ describe('Mapstory Home', function() {
 			});
 
 			it('> should show "Upload Icons"', function() {
+
+
 				expect(page.isLoggedIn()).toBeTruthy();
 				expect(page.navBar.isDisplayed()).toBe(true);
 				page.menuCreate.click();
@@ -412,7 +417,7 @@ describe('Mapstory Home', function() {
 				page.uploadIconsLink.click();
 			});
 
-			it('should only upload svg files', function() {
+			it('> should reject non svg files', function() {
 				expect(page.isLoggedIn()).toBeTruthy();
 				expect(page.navBar.isDisplayed()).toBe(true);
 				page.menuCreate.click();
@@ -426,7 +431,8 @@ describe('Mapstory Home', function() {
 				tagsInput.sendKeys('testtag00');
 
 				// Send the file
-				var filePath = page.getPNGPath();
+				var icon_upload_wizard = require('./icon_upload.po');
+				var filePath = icon_upload_wizard.getPNGPath();
 
 				var fileInput = element(by.css('#id_svg'));
 				expect(fileInput.waitReady()).toBeTruthy();
@@ -439,15 +445,14 @@ describe('Mapstory Home', function() {
 
 				uploadButton.click();
 
-				// Expect error message
-				// var errorMessage = element(by.css());
-				//
-				// browser.wait(1000);
-				// Button should still be there
-				// expect(uploadButton.waitReady()).toBeTruthy();
+				// Expect no success:
+				var successAlert = element(by.css('.alert.alert-success'));
+				successAlert.isPresent(function(visible){
+					expect(visible).toBe(false);
+				});
 			});
 
-			it('should upload icons', function() {
+			it('> should succeed in upload svg icons', function() {
 				expect(page.isLoggedIn()).toBeTruthy();
 				expect(page.navBar.isDisplayed()).toBe(true);
 				page.menuCreate.click();
@@ -458,7 +463,30 @@ describe('Mapstory Home', function() {
 				var tagsInput = element(by.css('#id_tags'));
 				expect(tagsInput.waitReady()).toBeTruthy();
 
-				tagsInput.sendKeys('testtag00');
+				tagsInput.sendKeys('testtag01');
+
+				// Send the file
+				var icon_upload_wizard = require('./icon_upload.po');
+				var filePath = icon_upload_wizard.getSVGPath();
+
+				var fileInput = element(by.css('#id_svg'));
+				expect(fileInput.waitReady()).toBeTruthy();
+
+				fileInput.sendKeys(filePath);
+
+				// Press send
+				var uploadButton = element(by.css('#icon_submit_btn'));
+				expect(uploadButton.waitReady()).toBeTruthy();
+
+				uploadButton.click();
+
+				// Expect success:
+				var successAlert = element(by.css('.alert.alert-success'));
+				expect(successAlert.waitReady()).toBeTruthy();
+
+				successAlert.getText(function(text) {
+					expect(text).toEqual('Congratulations! Your upload was successful. You can see your icons on your profile page. When you\'re composing a story with point layers, you\'ll be able to style your points with any icons uploaded by any storyteller in the Icons Commons!');
+				});
 			});
 
 			it('> should show "Compose Story"', function() {
@@ -494,11 +522,11 @@ describe('Mapstory Home', function() {
 						page.uploadLayer_Step1();
 					});
 
-					xit('> can close the form', function() {
+					pending('TODO').it('> can close the form', function() {
 
 					});
 
-					xit('> highlights the correct step', function() {
+					pending('TODO').it('> highlights the correct step', function() {
 
 					});
 				});
@@ -512,19 +540,19 @@ describe('Mapstory Home', function() {
 						page.uploadLayer_Step2();
 					});
 
-					it('> can go to next step', function() {
+					pending('TODO').it('> can go to next step', function() {
 
 					});
 
-					it('> can close form', function() {
+					pending('TODO').it('> can close form', function() {
 
 					});
 
-					it('> highlights the correct step', function() {
+					pending('TODO').it('> highlights the correct step', function() {
 
 					});
 
-					it('> should not continue without file', function() {
+					pending('TODO').it('> should not continue without file', function() {
 
 					});
 				});
@@ -533,7 +561,7 @@ describe('Mapstory Home', function() {
 				 * Step 3
 				 */
 				describe('> Step 3', function() {
-					xit('should edit title', function() {
+					pending('TODO').it('should edit title', function() {
 
 					});
 
@@ -560,7 +588,7 @@ describe('Mapstory Home', function() {
 				 * Step 5
 				 */
 				describe('> Step 5', function() {
-					xit('should set community settings', function() {
+					pending('TODO').it('should set community settings', function() {
 
 					});
 
@@ -588,8 +616,41 @@ describe('Mapstory Home', function() {
 					});
 				});
 
-				xit('> should show summary when succesful', function() {
+				pending('TODO').it('> should show summary when succesful', function() {
 
+				});
+			});
+
+			describe('Layer Edit Metadata', function() {
+				beforeEach(function() {
+					element(by.linkText('Create')).click();
+					page.importLayerLink.click();
+					page.uploadLayer_Step1();
+					page.uploadLayer_Step2();
+					page.uploadLayer_Step3();
+					page.uploadLayer_Step4();
+					page.uploadLayer_Step5();
+				});
+
+				it('Can edit metadata', function() {
+					page.uploadLayer_Step6();
+					browser.sleep(2000);
+					var titleInput = element(by.css('#id_title'));
+					var categoryDropdown = element(by.css('#id_category'));
+					var summaryText = element(by.css('#id_abstract'));
+					var languageDropdown = element(by.css('#id_language'));
+					var dataSourceText = element(by.css('#id_distribution_url'));
+					var dataQualityText = element(by.css('#id_data_quality_statement'));
+					var purposeText = element(by.css('#id_purpose'));
+					var isPublishedCheckbox = element(by.css('#id_is_published'));
+					expect(titleInput.waitReady()).toBeTruthy();
+					expect(categoryDropdown.waitReady()).toBeTruthy();
+					expect(summaryText.waitReady()).toBeTruthy();
+					expect(languageDropdown.waitReady()).toBeTruthy();
+					expect(dataSourceText.waitReady()).toBeTruthy();
+					expect(dataQualityText.waitReady()).toBeTruthy();
+					expect(purposeText.waitReady()).toBeTruthy();
+					expect(isPublishedCheckbox.waitReady()).toBeTruthy();
 				});
 			});
 		});
@@ -598,7 +659,7 @@ describe('Mapstory Home', function() {
 	/**
 	 * The search bar
 	 */
-	xdescribe('> The "Search bar"', function() {
+	pending('TODO').describe('> The "Search bar"', function() {
 		it('> should show', function() {
 
 		});
@@ -616,7 +677,7 @@ describe('Mapstory Home', function() {
 		});
 	});
 
-	xit('should logout', function() {
+	pending('TODO').it('should logout', function() {
 
 	});
 
