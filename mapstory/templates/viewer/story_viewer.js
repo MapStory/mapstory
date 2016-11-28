@@ -53,7 +53,6 @@
         this.storyChapter = 1;
         this.chapterCount = 1;
         var self = this;
-        var stutils = storytools.core.time.utils;
         StoryPinLayerManager.map = self.storyMap;
         StoryBoxLayerManager.map = self.storyMap;
         this.loadConfig = function(config, chapter){
@@ -78,11 +77,16 @@
             self.owner = config.about.owner;
         };
 
-        this.displayPinInfo = function(pixel) {
-            var feature = self.storyMap.getMap().forEachFeatureAtPixel(pixel,
-                function (feature, layer) {
-                    return feature;
-                });
+        this.displayPinInfo = function(pixel, pin) {
+            var feature = null;
+            if (typeof(pin) == 'undefined' || pin == null) {
+                feature = self.storyMap.getMap().forEachFeatureAtPixel(pixel,
+                    function (feature, layer) {
+                        return feature;
+                    });
+            } else {
+                feature = pin;
+            }
             if (feature) {
                 var overlays = self.storyMap.getMap().getOverlays().getArray();
                 var popup = null;
@@ -105,6 +109,7 @@
                     };
                     popup = new ol.Overlay.Popup(popupOptions);
                     self.storyMap.getMap().addOverlay(popup);
+                    $rootScope.$broadcast('pausePlayback');
                 }
                 popup.setPosition(coord);
                 popup.show(coord, feature.get('content') + feature.get('media'));
@@ -161,22 +166,8 @@
 
         self.loadConfig(config, chapter);
     });
-        $rootScope.$on('rangeChange', function(range) {
-            var pinsToCheck = StoryPinLayerManager.storyPins.filter(function(pin) {
-                return pin.auto_show;
-            });
-
-            for(var iPin = 0; iPin < pinsToCheck.length; iPin += 1) {
-                var pin = pinsToCheck[iPin];
-                var pinRange = stutils.createRange(pin.start_time, pin.end_time);
-                if (pinRange.intersects(range)) {
-                    self.displayPinInfo(pin.geometry.getCoordinates());
-                }
-            }
-        });
-
-        $rootScope.$on('show-pin', function(pin) {
-            self.displayPinInfo(pin.getGeometry().getCoordinates());
+        $rootScope.$on('showPin', function(event, pin) {
+            self.displayPinInfo(null, pin);
         });
 }
 
