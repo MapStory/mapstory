@@ -47,7 +47,6 @@ describe('Mapstory Home', function() {
 		browser.get('http://192.168.56.151');
 		page = require('./home.po');
 		browser.waitForAngular();
-		// Fetch the elements
 	});
 
 	/**
@@ -407,8 +406,6 @@ describe('Mapstory Home', function() {
 			});
 
 			it('> should show "Upload Icons"', function() {
-
-
 				expect(page.isLoggedIn()).toBeTruthy();
 				expect(page.navBar.isDisplayed()).toBe(true);
 				page.menuCreate.click();
@@ -417,77 +414,6 @@ describe('Mapstory Home', function() {
 				page.uploadIconsLink.click();
 			});
 
-			it('> should reject non svg files', function() {
-				expect(page.isLoggedIn()).toBeTruthy();
-				expect(page.navBar.isDisplayed()).toBe(true);
-				page.menuCreate.click();
-
-				expect(page.uploadIconsLink.waitReady()).toBeTruthy();
-				page.uploadIconsLink.click();
-
-				var tagsInput = element(by.css('#id_tags'));
-				expect(tagsInput.waitReady()).toBeTruthy();
-
-				tagsInput.sendKeys('testtag00');
-
-				// Send the file
-				var icon_upload_wizard = require('./icon_upload.po');
-				var filePath = icon_upload_wizard.getPNGPath();
-
-				var fileInput = element(by.css('#id_svg'));
-				expect(fileInput.waitReady()).toBeTruthy();
-
-				fileInput.sendKeys(filePath);
-
-				// Press send
-				var uploadButton = element(by.css('#icon_submit_btn'));
-				expect(uploadButton.waitReady()).toBeTruthy();
-
-				uploadButton.click();
-
-				// Expect no success:
-				var successAlert = element(by.css('.alert.alert-success'));
-				successAlert.isPresent(function(visible){
-					expect(visible).toBe(false);
-				});
-			});
-
-			it('> should succeed in upload svg icons', function() {
-				expect(page.isLoggedIn()).toBeTruthy();
-				expect(page.navBar.isDisplayed()).toBe(true);
-				page.menuCreate.click();
-
-				expect(page.uploadIconsLink.waitReady()).toBeTruthy();
-				page.uploadIconsLink.click();
-
-				var tagsInput = element(by.css('#id_tags'));
-				expect(tagsInput.waitReady()).toBeTruthy();
-
-				tagsInput.sendKeys('testtag01');
-
-				// Send the file
-				var icon_upload_wizard = require('./icon_upload.po');
-				var filePath = icon_upload_wizard.getSVGPath();
-
-				var fileInput = element(by.css('#id_svg'));
-				expect(fileInput.waitReady()).toBeTruthy();
-
-				fileInput.sendKeys(filePath);
-
-				// Press send
-				var uploadButton = element(by.css('#icon_submit_btn'));
-				expect(uploadButton.waitReady()).toBeTruthy();
-
-				uploadButton.click();
-
-				// Expect success:
-				var successAlert = element(by.css('.alert.alert-success'));
-				expect(successAlert.waitReady()).toBeTruthy();
-
-				successAlert.getText(function(text) {
-					expect(text).toEqual('Congratulations! Your upload was successful. You can see your icons on your profile page. When you\'re composing a story with point layers, you\'ll be able to style your points with any icons uploaded by any storyteller in the Icons Commons!');
-				});
-			});
 
 			it('> should show "Compose Story"', function() {
 				expect(page.isLoggedIn()).toBeTruthy();
