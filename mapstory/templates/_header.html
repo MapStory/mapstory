@@ -79,12 +79,13 @@
                             <li>
                                 <a href="{% url 'upload' %}">{% trans "Upload Icons" %}</a>
                             </li>
+                            <li><a href="{% url 'new_map' %}?tour">{% trans "Compose Story" %}</a></li>
                         {% else %}
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Import Layer" %}</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Create Layer" %}</a></li>
-                            <li><a href="{% url 'upload' %}">{% trans "Upload Icons" %}</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Upload Icons" %}</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Compose Story" %}</a></li>
                         {% endif %}
-                        <li><a href="{% url 'new_map' %}?tour">{% trans "Compose Story" %}</a></li>
                     </ul>
                 </li>
                 <li><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></li>
@@ -93,14 +94,17 @@
                     <form class="navbar-form quicksearchcontainer" id="search" action="{% url 'search' %}">
                         <div class="col-md-3 search">
                             <div class="input-group">
-                                {% if HAYSTACK_SEARCH %}
-                                    <input id="quicksearch" type="text" class="form-control" name="q" placeholder="Quick Search">
-                                {% else %}
-                                    <input id="quicksearch" type="text" class="form-control" name="keywords__slug__in" placeholder="Quick Search">
-                                {% endif %}
+                                <input id="quicksearch" type="text" class="form-control" 
+                                    placeholder="Quick Search"
+                                    {% if HAYSTACK_SEARCH %} name="q" 
+                                    {% else %} name="keywords__slug__in"
+                                    {% endif %}
+                                >
                                 <span class="input-group-btn">
-                                <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
-                            </span>
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
                             </div>
                         </div>
                     </form>
