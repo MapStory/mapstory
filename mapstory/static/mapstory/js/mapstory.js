@@ -515,6 +515,7 @@
   keyword_list = keyword_list.split('\'');
   $scope.tags = [];
   // Grab every odd numbered index - hack to grab the keywords only
+  // BUG: this doesn't work at all with special characters like '' "" in the unicode literals we're grabbing
   for (var i = 1; i < keyword_list.length; i += 2) {
     $scope.tags.push(keyword_list[i]);
   }
@@ -564,7 +565,7 @@
             type:'POST',
             data:
             {
-                add_keyword: e.attrs.value
+                add_keyword: e.attrs.value.toLowerCase()
             },
             success: function(msg)
             {
