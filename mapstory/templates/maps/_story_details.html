@@ -207,17 +207,46 @@
                                     </div>
                                 </div>
                                 {% endfor %}
-                            </div>    
+                            </div>
                         </div>
                     </div>
+                    {% if content_moderators in user.groups.all or user == resource.owner or user.is_superuser %}
+                    <div class="Summary">
+                      <div>
+                        <h3>
+                          Thumbnail
+                        </h3>
+                      </div>
+                      <hr>
+                      <tr>
+                          <td width="35%">
+                              <a href="{{ thumbnail }}"><img ng-src="{{ thumbnail }}" src="{{ thumbnail }}" id="change-thumbnail-image"></a>
+
+                              <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <p>{{ thumb_form.non_field_errors }}</p>
+                            <p>{{ thumb_form.docfile.label_tag }} </p>
+                            <p>
+                                {{ thumb_form.thumbnail_image.errors }}
+                                {{ thumb_form.thumbnail_image }}
+                            </p>
+                            <button style="width:200px" class="btn btn-primary btn-md btn-block" type="submit">
+                              Change Image
+                            </button>
+                        </form>
+                          </td>
+                      </tr>
+                    </div>
+                    {% endif %}
                     {% if resource.owner == user %}
                     <div style= "padding-top: 40px">
                         <button class="btn btn-danger">
-                            <a href="{% url "map_remove" resource.id %}">{% trans "Delete this " %}{{SITE_NAME}}</a> 
+                            <a href="{% url "map_remove" resource.id %}">{% trans "Delete this " %}{{SITE_NAME}}</a>
                         </button>
                     </div>
                     {% endif %}
                 </div>
+
             </div>
         </div>
     </section>
