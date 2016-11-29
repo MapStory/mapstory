@@ -30,7 +30,7 @@ from mapstory.models import GetPage
 from mapstory.models import NewsItem
 from journal.models import JournalEntry
 from mapstory.models import Leader
-from mapstory.models import ThumbnailImage, ThumbnailImageForm
+from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
 from icon_commons.models import Icon
 from geonode.contrib.favorite.models import Favorite
 from geonode.contrib.collections.models import Collection
