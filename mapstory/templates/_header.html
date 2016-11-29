@@ -28,7 +28,7 @@
                             <li class="divider"></li>
                             <li><a href="{% url "edit_profile" user.username %}">{% trans "Edit Profile" %}</a></li>
                             <li><a href="{% url "account_password" %}">{% trans "Change Password" %}</a> </li>
-                            <li><a href="#" data-toggle="modal" data-target="#notifications">Notification Settings</a></li>
+                            <li><a href="{% url 'profile_detail' slug=user.username %}?showNotifications=true">{% trans "Notification Settings" %}</a></li>
                             <li class="divider"></li>
                             <li><a href="{% url 'getpage' 'started' %}">{% trans "Help" %}</a></li>
                             <li class="divider"></li>
