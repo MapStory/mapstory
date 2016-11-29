@@ -184,33 +184,35 @@
             </div>
         </article>
     </div>
-    <div id="notifications" class="modal fade col-md-8">
-        <div class="modal-content">
-            <h2 style="display:inline">Notifications settings</h2>
-            <a class="btn pull-right" data-dismiss="modal">Close</a>
-            <table class="table table-striped notice_settings">
-                <tr>
-                    <th>{% trans "Notification Type" %}</th>
-                    <th>{% trans "Activate" %}</th>
-                </tr>
-                {% for settings in notice_settings %}
-                    <tr class="notice-row">
-                        <td>
-                            <strong>{{ settings.notice_type.display }}</strong><br/>
-                            <span class="notice_type_description">
-                      {{ settings.notice_type.description }}
-                  </span>
-                        </td>
-                        <td>
-                            <input class="notice_setting" type="checkbox" name="{{ settings.notice_type.label }}"
-                                   {% if settings.send %}checked="yes"{% endif %}/>
-                        </td>
+    {% if user == profile %} 
+    <!-- Generate notification setting tables for modal only if it is their profile -->
+        <div id="notifications" class="modal fade col-md-8">
+            <div class="modal-content">
+                <h2 style="display:inline">Notifications settings</h2>
+                <a class="btn pull-right" data-dismiss="modal">Close</a>
+                <table class="table table-striped notice_settings">
+                    <tr>
+                        <th>{% trans "Notification Type" %}</th>
+                        <th>{% trans "Activate" %}</th>
                     </tr>
-                {% endfor %}
-            </table>
+                    {% for settings in notice_settings %}
+                        <tr class="notice-row">
+                            <td>
+                                <strong>{{ settings.notice_type.display }}</strong><br/>
+                                <span class="notice_type_description">
+                          {{ settings.notice_type.description }}
+                      </span>
+                            </td>
+                            <td>
+                                <input class="notice_setting" type="checkbox" name="{{ settings.notice_type.label }}" {% if settings.send %}checked="yes"{% endif %}/>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
-    </div>
-    </div>
+    {% endif %}
+ </div>
     {% include "_bulk_permissions_form.html" %}
 {% endblock %}
 
@@ -225,21 +227,33 @@
         // Pass the keyword list from the django template into the javascript
         keyword_list = "{{profile.keyword_list|escapejs}}";
     </script>
-    <script type="text/javascript">
-        $('.notice_setting').change(function (event) {
-            var element = event.target;
-            var send = element.checked;
-            var notice_type = element.name;
-            $.post(
-                    "{% url "set_profile_notification" user.get_username %}",
-                    {
-                        send: send,
-                        notice_type: notice_type,
-                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]')[0].value
-                    }
-            ).fail(function (data) {
-                alert('There was an error saving your setting');
+
+    {% if user == profile %}
+        <!-- Interaction with notification setting modal only if it is their profile -->
+        <script type="text/javascript">
+            {% if request.GET.showNotifications == 'true'%}
+                // allows linking to profile page with modal up,
+                // prompts user to change profile notifications
+                $(window).load(function () {
+                    $('#notifications').modal('show');
+                });
+            {% endif %}
+
+            $('.notice_setting').change(function (event) {
+                var element = event.target;
+                var send = element.checked;
+                var notice_type = element.name;
+                $.post(
+                        "{% url "set_profile_notification" user.get_username %}",
+                        {
+                            send: send,
+                            notice_type: notice_type,
+                            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]')[0].value
+                        }
+                ).fail(function (data) {
+                    alert('There was an error saving your setting');
+                });
             });
-        });
-    </script>
+        </script>
+    {% endif %}
 {% endblock extra_script %}
