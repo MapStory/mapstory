@@ -5,38 +5,32 @@
 {% load pagination_tags %}
 
 
-<div class="sidebar-header"><h3>user info</h3></div>
 {% if profile.profile %}
+    <div class="sidebar-header"><h3>About</h3></div>
     <div class="sidebar-content">{{ profile.profile }}</div>{% endif %}
 {% if profile.city or profile.country %}
-    <div class="sidebar-header"><h5>location</h5></div>
+    <div class="sidebar-header"><h3>Location</h3></div>
     {% if profile.city %}
-        <a href="/search/?limit=100&offset=0&type__in=user&city={{ profile.city }}">
-            <div class="sidebar-content">{{ profile.city }}</div>
-        </a>
+        <div class="sidebar-content">{{ profile.city }}</div>
     {% endif %}
     {% if profile.country %}
-        <a href="/search/?limit=100&offset=0&type__in=user&country={{ profile.country }}">
-            <div class="sidebar-content">{{ profile.country }}</div>
-        </a>
+        <div class="sidebar-content">{{ profile.country }}</div>
     {% endif %}
 {% endif %}
 {% if profile.education %}
-    <div class="sidebar-header"><h5>education</h5></div>
+    <div class="sidebar-header"><h3>Education</h3></div>
     <div class="sidebar-content">{{ profile.education }}</div>
 {% endif %}
 {% if profile.expertise %}
-    <div class="sidebar-header"><h5>expertise</h5></div>
+    <div class="sidebar-header"><h3>Expertise</h3></div>
     <div class="sidebar-content">{{ profile.expertise }}</div>
 {% endif %}
 {% if user.Volunteer_Technical_Community %}
     <div class="sidebar-content"><p>Volunteer Technical Community Member</p></div>
 {% endif %}
 
-
-
 <!-- contact profile -->
-<div class="sidebar-header"><h3>contact {{ profile.first_name|default_if_none:profile.username }} </h3></div>
+<div class="sidebar-header"><h3>Contact</h3></div>
     {% if user != profile %}
     <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary">message</a>
     {% endif %}
