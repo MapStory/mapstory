@@ -131,7 +131,7 @@ var home_page = function() {
 
 		// Default to 5
 		if (length < 1 ){
-			length = 5;
+			length = 7;
 		}
 
 		for( var i=0; i < length; i++ )
@@ -252,7 +252,7 @@ var home_page = function() {
 		expect(layerName.waitReady()).toBeTruthy();
 
 		// This creates a random id to avoid name collision
-		var layerStringName = 'testLayer_' + this.makeid(5);
+		var layerStringName = 'testLayer_' + this.makeid(7);
 		layerName.sendKeys(layerStringName);
 
 		var currentSection = element(by.css('section.step.ng-isolate-scope.current'));

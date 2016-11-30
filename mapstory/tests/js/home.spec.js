@@ -400,7 +400,7 @@ describe('Mapstory Home', function() {
 				});
 			});
 
-			describe('Layer Edit Metadata', function() {
+			describe('> Layer Edit Metadata', function() {
 				beforeEach(function() {
 					element(by.linkText('Create')).click();
 					page.importLayerLink.click();
@@ -411,7 +411,7 @@ describe('Mapstory Home', function() {
 					page.uploadLayer_Step5();
 				});
 
-				it('Can edit metadata', function() {
+				it('> Can edit metadata', function() {
 					page.uploadLayer_Step6();
 					browser.sleep(wait_times['metadata_load']);
 					var titleInput = element(by.css('#id_title'));
