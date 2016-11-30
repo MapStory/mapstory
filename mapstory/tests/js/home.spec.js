@@ -39,7 +39,7 @@ function waitFor(element) {
 /**
  * Mapstory Home Page
  */
-describe('Mapstory Home', function() {
+xdescribe('Mapstory Home', function() {
 	// Our home page object
 	var page = null;
 
@@ -177,10 +177,6 @@ describe('Mapstory Home', function() {
 		 * The Sign up Form
 		 */
 		describe('> The "Sign up" tab', function() {
-			pending('TODO').it('> changes to the signup form when clicked', function() {
-
-			});
-
 			pending('TODO').it('> requires the user to agree the terms and conditions', function() {
 
 			});
