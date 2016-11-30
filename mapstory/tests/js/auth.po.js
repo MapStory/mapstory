@@ -161,7 +161,7 @@ var AuthWizard = function() {
 	 */
 	this.createUser = function(userData) {
 		if(userData.name === null) {
-			var randomName = defaultTestUser + '_' + this.makeid(5);
+			var randomName = defaultTestUser + '_' + this.makeid(7);
 			userData.name = randomName;
 		}
 

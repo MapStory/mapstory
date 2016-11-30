@@ -106,7 +106,7 @@ describe('User auth', function() {
 				var button = element(by.linkText('Sign Up'));
 				expect(button.waitReady()).toBeTruthy();
 				button.click();
-				var userid = auth.makeid(5);
+				var userid = auth.makeid(7);
 				var usernameInput = element(by.css('#id_username'));
 				var nameInput = element(by.css('#id_first_name'));
 				var lastNameInput = element(by.css('#id_last_name'));
