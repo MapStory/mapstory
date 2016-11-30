@@ -175,95 +175,68 @@
     };
 })
 
-.controller('search_controller', function($injector, $scope, $location, $http){
-    $scope.query = $location.search();
-    $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
-    $scope.query.offset = $scope.query.offset || 0;
-    $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
+.controller('featured_carousel', function($injector, $scope, $http){
+  $scope.query = {};
+  $scope.query['is_published'] = true;
+  $scope.query['featured'] = true;
 
-    $scope.search = function() {
-      return query_api($scope.query).then(function(result) {
-        return result;
-      });
-    };
+  //set query limit for number of featured items desired for carousel
+  $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
 
-    //Get data from apis and make them available to the page
-    function query_api(data){
-      return $http.get('/api/base/search/', {params: data || {}}).success(function(data){
-        $scope.results = data.objects;
-        $scope.total_counts = data.meta.total_count;
-        $scope.$root.query_data = data;
-        if (HAYSTACK_SEARCH) {
-          if ($location.search().hasOwnProperty('q')){
-            $scope.text_query = $location.search()['q'].replace(/\W+/g," ");
-          }
-          if ($location.search().hasOwnProperty('type__in')){
-            $scope.type__in = $location.search()['type__in'].replace(/\W+/g," ");;
-          }
-        } else {
-          if ($location.search().hasOwnProperty('title__icontains')){
-            $scope.text_query = $location.search()['title__icontains'].replace(/\W+/g," ");
-          }
+  $scope.search = function() {
+    return query_api($scope.query).then(function(result) {
+      return result;
+    });
+  };
+
+  //Get data from apis and make them available to the page
+  function query_api(data){
+    return $http.get('/api/base/search/', {params: data || {}}).success(function(data){
+      $scope.results = data.objects;
+      $scope.total_counts = data.meta.total_count;
+      $scope.$root.query_data = data;
+
+      // Initialize carousel display
+      $scope.display = [];
+      $scope.indeces = [];
+      for (var i = 0; i < $scope.results.length; i++) {
+        $scope.display[i] = $scope.results[i];
+        $scope.indeces[i] = i;
+        if (i >= 3) {
+            break;
         }
-
-        //Update facet/keyword/category counts from search results
-        if (HAYSTACK_FACET_COUNTS){
-            module.haystack_facets($http, $scope.$root, $location);
-            $("#types").find("a").each(function(){
-                if ($(this)[0].id in data.meta.facets.subtype) {
-                    $(this).find("span").text(data.meta.facets.subtype[$(this)[0].id]);
-                }
-                else if ($(this)[0].id in data.meta.facets.type) {
-                    $(this).find("span").text(data.meta.facets.type[$(this)[0].id]);
-                } else {
-                    $(this).find("span").text("0");
-                }
-            });
-        }
-
-        // Initialize carousel display
-        $scope.display = [];
-        $scope.indeces = [];
-        for (var i = 0; i < $scope.results.length; i++) {
-            $scope.display[i] = $scope.results[i];
-            $scope.indeces[i] = i;
-            if (i >= 3) {
-                break;
-            }
-        }
-      });
-    };
-
-    $scope.query['is_published'] = true;
-    $scope.query['featured'] = true;
-    query_api($scope.query);
-
-    $scope.query_category = function(category, type) {
-      $scope.query.type__in = type;
-      $scope.query.category__identifier__in = category;
-      $scope.search();
-    };
-
-    // carousel
-    $scope.slideLeft = function() {
-      for (var i = 0; i < $scope.indeces.length; i++) {
-        $scope.indeces[i] = ($scope.indeces[i] + 1) % $scope.results.length;
       }
-      $scope.updateDisplay();
-    };
+    });
+  };
 
-    $scope.slideRight = function() {
-      for (var i = 0; i < $scope.indeces.length; i++) {
-        $scope.indeces[i] = ($scope.indeces[i] - 1 + $scope.results.length) % $scope.results.length;
-      }
-      $scope.updateDisplay();
-    };
+  $scope.query_category = function(category) {
+    //does not require 'type' like in main search controller
+    $scope.query.category__identifier__in = category;
+    $scope.search();
+  };
 
-    $scope.updateDisplay = function() {
-      for (var i = 0; i < $scope.indeces.length; i++) {
-        $scope.display[i] = $scope.results[$scope.indeces[i]];
-      };
+  // carousel
+  $scope.slideLeft = function() {
+    for (var i = 0; i < $scope.indeces.length; i++) {
+      $scope.indeces[i] = ($scope.indeces[i] + 1) % $scope.results.length;
     }
+    $scope.updateDisplay();
+  };
+
+  $scope.slideRight = function() {
+    for (var i = 0; i < $scope.indeces.length; i++) {
+      $scope.indeces[i] = ($scope.indeces[i] - 1 + $scope.results.length) % $scope.results.length;
+    }
+    $scope.updateDisplay();
+  };
+
+  $scope.updateDisplay = function() {
+    for (var i = 0; i < $scope.indeces.length; i++) {
+      $scope.display[i] = $scope.results[$scope.indeces[i]];
+    };
+  }
+
+  query_api($scope.query);
 })
 
 .controller('profile_search_controller', function($injector, $scope, $location, $http, Configs, Django,
@@ -339,17 +312,16 @@
   };
 
   function getUploads(query) {
-
-      if (query == null) {
-          query = {offset: $scope.offset, limit: $scope.limit, user__username: $scope.user}
-      }
-
-      UploadedData.query(query).$promise.then(function(data) {
-          $scope.uploads = data.objects;
-          $scope.offset = data.meta.offset;
-          $scope.totalItems = data.meta.total_count;
-          $scope.loading = false;
-      });
+    if (query == null) {
+      query = {offset: $scope.offset, limit: $scope.limit, user__username: $scope.user}
+    }
+    
+    UploadedData.query(query).$promise.then(function(data) {
+      $scope.uploads = data.objects;
+      $scope.offset = data.meta.offset;
+      $scope.totalItems = data.meta.total_count;
+      $scope.loading = false;
+    });
   }
 
   $rootScope.$on('upload:complete', function(event, args) {
@@ -516,6 +488,7 @@
   keyword_list = keyword_list.split('\'');
   $scope.tags = [];
   // Grab every odd numbered index - hack to grab the keywords only
+  // BUG: this doesn't work at all with special characters like '' "" in the unicode literals we're grabbing
   for (var i = 1; i < keyword_list.length; i += 2) {
     $scope.tags.push(keyword_list[i]);
   }
@@ -565,7 +538,7 @@
             type:'POST',
             data:
             {
-                add_keyword: e.attrs.value
+                add_keyword: e.attrs.value.toLowerCase()
             },
             success: function(msg)
             {

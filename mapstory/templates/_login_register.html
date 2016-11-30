@@ -29,8 +29,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
-                                    <input  type="checkbox" value=""> Remember me
-                                    <a class="pull-right" href="/account/password/reset/">Forgot password?</a>
+                                    <a href="{% url "account_password_reset" %}">Forgot password?</a>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -92,37 +91,34 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label label-font-sm"></label>
                                 <div class="col-md-8">
-                                    {% verbatim %}
                                     <button ng-if="agreed && password.length >= 8" id="join-mapstory-button" class="login-auth-btn btn btn-md bg-ms btn-block">
                                         Join {{ SITE_NAME }}
                                     </button>
                                     <button ng-if="!agreed || password.length < 8" id="join-mapstory-button" class="btn btn-md bg-ms btn-block" disabled>
                                         Join {{ SITE_NAME }}
                                     </button>
-                                    {% endverbatim %}
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
-                <hr/>
                 {% if ENABLE_SOCIAL_LOGIN %}
+                <hr/>
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <a href="{% url 'social:begin' 'facebook' %}">
                                 <div class="facebook-btn btn btn-md bg-ms btn-block">
                                     <i class="fa fa-facebook"></i> Log In with Facebook
                                 </div>
                             </a>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <a href="{% url 'social:begin' 'google-oauth2' %}">
                                 <div class="google-btn btn btn-md bg-ms btn-block">
                                     <i class="fa fa-google"></i> Log In with Google
                                 </div>
                             </a>
                         </div>
-                        <div class="col-sm-4"> &nbsp; </div>
                     </div>
                 {% endif %}
             </div>

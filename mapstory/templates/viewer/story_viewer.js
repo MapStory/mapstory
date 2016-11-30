@@ -77,6 +77,45 @@
             self.owner = config.about.owner;
         };
 
+        this.displayPinInfo = function(pixel, pin) {
+            var feature = null;
+            if (typeof(pin) == 'undefined' || pin == null) {
+                feature = self.storyMap.getMap().forEachFeatureAtPixel(pixel,
+                    function (feature, layer) {
+                        return feature;
+                    });
+            } else {
+                feature = pin;
+            }
+            if (feature) {
+                var overlays = self.storyMap.getMap().getOverlays().getArray();
+                var popup = null;
+                var geometry = feature.getGeometry();
+                var coord = geometry.getCoordinates();
+                for (var iOverlay = 0; iOverlay < overlays.length; iOverlay += 1) {
+                    var overlay = overlays[iOverlay];
+                    if (overlay.getId() == 'popup-' + feature.id) {
+                        popup = overlay;
+                        break;
+                    }
+                }
+
+                if (popup == null) {
+                    var popupOptions = {
+                        insertFirst: false,
+                        id: 'popup-' + feature.id,
+                        positioning: 'bottom-center',
+                        stopEvent: false
+                    };
+                    popup = new ol.Overlay.Popup(popupOptions);
+                    self.storyMap.getMap().addOverlay(popup);
+                    $rootScope.$broadcast('pausePlayback');
+                }
+                popup.setPosition(coord);
+                popup.show(coord, feature.get('content') + feature.get('media'));
+            }
+        };
+
         this.loadMap = function(options) {
             options = options || {};
             if (options.id) {
@@ -93,48 +132,26 @@
             }
             this.currentMapOptions = options;
 
-            var element = document.getElementById('story-pin-popup');
+            //var element = document.getElementById('story-pin-popup');
 
-            var popup = new ol.Overlay({
+            /*var popup = new ol.Overlay({
                 element: element,
                 positioning: 'bottom-center',
                 stopEvent: false
             });
-            self.storyMap.getMap().addOverlay(popup);
-
-            var displayPinInfo = function(pixel){
-                var feature = self.storyMap.getMap().forEachFeatureAtPixel(pixel,
-                      function(feature, layer) {
-                          return feature;
-                      });
-                if (feature) {
-                    var geometry = feature.getGeometry();
-                    var coord = geometry.getCoordinates();
-                    $(element).popover('destroy');
-                    popup.setPosition(coord);
-                    $(element).popover({
-                        'placement': 'right',
-                        'html': true,
-                        'title': feature.get('title'),
-                        'content': feature.get('content') + feature.get('media')
-                    });
-                    $(element).popover('show');
-                } else {
-                    $(element).popover('destroy');
-                }
-            };
+            self.storyMap.getMap().addOverlay(popup);*/
 
             // display popup on hover
             self.storyMap.getMap().on('pointermove', function(evt) {
                 if (evt.dragging){
                     return;
                 }
-                displayPinInfo(evt.pixel);
+                self.displayPinInfo(evt.pixel);
             });
 
             // display popup on click
             self.storyMap.getMap().on('click', function(evt) {
-                displayPinInfo(evt.pixel);
+                self.displayPinInfo(evt.pixel);
             });
         };
         $rootScope.$on('$locationChangeSuccess', function() {
@@ -149,6 +166,9 @@
 
         self.loadConfig(config, chapter);
     });
+        $rootScope.$on('showPin', function(event, pin) {
+            self.displayPinInfo(null, pin);
+        });
 }
 
 /* EXACTLY THE SAME AS LAYER VIEWER */
