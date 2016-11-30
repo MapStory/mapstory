@@ -97,9 +97,8 @@
                                                 {% endif %}
                                             </td>
                                         </tr>
-                                        {% if content_moderators in user.groups.all or user == resource.owner %}
-                                        <tr>                                            
                                         {% if content_moderators in user.groups.all or user == resource.owner or user.is_superuser %}
+                                        <tr>
                                             <td width="35%">Thumbnail</td>
                                             <td width="35%">
                                                 <a href="{{ thumbnail }}"><img ng-src="{{ thumbnail }}" src="{{ thumbnail }}" id="change-thumbnail-image"></a>
