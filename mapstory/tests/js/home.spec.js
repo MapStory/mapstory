@@ -22,10 +22,7 @@ function elementFound(locator) {
 	return element(locator).isPresent();
 }
 
-
-var EC = protractor.ExpectedConditions;
 const wait_times = require('./wait_times');
-
 
 /**
  * Waits for an element to be visible
