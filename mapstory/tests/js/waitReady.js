@@ -10,7 +10,8 @@
  * @example
  * expect($('.some-html-class').waitReady()).toBeTruthy();
  */
-"use strict";
+
+'use strict';
 
 // Config
 var specTimeoutMs = 10000; // 10 seconds
@@ -26,16 +27,16 @@ ElementFinder.prototype.waitReady = function(opt_optStr) {
 	var driverWaitIterations = 0;
 	var lastWebdriverError;
 	function _throwError() {
-		throw new Error("Expected '" + self.locator().toString() +
-			"' to be present and visible. " +
-			"After " + driverWaitIterations + " driverWaitIterations. " +
-			"Last webdriver error: " + lastWebdriverError);
-	};
+		throw new Error('Expected \'' + self.locator().toString() +
+			'\' to be present and visible. ' +
+			'After ' + driverWaitIterations + ' driverWaitIterations. ' +
+			'Last webdriver error: ' + lastWebdriverError);
+	}
 
 	function _isPresentError(err) {
 		lastWebdriverError = (err != null) ? err.toString() : err;
 		return false;
-	};
+	}
 
 	return browser.driver.wait(function() {
 		driverWaitIterations++;
@@ -70,4 +71,4 @@ ElementFinder.prototype.waitReady = function(opt_optStr) {
 function _refreshPage() {
 	// Swallow useless refresh page webdriver errors
 	browser.navigate().refresh().then(function(){}, function(e){});
-};
+}

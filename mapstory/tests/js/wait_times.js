@@ -1,7 +1,7 @@
 'use strict';
 
 // Change this to a larger number if you want to wait longer.
-var waitFactor = 1.2;
+var waitFactor = 1.0;
 
 // The wait times in milliseconds
 var timings =  {
@@ -9,6 +9,7 @@ var timings =  {
 	layerCreate : 5000 * waitFactor,
 	newLayer: 4500 * waitFactor,
 	metadata_load: 3000 * waitFactor,
+	search: 1000 * waitFactor,
 };
 
 module.exports = timings;

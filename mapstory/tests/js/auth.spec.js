@@ -1,10 +1,16 @@
 'use strict';
 
+/**
+ * User auth tests
+ * ================
+ */
+
 var auth;
 var EC = protractor.ExpectedConditions;
 require('./waitReady.js');
 
-describe('Login Form', function() {
+
+describe('User auth', function() {
 	beforeEach(function(){
 		// Fetch Home
 		browser.get('http://192.168.56.151');
@@ -111,15 +117,15 @@ describe('Login Form', function() {
 				expect(usernameInput.waitReady()).toBeTruthy();
 				usernameInput.sendKeys(userid);
 				// Set First Name
-				nameInput.sendKeys('Moofasa');
+				nameInput.sendKeys(auth.getUsername());
 				// Set Last name
-				lastNameInput.sendKeys('Test');
+				lastNameInput.sendKeys(auth.getLastName());
 				// Set email
-				emailInput.sendKeys('josellausas+mapstory@gmail.com');
+				emailInput.sendKeys(auth.getEmail());
 				// Set password
-				passwordInput.sendKeys('testPassword2001!');
+				passwordInput.sendKeys(auth.getPassword());
 				// Confirm password
-				confirmPasswordInput.sendKeys('testPassword2001!');
+				confirmPasswordInput.sendKeys(auth.getPassword());
 				// Accept terms
 				var termsCheckbox = element(by.model('agreed'));
 				termsCheckbox.click();

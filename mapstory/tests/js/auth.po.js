@@ -5,8 +5,11 @@
 
 'use strict';
 
-const defaultTestUser = 'test_user';
-const defaullTestPassword = 'test1234';
+const defaultTestUser = 'Moofasa';
+const defaultLastName = 'Test';
+const defaultEmail = 'testing@testmail.com';
+const defaullTestPassword = 'testPassword2001!';
+
 
 require('./waitReady.js');
 
@@ -69,6 +72,14 @@ var AuthWizard = function() {
 
 	this.getPassword = function() {
 		return defaullTestPassword;
+	};
+
+	this.getEmail = function() {
+		return defaultEmail;
+	};
+
+	this.getLastName = function() {
+		return defaultLastName;
 	};
 
 
