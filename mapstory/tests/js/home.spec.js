@@ -39,14 +39,16 @@ function waitFor(element) {
 /**
  * Mapstory Home Page
  */
-xdescribe('Mapstory Home', function() {
+describe('Mapstory Home', function() {
 	// Our home page object
 	var page = null;
+	var auth = null;
 
 	beforeEach(function() {
 		// Fetch the site
 		browser.get('http://192.168.56.151');
 		page = require('./home.po');
+		auth = require('./auth.po');
 		browser.waitForAngular();
 	});
 
@@ -99,152 +101,9 @@ xdescribe('Mapstory Home', function() {
 		expect(browser.getTitle()).toEqual('MapStory');
 	});
 
-	it('> should have an icon', function() {
-		expect(page.loginIcon.isPresent()).toBeTruthy();
-		expect(page.loginIcon.waitReady()).toBeTruthy();
-	});
-
-	/**
-	 * Login Button
-	 */
-	it('> should display a Login Form', function() {
-		page.loginIcon.isDisplayed().then(function(displayed){
-			if(displayed == false) {
-				page.logout();
-			}
-			waitFor(page.loginIcon);
-			page.loginIcon.click();
-			waitFor(page.loginForm);
-		});
-	});
-
-	/**
-	 * The Auth Form
-	 */
-	describe('> The "Login Form"', function() {
-		it('should have "Log In" and "Sign up" tabs', function() {
-			expect(page.loginIcon.isDisplayed()).toBeTruthy();
-			expect(page.loginIcon.waitReady()).toBeTruthy();
-			// Click lgin
-			page.loginIcon.click();
-			expect(page.loginModal.waitReady()).toBe(true);
-			expect(element(by.linkText('Log In')).isPresent()).toBe(true);
-			expect(element(by.linkText('Sign Up')).isPresent()).toBe(true);
-		});
-
-		/**
-		 * The Log in Form
-		 */
-		describe('> The "Log In" tab', function() {
-			it('should be shown by default', function() {
-				expect(page.loginIcon.isDisplayed()).toBeTruthy();
-
-				// Click Login
-				page.loginIcon.click();
-				expect(page.loginForm.waitReady()).toBeTruthy();
-				expect(elementFound(by.css('label[for="username"]'))).toBe(true);
-			});
-
-			it('> should have a close button', function() {
-				expect(page.loginIcon.waitReady()).toBeTruthy();
-				// Click Login
-				page.loginIcon.click();
-				expect(page.loginForm.waitReady()).toBeTruthy();
-				expect(page.login_close_button.isDisplayed).toBeTruthy();
-				// Click close
-				page.login_close_button.click();
-			});
-
-			it('> should require a username and password', function() {
-				expect(page.loginIcon.isDisplayed()).toBeTruthy();
-				// Click login
-				page.loginIcon.click();
-				expect(page.loginForm.waitReady()).toBeTruthy();
-				// Clock submit
-				element(by.css('.login-auth-btn.btn.btn-md.btn-block')).click();
-				// Expect error messages
-				expect(element(by.css('#div_id_username.form-group.has-error')).isDisplayed()).toBeTruthy();
-				expect(element(by.css('#div_id_password.form-group.has-error')).isDisplayed()).toBeTruthy();
-
-			});
-
-			xit('> should deny wrong credentials', function() {});
-
-			xit('> should filter bad text input', function() {});
-		});
-
-		/**
-		 * The Sign up Form
-		 */
-		describe('> The "Sign up" tab', function() {
-			pending('TODO').it('> requires the user to agree the terms and conditions', function() {
-
-			});
-
-			it('> should register a new user', function() {
-				expect(page.loginIcon.isDisplayed()).toBeTruthy();
-				// Click login
-				page.loginIcon.click();
-				expect(page.loginForm.waitReady()).toBeTruthy();
-
-				// Click signup
-				var button = element(by.linkText('Sign Up'));
-				expect(button.waitReady()).toBeTruthy();
-				button.click();
-				var userid = page.makeid(5);
-				var usernameInput = element(by.css('#id_username'));
-				var nameInput = element(by.css('#id_first_name'));
-				var lastNameInput = element(by.css('#id_last_name'));
-				var emailInput = element(by.css('#id_email'));
-				var passwordInput = element(by.css('#id_password'));
-				var confirmPasswordInput = element(by.css('#password_confirm'));
-				// Set username
-				expect(usernameInput.waitReady()).toBeTruthy();
-				usernameInput.sendKeys(userid);
-				// Set First Name
-				nameInput.sendKeys('Moofasa');
-				// Set Last name
-				lastNameInput.sendKeys('Test');
-				// Set email
-				emailInput.sendKeys('josellausas+mapstory@gmail.com');
-				// Set password
-				passwordInput.sendKeys('testPassword2001!');
-				// Confirm password
-				confirmPasswordInput.sendKeys('testPassword2001!');
-				// Accept terms
-				var termsCheckbox = element(by.model('agreed'));
-				termsCheckbox.click();
-				// Click Join
-				element(by.buttonText('Join')).click();
-			});
-		});
-
-		it('> should log in admin', function() {
-			if(page.userAvatar.isPresent() == true) {
-				page.logout();
-			}
-			expect(page.loginIcon.waitReady()).toBeTruthy();
-			page.loginIcon.click();
-			expect(page.loginForm.isPresent()).toBe(true);
-			browser.wait(EC.visibilityOf(page.loginForm), 5000);
-			expect(page.loginForm.isDisplayed()).toBeTruthy();
-
-			// Input username
-			expect(page.usernameInput.isPresent()).toBe(true);
-			page.usernameInput.sendKeys('admin');
-
-			// Input password
-			expect(page.passwordInput.isPresent()).toBe(true);
-			page.passwordInput.sendKeys('admin');
-
-			// Press the login button
-			expect(page.loginButton.isPresent()).toBe(true);
-			page.loginButton.click();
-
-			// Should show the avatar after login
-			browser.get('http://192.168.56.151');
-			waitFor(page.userAvatar);
-			expect(page.userAvatar.isDisplayed()).toBe(true);
+	it('> should be authorized', function(){
+		auth.isLoggedIn().then(function(isLogged){
+			expect(isLogged).toBeTruthy();
 		});
 	});
 

@@ -11,14 +11,15 @@ var path = require('path');
 // Upload paths need to be absolute or error.
 const testLayerFileRelative = '../test_assets/lewisandclarktrail.csv';
 const testLayerFile = path.resolve(__dirname, testLayerFileRelative);
-
 var wait_times = require('./wait_times');
+var auth = require('./auth.po');
 
 
 /**
  * Home Page Object
  */
 var home_page = function() {
+
 	this.loginIcon = element(by.css('.fa.fa-user'));
 	this.loginModal = element(by.css('.modal-content'));
 	this.navigationTabs = element(by.css('.nav.nav-tabs'));

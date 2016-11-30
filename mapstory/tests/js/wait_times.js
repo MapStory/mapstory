@@ -1,9 +1,9 @@
 'use strict';
 
 // Change this to a larger number if you want to wait longer.
-var waitFactor = 1.0;
+var waitFactor = 1.2;
 
-// The wait times
+// The wait times in milliseconds
 var timings =  {
 	layerUpload : 9200 * waitFactor,
 	layerCreate : 5000 * waitFactor,
