@@ -62,7 +62,7 @@ class DeactivateProfileForm(forms.ModelForm):
 
 # A form for the fields we want the user to be able to edit
 class EditProfileForm(forms.ModelForm):
-    Volunteer_Technical_Community = forms.BooleanField(help_text=_("Join the Volunteer Technical Community (What's this? Learn more <a href='http://wiki.mapstory.org/wiki/Volunteer_Technical_Community'>here</a>)"), required=False)
+    Volunteer_Technical_Community = forms.BooleanField(help_text=_("Join the Volunteer Technical Community (What's this? <a href='http://wiki.mapstory.org/Volunteer_Technical_Community'>Learn more here</a>)"), required=False)
     keywords = taggit.forms.TagField(
         required=False,
         label='Interests',
