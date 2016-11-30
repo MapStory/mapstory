@@ -85,17 +85,17 @@
   tags: [settings]
 
 - name: migrate maps
-  django_manage: command="migrate maps" virtualenv={{ venv }} app_path={{ project_path }}
+  django_manage: command="migrate maps --noinput" virtualenv={{ venv }} app_path={{ project_path }}
   become_user: '{{ application_user }}'
   tags: [update, syncdb]
 
 - name: migrate layers
-  django_manage: command="migrate layers" virtualenv={{ venv }} app_path={{ project_path }}
+  django_manage: command="migrate layers --noinput" virtualenv={{ venv }} app_path={{ project_path }}
   become_user: '{{ application_user }}'
   tags: [update, syncdb]
 
 - name: migrate groups
-  django_manage: command="migrate groups" virtualenv={{ venv }} app_path={{ project_path }}
+  django_manage: command="migrate groups --noinput" virtualenv={{ venv }} app_path={{ project_path }}
   become_user: '{{ application_user }}'
   tags: [update, syncdb]
 
