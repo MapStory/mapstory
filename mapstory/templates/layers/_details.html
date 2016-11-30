@@ -18,10 +18,10 @@
         <div class="container">
             <div class="row">
                 <div style="text-align: left">
-                    <div> <h2>{{resource.title}}</h2> </div> 
+                    <div> <h2>{{resource.title}}</h2> </div>
                     <div class="row">
                         <div class="col-sm-9">
-                            <span class="small">{% trans "Imported by" %}                                          
+                            <span class="small">{% trans "Imported by" %}
                                 <a ng-href="{% url 'profile_detail' slug=resource.owner.username %}" target="_blank">
                                     {% if resource.owner.first_name != '' %}
                                         {{ resource.owner.first_name }} {{ resource.owner.last_name }}
@@ -97,9 +97,8 @@
                                                 {% endif %}
                                             </td>
                                         </tr>
-                                        {% if content_moderators in user.groups.all or user == resource.owner %}
-                                        <tr>                                            
                                         {% if content_moderators in user.groups.all or user == resource.owner or user.is_superuser %}
+                                        <tr>
                                             <td width="35%">Thumbnail</td>
                                             <td width="35%">
                                                 <a href="{{ thumbnail }}"><img ng-src="{{ thumbnail }}" src="{{ thumbnail }}" id="change-thumbnail-image"></a>
@@ -172,7 +171,7 @@
                                 </div>
                                 <div class="tab-pane" id="ShareLayer">
                                     <h3>Map Services</h3>
-                                    <div class="embed">WMS 
+                                    <div class="embed">WMS
                                         <i class="fa fa-question-circle ng-scope" tooltip-append-to-body="true" tooltip-placement="top" tooltip="OpenGIS® Web Map Service Interface Standard"></i>
                                         <input id="shareWMS" value ="http://{{ request.get_host }}/geoserver/geonode/{{ resource }}/wms?REQUEST=GetCapabilities&SERVICE=WMS&TILED=true&VERSION=1.1.1">
                                         <button class="copyclip btn" data-clipboard-target="#shareWMS">
@@ -184,7 +183,7 @@
                                         <input id="shareWFS" value ="http://{{ request.get_host }}/geoserver/geonode/{{ resource }}/wfs?REQUEST=GetCapabilities&SERVICE=WFS&VERSION=2.0.0">
                                         <button class="copyclip btn" data-clipboard-target="#shareWFS">
                                             <i class="fa fa-clipboard" aria-hidden="true"></i>
-                                        </button>        
+                                        </button>
                                     </div>
                                 </div>
                             </div>
