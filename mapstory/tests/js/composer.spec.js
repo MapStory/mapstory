@@ -33,9 +33,6 @@ describe('Composer', function() {
 		expect(home.composeStoryLink.waitReady()).toBeTruthy();
 		home.composeStoryLink.click();
 		browser.sleep(4000);
-		// browser.pause();
-		// expect(browser.getCurrentUrl()).toContain(browser.baseUrl + '/maps/new');
-
 	});
 
 	pending('TODO').it('> should display welcome modal', function() {
