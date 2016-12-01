@@ -847,6 +847,11 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     # assert False, str(layer_bbox)
     config = layer.attribute_config()
 
+    # only owners and admins can view unpublished layers
+    if not layer.is_published:
+        if request.user != layer.owner and not request.user.is_superuser:
+            return HttpResponse(_PERMISSION_MSG_VIEW, status=403, content_type="text/plain")
+
     # TODO (Mapstory): This has been commented out to force the client to make a getCapabilities request in order
     # to pull in the time dimension data.  Ideally we would cache time data just like the srs and bbox data to prevent
     # making the getCapabilities request.

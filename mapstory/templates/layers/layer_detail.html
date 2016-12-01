@@ -55,7 +55,10 @@
 {% endif %}
 
 {% if GEONODE_SECURITY_ENABLED %}
-    {% include "_permissions_form_js.html" %}
+    {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
+    {% if "change_resourcebase_permissions" in perms %}
+        {% include "_permissions_form_js.html" %}
+    {%  endif %}    
 {% endif %}
 <script src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
 {% endblock extra_script %}
