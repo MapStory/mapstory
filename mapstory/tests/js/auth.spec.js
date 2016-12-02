@@ -36,6 +36,8 @@ describe('User auth', function() {
 	 * The Auth Form
 	 */
 	describe('> The "Login Form"', function() {
+		beforeEach(function() {});
+
 		it('should have "Log In" and "Sign up" tabs', function() {
 			expect(auth.loginIcon.isDisplayed()).toBeTruthy();
 			expect(auth.loginIcon.waitReady()).toBeTruthy();
@@ -50,6 +52,8 @@ describe('User auth', function() {
 		 * The Log in Form
 		 */
 		describe('> The "Log In" tab', function() {
+			beforeEach(function() {});
+
 			it('should be shown by default', function() {
 				expect(auth.loginIcon.isDisplayed()).toBeTruthy();
 
@@ -71,7 +75,7 @@ describe('User auth', function() {
 			});
 
 			it('> should require a username and password', function() {
-				expect(auth.loginIcon.isDisplayed()).toBeTruthy();
+				expect(auth.loginIcon.waitReady()).toBeTruthy();
 				// Click login
 				auth.loginIcon.click();
 				expect(auth.loginForm.waitReady()).toBeTruthy();
@@ -92,9 +96,7 @@ describe('User auth', function() {
 		 * The Sign up Form
 		 */
 		describe('> The "Sign up" tab', function() {
-			pending('TODO').it('> requires the user to agree the terms and conditions', function() {
-
-			});
+			beforeEach(function() {});
 
 			it('> should register a new user', function() {
 				expect(auth.loginIcon.isDisplayed()).toBeTruthy();
@@ -106,7 +108,7 @@ describe('User auth', function() {
 				var button = element(by.linkText('Sign Up'));
 				expect(button.waitReady()).toBeTruthy();
 				button.click();
-				var userid = auth.makeid(7);
+				var userid = 'tester_' + auth.makeid(7);
 				var usernameInput = element(by.css('#id_username'));
 				var nameInput = element(by.css('#id_first_name'));
 				var lastNameInput = element(by.css('#id_last_name'));
@@ -130,7 +132,7 @@ describe('User auth', function() {
 				var termsCheckbox = element(by.model('agreed'));
 				termsCheckbox.click();
 				// Click Join
-				element(by.buttonText('Join')).click();
+				auth.signUpButton.click();
 			});
 		});
 

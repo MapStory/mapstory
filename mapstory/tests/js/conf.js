@@ -15,10 +15,17 @@ exports.config = {
 	framework: 'jasmine',
 	seleniumAddress: 'http://localhost:4444/wd/hub',
 	specs: ['*.spec.js'],
-	capabilities: {
-		browserName: 'chrome'
+
+	//capabilities: {
+	//	browserName: 'chrome'
 		// browserName: 'firefox'
-	},
+	//},
+	multiCapabilities: [
+		{'browserName' : 'chrome'},
+		// {'browserName' : 'firefox'}
+		// {'browserName' : 'safari'},
+	],
+
 	jasmineNodeOpts: {
 		showColors: true, // Use colors in the command line report.
 		defaultTimeoutInterval: 30000
