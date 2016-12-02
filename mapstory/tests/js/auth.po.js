@@ -25,6 +25,7 @@ var AuthWizard = function() {
 	this.usernameInput = this.loginForm.element(by.css('input.form-control[name="username"]'));
 	this.passwordInput = this.loginForm.element(by.css('input.form-control[name="password"]'));
 	this.loginButton = this.loginForm.element(by.partialButtonText('Sign in'));
+	this.signUpButton = element(by.buttonText('Join MapStory'));
 
 
 	/**
@@ -159,7 +160,7 @@ var AuthWizard = function() {
 	 * If no data is provided, random is used.
 	 * @param  {Object} userData {name, email, password}
 	 */
-	this.createUser = function(userData) {
+	this.signUp = function(userData) {
 		if(userData.name === null) {
 			var randomName = defaultTestUser + '_' + this.makeid(7);
 			userData.name = randomName;
