@@ -301,11 +301,11 @@ describe('Mapstory Home', function() {
 						page.uploadLayer_Step1();
 					});
 
-					pending('TODO').it('> can close the form', function() {
+					xit('> can close the form', function() {
 
 					});
 
-					pending('TODO').it('> highlights the correct step', function() {
+					xit('> highlights the correct step', function() {
 
 					});
 				});
@@ -319,19 +319,19 @@ describe('Mapstory Home', function() {
 						page.uploadLayer_Step2();
 					});
 
-					pending('TODO').it('> can go to next step', function() {
+					it('> can go to next step', function() {
 
 					});
 
-					pending('TODO').it('> can close form', function() {
+					it('> can close form', function() {
 
 					});
 
-					pending('TODO').it('> highlights the correct step', function() {
+					it('> highlights the correct step', function() {
 
 					});
 
-					pending('TODO').it('> should not continue without file', function() {
+					it('> should not continue without file', function() {
 
 					});
 				});
@@ -340,7 +340,7 @@ describe('Mapstory Home', function() {
 				 * Step 3
 				 */
 				describe('> Step 3', function() {
-					pending('TODO').it('should edit title', function() {
+					xit('should edit title', function() {
 
 					});
 
@@ -367,7 +367,7 @@ describe('Mapstory Home', function() {
 				 * Step 5
 				 */
 				describe('> Step 5', function() {
-					pending('TODO').it('should set community settings', function() {
+					xit('should set community settings', function() {
 
 					});
 
@@ -395,7 +395,7 @@ describe('Mapstory Home', function() {
 					});
 				});
 
-				pending('TODO').it('> should show summary when succesful', function() {
+				xit('> should show summary when succesful', function() {
 
 				});
 			});
@@ -438,7 +438,7 @@ describe('Mapstory Home', function() {
 	/**
 	 * The search bar
 	 */
-	pending('TODO').describe('> The "Search bar"', function() {
+	xdescribe('> The "Search bar"', function() {
 		it('> should show', function() {
 
 		});
@@ -456,7 +456,7 @@ describe('Mapstory Home', function() {
 		});
 	});
 
-	pending('TODO').it('should logout', function() {
+	xit('should logout', function() {
 
 	});
 

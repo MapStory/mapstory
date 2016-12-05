@@ -19,11 +19,11 @@ describe('Composer', function() {
 		home.login();
 	});
 
-	pending('TODO').it('> should require login', function() {
+	xit('> should require login', function() {
 
 	});
 
-	pending('TODO').it('> should be accessed from home', function(){
+	xit('> should be accessed from home', function(){
 		browser.get('http://192.168.56.151');
 		browser.waitForAngular();
 
@@ -35,7 +35,7 @@ describe('Composer', function() {
 		browser.sleep(4000);
 	});
 
-	pending('TODO').it('> should display welcome modal', function() {
+	xit('> should display welcome modal', function() {
 		browser.get('http://192.168.56.151/maps/new?tour');
 		// browser.waitForAngular();
 		// browser.wait(4000);
@@ -48,15 +48,15 @@ describe('Composer', function() {
 		// ok.click();
 	});
 
-	pending('TODO').it('> should go back to Home', function(){
+	xit('> should go back to Home', function(){
 
 	});
 
-	pending('TODO').it('> should give a tour', function() {
+	xit('> should give a tour', function() {
 
 	});
 
-	pending('TODO').it('> should begin creating', function() {
+	xit('> should begin creating', function() {
 
 	});
 });
