@@ -14,7 +14,19 @@
 exports.config = {
 	framework: 'jasmine',
 	seleniumAddress: 'http://localhost:4444/wd/hub',
-	specs: ['*.spec.js'],
+
+	//--------------------------
+	// Runs ALL specs
+	// specs: ['*.spec.js'],
+	// Cherry pick specks here:
+	specs: [
+		'auth.spec.js',
+		'composer.spec.js',
+		'home.spec.js',
+		'icon_upload.spec.js',
+		'search.spec.js',
+		'survey.spec.js',
+	],
 
 	//capabilities: {
 	//	browserName: 'chrome'

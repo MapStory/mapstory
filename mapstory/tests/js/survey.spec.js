@@ -14,6 +14,7 @@ var tester = {
 	resolution: null,
 };
 
+
 /**
  * Automated Survey tests
  *
@@ -26,17 +27,21 @@ describe('[Survey Tests] |', function() {
 		browser.waitForAngular();
 	});
 
+
+
 	describe('<<1>> Tester Info |', function () {
+		var randomId = auth.makeid(7);
+
 		describe('<a> Tester name', function() {
 			it(': should set a test name', function() {
-				tester.name = 'tester_' + auth.makeid(7);
+				tester.name = 'tester_' + randomId;
 				expect(tester.name).toBeTruthy('Tester name is expected');
 			});
 		});
 
 		describe('<b> Your email |', function() {
 			it('should set a test email', function() {
-				tester.email = 'josellausas+mapstory@gmail.com';
+				tester.email = 'test_' + randomId + '@testing.com';
 				expect(tester.email).toBeTruthy('Tester email is expected');
 			});
 		});
@@ -67,10 +72,6 @@ describe('[Survey Tests] |', function() {
 	});
 
 	describe('<<2>> User Profile |', function () {
-		beforeEach(function(){
-
-		});
-
 		describe('<a> Create an account |', function() {
 			it('> should start by logging out', function() {
 				element(by.partialLinkText('admin')).click();
@@ -83,30 +84,34 @@ describe('[Survey Tests] |', function() {
 
 				// Click login
 				auth.loginIcon.click();
-				expect(auth.loginForm.waitReady()).toBeTruthy('Could not find Login Form');
+				browser.sleep(1000);
+
+				var loginForm = element(by.css('form.form[action="/account/login/?next=/"]'));
+				expect(loginForm.waitReady()).toBeTruthy('Could not find Login Form');
 
 				// Click signup
 				var button = element(by.linkText('Sign Up'));
 				expect(button.waitReady()).toBeTruthy('Could not find Sign up button');
 				button.click();
 
+				var modalWindow = element(by.css('#loginModal'));
+
 				// Create a username
-				var userid = auth.makeid(7);
-				var usernameInput = element(by.css('#id_username'));
-				var nameInput = element(by.css('#id_first_name'));
-				var lastNameInput = element(by.css('#id_last_name'));
+				var usernameInput = modalWindow.element(by.css('#id_username'));
+				var nameInput = modalWindow.element(by.css('#id_first_name'));
+				var lastNameInput = modalWindow.element(by.css('#id_last_name'));
 				var emailInput = element(by.css('#id_email'));
 				var passwordInput = element(by.css('#id_password'));
 				var confirmPasswordInput = element(by.css('#password_confirm'));
 				// Set username
 				expect(usernameInput.waitReady()).toBeTruthy();
-				usernameInput.sendKeys(userid);
+				usernameInput.sendKeys(tester.name);
 				// Set First Name
-				nameInput.sendKeys(auth.getUsername());
+				nameInput.sendKeys(tester.name);
 				// Set Last name
 				lastNameInput.sendKeys(auth.getLastName());
 				// Set email
-				emailInput.sendKeys(auth.getEmail());
+				emailInput.sendKeys(tester.email);
 				// Set password
 				passwordInput.sendKeys(auth.getPassword());
 				// Confirm password
@@ -117,21 +122,45 @@ describe('[Survey Tests] |', function() {
 				// Click Join
 				auth.signUpButton.click();
 			});
+
+
+
+			xit('> should login with new account', function() {
+				var loginIcon = element(by.partialLinkText(tester.name));
+				expect(loginIcon.waitReady()).toBeTruthy('Did not find login icon');
+				loginIcon.click();
+
+				expect(auth.loginForm.isPresent()).toBe(true, 'Did not find login Form');
+				expect(auth.loginForm.waitReady()).toBeTruthy('Did not find login Form');
+				expect(auth.loginForm.isDisplayed()).toBeTruthy('Did not find login Form');
+
+				// Input username
+				expect(auth.usernameInput.isPresent()).toBe(true, 'Did not find username input');
+				auth.usernameInput.sendKeys(tester.name);
+
+				// Input password
+				expect(auth.passwordInput.isPresent()).toBe(true, 'Did not find password input');
+				auth.passwordInput.sendKeys(auth.getPassword());
+
+				// Press the login button
+				expect(auth.loginButton.isPresent()).toBe(true, 'Did not find the login button');
+				auth.loginButton.click();
+			});
 		});
 
-		describe('<b> Check your email |', function() {
+		xdescribe('<b> Check your email |', function() {
 			it('> should receive confirmation email', function() {
 
 			});
 		});
 
-		describe('<c> Confirm email |', function() {
+		xdescribe('<c> Confirm email |', function() {
 			it('> should confirm email', function() {
 
 			});
 		});
 
-		describe('<d> Did receive Welcome email |', function() {
+		xdescribe('<d> Did receive Welcome email |', function() {
 			it('> should receive welcome email', function() {
 
 			});
@@ -139,7 +168,30 @@ describe('[Survey Tests] |', function() {
 
 		describe('<e> Update profile info |', function() {
 			it('> should update profile info', function() {
+				// Click on your name
+				var userIcon = element(by.partialLinkText(tester.name));
+				expect(userIcon.waitReady()).toBeTruthy('Did not find the user icon');
 
+				userIcon.click();
+
+				var editProfileLink = element(by.partialLinkText('Edit Profile'));
+				expect(editProfileLink.waitReady()).toBeTruthy();
+				editProfileLink.click();
+
+				var lastnameDiv = element(by.css('#div_id_last_name'));
+
+				var lastNameInput = lastnameDiv.element(by.css('#id_last_name'));
+				expect(lastNameInput.waitReady()).toBeTruthy();
+
+				lastNameInput.sendKeys('t_123');
+
+				var updateProfileButton = element(by.css('[value="Update profile"]'));
+				updateProfileButton.click();
+
+				var userinfo = element(by.css('.user-info')).element(by.css('h1'));
+				userinfo.getText().then(function(text){
+					expect(text.includes('t_123')).toBeTruthy();
+				});
 			});
 		});
 
