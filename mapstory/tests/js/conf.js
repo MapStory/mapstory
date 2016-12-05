@@ -18,6 +18,7 @@ exports.config = {
 	//--------------------------
 	// Runs ALL specs
 	// specs: ['*.spec.js'],
+
 	// Cherry pick specks here:
 	specs: [
 		'auth.spec.js',

@@ -9,6 +9,8 @@ var auth;
 var EC = protractor.ExpectedConditions;
 require('./waitReady.js');
 
+// var screenHelper = require('./screenHelper.js');
+
 
 describe('User auth', function() {
 	beforeEach(function(){
@@ -17,6 +19,14 @@ describe('User auth', function() {
 		auth = require('./auth.po');
 		browser.waitForAngular();
 	});
+
+	// Take a screenshot automatically after each failing test.
+	// afterEach(function() {
+	// 	var passed = jasmine.getEnv().currentSpec.results().passed();
+	// 	if (!passed) {
+	// 		screenHelper.screenshot();
+	// 	}
+	// });
 
 	/**
 	 * Login Button
