@@ -188,8 +188,9 @@ describe('[Survey Tests] |', function() {
 				var updateProfileButton = element(by.css('[value="Update profile"]'));
 				updateProfileButton.click();
 
-				var userinfo = element(by.css('.user-info')).element(by.css('h1'));
-				userinfo.getText().then(function(text){
+				var userinfos = element(by.css('.user-info'));
+				var usertitle = userinfos.all(by.css('h1'));
+				usertitle.first().getText().then(function(text){
 					expect(text.includes('t_123')).toBeTruthy();
 				});
 			});

@@ -1,13 +1,21 @@
 'use strict';
 
-var home_page = null;
-var wizard = null;
+var home_page = require('./home.po');
+var wizard = require('./icon_upload.po');
 
-describe('Icon Upload Wizard', function() {
+// var screenHelper = require('./screenHelper');
+
+xdescribe('Icon Upload Wizard', function() {
 	beforeEach(function(){
-		home_page = require('./home.po');
-		wizard = require('./icon_upload.po');
 	});
+
+	// // Take a screenshot automatically after each failing test.
+	// afterEach(function() {
+	// 	var passed = jasmine.getEnv().currentSpec.results().passed();
+	// 	if (!passed) {
+	// 		screenHelper.screenshot();
+	// 	}
+	// });
 
 	it('> should be available to the user from the home page', function() {
 		expect(home_page.isLoggedIn()).toBeTruthy();
