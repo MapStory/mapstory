@@ -399,7 +399,7 @@ describe('[Survey Tests] |', function() {
 		/**
 			g. Click Download. Try to download the filetypes . No errors?
 		**/
-		describe('<g> Download filetypes', function() {
+		xdescribe('<g> Download filetypes', function() {
 			beforeEach(function() {
 				element(by.linkText('Create')).click();
 				home_page.importLayerLink.click();
