@@ -22,10 +22,10 @@ exports.config = {
 	// Cherry pick specks here:
 	specs: [
 		'auth.spec.js',
-		'composer.spec.js',
-		'home.spec.js',
-		'icon_upload.spec.js',
-		'search.spec.js',
+		// 'composer.spec.js',
+		// 'home.spec.js',
+		// 'icon_upload.spec.js',
+		// 'search.spec.js',
 		'survey.spec.js',
 	],
 
@@ -34,7 +34,21 @@ exports.config = {
 		// browserName: 'firefox'
 	//},
 	multiCapabilities: [
-		{'browserName' : 'chrome'},
+		{
+			'browserName' : 'chrome',
+			'chromeOptions': {
+				// Get rid of --ignore-certificate yellow warning
+				args: ['--no-sandbox', '--test-type=browser'],
+				// Set download path and avoid prompting for download even though
+				// this is already the default on Chrome but for completeness
+				prefs: {
+					'download': {
+						'prompt_for_download': false,
+						'default_directory': '../downloads/',
+					},
+				},
+			},
+		},
 		// {'browserName' : 'firefox'}
 		// {'browserName' : 'safari'},
 	],

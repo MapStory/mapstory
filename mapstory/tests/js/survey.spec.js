@@ -1,6 +1,9 @@
 'use strict';
 require('./waitReady.js');
 var auth = require('./auth.po');
+var wait_times = require('./wait_times');
+var home_page = require('./home.po');
+var layer_metadata = require('./layer_metadata.po');
 
 /**
  * Tester object
@@ -203,6 +206,12 @@ describe('[Survey Tests] |', function() {
 		======================
 	**/
 	describe('<<3>> Uploading Datasets |', function () {
+
+		var testUpload = {
+			filetype: 'CSV',
+
+		};
+
 		/**
 			a. Data format:
 			  - CSV
@@ -213,18 +222,18 @@ describe('[Survey Tests] |', function() {
 		**/
 		describe('<a> Set data format |', function() {
 			it('> should use CSV', function() {
+				expect(testUpload.filetype).toEqual('CSV');
+			});
+
+			xit('> should use SHP', function() {
 
 			});
 
-			it('> should use SHP', function() {
+			xit('> should use KML', function() {
 
 			});
 
-			it('> should use KML', function() {
-
-			});
-
-			it('> should use JSON', function() {
+			xit('> should use JSON', function() {
 
 			});
 		});
@@ -236,7 +245,8 @@ describe('[Survey Tests] |', function() {
 			  - Lines
 			  - Polygons
 		**/
-		describe('<b> Set Geometry type |', function() {
+		xdescribe('<b> Set Geometry type |', function() {
+
 
 		});
 		/**
@@ -245,7 +255,7 @@ describe('[Survey Tests] |', function() {
 			  - 650 Million years
 			  - Present time
 		**/
-		describe('<c> Set Timescale', function() {
+		xdescribe('<c> Set Timescale', function() {
 
 		});
 		/**
@@ -253,25 +263,178 @@ describe('[Survey Tests] |', function() {
 			  Where you able to upload sucesfulluy?
 		**/
 		describe('<d> Uploading', function() {
+			beforeEach(function() {
+				element(by.linkText('Create')).click();
+				home_page.importLayerLink.click();
+			});
 
+			it('> has a "Close button"', function() {
+				var closeButton = element(by.css('i.fa.fa-times.pointer.import-wizard-icon'));
+				expect(closeButton.isDisplayed()).toBe(true);
+				closeButton.click();
+			});
+
+			describe('> Step 1', function() {
+				it('> should complete step 1', function() {
+					home_page.uploadLayer_Step1();
+				});
+
+				xit('> can close the form', function() {
+
+				});
+
+				xit('> highlights the correct step', function() {
+
+				});
+			});
+
+			describe('> Step 2', function() {
+				it('should complete step 2', function() {
+					home_page.uploadLayer_Step1();
+					home_page.uploadLayer_Step2();
+				});
+			});
+
+			describe('> Step 3', function() {
+				it('> should complete step 3', function() {
+					home_page.uploadLayer_Step1();
+					home_page.uploadLayer_Step2();
+					home_page.uploadLayer_Step3();
+				});
+			});
+
+			describe('> Step 4', function() {
+				it('should complete step 4', function() {
+					home_page.uploadLayer_Step1();
+					home_page.uploadLayer_Step2();
+					home_page.uploadLayer_Step3();
+					home_page.uploadLayer_Step4();
+				});
+			});
+
+			describe('> Step 5', function() {
+				it('> should complete step 5', function() {
+					home_page.uploadLayer_Step1();
+					home_page.uploadLayer_Step2();
+					home_page.uploadLayer_Step3();
+					home_page.uploadLayer_Step4();
+					home_page.uploadLayer_Step5();
+				});
+
+			});
+
+			describe('> Step 6', function() {
+				it('> should complete step 6', function() {
+					home_page.uploadLayer_Step1();
+					home_page.uploadLayer_Step2();
+					home_page.uploadLayer_Step3();
+					home_page.uploadLayer_Step4();
+					home_page.uploadLayer_Step5();
+					home_page.uploadLayer_Step6();
+				});
+			});
 		});
+
 		/**
 			e. Click 'Update Metadata' and add responses to questions. Does it display correctly?
 		**/
 		describe('<e> Update Metadata', function() {
+			beforeEach(function() {
+				element(by.linkText('Create')).click();
+				home_page.importLayerLink.click();
+				home_page.uploadLayer_Step1();
+				home_page.uploadLayer_Step2();
+				home_page.uploadLayer_Step3();
+				home_page.uploadLayer_Step4();
+				home_page.uploadLayer_Step5();
+			});
 
+			it('> Can edit metadata', function() {
+				home_page.uploadLayer_Step6();
+				browser.sleep(wait_times['metadata_load']);
+				expect(layer_metadata.titleInput.waitReady()).toBeTruthy();
+				expect(layer_metadata.categoryDropdown.waitReady()).toBeTruthy();
+				expect(layer_metadata.summaryText.waitReady()).toBeTruthy();
+				expect(layer_metadata.languageDropdown.waitReady()).toBeTruthy();
+				expect(layer_metadata.dataSourceText.waitReady()).toBeTruthy();
+				expect(layer_metadata.dataQualityText.waitReady()).toBeTruthy();
+				expect(layer_metadata.purposeText.waitReady()).toBeTruthy();
+				expect(layer_metadata.isPublishedCheckbox.waitReady()).toBeTruthy();
+
+
+				// Save
+				layer_metadata.saveButton.click();
+			});
 		});
+
+
 		/**
 			f. Click update layer settings again and make sure that "Is published" is checked and save. Go to explore and find your update layer. Did you find it?
 		**/
 		describe('<f> Set is published', function() {
+			beforeEach(function() {
+				element(by.linkText('Create')).click();
+				home_page.importLayerLink.click();
+				home_page.uploadLayer_Step1();
+				home_page.uploadLayer_Step2();
+				home_page.uploadLayer_Step3();
+				home_page.uploadLayer_Step4();
+				home_page.uploadLayer_Step5();
+			});
+
+			it('should set published checkbox', function(){
+				home_page.uploadLayer_Step6();
+				browser.sleep(wait_times['metadata_load']);
+
+				expect(layer_metadata.isPublishedCheckbox.waitReady()).toBeTruthy();
+				layer_metadata.isPublishedCheckbox.click();
+
+				// Save
+				layer_metadata.saveButton.click();
+			});
 
 		});
+
+
 		/**
 			g. Click Download. Try to download the filetypes . No errors?
 		**/
 		describe('<g> Download filetypes', function() {
+			beforeEach(function() {
+				element(by.linkText('Create')).click();
+				home_page.importLayerLink.click();
+				home_page.uploadLayer_Step1();
+				home_page.uploadLayer_Step2();
+				home_page.uploadLayer_Step3();
+				home_page.uploadLayer_Step4();
+				home_page.uploadLayer_Step5();
+				home_page.uploadLayer_Step6();
 
+				browser.sleep(wait_times['metadata_load']);
+
+				// Mark as published
+				expect(layer_metadata.isPublishedCheckbox.waitReady()).toBeTruthy();
+				layer_metadata.isPublishedCheckbox.click();
+
+				// Save
+				layer_metadata.saveButton.click();
+
+				browser.sleep(1000);
+			});
+
+			it('should download CSV', function(){
+				browser.sleep(2000);
+				var downloadLink = element(by.linkText('Download'));
+				expect(downloadLink.waitReady()).toBeTruthy();
+
+				downloadLink.click();
+				browser.sleep(1000);
+
+				var CSVlink = element(by.linkText('CSV'));
+				expect(CSVlink.waitReady()).toBeTruthy();
+
+				CSVlink.click();
+			});
 		});
 		/**
 			h. Add tags to storylayer. Go to explore page and search for your storylayer using these tags.
