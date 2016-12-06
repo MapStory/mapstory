@@ -8,10 +8,9 @@
   become: yes
 
 - name: restart django
-  supervisorctl: name=gunicorn-django state=started
+  supervisorctl: name=gunicorn-django state=restarted
   become: yes
   notify: check django running
-  ignore_errors: True
 
 - name: check django running
   uri: url=http://localhost
