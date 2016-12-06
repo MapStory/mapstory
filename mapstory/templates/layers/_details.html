@@ -89,7 +89,7 @@
                                             <td width="65%">
                                                 <script type="text/javascript">
                                                     // Pass the keyword list from the django template into the javascript
-                                                    var keyword_list = "{{ resource.keyword_list|escapejs }}";
+                                                    var keywords = {{keywords|safe}};
                                                     var url = "{{ resource.detail_url }}";
                                                 </script>
                                                 {% if user.is_authenticated %}
