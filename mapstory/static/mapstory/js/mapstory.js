@@ -484,15 +484,8 @@
   $scope.showShare = function(){
      $scope.sharing = $scope.sharing ? !$scope.sharing : true;
   }
-  // For some reason it gets it all as a string, so parse for the ' and grab the content in between them
-  keyword_list = keyword_list.split('\'');
-  $scope.tags = [];
-  // Grab every odd numbered index - hack to grab the keywords only
-  // BUG: this doesn't work at all with special characters like '' "" in the unicode literals we're grabbing
-  for (var i = 1; i < keyword_list.length; i += 2) {
-    $scope.tags.push(keyword_list[i]);
-  }
 
+  $scope.tags = keywords;
   // Change to 10
   var MAX_TOKENS = 10;
 

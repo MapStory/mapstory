@@ -175,6 +175,11 @@ if ENABLE_SOCIAL_LOGIN:
         'social.backends.facebook.FacebookOAuth2',
     ) + AUTHENTICATION_BACKENDS
 
+# Download formats available in layer detail download modal
+DOWNLOAD_FORMATS_VECTOR = [
+    'Zipped Shapefile', 'GML 2.0', 'GML 3.1.1', 'CSV', 'GeoJSON', 'KML', 
+]
+
 #@todo remove this hack once maploom can deal with other config
 # have to put this after local_settings or any adjustments to OGC_SERVER will
 # not get picked up

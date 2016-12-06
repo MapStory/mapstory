@@ -1,0 +1,41 @@
+{% extends "layers/layer_base.html" %}
+{% load i18n %}
+{% load threadedcomments_tags %}
+
+{% block title %}{{ layer.typename }} — {{ block.super }}{% endblock %}
+
+{% block body %}
+<div class="page-header">
+  <h2 class="page-title">{% trans "Delete StoryLayer" %}</h2>
+</div>
+<div class="row">
+{% get_comment_count for layer as num_comments %}
+  <div class="col-md-8" ng-controller="geogigController">
+    <p class="lead">
+          Are you sure you want to delete this StoryLayer, <a href="{{ layer.get_absolute_url }}">{{ layer.title }}</a>?
+    </p>
+    <p> This layer has {% verbatim %}{{ stats.totalCommits | number}}{% endverbatim %} community contributions and {{ num_comments }} comments that will also be removed. </p>
+  <div>
+</div>
+    <form action="{% url "layer_remove" layer.service_typename %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" value="{{ layer.service_typename }}" />
+      <div class="form-actions">
+        <input type="submit" value="{% trans "Yes, I am sure" %}" class="btn btn-danger" />
+        <a href="{{ layer.get_absolute_url }}" class="btn btn-default">{% trans "No, don't delete it" %}</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+{% if GEOGIG_ENABLED and layer.link_set.geogig %}
+    {% with "layers/_geogig_scripts.html" as geogig_scripts_template %}
+      {% with layer as resource %}
+        {% include geogig_scripts_template %}
+      {% endwith %}
+    {% endwith %}
+{% endif %}
+{% endblock %}
+

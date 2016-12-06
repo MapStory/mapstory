@@ -847,6 +847,11 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     # assert False, str(layer_bbox)
     config = layer.attribute_config()
 
+    # only owners and admins can view unpublished layers
+    if not layer.is_published:
+        if request.user != layer.owner and not request.user.is_superuser:
+            return HttpResponse(_PERMISSION_MSG_VIEW, status=403, content_type="text/plain")
+
     # TODO (Mapstory): This has been commented out to force the client to make a getCapabilities request in order
     # to pull in the time dimension data.  Ideally we would cache time data just like the srs and bbox data to prevent
     # making the getCapabilities request.
@@ -895,6 +900,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     metadata = layer.link_set.metadata().filter(
         name__in=settings.DOWNLOAD_FORMATS_METADATA)
+
+    keywords = json.dumps([tag.name for tag in layer.keywords.all()])
 
     if request.method == "POST":
         keywords_form = KeywordsForm(request.POST, instance=layer)
@@ -970,6 +977,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "permissions_json": _perms_info_json(layer),
         "documents": get_related_documents(layer),
         "metadata": metadata,
+        "keywords": keywords,
         "is_layer": True,
         "wps_enabled": settings.OGC_SERVER['default']['WPS_ENABLED'],
         "keywords_form": keywords_form,
@@ -1050,6 +1058,8 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     for chapter in chapters:
         layers = layers + list(chapter.local_layers)
 
+    keywords = json.dumps([tag.name for tag in map_obj.keywords.all()])
+
     if request.method == "POST":
         keywords_form = KeywordsForm(request.POST, instance=map_obj)
         published_form = PublishStatusForm(instance=map_obj)
@@ -1110,6 +1120,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         'config': config,
         'resource': map_obj,
         'layers': layers,
+        'keywords': keywords,
         'permissions_json': _perms_info_json(map_obj),
         'documents': get_related_documents(map_obj),
         'keywords_form': keywords_form,
