@@ -484,6 +484,8 @@ NOSE_ARGS = [
     '--cover-package=mapstory',
     '--cover-inclusive',
     '--cover-html',
+    '--nocapture',
+    '--nologcapture',
 ]
 
 # Override number of results per page listed in the GeoNode search pages
