@@ -57,5 +57,6 @@ exports.config = {
 		showColors: true, // Use colors in the command line report.
 		defaultTimeoutInterval: 30000
 	},
-	allScriptsTimeout: 30000
+	allScriptsTimeout: 30000,
+	resultJsonOutputFile:'./result.json',
 };
