@@ -5,5 +5,5 @@ echo "  removing /srv/git/mapstory/geonode/geonode/static/.components/"
 rm -rf /srv/git/mapstory/geonode/geonode/static/.components/
 echo "  removing /srv/git/mapstory/geonode/geonode/static/node_modules/"
 rm -rf /srv/git/mapstory/geonode/geonode/static/node_modules/
-echo "  removing /srv/git/mapstory/mapstory-geonode/mapstory/static/node_modules/"
-rm -rf /srv/git/mapstory/mapstory-geonode/mapstory/static/node_modules/
+echo "  removing /srv/git/mapstory/mapstory/mapstory/static/node_modules/"
+rm -rf /srv/git/mapstory/mapstory/mapstory/static/node_modules/
