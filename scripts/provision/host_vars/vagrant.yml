@@ -57,7 +57,7 @@ celery_always_eager: False
 session_cookie_domain: "{{ nginx_server_name }}"
 mapstory_branch: master
 top_project: /srv/git/mapstory
-mapstory_geonode: '{{ top_project }}/mapstory-geonode'
+mapstory_geonode: '{{ top_project }}/mapstory'
 media_root: /var/lib/mapstory/media/
 uploads_root: '{{media_root}}uploads'
 django_su_pass: admin

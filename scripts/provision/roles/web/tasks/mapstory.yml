@@ -4,6 +4,7 @@
   become_user: '{{ application_user }}'
   tags: [config]
 
+
 - name: remove github.com from known host
   shell: ssh-keygen -R github.com
   become_user: '{{ application_user }}'
@@ -16,26 +17,42 @@
   when: setup_git_repo is defined and setup_git_repo
   tags: [config]
 
+- name: Ensures top directory exists
+  file: path={{ top_project }} state=directory group={{ application_user }} owner={{ application_user }} mode=755
+  tags: [git]
+
 - name: mapstory checkout
-  git: repo=git://github.com/MapStory/mapstory.git dest={{ top_project }} force=yes
+  git: repo=git://github.com/MapStory/mapstory.git dest={{ top_project }}/mapstory force=yes
   become_user: '{{ application_user }}'
   when: setup_git_repo is defined and setup_git_repo
   tags: [git]
 
-- name: mapstory branch
-  command: git checkout {{ mapstory_branch }} chdir={{ top_project }}
+#- name: mapstory-maploom checkout
+#  git: repo=git://github.com/MapStory/MapLoom.git dest={{ top_project }}/MapLoom force=yes
+#  become_user: '{{ application_user }}'
+#  when: setup_git_repo is defined and setup_git_repo
+#  tags: [git]
+
+- name: geonode checkout
+  git: repo=git://github.com/MapStory/geonode.git dest={{ top_project }}/geonode force=yes
+  become_user: '{{ application_user }}'
+  when: setup_git_repo is defined and setup_git_repo
+  tags: [git]
+
+- name: geoserver-geonode-ext checkout
+  git: repo=git://github.com/MapStory/geoserver-geonode-ext.git dest={{ top_project }}/geoserver-geonode-ext force=yes
+  become_user: '{{ application_user }}'
+  when: setup_git_repo is defined and setup_git_repo
+  tags: [git]
+
+- name: geotools checkout
+  git: repo=git://github.com/MapStory/geotools.git dest={{ top_project }}/geotools force=yes
   become_user: '{{ application_user }}'
   when: setup_git_repo is defined and setup_git_repo
   tags: [git]
 
 - name: clean modified geonode content to prevent submodule update fail
   command: git checkout -- . chdir={{ top_project }}/geonode
-  become_user: '{{ application_user }}'
-  when: setup_git_repo is defined and setup_git_repo
-  tags: [update]
-
-- name: mapstory update
-  shell: git pull && git submodule sync && git submodule update --init --recursive chdir={{ top_project }}
   become_user: '{{ application_user }}'
   when: setup_git_repo is defined and setup_git_repo
   tags: [update]
@@ -73,46 +90,68 @@
   tags: [settings]
 
 - name: write secret key
-  template: src=roles/web/files/local_key.py dest={{ project_path }}/{{ project_name }}/settings/local_key.py
+  template: src=roles/web/files/local_key.py dest=/tmp/local_key.py
   become_user: '{{ application_user }}'
   tags: [settings]
-  notify: restart django
+#  notify: restart django
 
-- name: write project local settings
-  template: src=roles/web/files/local_settings.py.j2 dest={{ project_path }}/{{ project_name }}/settings/local_settings.py
+- name: mv project local settings across synced file system if necessary
+  command: mv /tmp/local_key.py {{ project_path }}/{{ project_name }}/settings/local_key.py
   become_user: '{{ application_user }}'
   notify: restart django
   tags: [settings]
 
-- name: migrate maps
-  django_manage: command="migrate maps --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+- name: write project local settings - sync filesystem safe
+  template: src=roles/web/files/local_settings.py.j2 dest=/tmp/local_settings.py
   become_user: '{{ application_user }}'
-  tags: [update, syncdb]
+  tags: [settings]
 
-- name: migrate layers
-  django_manage: command="migrate layers --noinput" virtualenv={{ venv }} app_path={{ project_path }}
-  become_user: '{{ application_user }}'
-  tags: [update, syncdb]
 
-- name: migrate groups
-  django_manage: command="migrate groups --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+- name: mv project local settings across synced file system if necessary
+  command: mv /tmp/local_settings.py {{ project_path }}/{{ project_name }}/settings/local_settings.py
   become_user: '{{ application_user }}'
-  tags: [update, syncdb]
+  notify: restart django
+  tags: [settings]
 
-- name: migrate
-  django_manage: command="migrate --noinput" virtualenv={{ venv }} app_path={{ project_path }}
-  become_user: '{{ application_user }}'
-  tags: [update, syncdb]
+- name: Make sure manage.py is directly runnable (ansible > 2.0)
+  file: path={{ project_path }}/manage.py group={{ application_user }} owner={{ application_user }} mode=755
+  tags: [migrate, manage, syncdb]
 
-- name: syncdb
-  django_manage: command="syncdb --noinput" virtualenv={{ venv }} app_path={{ project_path }}
-  become_user: '{{ application_user }}'
-  tags: [update, syncdb]
+#- name: migrate journal
+#  django_manage: command="migrate journal --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+#  become_user: '{{ application_user }}'
+#  tags: [migrate, update, syncdb]
+#
+#- name: migrate maps
+#  django_manage: command="migrate maps --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+#  become_user: '{{ application_user }}'
+#  tags: [migrate, update, syncdb]
+#
+#- name: migrate layers
+#  django_manage: command="migrate layers --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+#  become_user: '{{ application_user }}'
+#  tags: [update, syncdb]
+#
+#- name: migrate groups
+#  django_manage: command="migrate groups --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+#  become_user: '{{ application_user }}'
+#  tags: [update, syncdb]
+#
+#- name: migrate
+#  django_manage: command="migrate --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+#  become_user: '{{ application_user }}'
+#  tags: [update, syncdb]
+#
+#- name: syncdb
+#  django_manage: command="syncdb --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+#  become_user: '{{ application_user }}'
+#  tags: [update, syncdb]
 
 - name: load initial data
   django_manage: app_path={{ project_path }} virtualenv={{ venv }} fixtures='{{ fixtures }}' command=loaddata
   become_user: '{{ application_user }}'
   tags: [settings, initial_data]
+
 
 - name: create or update django super user
   become_user: '{{ application_user }}'
@@ -129,7 +168,7 @@
          && python manage.py collectstatic --noinput --ignore node_modules
   become_user: '{{ application_user }}'
   when: use_aws_s3 is defined and use_aws_s3
-  tags: [update]
+  tags: [update, reload]
 
 - name: geonode npm install
   shell: npm install
@@ -184,7 +223,10 @@
   django_manage: app_path={{ project_path }} virtualenv={{ venv }} command='collectstatic --link --noinput --ignore node_modules'
   become_user: '{{ application_user }}'
   when: use_aws_s3 is undefined or use_aws_s3 == False
+  tags: [update, reload]
+  ignore_errors: True
   tags: [update]
+
 
 - name: reload indexes
   django_manage: app_path={{ project_path }} virtualenv={{ venv }} command='rebuild_index --noinput'
@@ -197,4 +239,3 @@
 
 - name: restart nginx
   shell: 'sudo service nginx restart'
-

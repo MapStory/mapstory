@@ -5,7 +5,7 @@ project_name: mapstory
 application_name: mapstory
 application_user: mapstory
 
-git_repo: mapstory-geonode
+git_repo: mapstory
 
 mapstory_branch: master
 

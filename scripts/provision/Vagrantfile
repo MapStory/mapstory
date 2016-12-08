@@ -34,7 +34,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	#   note - this should work except for bug: (adds C: to path)
 	#
 	#	  config.vm.provision "ansible_local" do |ansible|	
-	#	ansible.provisioning_path = "/srv/git/mapstory/mapstory-geonode/scripts/provision"
+	#	ansible.provisioning_path = "/srv/git/mapstory/mapstory/scripts/provision"
 	#
 	#
 	# do this "vagrant plugin install vagrant-guest_ansible" on control machine 
