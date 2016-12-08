@@ -213,14 +213,10 @@
         </div>
     {% endif %}
  </div>
-    {% include "_bulk_permissions_form.html" %}
 {% endblock %}
 
 {% block extra_script %}
     {{ block.super }}
-    {% if GEONODE_SECURITY_ENABLED %}
-        {% include "_permissions_form_js.html" %}
-    {% endif %}
     {% include 'favorite/_favorite_list_js.html' %}
     <script type="text/javascript">
         PROFILE_USERNAME = "{{ profile.username }}";
