@@ -18,11 +18,11 @@
 <script type="text/javascript">
 {% get_current_language as language %}
 
-$(window).load(function () {
-    if (window.location.href.indexOf('edit') < 0 && window.location.href.indexOf('draft') < 0) {
-        $('#welcomeTour').modal('show');
-    }
-});
+  document.addEventListener("DOMContentLoaded", function(event) {
+      if (window.location.href.indexOf('edit') < 0 && window.location.href.indexOf('draft') < 0) {
+          $('#welcomeTour').modal('show');
+      }
+  });
  site_name = '{{ SITE_NAME }}';
  site_icon = '/uploaded/{{ site.assets.favicon.name }}';
  config =  {
