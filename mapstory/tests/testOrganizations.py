@@ -36,6 +36,17 @@ class MapStoryTestMixin(TestCase):
 
 class MapStoryOrganizationTests(MapStoryTestMixin):
     """Organization Tests
+
+    These are the URLs for the Organizations API
+
+        url(r'^organizations/create/$', organization_create, name='organization_create'),
+        url(r'^organizations/(?P<slug>[^/]*)$', organization_detail, name='organization_detail'),
+        url(r'^organizations/edit/(?P<slug>[^/]*)$', organization_edit, name='organization_edit'),
+        url(r'^organizations/members/(?P<slug>[^/]*)$', organization_members, name='organization_members'),
+        url(r'^organizations/invite/(?P<slug>[^/]*)$', organization_invite, name='organization_invite'),
+        url(r'^organizations/(?P<slug>[^/]*)/members_add/$', organization_members_add, name='organization_members_add'),
+        url(r'^organizations/(?P<slug>[^/]*)/member_remove/(?P<username>.+)$', organization_member_remove, name='organization_member_remove'),
+
     """
     def setUp(self):
         self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
@@ -76,7 +87,12 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 404)
 
 
+
     def test_organization_create(self):
+        """Organization create
+        
+        url(r'^organizations/create/$', organization_create, name='organization_create'),
+        """
         admin = AdminClient()
         admin.login_as_admin()
 
@@ -141,6 +157,12 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
 
 
+        # Test invite
+        # http://192.168.56.151/organizations/Test-Organization/members_add/
+        # 
+        admin.get(reverse('organization_members_add'), args=[group.slug])
+        
+
     @skip("TODO")
     def test_public_access_type(self):
         print("TODO")
@@ -152,8 +174,38 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
     @skip("TODO")
     def test_access_type_private(self):
         print("TODO")
-        
-    
+
+    def test_organization_edit(self):
+        """Organization Tests
+        url(r'^organizations/edit/(?P<slug>[^/]*)$', organization_edit, name='organization_edit'),
+        """
+        print("TODO")
+
+    def test_organization_members(self):
+        """Organization members
+        url(r'^organizations/members/(?P<slug>[^/]*)$', organization_members, name='organization_members'),
+        """
+        print("TODO")
+
+    def test_organization_invite(self):
+        """Organization invite
+        url(r'^organizations/invite/(?P<slug>[^/]*)$', organization_invite, name='organization_invite'),
+        """
+        print("TODO")
+
+    def test_organization_members_add(self):
+        """Organization member add
+        url(r'^organizations/(?P<slug>[^/]*)/members_add/$', organization_members_add, name='organization_members_add'),
+        """
+        print("TODO")
+
+    def test_organization_member_remove(self):
+        """Organization member remove
+        url(r'^organizations/(?P<slug>[^/]*)/member_remove/(?P<username>.+)$', organization_member_remove, name='organization_member_remove'),
+        """
+        print("TODO")
+
+
 
 
 
