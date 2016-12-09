@@ -117,35 +117,35 @@
   file: path={{ project_path }}/manage.py group={{ application_user }} owner={{ application_user }} mode=755
   tags: [migrate, manage, syncdb]
 
-#- name: migrate journal
-#  django_manage: command="migrate journal --noinput" virtualenv={{ venv }} app_path={{ project_path }}
-#  become_user: '{{ application_user }}'
-#  tags: [migrate, update, syncdb]
-#
-#- name: migrate maps
-#  django_manage: command="migrate maps --noinput" virtualenv={{ venv }} app_path={{ project_path }}
-#  become_user: '{{ application_user }}'
-#  tags: [migrate, update, syncdb]
-#
-#- name: migrate layers
-#  django_manage: command="migrate layers --noinput" virtualenv={{ venv }} app_path={{ project_path }}
-#  become_user: '{{ application_user }}'
-#  tags: [update, syncdb]
-#
-#- name: migrate groups
-#  django_manage: command="migrate groups --noinput" virtualenv={{ venv }} app_path={{ project_path }}
-#  become_user: '{{ application_user }}'
-#  tags: [update, syncdb]
-#
-#- name: migrate
-#  django_manage: command="migrate --noinput" virtualenv={{ venv }} app_path={{ project_path }}
-#  become_user: '{{ application_user }}'
-#  tags: [update, syncdb]
-#
-#- name: syncdb
-#  django_manage: command="syncdb --noinput" virtualenv={{ venv }} app_path={{ project_path }}
-#  become_user: '{{ application_user }}'
-#  tags: [update, syncdb]
+- name: migrate maps
+  django_manage: command="migrate maps --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [migrate, update, syncdb]
+
+- name: migrate journal
+  django_manage: command="migrate journal --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [migrate, update, syncdb]
+
+- name: migrate layers
+  django_manage: command="migrate layers --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [update, syncdb]
+
+- name: migrate groups
+  django_manage: command="migrate groups --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [update, syncdb]
+
+- name: migrate
+  django_manage: command="migrate --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [update, syncdb]
+
+- name: syncdb
+  django_manage: command="syncdb --noinput" virtualenv={{ venv }} app_path={{ project_path }}
+  become_user: '{{ application_user }}'
+  tags: [update, syncdb]
 
 - name: load initial data
   django_manage: app_path={{ project_path }} virtualenv={{ venv }} fixtures='{{ fixtures }}' command=loaddata
