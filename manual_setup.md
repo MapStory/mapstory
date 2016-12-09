@@ -1,8 +1,8 @@
 
-mapstory-geonode
+mapstory
 ================
 
-[![Build Status](https://travis-ci.org/MapStory/mapstory-geonode.svg)](https://travis-ci.org/MapStory/mapstory-geonode)
+[![Build Status](https://travis-ci.org/MapStory/mapstory.svg)](https://travis-ci.org/MapStory/mapstory)
 
 **PROVISIONAL MANUAL SETUP INSTRUCTIONS**
 
@@ -18,25 +18,13 @@ Prerequisites:
 * python-pastescript
 * virtualenv OR virtualenvwrapper
 
-Repositories
-------------
-
-The full build lives in a 'meta-project' at https://github.com/MapStory/mapstory/tree/master. This is used for stability as the upstream dependent projects are pegged to specific versions. While MapStory has forks of upstream projects, the goal is to support temporary efforts that are intended for eventual merging into the respective projects. The forks will be updated as needed.
-
-For a local developer build, clone the following repositories as siblings of each other:
-* https://github.com/MapStory/MapLoom
-* https://github.com/GeoNode/geonode
-* https://github.com/MapStory/geoserver-geonode-ext
-* https://github.com/MapStory/mapstory-geonode
-* https://github.com/ischneider/geotools (optional - only needed for extended datetime support)
-
 Setup
 -----
 
 Follow installation instructions in GeoNode for the relevant operating system.
 *STOP* when you reach the point of running `pip install -e geonode`
 
-Make virtualenv for mapstory, activate it, change directory to `mapstory-geonode` and run:
+Make virtualenv for mapstory, activate it, change directory to `mapstory` and run:
 
     pip install -r requirements.txt
     
@@ -51,7 +39,7 @@ Now, change directory to `MapLoom` and bootstrap:
 Important Tasks
 ===============
 
-Many paver tasks are reused from GeoNode. They should be run in the `mapstory-geonode` directory to work properly.
+Many paver tasks are reused from GeoNode. They should be run in the `mapstory` directory to work properly.
 
 To setup from an initially clean state:
 

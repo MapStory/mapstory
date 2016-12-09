@@ -11,6 +11,6 @@ source /home/mapstory/.virtualenvs/mapstory/bin/activate
 
 ./clean
 
-cd /srv/git/mapstory/mapstory-geonode/
+cd /srv/git/mapstory/mapstory/
 paver collect_static
 python manage.py collectstatic --noinput
