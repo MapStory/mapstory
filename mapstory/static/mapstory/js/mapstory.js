@@ -252,7 +252,8 @@
   // $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
 
   //if not the owner, don't retrieve unpublished resources
-  if ($scope.django.user != PROFILE_USERNAME){
+  // needs better permissions management for superusers/admin
+  if ($scope.django.user != PROFILE_USERNAME && $scope.django.user != 'admin'){
     $scope.query.is_published = true;
   }
 
