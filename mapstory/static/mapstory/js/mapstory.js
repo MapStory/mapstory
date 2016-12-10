@@ -466,21 +466,6 @@
       return false;
     });
 
-  $scope.toggleFullScreen = function() {
-    var elem = document.getElementById('embedded_map');
-    if (!document.webkitFullScreen || !document.mozFullScreen || !document.msFullscreenElement || !document.fullscreenElement) {
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.msRequestFullscreen) {
-            elem.msRequestFullscreen();
-        } else if (elem.mozRequestFullScreen) {
-            elem.mozRequestFullScreen();
-        } else if (elem.webkitRequestFullScreen) {
-            elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-        }
-    }
-  }
-
   $scope.showShare = function(){
      $scope.sharing = $scope.sharing ? !$scope.sharing : true;
   }
