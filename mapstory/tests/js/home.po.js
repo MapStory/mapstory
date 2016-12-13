@@ -20,7 +20,7 @@ var auth = require('./auth.po');
  */
 var home_page = function() {
 
-	this.loginIcon = element(by.css('.fa.fa-user'));
+	this.loginIcon = element(by.css('[data-target="#loginModal"]'));
 	this.loginModal = element(by.css('.modal-content'));
 	this.navigationTabs = element(by.css('.nav.nav-tabs'));
 	this.adminLink = element(by.linkText('admin'));
