@@ -160,7 +160,7 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         # Test invite
         # http://192.168.56.151/organizations/Test-Organization/members_add/
         # 
-        admin.get(reverse('organization_members_add'), args=[group.slug])
+        # admin.get(reverse('organization_members_add'), args=[group.slug])
         
 
     @skip("TODO")
