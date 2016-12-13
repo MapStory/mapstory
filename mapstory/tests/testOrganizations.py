@@ -51,58 +51,6 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
         self.non_admin_username, self.non_admin_password = self.create_user('non_admin', 'non_admin')
 
-    def test_guest_access_redirect(self):
-        """Guests should be redirected to login
-        """
-        c = AdminClient()
-        response = c.get(reverse('organization_create'), follow=True)
-        # Should redirect to login
-        last_url, status_code = response.redirect_chain[-1]
-        self.assertRedirects(response, '/account/login/?next=/organizations/create/',status_code=302,target_status_code=200)
-        self.assertEqual(last_url, 'http://testserver/account/login/?next=/organizations/create/')
-
-    def test_user_access_denied(self):
-        """Regular users should not get access
-        """
-        c = AdminClient()
-        c.login_as_non_admin()
-        response = c.get(reverse('organization_create'), follow=True)
-        self.assertEqual(response.status_code, 403)
-
-    @skip("FIX")
-    def test_slug_get(self):
-        """Test slug
-        """
-        print(reverse('organization_detail', args=['Test-Organization']))
-        c = Client()
-        response = c.get(reverse('organization_detail', args=['Test-Organization']))
-        self.assertEqual(response.status_code, 200)
-
-        response = c.get(reverse('organization_members', args=['Test-Organization']))
-        self.assertEqual(response.status_code, 200)
-
-    def test_admin_access(self):
-        """Admin should get access
-        """
-        admin = AdminClient()
-        admin.login_as_admin()
-        response = admin.get(reverse('organization_create'))
-        self.assertEqual(response.status_code, 200)
-        self.assertHasGoogleAnalytics(response)
-
-    def test_member_404(self):
-        c = AdminClient()
-        c.login_as_non_admin()
-        response = c.get(reverse('organization_members', args=['Test-Organization-nonexistent']))
-        self.assertEqual(response.status_code, 404)
-
-
-
-    def test_organization_create(self):
-        """Organization create
-        
-        url(r'^organizations/create/$', organization_create, name='organization_create'),
-        """
         admin = AdminClient()
         admin.login_as_admin()
 
@@ -131,6 +79,75 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         group = GroupProfile.objects.all().first()
         collection = Collection.objects.all().first()
         self.assertEqual(collection.group, group)
+
+    def test_guest_access_redirect(self):
+        """Guests should be redirected to login
+        """
+        c = AdminClient()
+        response = c.get(reverse('organization_create'), follow=True)
+        # Should redirect to login
+        last_url, status_code = response.redirect_chain[-1]
+        self.assertRedirects(response, '/account/login/?next=/organizations/create/',status_code=302,target_status_code=200)
+        self.assertEqual(last_url, 'http://testserver/account/login/?next=/organizations/create/')
+
+    def test_user_access_denied(self):
+        """Regular users should not get access
+        """
+        c = AdminClient()
+        c.login_as_non_admin()
+        response = c.get(reverse('organization_create'), follow=True)
+        self.assertEqual(response.status_code, 403)
+
+    def test_slug_get(self):
+        """Test slug
+        """
+        print(reverse('organization_detail', args=['Test-Organization']))
+        c = Client()
+        response = c.get(reverse('organization_detail', args=['Test-Organization']))
+        self.assertEqual(response.status_code, 200)
+
+        response = c.get(reverse('organization_members', args=['Test-Organization']))
+        self.assertEqual(response.status_code, 200)
+
+    def test_admin_access(self):
+        """Admin should get access
+        """
+        admin = AdminClient()
+        admin.login_as_admin()
+        response = admin.get(reverse('organization_create'))
+        self.assertEqual(response.status_code, 200)
+        self.assertHasGoogleAnalytics(response)
+
+    def test_member_404(self):
+        c = AdminClient()
+        c.login_as_non_admin()
+        response = c.get(reverse('organization_members', args=['Test-Organization-nonexistent']))
+        self.assertEqual(response.status_code, 404)
+
+
+    def test_organization_create(self):
+        """Organization Create
+        url(r'^organizations/create/$', organization_create, name='organization_create'),
+        """
+        admin = AdminClient()
+        admin.login_as_admin()
+
+        group = GroupProfile.objects.all().first()
+        collection = Collection.objects.all().first()
+        self.assertEqual(collection.group, group)
+
+
+    def test_organization_edit(self):
+        """Organization Edit
+        
+        """
+        admin = AdminClient()
+        admin.login_as_admin()
+
+        group = GroupProfile.objects.all().first()
+        collection = Collection.objects.all().first()
+        self.assertEqual(collection.group, group)
+
 
         # Test editing the organization
         form_data = {
@@ -167,10 +184,6 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
 
 
-        # Test invite
-        # http://192.168.56.151/organizations/Test-Organization/members_add/
-        # 
-        # admin.get(reverse('organization_members_add'), args=[group.slug])
         
 
     @skip("TODO")
@@ -185,29 +198,59 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
     def test_access_type_private(self):
         print("TODO")
 
-    def test_organization_edit(self):
-        """Organization Tests
-        url(r'^organizations/edit/(?P<slug>[^/]*)$', organization_edit, name='organization_edit'),
-        """
-        print("TODO")
-
     def test_organization_members(self):
         """Organization members
         url(r'^organizations/members/(?P<slug>[^/]*)$', organization_members, name='organization_members'),
         """
-        print("TODO")
+        admin = AdminClient()
+        admin.login_as_admin()
+        response = admin.get(reverse('organization_members', args=['Test-Organization']), follow=True)
+        self.assertEqual(response.status_code, 200)
 
     def test_organization_invite(self):
         """Organization invite
         url(r'^organizations/invite/(?P<slug>[^/]*)$', organization_invite, name='organization_invite'),
         """
-        print("TODO")
+        admin = AdminClient()
+        admin.login_as_admin()
+
+        # Should reject GET requests
+        response = admin.get(reverse('organization_invite', args=['Test-Organization']), follow=True)
+        self.assertEqual(response.status_code, 405)
+
+        form_data = {
+        }   
+
+        # Should accept POST requests
+        response = admin.post(reverse('organization_invite', args=['Test-Organization']), follow=True, data=form_data)
+        self.assertEqual(response.status_code, 200)
+
+        # Should end up in 'organization_members'
+        last_url, status_code = response.redirect_chain[-1]
+        self.assertRedirects(response, reverse('organization_members', args=['Test-Organization']) ,status_code=302, target_status_code=200)
 
     def test_organization_members_add(self):
         """Organization member add
         url(r'^organizations/(?P<slug>[^/]*)/members_add/$', organization_members_add, name='organization_members_add'),
         """
-        print("TODO")
+        admin = AdminClient()
+        admin.login_as_admin()
+
+        # Should reject GET requests
+        response = admin.get(reverse('organization_members_add', args=['Test-Organization']), follow=True)
+        self.assertEqual(response.status_code, 405)
+
+        form_data = {
+        }   
+
+        # Should accept POST requests
+        response = admin.post(reverse('organization_members_add', args=['Test-Organization']), follow=True, data=form_data)
+        self.assertEqual(response.status_code, 200)
+
+        # Should end up in 'organization_members'
+        last_url, status_code = response.redirect_chain[-1]
+        self.assertRedirects(response, reverse('organization_detail', args=['Test-Organization']) ,status_code=302, target_status_code=200)
+        
 
     def test_organization_member_remove(self):
         """Organization member remove
