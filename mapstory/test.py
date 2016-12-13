@@ -17,7 +17,9 @@ from tests.testExtra import *
 from tests.testFunctional import *
 from tests.testModels import *
 from tests.testMapstory import *
+from tests.testOrganizations import MapStoryOrganizationTests
 from journal.tests import *
 from apps.boxes.tests import *
 from apps.flag.tests import *
 from apps.thumbnails.tests import *
+
