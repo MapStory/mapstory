@@ -49,7 +49,11 @@ exports.config = {
 				},
 			},
 		},
-		// {'browserName' : 'firefox'}
+
+		//{
+		//	browserName : 'firefox',
+		//	marionette : true,
+		//}
 		// {'browserName' : 'safari'},
 	],
 
