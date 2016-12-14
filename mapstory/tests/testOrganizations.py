@@ -6,10 +6,12 @@ from geonode.base.models import TopicCategory
 from geonode.base.populate_test_data import create_models
 from .AdminClient import AdminClient
 from django.core.urlresolvers import reverse
-from geonode.groups.models import GroupProfile
+from geonode.groups.models import GroupProfile, GroupMember
 from geonode.contrib.collections.models import Collection
 from datetime import datetime
 from unittest import skip
+from bs4 import BeautifulSoup
+
 
 User = get_user_model()
 
@@ -98,16 +100,22 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         response = c.get(reverse('organization_create'), follow=True)
         self.assertEqual(response.status_code, 403)
 
+
     def test_slug_get(self):
         """Test slug
         """
-        print(reverse('organization_detail', args=['Test-Organization']))
         c = Client()
         response = c.get(reverse('organization_detail', args=['Test-Organization']))
         self.assertEqual(response.status_code, 200)
 
         response = c.get(reverse('organization_members', args=['Test-Organization']))
         self.assertEqual(response.status_code, 200)
+
+        # response = c.get(reverse('organization_detail', args=['Test-Organization-nonexist']))
+        # self.assertEqual(response.status_code, 404)
+
+        # response = c.get(reverse('organization_members', args=['Test-Organization-nonexist']))
+        # self.assertEqual(response.status_code, 404)
 
     def test_admin_access(self):
         """Admin should get access
@@ -135,6 +143,54 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         group = GroupProfile.objects.all().first()
         collection = Collection.objects.all().first()
         self.assertEqual(collection.group, group)
+        manager = group.get_managers().all()
+        # Should only have 1 manager
+        self.assertEqual(len(manager), 1)
+        self.assertEqual(group.profile_type, 'org')
+
+    def test_organization_create_post(self):
+        """Should create a new organization
+        """
+        admin = AdminClient()
+        admin.login_as_admin()
+
+        # Create new organization
+        form_data = {
+            'social_twitter': 'notreal', 
+            'social_facebook': 'notreal', 
+            'title': 'Test Organization Two',
+            'description': 'Testing', 
+            'email': 'test@test.com', 
+            'access': 'public', 
+            'date_joined': datetime.now(),
+            'city': 'Cholula', 
+            'country': 'MEX', 
+            'keywords': 'test', 
+            'profile_type': 'org', 
+            'slug': 'Test-Organization-Two'
+        }
+
+        response = admin.post(reverse('organization_create'), data=form_data, follow=True)
+        self.assertEqual(response.status_code, 200)
+        
+        # When the organization is created, a GroupProfile and Collection model pointing to it should be created
+        group = GroupProfile.objects.all().first()
+        collection = Collection.objects.all().first()
+        self.assertEqual(collection.group, group)
+        self.assertEqual(collection.name, group.title)
+        self.assertEqual(collection.slug, group.slug)
+        self.assertEqual(group.profile_type,'org')
+
+
+    def test_organization_create_get(self):
+        """Should return an empty form.
+        """
+        admin = AdminClient()
+        admin.login_as_admin()
+
+        response = admin.get(reverse('organization_create'), follow=True)
+        self.assertEqual(response.status_code, 200)
+
 
 
     def test_organization_edit(self):
@@ -184,8 +240,6 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
 
 
-        
-
     @skip("TODO")
     def test_public_access_type(self):
         print("TODO")
@@ -207,6 +261,7 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         response = admin.get(reverse('organization_members', args=['Test-Organization']), follow=True)
         self.assertEqual(response.status_code, 200)
 
+
     def test_organization_invite(self):
         """Organization invite
         url(r'^organizations/invite/(?P<slug>[^/]*)$', organization_invite, name='organization_invite'),
@@ -218,6 +273,7 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         response = admin.get(reverse('organization_invite', args=['Test-Organization']), follow=True)
         self.assertEqual(response.status_code, 405)
 
+        # TODO: Put good data in here
         form_data = {
         }   
 
@@ -228,6 +284,7 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         # Should end up in 'organization_members'
         last_url, status_code = response.redirect_chain[-1]
         self.assertRedirects(response, reverse('organization_members', args=['Test-Organization']) ,status_code=302, target_status_code=200)
+
 
     def test_organization_members_add(self):
         """Organization member add
@@ -240,6 +297,7 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         response = admin.get(reverse('organization_members_add', args=['Test-Organization']), follow=True)
         self.assertEqual(response.status_code, 405)
 
+        # TODO: Put good data in here
         form_data = {
         }   
 
@@ -252,11 +310,52 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         self.assertRedirects(response, reverse('organization_detail', args=['Test-Organization']) ,status_code=302, target_status_code=200)
         
 
+    # http://stackoverflow.com/questions/11885211/how-to-write-a-unit-test-for-a-django-view
     def test_organization_member_remove(self):
         """Organization member remove
         url(r'^organizations/(?P<slug>[^/]*)/member_remove/(?P<username>.+)$', organization_member_remove, name='organization_member_remove'),
         """
-        print("TODO")
+        admin = AdminClient()
+        admin.login_as_admin()
+
+        # Should reject GET requests
+        response = admin.get(reverse('organization_member_remove', args=['Test-Organization', 'admin']), follow=True)
+        self.assertEqual(response.status_code, 200)
+
+        # TODO: Put good data in here
+        form_data = {
+        }   
+
+        # Should accept POST requests
+        response = admin.post(reverse('organization_member_remove', args=['Test-Organization', 'admin']), follow=True, data=form_data)
+        self.assertEqual(response.status_code, 403)
+
+        # Should end up in 'organization_members'
+        # last_url, status_code = response.redirect_chain[-1]
+        # self.assertRedirects(response, reverse('organization_detail', args=['Test-Organization']) ,status_code=302, target_status_code=200)
+        # 
+
+    def test_organization_manager(self):
+        group = GroupProfile.objects.get(slug='Test-Organization')
+        managers = group.get_managers().all()
+        self.assertEqual(len(managers), 1)
+        self.assertEqual(managers[0].username, 'admin')
+
+
+    def test_organization_form(self):
+        admin = AdminClient()
+        admin.login_as_admin()
+
+        # Get an empty form
+        response = admin.get(reverse('organization_create'))
+        self.assertEqual(response.status_code, 200)
+
+        soup = BeautifulSoup(response.content)
+
+        # Should have 27 fields total
+        self.assertEqual(len(soup.find_all('input')), 27)
+
+
 
 
 
