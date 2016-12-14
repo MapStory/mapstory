@@ -42,5 +42,8 @@ before_script:
 script:
   - python manage.py test mapstory.test
 
+after_success:
+  - coveralls
+
 notifications:
   slack: mapstory:E2W57xKNNOKDDqRmtQHNUlBK
