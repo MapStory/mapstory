@@ -6,3 +6,340 @@
 //
 
 @import '../../maps/maps.less';
+
+
+
+/* Emergency overrides for demo tomorrow */
+
+.ms-tool-mode {
+    display: none;
+    position: absolute;
+    top: 0;
+    z-index: 500;
+    background: none;
+    width: 100%;
+
+    .panel-heading {
+        &:extend(#pulldown-content .panel-heading);
+    }
+
+    .panel-group .panel + .panel {
+        margin: 0;
+    }
+
+    .panel-group.col-sm-3 {
+        padding: 0;
+    }
+}
+
+#map-name {
+    font-style: normal;
+    font-weight: bolder;
+}
+
+/* hide gallery until we need it
+@todo it's CSS still needs to be pulled in for dev mode
+*/
+#blueimp-gallery {
+    display: none;
+}
+
+/* Additions
+Our own additional rules go in this section
+*/
+body, html {
+    height: 100%;
+    background-color: white;
+}
+
+.todo {
+    background: pink;
+}
+
+footer {
+  background:#162F43;
+}
+
+
+#composerTopNav {
+    background: #162f43;
+}
+
+.modal-header {
+     padding: 15px;
+    color: #ccc;
+    text-align: center;
+    background-color: #162f43;
+    border-bottom: 0;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+#composerIconNav {
+    display: block;
+    height: 40px;
+    padding: 5px;
+    background-color: #444;
+}
+
+.menu {
+    width: 20%;
+    height: 100%;
+    overflow-y: scroll;
+    font-family: 'Open Sans',sans-serif!important;
+    /* font-size:1em; */
+    background: #333;
+}
+
+.menuHidden {
+    position: absolute;
+    top: 0;
+    left: -320px;
+    z-index: 1;
+    width: 350px;
+    min-height: 100%;
+    font-family: 'Open Sans',sans-serif!important;
+    color: #666;
+    background-color: whitesmoke
+}
+
+.menu i {
+    color: #ccc
+}
+
+.menu i:hover {
+    color: #eee
+}
+
+.menuHidden i {
+    float: right;
+    padding-right: 5px;
+    font-size: 20px
+}
+
+.menu h2 {
+    padding: 0;
+    margin: 0;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 20px;
+    color: #666
+}
+
+.menuHidden h2 {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 26px
+}
+
+.menuHidden #composerIconNav {
+    display: none
+}
+
+.menu a {
+    color: #ccc;
+}
+
+.menu a h2 {
+    margin: 0;
+    font-size: 10px;
+    font-weight: normal;
+    line-height: 16px;
+    color: #ccc
+}
+
+.menu small {
+    padding-left: 0;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 20px
+}
+
+.menu label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 20px;
+    color: #ccc
+}
+
+.menuItem {
+    background: #555;
+}
+
+.menuItem:hover {
+    background: #777
+}
+
+#menuButtonGroup {
+    margin: 0 5px;
+    background: transparent
+}
+
+style-editor button {
+    padding: 6px 12px!important;
+    font-size: 14px!important
+}
+
+.btn-composer {
+    display: inline-block;
+    padding: 6px;
+    margin-bottom: 0;
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 1.428571429;
+    color: white;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: #777;
+    border: 0;
+    border-color: #777;
+    border-radius: 3px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none
+}
+
+.btn-composer:hover,.btn-composer:focus,.btn-composer:active,.btn-composer.active,.open .dropdown-toggle.btn-composer {
+    color: white;
+    background-color: #162f43;
+    border-color: #162f43
+}
+
+.btn-storylayer {
+    display: inline-block;
+    width: 42%;
+    height: 75px;
+    margin: 10px;
+    margin-right: 0;
+    font-size: 10px;
+    color: whitesmoke;
+    text-transform: uppercase;
+    background: #aaa;
+    border: 0;
+    border-radius: 8px
+}
+
+.btn-storylayer a {
+    font-size: 10px;
+    font-weight: normal;
+    color: whitesmoke;
+    text-transform: uppercase;
+    border: 0
+}
+
+.btn-storylayer i {
+    width: 100%;
+    padding: 5px;
+    font-size: 2.5em;
+    color: white;
+    text-align: center
+}
+
+.btn-storylayer:hover,.btn-storylayer i:hover {
+    color: whitesmoke;
+    background-color: #255074
+}
+
+.form-composer {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 6px;
+    font-size: 12px;
+    line-height: 1.428571429;
+    color: #666;
+    vertical-align: middle;
+    background-color: #ccc;
+    border: 0;
+    border-radius: 2px
+}
+
+.form-composer:focus {
+    color: white;
+    background-color: #999;
+    outline: 0
+}
+
+.hopscotch-icon {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    margin: 15px;
+    text-align: center;
+    border: 0
+}
+
+.modal .modal-header,.loom-dialog.dialog-warning .modal-header {
+    padding: 15px;
+    color: #ccc;
+    text-align: center;
+    background-color: #162f43 !important;
+    border-bottom: 0;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px
+}
+
+.loom-dialog.dialog-warning .modal-body,.modal .modal-body,.loom-dialog.dialog-warning .modal-footer {
+    max-height: 60vh;
+    padding: 20px 30px;
+    overflow-y: auto;
+    background-color: #bbbbbb
+}
+
+.loom-dialog {
+    position: absolute;
+    top: 90%;
+    left: 10%;
+    width: 80%
+}
+
+.btn-default.playback {
+    color: white !important;
+    background: 0;
+    border: 0;
+}
+
+.btn-profile {
+    color: #444 !important;
+    background: #fff !important;
+}
+
+.modal .modal-footer {
+    margin-top: 0;
+    background-color: #bbbbbb;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none
+}
+
+.modal-title {
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 20px
+}
+
+.modal-body label {
+    display: inline-block;
+    margin-bottom: 5px;
+    font-size: .8em;
+    font-weight: 700;
+}
+
+#delete-icon-wrapper, #delete-button-inner{
+	  all: unset;
+}
+
+.backbutton .backicon, .deletebutton .backicon {
+    display: none;
+ }
