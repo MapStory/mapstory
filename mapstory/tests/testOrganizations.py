@@ -11,28 +11,7 @@ from geonode.contrib.collections.models import Collection
 from datetime import datetime
 from unittest import skip
 from bs4 import BeautifulSoup
-
-User = get_user_model()
-
-class MapStoryTestMixin(TestCase):
-    def assertLoginRequired(self, response):
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue('login' in response.url)
-
-    def assertHasGoogleAnalytics(self, response):
-        self.assertTrue('mapstory/_google_analytics.html' in [t.name for t in response.templates])
-
-    def create_user(self, username, password, **kwargs):
-        """
-        Convenience method for creating users.
-        """
-        user, created = User.objects.get_or_create(username=username, **kwargs)
-
-        if created:
-            user.set_password(password)
-            user.save()
-
-        return username, password
+from .MapStoryTestMixin import MapStoryTestMixin
 
 
 class MapStoryOrganizationTests(MapStoryTestMixin):
@@ -156,7 +135,7 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         # Create new organization
         form_data = {
             'social_twitter': 'notreal', 
-            'social_facebook': 'notreal', 
+            'social_facebook': 'notreal',
             'title': 'Test Organization Two',
             'description': 'Testing', 
             'email': 'test@test.com', 
@@ -249,7 +228,7 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
     @skip("TODO")
     def test_access_type_private(self):
         print("TODO")
-        
+
 
     def test_organization_members(self):
         """Organization members
