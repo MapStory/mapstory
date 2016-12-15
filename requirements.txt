@@ -49,3 +49,6 @@ coverage
 
 # Security Updates
 pycsw==2.0.2
+
+#command line picker
+pick
