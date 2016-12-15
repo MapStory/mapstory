@@ -1,11 +1,11 @@
-{% load staticfiles i18n avatar_tags maploom_tags %}
+{% load i18n maploom_tags %}
 
 <!DOCTYPE html>
 <html ng-app="MapLoom" ng-controller="AppCtrl">
 <head>
 
 <title ng-bind="pageTitle"></title>
-<link rel="shortcut icon" href="{% static 'mapstory/img/favicon.ico' %}">
+<link rel="shortcut icon" href="{{STATIC_URL}}mapstory/img/favicon.ico"/>
 
 <script type="text/javascript">
   var CLOSURE_NO_DEPS = true;
