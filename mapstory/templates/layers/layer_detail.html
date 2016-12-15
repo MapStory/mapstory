@@ -1,14 +1,10 @@
 {% extends "layers/layer_base.html" %}
-{% load staticfiles %}
 {% load i18n %}
 {% load dialogos_tags %}
 {% load agon_ratings_tags %}
 {% load bootstrap_tags %}
 {% load url from future %}
-{% load base_tags %}
 {% load guardian_tags %}
-{% load friendly_loader %}
-{% friendly_load avatar_tags %}
 
 {% block title %}{{ resource.title|default:resource.typename }} — {{ block.super }}{% endblock %}
 {% block head %}
