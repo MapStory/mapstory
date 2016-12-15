@@ -1,8 +1,5 @@
 {% extends "people/profile_base.html" %}
-{% load static %}
-{% load activity_tags social_tags i18n %}
-{% load friendly_loader %}
-{% friendly_load i18n avatar_tags relationship_tags activity_tags %}
+{% load activity_tags social_tags i18n avatar_tags %}
 {% load pagination_tags %}
 
 {% block title %} {% trans "Profile of " %}{{ profile.first_name|default_if_none:profile.username }}{% endblock %}
