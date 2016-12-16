@@ -11,27 +11,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--server-rest-url',
-            dest='server-rest-url',
-            default=ogc_server_settings.rest
-        )
-        parser.add_argument(
-            '--server-username',
-            dest='server-username',
-            default='admin',
-            help='geoserver admin username'
-        )
-        parser.add_argument(
-            '--server-pass',
-            dest='server-pass',
-            default='admin',
-            help='geoserver admin password'
-        )
-        parser.add_argument(
             '--layers',
             dest='layer_list',
             default=None,
-            help='optional list of layer names to grab instead of all layers'
+            help='optional list of layer names to grab instead of all layers in geoserver'
         )
         parser.add_argument(
             '--dry-run',
@@ -48,9 +31,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        rest_url = options['server-rest-url']
-        rest_user = options['server-username']
-        rest_pass = options['server-pass']
+        rest_url = ogc_server_settings.rest
+        rest_user = ogc_server_settings.credentials.username
+        rest_pass = ogc_server_settings.credentials.password
         dry_run = options['dry-run']
         gs = Catalog(rest_url, rest_user, rest_pass)
         layers = gs.get_layers()
@@ -144,7 +127,7 @@ class Command(BaseCommand):
 
             if lyr_obj is None:
                 add_unfixable(lyr, 'Layer does not exist')
-                self.stdout.write('{} does not exist'.format(lyr))
+                self.stdout.write('{} does not exist in geoserver'.format(lyr))
                 continue
             layer_validation = dict()
 
