@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
 
 class MapStoryTestMixin(TestCase):
@@ -8,6 +9,11 @@ class MapStoryTestMixin(TestCase):
         self.assertTrue('login' in response.url)
 
     def assertHasGoogleAnalytics(self, response):
+        """
+        Make sure you have a non empty string for google analytics inside your `local_settings.py`
+
+        :param response: Test response
+        """
         self.assertTrue('mapstory/_google_analytics.html' in [t.name for t in response.templates])
 
     def create_user(self, username, password, **kwargs):
