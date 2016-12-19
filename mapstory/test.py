@@ -10,7 +10,17 @@ TLDR
 -----
 **In order for your test file to be included in the tests add it here:**
 
-Run all tests with: `python manage.py test mapstory.test`
+Run all tests with: `python manage.py test --exe`
+
+
+FOUND SOLUTION!!!
+
+https://github.com/django-nose/django-nose/issues/34
+
+need to run : export NOSE_INCLUDE_EXE=1
+or :
+
+
 """
 
 from tests.testOrganizations import *
