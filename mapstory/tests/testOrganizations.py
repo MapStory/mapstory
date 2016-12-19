@@ -11,8 +11,7 @@ from geonode.contrib.collections.models import Collection
 from datetime import datetime
 from unittest import skip
 from bs4 import BeautifulSoup
-from .MapStoryTestMixin import MapStoryTestMixin
-
+from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 
 class MapStoryOrganizationTests(MapStoryTestMixin):
     """Organization Tests
