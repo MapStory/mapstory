@@ -16,8 +16,9 @@ from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 class MapStoryOrganizationTests(MapStoryTestMixin):
     """Organization Tests
 
-    These are the URLs for the Organizations API
-    --------------------------------------------
+    Organizations API
+    -----------------
+        ```
         url(r'^organizations/create/$', organization_create, name='organization_create'),
         url(r'^organizations/(?P<slug>[^/]*)$', organization_detail, name='organization_detail'),
         url(r'^organizations/edit/(?P<slug>[^/]*)$', organization_edit, name='organization_edit'),
@@ -25,16 +26,16 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         url(r'^organizations/invite/(?P<slug>[^/]*)$', organization_invite, name='organization_invite'),
         url(r'^organizations/(?P<slug>[^/]*)/members_add/$', organization_members_add, name='organization_members_add'),
         url(r'^organizations/(?P<slug>[^/]*)/member_remove/(?P<username>.+)$', organization_member_remove, name='organization_member_remove'),
+        ```
     """
 
     def setUp(self):
         self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
         self.non_admin_username, self.non_admin_password = self.create_user('non_admin', 'non_admin')
 
-        admin = AdminClient()
-        admin.login_as_admin()
+        admin_client = AdminClient()
+        admin_client.login_as_admin()
 
-        # Create new organization
         form_data = {
             'social_twitter': 'notreal',
             'social_facebook': 'notreal',
@@ -50,8 +51,11 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
             'slug': 'Test-Organization'
         }
 
-        response = admin.post(reverse('organization_create'), data=form_data, follow=True)
+        response = admin_client.post(reverse('organization_create'), data=form_data, follow=True)
+        # Test for final status code = HTTP OK
         self.assertEqual(response.status_code, 200)
+
+        # Test for correct redirect
         last_url, status_code = response.redirect_chain[-1]
         self.assertRedirects(response, '/organizations/' + form_data['slug'], status_code=302, target_status_code=200)
 
@@ -61,11 +65,14 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         self.assertEqual(collection.group, group)
 
     def test_guest_access_redirect(self):
-        """Guests should be redirected to login
+        """Guests should not be allowed.
+
+        Guests should be redirected when not given access.
         """
-        c = AdminClient()
-        response = c.get(reverse('organization_create'), follow=True)
-        # Should redirect to login
+        admin_client = AdminClient()
+        response = admin_client.get(reverse('organization_create'), follow=True)
+
+        # Test correct redirect to login page
         last_url, status_code = response.redirect_chain[-1]
         self.assertRedirects(response, '/account/login/?next=/organizations/create/', status_code=302,
                              target_status_code=200)
@@ -73,20 +80,24 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
 
     def test_user_access_denied(self):
         """Regular users should not get access
+
+        Only admin can use Organization features
         """
-        c = AdminClient()
-        c.login_as_non_admin()
-        response = c.get(reverse('organization_create'), follow=True)
+        admin_client = AdminClient()
+        admin_client.login_as_non_admin()
+        response = admin_client.get(reverse('organization_create'), follow=True)
+
+        # Test HTTP denied
         self.assertEqual(response.status_code, 403)
 
     def test_slug_get(self):
         """Test slug
         """
-        c = Client()
-        response = c.get(reverse('organization_detail', args=['Test-Organization']))
+        client = Client()
+        response = client.get(reverse('organization_detail', args=['Test-Organization']))
         self.assertEqual(response.status_code, 200)
 
-        response = c.get(reverse('organization_members', args=['Test-Organization']))
+        response = client.get(reverse('organization_members', args=['Test-Organization']))
         self.assertEqual(response.status_code, 200)
 
         # response = c.get(reverse('organization_detail', args=['Test-Organization-nonexist']))
@@ -98,24 +109,24 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
     def test_admin_access(self):
         """Admin should get access
         """
-        admin = AdminClient()
-        admin.login_as_admin()
-        response = admin.get(reverse('organization_create'))
+        admin_client = AdminClient()
+        admin_client.login_as_admin()
+        response = admin_client.get(reverse('organization_create'))
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
 
     def test_member_404(self):
-        c = AdminClient()
-        c.login_as_non_admin()
-        response = c.get(reverse('organization_members', args=['Test-Organization-nonexistent']))
+        admin_client = AdminClient()
+        admin_client.login_as_non_admin()
+        response = admin_client.get(reverse('organization_members', args=['Test-Organization-nonexistent']))
         self.assertEqual(response.status_code, 404)
 
     def test_organization_create(self):
         """Organization create
         url(r'^organizations/create/$', organization_create, name='organization_create'),
         """
-        admin = AdminClient()
-        admin.login_as_admin()
+        admin_client = AdminClient()
+        admin_client.login_as_admin()
         group = GroupProfile.objects.all().first()
         collection = Collection.objects.all().first()
         self.assertEqual(collection.group, group)
@@ -127,8 +138,8 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
     def test_organization_create_post(self):
         """Should create a new organization
         """
-        admin = AdminClient()
-        admin.login_as_admin()
+        admin_client = AdminClient()
+        admin_client.login_as_admin()
 
         # Create new organization
         form_data = {
@@ -146,7 +157,7 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
             'slug': 'Test-Organization-Two'
         }
 
-        response = admin.post(reverse('organization_create'), data=form_data, follow=True)
+        response = admin_client.post(reverse('organization_create'), data=form_data, follow=True)
         self.assertEqual(response.status_code, 200)
 
         # When the organization is created, a GroupProfile and Collection model pointing to it should be created
@@ -160,18 +171,18 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
     def test_organization_create_get(self):
         """Should return an empty form.
         """
-        admin = AdminClient()
-        admin.login_as_admin()
+        admin_client = AdminClient()
+        admin_client.login_as_admin()
 
-        response = admin.get(reverse('organization_create'), follow=True)
+        response = admin_client.get(reverse('organization_create'), follow=True)
         self.assertEqual(response.status_code, 200)
 
     def test_organization_edit(self):
         """Organization Edit
 
         """
-        admin = AdminClient()
-        admin.login_as_admin()
+        admin_client = AdminClient()
+        admin_client.login_as_admin()
 
         group = GroupProfile.objects.all().first()
         collection = Collection.objects.all().first()
@@ -188,7 +199,7 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
             'date_joined': datetime.now()
         }
 
-        response = admin.post(reverse('organization_edit', args=[group.slug]), data=form_data, follow=True)
+        response = admin_client.post(reverse('organization_edit', args=[group.slug]), data=form_data, follow=True)
         self.assertEqual(response.status_code, 200)
         # Redirect when form is submitted, therefore 302
         last_url, status_code = response.redirect_chain[-1]
@@ -204,11 +215,11 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         self.assertEqual(group_keywords, ['edit'])
 
         # Make sure the detail page can be viewed by a regular user
-        c = Client()
-        response = c.get(reverse('organization_detail', args=[group.slug]))
+        client = Client()
+        response = client.get(reverse('organization_detail', args=[group.slug]))
         self.assertEqual(response.status_code, 200)
 
-        response = c.get(reverse('organization_members', args=[group.slug]))
+        response = client.get(reverse('organization_members', args=[group.slug]))
         self.assertEqual(response.status_code, 200)
 
     @skip("TODO")
