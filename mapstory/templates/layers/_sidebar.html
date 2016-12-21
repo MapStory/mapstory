@@ -27,9 +27,6 @@
             <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">Flag</a>
         </li>
         {% include '_flag_content.html' %}
-        {% if content_moderators in user.groups.all or user == resource.owner %}
-            {% include "layers/_meta_modal.html" %}
-        {% endif %}
     </ul>
     {% endif %}
     
@@ -52,10 +49,11 @@
         {% endif %}
         {% if "change_resourcebase" in perms or "change_resourcebase_metadata" in perms%}
             <a href="#metaForm" data-toggle="modal">
-                <button   class="btn btn-block btn-detailpage">
+                <button class="btn btn-block btn-detailpage">
                     {% trans "Update Metadata" %}
                 </button>
             </a>
+            {% include "layers/_meta_modal.html" %}
         {% endif %}
 
         <div class="side-column-header">Use this Layer</div>
