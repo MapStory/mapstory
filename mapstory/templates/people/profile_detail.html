@@ -84,7 +84,7 @@
                                                     {% endverbatim %}
                                                     <div ng-repeat="upload in uploads">
                                                         <upload upload-object="upload" i="$index" static-url="{{ STATIC_URL }}"
-                                                                template-url="{{ STATIC_URL }}osgeo_importer/partials/upload.html"></upload>
+                                                                template-url="{{ STATIC_URL }}mapstory/partials/upload.html"></upload>
                                                     </div>
                                                     <uib-pagination total-items="totalItems" ng-init="init('{{ user.username }}')"
                                                                     ng-change="pageChanged()" max-size="7" class="pagination-sm"
