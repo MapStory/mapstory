@@ -500,6 +500,7 @@ HAYSTACK_CONNECTIONS = {
        'ENGINE': 'mapstory.search.elasticsearch_backend.MapStoryElasticsearchSearchEngine',
        'URL': 'http://127.0.0.1:9200/',
        'INDEX_NAME': 'geonode',
+       'EXCLUDED_INDEXES': ['geonode.layers.search_indexes.LayerIndex'],
        },
    }
 HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
