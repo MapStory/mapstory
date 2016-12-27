@@ -32,6 +32,9 @@ install:
   - pip install coveralls
 
 before_script:
+  - python manage.py migrate maps --noinput
+  - python manage.py migrate layers --noinput
+  - python manage.py migrate groups --noinput
   - sudo mkdir -p /var/lib/mapstory/media/
   - sudo chmod 775 /var/lib/mapstory/media/
   - sudo chown $USER /var/lib/mapstory/media/
