@@ -23,6 +23,7 @@ import os
 from geonode.settings import *
 import sys
 import logging
+
 #
 # General Django development settings
 #
@@ -36,8 +37,8 @@ LOCAL_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 WSGI_APPLICATION = "mapstory.wsgi.application"
 
 STATICFILES_DIRS = [
-    os.path.join(LOCAL_ROOT, "static"),
-] + STATICFILES_DIRS
+                       os.path.join(LOCAL_ROOT, "static"),
+                   ] + STATICFILES_DIRS
 
 STATIC_ROOT = os.path.join(LOCAL_ROOT, "static_root")
 MEDIA_ROOT = os.path.join(LOCAL_ROOT, "uploaded")
@@ -45,16 +46,16 @@ MEDIA_ROOT = os.path.join(LOCAL_ROOT, "uploaded")
 # Note that Django automatically includes the "templates" dir in all the
 # INSTALLED_APPS, se there is no need to add maps/templates or admin/templates
 TEMPLATE_DIRS = (
-    os.path.join(LOCAL_ROOT, "templates"),
-) + TEMPLATE_DIRS
+                    os.path.join(LOCAL_ROOT, "templates"),
+                ) + TEMPLATE_DIRS
 
 # Location of url mappings
 ROOT_URLCONF = 'mapstory.urls'
 
 # Location of locale files
 LOCALE_PATHS = (
-    os.path.join(LOCAL_ROOT, 'locale'),
-    ) + LOCALE_PATHS
+                   os.path.join(LOCAL_ROOT, 'locale'),
+               ) + LOCALE_PATHS
 
 # Defines settings for development
 DATABASES = {
@@ -101,24 +102,24 @@ TEMPLATE_CONTEXT_PROCESSORS += (
 )
 
 OGC_SERVER = {
-    'default' : {
-        'BACKEND' : 'geonode.geoserver',
-        'LOCATION' : 'http://localhost:8080/geoserver/',
+    'default': {
+        'BACKEND': 'geonode.geoserver',
+        'LOCATION': 'http://localhost:8080/geoserver/',
         # PUBLIC_LOCATION needs to be kept like this because in dev mode
         # the proxy won't work and the integration tests will fail
         # the entire block has to be overridden in the local_settings
-        'PUBLIC_LOCATION' : 'http://localhost:8000/geoserver/',
-        'USER' : 'admin',
-        'PASSWORD' : 'geoserver',
-        'MAPFISH_PRINT_ENABLED' : True,
-        'PRINT_NG_ENABLED' : True,
-        'GEONODE_SECURITY_ENABLED' : True,
-        'GEOGIG_ENABLED' : True,
-        'WMST_ENABLED' : False,
+        'PUBLIC_LOCATION': 'http://localhost:8000/geoserver/',
+        'USER': 'admin',
+        'PASSWORD': 'geoserver',
+        'MAPFISH_PRINT_ENABLED': True,
+        'PRINT_NG_ENABLED': True,
+        'GEONODE_SECURITY_ENABLED': True,
+        'GEOGIG_ENABLED': True,
+        'WMST_ENABLED': False,
         'BACKEND_WRITE_ENABLED': True,
-        'WPS_ENABLED' : True,
+        'WPS_ENABLED': True,
         # Set to name of database in DATABASES dictionary to enable
-        'DATASTORE': '', #'datastore',
+        'DATASTORE': '',  # 'datastore',
         'TIMEOUT': 10,  # number of seconds to allow for HTTP requests,
         'GEOGIG_DATASTORE_DIR': '/var/lib/geoserver/data/geogig',
         'PG_GEOGIG': True
@@ -139,21 +140,19 @@ AUTOCOMPLETE_QUICK_SEARCH = False
 ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
 ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
 
-ENABLE_SOCIAL_LOGIN = False
 USE_AWS_S3_STATIC = False
 USE_AWS_S3_MEDIA = False
 
-
 IMPORT_HANDLERS = (
-'mapstory.import_handlers.TruncatedNameHandler',
-'osgeo_importer.handlers.BigDateFieldConverterHandler',
-'osgeo_importer.handlers.geoserver.GeoserverPublishHandler',
-'osgeo_importer.handlers.geoserver.GeoServerBoundsHandler',
-'osgeo_importer.handlers.geoserver.GeoServerTimeHandler',
-'osgeo_importer.handlers.geoserver.GeoWebCacheHandler',
-'osgeo_importer.handlers.geonode.GeoNodePublishHandler',
-'osgeo_importer.handlers.geoserver.GenericSLDHandler',
-'mapstory.import_handlers.LayerAppendHandler'
+    'mapstory.import_handlers.TruncatedNameHandler',
+    'osgeo_importer.handlers.BigDateFieldConverterHandler',
+    'osgeo_importer.handlers.geoserver.GeoserverPublishHandler',
+    'osgeo_importer.handlers.geoserver.GeoServerBoundsHandler',
+    'osgeo_importer.handlers.geoserver.GeoServerTimeHandler',
+    'osgeo_importer.handlers.geoserver.GeoWebCacheHandler',
+    'osgeo_importer.handlers.geonode.GeoNodePublishHandler',
+    'osgeo_importer.handlers.geoserver.GenericSLDHandler',
+    'mapstory.import_handlers.LayerAppendHandler'
 )
 
 OSGEO_IMPORTER_GEONODE_ENABLED = True
@@ -161,26 +160,12 @@ OSGEO_IMPORTER_GEONODE_ENABLED = True
 if os.path.exists('mapstory/settings/local_settings.py'):
     exec open('mapstory/settings/local_settings.py') in globals()
 
-if ENABLE_SOCIAL_LOGIN:
-
-    SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/profiles/edit/'
-
-    INSTALLED_APPS = INSTALLED_APPS + (
-        'social.apps.django_app.default',
-        'provider',
-        'provider.oauth2',
-    )
-    AUTHENTICATION_BACKENDS = (
-        'social.backends.google.GoogleOAuth2',
-        'social.backends.facebook.FacebookOAuth2',
-    ) + AUTHENTICATION_BACKENDS
-
 # Download formats available in layer detail download modal
 DOWNLOAD_FORMATS_VECTOR = [
-    'Zipped Shapefile', 'GML 2.0', 'GML 3.1.1', 'CSV', 'GeoJSON', 'KML', 
+    'Zipped Shapefile', 'GML 2.0', 'GML 3.1.1', 'CSV', 'GeoJSON', 'KML',
 ]
 
-#@todo remove this hack once maploom can deal with other config
+# @todo remove this hack once maploom can deal with other config
 # have to put this after local_settings or any adjustments to OGC_SERVER will
 # not get picked up
 MAP_BASELAYERS = [
@@ -198,53 +183,53 @@ MAP_BASELAYERS = [
     },
     {
         "source": {"ptype": "gxp_olsource"},
-        "type":"OpenLayers.Layer",
-        "args":["No background"],
+        "type": "OpenLayers.Layer",
+        "args": ["No background"],
         "visibility": False,
         "fixed": True,
-        "group":"background"
+        "group": "background"
     },
     {
-        "source": {"ptype":"gxp_osmsource"},
-        "type":"OpenLayers.Layer.OSM",
-        "args":["OpenStreetMap"],
-        "name":'mapnik',
+        "source": {"ptype": "gxp_osmsource"},
+        "type": "OpenLayers.Layer.OSM",
+        "args": ["OpenStreetMap"],
+        "name": 'mapnik',
         'title': 'OpenStreetMap',
         "visibility": False,
         "fixed": True,
-        "group":"background"
+        "group": "background"
     },
     {
-        "source": {"ptype":"gxp_osmsource"},
-        "type":"OpenLayers.Layer.OSM",
-        "args":["Humanitarian OpenStreetMap", [
+        "source": {"ptype": "gxp_osmsource"},
+        "type": "OpenLayers.Layer.OSM",
+        "args": ["Humanitarian OpenStreetMap", [
             "//a.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
             "//b.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
             "//c.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png"
-          ], {"tileOptions": {"crossOriginKeyword": None}}
-        ],
+        ], {"tileOptions": {"crossOriginKeyword": None}}
+                 ],
         'title': 'Humanitarian OpenStreetMap',
         'name': "hot",
         "visibility": False,
         "fixed": True,
-        "group":"background"
+        "group": "background"
     },
     {
-        "source": {"ptype":"gxp_olsource"},
-        "type":"OpenLayers.Layer.WMS",
-        "group":"background",
+        "source": {"ptype": "gxp_olsource"},
+        "type": "OpenLayers.Layer.WMS",
+        "group": "background",
         "visibility": False,
         "fixed": True,
-        "args":[
+        "args": [
             "Naked Earth",
             "//maps.opengeo.org/geowebcache/service/wms",
             {
-                "layers":["Wayne"],
-                "format":"image/png",
+                "layers": ["Wayne"],
+                "format": "image/png",
                 "tiled": True,
-                "tilesOrigin":[-20037508.34, -20037508.34]
+                "tilesOrigin": [-20037508.34, -20037508.34]
             },
-            {"buffer":0}
+            {"buffer": 0}
         ]
     },
     {
@@ -299,9 +284,9 @@ MAP_BASELAYERS = [
     },
     {
         "source": {"ptype": "gxp_arcrestsource",
-                 "url": "https://services.arcgisonline.com/arcgis/rest/services/NGS_Topo_US_2D/MapServer/",
-                 "alwaysAnonymous": True,
-                 'proj': 'EPSG:4326'},
+                   "url": "https://services.arcgisonline.com/arcgis/rest/services/NGS_Topo_US_2D/MapServer/",
+                   "alwaysAnonymous": True,
+                   'proj': 'EPSG:4326'},
         "type": "OpenLayers.Layer",
         "args": ["Worldmap", "https://services.arcgisonline.com/arcgis/rest/services/NGS_Topo_US_2D/MapServer/",
                  {"layers": 'basic'}],
@@ -420,8 +405,8 @@ LOGGING = {
         "elasticsearch": {
             "handlers": ["console"], "level": "ERROR", },
 
-        },
-    }
+    },
+}
 
 if USE_AWS_S3_STATIC:
     STATICFILES_LOCATION = 'static'
@@ -450,7 +435,7 @@ DEFAULT_IMPORTER_CONFIG = {
     'index': 0
 }
 
-#append only needs to import to temporarily store changes, so we turn off editable and the geogig history.
+# Append only needs to import to temporarily store changes, so we turn off editable and the geogig history.
 DEFAULT_APPEND_CONFIG = {
     'configureTime': True,
     'editable': False,
@@ -462,12 +447,12 @@ DEFAULT_APPEND_CONFIG = {
 
 # Automated Testing Settings
 class DisableMigrations(object):
-
     def __contains__(self, item):
         return True
 
     def __getitem__(self, item):
         return "notmigrations"
+
 
 # Disable migrations only on tests
 TESTS_IN_PROGRESS = False
@@ -494,3 +479,34 @@ NOSE_ARGS = [
 # Override number of results per page listed in the GeoNode search pages
 CLIENT_RESULTS_LIMIT = 30
 
+# Social Auth Settings
+
+ENABLE_SOCIAL_LOGIN = False
+
+if ENABLE_SOCIAL_LOGIN:
+    SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
+
+    INSTALLED_APPS += (
+        'social.apps.django_app.default',
+        'provider',
+        'provider.oauth2',
+    )
+
+    AUTHENTICATION_BACKENDS += (
+        'social.backends.google.GoogleOAuth2',
+        'social.backends.facebook.FacebookOAuth2',
+    )
+
+DEFAULT_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'social.pipeline.mail.mail_validation',
+    'social.pipeline.social_auth.associate_by_email',
+    'social.pipeline.user.create_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details'
+)
