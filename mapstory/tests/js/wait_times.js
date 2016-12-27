@@ -10,7 +10,7 @@ var timings =  {
 	newLayer: 4500 * waitFactor,
 	metadata_load: 3000 * waitFactor,
 	search: 1000 * waitFactor,
-	composer_tour_modal: 2000 * waitFactor,
+	composer_tour_modal: 1000 * waitFactor,
 };
 
 module.exports = timings;
