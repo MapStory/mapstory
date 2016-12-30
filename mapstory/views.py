@@ -6,92 +6,85 @@ import shutil
 import StringIO
 import tempfile
 import zipfile
+import json
+import os
+from httplib import HTTPConnection, HTTPSConnection
+from urlparse import urlsplit
+
+import requests
+from account.conf import settings as account_settings
 from account.views import ConfirmEmailView
 from account.views import SignupView
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
-from django.core.urlresolvers import reverse
+from actstream.models import actor_stream
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.core.mail import EmailMultiAlternatives
+from django.core.urlresolvers import reverse
+from django.db.models import F
+from django.http import HttpResponse, HttpResponseServerError
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.http.request import validate_host
 from django.shortcuts import render_to_response, render, redirect, get_object_or_404
+from django.template import RequestContext
+from django.template import loader
+from django.template.loader import render_to_string
+from django.utils.http import is_safe_url
+from django.utils.timezone import now as provider_now
+from django.utils.translation import ugettext as _
+from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.template import RequestContext
-from django.utils.http import is_safe_url
-from django.utils.translation import ugettext as _
 from geonode.base.models import TopicCategory, Region
+from geonode.contrib.collections.models import Collection
+from geonode.contrib.favorite.models import Favorite
+from geonode.documents.models import get_related_documents
+from geonode.geoserver.helpers import ogc_server_settings
+from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
+from geonode.groups.models import GroupProfile, GroupMember
 from geonode.layers.models import Layer
-from geonode.layers.views import _resolve_layer
 from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
 from geonode.people.models import Profile
 from geonode.geoserver.views import layer_acls, resolve_user
+from geonode.layers.views import _resolve_layer
+from geonode.maps.models import MapStory
 from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
-from geonode.maps.models import Map, MapStory
-from httplib import HTTPConnection, HTTPSConnection
-from mapstory import tasks
-from mapstory.importers import GeoServerLayerCreator
-from mapstory.utils import has_exception, parse_wfst_response, print_exception
-from mapstory.models import get_sponsors, get_images, get_featured_groups
-from mapstory.models import GetPage
-from mapstory.models import NewsItem
-from journal.models import JournalEntry
-from mapstory.models import Leader
-from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
-from icon_commons.models import Icon
-from geonode.contrib.favorite.models import Favorite
-from geonode.contrib.collections.models import Collection
-from geonode.geoserver.helpers import ogc_server_settings
-from urlparse import urlsplit
-from user_messages.models import Thread
-from actstream.models import actor_stream
-
-
+from geonode.people.models import Profile
+from geonode.security.views import _perms_info_json
+from geonode.tasks.deletion import delete_mapstory, delete_layer
 from geonode.utils import GXPLayer, GXPMap
-from geonode.utils import resolve_object
 from geonode.utils import build_social_links
 from geonode.utils import default_map_config
+from geonode.utils import resolve_object
+from health_check.plugins import plugin_dir
+from icon_commons.models import Icon
+from lxml import etree
+from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
+from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
 from mapstory.forms import DeactivateProfileForm, EditProfileForm
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm
 from mapstory.forms import OrganizationForm, OrganizationUpdateForm
 from mapstory.forms import SignupForm
-from geonode.security.views import _perms_info_json
-from geonode.documents.models import get_related_documents
-
-from django.db.models import F
-from django.contrib.auth.models import Group
-from django.contrib import messages
-from django.contrib.auth import logout
-from django.contrib.auth import get_user_model
-
-from geonode.tasks.deletion import delete_mapstory, delete_layer
-from provider.oauth2.models import AccessToken
-from django.utils.timezone import now as provider_now
-from account.conf import settings as account_settings
-from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
-from osgeo_importer.forms import UploadFileForm
-from celery import group
-from lxml import etree
+from mapstory.importers import GeoServerLayerCreator
+from mapstory.models import GetPage
+from mapstory.models import Leader
+from mapstory.models import NewsItem
+from mapstory.models import get_sponsors, get_images, get_featured_groups
+from mapstory.search.utils import update_es_index
+from mapstory.utils import has_exception, parse_wfst_response, print_exception
 from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
-
 from .notifications import PROFILE_NOTICE_SETTINGS
 from osgeo_importer.utils import UploadError, launder
+from osgeo_importer.forms import UploadFileForm
+from provider.oauth2.models import AccessToken
+from user_messages.models import Thread
 
-import json
-import os
-import requests
-from geonode.groups.models import GroupProfile, GroupMember
-from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
-from mapstory.search.utils import update_es_index
-
-
-from django.http import HttpResponse, HttpResponseServerError
-from django.template import loader
-from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
-from health_check.plugins import plugin_dir
-from journal.models import get_group_journals
+from apps.journal.models import JournalEntry
+from apps.journal.models import get_group_journals
 
 plugin_dir.register(GeoServerHealthCheck)
 
@@ -188,7 +181,7 @@ def profile_edit(request, username=None):
                             request.user.username]))
         else:
             form = EditProfileForm(instance=profile)
-          
+
         return render(request, "people/profile_edit.html", {
             "form": form
         })
@@ -703,7 +696,7 @@ def layer_create(request, template='upload/layer_create.html'):
     if request.method == 'POST':
         errors = False
         error_messages = []
-        
+
         if request.is_ajax():
             configuration_options = json.loads(request.body)
         else:
@@ -1052,7 +1045,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                 layer.data_quality_statement = metadata_form.cleaned_data['data_quality_statement']
                 layer.purpose = metadata_form.cleaned_data['purpose']
                 layer.is_published = metadata_form.cleaned_data['is_published']
-                layer.save()                
+                layer.save()
             keywords_form = KeywordsForm(instance=layer)
         elif 'add_keyword' in request.POST:
             layer.keywords.add(request.POST['add_keyword'])
@@ -1332,7 +1325,7 @@ def account_verify(request):
 
 
 def layer_detail_id(request, layerid):
-    layer = get_object_or_404(Layer, pk=layerid)    
+    layer = get_object_or_404(Layer, pk=layerid)
     return layer_detail(request, layer.typename)
 
 

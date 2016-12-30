@@ -1,36 +1,29 @@
-from django.conf import settings
-from django.core.urlresolvers import reverse
-from django.db import models
-from django.contrib.auth.models import Group
-from datetime import datetime
-from geonode.maps.models import Map, MapLayer
+import datetime
 import hashlib
-import textile
-from django.template.defaulttags import register
+import json
 import os
-from django.template.defaultfilters import slugify
-from django.db.models import signals
-from geonode.people.models import Profile
-from geonode.layers.models import Layer
-from geonode.groups.models import GroupProfile
-from geonode.maps.models import Map
-from geonode.people.models import profile_post_save
-from guardian.shortcuts import get_objects_for_user
-from django.contrib.sites.models import Site
-from django import forms
-from journal.models import JournalEntry
+import uuid
 
-from mapstory.notifications import set_mapstory_notifications
+import geonode
+import guardian
+import textile
+from django import conf, db, contrib, template
 
-set_mapstory_notifications()
+import notifications, search
+from apps.journal import models
+
+from maps.models import MapStory
 
 
-class CustomSite(models.Model):
-    site = models.OneToOneField(Site, null=True, related_name='assets')
-    subtitle = models.CharField(max_length=100)
-    logo = models.ImageField(blank=False, upload_to='customsite')
-    favicon = models.ImageField(blank=False, upload_to='customsite')
-    footer_text = models.TextField()
+notifications.set_mapstory_notifications()
+
+
+class CustomSite(db.models.Model):
+    site = db.models.OneToOneField(contrib.sites.models.Site, null=True, related_name='assets')
+    subtitle = db.models.CharField(max_length=100)
+    logo = db.models.ImageField(blank=False, upload_to='customsite')
+    favicon = db.models.ImageField(blank=False, upload_to='customsite')
+    footer_text = db.models.TextField()
 
     class Meta:
         verbose_name = "Custom Site Property"
@@ -42,7 +35,7 @@ class CustomSite(models.Model):
     def save(self, *args, **kwargs):
         super(CustomSite, self).save(*args, **kwargs)
         # Cached information will likely be incorrect now.
-        Site.objects.clear_cache()
+        contrib.sites.models.Site.objects.clear_cache()
 
 
 def _stamp(data):
@@ -51,13 +44,13 @@ def _stamp(data):
     return s.hexdigest()[0:8]
 
 
-class Sponsor(models.Model):
-    name = models.CharField(max_length=64)
-    link = models.URLField(blank=False)
-    icon = models.ImageField(blank=False, upload_to='sponsors')
-    description = models.TextField(blank=True)
-    order = models.IntegerField(blank=True, default=0)
-    stamp = models.CharField(max_length=8, blank=True)
+class Sponsor(db.models.Model):
+    name = db.models.CharField(max_length=64)
+    link = db.models.URLField(blank=False)
+    icon = db.models.ImageField(blank=False, upload_to='sponsors')
+    description = db.models.TextField(blank=True)
+    order = db.models.IntegerField(blank=True, default=0)
+    stamp = db.models.CharField(max_length=8, blank=True)
 
     def url(self):
         return self.icon.url + "?" + self.stamp
@@ -79,13 +72,13 @@ class Sponsor(models.Model):
     image_tag.allow_tags = True
 
 
-class ContentMixin(models.Model):
-    content = models.TextField(
+class ContentMixin(db.models.Model):
+    content = db.models.TextField(
         help_text="use <a href=%s target='_'>textile</a> for the content" %
         'http://redcloth.org/hobix.com/textile/'
     )
-    date = models.DateTimeField(default=datetime.now)
-    publish = models.BooleanField(default=False)
+    date = db.models.DateTimeField(default=datetime.datetime.now)
+    publish = db.models.BooleanField(default=False)
 
     def html(self):
         return textile.textile(self.content)
@@ -95,16 +88,16 @@ class ContentMixin(models.Model):
         ordering = ['-date']
 
 
-class Community(models.Model):
-    name = models.CharField(max_length=64, unique=True)
-    icon = models.ImageField(blank=False, upload_to='communities')
-    description = models.TextField(blank=True)
-    order = models.IntegerField(blank=True, default=0)
-    stamp = models.CharField(max_length=8, blank=True)
-    slug = models.SlugField(max_length=64, unique=True, blank=True)
-    layer = models.ManyToManyField(Layer, blank=True)
-    leads = models.ManyToManyField(Profile, blank=True)
-    journals = models.ManyToManyField(JournalEntry, blank=True)
+class Community(db.models.Model):
+    name = db.models.CharField(max_length=64, unique=True)
+    icon = db.models.ImageField(blank=False, upload_to='communities')
+    description = db.models.TextField(blank=True)
+    order = db.models.IntegerField(blank=True, default=0)
+    stamp = db.models.CharField(max_length=8, blank=True)
+    slug = db.models.SlugField(max_length=64, unique=True, blank=True)
+    layer = db.models.ManyToManyField(geonode.layers.models.Layer, blank=True)
+    leads = db.models.ManyToManyField(geonode.people.models.Profile, blank=True)
+    journals = db.models.ManyToManyField(models.JournalEntry, blank=True)
 
     def url(self):
         return self.icon.url + "?" + self.stamp
@@ -127,28 +120,28 @@ class Community(models.Model):
     image_tag.allow_tags = True
 
 
-class Task(models.Model):
-    task = models.TextField(blank=True)
-    community = models.ForeignKey(Community, related_name='tasks')
+class Task(db.models.Model):
+    task = db.models.TextField(blank=True)
+    community = db.models.ForeignKey(Community, related_name='tasks')
 
 
 def name_post_save(instance, *args, **kwargs):
-    Community.objects.filter(name=instance.name).update(slug=(slugify(instance.name)))
+    Community.objects.filter(name=instance.name).update(slug=(template.defaultfilters.slugify(instance.name)))
 
 
 class NewsItem(ContentMixin ):
-    title = models.CharField(max_length=64)
+    title = db.models.CharField(max_length=64)
 
     @property
     def publication_time(self):
         return self.date
 
 
-class GetPage(models.Model):
-    name = models.SlugField(max_length=32, unique=True,
+class GetPage(db.models.Model):
+    name = db.models.SlugField(max_length=32, unique=True,
                             help_text='Do NOT include the "get" prefix')
-    title = models.CharField(max_length=32)
-    subtitle = models.CharField(max_length=32, blank=True)
+    title = db.models.CharField(max_length=32)
+    subtitle = db.models.CharField(max_length=32, blank=True)
 
     def published_entries(self):
         return self.contents.filter(publish=True)
@@ -158,16 +151,16 @@ class GetPage(models.Model):
 
 
 class GetPageContent(ContentMixin):
-    title = models.CharField(max_length=64)
-    subtitle = models.CharField(max_length=64, blank=True)
-    example_map = models.ForeignKey(Map, null=True, blank=True)
-    main_link = models.URLField(blank=False)
-    external_link = models.URLField(blank=True)
-    external_link_title = models.CharField(max_length=64, blank=True, null=True)
-    page = models.ForeignKey(GetPage, related_name='contents')
-    order = models.IntegerField(blank=True, default=0)
-    video = models.FileField(upload_to='getpage', blank=True)
-    video_embed_link = models.URLField(blank=True)
+    title = db.models.CharField(max_length=64)
+    subtitle = db.models.CharField(max_length=64, blank=True)
+    example_map = db.models.ForeignKey(geonode.maps.models.Map, null=True, blank=True)
+    main_link = db.models.URLField(blank=False)
+    external_link = db.models.URLField(blank=True)
+    external_link_title = db.models.CharField(max_length=64, blank=True, null=True)
+    page = db.models.ForeignKey(GetPage, related_name='contents')
+    order = db.models.IntegerField(blank=True, default=0)
+    video = db.models.FileField(upload_to='getpage', blank=True)
+    video_embed_link = db.models.URLField(blank=True)
 
     def extension(self):
         if self.video.name is None:
@@ -179,20 +172,21 @@ class GetPageContent(ContentMixin):
         ordering = ['order']
 
 
-class Leader(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    content = models.TextField()
+class Leader(db.models.Model):
+    user = db.models.ForeignKey(conf.settings.AUTH_USER_MODEL)
+    content = db.models.TextField()
 
     def html(self):
         return textile.textile(self.content)
 
 
-class ParallaxImage(models.Model):
-    name = models.CharField(max_length=64, blank=True)
-    image = models.ImageField(upload_to='parallax', max_length=255)
+class ParallaxImage(db.models.Model):
+    name = db.models.CharField(max_length=64, blank=True)
+    image = db.models.ImageField(upload_to='parallax', max_length=255)
 
     def __unicode__(self):
         return self.image.url
+
 
 def get_images():
     return ParallaxImage.objects.all()
@@ -203,14 +197,14 @@ def get_sponsors():
 
 
 def get_featured_groups():
-    return GroupProfile.objects.filter(featured=True)
+    return geonode.people.models.GroupProfile.objects.filter(featured=True)
 
 
 def get_group_layers(gProfile):
     users = gProfile.group.user_set.all()
     layers = []
     for user in users:
-        layers.append(get_objects_for_user(user, 'base.view_resourcebase').instance_of(Layer))
+        layers.append(guardian.shortcuts.get_objects_for_user(user, 'base.view_resourcebase').instance_of(geonode.layers.models.Layer))
 
     return [item for sublist in layers for item in sublist]
 
@@ -219,16 +213,32 @@ def get_group_maps(gProfile):
     users = gProfile.group.user_set.all()
     maps = []
     for user in users:
-        maps.append(get_objects_for_user(user, 'base.view_resourcebase').instance_of(Map))
+        maps.append(guardian.shortcuts.get_objects_for_user(user, 'base.view_resourcebase').instance_of(geonode.maps.models.Map))
 
     return [item for sublist in maps for item in sublist]
 
 
 def mapstory_profile_post_save(instance, sender, **kwargs):
-    profile_post_save(instance, sender, **kwargs)
-    registered_group, created = Group.objects.get_or_create(name='registered')
+    geonode.people.models.profile_post_save(instance, sender, **kwargs)
+    registered_group, created = contrib.auth.models.Group.objects.get_or_create(name='registered')
     instance.groups.add(registered_group)
-    Profile.objects.filter(id=instance.id).update()
+    geonode.people.models.Profile.objects.filter(id=instance.id).update()
 
-signals.post_save.connect(name_post_save, sender=Community)
-signals.post_save.connect(mapstory_profile_post_save, sender=Profile)
+def mapstory_map_post_save(instance, sender, **kwargs):
+    # Call basic post save map functionality from geonode
+    geonode.geoserver.signals.geoserver_post_save_map(instance, sender, **kwargs)
+
+    # Assuming map thumbnail was created successfully, updating Story object here
+    if instance.chapter_index == 0:
+        instance.story.update_thumbnail(instance)
+
+    try:
+        search.utils.update_es_index(MapStory, MapStory.objects.get(id=instance.story.id))
+    except:
+        pass
+
+db.models.signals.post_save.connect(name_post_save, sender=Community)
+db.models.signals.post_save.connect(mapstory_profile_post_save, sender=geonode.people.models.Profile)
+db.models.signals.post_save.connect(geonode.base.models.resourcebase_post_save, sender=MapStory)
+db.models.signals.post_save.connect(mapstory_map_post_save, sender=geonode.maps.models.Map)
+
