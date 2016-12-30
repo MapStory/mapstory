@@ -61,8 +61,8 @@ describe('[Survey Tests] |', function() {
 				// Get the browser name
 				browser.getCapabilities().then(function (cap) {
 					var version = cap.get('version');
-					var broserString = cap.get('browserName') + '_' + version;
-					tester.browser = broserString;
+					var browserString = cap.get('browserName') + '_' + version;
+					tester.browser = browserString;
 					expect(tester.browser).toBeTruthy('Browser name is expected');
 				});
 			});

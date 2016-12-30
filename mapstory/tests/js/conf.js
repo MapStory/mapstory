@@ -1,13 +1,12 @@
 'use strict';
 
 /**
- * End to end test Config
- * ======================
+ * Protractor tests configuration
+ * ==============================
  *
- * Notes
- * ----
- * - Will automatically include all tests inside files named `*.spec.js`
- * - Sometimes tests break in chrome when you have another instance of the browser open and logged into mapstory.
+ * This file is used to configure the browser used for teting.
+ * Tests can also be cherry picked by commenting them out to dissable.
+ * For multiple-browser testing uncomment browsers inside `multiCapabilities`
  *
  */
 
@@ -16,10 +15,11 @@ exports.config = {
 	seleniumAddress: 'http://localhost:4444/wd/hub',
 
 	//--------------------------
-	// Runs ALL specs
+	// Use this to run all test files
 	// specs: ['*.spec.js'],
 
-	// Cherry pick specks here:
+	//--------------------------
+	// Use this to cherry-pick tests
 	specs: [
 		'auth.spec.js',
 		'composer.spec.js',
@@ -29,10 +29,8 @@ exports.config = {
 		'survey.spec.js',
 	],
 
-	//capabilities: {
-	//	browserName: 'chrome'
-		// browserName: 'firefox'
-	//},
+	//---------------------------------------
+	// Use this to run the tests in several browsers simultaniously
 	multiCapabilities: [
 		{
 			'browserName' : 'chrome',
@@ -49,6 +47,8 @@ exports.config = {
 				},
 			},
 		},
+		//-----------------------------
+		// Uncomment to use:
 		// {'browserName' : 'firefox'}
 		// {'browserName' : 'safari'},
 	],
@@ -58,5 +58,7 @@ exports.config = {
 		defaultTimeoutInterval: 30000
 	},
 	allScriptsTimeout: 30000,
+	//----------------------------------------------
+	// Results output file
 	resultJsonOutputFile:'./result.json',
 };
