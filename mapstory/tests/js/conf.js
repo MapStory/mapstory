@@ -23,10 +23,10 @@ exports.config = {
 	specs: [
 		'auth.spec.js',
 		'composer.spec.js',
-		// 'home.spec.js',
-		// 'icon_upload.spec.js',
-		// 'search.spec.js',
-		// 'survey.spec.js',
+		'home.spec.js',
+		'icon_upload.spec.js',
+		'search.spec.js',
+		'survey.spec.js',
 	],
 
 	//---------------------------------------
