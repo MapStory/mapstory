@@ -469,11 +469,14 @@ if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
 # Setup django-nose as our test runner and have it provide us with HTML coverage reports generated in the cover folder.
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
+# Nose Test arguments. Will not find and run tests unless --exe is specified.
 NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=mapstory',
     '--cover-inclusive',
     '--cover-html',
+    '--exe',
+    '--ignore-files=(^\.|^_|pavement\.py$|fabfile\.py$|_settings\.py$|cf\.py$|search_indexes\.py$)'
 ]
 
 # Override number of results per page listed in the GeoNode search pages
