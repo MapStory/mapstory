@@ -53,8 +53,8 @@ TODO: change help text in /geonode/geonode/people/models.py to encourage correct
     </div>
 {% endif %}
 
-    {% comment %} 
-    <!-- can be uncommented once tagging & keywords are functional -->
+{% if THEME == 'default' %}
+{# only show interests in development environment until bugs fixed #}
     <!-- tags and interests -->
     {% if profile.keyword_list %}
         <div class="sidebar-header"><h3>tags & interests </h3></div>
@@ -62,7 +62,7 @@ TODO: change help text in /geonode/geonode/people/models.py to encourage correct
             <input type="text" class="form-control"/>
         </div>
     {% endif %}
-    {% endcomment %}
+{% endif %}
 
 {% if user == profile %}
     <div style= "padding-top: 40px">
