@@ -34,12 +34,15 @@
             </a>
         </li>
     {% endif %}
+    {% if THEME == 'default' %}
+    {# only show activity feed in development environment until bugs fixed #}
     <li>
         <a href="#user_activities" data-toggle="tab">
             <div class="counter">{{ action_list.count }}</div>
             Activity Feed 
         </a>
     </li>
+    {% endif %}
     <li>
         <a href="#journal_entries" data-toggle="tab">
             <div class="counter">
