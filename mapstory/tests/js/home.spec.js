@@ -7,31 +7,17 @@
  * --------------------
  * 1. Install Protractor: http://www.protractortest.org/
  * 2. Start the webriver: webdriver-manager start
- * 3. Run the tests with `../runE2ETests.sh`
+ * 3. Run the tests with `./runE2ETests.sh`
  *
  * Notes
  * -----
- * This is very handy for finding the right selectors: https://github.com/andresdominguez/elementor
+ * You can use this tool for finding the right selectors: https://github.com/andresdominguez/elementor
  * After install run: `elementor http://192.168.56.151` to start the tool
  */
 'use strict';
 
 require('./waitReady.js');
-
-function elementFound(locator) {
-	return element(locator).isPresent();
-}
-
 const wait_times = require('./wait_times');
-
-/**
- * Waits for an element to be visible
- * @param  {element} element The element to wait for
- */
-function waitFor(element) {
-	// browser.wait(EC.visibilityOf(element), 5000);
-	expect(element.waitReady()).toBeTruthy();
-}
 
 /**
  * Mapstory Home Page
@@ -40,10 +26,10 @@ describe('Mapstory Home', function() {
 	// Our home page object
 	var page = require('./home.po');
 	var auth = require('./auth.po');
+	var explore_page = require('./explore.po');
 
 	beforeEach(function() {
 		// Fetch the site
-		// browser.driver.manage().window().maximize();
 		browser.get('http://192.168.56.151');
 		browser.waitForAngular();
 	});
@@ -57,7 +43,7 @@ describe('Mapstory Home', function() {
 		page.loginIcon.click();
 
 		// Wait for login form
-		waitFor(page.loginForm);
+		expect(page.loginForm.waitReady()).toBeTruthy();
 		page.loginForm.isDisplayed().then(function(displayed){
 			expect(displayed).toBe(true);
 		});
@@ -108,17 +94,24 @@ describe('Mapstory Home', function() {
 	 */
 	describe('> The "Navigation Menu"', function() {
 		it('> should navigate to "Explore"', function() {
-			expect(element(by.linkText('Explore')).isDisplayed()).toBe(true);
-			element(by.linkText('Explore')).click();
-			expect(elementFound(by.css('#content-search'))).toBe(true);
+			// Click the link
+			expect(page.menu_explore.waitReady()).toBeTruthy();
+			page.menu_explore.click();
+
+			// Title should be explore
+			expect(browser.getTitle()).toEqual(explore_page.title);
 		});
 
 		it('> should navigate to "Get Started"', function() {
 			expect(element(by.linkText('Get Started')).isDisplayed()).toBe(true);
+
+			// TODO: Expect title
 		});
 
 		it('> should navigate to "Journal"', function() {
 			expect(element(by.linkText('Journal')).isDisplayed()).toBe(true);
+
+			// TODO: Expect title
 		});
 
 		/**
@@ -287,7 +280,7 @@ describe('Mapstory Home', function() {
 
 				it('> has a "Close button"', function() {
 					var closeButton = element(by.css('i.fa.fa-times.pointer.import-wizard-icon'));
-					expect(closeButton.isDisplayed()).toBe(true);
+					expect(closeButton.waitReady()).toBeTruthy();
 					closeButton.click();
 				});
 

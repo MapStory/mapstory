@@ -19,7 +19,6 @@ var auth = require('./auth.po');
  * Home Page Object
  */
 var home_page = function() {
-
 	this.loginIcon = element(by.css('[data-target="#loginModal"]'));
 	this.loginModal = element(by.css('.modal-content'));
 	this.navigationTabs = element(by.css('.nav.nav-tabs'));
@@ -33,6 +32,7 @@ var home_page = function() {
 	this.loginButton = this.loginForm.element(by.partialButtonText('Sign in'));
 	this.navBar = element(by.css('#navbar'));
 	this.menuCreate = element(by.linkText('Create'));
+	this.menu_explore = element(by.linkText('Explore'));
 	this.step1 = element(by.css('[title="Check Your Data"]'));
 	this.step2 = element(by.css('.row.step.ng-isolate-scope.current'));
 	this.step3 = element(by.css('.row.step.ng-isolate-scope.current[title="Title"]'));
@@ -43,7 +43,6 @@ var home_page = function() {
 	this.createLayerLink = element(by.linkText('Create StoryLayer'));
 	this.uploadIconsLink = element(by.linkText('Upload Icons'));
 	this.composeStoryLink = this.navBar.element(by.linkText('Compose Story'));
-
 
 	/**
 	 * Signs in a user

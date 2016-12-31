@@ -5,8 +5,8 @@ var waitFactor = 1.0;
 
 // The wait times in milliseconds
 var timings =  {
-	layerUpload : 9200 * waitFactor,
-	layerCreate : 5000 * waitFactor,
+	layerUpload : 3000 * waitFactor,
+	layerCreate : 3000 * waitFactor,
 	newLayer: 4500 * waitFactor,
 	metadata_load: 3000 * waitFactor,
 	search: 1000 * waitFactor,
