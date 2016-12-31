@@ -5,28 +5,18 @@
  * ================
  */
 
-var auth;
+
 var EC = protractor.ExpectedConditions;
 require('./waitReady.js');
 
-// var screenHelper = require('./screenHelper.js');
-
-
 describe('User auth', function() {
+	var auth = require('./auth.po');
+
 	beforeEach(function(){
 		// Fetch Home
 		browser.get('http://192.168.56.151');
-		auth = require('./auth.po');
 		browser.waitForAngular();
 	});
-
-	// Take a screenshot automatically after each failing test.
-	// afterEach(function() {
-	// 	var passed = jasmine.getEnv().currentSpec.results().passed();
-	// 	if (!passed) {
-	// 		screenHelper.screenshot();
-	// 	}
-	// });
 
 	/**
 	 * Login Button

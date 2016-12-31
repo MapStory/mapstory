@@ -27,6 +27,8 @@ exports.config = {
 		'icon_upload.spec.js',
 		'search.spec.js',
 		'survey.spec.js',
+		'explore.spec.js',
+		'journal.spec.js'
 	],
 
 	//---------------------------------------
