@@ -1,54 +1,54 @@
-{% load i18n %}
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
-{% block head %}
-    <link href="{{ STATIC_URL }}lib/css/bootstrap.min.css" rel="stylesheet"/>
-    <link href="{{ STATIC_URL }}lib/css/jquery-ui.css" rel="stylesheet"/>
-    <link href="{{ STATIC_URL }}lib/css/bootstrap-datetimepicker.css" rel="stylesheet"/>
-    <link href="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css" rel="stylesheet"/>
-    {% include "osgeo_importer/_importer_styles.html" %}
-    <link href="{{ STATIC_URL }}style/themes/{{ THEME }}/site-theme.css" rel="stylesheet"/>
-    {% if site.assets.favicon %}
-        <link rel="shortcut icon" href="{{ MEDIA_URL }}{{ site.assets.favicon.name }}">{% endif %}
-    {% if GOOGLE_ANALYTICS %}{% include "mapstory/_google_analytics.html" %}{% endif %}
-    {% block extra_head %}{% endblock %}
-{% endblock head %}
-</head>
-<body class="{% block body_class %}{% endblock %}" ng-cloak>
-{% block header %}
-{% include '_header.html' %}
-{% block extra_tab %}{% endblock %}
-{% endblock header %}
-<div class="alert alert-danger alert-dismissible" role="alert" id="ieflag" style="display:none">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h1>You are using an outdated browser that is not supported by GeoNode.</h1>
-    <p>Please use a <strong>modern browser</strong> like Mozilla Firefox, Google Chrome or Safari.</p>  
-</div>
-<div id="wrap">
-    {% block middle %}
-        <div class="container">
-            {% include "_status_message.html" %}
-            {% include "_announcements.html" %}
-            {% include "_messages.html" %}
-            {% block body_outer %}
-                <div class="row">
-                    <div class="col-md-8">
-                        {% block body %}{% endblock %}
-                    </div>
-                    <div class="col-md-4">
-                        {% block sidebar %}{% endblock %}
-                    </div>
-                </div>
-            {% endblock %}
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+    {% block head %}
+        <link href="{{ STATIC_URL }}lib/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="{{ STATIC_URL }}lib/css/jquery-ui.css" rel="stylesheet"/>
+        <link href="{{ STATIC_URL }}lib/css/bootstrap-datetimepicker.css" rel="stylesheet"/>
+        <link href="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css" rel="stylesheet"/>
+        {% include "osgeo_importer/_importer_styles.html" %}
+        <link href="{{ STATIC_URL }}style/themes/{{ THEME }}/site-theme.css" rel="stylesheet"/>
+        {% if site.assets.favicon %}
+        <link rel="shortcut icon" href="{{ MEDIA_URL }}{{ site.assets.favicon.name }}">
+        {% endif %}
+        {% if GOOGLE_ANALYTICS %}{% include "mapstory/_google_analytics.html" %}{% endif %}  
+        {% block extra_head %}{% endblock %}
+    {% endblock head %}
+    </head>
+    <body class="{% block body_class %}{% endblock %}" ng-cloak>
+        {% block header %}
+        {% include '_header.html' %}
+        {% block extra_tab %}{% endblock %}
+        {% endblock header %}
+        <div class="alert alert-danger alert-dismissible" role="alert" id="ieflag" style="display:none">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h1>You are using an outdated browser that is not supported by GeoNode.</h1>
+            <p>Please use a <strong>modern browser</strong> like Mozilla Firefox, Google Chrome or Safari.</p>  
         </div>
-    {% endblock middle %}
-</div>
-{% block footer %}{% include '_footer.html' %}{% endblock footer%}
-{% include "_site_scripts.html" %}
-{% block extra_script %}{% endblock extra_script %}
-</body>
+        <div id="wrap">
+            {% block middle %}
+                <div class="container">
+                    {% include "_status_message.html" %}
+                    {% include "_announcements.html" %}
+                    {% include "_messages.html" %}
+                    {% block body_outer %}
+                        <div class="row">
+                            <div class="col-md-8">
+                                {% block body %}{% endblock %}
+                            </div>
+                            <div class="col-md-4">
+                                {% block sidebar %}{% endblock %}
+                            </div>
+                        </div>
+                    {% endblock %}
+                </div>
+            {% endblock middle %}
+        </div>
+        {% block footer %}{% include '_footer.html' %}{% endblock footer%}
+        {% include "_site_scripts.html" %}
+        {% block extra_script %}{% endblock extra_script %}
+    </body>
 </html>
