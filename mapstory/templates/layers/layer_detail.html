@@ -1,4 +1,4 @@
-{% extends "layers/layer_base.html" %}
+{% extends "site_base.html" %}
 {% load i18n %}
 {% load dialogos_tags %}
 {% load agon_ratings_tags %}
@@ -20,9 +20,7 @@
 
 {% block extra_script %}
 {% if GEOGIG_ENABLED and resource.link_set.geogig %}
-    {% with "layers/_geogig_scripts.html" as geogig_scripts_template %}
-        {% include  geogig_scripts_template %}
-    {% endwith %}
+    {% include "layers/_geogig_scripts.html" %}
 {% endif %}
 <script type="text/javascript">
     var app;

@@ -13,15 +13,11 @@
       {% endblock %}
     {% endblock %}
   </head>
-  
   <body class="viewerbody">
-  {% block middle %}
-  {% endblock middle %}
-
-  {% block extra_script %}{% endblock extra_script %} 
+    {% block middle %}{% endblock middle %}
+    {% block extra_script %}{% endblock extra_script %} 
     <script src="{{ STATIC_URL }}lib/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
-
     <script type="text/javascript" src="{% url "lang" %}"></script>
   </body>
 </html>
