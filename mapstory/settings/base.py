@@ -471,12 +471,15 @@ if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 # Nose Test arguments. Will not find and run tests unless --exe is specified.
+# Nose-runner has issues with coverage reporting and model loading. 
+# https://github.com/django-nose/django-nose/issues/180
+# Coverage options are now specified in `.coveragerc`
 NOSE_ARGS = [
-    '--with-coverage',
-    '--cover-package=mapstory',
-    '--cover-inclusive',
-    '--cover-erase',
-    '--cover-html',
+    # '--with-coverage',
+    # '--cover-package=mapstory',
+    # '--cover-inclusive',
+    # '--cover-erase',
+    # '--cover-html',
     '--exe',
     '--ignore-files=(^\.|^_|pavement\.py$|fabfile\.py$|_settings\.py$|cf\.py$|search_indexes\.py$)'
 ]
