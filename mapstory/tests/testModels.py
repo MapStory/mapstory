@@ -271,6 +271,12 @@ class TestSponsor(TestCase):
         self.assertTrue(self.sponsor.image_tag().startswith('<img src="'))
         self.assertTrue(self.sponsor.image_tag().endswith('" />'))
 
+    def test_get_sponsors(self):
+        sponsors = get_sponsors()
+        self.assertIsNotNone(sponsors)
+        self.assertEqual(len(sponsors), 0)
+
+
 class TestContentMixin(TestCase):
     def setUp(self):
         self.contentMixin = ContentMixin(content="<a href=%s target='_'>")
