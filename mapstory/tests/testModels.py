@@ -137,7 +137,9 @@ class TestHelperMethods(TestCase):
         self.assertEqual(get_images().count(), 0)
 
     def test_get_sponsors(self):
-        self.assertEqual(get_sponsors().count(), 0)
+        sponsors = get_sponsors()
+        self.assertIsNotNone(sponsors)
+        self.assertEqual(sponsors.count(), 0)
 
     def test_get_featured_groups(self):
         self.assertEqual(get_featured_groups().count(), 0)
@@ -270,11 +272,6 @@ class TestSponsor(TestCase):
         """
         self.assertTrue(self.sponsor.image_tag().startswith('<img src="'))
         self.assertTrue(self.sponsor.image_tag().endswith('" />'))
-
-    def test_get_sponsors(self):
-        sponsors = get_sponsors()
-        self.assertIsNotNone(sponsors)
-        self.assertEqual(len(sponsors), 0)
 
 
 class TestContentMixin(TestCase):

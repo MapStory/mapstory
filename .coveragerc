@@ -1,5 +1,6 @@
 # Coverage config file
 [run]
+source = mapstory
 omit =
 	*/__init__.py
 	*/.local/*
