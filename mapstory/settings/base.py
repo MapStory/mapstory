@@ -474,6 +474,7 @@ NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=mapstory',
     '--cover-inclusive',
+    '--cover-erase',
     '--cover-html',
     '--exe',
     '--ignore-files=(^\.|^_|pavement\.py$|fabfile\.py$|_settings\.py$|cf\.py$|search_indexes\.py$)'
