@@ -6,6 +6,8 @@ omit =
 	*/migrations/*
 	*/migrations.py
 	*/management/*
+	*/tests/*
+	*/tests.py
 	mapstory/apps/health_check_geoserver/*
 	mapstory/settings.py
 	mapstory/settings/*

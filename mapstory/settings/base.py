@@ -66,6 +66,7 @@ DATABASES = {
 }
 
 INSTALLED_APPS += (
+    'django_nose',
     'mapstory',
     'django.contrib.webdesign',
     'geonode.contrib.geogig',

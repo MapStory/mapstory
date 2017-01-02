@@ -11,3 +11,4 @@ if __name__ == "__main__":
     os.environ.setdefault(env_module, os.getenv(env_module, "mapstory.settings"))
    
     execute_from_command_line(sys.argv)
+    
