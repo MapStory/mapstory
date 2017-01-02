@@ -1,0 +1,15 @@
+# Coverage config file
+[run]
+omit =
+	*/__init__.py
+	*/.local/*
+	*/migrations/*
+	*/migrations.py
+	*/management/*
+	mapstory/apps/health_check_geoserver/*
+	mapstory/settings.py
+	mapstory/settings/*
+	mapstory/wsgi.py
+	mapstory/version.py
+	mapstory/s3_storages.py
+
