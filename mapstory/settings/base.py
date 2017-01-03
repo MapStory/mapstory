@@ -91,6 +91,7 @@ INSTALLED_APPS += (
     'health_check_storage',
     'mapstory.apps.health_check_geoserver',
     'mapstory.journal',
+    'mapstory.apps.thumbnails'
 )
 
 # Adding Threaded Comments app
@@ -471,7 +472,7 @@ if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 # Nose Test arguments. Will not find and run tests unless --exe is specified.
-# Nose-runner has issues with coverage reporting and model loading. 
+# Nose-runner has issues with coverage reporting and model loading.
 # https://github.com/django-nose/django-nose/issues/180
 # Coverage options are now specified in `.coveragerc`
 NOSE_ARGS = [
