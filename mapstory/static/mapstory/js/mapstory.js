@@ -412,7 +412,7 @@
   };
 })
 
-.controller('detail_page_controller', function($compile, $scope, $http){
+.controller('detail_page_controller', function($scope, $http){
 
   $("#comment_submit_btn").click(function (event) {
       $.ajax({
@@ -435,111 +435,69 @@
   }
 
   $scope.tags = keywords;
-  // Change to 10
-  var MAX_TOKENS = 10;
+
+  var updatePlaceholder = function(){
+    var textField = $('#tokenfield-tags-tokenfield');
+
+    if ($scope.tags.length > 0){
+      textField.prop('placeholder', '');
+    }else{
+      textField.prop('placeholder', 'Type here to add tags...');
+    }
+  }
 
   // Manually set the value field
   var value = $('#tokenfield-tags').val($scope.tags);
   // Only initialize the tokenfield once the values are set
   if (value) {
-    $('#tokenfield-tags').tokenfield({
-      limit: MAX_TOKENS
-    })
+    $('#tokenfield-tags').tokenfield()
     .on('tokenfield:createtoken', function(e) {
-      var num_tokens = $('#tokenfield-tags').tokenfield('getTokens').length;
-      // Tokenize by space if num_spaces > 3
-      var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
       var data = e.attrs.value.split(' ');
-      if (num_spaces > 3) {
-        e.attrs.value = data[0];
-        e.attrs.label = data[0];
-        // Only create as many tokens as we have left
-        for (var i = 1; i < data.length; i++) {
-          // If we've reached the maximum tokens, only add it to the scope
-          if (num_tokens + i >= MAX_TOKENS) {
-            $scope.tags.push(data[i]);
-          } else {
-            $('#tokenfield-tags').tokenfield('createToken', data[i]);
-          }
-        }
+      // Create token for first word
+      e.attrs.value = data[0];
+      e.attrs.label = data[0];
+      // Create tokens for remaining words, if any, separated by spaces
+      for (var i = 1; i < data.length; i++) {
+        $('#tokenfield-tags').tokenfield('createToken', data[i]);
       }
     })
     .on('tokenfield:createdtoken', function(e) {
-      // Only add this token if it doesn't already exist
       if ($scope.tags.indexOf(e.attrs.value) == -1) {
         $scope.tags.push(e.attrs.value);
-        // Check if we have max tokens already
-        var num_tokens = $('#tokenfield-tags').tokenfield('getTokens').length;
-        if (num_tokens >= MAX_TOKENS) {
-          // Don't allow more input
-          $('#tokenfield-tags-tokenfield').prop('disabled', true);
-        }
-        // Make a POST to the url to add a keyword - use ajax so we don't refresh page
+        updatePlaceholder();
+
         $.ajax({
-            url: url,
-            type:'POST',
-            data:
-            {
-                add_keyword: e.attrs.value.toLowerCase()
-            },
-            success: function(msg)
-            {
-                console.log('Keyword added');
-            }
-        });
-      }
-      $compile($('#dashboard').contents())($scope);
-      // If we created a token, remove the placeholder on the input field
-      $('#tokenfield-tags-tokenfield').prop('placeholder', '');
-    })
-    .on('tokenfield:removedtoken', function(e) {
-      //remove the tag from the input box
-      var index = $scope.tags.indexOf(e.attrs.value);
-      if (index > -1) {
-          $scope.tags.splice(index, 1);
-      }
-  
-      if ($scope.tags.length >= MAX_TOKENS) {
-        $('#tokenfield-tags').tokenfield('createToken', $scope.tags[MAX_TOKENS-1]);
-      } else {
-        // Allow more input if we have less than maximum tokens now
-        $('#tokenfield-tags-tokenfield').prop('disabled', false);
-      }
-      $compile($('#dashboard').contents())($scope);
-      // Make a POST to the url to remove a keyword - use ajax so we don't refresh page
-      $.ajax({
           url: url,
           type:'POST',
-          data:
-          {
-              remove_keyword: e.attrs.value
-          },
-          success: function(msg)
-          {
-              console.log('Keyword removed');
+          data:{ 
+            add_keyword: e.attrs.value.toLowerCase()
           }
-      });
-      // If we removed the last token, add the placeholder field back to the input field
-      if ($scope.tags.length == 0) {
-        $('#tokenfield-tags-tokenfield').prop('placeholder', 'Type here to add up to 10 tags');
+        });
+      }
+    })
+    .on('tokenfield:removedtoken', function(e) {
+      var index = $scope.tags.indexOf(e.attrs.value);
+      if (index > -1) {
+        $scope.tags.splice(index, 1);
+        updatePlaceholder();
+
+        $.ajax({
+          url: url,
+          type:'POST',
+          data: {
+            remove_keyword: e.attrs.value
+          }
+        });
       }
     });
-    // Check if we have max tokens already
-    var num_tokens = $('#tokenfield-tags').tokenfield('getTokens').length;
-    if (num_tokens >= MAX_TOKENS) {
-      // Don't allow more input
-      $('#tokenfield-tags-tokenfield').prop('disabled', true);
-    }
-    if (num_tokens == 0) {
-      $('#tokenfield-tags-tokenfield').prop('placeholder', 'Type here to add up to 10 tags');
-    }
+
+    //After initializing token field adjust placeholder text
+    updatePlaceholder();
   }
   // Manually set the value field
   var value_ro = $('#tokenfield-tags-readonly').val($scope.tags);
   if (value_ro) {
-    $('#tokenfield-tags-readonly').tokenfield({
-      limit: MAX_TOKENS
-    });
+    $('#tokenfield-tags-readonly').tokenfield();
     $('#tokenfield-tags-readonly').tokenfield('readonly');
   }
   // If a label is clicked, do a manual redirect to the explore page with the value of the token as the keyword search filter
