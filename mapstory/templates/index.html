@@ -59,48 +59,50 @@
         </div>
     </section>
     <div ng-controller="featured_carousel">
-        <section class="slice category">
+        <section class="slice carousel category">
             <div class="container">
-                <nav id="filter" class="col-md-12 text-center">
+                <nav id="filter" class="col-sm-10 col-sm-offset-1 col-md-12 col-md-offset-0 text-center">
                     <ul id="categories" class="nav nav-tabs">
-                        <li><a ng-click="query_category();" class="btn btn-filter btn-sm sectionTab">{% trans "All Categories" %}</a></li>
+                        <li><a ng-click="reset();" class="btn btn-filter btn-sm sectionTab">{% trans "All Categories" %}</a></li>
                         {% verbatim %}
                             <li ng-repeat="category in categories">
-                                <a ng-click="query_category(category.identifier);" class="btn btn-filter btn-sm sectionTab">{{ category.gn_description }}</a>
+                                <a ng-click="filterCategory(category.identifier);" class="btn btn-filter btn-sm sectionTab">{{ category.gn_description }}</a>
                             </li>
                         {% endverbatim %}  
                     </ul>
                 </nav>
                 <div class="row">
-                    <p ng-hide="results.length">{% trans "No Featured Items in this category" %} ...</p>
+                    <p ng-hide="display.length">{% trans "No Featured Items in this category" %}...</p>
                 </div>
             </div>
         </section>
-        <section class="slice results">
+        <section class="slice carousel results">
             <div class="container">
-                <div ng-if="results.length">
-                    <slick infinite="true" slides-to-show="3" autoplay="true" init-onload="true" data="results">
-                        <div class="col-md-4" ng-repeat="item in results">
-                            {% verbatim %}
-                                <a href="{{ item.detail_url }}">
-                                    <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url }}" style="margin: auto;"/>
-                                </a>
-                                <h3>
-                                    <a href="{{ item.detail_url }}">{{ item.title }}</a>
-                                </h3>
-                                <h5 class="abstract">{{ item.abstract|limitTo:250  }}
-                                <a href="{{ item.detail_url }}">
-                                <i>...
-                            {% endverbatim %}
-                            {% trans "read more" %}
-                            {% verbatim %}</i>
-                                </a>
-                                </h5>
-                                <h4><span class="owner">{{ item.owner.username }}</span></h4>
-                            {% endverbatim %}
-                        </div>
-                    </slick>
-                </div>
+                <slick id="tablet-carousel" infinite="true" slides-to-show="4" autoplay="true" init-onload="true" data="display">
+                    <div class="col-md-3 col-sm-6 " ng-repeat="item in display">
+                        {% verbatim %}
+                        <a href="{{ item.detail_url }}">
+                            <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url }}" style="margin: auto;"/>
+                        </a>
+                        <h3>
+                            <a href="{{ item.detail_url }}">{{ item.title }}</a>
+                            <span ng-if="item.owner__first_name" class="owner"> by {{ item.owner__first_name }} {{item.owner__last_name}}</span>
+                        </h3>
+                        <h5 class="abstract">{{ item.abstract|limitTo:140  }}
+                            <a href="{{ item.detail_url }}"><i>...</i></a>
+                        </h5>
+                    </div>
+                </slick>
+                <slick id="mobile-carousel" infinite="true" slides-to-show="2" autoplay="true" init-onload="true" data="display">
+                    <div class="col-md-3 col-sm-6" ng-repeat="item in display">
+                            <a href="{{ item.detail_url }}">
+                                <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url }}" style="margin: auto;"/>
+                            </a>
+                            <a href="{{ item.detail_url }}">{{ item.title }}</a>
+                            <span ng-if="item.owner__first_name" class="owner"> by {{ item.owner__first_name }} {{item.owner__last_name}}</span>
+                        {% endverbatim %}
+                    </div>
+                </slick>
             </div>
         </section>
     </div>
