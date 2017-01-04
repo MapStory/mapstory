@@ -40,7 +40,9 @@ before_script:
   - sudo chown $USER /var/lib/mapstory/media/
 
 script:
-  - coverage run ./manage.py test; coverage report; coverage html -d cover
+  - coverage run ./manage.py test
+  - coverage report
+  - coverage html -d cover
 
 after_success:
   - coveralls
