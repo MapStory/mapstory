@@ -373,7 +373,7 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         'data_quality_statement': 'This is quality', 'purpose': 'To educate', 'is_published': 'on'}
         # The submitted data as it will appear in the model is slightly different
         submitted_data = {'title': unicode('New title'), 'category': TopicCategory.objects.first(), 'language': unicode('fra'),
-        'distribution_url': layer.distribution_url, 'data_quality_statement': unicode('This is quality'),
+        'distribution_url': unicode(layer.distribution_url), 'data_quality_statement': unicode('This is quality'),
         'purpose': unicode('To educate'), 'is_published': True}
 
         response = c.post(reverse('layer_detail', args=[layer.typename]), data=form_data)
