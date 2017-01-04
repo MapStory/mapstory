@@ -341,7 +341,8 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         self.assertEqual(geonode_authorize_layer('AnonymousUser', layer.typename), 'lo-rw')
 
     def test_detail_page_forms(self):
-        c = Client()
+        c = AdminClient()
+        c.login_as_admin()
         layer = Layer.objects.first()
         response = c.get(reverse('layer_detail', args=[layer.typename]))
         self.assertEqual(response.status_code, 200)
