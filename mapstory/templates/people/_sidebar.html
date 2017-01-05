@@ -1,9 +1,4 @@
-{% load static %}
-{% load activity_tags social_tags i18n %}
-{% load friendly_loader %}
-{% friendly_load i18n avatar_tags relationship_tags activity_tags %}
-{% load pagination_tags %}
-
+{% load i18n %}
 
 {% if profile.profile %}
     <div class="sidebar-header"><h3>About</h3></div>
@@ -57,18 +52,18 @@ TODO: change help text in /geonode/geonode/people/models.py to encourage correct
         <a href="https://github.com/{{ profile.social_github }}"><i class="fa fa-github"></i> {{ profile.social_github }}</a>
     </div>
 {% endif %}
-{% comment %} 
-<!-- can be uncommented once tagging & keywords are functional -->
-<!-- tags and interests -->
-{% if profile.keyword_list %}
-    <div class="sidebar-header"><h3>tags & interests </h3></div>
-    <div>
-        <input type="text" class="form-control"/>
-    </div>
-{% endif %}
-{% endcomment %}
 
-<!-- notifications -->
+{% if THEME == 'default' %}
+{# only show interests in development environment until bugs fixed #}
+    <!-- tags and interests -->
+    {% if profile.keyword_list %}
+        <div class="sidebar-header"><h3>tags & interests </h3></div>
+        <div>
+            <input type="text" class="form-control"/>
+        </div>
+    {% endif %}
+{% endif %}
+
 {% if user == profile %}
     <div style= "padding-top: 40px">
         <button class="btn btn-danger"><a href="{% url "profile_delete" user.username %}">{% trans "delete profile" %}</a> </button>

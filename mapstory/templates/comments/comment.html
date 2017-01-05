@@ -1,8 +1,7 @@
 {% load i18n %}
 {% load comments %}
 {% load fluent_comments_tags %}
-{% load friendly_loader %}
-{% friendly_load avatar_tags %}
+{% load avatar_tags %}
 <article class="col-md-12 comment" style="{% if forloop.counter %}{% if forloop.counter|divisibleby:2 %}background-color: #f5f5f5;{% endif %}{% endif %}">
   <div class="avatar pull-left"><a href="{{ comment.user.get_absolute_url }}">{% avatar comment.user 40 %}</a></div>
   <p class="comment-description">

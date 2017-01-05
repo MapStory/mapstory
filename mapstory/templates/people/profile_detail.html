@@ -1,12 +1,9 @@
-{% extends "people/profile_base.html" %}
-{% load static %}
-{% load activity_tags social_tags i18n %}
-{% load friendly_loader %}
-{% friendly_load i18n avatar_tags relationship_tags activity_tags %}
+{% extends "site_base.html" %}
+{% load activity_tags social_tags i18n avatar_tags %}
 {% load pagination_tags %}
 
 {% block title %} {% trans "Profile of " %}{{ profile.first_name|default_if_none:profile.username }}{% endblock %}
-{% block body_class %}people explore{% endblock %}
+{% block body_class %}people{% endblock %}
 {% block body %}
     <div ng-controller="profile_search_controller">
         <div class="container">
@@ -87,7 +84,7 @@
                                                     {% endverbatim %}
                                                     <div ng-repeat="upload in uploads">
                                                         <upload upload-object="upload" i="$index" static-url="{{ STATIC_URL }}"
-                                                                template-url="{{ STATIC_URL }}osgeo_importer/partials/upload.html"></upload>
+                                                                template-url="{{ STATIC_URL }}mapstory/partials/upload.html"></upload>
                                                     </div>
                                                     <uib-pagination total-items="totalItems" ng-init="init('{{ user.username }}')"
                                                                     ng-change="pageChanged()" max-size="7" class="pagination-sm"

@@ -1,7 +1,4 @@
-{% load static %}
 {% load activity_tags social_tags i18n %}
-{% load friendly_loader %}
-{% friendly_load i18n avatar_tags relationship_tags activity_tags %}
 {% load pagination_tags %}
 
 <ul class="nav nav-tabs">
@@ -37,12 +34,15 @@
             </a>
         </li>
     {% endif %}
+    {% if THEME == 'default' %}
+    {# only show activity feed in development environment until bugs fixed #}
     <li>
         <a href="#user_activities" data-toggle="tab">
             <div class="counter">{{ action_list.count }}</div>
             Activity Feed 
         </a>
     </li>
+    {% endif %}
     <li>
         <a href="#journal_entries" data-toggle="tab">
             <div class="counter">

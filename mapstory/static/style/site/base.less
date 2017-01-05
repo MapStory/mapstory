@@ -89,17 +89,6 @@ a:hover, a:focus, a:active {
   text-decoration: none
 }
 
-.label-font { //journal_edit.html
-  font-size: 23px;
-  font-weight: 100;
-  padding: 20px 0 0 0;
-}
-
-.label-font-sm { //_login_register.html
-  font-size: 15px;
-  font-weight: 100;
-}
-
 .page-title {
   display: block;
   overflow: hidden;
@@ -114,8 +103,8 @@ a:hover, a:focus, a:active {
 .slice {
   padding: 33px 20px;
   width: 100%;
-  margin: 0;
-  border: 0;
+  // margin: 0;
+  // border: 0;
   background-color: @white;
   position: relative;
   text-align: center;
@@ -124,10 +113,6 @@ a:hover, a:focus, a:active {
 .banner {
   text-align: center;
   padding: 50px 0 10px 0;
-}
-
-.blog-content {
-  border-left: 1px solid @gray80;
 }
 
 .border-right {
@@ -184,8 +169,6 @@ form {
   }
 }
 
-/* --- BASE - Buttons --- */
-
 .btn-sm, .btn-group-sm > .btn {
   padding: 10px 13px;
   font-size: 12px;
@@ -193,23 +176,17 @@ form {
   border-radius: 3px;
 }
 
-.facebook-btn {
-  background-color: @facebook;
-  color: @white;
-}
 
-.google-btn {
-  background-color: @google;
-  color: @white;
-}
-
-.login-auth-btn {
-  background-color: @primary-shadow;
-  color: @white;
+button#text_search_btn, .homepage-search button, .quicksearchcontainer button{
+  background: @primary;
+  color: white;
   &:hover{
-    background-color: @primary;
-    color: @white;
+    background: @primary-shadow;
   }
+}
+
+.quicksearchcontainer button{
+  border: 1px solid @gray80;
 }
 
 /* --- BASE - Misc --- */
@@ -266,7 +243,7 @@ nav.filter {
   text-align: left;
 }
 
-/*--- Paralax---*/
+/*--- BASE - Initiatives & Organizations ---*/
 .maskParent {
   position: relative;
   height: 100%;
@@ -291,6 +268,17 @@ nav.filter {
   color: @white;
 }
 
+.blog-content {
+  border-left: 1px solid @gray80;
+}
+
+/*--- BASE - Login modal ---*/
+
+.label-font-sm { //_login_register.html
+  font-size: 15px;
+  font-weight: 100;
+}
+
 #loginModal {
   .modal-dialog {
     width: 1000px;
@@ -301,15 +289,21 @@ nav.filter {
   }
 }
 
-button#text_search_btn, .homepage_search button, .quicksearchcontainer button{
-  background: @primary;
-  color: white;
+.login-auth-btn {
+  background-color: @primary-shadow;
+  color: @white;
   &:hover{
-    background: @primary-shadow;
+    background-color: @primary;
+    color: @white;
   }
 }
 
-.quicksearchcontainer button{
-  border: 1px solid @gray80;
+.facebook-btn {
+  background-color: @facebook;
+  color: @white;
 }
 
+.google-btn {
+  background-color: @google;
+  color: @white;
+}

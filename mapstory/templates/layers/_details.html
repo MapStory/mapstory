@@ -5,12 +5,8 @@
 {% load agon_ratings_tags %}
 {% load bootstrap_tags %}
 {% load url from future %}
-{% load base_tags %}
 {% load guardian_tags %}
-{% load friendly_loader %}
-{% load mapstory_tags %}
 {% load flag_tags %}
-{% friendly_load avatar_tags %}
 
 {% get_comment_count for resource as num_comments %}
 <div ng-controller="detail_page_controller">
@@ -57,9 +53,9 @@
                                 <li><a href="#Edits" data-toggle="tab">Contributions ({% verbatim %}{{ stats.totalCommits| number}}{% endverbatim %})</a></li>
                                 <li><a href="#Comments" data-toggle="tab">Comments ({{ num_comments }})</a></li>
                                 <li><a href="#ShareLayer" data-toggle="tab">Share</a></li>
-                                {% comment %}{% if resource.category %}
+                                {% if resource.category %}
                                 <li><a href="#Related" data-toggle="tab" ng-click="query_category('{{ resource.category }}', '{{page}}');">Related</a></li>
-                                {% endif %}{% endcomment %}
+                                {% endif %}
                             </ul>
                             <div class="tab-content details">
                                 <div class="tab-pane active" id="Metadata">

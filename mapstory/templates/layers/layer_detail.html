@@ -1,14 +1,10 @@
-{% extends "layers/layer_base.html" %}
-{% load staticfiles %}
+{% extends "site_base.html" %}
 {% load i18n %}
 {% load dialogos_tags %}
 {% load agon_ratings_tags %}
 {% load bootstrap_tags %}
 {% load url from future %}
-{% load base_tags %}
 {% load guardian_tags %}
-{% load friendly_loader %}
-{% friendly_load avatar_tags %}
 
 {% block title %}{{ resource.title|default:resource.typename }} — {{ block.super }}{% endblock %}
 {% block head %}
@@ -24,9 +20,7 @@
 
 {% block extra_script %}
 {% if GEOGIG_ENABLED and resource.link_set.geogig %}
-    {% with "layers/_geogig_scripts.html" as geogig_scripts_template %}
-        {% include  geogig_scripts_template %}
-    {% endwith %}
+    {% include "layers/_geogig_scripts.html" %}
 {% endif %}
 <script type="text/javascript">
     var app;

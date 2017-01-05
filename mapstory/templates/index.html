@@ -1,41 +1,29 @@
 {% extends "site_base.html" %}
-{% load webdesign %}
 {% load i18n %}
-{% load staticfiles %}
-{% load base_tags %}
-{% load mapstory_tags %}
-{% load cache %}
-{% load avatar_tags %}
+{% load mapstory_tags %}{# mapstory/templatetags/mapstory_tags.py, only used here for images|byname filter parallax #}
 
 {% block middle %}
 <div>
     <section class="parallax splash">
-        <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0"
-             style="background-image: url({{ images|by_name:'Africa' }});">
-        </div>
+        <div style="background-image: url({{ images|by_name:'Africa' }});"></div>
     </section>
     <section class="slice welcome">
         <div class="container">
-            <div class="row col-sm-12">
-                <h1 class="text-center">{{ site.assets.subtitle }} </h1>
-            </div>
-            <div class="row search">
-                <div class="col-sm-6 col-sm-offset-3">
-                    <form action="{% url 'search' %}">
-                        <div class="input-group homepage_search">
-                            <input class="form-control" id="homepage_search" type="text" placeholder="{% trans "Explore Stories and Layers" %}"
-                                {% if HAYSTACK_SEARCH %} name="q" 
-                                {% else %} name="keywords__slug__in"
-                                {% endif %}
-                            >
-                            <span class="input-group-btn">
-                              <button class="btn btn-primary" type="submit">
-                              <i class="fa fa-search"></i></button>
-                            </span>
-                        </div>
-                    </form>
+            <h1> The atlas of change anyone can edit {{ site.assets.subtitle }} </h1>
+            <form class="col-sm-6 col-sm-offset-3" action="{% url 'search' %}">
+                <div class="input-group homepage-search">
+                    <input class="form-control" type="text" placeholder="{% trans "Explore Stories and Layers" %}"
+                        {% if HAYSTACK_SEARCH %} name="q" 
+                        {% else %} name="keywords__slug__in"
+                        {% endif %}
+                    >
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
                 </div>
-            </div>
+            </form>
             <div class="row links">
                 {% with colsm3=REGISTRATION_OPEN %}
                     {% if colsm3 and not user.is_authenticated %}
@@ -43,7 +31,7 @@
                             <a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Sign up now" %}</a>
                         </div>
                     {% endif %}
-                    <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}" id="uploadLayers">
+                    <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}">
                         {% if user.is_authenticated %}
                             <a ng-controller="ImportController"
                                ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', '{{ default_layer_config }}', null, null, null)"
@@ -54,7 +42,7 @@
                         {% trans "Import Layers" %}
                         </a>
                     </div>
-                    <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}" id="composeStory">
+                    <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}">
                         {% if user.is_authenticated %}
                             <a href="{% url 'new_map' %}?tour">
                         {% else %}
@@ -71,83 +59,82 @@
         </div>
     </section>
     <div ng-controller="featured_carousel">
-        <section class="slice category">
+        <section class="slice carousel category">
             <div class="container">
-                <nav id="filter" class="col-md-12 text-center">
+                <nav id="filter" class="col-sm-10 col-sm-offset-1 col-md-12 col-md-offset-0 text-center">
                     <ul id="categories" class="nav nav-tabs">
-                        <li><a ng-click="query_category();" class="btn btn-filter btn-sm sectionTab">{% trans "All Categories" %}</a></li>
+                        <li><a ng-click="reset();" class="btn btn-filter btn-sm sectionTab">{% trans "All Categories" %}</a></li>
                         {% verbatim %}
                             <li ng-repeat="category in categories">
-                                <a ng-click="query_category(category.identifier);" class="btn btn-filter btn-sm sectionTab">{{ category.gn_description }}</a>
+                                <a ng-click="filterCategory(category.identifier);" class="btn btn-filter btn-sm sectionTab">{{ category.gn_description }}</a>
                             </li>
                         {% endverbatim %}  
                     </ul>
                 </nav>
                 <div class="row">
-                    <p ng-hide="results.length">{% trans "No Featured Items in this category" %} ...</p>
+                    <p ng-hide="display.length">{% trans "No Featured Items in this category" %}...</p>
                 </div>
             </div>
         </section>
-        <section class="slice results">
+        <section class="slice carousel results">
             <div class="container">
-                <div ng-if="results.length">
-                    <slick infinite="true" slides-to-show="3" autoplay="true" init-onload="true" data="results">
-                        <div class="col-md-4" ng-repeat="item in results">
-                            {% verbatim %}
-                                <a href="{{ item.detail_url }}">
-                                    <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url }}" style="margin: auto;"/>
-                                </a>
-                                <h3>
-                                    <a href="{{ item.detail_url }}">{{ item.title }}</a>
-                                </h3>
-                                <h5 class="abstract">{{ item.abstract|limitTo:250  }}
-                                <a href="{{ item.detail_url }}">
-                                <i>...
-                            {% endverbatim %}
-                            {% trans "read more" %}
-                            {% verbatim %}</i>
-                                </a>
-                                </h5>
-                                <h4><span class="owner">{{ item.owner.username }}</span></h4>
-                            {% endverbatim %}
-                        </div>
-                    </slick>
-                </div>
+                <slick id="tablet-carousel" infinite="true" slides-to-show="4" autoplay="true" init-onload="true" data="display">
+                    <div class="col-md-3 col-sm-6 " ng-repeat="item in display">
+                        {% verbatim %}
+                        <a href="{{ item.detail_url }}">
+                            <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url }}" style="margin: auto;"/>
+                        </a>
+                        <h3>
+                            <a href="{{ item.detail_url }}">{{ item.title }}</a>
+                            <span ng-if="item.owner__first_name" class="owner"> by {{ item.owner__first_name }} {{item.owner__last_name}}</span>
+                        </h3>
+                        <h5 class="abstract">{{ item.abstract|limitTo:140  }}
+                            <a href="{{ item.detail_url }}"><i>...</i></a>
+                        </h5>
+                    </div>
+                </slick>
+                <slick id="mobile-carousel" infinite="true" slides-to-show="2" autoplay="true" init-onload="true" data="display">
+                    <div class="col-md-3 col-sm-6" ng-repeat="item in display">
+                            <a href="{{ item.detail_url }}">
+                                <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url }}" style="margin: auto;"/>
+                            </a>
+                            <a href="{{ item.detail_url }}">{{ item.title }}</a>
+                            <span ng-if="item.owner__first_name" class="owner"> by {{ item.owner__first_name }} {{item.owner__last_name}}</span>
+                        {% endverbatim %}
+                    </div>
+                </slick>
             </div>
         </section>
     </div>
-    {% if THEME == 'orange' %}{% include "mapstory/_extended_index.html" %}{% endif %}
+    {% if THEME == 'orange' %}
+        {% include "mapstory/_extended_index.html" %}
+    {% endif %}
     <section class="slice sponsors">
         <div class="container">
-            <div class="row">
-                <h1 class="text-center">{% trans "Our Sponsors" %}</h1>
-                <h3 class="text-center">Organizations like these drive innovation in the {{ SITE_NAME }} codebase, content and community.
-                    {% if THEME == 'orange' %}
-                        <a href="{% url 'donate' %}">
-                            {% trans "Join them." %}</a>
-                    {% endif %}
-                </h3>
-            </div>
+            <h1>{% trans "Our Sponsors" %}</h1>
+            <h3>Organizations like these drive innovation in the {{ SITE_NAME }} codebase, content and community.
+                {% if THEME == 'orange' %}
+                    <a href="{% url 'donate' %}">
+                        {% trans "Join them." %}</a>
+                {% endif %}
+            </h3>
             <hr/>
             <div class="row">
-                <slice infinite="true" slides-to-show="6" autoplay="true">
-                    {% for sponsor in sponsors %}
-                        <div class="col-sm-2">
-                            <a href="{{ sponsor.link }}">
-                                <img src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
-                            </a>
-                        </div>
-                        {% empty %}
-                        <p>{% trans "No Sponsors." %} {% trans "Add" %} <a href="{% url 'admin:mapstory_sponsor_add' %}">{% trans "some" %}</a></p>
-                    {% endfor %}
-                </slice>
+                {% for sponsor in sponsors %}
+                    <div class="col-sm-2">
+                        <a href="{{ sponsor.link }}">
+                            <img src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
+                        </a>
+                    </div>
+                    {% empty %}
+                    <p>{% trans "No Sponsors." %} {% trans "Add" %} <a href="{% url 'admin:mapstory_sponsor_add' %}">{% trans "some" %}</a></p>
+                {% endfor %}
             </div>
         </div>
     </section>
     {% if THEME == 'orange' %}
         <section class="parallax last">
-            <div data-stellar-background-ratio="0.5" data-stellar-vertical-offset="0"
-                 style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
+            <div style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
         </section>
     {% endif %}
 </div>
