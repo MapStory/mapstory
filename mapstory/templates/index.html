@@ -10,20 +10,22 @@
     <section class="slice welcome">
         <div class="container">
             <h1> The atlas of change anyone can edit {{ site.assets.subtitle }} </h1>
-            <form class="col-sm-6 col-sm-offset-3" action="{% url 'search' %}">
-                <div class="input-group homepage-search">
-                    <input class="form-control" type="text" placeholder="{% trans "Explore Stories and Layers" %}"
-                        {% if HAYSTACK_SEARCH %} name="q" 
-                        {% else %} name="keywords__slug__in"
-                        {% endif %}
-                    >
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </span>
-                </div>
-            </form>
+            <div class="row search">
+                <form class="col-sm-6 col-sm-offset-3" action="{% url 'search' %}">
+                    <div class="input-group homepage-search">
+                        <input class="form-control" type="text" placeholder="{% trans "Explore Stories and Layers" %}"
+                            {% if HAYSTACK_SEARCH %} name="q" 
+                            {% else %} name="keywords__slug__in"
+                            {% endif %}
+                        >
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
             <div class="row links">
                 {% with colsm3=REGISTRATION_OPEN %}
                     {% if colsm3 and not user.is_authenticated %}
