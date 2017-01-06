@@ -25,7 +25,7 @@
   git: repo=git://github.com/MapStory/mapstory.git dest={{ top_project }}/mapstory force=yes
   become_user: '{{ application_user }}'
   when: setup_git_repo is defined and setup_git_repo
-  tags: [git]
+  tags: [git, update]
 
 #- name: mapstory-maploom checkout
 #  git: repo=git://github.com/MapStory/MapLoom.git dest={{ top_project }}/MapLoom force=yes
@@ -37,19 +37,19 @@
   git: repo=git://github.com/MapStory/geonode.git dest={{ top_project }}/geonode force=yes
   become_user: '{{ application_user }}'
   when: setup_git_repo is defined and setup_git_repo
-  tags: [git]
+  tags: [git, update]
 
 - name: geoserver-geonode-ext checkout
   git: repo=git://github.com/MapStory/geoserver-geonode-ext.git dest={{ top_project }}/geoserver-geonode-ext force=yes
   become_user: '{{ application_user }}'
   when: setup_git_repo is defined and setup_git_repo
-  tags: [git]
+  tags: [git, update]
 
 - name: geotools checkout
   git: repo=git://github.com/MapStory/geotools.git dest={{ top_project }}/geotools force=yes
   become_user: '{{ application_user }}'
   when: setup_git_repo is defined and setup_git_repo
-  tags: [git]
+  tags: [git, update]
 
 - name: clean modified geonode content to prevent submodule update fail
   command: git checkout -- . chdir={{ top_project }}/geonode
