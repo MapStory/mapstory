@@ -5,8 +5,8 @@ MEDIA_ROOT = '{{media_root}}'
 DATABASE_PASSWORD = '{{ db_password }}'
 DATABASE_HOST = '{{ db_host }}'
 OGC_SERVER['default']['PASSWORD'] = '{{ geoserver_password }}'
-OGC_SERVER['default']['PUBLIC_LOCATION'] = 'http://{{ geoserver_host }}/geoserver/'
-OGC_SERVER['default']['LOCATION'] = 'http://{{ geoserver_host }}/geoserver/'
+OGC_SERVER['default']['PUBLIC_LOCATION'] = '{{ geoserver_protocol }}{{ geoserver_host }}/geoserver/'
+OGC_SERVER['default']['LOCATION'] = '{{ geoserver_protocol }}{{ geoserver_host }}/geoserver/'
 OGC_SERVER['default']['PG_GEOGIG'] = True
 LOCAL_CONTENT = False
 
