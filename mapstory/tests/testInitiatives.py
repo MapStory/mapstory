@@ -4,8 +4,8 @@ from datetime import datetime
 from geonode.groups.models import GroupProfile
 from geonode.contrib.collections.models import Collection
 
-from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
-from mapstory.tests.AdminClient import AdminClient
+from .MapStoryTestMixin import MapStoryTestMixin
+from .AdminClient import AdminClient
 
 
 class InitiativeTests(MapStoryTestMixin):

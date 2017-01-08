@@ -71,7 +71,7 @@ class TestMapstoryModel(TestCase):
         MapStory.objects.filter(id=self.mapstory.id).delete()
         self.assertEqual(0, MapStory.objects.all().count())
 
-    @skip("TODO")
+    @skip("TODO: Fix")
     def test_get_abosolute_url(self):
         self.assertIsNotNone(self.mapstory.get_absolute_url())
 
