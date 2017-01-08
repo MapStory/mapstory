@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model, authenticate
 from django.test import TestCase, Client
+from django.test.utils import override_settings
 from geonode.geoserver.helpers import gs_catalog
 from socket import error as socket_error
 from geonode.base.models import TopicCategory
@@ -12,6 +13,7 @@ from datetime import datetime
 from unittest import skip
 from bs4 import BeautifulSoup
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
+
 
 class MapStoryOrganizationTests(MapStoryTestMixin):
     """Organization Tests
@@ -106,6 +108,7 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         # response = c.get(reverse('organization_members', args=['Test-Organization-nonexist']))
         # self.assertEqual(response.status_code, 404)
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_admin_access(self):
         """Admin should get access
         """

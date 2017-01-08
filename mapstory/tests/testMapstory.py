@@ -26,30 +26,8 @@ from geonode.contrib.collections.models import Collection
 from datetime import datetime
 from ..models import Sponsor
 from .AdminClient import AdminClient
+from .MapStoryTestMixin import MapStoryTestMixin
 User = get_user_model()
-
-
-class MapStoryTestMixin(TestCase):
-
-    def assertLoginRequired(self, response):
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue('login' in response.url)
-
-    def assertHasGoogleAnalytics(self, response):
-        self.assertTrue('mapstory/_google_analytics.html' in [t.name for t in response.templates])
-
-    def create_user(self, username, password, **kwargs):
-        """
-        Convenience method for creating users.
-        """
-        user, created = User.objects.get_or_create(username=username, **kwargs)
-
-        if created:
-            user.set_password(password)
-            user.save()
-
-        return username, password
-
 
 
 class MapStoryTests(MapStoryTestMixin):
@@ -70,6 +48,7 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertTrue("_gaq.push(['_setAccount', 'testing']);" in response.content)
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_home_renders(self):
         """
         Ensure the home page returns a 200.
@@ -79,6 +58,7 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_search_renders(self):
         """
         Ensure the search page returns a 200.
@@ -88,6 +68,7 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_sign_up_renders(self):
         """
         Ensure the sign up page returns a 200.
@@ -126,6 +107,7 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
 
     @skip("TODO")
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_story_teller_renders(self):
         """
         Ensure the story teller view renders.
@@ -156,6 +138,7 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_about_leaders_page_renders(self):
         """
         Ensure the about leaders page view renders.
@@ -165,6 +148,7 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_donate_renders(self):
         """
         Ensure the donate view renders.
@@ -174,6 +158,7 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_get_started_renders(self):
         """
         Ensure the get started view renders.
@@ -183,6 +168,7 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_get_involved_renders(self):
         """
         Ensure the get started view renders.
@@ -192,6 +178,7 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_get_skills_renders(self):
         """
         Ensure the get started view renders.
@@ -201,6 +188,7 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_sign_in_renders(self):
         """
         Ensure the sign in renders.
@@ -221,6 +209,7 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEqual(response.context['form'].errors['__all__'][0],
                          'The username and/or password you specified are not correct.')
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_sign_up(self):
         """
         Ensure the signup works.
@@ -392,6 +381,7 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
             layer_keywords_names.append(lkeyword.name)
         self.assertEqual(layer_keywords_names, new_keywords_names)
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_organizations(self):
         admin = AdminClient()
         admin.login_as_admin()
@@ -431,6 +421,7 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         response = c.get(reverse('organization_detail', args=[group.slug]))
         self.assertEqual(response.status_code, 200)
 
+    @override_settings(GOOGLE_ANALYTICS='testing')
     def test_initiatives(self):
         admin = AdminClient()
         admin.login_as_admin()
