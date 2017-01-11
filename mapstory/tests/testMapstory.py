@@ -5,6 +5,7 @@ from django.test import TestCase, Client
 from django.test.utils import override_settings
 from django.conf import settings
 from django.core import mail
+from django.db import connection
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model, authenticate
@@ -261,11 +262,8 @@ class MapStoryAdminTests(MapStoryTestMixin):
         Ensure export model returns a csv file
         """
         c = Client()
-
         request = c.get(reverse('index_view'))
-
         response = export_via_model(User, request, User.objects.all(), exclude=['password'])
-
         self.assertEqual(response['Content-Type'], 'text/csv')
 
 
@@ -308,7 +306,7 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
             self.skipTest('Authorize layer function does not exist.')
 
         layer = Layer.objects.first()
-        from django.db import connection
+        
         cursor = connection.cursor()
 
         def geonode_authorize_layer(username, typename):
@@ -465,18 +463,18 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
 class LayersCreateTest(MapStoryTestMixin):
 
     def create_datastore(self, connection, catalog):
-        settings = connection.settings_dict
-        params = {'database': settings['NAME'],
-                  'passwd': settings['PASSWORD'],
+        connection_settings = connection.settings_dict
+        params = {'database': connection_settings['NAME'],
+                  'passwd': connection_settings['PASSWORD'],
                   'namespace': 'http://www.geonode.org/',
                   'type': 'PostGIS',
                   'dbtype': 'postgis',
-                  'host': settings['HOST'],
-                  'user': settings['USER'],
-                  'port': settings['PORT'],
+                  'host': connection_settings['HOST'],
+                  'user': connection_settings['USER'],
+                  'port': connection_settings['PORT'],
                   'enabled': "True"}
 
-        store = catalog.create_datastore(settings['NAME'], workspace=self.workspace)
+        store = catalog.create_datastore(connection_settings['NAME'], workspace=self.workspace)
         store.connection_parameters.update(params)
 
         try:
@@ -485,7 +483,7 @@ class LayersCreateTest(MapStoryTestMixin):
             # assuming this is because it already exists
             pass
 
-        return catalog.get_store(settings['NAME'])
+        return catalog.get_store(connection_settings['NAME'])
 
     def setUp(self):
 

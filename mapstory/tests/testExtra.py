@@ -34,15 +34,7 @@ class MockSuperUser(object):
 request = MockRequest()
 
 class TestHomeView(TestCase):
-    """
-    Test the index view
-    """
-    def test_root_url_resolves_to_index_view(self):
-        found = resolve("/")
-        self.assertIsNotNone(found.func)
-        # self.assertEqual(found.func, IndexView.dispatch().func)
-
-    def test_get_response(self):
+    def test_home_response(self):
         """
         Should get a response for index_view
         """
@@ -55,9 +47,7 @@ class TestHomeView(TestCase):
         Should return a valid context
         """
         i = IndexView()
-        self.assertIsInstance(i, IndexView, "Should be an instance of IndexView")
         context = i.get_context_data()
-
         self.assertIsNotNone(context, "Context should not be None")
         self.assertIsNotNone(context['sponsors'], "Sponsors was None")
         self.assertIsNotNone(context['communities'], "Communities was None")
@@ -69,6 +59,8 @@ class TestHomeView(TestCase):
         c = Client()
         response = c.get(reverse('journal'))
         self.assertEqual(response.status_code, 200)
+
+
 
 
 class TestVersion(TestCase):
@@ -128,15 +120,3 @@ class TestAdmin(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "index.html")
 
-    @skip("TODO")
-    def test_constructors(self):
-        self.assertIsNotNone(GetPageChoiceField())
-        self.assertIsNotNone(GetPageContentForm())
-        self.assertIsNotNone(SponsorAdmin())
-        self.assertIsNotNone(TaskInline())
-        self.assertIsNotNone(CommunityAdmin())
-        self.assertIsNotNone(NewsItemForm())
-        self.assertIsNotNone(JournalEntryAdmin())
-        self.assertIsNotNone(LeaderAdmin())
-        self.assertIsNotNone(ParallaxImageAdmin())
-        self.assertIsNotNone(CustomSiteAdmin())
