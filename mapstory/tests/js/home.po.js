@@ -9,7 +9,7 @@
 require('./waitReady.js');
 var path = require('path');
 // Upload paths need to be absolute or error.
-const testLayerFileRelative = '../test_assets/lewisandclarktrail.csv';
+const testLayerFileRelative = '../sampledata/lewisandclarktrail.csv';
 const testLayerFile = path.resolve(__dirname, testLayerFileRelative);
 var wait_times = require('./wait_times');
 var auth = require('./auth.po');

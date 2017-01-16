@@ -6,4 +6,4 @@ class ProfileDataViewTest(TestCase):
         #profile_detail = ProfileDetail()
         #self.assertIsNotNone(profile_detail)
         #context_data = profile_detail.get_context_data()
-        self.assertIsNotNone(True)
+        pass

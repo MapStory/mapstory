@@ -1,6 +1,6 @@
 from mapstory.import_handlers import LayerAppendHandler, TruncatedNameHandler
-from osgeo_importer.handlers import ImportHandlerMixin, ensure_can_run
-from .MapStoryTestMixin import MapStoryTestMixin
+from osgeo_importer.handlers import ImportHandlerMixin
+from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 
 class ImportHandlerTests(MapStoryTestMixin):
     def test_layer_append_handler(self):
