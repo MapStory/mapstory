@@ -2,9 +2,13 @@
 mapstory
 ================
 
+[![Coverage Status](https://coveralls.io/repos/github/MapStory/mapstory/badge.svg?branch=master)](https://coveralls.io/github/MapStory/mapstory?branch=master)
+
+Please visit [our wiki](https://github.com/MapStory/mapstory/wiki)
 
 Deployment
 ----------
+
 
 ## local developer build
 
