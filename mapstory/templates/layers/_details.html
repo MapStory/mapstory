@@ -91,12 +91,12 @@
                                                 {% if user.is_authenticated %}
                                                     <input type="text" class="form-control" id="tokenfield-tags"/>
                                                     {% verbatim %}
-                                                        <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+                                                        <!-- <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span> -->
                                                     {% endverbatim %}
                                                 {% else %}
                                                     <input type="text" class="form-control" id="tokenfield-tags-readonly"/>
                                                     {% verbatim %}
-                                                        <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span>
+                                                       <!--  <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span> -->
                                                     {% endverbatim %}
                                                 {% endif %}
                                             </td>
