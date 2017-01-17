@@ -1,13 +1,14 @@
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.test import Client
-from mapstory.tests.testMapstory import MapStoryTestMixin
-from mapstory.tests.testMapstory import User
+from django.contrib.auth import get_user_model
 from geonode.base.models import TopicCategory
 from geonode.base.populate_test_data import create_models
 from geonode.maps.models import Map
 from .models import FlaggedContent
+from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 
+User = get_user_model()
 
 # @TODO Replace this with something better that doesn't specify a username and password.
 class AdminClient(Client):
@@ -25,7 +26,6 @@ class AdminClient(Client):
 
 
 class FlagsTest(MapStoryTestMixin):
-
     def setUp(self):
         # these are needed for the geonode fixtures
         TopicCategory.objects.create(identifier='biota')

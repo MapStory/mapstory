@@ -1,6 +1,6 @@
 import datetime
 import json
-from django.test import TestCase, Client
+from django.test import Client
 from unittest import skip
 from geonode.base.models import TopicCategory
 from geonode.base.populate_test_data import create_models
@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from .forms import StoryBoxForm
 from .utils import parse_date_time, datetime_to_seconds, make_point
 from .models import StoryBox
-from mapstory.tests.testMapstory import MapStoryTestMixin, User
+from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 
 # @TODO Replace this with something better that doesn't specify a username and password.
 class AdminClient(Client):
