@@ -28,6 +28,7 @@ from mapstory.views import initiative_create, initiative_edit, initiative_detail
 from mapstory.views import initiative_invite, initiative_members_add, initiative_member_remove
 from tastypie.api import Api
 from mapstory.api import UploadedLayerResource
+from annotations.urls import urlpatterns as annotations_urls
 
 
 importer_api = Api(api_name='importer-api')
@@ -119,6 +120,8 @@ urlpatterns = patterns('',
     url(r'^layers/notify-download$', notify_download, name='notify-layer-download'),
 
 ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
+
+urlpatterns += annotations_urls
 
 urlpatterns += maploom_urls
 
