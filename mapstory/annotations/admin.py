@@ -1,4 +1,4 @@
-from geonode.annotations.models import Annotation
+from mapstory.annotations.models import Annotation
 from django.contrib import admin
 
 class AnnotationAdmin(admin.ModelAdmin):

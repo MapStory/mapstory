@@ -1,8 +1,8 @@
 from django import forms
-from geonode.annotations.models import Annotation
-from geonode.annotations.utils import datetime_to_seconds
-from geonode.annotations.utils import make_point
-from geonode.annotations.utils import parse_date_time
+from mapstory.annotations.models import Annotation
+from mapstory.annotations.utils import datetime_to_seconds
+from mapstory.annotations.utils import make_point
+from mapstory.annotations.utils import parse_date_time
 
 import json
 

@@ -22,6 +22,6 @@ from django.conf.urls import patterns, url
 
 
 urlpatterns = patterns(
-    'geonode.annotations.views',
+    'mapstory.annotations.views',
     url(r'^maps/(?P<mapid>\d+)/annotations$', 'annotations', name='annotations'),
 )

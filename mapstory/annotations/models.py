@@ -1,7 +1,7 @@
 from django.db import models
 from geonode.maps.models import Map
 #from geonode.maps.signals import map_copied_signal
-from geonode.annotations.utils import parse_date_time
+from mapstory.annotations.utils import parse_date_time
 from datetime import datetime
 from django.contrib.gis.db import models as gis
 

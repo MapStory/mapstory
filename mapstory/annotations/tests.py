@@ -3,9 +3,9 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.test.utils import override_settings
 from django.test.client import Client
-from geonode.annotations.models import Annotation
-from geonode.annotations.utils import make_point
-from geonode.annotations.utils import unicode_csv_dict_reader
+from mapstory.annotations.models import Annotation
+from mapstory.annotations.utils import make_point
+from mapstory.annotations.utils import unicode_csv_dict_reader
 from geonode.maps.models import Map
 import json
 import re

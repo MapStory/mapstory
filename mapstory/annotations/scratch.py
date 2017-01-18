@@ -1,5 +1,5 @@
-from geonode.annotations.models import Annotation
-from geonode.annotations.utils import make_point
+from mapstory.annotations.models import Annotation
+from mapstory.annotations.utils import make_point
 from geonode.maps.models import Map
 
 def make_annotations(mapid):
