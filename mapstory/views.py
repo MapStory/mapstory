@@ -527,7 +527,7 @@ class LeaderListView(ListView):
     model = Leader
 
 
-def test_view(req, template):
+def debug_view(req, template):
     return render_to_response('testing/%s.html' % template, RequestContext(req))
 
 
