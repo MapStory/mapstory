@@ -705,7 +705,7 @@ def layer_create(request, template='upload/layer_create.html'):
         if configuration_options['featureType'].get('editable') is True:
             configuration_options['storeCreateGeogig'] = True
 
-        store_name = '{0}-layers'.format(request.user.username)
+        store_name = '{0}-layers'.format(request.user.username.lower())
         configuration_options['featureType']['store']['name'] = store_name;
 
         creator = GeoServerLayerCreator()
