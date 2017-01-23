@@ -66,3 +66,7 @@ class TestSponsor(TestCase):
         """
         self.assertTrue(self.sponsor.image_tag().startswith('<img src="'))
         self.assertTrue(self.sponsor.image_tag().endswith('" />'))
+
+    def test_sponsor_name(self):
+        sponsor = Sponsor(name='My Sponsor Name')
+        self.assertEqual(unicode(sponsor), 'Sponsor - ' + sponsor.name)

@@ -4,7 +4,8 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 from geonode.maps.models import MapStory
-
+from mapstory.version import get_version
+from mapstory import __version__ as version
 User = get_user_model()
 
 def getTestUser():
@@ -26,7 +27,7 @@ def getTestUser():
 # Get a user for testing
 testUser = getTestUser()
 
-class TestMapstoryModel(TestCase):
+class TestMapstory(TestCase):
     """
     Mapstory Model Tests
     """
@@ -65,3 +66,13 @@ class TestMapstoryModel(TestCase):
         conf.abstract = "Test abstract"
         conf.is_published = True
         self.mapstory.update_from_viewer(conf)
+
+
+class TestMapstoryVersion(TestCase):
+    def test_did_import(self):
+        self.assertIsNotNone(get_version)
+
+    def test_get_version(self):
+        self.assertIsNotNone(get_version(None))
+        self.assertEqual(get_version(), "1.0c0")
+        self.assertEqual(get_version(version=version), "1.0c0")
