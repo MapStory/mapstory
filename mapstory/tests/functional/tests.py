@@ -27,7 +27,7 @@ class FunctionalTest(TestCase):
     """
     def setUp(self):
         self.browser = webdriver.PhantomJS(executable_path=r'/srv/git/mapstory/mapstory/node_modules/phantomjs/lib/phantom/bin/phantomjs')
-        self.browser.implicitly_wait(3)
+        self.browser.implicitly_wait(1)
         self.browser.set_window_size(1120,600)
 
     def tearDown(self):
