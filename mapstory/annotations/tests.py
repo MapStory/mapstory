@@ -47,7 +47,7 @@ class AnnotationsTest(TransactionTestCase):
 
     def make_annotations(self, mapobj, cnt=100):
         point = make_point(5, 23)
-        for a in xrange(cnt):
+        for a in range(cnt):
             # make sure some geometries are missing
             geom = point if cnt % 2 == 0 else None
             # make the names sort nicely by title/number
