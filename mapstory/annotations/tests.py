@@ -36,10 +36,6 @@ class AnnotationsTest(TransactionTestCase):
             # make the names sort nicely by title/number
             Annotation.objects.create(title='ann%2d' % a, map=mapobj, the_geom=geom).save()
 
-    def assertLoginRedirect(self, resp):
-        self.assertEqual(302, resp.status_code)
-        self.assertTrue(reverse('account_login') in resp['Location'])
-
     def test_copy_annotations(self):
         self.make_annotations(self.dummy)
 
@@ -88,7 +84,7 @@ class AnnotationsTest(TransactionTestCase):
         })
         # without login, expect failure
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
-        self.assertLoginRedirect(resp)
+        self.assertEqual(403, resp.status_code)
 
         # login and verify change accepted
         self.c.login(username='admin',password='admin')
@@ -126,7 +122,7 @@ class AnnotationsTest(TransactionTestCase):
         data = json.dumps({'action':'delete', 'ids':ids_to_delete})
         # verify failure before login
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
-        self.assertLoginRedirect(resp)
+        self.assertEqual(403, resp.status_code)
 
         # now check success
         self.c.login(username='admin',password='admin')
@@ -157,9 +153,11 @@ class AnnotationsTest(TransactionTestCase):
             u"2,bunk,\u201c,20,30,,,"
         ).encode('utf-8'))
         fp.seek(0)
+
         # verify failure before login
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]),{'csv':fp})
-        self.assertLoginRedirect(resp)
+        self.assertEqual(403, resp.status_code)
+
         # still only 2 annotations
         self.assertEqual(2, Annotation.objects.filter(map=self.dummy.id).count())
 
