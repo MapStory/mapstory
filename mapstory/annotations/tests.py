@@ -110,6 +110,7 @@ class AnnotationsTest(TransactionTestCase):
         # login and verify change accepted
         self.c.login(username="test_admin", password="test_admin")
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
+        self.assertEqual(200, resp.status_code)
         ann = Annotation.objects.get(id=ann.id)
         self.assertEqual(ann.title, "new title")
         get_x = lambda ann: int(json.loads(ann.the_geom)['coordinates'][0])
@@ -127,6 +128,7 @@ class AnnotationsTest(TransactionTestCase):
             }]
         })
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
+        self.assertEqual(200, resp.status_code)
         resp = json.loads(resp.content)
         self.assertEqual(resp['success'], True)
         ann = Annotation.objects.get(id=ann.id + 1)
@@ -148,6 +150,7 @@ class AnnotationsTest(TransactionTestCase):
         # now check success
         self.c.login(username="test_admin", password="test_admin")
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
+        self.assertEqual(200, resp.status_code)
 
         # these are gone
         ann = Annotation.objects.filter(id__in=ids_to_delete)
@@ -187,6 +190,7 @@ class AnnotationsTest(TransactionTestCase):
 
         fp.seek(0)
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]),{'csv':fp})
+        self.assertEqual(200, resp.status_code)
         # response type must be text/html for ext fileupload
         self.assertEqual('text/html', resp['content-type'])
         jsresp = json.loads(resp.content)
