@@ -29,6 +29,10 @@ class AnnotationsTest(TransactionTestCase):
 
         return username, password
 
+    def get_x(self, annotation):
+        x_coord = int(json.loads(annotation.the_geom)['coordinates'][0])
+        return x_coord
+
     def setUp(self):
         user_model = get_user_model()
 
@@ -113,8 +117,7 @@ class AnnotationsTest(TransactionTestCase):
         self.assertEqual(200, resp.status_code)
         ann = Annotation.objects.get(id=ann.id)
         self.assertEqual(ann.title, "new title")
-        get_x = lambda ann: int(json.loads(ann.the_geom)['coordinates'][0])
-        self.assertEqual(get_x(ann), 5)
+        self.assertEqual(self.get_x(ann), 5)
         self.assertEqual(ann.end_time, 1371136048)
         self.assertEqual(ann.start_time, 978307200)
 
@@ -199,13 +202,12 @@ class AnnotationsTest(TransactionTestCase):
         # we uploaded 3, the other 2 should be deleted (overwrite mode)
         self.assertEqual(3, ann.count())
         ann = Annotation.objects.get(title='bar foo')
-        get_x = lambda ann: int(json.loads(ann.the_geom)['coordinates'][0])
-        self.assertEqual(get_x(ann), 20.)
+        self.assertEqual(self.get_x(ann), 20.)
         ann = Annotation.objects.get(title='bunk')
         self.assertTrue(u'\u201c', ann.content)
         ann = Annotation.objects.get(title='foo bar')
         self.assertEqual('foo bar', ann.title)
-        self.assertEqual(get_x(ann), 10.)
+        self.assertEqual(self.get_x(ann), 10.)
 
         resp = self.c.get(reverse('annotations',args=[self.dummy.id]) + "?csv")
         # verify each row has the same number of fields, even if some fields
