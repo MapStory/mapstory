@@ -17,6 +17,18 @@ class AnnotationsTest(TransactionTestCase):
     fixtures = ['initial_data.json', 'map_data.json', 'sample_admin.json']
     c = Client()
 
+    def create_user(self, username, password, **kwargs):
+        """
+        Convenience method for creating users.
+        """
+        user, created = get_user_model().objects.get_or_create(username=username, **kwargs)
+
+        if created:
+            user.set_password(password)
+            user.save()
+
+        return username, password
+
     def setUp(self):
         user_model = get_user_model()
         self.admin = user_model.objects.get(username='admin')
