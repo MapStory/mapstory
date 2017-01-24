@@ -19,7 +19,6 @@ class AnnotationsTest(TransactionTestCase):
 
     def setUp(self):
         user_model = get_user_model()
-        self.bobby, _ = user_model.objects.get_or_create(username='bobby')
         self.admin = user_model.objects.get(username='admin')
         admin_map = Map.objects.create(owner=self.admin, zoom=1, center_x=0, center_y=0, title='map1')
         # have to use a 'dummy' map to create the appropriate JSON
