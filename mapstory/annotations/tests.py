@@ -31,13 +31,19 @@ class AnnotationsTest(TransactionTestCase):
 
     def setUp(self):
         user_model = get_user_model()
-        self.admin = user_model.objects.get(username='admin')
+
+        test_admin_user, test_admin_password = self.create_user(username='test_admin', password='test_admin', is_superuser=True)
+
+        self.admin = user_model.objects.get(username='test_admin')
+
         admin_map = Map.objects.create(owner=self.admin, zoom=1, center_x=0, center_y=0, title='map1')
+
         # have to use a 'dummy' map to create the appropriate JSON
         dummy = Map.objects.get(id=admin_map.id)
         dummy.id = None  # let Django auto-gen a good PK
         dummy.save()
         self.dummy = dummy
+        self.admin_map = admin_map
 
     def make_annotations(self, mapobj, cnt=100):
         point = make_point(5, 23)
@@ -102,7 +108,7 @@ class AnnotationsTest(TransactionTestCase):
         self.assertEqual(403, resp.status_code)
 
         # login and verify change accepted
-        self.c.login(username='admin',password='admin')
+        self.c.login(username="test_admin", password="test_admin")
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
         ann = Annotation.objects.get(id=ann.id)
         self.assertEqual(ann.title, "new title")
@@ -140,7 +146,7 @@ class AnnotationsTest(TransactionTestCase):
         self.assertEqual(403, resp.status_code)
 
         # now check success
-        self.c.login(username='admin',password='admin')
+        self.c.login(username="test_admin", password="test_admin")
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
 
         # these are gone
@@ -177,7 +183,8 @@ class AnnotationsTest(TransactionTestCase):
         self.assertEqual(2, Annotation.objects.filter(map=self.dummy.id).count())
 
         # login, rewind the buffer and verify
-        self.c.login(username='admin',password='admin')
+        self.c.login(username="test_admin", password="test_admin")
+
         fp.seek(0)
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]),{'csv':fp})
         # response type must be text/html for ext fileupload
