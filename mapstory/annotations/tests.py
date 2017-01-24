@@ -24,7 +24,7 @@ class AnnotationsTest(TestCase):
         admin_map = Map.objects.create(owner=self.admin, zoom=1, center_x=0, center_y=0, title='map1')
         # have to use a 'dummy' map to create the appropriate JSON
         dummy = Map.objects.get(id=admin_map.id)
-        dummy.id += 1
+        dummy.id = None  # let Django auto-gen a good PK
         dummy.save()
         self.dummy = dummy
 
@@ -46,7 +46,7 @@ class AnnotationsTest(TestCase):
         admin_map = Map.objects.create(owner=self.admin, zoom=1, center_x=0, center_y=0, title='map2')
         # have to use a 'dummy' map to create the appropriate JSON
         target = Map.objects.get(id=admin_map.id)
-        target.id += 1
+        target.id = None  # let Django auto-gen a good PK
         target.save()
 
         Annotation.objects.copy_map_annotations(self.dummy.id, target)
@@ -112,16 +112,18 @@ class AnnotationsTest(TestCase):
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
         resp = json.loads(resp.content)
         self.assertEqual(resp['success'], True)
-        self.assertEqual([2], resp['ids'])
         ann = Annotation.objects.get(id=ann.id + 1)
         self.assertEqual(ann.title, "new ann")
 
     def test_delete(self):
         '''test delete operations'''
 
-        # make 10 annotations, drop 4-7
+        # make 10 annotations, drop numbers 4-7
         self.make_annotations(self.dummy, 10)
-        data = json.dumps({'action':'delete', 'ids':range(4,8)})
+        current_anns = Annotation.objects.filter(map=self.dummy)
+        titles_to_delete = [u'ann 4', u'ann 5', u'ann 6', u'ann 7']
+        ids_to_delete = [ann.id for ann in current_anns if ann.title in titles_to_delete]
+        data = json.dumps({'action':'delete', 'ids':ids_to_delete})
         # verify failure before login
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
         self.assertLoginRedirect(resp)
@@ -129,8 +131,9 @@ class AnnotationsTest(TestCase):
         # now check success
         self.c.login(username='admin',password='admin')
         resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
+
         # these are gone
-        ann = Annotation.objects.filter(id__in=range(4,8))
+        ann = Annotation.objects.filter(id__in=ids_to_delete)
         self.assertEqual(0, ann.count())
         # six remain
         ann = Annotation.objects.filter(map=self.dummy)
