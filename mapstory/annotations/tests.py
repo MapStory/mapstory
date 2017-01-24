@@ -1,8 +1,8 @@
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
-from django.test import TestCase
 from django.test.utils import override_settings
 from django.test.client import Client
+from django.test import TransactionTestCase
 from mapstory.annotations.models import Annotation
 from mapstory.annotations.utils import make_point
 from mapstory.annotations.utils import unicode_csv_dict_reader
@@ -13,7 +13,7 @@ import tempfile
 
 
 @override_settings(DEBUG=True)
-class AnnotationsTest(TestCase):
+class AnnotationsTest(TransactionTestCase):
     fixtures = ['initial_data.json', 'map_data.json', 'sample_admin.json']
     c = Client()
 
