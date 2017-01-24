@@ -28,7 +28,7 @@ def _annotations_get(req, mapid):
         ann = ann[start:end]
 
     if 'csv' in req.GET:
-        response = HttpResponse(mimetype='text/csv')
+        response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename=map-%s-annotations.csv' % mapobj.id
         response['Content-Encoding'] = 'utf-8'
         writer = csv.writer(response)
