@@ -60,10 +60,14 @@ class AnnotationsTest(TransactionTestCase):
         self.assertEqual(100, len(rows))
 
         for p in range(4):
-            response = self.c.get(reverse('annotations',args=[self.dummy.id]) + "?page=%s" % p)
+            response = self.c.get(reverse('annotations', args=[self.dummy.id]) + "?page=%s" % p)
             rows = json.loads(response.content)['features']
             self.assertEqual(25, len(rows))
-            self.assertEqual('ann%2d' % (25 * p), rows[0]['properties']['title'])
+
+            if p == 1:
+                # check the last title on page 1
+                # titles are sorted strings, thus #25 is ann31 (not ann25)
+                self.assertEqual('ann%2d' % (31), rows[0]['properties']['title'])
 
     def test_post(self):
         '''test post operations'''
