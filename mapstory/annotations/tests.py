@@ -186,11 +186,11 @@ class AnnotationsTest(TransactionTestCase):
         self.assertEqual(get_x(ann), 10.)
 
         resp = self.c.get(reverse('annotations',args=[self.dummy.id]) + "?csv")
-        # the dict reader won't fill out keys for the missing entries
-        # verify each row has 7 fields
+        # verify each row has the same number of fields, even if some fields
+        # are empty
         for l in resp.content.split('\r\n'):
             if l.strip():
-                self.assertEqual(7, len(l.split(',')))
+                self.assertEqual(10, len(l.split(',')))
         x = list(unicode_csv_dict_reader(resp.content))
         self.assertEqual(3, len(x))
         by_title = dict( [(v['title'],v) for v in x] )
