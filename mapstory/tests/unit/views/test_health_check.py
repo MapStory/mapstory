@@ -13,8 +13,10 @@ class HealthCheckViewTest(MapStoryTestMixin):
         pass
     
     def test_responses(self):
-        self.userclient.login_as_admin()
-        response = self.userclient.get(reverse('health_check'))
+        self.userclient.login_as_non_admin(username=self.test_username, password=self.test_password)
+        response = self.userclient.get(reverse('health_check'), follow=True)
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'health_check/dashboard.html')
+
 
 
