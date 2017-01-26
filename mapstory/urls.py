@@ -137,7 +137,7 @@ urlpatterns += patterns("",url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.
 
 if settings.DEBUG:
     urlpatterns = urlpatterns + patterns('',
-        url(r'^testing/(?P<template>.*)$', 'mapstory.views.test_view'),
+        url(r'^testing/(?P<template>.*)$', 'mapstory.views.debug_view'),
     )
 
 if settings.LOCAL_CONTENT:
