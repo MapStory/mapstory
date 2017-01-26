@@ -9,6 +9,7 @@ Install Phantom JS inside the mapstory directory with:
 `npm install PhantomJS`
 
 """
+'''
 from django.test import TestCase
 from django.conf import settings
 
@@ -86,6 +87,4 @@ class TestSearchFunctionality(FunctionalTest):
         # the page changes to show results if any
         self.assertIn('search', self.browser.current_url, 'search not in URL')
         self.check_for_text_in_search_results(u'Lewisandclark')
-
-
-
+'''

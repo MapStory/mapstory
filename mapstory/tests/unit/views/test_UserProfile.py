@@ -96,16 +96,28 @@ class ProfileDetailViewTest(MapStoryTestMixin):
         response = self.userclient.get(reverse('profile_delete', kwargs={'username':'nonexistentuser'}), follow=True)
         self.assertEqual(response.status_code, 404)
 
-    def test_profile_delete(self):
+    def test_profile_delete_get(self):
         self.userclient.login_as_non_admin(username=self.test_username, password=self.test_password)
         response = self.userclient.get(reverse('profile_delete', kwargs={'username':self.test_username}), follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'people/profile_delete.html')
 
+    def test_profile_delete_post(self):
+        self.userclient.login_as_non_admin(username=self.test_username, password=self.test_password)
+        # Create new organization
+        form_data = {
+            'is_active': False,
+        }
+        response = self.userclient.post(
+            reverse('profile_delete', kwargs={'username':self.test_username}), 
+            data=form_data,
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'index.html')
 
+        response = self.client.get(reverse('profile_detail', kwargs={'slug':self.test_username}), follow=True)
+        self.assertEqual(response.status_code, 200)
 
-
-
-
-
-
+        #TODO: Assert the deactivated page
+        # self.assertContains(response, 'deactivated')

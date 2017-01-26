@@ -492,7 +492,7 @@ NOSE_ARGS = [
     # '--with-id',
     # '--pdb',
     # '--verbosity=3',
-    '--stop',
+    # '--stop',
 ]
 
 # Override number of results per page listed in the GeoNode search pages
