@@ -86,9 +86,9 @@ class AnnotationsTest(TransactionTestCase):
             self.assertEqual(25, len(rows))
 
             if p == 1:
-                # check the last title on page 1
-                # titles are sorted strings, thus #25 is ann31 (not ann25)
-                self.assertEqual('ann%2d' % (31), rows[0]['properties']['title'])
+                # check the first title on page 2
+                # titles are sorted strings, thus #26 is ann31 (not ann26)
+                self.assertEqual('ann31', rows[0]['properties']['title'])
 
     def test_post(self):
         '''test post operations'''
