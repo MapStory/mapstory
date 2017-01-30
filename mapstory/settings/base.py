@@ -353,9 +353,11 @@ if DATABASE_PASSWORD:
     GEOGIG_DATASTORE_NAME = 'geogig'
 
 SCHEMA_DOWNLOAD_EXCLUDE = [
+    'FID',
     'ogc_fid',
     'date_xd',
     'date_parsed',
+    'wkb_geometry',
 ]
 
 LOGGING = {
@@ -407,7 +409,8 @@ LOGGING = {
             "handlers": ["console"], "level": "ERROR", },
         "elasticsearch": {
             "handlers": ["console"], "level": "ERROR", },
-
+        "osgeo_importer": {
+            "handlers": ["console"], "level": "DEBUG", },
     },
 }
 
