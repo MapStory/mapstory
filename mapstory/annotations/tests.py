@@ -51,11 +51,16 @@ class AnnotationsTest(TransactionTestCase):
 
     def make_annotations(self, mapobj, cnt=100):
         point = make_point(5, 23)
+        end_time = 9999999999
         for a in range(cnt):
+            # make our fake start time sort in order of creation
+            start_time = "0000000%03d" % a
             # make sure some geometries are missing
             geom = point if cnt % 2 == 0 else None
             # make the names sort nicely by title/number
-            Annotation.objects.create(title='ann%2d' % a, map=mapobj, the_geom=geom).save()
+            Annotation.objects.create(title='ann%2d' % a, map=mapobj,
+                                      start_time=start_time,
+                                      end_time=end_time, the_geom=geom).save()
 
     def test_copy_annotations(self):
         self.make_annotations(self.dummy)
@@ -85,10 +90,11 @@ class AnnotationsTest(TransactionTestCase):
             rows = json.loads(response.content)['features']
             self.assertEqual(25, len(rows))
 
-            if p == 1:
-                # check the last title on page 1
-                # titles are sorted strings, thus #25 is ann31 (not ann25)
-                self.assertEqual('ann%2d' % (31), rows[0]['properties']['title'])
+            titles = [row['properties']['title'] for row in rows]
+            # check the first title on each page
+            # because make_annotations() creates a set sorted by start_time,
+            # these should be: (ann 0, ann25, ann50, ann75)
+            self.assertEqual('ann%2d' % (p * 25), titles[0])
 
     def test_post(self):
         '''test post operations'''
