@@ -60,6 +60,47 @@
                 </div>
             </wz-step>
 
+            <wz-step title="Time" wz-disabled="{{ appending() === true ? false : 'true' }}" canexit="layer.configuration_options.start_date != null" class="row">
+                <div class="modal-content-inner">
+                    <div class="gray-container">
+                        <div class="step-title">Configure Time</div>
+                        <div>All datasets uploaded must contain time information. If the dataset contains only one timeslice, add a column
+                            indicating
+                            the timeslice.</div>
+                        <form name="importOptionsForm" class="form-horizontal import-options-form">
+                            <div class="form-group">
+                                <label for="start_date" class="col-sm-4 col-xs-4 col-md-4 control-label">Start Time</label>
+                                <select ng-model="layer.configuration_options.start_date" class="col-md-5 col-xs-5 col-sm-5 input-md" id="start_date"
+                                        ng-required='layer.configuration_options'>
+                                    <option value="" ng-selected="'' == layer.configuration_options.start_date">--Please select a field--</option>
+                                    <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.start_date"
+                                            value="{{ option.name }}">{{ option.name }}</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="end_date" class="col-sm-4 col-xs-4 col-md-4 control-label">Optional End Time</label>
+                                <select ng-model="layer.configuration_options.end_date" class="col-md-5 col-xs-5 col-sm-5 input-md" id="end_date">
+                                    <option value="" ng-selected="'' == layer.configuration_options.end_date">--Please select a field--</option>
+                                    <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.end_date"
+                                            value="{{ option.name }}">{{ option.name }}</option>
+                                </select>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="row modal-content-footer">
+                    <div class="col-md-6 import-wizard-button">
+                        <button class="btn btn-block" type="submit" wz-previous value="Previous Step"><i class="fa fa-arrow-left"></i> Previous Step
+                        </button>
+                    </div>
+                    <div class="col-md-6 import-wizard-button">
+                        <button class="btn btn-block" type="submit" wz-next value="Next Step">Next Step <i class="fa fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </wz-step>
+
             <wz-step title="Append" wz-disabled="{{ appending() === true ? false : 'true' }}" class="row">
                 <div class="modal-content-inner">
                     <div class="gray-container">
