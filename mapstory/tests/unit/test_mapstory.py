@@ -9,7 +9,7 @@ from ...version import get_version
 from ... import __version__ as version
 from ..MapStoryTestMixin import MapStoryTestMixin
 from ..utils import get_test_user, create_mapstory
-from ...forms import KeywordsForm
+from ...forms import KeywordsForm, PublishStatusForm
 
 testUser = get_test_user()
 
@@ -99,9 +99,26 @@ class MapViewsTest(MapStoryTestMixin):
         # Should handle Keywords form post
         form_data = {'keywords': ['testKeyword01','testKeyword02','testKeyword03']}
         form = KeywordsForm(data=form_data)
-        self.assertIsTrue(form.is_valid())
+        self.assertTrue(form.is_valid())
         response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": testMapstory.id}), form_data)
         self.assertEquals(response.status_code, 200)
+
+    def test_mapstory_detail_publish_status_form(self):
+        # Should not be published yet
+        testMapstory = create_mapstory(testUser, 'Testing Map 03')
+        self.assertFalse(testMapstory.is_published)
+
+        # Send POST
+        form_data = {'is_published': True, 'published_submit_btn': True}
+        form = PublishStatusForm(data=form_data)
+        self.assertTrue(form.is_valid())
+        response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": testMapstory.id}), form_data)
+        self.assertEquals(response.status_code, 200)
+
+        # Should be published
+        testMapstory = MapStory.objects.get(id=testMapstory.id)
+        self.assertTrue(testMapstory.is_published)
+
 
 
 
