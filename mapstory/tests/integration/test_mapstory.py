@@ -1,6 +1,6 @@
 from unittest import skip
-
 from account.models import EmailConfirmation
+
 from django.core.urlresolvers import reverse
 from django.core import mail
 from django.contrib.auth import get_user_model, authenticate

@@ -1,31 +1,18 @@
 from unittest import skip
 
+from django.core.urlresolvers import reverse
 from django.test import TestCase
-from django.contrib.auth import get_user_model
 
 from geonode.maps.models import MapStory
-from mapstory.version import get_version
-from mapstory import __version__ as version
-User = get_user_model()
 
-def getTestUser():
-    """
-    Returns an existing user or
-    a new one if no users exist.
+from ...version import get_version
+from ... import __version__ as version
+from ..MapStoryTestMixin import MapStoryTestMixin
+from ..utils import get_test_user, create_mapstory
+from ...forms import KeywordsForm
 
-    Returns:
-        TYPE: User 
-    """
-    allUsers = User.objects.all()
-    if allUsers.count() > 0 :
-        return allUsers[0]
-    else :
-        return User.objects.create_user(username='modeltester',
-                                 email='modeltester@models.com',
-                                 password='glassonion232123')
+testUser = get_test_user()
 
-# Get a user for testing
-testUser = getTestUser()
 
 class TestMapstory(TestCase):
     """
@@ -68,6 +55,7 @@ class TestMapstory(TestCase):
         self.mapstory.update_from_viewer(conf)
 
 
+
 class TestMapstoryVersion(TestCase):
     def test_did_import(self):
         self.assertIsNotNone(get_version)
@@ -76,3 +64,44 @@ class TestMapstoryVersion(TestCase):
         self.assertIsNotNone(get_version(None))
         self.assertEqual(get_version(), "1.0c0")
         self.assertEqual(get_version(version=version), "1.0c0")
+
+
+
+class MapViewsTest(MapStoryTestMixin):
+    def test_mapstory_detail_view(self):
+        testMapstory = create_mapstory(testUser, 'Testing Map 01')
+        self.assertIsNotNone(testMapstory)
+        self.assertIsNotNone(testMapstory.id)
+
+        # Should exist in the database
+        found = MapStory.objects.get(id=testMapstory.id)
+        self.assertEquals(found.title, testMapstory.title)
+        # Should get a 200 response from the URL
+        response = self.client.get(reverse('mapstory_detail', kwargs={"mapid": testMapstory.id}))
+        self.assertEquals(response.status_code, 200)
+
+        # Should use the correct template
+        self.assertTemplateUsed(response, 'maps/map_detail.html')
+        self.assertContains(response, testMapstory.title)
+
+    def test_post_mapstory_detail_keyword_post(self):
+        # Should create add a keyword
+        testMapstory = create_mapstory(testUser, 'Testing Map 02')
+        response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": testMapstory.id}), {'add_keyword': 'test_keyword'})
+        self.assertEquals(response.status_code, 200)
+
+        # Should remove the keyword
+        response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": testMapstory.id}),
+                                    {'remove_keyword': 'test_keyword'})
+
+        self.assertEquals(response.status_code, 200)
+
+        # Should handle Keywords form post
+        form_data = {'keywords': ['testKeyword01','testKeyword02','testKeyword03']}
+        form = KeywordsForm(data=form_data)
+        self.assertIsTrue(form.is_valid())
+        response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": testMapstory.id}), form_data)
+        self.assertEquals(response.status_code, 200)
+
+
+

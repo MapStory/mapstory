@@ -15,6 +15,7 @@ from ...admin import (
     CustomSiteAdmin,
     content_html
 )
+
 from ...journal.admin import JournalEntryAdmin
 from ...models import GetPage, GetPageContent
 
