@@ -22,6 +22,7 @@ from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_downlo
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
+from mapstory.views import new_map
 from mapstory.views import organization_create, organization_edit, organization_detail, organization_members
 from mapstory.views import organization_invite, organization_members_add, organization_member_remove
 from mapstory.views import initiative_create, initiative_edit, initiative_detail, initiative_members
@@ -29,6 +30,7 @@ from mapstory.views import initiative_invite, initiative_members_add, initiative
 from tastypie.api import Api
 from mapstory.api import UploadedLayerResource
 from annotations.urls import urlpatterns as annotations_urls
+
 
 
 importer_api = Api(api_name='importer-api')
@@ -63,6 +65,7 @@ urlpatterns = patterns('',
 
     url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
     url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
+    url(r'^maps/new_map', new_map, name='new_map'),
 
     url(r'^story/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
     url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),

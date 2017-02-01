@@ -1,7 +1,7 @@
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
 
-from mapstory.admin import (
+from ...admin import (
     GetPageAdmin, 
     GetPageChoiceField, 
     GetPageContentForm, 
@@ -13,10 +13,14 @@ from mapstory.admin import (
     LeaderAdmin, 
     ParallaxImageAdmin, 
     CustomSiteAdmin,
+    content_html
 )
-from mapstory.journal.admin import JournalEntryAdmin
-from mapstory.models import GetPage, GetPageContent
+from ...journal.admin import JournalEntryAdmin
+from ...models import GetPage, GetPageContent
 
+class DummyHTMLObj(object):
+    def html(self):
+        return "<html>Testing</html>"
 
 class TestAdmin(TestCase):
     def setUp(self):
@@ -54,3 +58,7 @@ class TestAdmin(TestCase):
         getPageContentAdmin = GetPageContentAdmin(self.getPageContent, self.site)
         self.assertIsNotNone(getPageContentAdmin)
         self.assertIsInstance(getPageContentAdmin, GetPageContentAdmin)
+
+    def test_content_html(self):
+        obj = DummyHTMLObj()
+        self.assertHTMLEqual(obj.html(), content_html(obj))

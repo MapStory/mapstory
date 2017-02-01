@@ -10,6 +10,8 @@ from .forms import StoryBoxForm
 from .utils import parse_date_time, datetime_to_seconds, make_point
 from .models import StoryBox
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
+from django.test import TestCase
+from mapstory.apps.boxes.views import boxes
 
 # @TODO Replace this with something better that doesn't specify a username and password.
 class AdminClient(Client):
@@ -148,3 +150,31 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         self.assertEqual(box.zoom, feature['properties']['zoom'])
         self.assertEqual(eval(box.center), feature['properties']['center'])
         self.assertEqual(eval(box.speed), feature['properties']['speed'])
+
+
+
+class BoxesViewUnitTests(TestCase):
+    def test__boxes_get(self):
+        self.assertIsNotNone(boxes)
+
+    def test_boxes(self):
+        try:
+            boxes()
+            self.fail("Expected an exception")
+        except Exception as inst:
+            self.assertEqual(inst.message, "boxes() takes exactly 2 arguments (0 given)")
+
+
+        try:
+            boxes({},{})
+            self.fail("Expected an exception")
+        except Exception as inst:
+            self.assertIsNotNone(inst.message)
+
+
+        # try:
+        # except Exception as inst:
+            # self.assertEqual(inst.message, "ContentType matching query does not exist.")
+
+
+
