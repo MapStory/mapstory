@@ -69,7 +69,7 @@ from lxml import etree
 from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 
 from .notifications import PROFILE_NOTICE_SETTINGS
-from osgeo_importer.utils import UploadError
+from osgeo_importer.utils import UploadError, launder
 
 import json
 import os
@@ -707,6 +707,12 @@ def layer_create(request, template='upload/layer_create.html'):
 
         store_name = '{0}-layers'.format(request.user.username.lower())
         configuration_options['featureType']['store']['name'] = store_name
+
+        # Launder the name of each attribute to ensure that there's no spaces or special characters,
+        # as they will break the functionality of adding and editing features.
+        for attribute in configuration_options['featureType']['attributes']['attribute']:
+            attribute['name'] = launder(attribute['name'])
+            print attribute['name']
 
         creator = GeoServerLayerCreator()
         try:
