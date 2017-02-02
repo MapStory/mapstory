@@ -16,8 +16,8 @@ from geonode.geoserver.helpers import gs_catalog
 from geonode.groups.models import GroupProfile
 from geonode.layers.models import Layer
 
-from ..AdminClient import AdminClient
-from ..MapStoryTestMixin import MapStoryTestMixin
+from mapstory.tests.AdminClient import AdminClient
+from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 
 User = get_user_model()
 

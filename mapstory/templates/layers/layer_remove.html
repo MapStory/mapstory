@@ -17,11 +17,11 @@
     <p> This layer has {% verbatim %}{{ stats.totalCommits | number}}{% endverbatim %} community contributions and {{ num_comments }} comments that will also be removed. </p>
   <div>
 </div>
-    <form action="{% url "layer_remove" layer.service_typename %}" method="POST">
+    <form action="{% url 'layer_remove' layer.service_typename %}" method="POST">
       {% csrf_token %}
       <input type="hidden" value="{{ layer.service_typename }}" />
       <div class="form-actions">
-        <input type="submit" value="{% trans "Yes, I am sure" %}" class="btn btn-danger" />
+        <input type="submit" value="{% trans 'Yes, I am sure' %}" class="btn btn-danger" />
         <a href="{{ layer.get_absolute_url }}" class="btn btn-default">{% trans "No, don't delete it" %}</a>
       </div>
     </form>

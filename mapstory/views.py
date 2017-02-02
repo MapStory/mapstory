@@ -527,7 +527,7 @@ class LeaderListView(ListView):
     model = Leader
 
 
-def test_view(req, template):
+def debug_view(req, template):
     return render_to_response('testing/%s.html' % template, RequestContext(req))
 
 
@@ -706,7 +706,7 @@ def layer_create(request, template='upload/layer_create.html'):
             configuration_options['storeCreateGeogig'] = True
 
         store_name = '{0}-layers'.format(request.user.username.lower())
-        configuration_options['featureType']['store']['name'] = store_name;
+        configuration_options['featureType']['store']['name'] = store_name
 
         creator = GeoServerLayerCreator()
         try:

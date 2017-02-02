@@ -1,7 +1,7 @@
 from django.test import TestCase
 from mapstory.apps.flag.templatetags.flag_tags import flag
 
-class FlagTagUnitTest(TestCase):
+class Test_flag_tags(TestCase):
     def test_flag(self):
         self.assertIsNotNone(flag)
 

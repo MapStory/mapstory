@@ -14,39 +14,7 @@ from mapstory.views import organization_create, organization_edit, organization_
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 from mapstory.tests.AdminClient import AdminClient
 
-class TestUnitOrganizations(TestCase):
-    def test_view_imports(self):
-        self.assertIsNotNone(organization_create, "Failed to import 'organization_create'")
-        self.assertIsNotNone(organization_edit, "Failed to import 'organization_edit'")
-        self.assertIsNotNone(organization_detail, "Failed to import 'organization_detail'")
-        self.assertIsNotNone(organization_members, "Failed to import 'organization_members'")
-
-    def test_url_api(self):
-        self.assertEqual(reverse('organization_create'), u'/organizations/create/')
-        self.assertEqual(reverse('organization_edit', kwargs={'slug': 'testslug'}), u'/organizations/edit/testslug')
-        self.assertEqual(reverse('organization_detail', kwargs={'slug': 'testslug'}), u'/organizations/testslug')
-        self.assertEqual(reverse('organization_members', kwargs={'slug': 'testslug'}), u'/organizations/members/testslug')
-
-    def test_create_unauthorized(self):
-        # TODO: Test creating with guest user
-        pass
-
-    def test_create_authorized(self):
-        # TODO: Test creating 
-        # c = Client()
-        pass
-        # c.put(reverse('organization_create'), )
-
-    def test_create_template(self):
-        # TODO: Figure out the template
-        # Should use the correct template
-        c = Client()
-        response = c.get(reverse('index_view'))
-        self.assertContains(response, "<!DOCTYPE html>", count=1, status_code=200, html=False)
-        # self.assertTemplateUsed()
-        # 
-
-class MapStoryOrganizationTests(MapStoryTestMixin):
+class TestOrganizations(MapStoryTestMixin):
     def setUp(self):
         self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
         self.non_admin_username, self.non_admin_password = self.create_user('non_admin', 'non_admin')
@@ -343,15 +311,3 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         self.assertEqual(len(managers), 1)
         self.assertEqual(managers[0].username, 'admin')
 
-    def test_organization_form(self):
-        admin = AdminClient()
-        admin.login_as_admin()
-
-        # Get an empty form
-        response = admin.get(reverse('organization_create'))
-        self.assertEqual(response.status_code, 200)
-
-        soup = BeautifulSoup(response.content)
-
-        # Should have 27 fields total
-        self.assertEqual(len(soup.find_all('input')), 28)

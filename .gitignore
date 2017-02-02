@@ -25,3 +25,5 @@ mapstory/importer/static/importer/bower_components
 cover
 .coverage
 result.json
+.noseids
+ghostdriver.log

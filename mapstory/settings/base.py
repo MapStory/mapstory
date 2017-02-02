@@ -486,7 +486,17 @@ NOSE_ARGS = [
     # '--cover-erase',
     # '--cover-html',
     '--exe',
-    '--ignore-files=(^\.|^_|pavement\.py$|fabfile\.py$|_settings\.py$|cf\.py$|search_indexes\.py$)'
+    # This:
+    '--ignore-files=(^\.|^_|pavement\.py$|fabfile\.py$|_settings\.py$|cf\.py$|search_indexes\.py$)',
+    # Is not the same as this:
+    # '--exclude=(^\.|^_|pavement\.py$|fabfile\.py$|_settings\.py$|cf\.py$|search_indexes\.py$)',
+    '--all-modules',
+    '--traverse-namespace',
+    # '--detailed-errors',
+    # '--with-id',
+    # '--pdb',
+    # '--verbosity=3',
+    # '--stop',
 ]
 
 # Override number of results per page listed in the GeoNode search pages
