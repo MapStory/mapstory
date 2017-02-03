@@ -6,6 +6,8 @@ mapstory
 
 Please visit [our wiki](https://github.com/MapStory/mapstory/wiki)
 
+Interested in seeing our progress?  We're keeping track of what is going on using our [Waffle kanban board](https://waffle.io/MapStory/mapstory).
+
 Deployment
 ----------
 
