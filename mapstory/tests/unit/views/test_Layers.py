@@ -1,23 +1,44 @@
 import os
 import json
+import time
 
 from django.core.urlresolvers import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 
+from geonode.geoserver.helpers import ogc_server_settings
 from geonode.layers.models import Layer
+from geoserver.catalog import Catalog
+
 
 from ...MapStoryTestMixin import MapStoryTestMixin
 from ...AdminClient import AdminClient
-from ...utils import create_admin_user
+from ...utils import create_admin_user, generate_testname
 
-import time
 
 User = get_user_model()
 test_layer_file_path = '/srv/git/mapstory/mapstory/mapstory/tests/sampledata/lewisandclarktrail.csv'
 
+
+
+def getLayerCatalog():
+    rest_url = ogc_server_settings.rest
+    rest_user = ogc_server_settings.credentials.username
+    rest_pass = ogc_server_settings.credentials.password
+    return Catalog(rest_url, rest_user, rest_pass)
+
+
 class TestLayerViews(MapStoryTestMixin):
+
+    def login_admin(self):
+        try:
+            user = User.objects.get(username='admin')
+        except User.DoesNotExist:
+            create_admin_user("admin", "admin")
+
+        self.admin_client.login_as_admin("admin", "admin")
+
 
     def setUp(self):
         self.admin_client = AdminClient()
@@ -41,10 +62,7 @@ class TestLayerViews(MapStoryTestMixin):
 
 
     def test_csv_layer_upload(self):
-        # Admin should exist
-        create_admin_user("admin", "admin")
-        self.assertIsNotNone(User.objects.get(username='admin'))
-        self.admin_client.login_as_admin("admin", "admin")
+        self.login_admin()
 
         # Upload the file
         with open(test_layer_file_path) as fp:
@@ -53,17 +71,56 @@ class TestLayerViews(MapStoryTestMixin):
             self.assertTemplateNotUsed(response, 'account/login.html')
 
 
-    def test_layer_create_wizard_views(self):
-        file_location = '/srv/git/mapstory/mapstory/mapstory/tests/sampledata/json/layer_create_config.json'
-        with open(file_location) as payload:
-            response = self.admin_client.post(
-                reverse('layer_create'),
-                content_type="application/json",
-                data=payload,
-                follow=True
-            )
+    def test_layer_create_wizard(self):
+        self.login_admin()
 
-            self.assertEquals(200, response.status_code)
+        # Should be emtpty
+        catalog = getLayerCatalog()
+        current_layer_count = len(catalog.get_layers())
+
+        # POST json to layer_create view
+        file_location = '/srv/git/mapstory/mapstory/mapstory/tests/sampledata/json/layer_create_config.json'
+        filename = generate_testname(prefix="layer", size=5)
+        payload = """{
+            "featureType":{
+                "attributes":{
+                    "attribute":[
+                        {"name":"geometry","binding":"com.vividsolutions.jts.geom.Point","minOccurs":0,"nillable":true},
+                        {"name":"time","binding":"org.geotools.data.postgis.BigDate","nillable":true,"minOccurs":0}
+                    ]
+                },
+                "nativeCRS":"EPSG:4326",
+                "srs":"EPSG:4326",
+                "store":{"name":"mapstory_geogig"},
+                "namespace":{"name":"geonode"},
+                "configureTime":true,
+                "editable":true,
+                "name":"%s",
+                "start_date":"time",
+                "permissions":{
+                    "users":{
+                        "AnonymousUser":["change_layer_data","download_resourcebase","view_resourcebase"]
+                    },
+                    "groups":{
+                        "registered":["change_layer_data","download_resourcebase","view_resourcebase"]
+                    }
+                },
+                "storeCreateGeogig":true
+            }
+        }
+        """ % (filename,)
+
+        response = self.admin_client.post(
+            reverse('layer_create'),
+            data=payload,
+            content_type='application/json',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        # Should OK
+        self.assertEquals(201, response.status_code)
+
+        # Should update the catalog
+        self.assertEquals(current_layer_count + 1, len(getLayerCatalog().get_layers()))
 
 
     def test_layer_import_wizard_views(self):
@@ -73,12 +130,7 @@ class TestLayerViews(MapStoryTestMixin):
         self.assertTemplateNotUsed(response, 'account/login.html')
         self.assertEquals(0, len(Layer.objects.all()))
 
-        # Admin should exist
-        create_admin_user("admin", "admin")
-        self.assertIsNotNone(User.objects.get(username='admin'))
-        self.admin_client.login_as_admin("admin", "admin")
-
-
+        self.login_admin()
         with open(test_layer_file_path) as fp:
             # ---------------
             # 1. Upload file
@@ -163,8 +215,8 @@ class TestLayerViews(MapStoryTestMixin):
             json_task = json.loads(config_response.content)
             self.assertIsNotNone(json_task)
             self.assertTrue(u'task' in json_task.keys())
-
             taskid = json_task[u'task']
+            self.assertIsNotNone(taskid)
 
             # -------------------
             # 4. Get data layers
@@ -195,23 +247,11 @@ class TestLayerViews(MapStoryTestMixin):
                     print("retrying")
                     retries += 1
 
-
             # self.assertEquals(json_response[u'status'], u'SUCCESS')
             # self.assertEquals(1, len(Layer.objects.all()))
-
-
 
 
     def test_layer_detail_view_404(self):
         # response = self.client.get(reverse('layer_viewer'), kwargs={'layername':'nonexistent123'})
         # self.assertEquals(response.status_code, 404)
-        pass
-
-
-
-    def test_layer_upload_view(self):
-        # with open('mapstory/tests/sampledata/lewisandclarktrail.csv') as filecontents:
-        # post_dict = {'title': 'Test Layer Upload'}
-        # file_dict = {'file': SimpleUploadedFile(upload_file.name, upload_file.read())}
-        #     self.client.post(reverse('layer_create', {'name': 'Test Layer', 'data':filecontents}))
         pass

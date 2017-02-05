@@ -696,7 +696,7 @@ def layer_create(request, template='upload/layer_create.html'):
         if request.is_ajax():
             configuration_options = json.loads(request.body)
         else:
-            configuration_options = request.POST.copy()
+            configuration_options = request.POST
             if isinstance(configuration_options.get('featureType', {}), str) \
                     or isinstance(configuration_options.get('featureType', {}), unicode):
                 configuration_options['featureType'] = json.loads(configuration_options['featureType'])

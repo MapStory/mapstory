@@ -1,6 +1,8 @@
 """
 Test Utilities and helpers
 """
+import string
+import random
 from django.contrib.auth import get_user_model
 from geonode.maps.models import Map, MapStory
 
@@ -69,4 +71,11 @@ def create_map(owner, title):
 
 def create_mapstory(owner, title):
     return MapStory.objects.create(owner=owner, title=title)
+
+def id_generator(size=6, chars=string.ascii_lowercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+def generate_testname(prefix="test", size=6):
+    return "%s_%s" % (prefix, id_generator(size=size))
+
 
