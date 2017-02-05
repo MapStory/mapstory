@@ -1,7 +1,6 @@
 import os
 import json
 import time
-import string
 
 from unittest import skip
 
@@ -18,10 +17,8 @@ from ...MapStoryTestMixin import MapStoryTestMixin
 from ...AdminClient import AdminClient
 from ...utils import create_admin_user, generate_testname
 
-
 User = get_user_model()
-test_layer_file_path = '/srv/git/mapstory/mapstory/mapstory/tests/sampledata/lewisandclarktrail.csv'
-
+test_layer_file_path = os.path.realpath('mapstory/tests/sampledata/lewisandclarktrail.csv')
 
 def getLayerCatalog():
     """
@@ -98,6 +95,8 @@ class TestLayerViews(MapStoryTestMixin):
 
 
     def get_test_layer(self):
+        self.login_admin()
+
         all_layers = getLayerCatalog().get_layers()
 
         # Special case: No layers exist
