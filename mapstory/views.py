@@ -685,16 +685,18 @@ def new_map(request, template):
     from geonode.maps.views import new_map
     return new_map(request, template)
 
+
+
 @login_required
 def layer_create(request, template='upload/layer_create.html'):
     if request.method == 'POST':
         errors = False
         error_messages = []
-        
+
         if request.is_ajax():
             configuration_options = json.loads(request.body)
         else:
-            configuration_options = request.POST
+            configuration_options = request.POST.copy()
             if isinstance(configuration_options.get('featureType', {}), str) \
                     or isinstance(configuration_options.get('featureType', {}), unicode):
                 configuration_options['featureType'] = json.loads(configuration_options['featureType'])
