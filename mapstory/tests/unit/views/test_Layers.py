@@ -94,8 +94,9 @@ class TestLayerViews(MapStoryTestMixin):
 
 
 
-    def get_test_layer(self):
+    def get_layer(self):
         self.login_admin()
+
         all_layers = getLayerCatalog().get_layers()
 
         # Special case: No layers exist
@@ -104,7 +105,6 @@ class TestLayerViews(MapStoryTestMixin):
             # Make a new layer, refresh and break if nothing happened
             test_layer = self.create_test_layer()
             if (test_layer == None):
-
                 raise RuntimeError
 
             all_layers = getLayerCatalog().get_layers()
@@ -118,6 +118,7 @@ class TestLayerViews(MapStoryTestMixin):
         """
         try:
             user = User.objects.get(username='admin')
+            self.assertIsNotNone(user)
         except User.DoesNotExist:
             create_admin_user("admin", "admin")
 
@@ -294,7 +295,7 @@ class TestLayerViews(MapStoryTestMixin):
     @skip("This is not working")
     def test_layer_detail_view(self):
         self.login_admin()
-        layer = self.get_test_layer()
+        layer = self.get_layer()
         self.assertIsNotNone(layer)
 
         # print(layer.name)
