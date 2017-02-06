@@ -75,7 +75,6 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         """
         Tests the parse date time function.
         """
-
         self.assertIsNone(parse_date_time(None))
 
         with self.assertRaises(ValueError):
@@ -103,7 +102,6 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         """
         Tests the datetime to seconds function.
         """
-
         self.assertEqual(datetime_to_seconds(datetime.datetime(2009, 10, 21, 0, 0)), 1256083200)
 
 
@@ -111,7 +109,6 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         """
         Tests various methods of the boxes view.
         """
-
         m = Map.objects.first()
 
         c = AdminClient()
@@ -152,7 +149,6 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         self.assertEqual(eval(box.speed), feature['properties']['speed'])
 
 
-
 class BoxesViewUnitTests(TestCase):
     def test__boxes_get(self):
         self.assertIsNotNone(boxes)
@@ -164,17 +160,12 @@ class BoxesViewUnitTests(TestCase):
         except Exception as inst:
             self.assertEqual(inst.message, "boxes() takes exactly 2 arguments (0 given)")
 
-
         try:
             boxes({},{})
             self.fail("Expected an exception")
         except Exception as inst:
             self.assertIsNotNone(inst.message)
 
-
         # try:
         # except Exception as inst:
             # self.assertEqual(inst.message, "ContentType matching query does not exist.")
-
-
-
