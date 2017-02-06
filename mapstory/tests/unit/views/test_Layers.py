@@ -96,7 +96,6 @@ class TestLayerViews(MapStoryTestMixin):
 
     def get_test_layer(self):
         self.login_admin()
-
         all_layers = getLayerCatalog().get_layers()
 
         # Special case: No layers exist
