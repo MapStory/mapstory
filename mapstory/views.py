@@ -1,4 +1,6 @@
+import csv
 import datetime
+import urllib2
 from account.views import ConfirmEmailView
 from account.views import SignupView
 from django.contrib.auth.decorators import login_required
@@ -1018,16 +1020,44 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     if shapefile_link is not None:
         shapefile_link = shapefile_link.url + '&featureID=fakeID' + '&propertyName=' + layer_attrib_string
         context_dict["shapefile_link"] = shapefile_link
+        request.session["shp_name"] = layer.typename
+        request.session["shp_link"] = shapefile_link
 
     csv_link = layer.link_set.download().filter(mime='csv').first()
     if csv_link is not None:
         csv_link = csv_link.url + '&featureID=fakeID'  + '&propertyName=' + layer_attrib_string
         context_dict["csv_link"] = csv_link
+        request.session["csv_name"] = layer.typename
+        request.session["csv_link"] = csv_link
 
     if settings.SOCIAL_ORIGINS:
         context_dict["social_links"] = build_social_links(request, layer)
 
     return render_to_response(template, RequestContext(request, context_dict))
+
+
+def download_append_csv(request):
+    # Retrieve the CSV and save it in a variable
+
+    csv_url = request.session['csv_link']
+    csv_name = '{}.csv'.format(request.session['csv_name'])
+    original_csv_download = urllib2.urlopen(csv_url)
+    original_csv = csv.DictReader(original_csv_download)
+
+    # Remove the FID and OGC_FID fields
+    original_csv.fieldnames.remove('FID')
+    original_csv.fieldnames.remove('ogc_fid')
+
+    # Create the new CSV
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename={}'.format(csv_name)
+    writer = csv.writer(response)
+    writer.writerow(original_csv.fieldnames)
+
+    # Return the CSV as an HTTP Response for the user to download
+
+    return response
+
 
 def _resolve_map(request, id, permission='base.change_resourcebase',
                  msg=_PERMISSION_MSG_GENERIC, **kwargs):
