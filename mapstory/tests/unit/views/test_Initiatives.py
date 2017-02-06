@@ -136,3 +136,9 @@ class TestInitiativesViews(MapStoryTestMixin):
         response = self.admin.get(reverse('initiative_members', kwargs={'slug': initiative.slug}))
         self.assertEquals(response.status_code, 200)
         self.assertContains(response, initiative.title)
+
+    def test_initiatives_members_add(self):
+        pass
+
+    def test_initiative_member_remove(self):
+        pass
