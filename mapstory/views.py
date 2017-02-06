@@ -24,7 +24,6 @@ from geonode.people.models import Profile
 from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
 from geonode.maps.models import Map, MapStory
 from httplib import HTTPConnection, HTTPSConnection
-from mapstory import tasks
 from mapstory.importers import GeoServerLayerCreator
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
 from mapstory.models import get_sponsors, get_images, get_featured_groups
@@ -40,7 +39,6 @@ from geonode.geoserver.helpers import ogc_server_settings
 from urlparse import urlsplit
 from user_messages.models import Thread
 from actstream.models import actor_stream
-
 
 from geonode.utils import GXPLayer, GXPMap
 from geonode.utils import resolve_object
@@ -66,7 +64,6 @@ from account.conf import settings as account_settings
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from osgeo_importer.forms import UploadFileForm
-from celery import group
 from lxml import etree
 from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 
@@ -79,7 +76,6 @@ import requests
 from geonode.groups.models import GroupProfile, GroupMember
 from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
 from mapstory.search.utils import update_es_index
-
 
 from django.http import HttpResponse, HttpResponseServerError
 from django.template import loader
@@ -105,7 +101,6 @@ class IndexView(TemplateView):
 
 
 class MapStorySignupView(SignupView):
-
     form_class = SignupForm
 
     def after_signup(self, form):
@@ -126,7 +121,8 @@ class GetPageView(DetailView):
 
 
 class SearchView(TemplateView):
-    template_name='search/searchn.html'
+    template_name = 'search/searchn.html'
+
     def get_context_data(self, **kwargs):
         context = super(TemplateView, self).get_context_data(**kwargs)
         context['regions'] = Region.objects.filter(level=1)
@@ -157,6 +153,7 @@ class ProfileDetail(DetailView):
 
         return ctx
 
+
 @login_required
 def profile_edit(request, username=None):
     if username is None:
@@ -180,13 +177,14 @@ def profile_edit(request, username=None):
                             request.user.username]))
         else:
             form = EditProfileForm(instance=profile)
-          
+
         return render(request, "people/profile_edit.html", {
             "form": form
         })
     else:
         return HttpResponseForbidden(
             'You are not allowed to edit other users profile')
+
 
 @login_required
 def health_check(request):
@@ -233,6 +231,7 @@ def profile_delete(request, username=None):
         return HttpResponseForbidden(
             'You are not allowed to delete other users profile')
 
+
 # TODO: Refactor this code to use content mixins and class based views so it avoids repetition
 def organization_detail(request, slug):
     group = GroupProfile.objects.get(slug=slug)
@@ -245,7 +244,8 @@ def organization_detail(request, slug):
         "images": get_images(),
         "journals": get_group_journals(group),
         "managers": group.get_managers().all()
-        }, context_instance=RequestContext(request))
+    }, context_instance=RequestContext(request))
+
 
 def initiative_detail(request, slug):
     group = GroupProfile.objects.get(slug=slug)
@@ -258,7 +258,8 @@ def initiative_detail(request, slug):
         "images": get_images(),
         "journals": get_group_journals(group),
         "managers": group.get_managers().all()
-        }, context_instance=RequestContext(request))
+    }, context_instance=RequestContext(request))
+
 
 @login_required
 def organization_create(request):
@@ -287,9 +288,10 @@ def organization_create(request):
     if request.user.is_superuser:
         return render_to_response("groups/group_create.html", {
             "form": form,
-            }, context_instance=RequestContext(request))
+        }, context_instance=RequestContext(request))
     else:
         return HttpResponse(status=403)
+
 
 @login_required
 def initiative_create(request):
@@ -318,9 +320,10 @@ def initiative_create(request):
     if request.user.is_superuser:
         return render_to_response("groups/group_create.html", {
             "form": form,
-            }, context_instance=RequestContext(request))
+        }, context_instance=RequestContext(request))
     else:
         return HttpResponse(status=403)
+
 
 @login_required
 def organization_edit(request, slug):
@@ -350,6 +353,7 @@ def organization_edit(request, slug):
         "group": group,
     }, context_instance=RequestContext(request))
 
+
 @login_required
 def initiative_edit(request, slug):
     group = GroupProfile.objects.get(slug=slug)
@@ -378,6 +382,7 @@ def initiative_edit(request, slug):
         "group": group,
     }, context_instance=RequestContext(request))
 
+
 def organization_members(request, slug):
     group = get_object_or_404(GroupProfile, slug=slug)
     ctx = {}
@@ -386,10 +391,10 @@ def organization_members(request, slug):
         raise Http404()
 
     if group.access in [
-            "public-invite",
-            "private"] and group.user_is_role(
-            request.user,
-            "manager"):
+        "public-invite",
+        "private"] and group.user_is_role(
+        request.user,
+        "manager"):
         ctx["invite_form"] = GroupInviteForm()
 
     if group.user_is_role(request.user, "manager"):
@@ -403,6 +408,7 @@ def organization_members(request, slug):
     })
     ctx = RequestContext(request, ctx)
     return render_to_response("groups/organization_members.html", ctx)
+
 
 @require_POST
 @login_required
@@ -421,6 +427,7 @@ def organization_members_add(request, slug):
 
     return redirect("organization_detail", slug=group.slug)
 
+
 @login_required
 def organization_member_remove(request, slug, username):
     group = get_object_or_404(GroupProfile, slug=slug)
@@ -432,6 +439,7 @@ def organization_member_remove(request, slug, username):
         GroupMember.objects.get(group=group, user=user).delete()
         user.groups.remove(group.group)
         return redirect("organization_detail", slug=group.slug)
+
 
 @require_POST
 def organization_invite(request, slug):
@@ -451,6 +459,7 @@ def organization_invite(request, slug):
 
     return redirect("organization_members", slug=group.slug)
 
+
 def initiative_members(request, slug):
     group = get_object_or_404(GroupProfile, slug=slug)
     ctx = {}
@@ -459,10 +468,10 @@ def initiative_members(request, slug):
         raise Http404()
 
     if group.access in [
-            "public-invite",
-            "private"] and group.user_is_role(
-            request.user,
-            "manager"):
+        "public-invite",
+        "private"] and group.user_is_role(
+        request.user,
+        "manager"):
         ctx["invite_form"] = GroupInviteForm()
 
     if group.user_is_role(request.user, "manager"):
@@ -476,6 +485,7 @@ def initiative_members(request, slug):
     })
     ctx = RequestContext(request, ctx)
     return render_to_response("groups/initiative_members.html", ctx)
+
 
 @require_POST
 @login_required
@@ -494,6 +504,7 @@ def initiative_members_add(request, slug):
 
     return redirect("initiative_detail", slug=group.slug)
 
+
 @login_required
 def initiative_member_remove(request, slug, username):
     group = get_object_or_404(GroupProfile, slug=slug)
@@ -505,6 +516,7 @@ def initiative_member_remove(request, slug, username):
         GroupMember.objects.get(group=group, user=user).delete()
         user.groups.remove(group.group)
         return redirect("initiative_detail", slug=group.slug)
+
 
 @require_POST
 def initiative_invite(request, slug):
@@ -523,6 +535,7 @@ def initiative_invite(request, slug):
                 role=form.cleaned_data["invite_role"])
 
     return redirect("initiative_members", slug=group.slug)
+
 
 class LeaderListView(ListView):
     context_object_name = 'leaders'
@@ -627,15 +640,17 @@ class MapStoryConfirmEmailView(ConfirmEmailView):
         html_content = render_to_string("account/email/welcome_message.html", ctx)
         text_content = render_to_string("account/email/welcome_message.txt", ctx)
         msg = EmailMultiAlternatives(subject, text_content,
-            account_settings.DEFAULT_FROM_EMAIL, [confirmation.email_address.email])
+                                     account_settings.DEFAULT_FROM_EMAIL, [confirmation.email_address.email])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
         super(MapStoryConfirmEmailView, self).after_confirmation(confirmation)
+
 
 @login_required
 def new_map_json(request):
     from geonode.maps.views import new_map_json
     return new_map_json(request)
+
 
 def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer.html'):
     """
@@ -654,8 +669,9 @@ def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer
         'config': json.dumps(config)
     }))
 
+
 def _resolve_story(request, id, permission='base.change_resourcebase',
-                 msg=_PERMISSION_MSG_GENERIC, **kwargs):
+                   msg=_PERMISSION_MSG_GENERIC, **kwargs):
     '''
     Resolve the Map by the provided typename and check the optional permission.
     '''
@@ -666,8 +682,8 @@ def _resolve_story(request, id, permission='base.change_resourcebase',
     return resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
 
-def draft_view(request, storyid, template='composer/maploom.html'):
 
+def draft_view(request, storyid, template='composer/maploom.html'):
     story_obj = _resolve_story(request, storyid, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
 
     config = story_obj.viewer_json(request.user)
@@ -676,6 +692,7 @@ def draft_view(request, storyid, template='composer/maploom.html'):
         'config': json.dumps(config),
         'story': story_obj
     }))
+
 
 @login_required
 def mapstory_draft(request, storyid, template):
@@ -687,12 +704,13 @@ def new_map(request, template):
     from geonode.maps.views import new_map
     return new_map(request, template)
 
+
 @login_required
 def layer_create(request, template='upload/layer_create.html'):
     if request.method == 'POST':
         errors = False
         error_messages = []
-        
+
         if request.is_ajax():
             configuration_options = json.loads(request.body)
         else:
@@ -743,18 +761,19 @@ def layer_append_minimal(source, target, request_cookies):
     The main layer_append logic that can run outside of a request.
     """
     source = 'geonode:' + source
+
     def chunk_list(list, chunk_size):
         """Yield successive chunk_size chunks from list."""
         for i in xrange(0, len(list), chunk_size):
-            yield list[i:i+chunk_size]
+            yield list[i:i + chunk_size]
 
     # TODO: use the provided column to decide which features should be updated and which should be created
     # join_on_attribute = json.loads(request.POST.get(u'joinOnAttributeName', 'false'))
 
     get_features_request = requests.post(
-            '{}/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames={}'.format(ogc_server_settings.public_url,
-                                                                                      source),
-            auth=ogc_server_settings.credentials
+        '{}/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames={}'.format(ogc_server_settings.public_url,
+                                                                                  source),
+        auth=ogc_server_settings.credentials
     )
 
     if has_exception(get_features_request.content):
@@ -839,9 +858,6 @@ def layer_append_minimal(source, target, request_cookies):
         else:
             summary = parse_wfst_response(insert_features_request.content)
             summary_aggregate.append(summary)
-    #insert_tasks = group(tasks.append_feature_chunks.subtask((features,wfst_insert_template,get_features_request,target)) for features in features_chunks)
-    #results = insert_tasks.apply_async()
-    #insert_summary = results.join()
 
     return summary_aggregate
 
@@ -865,17 +881,16 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     # making the getCapabilities request.
 
     # Add required parameters for GXP lazy-loading
-    #layer_bbox = layer.bbox
-    #bbox = [float(coord) for coord in list(layer_bbox[0:4])]
-    #srid = layer.srid
+    # layer_bbox = layer.bbox
+    # bbox = [float(coord) for coord in list(layer_bbox[0:4])]
+    # srid = layer.srid
 
     # Transform WGS84 to Mercator.
-    #config["srs"] = srid if srid != "EPSG:4326" else "EPSG:900913"
-    #config["bbox"] = llbbox_to_mercator([float(coord) for coord in bbox])
+    # config["srs"] = srid if srid != "EPSG:4326" else "EPSG:900913"
+    # config["bbox"] = llbbox_to_mercator([float(coord) for coord in bbox])
 
-    #config["title"] = layer.title
-    #config["queryable"] = True
-
+    # config["title"] = layer.title
+    # config["queryable"] = True
 
     if layer.storeType == "remoteStore":
         service = layer.service
@@ -936,7 +951,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                 layer.data_quality_statement = metadata_form.cleaned_data['data_quality_statement']
                 layer.purpose = metadata_form.cleaned_data['purpose']
                 layer.is_published = metadata_form.cleaned_data['is_published']
-                layer.save()                
+                layer.save()
             keywords_form = KeywordsForm(instance=layer)
         elif 'add_keyword' in request.POST:
             layer.keywords.add(request.POST['add_keyword'])
@@ -954,7 +969,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     default_thumbnail_array = layer.get_thumbnail_url().split('/')
     default_thumbnail_name = default_thumbnail_array[
         len(default_thumbnail_array) - 1
-    ]
+        ]
     default_thumbnail = os.path.join(thumbnail_dir, default_thumbnail_name)
 
     if request.method == 'POST':
@@ -996,7 +1011,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     }
 
     context_dict["viewer"] = json.dumps(
-        map_obj.viewer_json(request.user, * (NON_WMS_BASE_LAYERS + [maplayer])))
+        map_obj.viewer_json(request.user, *(NON_WMS_BASE_LAYERS + [maplayer])))
     context_dict["preview"] = getattr(
         settings,
         'LAYER_PREVIEW_LIBRARY')
@@ -1012,7 +1027,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     layer_property_names = []
     for attrib in layer.attributes:
-        if attrib.attribute not in settings.SCHEMA_DOWNLOAD_EXCLUDE and not (attrib.attribute.endswith('_xd') or attrib.attribute.endswith('_parsed')):
+        if attrib.attribute not in settings.SCHEMA_DOWNLOAD_EXCLUDE and not (
+            attrib.attribute.endswith('_xd') or attrib.attribute.endswith('_parsed')):
             layer_property_names.append(attrib.attribute)
     layer_attrib_string = ','.join(layer_property_names)
 
@@ -1025,7 +1041,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     csv_link = layer.link_set.download().filter(mime='csv').first()
     if csv_link is not None:
-        csv_link = csv_link.url + '&featureID=fakeID'  + '&propertyName=' + layer_attrib_string
+        csv_link = csv_link.url + '&featureID=fakeID' + '&propertyName=' + layer_attrib_string
         context_dict["csv_link"] = csv_link
         request.session["csv_name"] = layer.typename
         request.session["csv_link"] = csv_link
@@ -1070,6 +1086,7 @@ def _resolve_map(request, id, permission='base.change_resourcebase',
         key = 'urlsuffix'
     return resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
+
 
 def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     '''
@@ -1169,6 +1186,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         context_dict["social_links"] = build_social_links(request, map_obj)
     return render_to_response(template, RequestContext(request, context_dict))
 
+
 @login_required
 def layer_remove(request, layername, template='layers/layer_remove.html'):
     layer = _resolve_layer(
@@ -1197,6 +1215,7 @@ def layer_remove(request, layername, template='layers/layer_remove.html'):
     else:
         return HttpResponse("Not allowed", status=403)
 
+
 @login_required
 def map_remove(request, mapid, template='maps/map_remove.html'):
     ''' Delete a map, and its constituent layers. '''
@@ -1213,7 +1232,6 @@ def map_remove(request, mapid, template='maps/map_remove.html'):
 
 
 def account_verify(request):
-
     access_token = request.GET.get('access_token', '')
 
     if not access_token:
@@ -1238,8 +1256,9 @@ def account_verify(request):
         msg = 'User inactive or deleted: %s' % user.username
         return HttpResponseForbidden(msg)
     return HttpResponse('{"id":"%s","first_name":"%s","last_name":"%s","username":"%s","email":"%s"}'
-            % (user.id, user.first_name, user.last_name, user.username, user.email), mimetype='application/json')
+                        % (user.id, user.first_name, user.last_name, user.username, user.email), mimetype='application/json')
+
 
 def layer_detail_id(request, layerid):
-    layer = get_object_or_404(Layer, pk=layerid)    
+    layer = get_object_or_404(Layer, pk=layerid)
     return layer_detail(request, layer.typename)
