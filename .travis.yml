@@ -16,7 +16,34 @@ env:
 virtualenv:
   system_site_packages: true
 
+# GEONODE
+sudo: required
+dist: trusty
+cache:
+  directories:
+    - gs
+    - $HOME/.cache/pip
+    - importer-test-files # REMOVE?
+
+addons:
+  - postgresql
+
+matrix:
+  include:
+    - python: "2.7" env: GS_VERSION=2.7.x GDAL_DATA="/usr/local/lib/gdal
+
+before_install:
+  - chmod +x ./scripts/geonode_install.sh
+  - chmod +x ./scripts/geonode_before.sh
+# END GEONODE
+
+
 install:
+  # INSTALL GEONODE
+  - cd ..
+  - ./scripts/geonode_install.sh
+
+  # INSTALL MAPSTORY
   - cd ..
   - git clone https://github.com/MapStory/geonode.git
   - cd mapstory
@@ -32,6 +59,9 @@ install:
   - pip install coveralls
 
 before_script:
+  # GEONODE
+  - sudo scripts/geonode_before.sh
+  # MAPSTORY
   - python manage.py migrate maps --noinput
   - python manage.py migrate layers --noinput
   - python manage.py migrate groups --noinput
@@ -40,6 +70,7 @@ before_script:
   - sudo chown $USER /var/lib/mapstory/media/
 
 script:
+#  - flake8 osgeo_importer
   - coverage run ./manage.py test
   - coverage report
   - coverage html -d cover
