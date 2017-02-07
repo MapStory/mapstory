@@ -8,9 +8,9 @@ sudo apt-get install -y unzip
 mkdir -p gs
 pushd gs
 wget http://repo2.maven.org/maven2/org/mortbay/jetty/jetty-runner/8.1.8.v20121106/jetty-runner-8.1.8.v20121106.jar
-wget http://ares.boundlessgeo.com/geoserver/${GS_VERSION}/geoserver-${GS_VERSION}-latest-war.zip
+wget http://ares.boundlessgeo.com/geoserver/2.9.x/geoserver-2.9.x-latest-war.zip
 chmod +x jetty-runner-8.1.8.v20121106.jar
-unzip -o geoserver-${GS_VERSION}-latest-war.zip -d .
+unzip -o geoserver-2.9.x-latest-war.zip -d .
 popd
 sudo apt-get update -qq
 
@@ -50,8 +50,8 @@ if [ -n "$1" ]
 fi
 
 # Python packages, requirements & additional development requirements
-pip install -r requirements.txt
-pip install -r requirements.dev.txt
+#pip install -r requirements.txt
+#pip install -r requirements.dev.txt
 
 sudo mkdir -p -m 777 importer-test-files
 aws --no-sign-request s3 sync s3://mapstory-data/importer-test-files/ importer-test-files
