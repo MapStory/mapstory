@@ -1,7 +1,3 @@
-branches:
-  only:
-    - master
-
 language: python
 
 python:
@@ -48,9 +44,6 @@ before_install:
 
 
 install:
-  # INSTALL GEONODE
-  - ./scripts/geonode_install.sh
-
   # INSTALL MAPSTORY
   - cd ..
   - git clone https://github.com/MapStory/geonode.git
@@ -67,6 +60,10 @@ install:
   - pip install -r requirements.txt
   - pip install urllib3[secure] --upgrade
   - pip install coveralls
+
+  # INSTALL GEONODE
+  - cd ..
+  - ./scripts/geonode_install.sh
 
 before_script:
   # GEONODE
