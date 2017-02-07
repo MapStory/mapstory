@@ -11,14 +11,17 @@ python:
   - "2.7"
 
 env:
-- DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
+  - DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
 
 virtualenv:
   system_site_packages: true
 
 # GEONODE
+
 sudo: required
+
 dist: trusty
+
 cache:
   directories:
     - gs
@@ -30,7 +33,12 @@ addons:
 
 matrix:
   include:
-    - python: "2.7" env: GS_VERSION=2.7.x GDAL_DATA="/usr/local/lib/gdal
+    - python: "2.7"
+      env: GS_VERSION=2.7.x GDAL_DATA="/usr/local/lib/gdal"
+    - python: "2.7"
+      env: GS_VERSION=2.8.x GDAL_DATA="/usr/local/lib/gdal/share/gdal/"
+    - python: "2.7"
+      env: GS_VERSION=master GDAL_DATA="/usr/local/lib/gdal/share/gdal/"
 
 before_install:
   - chmod +x ./scripts/geonode_install.sh
