@@ -1,0 +1,24 @@
+# gdal/ogr python bindings
+python-dateutil
+psycopg2
+numpy
+
+# Needed for testing.
+mock
+
+# Just for documentation generation
+sphinx
+sphinx-autobuild
+
+Django==1.8.15
+
+# Install GeoNode latest master
+-e git+https://github.com/GeoNode/geonode.git#egg=GeoNode
+
+awscli
+flake8
+coverage
+
+git+https://github.com/mapproxy/mapproxy.git@eeb162ee0604#egg=MapProxy==1.10.0a
+
+# You will also need gdal/ogr.  See Developer Notes section of docs.
