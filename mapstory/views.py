@@ -1075,6 +1075,82 @@ def download_append_csv(request):
     return response
 
 
+def download_append_shp(request):
+    import tempfile
+
+    shp_url = request.session['shp_link']
+    shp_name = '{}.zip'.format(request.session['shp_name'])
+    print(shp_url)
+    print(shp_name)
+    tempdir = tempfile.mkdtemp()
+    print tempdir
+
+    # Download the zip file to a temporary directory
+
+    import urllib
+    urllib.urlretrieve(shp_url, "{}/{}".format(tempdir, shp_name))
+    print os.listdir(tempdir)
+
+    # Extract the zip file to a temporary directory
+    import zipfile
+    zfile = zipfile.ZipFile("{}/{}".format(tempdir, shp_name))
+    print "ORIGINAL NAME LIST IS {}".format(zfile.namelist())
+    print "ORIGINAL INFO LIST IS {}".format(zfile.infolist())
+    zfile.extractall(tempdir)
+    os.remove("{}/{}".format(tempdir, shp_name))
+
+    print os.listdir(tempdir)
+
+    # Read the shapefile and it's attributes
+    import ogr
+    ogr.UseExceptions()
+    data_source = ogr.Open(os.path.join(tempdir, '{}.shp'.format(shp_name)), True)
+    data_layer = data_source.GetLayer(0)
+    layer_definition = data_layer.GetLayerDefn()
+
+    field_list = []
+
+    for i in range(layer_definition.GetFieldCount()):
+        field_list.append(layer_definition.GetFieldDefn(i).GetName())
+        print layer_definition.GetFieldDefn(i).GetName()
+
+    print field_list
+    # Remove the FID and OGC_FID attributes
+
+    data_source.ExecuteSQL('ALTER TABLE american_civil_war32 DROP COLUMN ogc_fid')
+    # data_source.ExecuteSQL('ALTER TABLE american_civil_war32 DROP COLUMN FID')
+
+    # Save the new shapefile
+
+    # Create a new zipped shapefile
+
+    import StringIO
+    from os.path import basename
+
+    # Open StringIO to grab in-memory ZIP contents
+    in_memory_contents = StringIO.StringIO()
+
+    new_zipfile = zipfile.ZipFile(in_memory_contents, "w", compression=zipfile.ZIP_DEFLATED)
+    for dirname, subdirs, files in os.walk(tempdir):
+        for filename in files:
+            print os.path.join(dirname, filename)
+            new_zipfile.write(os.path.join(dirname, filename), basename(filename))
+    new_zipfile.close()
+
+    print "NAME LIST IS {}".format(new_zipfile.namelist())
+    print "INFO LIST IS {}".format(new_zipfile.infolist())
+
+    # Grab ZIP file from in-memory, make response with correct MIME-type
+    response = HttpResponse(in_memory_contents.getvalue(), content_type="application/zip")
+    # ..and correct content-disposition
+    response['Content-Disposition'] = 'attachment; filename=%s' % shp_name
+
+    # Return the HttpResponse to the user for download
+
+    return response
+
+
+
 def _resolve_map(request, id, permission='base.change_resourcebase',
                  msg=_PERMISSION_MSG_GENERIC, **kwargs):
     '''
