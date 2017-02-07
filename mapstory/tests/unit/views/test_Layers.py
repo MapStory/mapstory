@@ -291,7 +291,6 @@ class TestLayerViews(MapStoryTestMixin):
             # self.assertEquals(1, len(Layer.objects.all()))
 
 
-
     def test_layer_detail_view(self):
         self.login_admin()
         layer = self.get_layer()
