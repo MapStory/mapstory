@@ -26,11 +26,6 @@
     };
   });
 
-    // watch for change in location
-    // for property in location.search, 
-      // set active property
-      // set active class..... (can I simply have the class watch the property?) ng-class="-item-.active"
-
   // set active class of a filter based on the url parameters
   module.set_active_filters = function (data, url_query, filter_param){
     for(var i=0;i<data.length;i++){
@@ -74,10 +69,10 @@
       module.load_active_list($http, $rootScope, $location, 'keywords',
         KEYWORDS_ENDPOINT,'keywords__slug__in', 'slug');
     }
-    if ($('#regions').length > 0){
-      module.load_active_list($http, $rootScope, $location, 'regions',
-        REGIONS_ENDPOINT,'regions__name__in', 'name');
-    }
+    // if ($('#regions').length > 0){
+    //   module.load_active_list($http, $rootScope, $location, 'regions',
+    //     REGIONS_ENDPOINT,'regions__name__in', 'name');
+    // }
     //note: we don't load #owners like in geonode/search.js, grab it if ya need it
     //insert module.haystack_facets() from geonode/search.js & un-comment this if we turn on HAYSTACK_FACET_COUNTS
     /* 
@@ -116,24 +111,6 @@
         $location.search($scope.query);
       }, true);
     } 
-
-    $scope.showUserGroup = function() {
-        if ($location.search().hasOwnProperty('type__in')) {
-            var typeInParam = $location.search()['type__in'];
-            if (typeof(typeInParam) === "string") {
-                if (typeInParam === 'user' || typeInParam === 'group') {
-                    return true;
-                }
-            } else if (typeof(typeInParam) === "object") {
-                for(var i = 0; i < typeInParam.length; i++) {
-                  if(typeInParam[i] === 'user' || typeInParam[i] === 'group') {
-                      return true;
-                    }
-                };
-            }
-          }
-        return false;
-    };
 
     //Get data from apis and make them available to the page
     function query_api(data){
@@ -188,9 +165,9 @@
       $scope.query.category__identifier__in = category;
       $scope.search();
     };
-    //used in what's-hot for switching to featured and profile
+    // was used in what's-hot for switching to featured and profile
     $scope.change_api = function(api_endpoint) {
-      Configs.url = "/api/" + api_endpoint + "/";
+      $scope.api_endpoint = "/api/" + api_endpoint + "/";
       $scope.query.limit = CLIENT_RESULTS_LIMIT;
       $scope.query.offset = 0;
       return query_api($scope.query).then(function(result) {
@@ -352,47 +329,33 @@
       console.log($scope.query);
       query_api($scope.query);
     }
-    // If the below functions & promises are needed, find them in geonode/search.js,
-    // don't think we need to implement most popular tallies this way
-    // if we have elastic search facets, etc. Note: this wasn't even used.
 
-    // $scope.calculate_popular_items = function() {
-    //   calculate_most_popular_interest();
-    //   calculate_most_popular_location();
-    // }
-
-    // Toggle the background of the header buttons to indicate which one is active
     // Make the content one active, user inactive
     $scope.toggle_content = function() {
-      $('#content-search').css('background-color', 'white');
-      $('#user-search').css('background-color', 'gainsboro');
-      // clear the content search
-      $('#tokenfield-profile').tokenfield('setTokens', []);
-      $('#tokenfield-region').tokenfield('setTokens', []);
-      $('#tokenfield-keyword').tokenfield('setTokens', []);
       $scope.api_endpoint = '/api/owners/';
-      // //stash filters for toggle-back
-      // $scope.content_stash = $scope.query;
-      $scope.query = {limit: CLIENT_RESULTS_LIMIT, offset: 0, q: $scope.query.q};
+      $scope.query = {limit: CLIENT_RESULTS_LIMIT, offset: 0}; //, q: $scope.query.q
     };
     // Make the user one active, content inactive
     $scope.toggle_user = function() {
-      $('#content-search').css('background-color', 'gainsboro');
-      $('#user-search').css('background-color', 'white');
-      // clear the user search
-      $('#tokenfield-interest').tokenfield('setTokens', []);
       $scope.api_endpoint = '/api/base/search/';
-      // //stash filters for toggle-back
-      //$scope.content_stash.q = $scope.query.q
-      $scope.query = {is_published: true,limit: CLIENT_RESULTS_LIMIT, offset: 0, q: $scope.query.q};// set to $scope.content_stash;
-      //remove is_published: true for a user's drafts to appear in their search
+      $scope.query = {is_published: true,limit: CLIENT_RESULTS_LIMIT, offset: 0};//, q: $scope.query.q
     };
+
+    // front-end fix until we update or create an api that doesn't include maps
+    $scope.all_types = function(){
+      $scope.delete_query('type__in');
+      $scope.add_query('type__in', 'mapstory');
+      $scope.add_query('type__in', 'layer');
+      query_api($scope.query);
+    }
 
 // Configure new autocomplete
 var profile_autocompletes = [];
 var region_autocompletes = [];
 var keyword_autocompletes = [];
 var city_autocompletes = [];
+
+
 var usernames = [];
 var regions = [];
 var keywords = [];
@@ -418,26 +381,27 @@ function init_tokenfields() {
           showAutocompleteOnFocus: true,
           limit: 10
         })
-        .on('tokenfield:createtoken', function(e) {
-          // Tokenize by space if num_spaces > 3
-          var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-          var data = e.attrs.value.split(' ');
-          if (num_spaces > 3) {
-            e.attrs.value = data[0];
-            e.attrs.label = data[0];
-            for (var i = 1; i < data.length; i++) {
-              $('#tokenfield-profile').tokenfield('createToken', data[i]);
-            }
-          }
-        })
+        // .on('tokenfield:createtoken', function(e) {
+        //   // Tokenize by space if num_spaces > 3
+        //   var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+        //   var data = e.attrs.value.split(' ');
+        //   if (num_spaces > 3) {
+        //     e.attrs.value = data[0];
+        //     e.attrs.label = data[0];
+        //     for (var i = 1; i < data.length; i++) {
+        //       $('#tokenfield-profile').tokenfield('createToken', data[i]);
+        //     }
+        //   }
+        // })
         .on('tokenfield:createdtoken', function(e) {
           // Match search to possible usernames - casting a wide net for now
-          possible_profiles(e.attrs.value).then(function(usernames_to_search) {
-            // Duplicates are fine in usernames_to_search because the add_search() function will catch them
-            for (var i = 0; i < usernames_to_search.length; i++) {
-              $scope.add_search('owner__username__in', usernames_to_search[i], usernames);
-            }
-          });
+          // possible_profiles(e.attrs.value).then(function(usernames_to_search) {
+          //   // Duplicates are fine in usernames_to_search because the add_search() function will catch them
+          //   for (var i = 0; i < usernames_to_search.length; i++) {
+          //     $scope.add_search('owner__username__in', usernames_to_search[i], usernames);
+          //   }
+          // });
+           $scope.add_search('owner__username__in', e.attrs.value, usernames);
         })
         .on('tokenfield:removedtoken', function(e) {
           $scope.remove_search('owner__username__in', e.attrs.value, usernames);
@@ -446,24 +410,9 @@ function init_tokenfields() {
       $('#tokenfield-city')
         .tokenfield({
           autocomplete: {
-            source: city_autocompletes,
-            delay: 100,
-            minLength: 3
+            source: city_autocompletes
           },
-          showAutocompleteOnFocus: true,
           limit: 10
-        })
-        .on('tokenfield:createtoken', function(e) {
-          // Tokenize by space if num_spaces > 3
-          var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-          var data = e.attrs.value.split(' ');
-          if (num_spaces > 3) {
-            e.attrs.value = data[0];
-            e.attrs.label = data[0];
-            for (var i = 1; i < data.length; i++) {
-              $('#tokenfield-city').tokenfield('createToken', data[i]);
-            }
-          }
         })
         .on('tokenfield:createdtoken', function(e) {
           $scope.add_search('city', e.attrs.value, cities);
@@ -473,39 +422,10 @@ function init_tokenfields() {
         });
     })
   );
-  
+
   promises.push(
     region_autocomplete()
     .then(function() {
-      $('#tokenfield-region')
-        .tokenfield({
-          autocomplete: {
-            source: region_autocompletes,
-            delay: 100,
-            minLength: 3
-          },
-          showAutocompleteOnFocus: true,
-          limit: 10
-        })
-        .on('tokenfield:createtoken', function(e) {
-          // Tokenize by space if num_spaces > 3
-          var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-          var data = e.attrs.value.split(' ');
-          if (num_spaces > 3) {
-            e.attrs.value = data[0];
-            e.attrs.label = data[0];
-            for (var i = 1; i < data.length; i++) {
-              $('#tokenfield-region').tokenfield('createToken', data[i]);
-            }
-          }
-        })
-        .on('tokenfield:createdtoken', function(e) {
-          $scope.add_search('regions__name__in', e.attrs.value, regions);
-        })
-        .on('tokenfield:removedtoken', function(e) {
-          $scope.remove_search('regions__name__in', e.attrs.value, regions);
-        });
-
       $('#tokenfield-country')
         .tokenfield({
           autocomplete: {
@@ -516,23 +436,10 @@ function init_tokenfields() {
           showAutocompleteOnFocus: true,
           limit: 10
         })
-        .on('tokenfield:createtoken', function(e) {
-          // Tokenize by space if num_spaces > 3
-          var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-          var data = e.attrs.value.split(' ');
-          if (num_spaces > 3) {
-            e.attrs.value = data[0];
-            e.attrs.label = data[0];
-            for (var i = 1; i < data.length; i++) {
-              $('#tokenfield-country').tokenfield('createToken', data[i]);
-            }
-          }
-        })
         .on('tokenfield:createdtoken', function(e) {
           if (region_autocompletes.indexOf(e.attrs.value) != -1) {
             $scope.add_search('country', country_codes[region_autocompletes.indexOf(e.attrs.value)], countries);
-          }
-          
+          } 
         })
         .on('tokenfield:removedtoken', function(e) {
           if (region_autocompletes.indexOf(e.attrs.value) != -1) {
@@ -546,62 +453,33 @@ function init_tokenfields() {
     keyword_autocomplete()
     .then(function() {
       $('#tokenfield-keyword')
-        .tokenfield({
-          autocomplete: {
-            source: keyword_autocompletes,
-            delay: 100,
-            minLength: 3
-          },
-          showAutocompleteOnFocus: true,
-          limit: 10
-        })
-        .on('tokenfield:createtoken', function(e) {
-          // Tokenize by space if num_spaces > 3
-          var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-          var data = e.attrs.value.split(' ');
-          if (num_spaces > 3) {
-            e.attrs.value = data[0];
-            e.attrs.label = data[0];
-            for (var i = 1; i < data.length; i++) {
-              $('#tokenfield-keyword').tokenfield('createToken', data[i]);
-            }
+      .tokenfield({
+        autocomplete: {
+          source: keyword_autocompletes,
+          delay: 100,
+          minLength: 3
+        },
+        showAutocompleteOnFocus: true,
+        limit: 10
+      })
+      .on('tokenfield:createtoken', function(e) {
+        // Tokenize by space if num_spaces > 3
+        var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
+        var data = e.attrs.value.split(' ');
+        if (num_spaces > 3) {
+          e.attrs.value = data[0];
+          e.attrs.label = data[0];
+          for (var i = 1; i < data.length; i++) {
+            $('#tokenfield-keyword').tokenfield('createToken', data[i]);
           }
-        })
-        .on('tokenfield:createdtoken', function(e) {
-          $scope.add_search('keywords__slug__in', e.attrs.value, keywords);
-        })
-        .on('tokenfield:removedtoken', function(e) {
-          $scope.remove_search('keywords__slug__in', e.attrs.value, keywords);
-        });
-
-      $('#tokenfield-interest')
-        .tokenfield({
-          autocomplete: {
-            source: keyword_autocompletes,
-            delay: 100,
-            minLength: 3
-          },
-          showAutocompleteOnFocus: true,
-          limit: 10
-        })
-        .on('tokenfield:createtoken', function(e) {
-          // Tokenize by space if num_spaces > 3
-          var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-          var data = e.attrs.value.split(' ');
-          if (num_spaces > 3) {
-            e.attrs.value = data[0];
-            e.attrs.label = data[0];
-            for (var i = 1; i < data.length; i++) {
-              $('#tokenfield-interest').tokenfield('createToken', data[i]);
-            }
-          }
-        })
-        .on('tokenfield:createdtoken', function(e) {
-          $scope.add_search('interest_list', e.attrs.value, keywords);
-        })
-        .on('tokenfield:removedtoken', function(e) {
-          $scope.remove_search('interest_list', e.attrs.value, keywords);
-        });
+        }
+      })
+      .on('tokenfield:createdtoken', function(e) {
+        $scope.add_search('keywords__slug__in', e.attrs.value, keywords);
+      })
+      .on('tokenfield:removedtoken', function(e) {
+        $scope.remove_search('keywords__slug__in', e.attrs.value, keywords);
+      });
     })
   );
 
@@ -633,63 +511,63 @@ function profile_autocomplete() {
     });
 };
 
-function possible_profiles(token) {
-  var promises = [];
-  var profiles = [];
-  var query = {};
-  var deferred = $q.defer();
-  // Count spaces in token
-  var num_spaces = (token.match(/ /g)||[]).length;
-  // If there's no spaces, we might be directly searching a username
-  if (num_spaces == 0) {
-    profiles.push(token);
-  }
-  for (var i = 0; i < num_spaces; i++) {
-    // split at ith instance of space in token
-    // grab first and last name
-    query['first_name'] = token.split(' ').slice(0, (i + 1)).join(' ');
-    query['last_name'] = token.split(' ').slice(i + 1).join(' ');
-    // query api w/query
-    promises[i] = $http.get('/api/profiles/', {params: query})
-      .success(function(data) {
-        var results = data.objects;
-        for (var j = 0; j < results.length; j++) {
-          profiles.push(results[j].username);
-        }
-      });
-  }
-  query['first_name'] = token;
-  query['last_name'] = null;
+// function possible_profiles(token) {
+//   var promises = [];
+//   var profiles = [];
+//   var query = {};
+//   var deferred = $q.defer();
+//   // Count spaces in token
+//   var num_spaces = (token.match(/ /g)||[]).length;
+//   // If there's no spaces, we might be directly searching a username
+//   if (num_spaces == 0) {
+//     profiles.push(token);
+//   }
+//   for (var i = 0; i < num_spaces; i++) {
+//     // split at ith instance of space in token
+//     // grab first and last name
+//     query['first_name'] = token.split(' ').slice(0, (i + 1)).join(' ');
+//     query['last_name'] = token.split(' ').slice(i + 1).join(' ');
+//     // query api w/query
+//     promises[i] = $http.get('/api/profiles/', {params: query})
+//       .success(function(data) {
+//         var results = data.objects;
+//         for (var j = 0; j < results.length; j++) {
+//           profiles.push(results[j].username);
+//         }
+//       });
+//   }
+//   query['first_name'] = token;
+//   query['last_name'] = null;
   
-  promises.push($http.get('/api/profiles/', {params: query})
-    .success(function(data) {
-      var results = data.objects;
-      for (var j = 0; j < results.length; j++) {
-        profiles.push(results[j].username);
-      }
-    })
-  );
+//   promises.push($http.get('/api/profiles/', {params: query})
+//     .success(function(data) {
+//       var results = data.objects;
+//       for (var j = 0; j < results.length; j++) {
+//         profiles.push(results[j].username);
+//       }
+//     })
+//   );
 
-  $q.all(promises)
-    .then(function() {
-      deferred.resolve(profiles);
-    }, function() {
-      deferred.reject('Some HTTP requests failed');
-    });
+//   $q.all(promises)
+//     .then(function() {
+//       deferred.resolve(profiles);
+//     }, function() {
+//       deferred.reject('Some HTTP requests failed');
+//     });
 
-  return deferred.promise;
-};
+//   return deferred.promise;
+// };
 
-function region_autocomplete() {
-  return $http.get('/api/regions/')
-    .success(function(data){
-      var results = data.objects;
-      for (var i = 0; i < results.length; i++) {
-        region_autocompletes.push(results[i].name);
-        country_codes.push(results[i].code);
-      }
-    });
-};
+// function region_autocomplete() {
+//   return $http.get('/api/regions/')
+//     .success(function(data){
+//       var results = data.objects;
+//       for (var i = 0; i < results.length; i++) {
+//         region_autocompletes.push(results[i].name);
+//         country_codes.push(results[i].code);
+//       }
+//     });
+// };
 
 function keyword_autocomplete() {
   return $http.get('/api/keywords/')
@@ -702,7 +580,6 @@ function keyword_autocomplete() {
 };
 
 init_tokenfields()
-
 
     $scope.filterVTC = function() {
       // When VTC check box is clicked, also filter by VTC; when unchecked, reset it
@@ -727,43 +604,8 @@ init_tokenfields()
       } 
     };
 
-    /*
-    * Date management
-    */
-
-    $scope.date_query = {
-      'date__gte': '',
-      'date__lte': ''
-    };
-    var init_date = true;
-    $scope.$watch('date_query', function(){
-      if($scope.date_query.date__gte != '' && $scope.date_query.date__lte != ''){
-        $scope.query['date__range'] = $scope.date_query.date__gte + ',' + $scope.date_query.date__lte;
-        delete $scope.query['date__gte'];
-        delete $scope.query['date__lte'];
-      }else if ($scope.date_query.date__gte != ''){
-        $scope.query['date__gte'] = $scope.date_query.date__gte;
-        delete $scope.query['date__range'];
-        delete $scope.query['date__lte'];
-      }else if ($scope.date_query.date__lte != ''){
-        $scope.query['date__lte'] = $scope.date_query.date__lte;
-        delete $scope.query['date__range'];
-        delete $scope.query['date__gte'];
-      }else{
-        delete $scope.query['date__range'];
-        delete $scope.query['date__gte'];
-        delete $scope.query['date__lte'];
-      }
-      if (!init_date){
-        query_api($scope.query);
-      }else{
-        init_date = false;
-      }
-      
-    }, true);
-
-    // Set the default orderMethod for when a user first hits the Explore page to be descending dates.
-    $scope.orderMethod = '-date';
+    // Set the default orderMethod for when a user first hits the Explore page to be descending views.
+    $scope.orderMethod = '-popular_count';
     // Allow the user to choose an order method using the What's Hot section.
     $scope.orderMethodUpdate = function(orderMethod) {
       $scope.orderMethod = orderMethod;

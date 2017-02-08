@@ -132,7 +132,7 @@ class GetPageView(DetailView):
 
 
 class SearchView(TemplateView):
-    template_name='search/searchn.html'
+    template_name='search/explore.html'
     def get_context_data(self, **kwargs):
         context = super(TemplateView, self).get_context_data(**kwargs)
         context['regions'] = Region.objects.filter(level=1)

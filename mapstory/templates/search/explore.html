@@ -1,0 +1,136 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load url from future %}
+{% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
+{% block body_class %}search{% endblock %}
+{% block body_outer %}
+<div ng-controller="geonode_search_controller">
+    <div>
+        <ul>
+          <li role="presentation" class="active" ng-click="toggle_user(); search();""><a href="#content-searching" data-toggle="tab">Content</a></li>
+          <li role="presentation" ng-click="toggle_content(); search();"><a href="#user-searching" data-toggle="tab">StoryTellers</a></li>
+        </ul>
+    </div>
+    <div class="tab-content">
+        {% comment %} Search for Content {% endcomment %}
+        <div class="tab-pane active" id="content-searching">
+            <div class="col-sm-3 search-side">   
+                <div> Filter Results 
+                    <span> Clear all </span>
+                </div>
+                
+                <div> Search </div>
+                
+                <nav class="filter">
+                    <div class="input-group">
+                        <input name="text_search_input" id="text_search_input" ng-model="query.q" type="text"
+                            class="form-control" ng-enter="search()" placeholder="Search content...">
+                        <span class="input-group-btn">
+                            <button class="btn" ng-click="search()" type="submit" id="text_search_btn">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </nav>
+
+                <div> Content Type </div>
+                    <ul>
+                        <li><a href="" ng-click="all_types()">All</a></li>
+                        <li><a href="" ng-click="add_single_query('type__in', 'layer')"></i> StoryLayer</a></li>
+                        <li><a href="" ng-click="add_single_query('type__in', 'mapstory')"></i> {{SITE_NAME}}</a></li>
+                    </ul>
+                <div> Category </div>
+                <div>
+                    <ul id="categories">   
+                        {% verbatim %}
+                        <li ng-repeat="category in categories"> 
+                            <a href="" ng-init="toggle=!category.active" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle;" ng-class="{active: (!toggle )}"> {{ category.gn_description }}
+                                <span ng-show="!toggle" class="pull-left"><i class="fa fa-check"></i></span>
+                            </a>                                
+                        </li>
+                        {% endverbatim %}                       
+                    </ul>
+                </div>
+                <div>StoryTeller</div>
+                <div id="user-tab">
+                    <input type="text" class="form-control" id="tokenfield-profile"/>
+                </div>
+                <div>Tag</div>
+                <div id="keyword-tab">
+                    <input type="text" class="form-control" id="tokenfield-keyword"/>
+                </div>
+                <div id="keywords">{% verbatim %} 
+                    <div> Top Tags </div>
+                    <span ng-repeat="item in trending">
+                        <a href="" ng-init="toggle=!item.active" ng-click="toggle_query(toggle, 'keywords__slug__in', item.slug); toggle=!toggle;" ng-class="{active: !toggle}">
+                            <span ng-show="!toggle"><i class="fa fa-check"></i></span>
+                            {{ item.name }}   
+                        </a>                        
+                    </span>                       
+                {% endverbatim %}
+                </div>
+            </div>
+            <div class="col-sm-9">
+                Sort by:
+                <a ng-click="orderMethodUpdate('-popular_count')"> Popular | </a>
+                <a ng-click="orderMethodUpdate('-date')"> Newest</a>
+                </span>
+                
+                <div class="clearfix search-results">
+                    <ul>
+                        {% verbatim %}
+                        <li ng-repeat="item in results | orderBy: orderMethod" resource-id="{{ item.id }}" class="col-lg-4 col-sm-6 flip-container resource-{{ item.id }}">
+                        {% endverbatim %}
+                        {% include 'search/_result_content.html' %}
+                    </ul>
+                </div>
+                <div class="pull-right">
+                    <a href><i ng-click="paginate_down()" class="fa fa-chevron-left"></i></a>
+                    <span>page </span>
+                    <span ng-model="page" ng-bind="page"></span>
+                    <span> of </span>
+                    <span ng-bind="numpages"></span>
+                    <a href><i ng-click="paginate_up()" class="fa fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+        {% comment %} Search for Storytellers {% endcomment %}
+        <div class="tab-pane" id="user-searching">
+            <div class="col-sm-3 search-side">
+                <div class="input-group">
+                    <input name="user_search_input" id="user_search_input" ng-model="query.q" type="text"
+                        class="form-control" ng-enter="search()" placeholder="Search StoryTellers...">
+                    <span class="input-group-btn">
+                        <button class="btn" type="submit" ng-click="search()" ng-class="{'disabled': !query.q}" id="user_search_btn"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+                <div> City </div>
+                <div>
+                    <input type="text" class="form-control" id="tokenfield-city" placeholder="Search for city ..."/>
+                </div>
+                <div> Country </div>
+                <div> 
+                    <input type="text" class="form-control" id="tokenfield-country" placeholder="Search for country ..."/>
+                </div>
+                <div>
+                    <input type="checkbox" ng-model="VTCisChecked" ng-click="filterVTC()"> VTC Members
+                </div>
+            </div>
+            <div class="col-sm-9">
+                <nav class="filter"></nav>
+                <div class="clearfix user search-results">
+                    <ul>{% include 'search/_result_users.html' %}</ul>
+                </div>
+                <div class="pull-right">
+                    <a href><i ng-click="paginate_down()" class="fa fa-chevron-left"></i></a>
+                    <span>page </span>
+                    <span ng-model="page" ng-bind="page"></span>
+                    <span> of </span>
+                    <span ng-bind="numpages"></span>
+                    <a href><i ng-click="paginate_up()" class="fa fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

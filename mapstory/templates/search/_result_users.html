@@ -1,13 +1,13 @@
 {% verbatim %}
 <div>
-    <li ng-repeat="item in results | filter:itemFilter" resource-id="{{ item.id }}" class="col-lg-4 col-sm-6 ">
+    <li ng-repeat="item in results | filter:itemFilter" resource-id="{{ item.id }}" class="col-lg-3 col-md-4 col-sm-5 col-xs-6 ">
         <div style="text-align: center;">
             <a href="/storyteller/{{ item.username }}">
                 <img class="thumb img-responsive img-circle" src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100" ng-src="{{ item.avatar_100 }}"/>
             </a>
-            <div>{{ item.first_name ?
+            <div><a href="/storyteller/{{ item.username }}">{{ item.first_name ?
                  item.first_name + ' ' + item.last_name 
-                 : item.username }}
+                 : item.username }}</a>
             </div>
             {% endverbatim %}
             
@@ -42,15 +42,33 @@
             {% endcomment %}
             
             {% verbatim %}
-            <div class="profile-view">
-                <a href="/storyteller/{{ item.username }}">
+            <div class="profile-view" style="text-align: right; color: gray34">
+            <a href="https://twitter.com/{{ item.social_twitter }}" ng-if="item.social_twitter"><i class="fa fa-twitter"></i></a>
+            <a href="https://www.facebook.com/{{ item.social_facebook }}" ng-if="item.social_facebook" ><i class="fa fa-facebook"></i></a>
+            <a href="https://www.linkedin.com/in/{{ item.social_linkedin }}" ng-if="item.social_linkedin"><i class="fa fa-linkedin"></i></a>
+            <a href="https://github.com/{{ item.social_github }}" ng-if="item.social_github"><i class="fa fa-github"></i></a>
+
+
+              {% endverbatim %}  
+                {% if profile.social_facebook %}
+                    {% verbatim %}<a href="https://www.facebook.com/{{ item.social_facebook }}"><i class="fa fa-facebook"></i></a>{% endverbatim %}
+                {% endif %}
+                {% if profile.social_linkedin %}
+                    {% verbatim %}<a href="https://www.linkedin.com/in/{{ item.social_linkedin }}"><i class="fa fa-linkedin"></i></a>{% endverbatim %}
+                {% endif %}
+                {% if profile.social_github %}
+                    {% verbatim %}<a href="https://github.com/{{ item.social_github }}"><i class="fa fa-github"></i></a>{% endverbatim %}
+                {% endif %}
+
+       <!--          <a href="/storyteller/{{ item.username }}">
                     <button class="btn"> View Profile </button>
-                </a>
+                </a> -->
             </div>
         </div>
     </li>
 </div>
 <!-- Outdated -->
+{% verbatim %}
 <div ng-show="query.type__in==='group'">
     <li ng-repeat="item in results" resource_id="{{ item.id }}" class="col-md-3" ng-if="item.type==='group'">
         <div style="text-align: left;">

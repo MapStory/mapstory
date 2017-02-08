@@ -1,41 +1,4 @@
 /* --- Search --- */
-.panel-group{
-    margin: 0;
-    padding: 0;
-}
-
-.panel-default {
-    border: none;
-    background-color: @white;
-    box-shadow: 0;
-}
-
-.panel-default  .panel-heading {
-    border: 1px solid transparent;
-}
-
-.panel-title {
-    border: 1px solid transparent;
-    background-color: @white;
-    font-size: 1.2em;
-    color: @gray30;
-}
-
-.panel-body {
-    border: 1px solid transparent;
-    background-color: @white;
-}
-
-.search-bar {
-    padding: 20px 0;
-}
-
-.whats-hot {
-    ul {
-        list-style-type: none;
-    }
-}
-
 .search-results {
     ul {
         list-style-type: none;
@@ -103,29 +66,6 @@
     min-height: 200px;
 }
 
-#content-search{
-    background-color:gainsboro;
-}
-
-.explore-header {
-    &.row{
-        border-bottom:1px solid darkgray;
-        padding:20px 0 30px;
-    }
-    span{
-        font-size:1.3em;
-        background-color:white;
-        border:1px solid gainsboro; 
-        cursor:pointer;
-    }
-}
-
-.resource_selected {
-  -moz-box-shadow: 0 0 5px @secondary;
-  -webkit-box-shadow: 0 0 5px @secondary;
-  box-shadow: 0 0 5px @secondary;
-}
-
 .result-title h3 {
    text-transform: capitalize;
    overflow-wrap: break-word;
@@ -146,6 +86,7 @@
     height: 180px;
 }
 
+//drafts on profile page
 .unpublished {
     position:absolute;
     top:10px;
@@ -176,64 +117,6 @@
     margin-top: 20px;
     text-align: center;
 }
-
-/* entire container, keeps perspective */
-// .flip-container {
-//     perspective: 1000px;
-// }
-
-/* flip the pane when hovered */
-// .flip-container.flip .flipper {
-//     transform: rotateY(180deg);
-// }
-
-/* flip speed goes here */
-// .flipper {
-//     transition: 0.6s;
-//     transform-style: preserve-3d;
-
-//     position: relative;
-// }
-
-/* hide back of pane during swap */
-// .front, .back {
-//     backface-visibility: hidden;
-//     padding: inherit;
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-// }
-
-/* front pane, placed above back */
-// .front {
-//     display: inline;
-//     z-index: 2;
-//      //for firefox 31 
-//     transform: rotateY(0deg);
-// }
-
-.back{
-    display: none;
-}
-
-// /* back, initially hidden pane */
-// .back {
-//     display: inline;
-//     transform: rotateY(180deg);
-//     .result-title h3{
-//         margin: auto;
-//         padding-bottom: 7px;
-//         margin-bottom: 3px;
-//         border-bottom: 1px lightgrey solid;
-//     }
-// }
-
-// .turn {
-//     position: absolute;
-//     bottom: 15px;
-//     right: 18px;
-//     color: gray;
-// }
 
 .search-side {
     display:none;
