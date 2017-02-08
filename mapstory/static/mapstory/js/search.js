@@ -26,62 +26,6 @@
     };
   });
 
-  // set active class of a filter based on the url parameters
-  module.set_active_filters = function (data, url_query, filter_param){
-    for(var i=0;i<data.length;i++){
-      if( url_query == data[i][filter_param] || url_query.indexOf(data[i][filter_param] ) != -1){
-          data[i].active = 'active';
-      }else{
-          data[i].active = '';
-      }
-    }
-    return data;
-  }
-  // grab & prep categories, keywords, and regions from endpoints with 'active' queries noted
-  // each only called if element with corresponding id is on html page
-  module.load_active_list = function ($http, $rootScope, $location, api, endpoint, filter, value){
-      var params = typeof FILTER_TYPE == 'undefined' ? {} : {'type': FILTER_TYPE};
-      $http.get(endpoint, {params: params}).success(function(data){
-        //sets an active property if category already selected in a url query
-        if($location.search().hasOwnProperty(filter)){
-            data.objects = module.set_active_filters(data.objects,
-                $location.search()[filter], value);
-          }
-        //front-end filtering  of categories to avoid reprovision, 
-        if (api === 'categories'){
-          //geonode's initial_data.json pulls in categories we don't want
-          data.objects = _.where(data.objects,{'description': ''});
-        }
-        $rootScope[api]= data.objects;
-      });
-    }
-
-  /*
-  * Load categories and keywords if the filter is available in the page
-  * set active class if needed, update here for facet counts if enabled in settings
-  */
-  module.run(function($http, $rootScope, $location){
-    if ($('#categories').length > 0){
-      module.load_active_list($http, $rootScope, $location, 'categories',
-        CATEGORIES_ENDPOINT,'category__identifier__in', 'identifier');
-    }
-    if ($('#keywords').length > 0){
-      module.load_active_list($http, $rootScope, $location, 'keywords',
-        KEYWORDS_ENDPOINT,'keywords__slug__in', 'slug');
-    }
-    // if ($('#regions').length > 0){
-    //   module.load_active_list($http, $rootScope, $location, 'regions',
-    //     REGIONS_ENDPOINT,'regions__name__in', 'name');
-    // }
-    //note: we don't load #owners like in geonode/search.js, grab it if ya need it
-    //insert module.haystack_facets() from geonode/search.js & un-comment this if we turn on HAYSTACK_FACET_COUNTS
-    /* 
-    if (HAYSTACK_FACET_COUNTS && $rootScope.query_data) {
-         module.haystack_facets($http, $rootScope, $location);
-    } 
-    */
-  });
-
   /*
   * Main search controller
   * Load data from api and defines the multiple and single choice handlers
@@ -98,6 +42,26 @@
     $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
     $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
     $scope.django = Django.all();
+
+    $http.get(CATEGORIES_ENDPOINT, {})
+      .success(function(data){ 
+        $scope.categories = data.objects;
+    })
+
+    $http.get(KEYWORDS_ENDPOINT, {}).success(function(data){ 
+      $scope.keywords = data.objects
+
+      var results = data.objects.sort(function(kw1, kw2) {
+        return kw2.count - kw1.count;
+      });
+      // Grab the top 8 // or change the # displaying here
+      var num_trending = (results.length > 8) ? 8 : results.length;
+      for (var i = 0; i < num_trending; i++) {
+        if (results[i].count > 0) {
+          $scope.trending.push(results[i]);
+        }
+      }
+    })
 
     $scope.search = function() {
       return query_api($scope.query).then(function(result) {
@@ -136,28 +100,6 @@
         //to Update facet/keyword/category counts from search results
       });
     };
-
-    // Grab the keywords and sort them by 'count' to determine the trending tags
-    function trending_keywords_query(data) {
-      return $http.get('/api/keywords', {params: data || {}}).success(function(data){
-        if($location.search().hasOwnProperty('keywords__slug__in')){
-            data.objects = module.set_active_filters(data.objects,
-                $location.search()['keywords__slug__in'], 'slug');
-        }
-
-        var results = data.objects;
-        // Sort them by count in order from highest to lowest
-        results.sort(function(kw1, kw2) {
-          return kw2.count - kw1.count;
-        });
-        // Grab the top 8 // or change the # displaying here
-        var num_trending = (results.length > 8) ? 8 : results.length;
-        for (var i = 0; i < num_trending; i++) {
-          if (results[i].count > 0) $scope.trending.push(results[i]);
-        }
-      });
-    };
-    trending_keywords_query();
 
     //used in detail page 'related' tab and featured content on index page
     $scope.query_category = function(category, type) {
@@ -381,26 +323,7 @@ function init_tokenfields() {
           showAutocompleteOnFocus: true,
           limit: 10
         })
-        // .on('tokenfield:createtoken', function(e) {
-        //   // Tokenize by space if num_spaces > 3
-        //   var num_spaces = (e.attrs.value.match(/ /g)||[]).length;
-        //   var data = e.attrs.value.split(' ');
-        //   if (num_spaces > 3) {
-        //     e.attrs.value = data[0];
-        //     e.attrs.label = data[0];
-        //     for (var i = 1; i < data.length; i++) {
-        //       $('#tokenfield-profile').tokenfield('createToken', data[i]);
-        //     }
-        //   }
-        // })
         .on('tokenfield:createdtoken', function(e) {
-          // Match search to possible usernames - casting a wide net for now
-          // possible_profiles(e.attrs.value).then(function(usernames_to_search) {
-          //   // Duplicates are fine in usernames_to_search because the add_search() function will catch them
-          //   for (var i = 0; i < usernames_to_search.length; i++) {
-          //     $scope.add_search('owner__username__in', usernames_to_search[i], usernames);
-          //   }
-          // });
            $scope.add_search('owner__username__in', e.attrs.value, usernames);
         })
         .on('tokenfield:removedtoken', function(e) {
@@ -419,32 +342,6 @@ function init_tokenfields() {
         })
         .on('tokenfield:removedtoken', function(e) {
           $scope.remove_search('city', e.attrs.value, cities);
-        });
-    })
-  );
-
-  promises.push(
-    region_autocomplete()
-    .then(function() {
-      $('#tokenfield-country')
-        .tokenfield({
-          autocomplete: {
-            source: region_autocompletes,
-            delay: 100,
-            minLength: 3
-          },
-          showAutocompleteOnFocus: true,
-          limit: 10
-        })
-        .on('tokenfield:createdtoken', function(e) {
-          if (region_autocompletes.indexOf(e.attrs.value) != -1) {
-            $scope.add_search('country', country_codes[region_autocompletes.indexOf(e.attrs.value)], countries);
-          } 
-        })
-        .on('tokenfield:removedtoken', function(e) {
-          if (region_autocompletes.indexOf(e.attrs.value) != -1) {
-            $scope.remove_search('country', country_codes[region_autocompletes.indexOf(e.attrs.value)], countries);
-          }
         });
     })
   );
@@ -490,7 +387,6 @@ function init_tokenfields() {
       deferred.reject('Some tokenization field initializations failed');
     }
   );
-
   return deferred.promise;
 }
 
@@ -510,64 +406,6 @@ function profile_autocomplete() {
       }
     });
 };
-
-// function possible_profiles(token) {
-//   var promises = [];
-//   var profiles = [];
-//   var query = {};
-//   var deferred = $q.defer();
-//   // Count spaces in token
-//   var num_spaces = (token.match(/ /g)||[]).length;
-//   // If there's no spaces, we might be directly searching a username
-//   if (num_spaces == 0) {
-//     profiles.push(token);
-//   }
-//   for (var i = 0; i < num_spaces; i++) {
-//     // split at ith instance of space in token
-//     // grab first and last name
-//     query['first_name'] = token.split(' ').slice(0, (i + 1)).join(' ');
-//     query['last_name'] = token.split(' ').slice(i + 1).join(' ');
-//     // query api w/query
-//     promises[i] = $http.get('/api/profiles/', {params: query})
-//       .success(function(data) {
-//         var results = data.objects;
-//         for (var j = 0; j < results.length; j++) {
-//           profiles.push(results[j].username);
-//         }
-//       });
-//   }
-//   query['first_name'] = token;
-//   query['last_name'] = null;
-  
-//   promises.push($http.get('/api/profiles/', {params: query})
-//     .success(function(data) {
-//       var results = data.objects;
-//       for (var j = 0; j < results.length; j++) {
-//         profiles.push(results[j].username);
-//       }
-//     })
-//   );
-
-//   $q.all(promises)
-//     .then(function() {
-//       deferred.resolve(profiles);
-//     }, function() {
-//       deferred.reject('Some HTTP requests failed');
-//     });
-
-//   return deferred.promise;
-// };
-
-// function region_autocomplete() {
-//   return $http.get('/api/regions/')
-//     .success(function(data){
-//       var results = data.objects;
-//       for (var i = 0; i < results.length; i++) {
-//         region_autocompletes.push(results[i].name);
-//         country_codes.push(results[i].code);
-//       }
-//     });
-// };
 
 function keyword_autocomplete() {
   return $http.get('/api/keywords/')
@@ -609,13 +447,6 @@ init_tokenfields()
     // Allow the user to choose an order method using the What's Hot section.
     $scope.orderMethodUpdate = function(orderMethod) {
       $scope.orderMethod = orderMethod;
-    };
-
-    /*
-    * Result Content Card flip!
-    */
-    $scope.flip = function(id){
-       $('.resource-'+id).toggleClass('flip');
     };
 
     $scope.search();
