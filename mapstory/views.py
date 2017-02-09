@@ -1079,6 +1079,7 @@ def download_append_shp(request):
     import tempfile
 
     shp_url = request.session['shp_link']
+    #shp_url = 'https://mapstory.org/geoserver/wfs?format_options=charset%3AUTF-8&typename=geonode%3Aamerican_civil_war32&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature&featureID=fakeID&propertyName=battlefiel,battlename,state,battletype,begindate,enddate,theatercod,result,totalcasua,wkb_geometry'
     shp_name = '{}.zip'.format(request.session['shp_name'])
     print(shp_url)
     print(shp_name)
@@ -1087,8 +1088,10 @@ def download_append_shp(request):
 
     # Download the zip file to a temporary directory
 
-    import urllib
-    urllib.urlretrieve(shp_url, "{}/{}".format(tempdir, shp_name))
+    r = requests.get(shp_url)
+    with open(os.path.join(tempdir, shp_name), "wb") as code:
+        code.write(r.content)
+
     print os.listdir(tempdir)
 
     # Extract the zip file to a temporary directory
@@ -1101,10 +1104,22 @@ def download_append_shp(request):
 
     print os.listdir(tempdir)
 
+    for root, dirs, files in os.walk(tempdir):
+        for file in files:
+            if file.endswith(".shp"):
+                print('THE REAL SHAPEFILE')
+                print(file)
+                shapefile_name = file
+                table_name = shapefile_name.rsplit('.', 1)[0]
+                print table_name
+                break
+
     # Read the shapefile and it's attributes
     import ogr
     ogr.UseExceptions()
-    data_source = ogr.Open(os.path.join(tempdir, '{}.shp'.format(shp_name)), True)
+    print('SHAPEFILE NAME')
+    print('{}.shp'.format(shp_name))
+    data_source = ogr.Open(os.path.join(tempdir, shapefile_name), True)
     data_layer = data_source.GetLayer(0)
     layer_definition = data_layer.GetLayerDefn()
 
@@ -1117,7 +1132,7 @@ def download_append_shp(request):
     print field_list
     # Remove the FID and OGC_FID attributes
 
-    data_source.ExecuteSQL('ALTER TABLE american_civil_war32 DROP COLUMN ogc_fid')
+    data_source.ExecuteSQL('ALTER TABLE {} DROP COLUMN ogc_fid'.format(table_name))
     # data_source.ExecuteSQL('ALTER TABLE american_civil_war32 DROP COLUMN FID')
 
     # Save the new shapefile
