@@ -1,6 +1,5 @@
 import csv
 import datetime
-import urllib2
 import tempfile
 import zipfile
 import ogr
@@ -1060,16 +1059,19 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
 
 def download_append_csv(request):
-    # Retrieve the CSV and save it in a variable
 
+    # Retrieve the CSV and save it in a variable
     csv_url = request.session['csv_link']
     csv_name = '{}.csv'.format(request.session['csv_name'])
-    original_csv_download = urllib2.urlopen(csv_url)
+    original_csv_download = requests.get(csv_url)
     original_csv = csv.DictReader(original_csv_download)
+    original_csv.fieldnames = [field_name.lower() for field_name in original_csv.fieldnames]
 
     # Remove the FID and OGC_FID fields
-    original_csv.fieldnames.remove('FID')
-    original_csv.fieldnames.remove('ogc_fid')
+    if 'fid' in original_csv.fieldnames:
+        original_csv.fieldnames.remove('fid')
+    if 'ogc_fid' in original_csv.fieldnames:
+        original_csv.fieldnames.remove('ogc_fid')
 
     # Create the new CSV
     response = HttpResponse(content_type='text/csv')
@@ -1078,7 +1080,6 @@ def download_append_csv(request):
     writer.writerow(original_csv.fieldnames)
 
     # Return the CSV as an HTTP Response for the user to download
-
     return response
 
 
