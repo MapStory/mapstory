@@ -15,9 +15,7 @@ python:
   - "2.7"
 
 env:
-  - DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
-  - GS_VERSION='2.9.x'
-  - GDAL_DATA="/usr/local/lib/gdal/share/gdal/"
+  - DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings' GS_VERSION='2.9.x' GDAL_DATA="/usr/local/lib/gdal/share/gdal/"
 
 cache:
   directories:
