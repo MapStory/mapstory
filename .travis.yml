@@ -30,6 +30,7 @@ before_install:
   - chmod +x ./scripts/geoserver_before.sh
 
 install:
+  - ./scripts/geoserver_install.sh
   - cd ..
   - git clone https://github.com/MapStory/geonode.git
   - cd mapstory
@@ -45,7 +46,7 @@ install:
   - pip install coveralls
   - sudo apt-get update
   - sudo apt-get autoremove
-  - ./scripts/geoserver_install.sh
+
 
 before_script:
   - python manage.py migrate maps --noinput

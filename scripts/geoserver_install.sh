@@ -35,7 +35,7 @@ else
    sudo apt-get -y install postgresql-9.3-postgis-2.3
 fi
 
-sudo apt-get install -y python-dev python-lxml libxslt1-dev  libpq-dev
+sudo apt-get install -y python-dev python-lxml libxslt1-dev libpq-dev
 sudo apt-get install -y python-virtualenv python-imaging python-pyproj libgeos-3.4.2 libgeos-dev python-shapely python-nose python-httplib2 python-httplib2 gettext git
 sudo apt-get install -y libproj0 libproj-dev postgresql-plpython-9.3 python-numpy python-dateutil libjpeg62 zlib1g-dev python-dev libxml2 libxml2-dev libxslt1-dev libpq-dev
 
