@@ -19,6 +19,9 @@ html, body {
   overflow: scroll;
   z-index: 2;
   opacity: .9;
+  .content {
+    padding: 10px;
+  }
 }
 
 .sidebarHidden {
@@ -30,39 +33,57 @@ html, body {
   margin: 0;
   color: @gray40;
   left: -17.25%;
-  z-index: 2
+  z-index: 2;
 }
 
 .sidebar p {
   font-size: 12px;
   padding: 6px 0;
-  max-height: 45vh;
+  max-height: 30vh;
   overflow-y: scroll;
+  line-height: 1.5;
+  font-weight: 500;
 }
 
-.sidebar a {
-  color: @gray55;
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 20px;
-  outline: 0;
-  overflow: hidden;
-  text-decoration: none;
-}
-
-.sidebar i {
+.viewer-nav i {
   color: @gray97;
   float: right;
   font-size: 15px;
-  padding: 3px 10px 0;
+  margin: 10px;
+  cursor: pointer;
+  &.fa-caret-right {
+    display: none;
+  }
 }
 
 .sidebarHidden i {
   color: @gray97;
   float: right;
   font-size: 15px;
-  padding: 3px 10px 0;
+  margin: 10px;
+  &.fa-caret-left {
+    display: none;
+  }
+  &.fa-caret-right {
+    cursor: pointer;
+    display: block;
+  }
+}
+
+.viewer-chapter-nav {
+  font-size: 13px;
+  a {
+    color: @link-color;
+    float: left;
+    clear: both;
+    margin-bottom: 5px;
+    &:hover, &:active {
+      color: @link-color-hover;
+    }
+    &[disabled] {
+      display: none;
+    }
+  }
 }
 
 .st-legend {
@@ -93,51 +114,50 @@ html, body {
 
 }
 
-.viewerTopNav {
+.viewer-nav {
   background: @primary;
   height: 40px;
   padding: 3px;
 }
 
-.viewerTopNav a {
+.viewer-nav a {
   display: inline;
 }
 
-.topText {
-  color: @gray55;
+.viewer-author {
+  color: @link-color;
   display: block;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 10px;
   margin: 0;
-  padding: 5px 10px;
+  padding: 5px 0; 
+  &:hover, &:active {
+    color: @link-color-hover;
+  }
 }
 
-.bottomText {
-  color: @gray55;
+.viewer-story-title {
+  color: @gray20;
   display: block;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 700;
-  line-height: 24px;
-  margin: 0;
-  padding: 10px 10px 0px;
-}
-
-.menuItem {
-  padding: 10px;
-  margin: 10px;
-  background: @gray90;
-  border-radius: 4px;
-}
-
-.menuItem h5 {
+  line-height: 1.5;
   margin: 0;
 }
 
-.menuItem h3 {
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 20px;
+.viewer-chapter-number {
+	margin: 10px 0 0;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 600;
+  color: @gray55;
+}
+
+.viewer-chapter-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
   margin: 0;
 }
 
