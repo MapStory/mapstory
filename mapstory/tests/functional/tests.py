@@ -6,10 +6,10 @@ Install selenium with:
 `pip install selenium`
 
 Install Phantom JS inside the mapstory directory with:
-`npm install PhantomJS`
+`npm install phantomjs-prebuilt`
 
 """
-'''
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -21,7 +21,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 
-from mapstory.tests.AdminClient import AdminClient
+from ...tests.AdminClient import AdminClient
 
 class FunctionalTest(TestCase):
     """Generic Functional Test
@@ -148,10 +148,8 @@ class TestLayerUpload(FunctionalTest):
         self.assertIsNotNone(createLink)
         createLink.click()
 
-        self.browser.wait(10)
 
         # Click Import Story Layer
-        importStoryLayerLink = self.browser.find_element_by_partial_link_text('Import StoryLayer')
+        importStoryLayerLink = self.browser.find_element_by_partial_link_text('Import Layer')
         self.assertIsNotNone(importStoryLayerLink)
         importStoryLayerLink.click()
-'''

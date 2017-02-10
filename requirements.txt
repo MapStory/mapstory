@@ -52,3 +52,6 @@ pycsw==2.0.2
 
 #command line picker
 pick
+
+# Selenium testing
+selenium
