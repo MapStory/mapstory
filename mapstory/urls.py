@@ -15,6 +15,7 @@ from mapstory.views import health_check
 from mapstory.views import map_detail
 from mapstory.views import layer_detail, layer_detail_id, layer_create
 from mapstory.views import layer_remove, map_remove
+from mapstory.views import download_append_csv
 from mapstory.views import MapStoryConfirmEmailView
 from mapstory.views import MapStorySignupView
 from mapstory.notifications import notify_download, set_profile_notification
@@ -121,6 +122,7 @@ urlpatterns = patterns('',
     url(r'^layers/(?P<layername>[^/]*)/viewer$', layer_detail, {'template': 'viewer/layer_viewer.html'}, name="layer_viewer"),
     url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
     url(r'^layers/notify-download$', notify_download, name='notify-layer-download'),
+    url(r'^layers/download-append-csv$', download_append_csv, name='download_append_csv'),
 
 ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 
