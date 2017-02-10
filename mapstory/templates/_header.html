@@ -10,8 +10,14 @@
                 <span class="icon-bar"></span>
             </button>
             {% if site.assets.logo %}
-                <a class="navbar-brand" style="background:url('{{ MEDIA_URL }}{{ site.assets.logo.name }}') no-repeat; background-size:100%;"
-                   href="{% url "home" %}">{{ SITE_NAME }}</a>
+                <div class="navbar-logo">
+                    <a class="navbar-brand"
+                       style="background:url('{{ MEDIA_URL }}{{ site.assets.logo.name }}') no-repeat; background-size:100%;"
+                       href="{% url "home" %}">{{ SITE_NAME }}</a>
+                    {% if THEME == 'orange' %}
+                        <div class="beta-tag">Beta</div>
+                    {% endif %}
+                </div>
             {% endif %}
         </div>
         <div id="navbar" class="navbar-collapse collapse">
