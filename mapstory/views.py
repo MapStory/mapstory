@@ -1,4 +1,11 @@
+import contextlib
+import csv
 import datetime
+import ogr
+import shutil
+import StringIO
+import tempfile
+import zipfile
 from account.views import ConfirmEmailView
 from account.views import SignupView
 from django.contrib.auth.decorators import login_required
@@ -842,6 +849,111 @@ def layer_append_minimal(source, target, request_cookies):
     #insert_summary = results.join()
 
     return summary_aggregate
+
+
+def download_append_csv(request):
+
+    # Retrieve the CSV and save it in a variable
+    csv_url = request.session['csv_link']
+    csv_name = '{}.csv'.format(request.session['csv_name'])
+    original_csv_download = requests.get(csv_url)
+    original_csv = csv.DictReader(original_csv_download)
+    original_csv.fieldnames = [field_name.lower() for field_name in original_csv.fieldnames]
+
+    # Remove the FID and OGC_FID fields
+    if 'fid' in original_csv.fieldnames:
+        original_csv.fieldnames.remove('fid')
+    if 'ogc_fid' in original_csv.fieldnames:
+        original_csv.fieldnames.remove('ogc_fid')
+
+    # Create the new CSV
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename={}'.format(csv_name)
+    writer = csv.writer(response)
+    writer.writerow(original_csv.fieldnames)
+
+    # Return the CSV as an HTTP Response for the user to download
+    return response
+
+
+@contextlib.contextmanager
+def temporary_directory(*args, **kwargs):
+    """
+    A context manager that allows us to create a temporary directory
+    that will be cleaned up after it's no longer being used.
+    """
+    tempdir = tempfile.mkdtemp(*args, **kwargs)
+    try:
+        yield tempdir
+    finally:
+        shutil.rmtree(tempdir)
+
+
+def download_append_shp(request):
+    """
+    This function grabs a zipped shapefile from a WFS request, and removes
+    the fields that are unnecessary for appending data to that
+    """
+
+    # Create a temporary directory that is removed after the user downloads the zipfile.
+    with temporary_directory() as tempdir:
+
+        shp_url = request.session['shp_link']
+        shp_name = '{}.zip'.format(request.session['shp_name'])
+        print tempdir
+
+        # Download the zip file to a temporary directory.
+        shapefile_request = requests.get(shp_url)
+        with open(os.path.join(tempdir, shp_name), "wb") as code:
+            code.write(shapefile_request.content)
+
+        # Extract the zip file to a temporary directory.
+        original_zipfile = zipfile.ZipFile("{}/{}".format(tempdir, shp_name))
+        original_zipfile.extractall(tempdir)
+
+        # Remove the zip file after we've extracted it.
+        os.remove("{}/{}".format(tempdir, shp_name))
+
+        # Find the shapefile (.shp) and set it's name to a variable for later use.
+        for root, dirs, files in os.walk(tempdir):
+            for file in files:
+                if file.endswith(".shp"):
+                    shapefile_name = file
+                    table_name = shapefile_name.rsplit('.', 1)[0]
+                    break
+
+        # Read the shapefile and it's attributes.
+        data_source = ogr.Open(os.path.join(tempdir, shapefile_name), True)
+        data_layer = data_source.GetLayer(0)
+        layer_definition = data_layer.GetLayerDefn()
+        field_list = []
+
+        for i in range(layer_definition.GetFieldCount()):
+            field_list.append(layer_definition.GetFieldDefn(i).GetName().lower())
+
+        # Remove the FID and OGC_FID attributes
+        if 'ogc_fid' in field_list:
+            data_source.ExecuteSQL('ALTER TABLE {} DROP COLUMN ogc_fid'.format(table_name))
+        if 'fid' in field_list:
+            data_source.ExecuteSQL('ALTER TABLE {} DROP COLUMN fid'.format(table_name))
+
+        # Open StringIO to grab in-memory ZIP contents and write the new zipfile.
+        in_memory_contents = StringIO.StringIO()
+
+        new_zipfile = zipfile.ZipFile(in_memory_contents, "w", compression=zipfile.ZIP_DEFLATED)
+        for dirname, subdirs, files in os.walk(tempdir):
+            for filename in files:
+                print os.path.join(dirname, filename)
+                new_zipfile.write(os.path.join(dirname, filename), os.path.basename(filename))
+        new_zipfile.close()
+
+        # Grab ZIP file from in-memory, make response with correct MIME-type
+        response = HttpResponse(in_memory_contents.getvalue(), content_type="application/zip")
+        # ..and correct content-disposition.
+        response['Content-Disposition'] = 'attachment; filename=%s' % shp_name
+
+        # Return the HttpResponse (zipfile) to the user for download.
+        return response
 
 
 def layer_detail(request, layername, template='layers/layer_detail.html'):
