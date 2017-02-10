@@ -6,8 +6,12 @@ language: python
 
 sudo: required
 
+addons:
+  postgresql: "9.3"
+
 services:
   - elasticsearch
+  - postgresql
 
 python:
   - "2.7"
@@ -40,6 +44,7 @@ install:
   - pip install urllib3[secure] --upgrade
   - pip install coveralls
   - sudo apt-get update
+  - sudo apt-get autoremove
   - ./scripts/geoserver_install.sh
 
 before_script:
