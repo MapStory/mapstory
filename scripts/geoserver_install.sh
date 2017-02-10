@@ -19,11 +19,11 @@ sudo tar --directory=/usr/local/lib -xvf gdal-2.2.0-linux-bin.tar.gz
 sudo mv /usr/local/lib/gdal-2.2.0-linux-bin /usr/local/lib/gdal
 export PATH=/usr/local/lib/gdal/bin:$PATH
 sudo touch /usr/lib/python2.7/dist-packages/gdal.pth
-sudo su -c  "echo '/usr/local/lib/gdal/lib/python2.7/site-packages' > /usr/lib/python2.7/dist-packages/gdal.pth"
-sudo su -c "echo '/usr/local/lib/gdal/lib/' >> /etc/ld.so.conf"
+sudo su -c  "echo '/usr/local/lib/gdal/lib/python2.7/site-packages'" > /usr/lib/python2.7/dist-packages/gdal.pth
+sudo su -c "echo '/usr/local/lib/gdal/lib/'" >> /etc/ld.so.conf
 sudo ldconfig
 sudo touch /etc/profile.d/gdal
-sudo su -c "echo 'export GDAL_DATA=/usr/local/lib/gdal/share/gdal/' >> /etc/profile.d/gdal.sh"
+sudo su -c "echo 'export GDAL_DATA=/usr/local/lib/gdal/share/gdal/'" >> /etc/profile.d/gdal.sh
 
 if [ "$TRAVIS" = true ];
 then
