@@ -7,9 +7,10 @@ Install selenium with:
 
 Install Phantom JS inside the mapstory directory with:
 `npm install phantomjs-prebuilt`
-
 """
 
+
+from unittest import skip
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -56,7 +57,6 @@ class NewVisitorTest(FunctionalTest):
 
 
 class TestSearchFunctionality(FunctionalTest):
-
     def check_for_text_in_search_results(self, text):
         """Asserts if text is part of search results
 
@@ -83,7 +83,8 @@ class TestSearchFunctionality(FunctionalTest):
         # the page changes to show results if any
         self.assertIn('search', self.browser.current_url, 'search not in URL')
 
-    def test_home_search_story(self):
+    @skip("TODO: Fix this by creating a layer before searching")
+    def test_created_story_is_found_by_search(self):
         # User opens mapstory
         self.browser.get(settings.SITEURL)
         searchBar = self.browser.find_element_by_name('q')
