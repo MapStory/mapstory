@@ -4,6 +4,8 @@ branches:
 
 language: python
 
+sudo: required
+
 services:
   - elasticsearch
 
@@ -11,10 +13,17 @@ python:
   - "2.7"
 
 env:
-- DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
+  global:
+    - DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
+    - GS_VERSION=2.7.x
+    - GDAL_DATA="/usr/local/lib/gdal/share/gdal/"
 
 virtualenv:
   system_site_packages: true
+
+before_install:
+  - chmod +x ./scripts/geoserver_install.sh
+  - chmod +x ./scripts/geoserver_before.sh
 
 install:
   - cd ..
@@ -30,6 +39,7 @@ install:
   - pip install -r requirements.txt
   - pip install urllib3[secure] --upgrade
   - pip install coveralls
+  - ./scripts/geoserver_install.sh
 
 before_script:
   - python manage.py migrate maps --noinput
@@ -38,6 +48,7 @@ before_script:
   - sudo mkdir -p /var/lib/mapstory/media/
   - sudo chmod 775 /var/lib/mapstory/media/
   - sudo chown $USER /var/lib/mapstory/media/
+  - ./scripts/geoserver_before.sh
 
 script:
   - coverage run ./manage.py test
