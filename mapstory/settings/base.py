@@ -90,9 +90,9 @@ INSTALLED_APPS += (
     'health_check_db',
     'health_check_storage',
     'mapstory.apps.health_check_geoserver',
-    'mapstory.journal',
     'mapstory.apps.thumbnails',
     'mapstory.annotations',
+    'mapstory.apps.journal',
 )
 
 # Adding Threaded Comments app
