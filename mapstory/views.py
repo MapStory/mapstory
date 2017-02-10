@@ -1,93 +1,85 @@
+# Standard Python Library Imports
+import contextlib
 import csv
 import datetime
-import tempfile
-import zipfile
-import ogr
-import StringIO
-import contextlib
-import shutil
+import httplib
 import json
 import os
-import requests
-from os.path import basename
-from account.views import ConfirmEmailView
-from account.views import SignupView
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
-from django.core.urlresolvers import reverse
+import StringIO
+import shutil
+import tempfile
+import urlparse
+import zipfile
+
+# Core Django Imports
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.contrib import messages
+from django.contrib.auth import logout
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.core.mail import EmailMultiAlternatives
+from django.core.urlresolvers import reverse
+from django.db.models import F
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseServerError
 from django.http.request import validate_host
 from django.shortcuts import render_to_response, render, redirect, get_object_or_404
+from django.template import loader
+from django.template import RequestContext
+from django.template.loader import render_to_string
+from django.utils.http import is_safe_url
+from django.utils.timezone import now as provider_now
+from django.utils.translation import ugettext as _
+from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.template import RequestContext
-from django.utils.http import is_safe_url
-from django.utils.translation import ugettext as _
+
+# Third Party App Imports
+from account.conf import settings as account_settings
+from account.views import ConfirmEmailView, SignupView
+from actstream.models import actor_stream
 from geonode.base.models import TopicCategory, Region
-from geonode.layers.models import Layer
-from geonode.layers.views import _resolve_layer
-from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
-from geonode.people.models import Profile
-from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
-from geonode.maps.models import Map, MapStory
-from httplib import HTTPConnection, HTTPSConnection
-from mapstory.importers import GeoServerLayerCreator
-from mapstory.utils import has_exception, parse_wfst_response, print_exception
-from mapstory.models import get_sponsors, get_images, get_featured_groups
-from mapstory.models import GetPage
-from mapstory.models import NewsItem
-from journal.models import JournalEntry
-from mapstory.models import Leader
-from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
-from icon_commons.models import Icon
 from geonode.contrib.favorite.models import Favorite
 from geonode.contrib.collections.models import Collection
+from geonode.documents.models import get_related_documents
 from geonode.geoserver.helpers import ogc_server_settings
-from urlparse import urlsplit
+from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
+from geonode.groups.models import GroupProfile, GroupMember
+from geonode.layers.models import Layer
+from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE, _resolve_layer
+from geonode.maps.models import Map, MapStory
+from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
+from geonode.people.models import Profile
+from geonode.security.views import _perms_info_json
+from geonode.tasks.deletion import delete_mapstory, delete_layer
+from geonode.utils import build_social_links, default_map_config, GXPLayer, GXPMap, resolve_object
+from health_check.plugins import plugin_dir
+from icon_commons.models import Icon
+from journal.models import JournalEntry, get_group_journals
+from lxml import etree
+from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
+import ogr
+from osgeo_importer.forms import UploadFileForm
+from osgeo_importer.utils import UploadError, launde
+from provider.oauth2.models import AccessToken
+import requests
 from user_messages.models import Thread
-from actstream.models import actor_stream
 
-from geonode.utils import GXPLayer, GXPMap
-from geonode.utils import resolve_object
-from geonode.utils import build_social_links
-from geonode.utils import default_map_config
+# MapStory Specific Imports
+from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
 from mapstory.forms import DeactivateProfileForm, EditProfileForm
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm
 from mapstory.forms import OrganizationForm, OrganizationUpdateForm
 from mapstory.forms import SignupForm
-from geonode.security.views import _perms_info_json
-from geonode.documents.models import get_related_documents
-
-from django.db.models import F
-from django.contrib.auth.models import Group
-from django.contrib import messages
-from django.contrib.auth import logout
-from django.contrib.auth import get_user_model
-
-from geonode.tasks.deletion import delete_mapstory, delete_layer
-from provider.oauth2.models import AccessToken
-from django.utils.timezone import now as provider_now
-from account.conf import settings as account_settings
-from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
-from osgeo_importer.forms import UploadFileForm
-from lxml import etree
-from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
-
-from .notifications import PROFILE_NOTICE_SETTINGS
-from osgeo_importer.utils import UploadError, launder
-
-from geonode.groups.models import GroupProfile, GroupMember
-from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
+from mapstory.importers import GeoServerLayerCreator
+from mapstory.models import get_sponsors, get_images, get_featured_groups
+from mapstory.models import GetPage
+from mapstory.models import NewsItem
+from mapstory.models import Leader
 from mapstory.search.utils import update_es_index
-
-from django.http import HttpResponse, HttpResponseServerError
-from django.template import loader
-from health_check.plugins import plugin_dir
-
-from journal.models import get_group_journals
+from mapstory.utils import has_exception, parse_wfst_response, print_exception
+from .notifications import PROFILE_NOTICE_SETTINGS
 
 
 class IndexView(TemplateView):
@@ -564,7 +556,7 @@ def proxy(request):
                             )
 
     raw_url = request.GET['url']
-    url = urlsplit(raw_url)
+    url = urlparse.urlsplit(raw_url)
 
     locator = url.path
     if url.query != "":
@@ -595,9 +587,9 @@ def proxy(request):
         headers['ACCEPT'] = request.META['HTTP_ACCEPT']
 
     if url.scheme == 'https':
-        conn = HTTPSConnection(url.hostname, url.port)
+        conn = httplib.HTTPSConnection(url.hostname, url.port)
     else:
-        conn = HTTPConnection(url.hostname, url.port)
+        conn = httplib.HTTPConnection(url.hostname, url.port)
 
     conn.request(request.method, locator, request.body, headers)
     result = conn.getresponse()
@@ -1151,7 +1143,7 @@ def download_append_shp(request):
         for dirname, subdirs, files in os.walk(tempdir):
             for filename in files:
                 print os.path.join(dirname, filename)
-                new_zipfile.write(os.path.join(dirname, filename), basename(filename))
+                new_zipfile.write(os.path.join(dirname, filename), os.path.basename(filename))
         new_zipfile.close()
 
         # Grab ZIP file from in-memory, make response with correct MIME-type
