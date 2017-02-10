@@ -1,37 +1,39 @@
+sudo: required
+dist: trusty
+
+branches:
+  only:
+    - master
+
 language: python
+
+services:
+  - postgresql
+  - elasticsearch
 
 python:
   - "2.7"
 
 env:
   - DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
-
-virtualenv:
-  system_site_packages: true
-
-services:
-  - elasticsearch
-  - postgresql
-
-# GEONODE
-sudo: required
-
-dist: trusty
+  - GS_VERSION='2.9.x'
+  - GDAL_DATA="/usr/local/lib/gdal/share/gdal/"
 
 cache:
   directories:
     - gs
     - $HOME/.cache/pip
-    - importer-test-files # REMOVE?
+    - importer-test-files
 
 addons:
   postgresql: "9.3"
 
+virtualenv:
+  system_site_packages: true
+
 before_install:
   - chmod +x ./scripts/geonode_install.sh
   - chmod +x ./scripts/geonode_before.sh
-# END GEONODE
-
 
 install:
   # INSTALL MAPSTORY
@@ -45,12 +47,14 @@ install:
   - sudo apt-get update
   - sudo apt-get install -y --force-yes oracle-java8-installer ant maven2 libjai-imageio-core-java --no-install-recommends
   - sudo update-java-alternatives --set java-8-oracle
+  # Upgrade pip
+  # - pip install --upgrade pip
   - pip install -r requirements.txt
   - pip install urllib3[secure] --upgrade
   - pip install coveralls
 
-  # INSTALL GEONODE
-  - ./scripts/geonode_install.sh
+  # Install Geoserver
+  - ./scripts/geoserver_install.sh
 
 before_script:
   # MAPSTORY
@@ -60,11 +64,10 @@ before_script:
   - sudo mkdir -p /var/lib/mapstory/media/
   - sudo chmod 775 /var/lib/mapstory/media/
   - sudo chown $USER /var/lib/mapstory/media/
-  # GEONODE
-  - sudo scripts/geonode_before.sh
+  # Geoserver
+  - sudo scripts/geoserver_before.sh
 
 script:
-#  - flake8 osgeo_importer
   - coverage run ./manage.py test
   - coverage report
   - coverage html -d cover
