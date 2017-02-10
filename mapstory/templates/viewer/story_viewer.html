@@ -13,50 +13,42 @@
 {% endblock head %}
 
 {% block middle %}
-<div ng-app="viewer" ng-controller="viewerController as viewer" id="story-viewer">
+<div ng-app="viewer" ng-controller="viewerController as viewer">
     <div class="st-legend"></div>
     <div class="sidebar" id="sidebar">
-        <div class="viewerTopNav">
+        <div class="viewer-nav">
             <a target="_blank" href="{% url "home" %}">
-            {% if site.assets.favicon %}
-                <img src="/uploaded/{{ site.assets.favicon.name }}" id="sidebarDropdown" width="35px" height="35px"/>
-                {% comment %}<img src="https://res.cloudinary.com/dw1zyrzc5/image/upload/v1461606100/ms_logo_white_pot8b9.png" id="sidebarDropdown" width="35px" height="35px"/>{% endcomment %}
-            {% else %}
-                <i class="fa fa-home pull-left" id="sidebarDropdown"></i>
-            {% endif %}   
+                {% if site.assets.favicon %}
+                    <img src="/uploaded/{{ site.assets.favicon.name }}" width="35px" height="35px"/>
+                    {% comment %}<img src="https://res.cloudinary.com/dw1zyrzc5/image/upload/v1461606100/ms_logo_white_pot8b9.png" id="sidebarDropdown" width="35px" height="35px"/>{% endcomment %}
+                {% else %}
+                    <i class="fa fa-home pull-left"></i>
+                {% endif %}
             </a>
-            <i class="fa fa-bars" ng-click="toggleSidebar()"></i>
+            <i class="fa fa-caret-left" ng-click="toggleSidebar()"></i>
+            <i class="fa fa-caret-right" ng-click="toggleSidebar()"></i>
         </div>
-        <div id="content">
+        <div class="content">
             {% verbatim %}
-            <div id="title">
-                <a target="_blank" href="/story/{{ mapManager.storyMap.get('id') - 1 }}/view">
-                    <div class="bottomText" ng-bind="mapManager.title"></div>
+            <a target="_blank" href="/story/{{ mapManager.storyMap.get('id') - 1 }}/view" class="viewer-story-title" ng-bind="mapManager.title"></a>
+            {% endverbatim %}
+            <a target="_blank" href="/storyteller/{{ mapManager.username }}" class="viewer-author">{{ SITE_NAME }} {% verbatim %}by {{ mapManager.owner }}</a>
+            <div class="viewer-chapter-number">Chapter {{ mapManager.storyChapter}}</div>
+            <div class="viewer-chapter-title" ng-bind="mapManager.storyMap.getStoryTitle()"></div>
+            <p ng-bind="mapManager.storyMap.getStoryAbstract()"></p>
+            {% endverbatim %}
+
+            <div ng-if="mapManager.chapterCount > 1" class="viewer-chapter-nav">
+                <a class="pointer" ng-click="previousChapter()" ng-disabled="mapManager.storyChapter == 1">
+                    <i class="fa fa-step-backward"></i>
+                    Previous Chapter
                 </a>
-            </div>
-            <div id="author">
-                <a target="_blank" href="/storyteller/{{ mapManager.username }}">
-                {% endverbatim %}
-                    <div class="topText">{{ SITE_NAME }} {% verbatim %}by {{ mapManager.owner }}</div>
+                <a class="pointer" ng-click="nextChapter()" ng-disabled="mapManager.storyChapter == mapManager.chapterCount">
+                    Next Chapter
+                    <i class="fa fa-step-forward"></i>
                 </a>
-            </div>
-            <div id="summary" class="menuItem">
-                <h5>Chapter {{ mapManager.storyChapter }}</h5>
-                <h3 ng-bind="mapManager.storyMap.getStoryTitle()"></h3>
-                <p ng-bind="mapManager.storyMap.getStoryAbstract()"></p>
-            </div>
-            <div class="floating-below" ng-if="mapManager.chapterCount > 1">
-                <div class="menuItem">
-                    <i class="fa fa-step-backward pull-right"></i>
-                    <a class="pointer" ng-click="previousChapter()" ng-disabled="mapManager.storyChapter == 1">Previous Chapter</a>
-                </div>
-                <div class="menuItem">
-                    <i class="fa fa-step-forward pull-right"></i>
-                    <a class="pointer" ng-click="nextChapter()" ng-disabled="mapManager.storyChapter == mapManager.chapterCount">Next Chapter</a>
-                </div>
             </div>
         </div>
-        {% endverbatim %}
     </div>
     <div class="map" id="mapContainer">
         <div id="map"></div>
