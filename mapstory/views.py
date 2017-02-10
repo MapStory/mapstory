@@ -1,89 +1,85 @@
+# Standard Python Library Imports
+import contextlib
+import csv
 import datetime
-from account.views import ConfirmEmailView
-from account.views import SignupView
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
-from django.core.urlresolvers import reverse
+import httplib
+import json
+import os
+import StringIO
+import shutil
+import tempfile
+import urlparse
+import zipfile
+
+# Core Django Imports
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.contrib import messages
+from django.contrib.auth import logout
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.core.mail import EmailMultiAlternatives
+from django.core.urlresolvers import reverse
+from django.db.models import F
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, HttpResponseServerError
 from django.http.request import validate_host
 from django.shortcuts import render_to_response, render, redirect, get_object_or_404
+from django.template import loader
+from django.template import RequestContext
+from django.template.loader import render_to_string
+from django.utils.http import is_safe_url
+from django.utils.timezone import now as provider_now
+from django.utils.translation import ugettext as _
+from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.template import RequestContext
-from django.utils.http import is_safe_url
-from django.utils.translation import ugettext as _
+
+# Third Party App Imports
+from account.conf import settings as account_settings
+from account.views import ConfirmEmailView, SignupView
+from actstream.models import actor_stream
 from geonode.base.models import TopicCategory, Region
-from geonode.layers.models import Layer
-from geonode.layers.views import _resolve_layer
-from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
-from geonode.people.models import Profile
-from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
-from geonode.maps.models import Map, MapStory
-from httplib import HTTPConnection, HTTPSConnection
-from mapstory import tasks
-from mapstory.importers import GeoServerLayerCreator
-from mapstory.utils import has_exception, parse_wfst_response, print_exception
-from mapstory.models import get_sponsors, get_images, get_featured_groups
-from mapstory.models import GetPage
-from mapstory.models import NewsItem
-from journal.models import JournalEntry
-from mapstory.models import Leader
-from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
-from icon_commons.models import Icon
 from geonode.contrib.favorite.models import Favorite
 from geonode.contrib.collections.models import Collection
+from geonode.documents.models import get_related_documents
 from geonode.geoserver.helpers import ogc_server_settings
-from urlparse import urlsplit
+from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
+from geonode.groups.models import GroupProfile, GroupMember
+from geonode.layers.models import Layer
+from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE, _resolve_layer
+from geonode.maps.models import Map, MapStory
+from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
+from geonode.people.models import Profile
+from geonode.security.views import _perms_info_json
+from geonode.tasks.deletion import delete_mapstory, delete_layer
+from geonode.utils import build_social_links, default_map_config, GXPLayer, GXPMap, resolve_object
+from health_check.plugins import plugin_dir
+from icon_commons.models import Icon
+from journal.models import JournalEntry, get_group_journals
+from lxml import etree
+from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
+import ogr
+from osgeo_importer.forms import UploadFileForm
+from osgeo_importer.utils import UploadError, launder
+from provider.oauth2.models import AccessToken
+import requests
 from user_messages.models import Thread
-from actstream.models import actor_stream
 
-
-from geonode.utils import GXPLayer, GXPMap
-from geonode.utils import resolve_object
-from geonode.utils import build_social_links
-from geonode.utils import default_map_config
+# MapStory Specific Imports
+from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
 from mapstory.forms import DeactivateProfileForm, EditProfileForm
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm
 from mapstory.forms import OrganizationForm, OrganizationUpdateForm
 from mapstory.forms import SignupForm
-from geonode.security.views import _perms_info_json
-from geonode.documents.models import get_related_documents
-
-from django.db.models import F
-from django.contrib.auth.models import Group
-from django.contrib import messages
-from django.contrib.auth import logout
-from django.contrib.auth import get_user_model
-
-from geonode.tasks.deletion import delete_mapstory, delete_layer
-from provider.oauth2.models import AccessToken
-from django.utils.timezone import now as provider_now
-from account.conf import settings as account_settings
-from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
-from osgeo_importer.forms import UploadFileForm
-from celery import group
-from lxml import etree
-from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
-
-from .notifications import PROFILE_NOTICE_SETTINGS
-from osgeo_importer.utils import UploadError, launder
-
-import json
-import os
-import requests
-from geonode.groups.models import GroupProfile, GroupMember
-from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
+from mapstory.importers import GeoServerLayerCreator
+from mapstory.models import get_sponsors, get_images, get_featured_groups
+from mapstory.models import GetPage
+from mapstory.models import NewsItem
+from mapstory.models import Leader
 from mapstory.search.utils import update_es_index
-
-
-from django.http import HttpResponse, HttpResponseServerError
-from django.template import loader
-from health_check.plugins import plugin_dir
-
-from journal.models import get_group_journals
+from mapstory.utils import has_exception, parse_wfst_response, print_exception
+from .notifications import PROFILE_NOTICE_SETTINGS
 
 
 class IndexView(TemplateView):
@@ -103,7 +99,6 @@ class IndexView(TemplateView):
 
 
 class MapStorySignupView(SignupView):
-
     form_class = SignupForm
 
     def after_signup(self, form):
@@ -124,7 +119,8 @@ class GetPageView(DetailView):
 
 
 class SearchView(TemplateView):
-    template_name='search/searchn.html'
+    template_name = 'search/searchn.html'
+
     def get_context_data(self, **kwargs):
         context = super(TemplateView, self).get_context_data(**kwargs)
         context['regions'] = Region.objects.filter(level=1)
@@ -155,6 +151,7 @@ class ProfileDetail(DetailView):
 
         return ctx
 
+
 @login_required
 def profile_edit(request, username=None):
     if username is None:
@@ -178,13 +175,14 @@ def profile_edit(request, username=None):
                             request.user.username]))
         else:
             form = EditProfileForm(instance=profile)
-          
+
         return render(request, "people/profile_edit.html", {
             "form": form
         })
     else:
         return HttpResponseForbidden(
             'You are not allowed to edit other users profile')
+
 
 @login_required
 def health_check(request):
@@ -231,6 +229,7 @@ def profile_delete(request, username=None):
         return HttpResponseForbidden(
             'You are not allowed to delete other users profile')
 
+
 # TODO: Refactor this code to use content mixins and class based views so it avoids repetition
 def organization_detail(request, slug):
     group = GroupProfile.objects.get(slug=slug)
@@ -243,7 +242,8 @@ def organization_detail(request, slug):
         "images": get_images(),
         "journals": get_group_journals(group),
         "managers": group.get_managers().all()
-        }, context_instance=RequestContext(request))
+    }, context_instance=RequestContext(request))
+
 
 def initiative_detail(request, slug):
     group = GroupProfile.objects.get(slug=slug)
@@ -256,7 +256,8 @@ def initiative_detail(request, slug):
         "images": get_images(),
         "journals": get_group_journals(group),
         "managers": group.get_managers().all()
-        }, context_instance=RequestContext(request))
+    }, context_instance=RequestContext(request))
+
 
 @login_required
 def organization_create(request):
@@ -285,9 +286,10 @@ def organization_create(request):
     if request.user.is_superuser:
         return render_to_response("groups/group_create.html", {
             "form": form,
-            }, context_instance=RequestContext(request))
+        }, context_instance=RequestContext(request))
     else:
         return HttpResponse(status=403)
+
 
 @login_required
 def initiative_create(request):
@@ -316,9 +318,10 @@ def initiative_create(request):
     if request.user.is_superuser:
         return render_to_response("groups/group_create.html", {
             "form": form,
-            }, context_instance=RequestContext(request))
+        }, context_instance=RequestContext(request))
     else:
         return HttpResponse(status=403)
+
 
 @login_required
 def organization_edit(request, slug):
@@ -348,6 +351,7 @@ def organization_edit(request, slug):
         "group": group,
     }, context_instance=RequestContext(request))
 
+
 @login_required
 def initiative_edit(request, slug):
     group = GroupProfile.objects.get(slug=slug)
@@ -376,6 +380,7 @@ def initiative_edit(request, slug):
         "group": group,
     }, context_instance=RequestContext(request))
 
+
 def organization_members(request, slug):
     group = get_object_or_404(GroupProfile, slug=slug)
     ctx = {}
@@ -384,10 +389,10 @@ def organization_members(request, slug):
         raise Http404()
 
     if group.access in [
-            "public-invite",
-            "private"] and group.user_is_role(
-            request.user,
-            "manager"):
+        "public-invite",
+        "private"] and group.user_is_role(
+        request.user,
+        "manager"):
         ctx["invite_form"] = GroupInviteForm()
 
     if group.user_is_role(request.user, "manager"):
@@ -401,6 +406,7 @@ def organization_members(request, slug):
     })
     ctx = RequestContext(request, ctx)
     return render_to_response("groups/organization_members.html", ctx)
+
 
 @require_POST
 @login_required
@@ -419,6 +425,7 @@ def organization_members_add(request, slug):
 
     return redirect("organization_detail", slug=group.slug)
 
+
 @login_required
 def organization_member_remove(request, slug, username):
     group = get_object_or_404(GroupProfile, slug=slug)
@@ -430,6 +437,7 @@ def organization_member_remove(request, slug, username):
         GroupMember.objects.get(group=group, user=user).delete()
         user.groups.remove(group.group)
         return redirect("organization_detail", slug=group.slug)
+
 
 @require_POST
 def organization_invite(request, slug):
@@ -449,6 +457,7 @@ def organization_invite(request, slug):
 
     return redirect("organization_members", slug=group.slug)
 
+
 def initiative_members(request, slug):
     group = get_object_or_404(GroupProfile, slug=slug)
     ctx = {}
@@ -457,10 +466,10 @@ def initiative_members(request, slug):
         raise Http404()
 
     if group.access in [
-            "public-invite",
-            "private"] and group.user_is_role(
-            request.user,
-            "manager"):
+        "public-invite",
+        "private"] and group.user_is_role(
+        request.user,
+        "manager"):
         ctx["invite_form"] = GroupInviteForm()
 
     if group.user_is_role(request.user, "manager"):
@@ -474,6 +483,7 @@ def initiative_members(request, slug):
     })
     ctx = RequestContext(request, ctx)
     return render_to_response("groups/initiative_members.html", ctx)
+
 
 @require_POST
 @login_required
@@ -492,6 +502,7 @@ def initiative_members_add(request, slug):
 
     return redirect("initiative_detail", slug=group.slug)
 
+
 @login_required
 def initiative_member_remove(request, slug, username):
     group = get_object_or_404(GroupProfile, slug=slug)
@@ -503,6 +514,7 @@ def initiative_member_remove(request, slug, username):
         GroupMember.objects.get(group=group, user=user).delete()
         user.groups.remove(group.group)
         return redirect("initiative_detail", slug=group.slug)
+
 
 @require_POST
 def initiative_invite(request, slug):
@@ -521,6 +533,7 @@ def initiative_invite(request, slug):
                 role=form.cleaned_data["invite_role"])
 
     return redirect("initiative_members", slug=group.slug)
+
 
 class LeaderListView(ListView):
     context_object_name = 'leaders'
@@ -543,7 +556,7 @@ def proxy(request):
                             )
 
     raw_url = request.GET['url']
-    url = urlsplit(raw_url)
+    url = urlparse.urlsplit(raw_url)
 
     locator = url.path
     if url.query != "":
@@ -574,9 +587,9 @@ def proxy(request):
         headers['ACCEPT'] = request.META['HTTP_ACCEPT']
 
     if url.scheme == 'https':
-        conn = HTTPSConnection(url.hostname, url.port)
+        conn = httplib.HTTPSConnection(url.hostname, url.port)
     else:
-        conn = HTTPConnection(url.hostname, url.port)
+        conn = httplib.HTTPConnection(url.hostname, url.port)
 
     conn.request(request.method, locator, request.body, headers)
     result = conn.getresponse()
@@ -625,15 +638,17 @@ class MapStoryConfirmEmailView(ConfirmEmailView):
         html_content = render_to_string("account/email/welcome_message.html", ctx)
         text_content = render_to_string("account/email/welcome_message.txt", ctx)
         msg = EmailMultiAlternatives(subject, text_content,
-            account_settings.DEFAULT_FROM_EMAIL, [confirmation.email_address.email])
+                                     account_settings.DEFAULT_FROM_EMAIL, [confirmation.email_address.email])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
         super(MapStoryConfirmEmailView, self).after_confirmation(confirmation)
+
 
 @login_required
 def new_map_json(request):
     from geonode.maps.views import new_map_json
     return new_map_json(request)
+
 
 def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer.html'):
     """
@@ -652,8 +667,9 @@ def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer
         'config': json.dumps(config)
     }))
 
+
 def _resolve_story(request, id, permission='base.change_resourcebase',
-                 msg=_PERMISSION_MSG_GENERIC, **kwargs):
+                   msg=_PERMISSION_MSG_GENERIC, **kwargs):
     '''
     Resolve the Map by the provided typename and check the optional permission.
     '''
@@ -664,8 +680,8 @@ def _resolve_story(request, id, permission='base.change_resourcebase',
     return resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
 
-def draft_view(request, storyid, template='composer/maploom.html'):
 
+def draft_view(request, storyid, template='composer/maploom.html'):
     story_obj = _resolve_story(request, storyid, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
 
     config = story_obj.viewer_json(request.user)
@@ -674,6 +690,7 @@ def draft_view(request, storyid, template='composer/maploom.html'):
         'config': json.dumps(config),
         'story': story_obj
     }))
+
 
 @login_required
 def mapstory_draft(request, storyid, template):
@@ -685,8 +702,7 @@ def new_map(request, template):
     from geonode.maps.views import new_map
     return new_map(request, template)
 
-
-
+  
 @login_required
 def layer_create(request, template='upload/layer_create.html'):
     if request.method == 'POST':
@@ -743,18 +759,19 @@ def layer_append_minimal(source, target, request_cookies):
     The main layer_append logic that can run outside of a request.
     """
     source = 'geonode:' + source
+
     def chunk_list(list, chunk_size):
         """Yield successive chunk_size chunks from list."""
         for i in xrange(0, len(list), chunk_size):
-            yield list[i:i+chunk_size]
+            yield list[i:i + chunk_size]
 
     # TODO: use the provided column to decide which features should be updated and which should be created
     # join_on_attribute = json.loads(request.POST.get(u'joinOnAttributeName', 'false'))
 
     get_features_request = requests.post(
-            '{}/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames={}'.format(ogc_server_settings.public_url,
-                                                                                      source),
-            auth=ogc_server_settings.credentials
+        '{}/wfs?service=wfs&version=2.0.0&request=GetFeature&typeNames={}'.format(ogc_server_settings.public_url,
+                                                                                  source),
+        auth=ogc_server_settings.credentials
     )
 
     if has_exception(get_features_request.content):
@@ -839,9 +856,6 @@ def layer_append_minimal(source, target, request_cookies):
         else:
             summary = parse_wfst_response(insert_features_request.content)
             summary_aggregate.append(summary)
-    #insert_tasks = group(tasks.append_feature_chunks.subtask((features,wfst_insert_template,get_features_request,target)) for features in features_chunks)
-    #results = insert_tasks.apply_async()
-    #insert_summary = results.join()
 
     return summary_aggregate
 
@@ -865,17 +879,16 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     # making the getCapabilities request.
 
     # Add required parameters for GXP lazy-loading
-    #layer_bbox = layer.bbox
-    #bbox = [float(coord) for coord in list(layer_bbox[0:4])]
-    #srid = layer.srid
+    # layer_bbox = layer.bbox
+    # bbox = [float(coord) for coord in list(layer_bbox[0:4])]
+    # srid = layer.srid
 
     # Transform WGS84 to Mercator.
-    #config["srs"] = srid if srid != "EPSG:4326" else "EPSG:900913"
-    #config["bbox"] = llbbox_to_mercator([float(coord) for coord in bbox])
+    # config["srs"] = srid if srid != "EPSG:4326" else "EPSG:900913"
+    # config["bbox"] = llbbox_to_mercator([float(coord) for coord in bbox])
 
-    #config["title"] = layer.title
-    #config["queryable"] = True
-
+    # config["title"] = layer.title
+    # config["queryable"] = True
 
     if layer.storeType == "remoteStore":
         service = layer.service
@@ -936,7 +949,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                 layer.data_quality_statement = metadata_form.cleaned_data['data_quality_statement']
                 layer.purpose = metadata_form.cleaned_data['purpose']
                 layer.is_published = metadata_form.cleaned_data['is_published']
-                layer.save()                
+                layer.save()
             keywords_form = KeywordsForm(instance=layer)
         elif 'add_keyword' in request.POST:
             layer.keywords.add(request.POST['add_keyword'])
@@ -954,7 +967,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     default_thumbnail_array = layer.get_thumbnail_url().split('/')
     default_thumbnail_name = default_thumbnail_array[
         len(default_thumbnail_array) - 1
-    ]
+        ]
     default_thumbnail = os.path.join(thumbnail_dir, default_thumbnail_name)
 
     if request.method == 'POST':
@@ -996,7 +1009,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     }
 
     context_dict["viewer"] = json.dumps(
-        map_obj.viewer_json(request.user, * (NON_WMS_BASE_LAYERS + [maplayer])))
+        map_obj.viewer_json(request.user, *(NON_WMS_BASE_LAYERS + [maplayer])))
     context_dict["preview"] = getattr(
         settings,
         'LAYER_PREVIEW_LIBRARY')
@@ -1012,7 +1025,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     layer_property_names = []
     for attrib in layer.attributes:
-        if attrib.attribute not in settings.SCHEMA_DOWNLOAD_EXCLUDE and not (attrib.attribute.endswith('_xd') or attrib.attribute.endswith('_parsed')):
+        if attrib.attribute not in settings.SCHEMA_DOWNLOAD_EXCLUDE and not (
+            attrib.attribute.endswith('_xd') or attrib.attribute.endswith('_parsed')):
             layer_property_names.append(attrib.attribute)
     layer_attrib_string = ','.join(layer_property_names)
 
@@ -1020,16 +1034,126 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     if shapefile_link is not None:
         shapefile_link = shapefile_link.url + '&featureID=fakeID' + '&propertyName=' + layer_attrib_string
         context_dict["shapefile_link"] = shapefile_link
+        request.session["shp_name"] = layer.typename
+        request.session["shp_link"] = shapefile_link
 
     csv_link = layer.link_set.download().filter(mime='csv').first()
     if csv_link is not None:
-        csv_link = csv_link.url + '&featureID=fakeID'  + '&propertyName=' + layer_attrib_string
+        csv_link = csv_link.url + '&featureID=fakeID' + '&propertyName=' + layer_attrib_string
         context_dict["csv_link"] = csv_link
+        request.session["csv_name"] = layer.typename
+        request.session["csv_link"] = csv_link
 
     if settings.SOCIAL_ORIGINS:
         context_dict["social_links"] = build_social_links(request, layer)
 
     return render_to_response(template, RequestContext(request, context_dict))
+
+
+def download_append_csv(request):
+
+    # Retrieve the CSV and save it in a variable
+    csv_url = request.session['csv_link']
+    csv_name = '{}.csv'.format(request.session['csv_name'])
+    original_csv_download = requests.get(csv_url)
+    original_csv = csv.DictReader(original_csv_download)
+    original_csv.fieldnames = [field_name.lower() for field_name in original_csv.fieldnames]
+
+    # Remove the FID and OGC_FID fields
+    if 'fid' in original_csv.fieldnames:
+        original_csv.fieldnames.remove('fid')
+    if 'ogc_fid' in original_csv.fieldnames:
+        original_csv.fieldnames.remove('ogc_fid')
+
+    # Create the new CSV
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename={}'.format(csv_name)
+    writer = csv.writer(response)
+    writer.writerow(original_csv.fieldnames)
+
+    # Return the CSV as an HTTP Response for the user to download
+    return response
+
+
+@contextlib.contextmanager
+def temporary_directory(*args, **kwargs):
+    """
+    A context manager that allows us to create a temporary directory
+    that will be cleaned up after it's no longer being used.
+    """
+    tempdir = tempfile.mkdtemp(*args, **kwargs)
+    try:
+        yield tempdir
+    finally:
+        shutil.rmtree(tempdir)
+
+
+def download_append_shp(request):
+    """
+    This function grabs a zipped shapefile from a WFS request, and removes
+    the fields that are unnecessary for appending data to that
+    """
+
+    # Create a temporary directory that is removed after the user downloads the zipfile.
+    with temporary_directory() as tempdir:
+
+        shp_url = request.session['shp_link']
+        shp_name = '{}.zip'.format(request.session['shp_name'])
+        print tempdir
+
+        # Download the zip file to a temporary directory.
+        shapefile_request = requests.get(shp_url)
+        with open(os.path.join(tempdir, shp_name), "wb") as code:
+            code.write(shapefile_request.content)
+
+        # Extract the zip file to a temporary directory.
+        original_zipfile = zipfile.ZipFile("{}/{}".format(tempdir, shp_name))
+        original_zipfile.extractall(tempdir)
+
+        # Remove the zip file after we've extracted it.
+        os.remove("{}/{}".format(tempdir, shp_name))
+
+        # Find the shapefile (.shp) and set it's name to a variable for later use.
+        for root, dirs, files in os.walk(tempdir):
+            for file in files:
+                if file.endswith(".shp"):
+                    shapefile_name = file
+                    table_name = shapefile_name.rsplit('.', 1)[0]
+                    break
+
+        # Read the shapefile and it's attributes.
+        data_source = ogr.Open(os.path.join(tempdir, shapefile_name), True)
+        data_layer = data_source.GetLayer(0)
+        layer_definition = data_layer.GetLayerDefn()
+        field_list = []
+
+        for i in range(layer_definition.GetFieldCount()):
+            field_list.append(layer_definition.GetFieldDefn(i).GetName().lower())
+
+        # Remove the FID and OGC_FID attributes
+        if 'ogc_fid' in field_list:
+            data_source.ExecuteSQL('ALTER TABLE {} DROP COLUMN ogc_fid'.format(table_name))
+        if 'fid' in field_list:
+            data_source.ExecuteSQL('ALTER TABLE {} DROP COLUMN fid'.format(table_name))
+
+        # Open StringIO to grab in-memory ZIP contents and write the new zipfile.
+        in_memory_contents = StringIO.StringIO()
+
+        new_zipfile = zipfile.ZipFile(in_memory_contents, "w", compression=zipfile.ZIP_DEFLATED)
+        for dirname, subdirs, files in os.walk(tempdir):
+            for filename in files:
+                print os.path.join(dirname, filename)
+                new_zipfile.write(os.path.join(dirname, filename), os.path.basename(filename))
+        new_zipfile.close()
+
+        # Grab ZIP file from in-memory, make response with correct MIME-type
+        response = HttpResponse(in_memory_contents.getvalue(), content_type="application/zip")
+        # ..and correct content-disposition.
+        response['Content-Disposition'] = 'attachment; filename=%s' % shp_name
+
+        # Return the HttpResponse (zipfile) to the user for download.
+        return response
+
 
 def _resolve_map(request, id, permission='base.change_resourcebase',
                  msg=_PERMISSION_MSG_GENERIC, **kwargs):
@@ -1042,6 +1166,7 @@ def _resolve_map(request, id, permission='base.change_resourcebase',
         key = 'urlsuffix'
     return resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
+
 
 def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     '''
@@ -1141,6 +1266,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         context_dict["social_links"] = build_social_links(request, map_obj)
     return render_to_response(template, RequestContext(request, context_dict))
 
+
 @login_required
 def layer_remove(request, layername, template='layers/layer_remove.html'):
     layer = _resolve_layer(
@@ -1169,6 +1295,7 @@ def layer_remove(request, layername, template='layers/layer_remove.html'):
     else:
         return HttpResponse("Not allowed", status=403)
 
+
 @login_required
 def map_remove(request, mapid, template='maps/map_remove.html'):
     ''' Delete a map, and its constituent layers. '''
@@ -1185,7 +1312,6 @@ def map_remove(request, mapid, template='maps/map_remove.html'):
 
 
 def account_verify(request):
-
     access_token = request.GET.get('access_token', '')
 
     if not access_token:
@@ -1210,8 +1336,9 @@ def account_verify(request):
         msg = 'User inactive or deleted: %s' % user.username
         return HttpResponseForbidden(msg)
     return HttpResponse('{"id":"%s","first_name":"%s","last_name":"%s","username":"%s","email":"%s"}'
-            % (user.id, user.first_name, user.last_name, user.username, user.email), mimetype='application/json')
+                        % (user.id, user.first_name, user.last_name, user.username, user.email), mimetype='application/json')
+
 
 def layer_detail_id(request, layerid):
-    layer = get_object_or_404(Layer, pk=layerid)    
+    layer = get_object_or_404(Layer, pk=layerid)
     return layer_detail(request, layer.typename)
