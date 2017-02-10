@@ -11,6 +11,7 @@ from mapstory.models import Leader
 from mapstory.models import ParallaxImage
 from mapstory.models import Task
 from mapstory.models import CustomSite
+from mapstory.models import MapStory
 
 from mapstory.export import export_via_model
 
@@ -146,6 +147,7 @@ flag_admin.register_group_to_flag_types(
 class CustomSiteAdmin(admin.ModelAdmin):
     model = CustomSite
 
+admin.site.register(MapStory)
 admin.site.register(GetPage, GetPageAdmin)
 admin.site.register(GetPageContent, GetPageContentAdmin)
 admin.site.register(Sponsor, SponsorAdmin)
