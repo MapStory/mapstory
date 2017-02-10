@@ -357,6 +357,7 @@ SCHEMA_DOWNLOAD_EXCLUDE = [
     'ogc_fid',
     'date_xd',
     'date_parsed',
+    'wkb_geometry',
 ]
 
 LOGGING = {
