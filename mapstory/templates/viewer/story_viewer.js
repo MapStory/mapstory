@@ -116,6 +116,17 @@
             }
         };
 
+        this.hidePinOverlay = function(pin) {
+          var overlays = self.storyMap.getMap().getOverlays().getArray();
+          for (var iOverlay = 0; iOverlay < overlays.length; iOverlay += 1) {
+              var overlay = overlays[iOverlay];
+              if (overlay.getId() == 'popup-' + pin.id) {
+                var map = self.storyMap.getMap();
+                map.removeOverlay(overlay);
+              }
+          }
+        };
+
         this.loadMap = function(options) {
             options = options || {};
             if (options.id) {
@@ -166,9 +177,13 @@
 
         self.loadConfig(config, chapter);
     });
-        $rootScope.$on('showPin', function(event, pin) {
-            self.displayPinInfo(null, pin);
-        });
+    $rootScope.$on('showPin', function(event, pin) {
+        self.displayPinInfo(null, pin);
+    });
+
+    $rootScope.$on('hidePinOverlay', function(event, pin) {
+        self.hidePinOverlay(pin);
+    });
 }
 
 /* EXACTLY THE SAME AS LAYER VIEWER */
