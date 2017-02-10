@@ -1,6 +1,3 @@
-sudo: required
-dist: trusty
-
 branches:
   only:
     - master
@@ -8,36 +5,18 @@ branches:
 language: python
 
 services:
-  - postgresql
   - elasticsearch
 
 python:
   - "2.7"
 
 env:
-  global:
-    - DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
-    - GS_VERSION='2.9.x'
-    - GDAL_DATA="/usr/local/lib/gdal/share/gdal/"
-
-cache:
-  directories:
-    - gs
-    - $HOME/.cache/pip
-    - importer-test-files
-
-addons:
-  postgresql: "9.3"
+- DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
 
 virtualenv:
   system_site_packages: true
 
-before_install:
-  - chmod +x ./scripts/geoserver_install.sh
-  - chmod +x ./scripts/geoserver_before.sh
-
 install:
-  # INSTALL MAPSTORY
   - cd ..
   - git clone https://github.com/MapStory/geonode.git
   - cd mapstory
@@ -48,25 +27,17 @@ install:
   - sudo apt-get update
   - sudo apt-get install -y --force-yes oracle-java8-installer ant maven2 libjai-imageio-core-java --no-install-recommends
   - sudo update-java-alternatives --set java-8-oracle
-  # Upgrade pip
-  # - pip install --upgrade pip
   - pip install -r requirements.txt
   - pip install urllib3[secure] --upgrade
   - pip install coveralls
 
-  # Install Geoserver
-  - ./scripts/geoserver_install.sh
-
 before_script:
-  # MAPSTORY
   - python manage.py migrate maps --noinput
   - python manage.py migrate layers --noinput
   - python manage.py migrate groups --noinput
   - sudo mkdir -p /var/lib/mapstory/media/
   - sudo chmod 775 /var/lib/mapstory/media/
   - sudo chown $USER /var/lib/mapstory/media/
-  # Geoserver
-  - sudo scripts/geoserver_before.sh
 
 script:
   - coverage run ./manage.py test
