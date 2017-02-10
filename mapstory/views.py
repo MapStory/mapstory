@@ -61,7 +61,7 @@ from lxml import etree
 from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 import ogr
 from osgeo_importer.forms import UploadFileForm
-from osgeo_importer.utils import UploadError, launde
+from osgeo_importer.utils import UploadError, launder
 from provider.oauth2.models import AccessToken
 import requests
 from user_messages.models import Thread
