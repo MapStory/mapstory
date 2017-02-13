@@ -23,7 +23,7 @@ sudo su -c  "echo '/usr/local/lib/gdal/lib/python2.7/site-packages' > /usr/lib/p
 sudo su -c "echo '/usr/local/lib/gdal/lib/' >> /etc/ld.so.conf"
 sudo ldconfig
 sudo touch /etc/profile.d/gdal
-sudo su -c "echo 'export GDAL_DATA=/usr/local/lib/gdal/share/gdal/'" >> /etc/profile.d/gdal.sh
+sudo su -c "echo 'export GDAL_DATA=/usr/local/lib/gdal/share/gdal/' >> /etc/profile.d/gdal.sh"
 
 #if [ "$TRAVIS" = true ];
 #then
