@@ -35,14 +35,14 @@ sudo su -c "echo 'export GDAL_DATA=/usr/local/lib/gdal/share/gdal/' >> /etc/prof
 #   sudo apt-get -y install postgresql-9.3-postgis-2.3
 #fi
 
-#sudo apt-get install -y python-dev python-lxml libxslt1-dev libpq-dev
-#sudo apt-get install -y python-virtualenv python-imaging python-pyproj libgeos-3.4.2 libgeos-dev python-shapely python-nose python-httplib2 python-httplib2 gettext git
-#sudo apt-get install -y libproj0 libproj-dev postgresql-plpython-9.3 python-numpy python-dateutil libjpeg62 zlib1g-dev python-dev libxml2 libxml2-dev libxslt1-dev libpq-dev
+sudo apt-get install -y python-dev python-lxml libxslt1-dev libpq-dev
+sudo apt-get install -y python-virtualenv python-imaging python-pyproj libgeos-3.4.2 libgeos-dev python-shapely python-nose python-httplib2 python-httplib2 gettext git
+sudo apt-get install -y libproj0 libproj-dev postgresql-plpython-9.3 python-numpy python-dateutil libjpeg62 zlib1g-dev python-dev libxml2 libxml2-dev libxslt1-dev libpq-dev
 
 #install libraries for a stacked out gdal
-#sudo apt-get install -y sqlite3 libsqlite3-0 libsqlite3-dev libspatialite5 libspatialite-dev libcurl4-gnutls-dev libxerces-c-dev
-#sudo apt-get install -y gpsbabel libfreexl-dev unixodbc-dev libwebp-dev libjpeg-dev libpng12-dev libgif-dev liblzma-dev
-#sudo apt-get install -y libcrypto++-dev netcdf-bin libnetcdf-dev libexpat-dev
+sudo apt-get install -y sqlite3 libsqlite3-0 libsqlite3-dev libspatialite5 libspatialite-dev libcurl4-gnutls-dev libxerces-c-dev
+sudo apt-get install -y gpsbabel libfreexl-dev unixodbc-dev libwebp-dev libjpeg-dev libpng12-dev libgif-dev liblzma-dev
+sudo apt-get install -y libcrypto++-dev netcdf-bin libnetcdf-dev libexpat-dev
 
 if [ -n "$1" ]
  then
