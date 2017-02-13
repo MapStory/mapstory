@@ -1322,6 +1322,11 @@ def account_verify(request):
     return HttpResponse('{"id":"%s","first_name":"%s","last_name":"%s","username":"%s","email":"%s"}'
             % (user.id, user.first_name, user.last_name, user.username, user.email), mimetype='application/json')
 
+
 def layer_detail_id(request, layerid):
     layer = get_object_or_404(Layer, pk=layerid)    
     return layer_detail(request, layer.typename)
+
+
+def messages_redirect(request):
+    return HttpResponseRedirect("/storyteller/{}/#messages_list".format(request.user))

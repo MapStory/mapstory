@@ -18,6 +18,7 @@ from mapstory.views import layer_remove, map_remove
 from mapstory.views import download_append_csv, download_append_shp
 from mapstory.views import MapStoryConfirmEmailView
 from mapstory.views import MapStorySignupView
+from mapstory.views import messages_redirect
 from mapstory.notifications import notify_download, set_profile_notification
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
 from django.core.urlresolvers import reverse_lazy
@@ -52,7 +53,7 @@ layer_detail_patterns = patterns('',
     )
 
 urlpatterns = patterns('',
-
+    url(r'^messages/inbox/', messages_redirect),
     url(r'^ht/', health_check, name="health_check"),
     # Adding Threaded Comments app
     url(r'^articles/comments/', include('django_comments.urls')),
