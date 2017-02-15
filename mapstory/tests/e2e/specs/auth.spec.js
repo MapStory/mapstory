@@ -7,10 +7,10 @@
 
 
 var EC = protractor.ExpectedConditions;
-require('./waitReady.js');
+require('../tools/waitReady.js');
 
 describe('User auth', function() {
-	var auth = require('./auth.po');
+	var auth = require('../pages/auth.po');
 
 	beforeEach(function(){
 		// Fetch Home

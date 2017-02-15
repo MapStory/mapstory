@@ -6,7 +6,7 @@
  */
 'use strict';
 
-require('./waitReady.js');
+require('../tools/waitReady.js');
 
 var ExplorePageObject = function() {
 	this.title = 'Explore - MapStory';

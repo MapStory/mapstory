@@ -4,9 +4,9 @@
  */
 'use strict';
 
-var page = require('./composer.po.js');
-var home = require('./home.po.js');
-var wait_times = require('./wait_times.js');
+var page = require('../pages/composer.po.js');
+var home = require('../pages/home.po.js');
+var wait_times = require('../tools/wait_times.js');
 
 describe('Composer', function() {
 	// Our home page object

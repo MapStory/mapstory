@@ -1,0 +1,24 @@
+{
+  "undef": true,
+  "unused": true,
+  "predef": [
+    "browser",
+    "by",
+    "element",
+    "jasmine",
+    "describe",
+    "xdescribe",
+    "before",
+    "beforeEach",
+    "after",
+    "afterEach",
+    "it",
+    "xit",
+    "it",
+    "inject",
+    "expect",
+    "spyOn" ],
+  "esversion": 6,
+  "-W117": true,
+  "-W097": true
+}

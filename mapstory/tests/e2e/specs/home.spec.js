@@ -16,17 +16,17 @@
  */
 'use strict';
 
-require('./waitReady.js');
-const wait_times = require('./wait_times');
+require('../tools/waitReady.js');
+const wait_times = require('../tools/wait_times');
 
 /**
  * Mapstory Home Page
  */
 describe('Mapstory Home', function() {
 	// Our home page object
-	var page = require('./home.po');
-	var auth = require('./auth.po');
-	var explore_page = require('./explore.po');
+	var page = require('../pages/home.po');
+	var auth = require('../pages/auth.po');
+	var explore_page = require('../pages/explore.po');
 
 	beforeEach(function() {
 		// Fetch the site

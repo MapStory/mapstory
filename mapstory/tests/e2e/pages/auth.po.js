@@ -10,7 +10,7 @@ const defaultLastName = 'Test';
 const defaultEmail = 'testing@testmail.com';
 const defaullTestPassword = 'testPassword2001!';
 
-require('./waitReady.js');
+require('../tools/waitReady.js');
 
 var AuthWizard = function() {
 	this.loginIcon = element(by.css('.fa.fa-user'));

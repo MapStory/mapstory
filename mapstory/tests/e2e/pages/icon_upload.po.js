@@ -4,13 +4,13 @@
  */
 'use strict';
 
-require('./waitReady.js');
+require('../tools/waitReady.js');
 var path = require('path');
 
-const testPNGRelative = '../sampledata/icon.png';
+const testPNGRelative = '../../sampledata/icon.png';
 const testPNGFile = path.resolve(__dirname, testPNGRelative);
 
-const testSVGRelative = '../sampledata/icon-github.svg';
+const testSVGRelative = '../../sampledata/icon-github.svg';
 const testSVGFile = path.resolve(__dirname, testSVGRelative);
 
 var iconUploadWizard = function() {
