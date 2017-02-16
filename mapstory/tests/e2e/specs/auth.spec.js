@@ -6,11 +6,12 @@
  */
 
 
-var EC = protractor.ExpectedConditions;
+let EC = protractor.ExpectedConditions;
 require('../tools/waitReady.js');
 
 describe('User auth', function() {
-	var auth = require('../pages/auth.po');
+
+	let auth = require('../pages/auth.po');
 
 	beforeEach(function(){
 		// Fetch Home
@@ -22,11 +23,15 @@ describe('User auth', function() {
 	 * Login Button
 	 */
 	it('> should display a Login Form', function(done) {
+
 		auth.loginIcon.isDisplayed().then(function(displayed){
-			if(displayed == false) {
+
+			if(displayed === false) {
 				auth.logout();
 			}
+
 			expect(auth.loginIcon.waitReady()).toBeTruthy();
+
 			auth.loginIcon.click();
 			expect(auth.loginForm.waitReady()).toBeTruthy();
 
@@ -39,12 +44,14 @@ describe('User auth', function() {
 	 * The Auth Form
 	 */
 	describe('> The "Login Form"', function() {
+
 		beforeEach(function() {});
 
 		it('should have "Log In" and "Sign up" tabs', function() {
 			expect(auth.loginIcon.isDisplayed()).toBeTruthy();
 			expect(auth.loginIcon.waitReady()).toBeTruthy();
-			// Click lgin
+
+			// Click login
 			auth.loginIcon.click();
 			expect(auth.loginModal.waitReady()).toBe(true);
 			expect(element(by.linkText('Log In')).isPresent()).toBe(true);
@@ -55,6 +62,7 @@ describe('User auth', function() {
 		 * The Log in Form
 		 */
 		describe('> The "Log In" tab', function() {
+
 			beforeEach(function() {});
 
 			it('should be shown by default', function() {
@@ -63,27 +71,35 @@ describe('User auth', function() {
 				// Click Login
 				auth.loginIcon.click();
 				expect(auth.loginForm.waitReady()).toBeTruthy();
-				var usernameLabel = element(by.css('label[for="username"]'));
+
+				let usernameLabel = element(by.css('label[for="username"]'));
 				expect(usernameLabel.waitReady()).toBeTruthy();
 			});
 
 			it('> should have a close button', function() {
+
 				expect(auth.loginIcon.waitReady()).toBeTruthy();
+
 				// Click Login
 				auth.loginIcon.click();
 				expect(auth.loginForm.waitReady()).toBeTruthy();
 				expect(auth.login_close_button.isDisplayed).toBeTruthy();
+
 				// Click close
 				auth.login_close_button.click();
 			});
 
 			it('> should require a username and password', function() {
+
 				expect(auth.loginIcon.waitReady()).toBeTruthy();
+
 				// Click login
 				auth.loginIcon.click();
 				expect(auth.loginForm.waitReady()).toBeTruthy();
+
 				// Clock submit
 				element(by.css('.login-auth-btn.btn.btn-md.btn-block')).click();
+
 				// Expect error messages
 				expect(element(by.css('#div_id_username.form-group.has-error')).isDisplayed()).toBeTruthy();
 				expect(element(by.css('#div_id_password.form-group.has-error')).isDisplayed()).toBeTruthy();
@@ -108,16 +124,16 @@ describe('User auth', function() {
 				expect(auth.loginForm.waitReady()).toBeTruthy();
 
 				// Click signup
-				var button = element(by.linkText('Sign Up'));
+				let button = element(by.linkText('Sign Up'));
 				expect(button.waitReady()).toBeTruthy();
 				button.click();
-				var userid = 'tester_' + auth.makeid(7);
-				var usernameInput = element(by.css('#id_username'));
-				var nameInput = element(by.css('#id_first_name'));
-				var lastNameInput = element(by.css('#id_last_name'));
-				var emailInput = element(by.css('#id_email'));
-				var passwordInput = element(by.css('#id_password'));
-				var confirmPasswordInput = element(by.css('#password_confirm'));
+				let userid = 'tester_' + auth.makeid(7);
+				let usernameInput = element(by.css('#id_username'));
+				let nameInput = element(by.css('#id_first_name'));
+				let lastNameInput = element(by.css('#id_last_name'));
+				let emailInput = element(by.css('#id_email'));
+				let passwordInput = element(by.css('#id_password'));
+				let confirmPasswordInput = element(by.css('#password_confirm'));
 				// Set username
 				expect(usernameInput.waitReady()).toBeTruthy();
 				usernameInput.sendKeys(userid);
@@ -132,7 +148,7 @@ describe('User auth', function() {
 				// Confirm password
 				confirmPasswordInput.sendKeys(auth.getPassword());
 				// Accept terms
-				var termsCheckbox = element(by.model('agreed'));
+				let termsCheckbox = element(by.model('agreed'));
 				termsCheckbox.click();
 				// Click Join
 				auth.signUpButton.click();
