@@ -1,7 +1,7 @@
 import json
 
 import geonode
-import geonode.contrib.favorite.models
+import mapstory.apps.favorite.models
 from mapstory.maps.models import Map, MapStory
 from django import contrib, db, http, views
 from mapstory.apps import flag
@@ -145,7 +145,7 @@ def post_save_rating(instance, sender, **kwargs):
 
 def set_mapstory_notifications():
     signals.post_save.connect(comment_post_save, sender=ThreadedComment)
-    signals.post_save.connect(favorite_post_save, sender=geonode.contrib.favorite.models.Favorite)
+    signals.post_save.connect(favorite_post_save, sender=mapstory.apps.favorite.models.Favorite)
     signals.post_save.connect(post_save_flag, sender=FlagInstance)
     signals.post_save.connect(post_save_message, sender=Message)
     signals.pre_save.connect(pre_save_map, sender=Map)
