@@ -54,7 +54,8 @@ from geonode.maps.models import MapStory
 from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
 from geonode.people.models import Profile
 from geonode.security.views import _perms_info_json
-from geonode.tasks.deletion import delete_mapstory, delete_layer
+from geonode.tasks.deletion import delete_layer
+from tasks import delete_mapstory
 from geonode.utils import GXPLayer, GXPMap
 from geonode.utils import build_social_links
 from geonode.utils import default_map_config
