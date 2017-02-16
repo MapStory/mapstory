@@ -30,6 +30,8 @@ install:
   - pip install -r requirements.txt
   - pip install urllib3[secure] --upgrade
   - pip install coveralls
+  - sudo apt-get install -y xvfb
+  - npm install -g protractor
 
 before_script:
   - python manage.py migrate maps --noinput
@@ -38,8 +40,13 @@ before_script:
   - sudo mkdir -p /var/lib/mapstory/media/
   - sudo chmod 775 /var/lib/mapstory/media/
   - sudo chown $USER /var/lib/mapstory/media/
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+  - nohup bash -c "./nodemodules/protractor/bin/webdriver-manager start 2>&1 &" # Starts the webdriver
 
 script:
+  - protractor mapstory/tests/e2e/conf.js
   - coverage run ./manage.py test
   - coverage report
   - coverage html -d cover
