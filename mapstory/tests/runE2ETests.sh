@@ -19,7 +19,7 @@ else
 fi
 
 if exists protractor; then
-	protractor js/conf.js
+	protractor e2e/conf.js
 else
 	echo 'Error: protractor is not installed!'
 	echo 'Please install protractor from: protractortest.org'

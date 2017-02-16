@@ -27,6 +27,9 @@
         this.container.className = 'ol-popup';
         this.container.id = (options.hasOwnProperty('id')) ? options.id : '';
 
+        /*
+          Disable closer for viewer until the issue of the overlay repeatedly
+          opening during playback in resolved
 
         this.closer = document.createElement('a');
         this.closer.className = 'ol-popup-closer';
@@ -39,6 +42,7 @@
             that.closer.blur();
             evt.preventDefault();
         }, false);
+        */
 
         this.content = document.createElement('div');
         this.content.className = 'ol-popup-content';
