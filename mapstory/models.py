@@ -8,7 +8,7 @@ import geonode
 import guardian
 import textile
 from django import conf, db, contrib, template
-
+from django.contrib.sites.models import Site
 import notifications, search
 from apps.journal import models
 
@@ -19,7 +19,7 @@ notifications.set_mapstory_notifications()
 
 
 class CustomSite(db.models.Model):
-    site = db.models.OneToOneField(contrib.sites.models.Site, null=True, related_name='assets')
+    site = db.models.OneToOneField(Site, null=True, related_name='assets')
     subtitle = db.models.CharField(max_length=100)
     logo = db.models.ImageField(blank=False, upload_to='customsite')
     favicon = db.models.ImageField(blank=False, upload_to='customsite')
@@ -35,7 +35,7 @@ class CustomSite(db.models.Model):
     def save(self, *args, **kwargs):
         super(CustomSite, self).save(*args, **kwargs)
         # Cached information will likely be incorrect now.
-        contrib.sites.models.Site.objects.clear_cache()
+        Site.objects.clear_cache()
 
 
 def _stamp(data):
