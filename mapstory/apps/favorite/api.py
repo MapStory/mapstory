@@ -10,7 +10,7 @@ from tastypie.constants import ALL
 from tastypie.contrib.contenttypes.fields import GenericForeignKeyField
 
 from geonode.layers.models import Layer
-from geonode.maps.models import Map
+from mapstory.mapstories.models import Map
 from geonode.documents.models import Document
 from geonode.people.models import Profile
 from geonode.api.resourcebase_api import LayerResource, MapResource, DocumentResource

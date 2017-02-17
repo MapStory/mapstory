@@ -26,7 +26,7 @@ from django.db import models
 
 from geonode.documents.models import Document
 from geonode.layers.models import Layer
-from geonode.maps.models import Map
+from mapstory.mapstories.models import Map
 
 
 class FavoriteManager(models.Manager):

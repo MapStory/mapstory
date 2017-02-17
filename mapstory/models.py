@@ -12,7 +12,7 @@ from django import conf, db, contrib, template
 import notifications, search
 from apps.journal import models
 
-from mapstory.mapstories.models import MapStory
+from mapstory.mapstories.models import MapStory, Map
 
 
 notifications.set_mapstory_notifications()
@@ -153,7 +153,7 @@ class GetPage(db.models.Model):
 class GetPageContent(ContentMixin):
     title = db.models.CharField(max_length=64)
     subtitle = db.models.CharField(max_length=64, blank=True)
-    example_map = db.models.ForeignKey(geonode.maps.models.Map, null=True, blank=True)
+    example_map = db.models.ForeignKey(Map, null=True, blank=True)
     main_link = db.models.URLField(blank=False)
     external_link = db.models.URLField(blank=True)
     external_link_title = db.models.CharField(max_length=64, blank=True, null=True)
@@ -213,7 +213,7 @@ def get_group_maps(gProfile):
     users = gProfile.group.user_set.all()
     maps = []
     for user in users:
-        maps.append(guardian.shortcuts.get_objects_for_user(user, 'base.view_resourcebase').instance_of(geonode.maps.models.Map))
+        maps.append(guardian.shortcuts.get_objects_for_user(user, 'base.view_resourcebase').instance_of(Map))
 
     return [item for sublist in maps for item in sublist]
 
@@ -240,5 +240,5 @@ def mapstory_map_post_save(instance, sender, **kwargs):
 db.models.signals.post_save.connect(name_post_save, sender=Community)
 db.models.signals.post_save.connect(mapstory_profile_post_save, sender=geonode.people.models.Profile)
 db.models.signals.post_save.connect(geonode.base.models.resourcebase_post_save, sender=MapStory)
-db.models.signals.post_save.connect(mapstory_map_post_save, sender=geonode.maps.models.Map)
+db.models.signals.post_save.connect(mapstory_map_post_save, sender=Map)
 

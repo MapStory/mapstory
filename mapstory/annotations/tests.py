@@ -6,7 +6,7 @@ from django.test import TransactionTestCase
 from mapstory.annotations.models import Annotation
 from mapstory.annotations.utils import make_point
 from mapstory.annotations.utils import unicode_csv_dict_reader
-from geonode.maps.models import Map
+from mapstory.mapstories.models import Map
 import json
 import re
 import tempfile

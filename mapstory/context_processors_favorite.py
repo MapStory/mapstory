@@ -2,8 +2,7 @@ import re
 
 from mapstory.apps.favorite.utils import get_favorite_info as geonode_get_favorite_info
 from geonode.layers.models import Layer
-from geonode.maps.models import Map
-from geonode.maps.models import MapStory
+from mapstory.mapstories.models import MapStory, Map
 
 # based on urls.py
 layer_detail_path = re.compile('/layers/[^/]*$')

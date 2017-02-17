@@ -4,7 +4,7 @@ from mapstory.apps.boxes.models import StoryBox
 from mapstory.apps.boxes.forms import StoryBoxForm
 from mapstory.apps.boxes.utils import unicode_csv_dict_reader
 from geonode.utils import resolve_object
-from geonode.maps.models import Map
+from mapstory.mapstories.models import Map
 from geonode.utils import json_response
 
 import csv
@@ -188,7 +188,7 @@ def boxes(req, mapid):
         return _boxes_get(req, mapid)
     if req.method == 'POST':
         return _boxes_post(req, mapid)
-    
+
     return HttpResponse(status=400)
 
 

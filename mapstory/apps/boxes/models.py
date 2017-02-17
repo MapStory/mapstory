@@ -1,5 +1,5 @@
 from django.db import models
-from geonode.maps.models import Map
+from mapstory.mapstories.models import Map
 from mapstory.apps.boxes.utils import parse_date_time
 from datetime import datetime
 from django.contrib.gis.db import models as gis

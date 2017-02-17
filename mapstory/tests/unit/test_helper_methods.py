@@ -1,8 +1,8 @@
 from unittest import skip
 from django.test import TestCase
 
+from geonode.groups.models import GroupProfile
 from mapstory.models import _stamp
-from mapstory.models import GroupProfile
 from mapstory.models import name_post_save
 from mapstory.models import get_images
 from mapstory.models import get_sponsors
@@ -67,7 +67,7 @@ class TestHelperMethods(TestCase):
     def test_group_layers(self):
         gp = GroupProfile()
         self.assertEqual(get_group_layers(gp).count(), 0)
-    
+
     @skip("TODO")
     def test_group_maps(self):
         gp = GroupProfile()
