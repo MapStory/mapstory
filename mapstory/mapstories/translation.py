@@ -1,4 +1,4 @@
 from modeltranslation.translator import translator
-from maps.models import MapStory
+from mapstory.mapstories.models import MapStory
 
 translator.register(MapStory)
