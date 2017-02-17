@@ -32,7 +32,7 @@ from django.template import RequestContext
 from geonode.documents.models import Document
 from geonode.layers.models import Layer
 from geonode.maps.models import Map
-from mapstory.maps.models import MapStory
+from mapstory.mapstories.models import MapStory
 import models
 
 

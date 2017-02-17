@@ -2,7 +2,7 @@ import json
 
 import geonode
 import mapstory.apps.favorite.models
-from mapstory.maps.models import Map, MapStory
+from mapstory.mapstories.models import Map, MapStory
 from django import contrib, db, http, views
 from mapstory.apps import flag
 

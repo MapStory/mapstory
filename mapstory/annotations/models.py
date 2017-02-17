@@ -1,5 +1,5 @@
 from django.db import models
-from geonode.maps.models import Map
+from mapstory.mapstories.models import Map
 #from geonode.maps.signals import map_copied_signal
 from mapstory.annotations.utils import parse_date_time
 from datetime import datetime

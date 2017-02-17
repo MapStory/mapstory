@@ -3,7 +3,7 @@ from unittest import skip
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from geonode.maps.models import MapStory
+from mapstory.mapstories.models import MapStory
 
 from ...version import get_version
 from ... import __version__ as version

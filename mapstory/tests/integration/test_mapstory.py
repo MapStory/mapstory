@@ -7,8 +7,8 @@ from django.contrib.auth import get_user_model, authenticate
 from django.test import TestCase, Client
 from django.test.utils import override_settings
 
-from geonode.maps.models import Map
-from geonode.maps.models import MapStory
+from mapstory.mapstories.models import Map
+from mapstory.mapstories.models import MapStory
 
 from ..AdminClient import AdminClient
 from ..MapStoryTestMixin import MapStoryTestMixin

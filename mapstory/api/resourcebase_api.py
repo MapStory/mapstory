@@ -1,6 +1,6 @@
 from django.conf import settings
 from geonode.api.resourcebase_api import CommonModelApi, CommonMetaApi
-from maps.models import MapStory
+from mapstory.mapstories.models import MapStory
 
 
 class MapStoryResource(CommonModelApi):

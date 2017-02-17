@@ -3,7 +3,7 @@ from dialogos.models import Comment
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Avg
 from haystack import indexes
-from mapstory.maps.models import MapStory
+from mapstory.mapstories.models import MapStory
 
 
 class MapStoryIndex(indexes.SearchIndex, indexes.Indexable):

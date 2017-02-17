@@ -1,6 +1,6 @@
 from geonode.geoserver.helpers import ogc_server_settings
 from mapstory.utils import parse_wfst_response, has_exception, error_response, print_exception
-from maps.models import MapStory
+from mapstory.mapstories.models import MapStory
 import requests
 from celery import app
 

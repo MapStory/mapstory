@@ -50,7 +50,7 @@ from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, 
 from geonode.people.models import Profile
 from geonode.geoserver.views import layer_acls, resolve_user
 from geonode.layers.views import _resolve_layer
-from maps.models import MapStory
+from mapstory.mapstories.models import MapStory
 from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
 from geonode.people.models import Profile
 from geonode.security.views import _perms_info_json

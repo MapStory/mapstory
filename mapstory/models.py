@@ -12,7 +12,7 @@ from django import conf, db, contrib, template
 import notifications, search
 from apps.journal import models
 
-from maps.models import MapStory
+from mapstory.mapstories.models import MapStory
 
 
 notifications.set_mapstory_notifications()

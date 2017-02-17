@@ -4,7 +4,8 @@ Test Utilities and helpers
 import string
 import random
 from django.contrib.auth import get_user_model
-from geonode.maps.models import Map, MapStory
+from mapstory.mapstories.models import Map
+from mapstory.mapstories.models import MapStory
 
 User = get_user_model()
 
