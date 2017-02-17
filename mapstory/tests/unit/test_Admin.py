@@ -16,7 +16,7 @@ from ...admin import (
     content_html
 )
 
-from ...journal.admin import JournalEntryAdmin
+from mapstory.apps.journal.admin import JournalEntryAdmin
 from ...models import GetPage, GetPageContent
 
 class DummyHTMLObj(object):
