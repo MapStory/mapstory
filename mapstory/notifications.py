@@ -20,7 +20,7 @@ from user_messages.models import Message
 
 PROFILE_NOTICE_SETTINGS = ['layer_comment', 'layer_rated', 'layer_favorited', 'layer_flagged',
     'layer_downloaded', 'layer_used', 'map_comment', 'map_rated', 'map_favorited',
-    'map_flagged', 'map_featured', 'message_received', 'journal_comment', 'password_updated'] 
+    'map_flagged', 'map_featured', 'message_received', 'journal_comment', 'password_updated']
 
 
 def send_notification(notice_type_label, user, extra_content=None):

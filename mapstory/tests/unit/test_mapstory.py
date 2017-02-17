@@ -23,7 +23,7 @@ class TestMapstory(TestCase):
         self.assertIsInstance(self.mapstory, MapStory, "Should be instance of MapStory")
         self.mapstory.title = "Test story"
         self.mapstory.owner = testUser
-    
+
     def test_save_and_retrieve(self):
         """
         Should save in database
