@@ -17,7 +17,7 @@ from geonode.api.resourcebase_api import LayerResource, MapResource, DocumentRes
 from geonode.api.api import ProfileResource
 from geonode.base.models import ResourceBase
 
-from .models import Favorite 
+from .models import Favorite
 
 
 class FavoriteResource(ModelResource):
@@ -103,5 +103,5 @@ class FavoriteResource(ModelResource):
         allowed_methods = ['get']
         authorization = Authorization()
         filtering = {
-            'content_type': 'exact',  
+            'content_type': 'exact',
         }
