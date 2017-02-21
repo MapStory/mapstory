@@ -6,41 +6,17 @@ Install selenium with:
 `pip install selenium`
 
 Install Phantom JS inside the mapstory directory with:
-`npm install PhantomJS`
-
+`npm install phantomjs-prebuilt`
 """
-'''
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from unittest import skip
 
-from django.test import TestCase
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 
-from mapstory.tests.AdminClient import AdminClient
+from selenium.webdriver.common.keys import Keys
 
-class FunctionalTest(TestCase):
-    """Generic Functional Test
-
-    - Sets up the browser with phantomJS
-    - Tears down the browser when done
-    - Knows how to assert search results
-    
-    Attributes:
-        browser (WebDriver): The Selenium headless browser
-    """
-    def setUp(self):
-        self.browser = webdriver.PhantomJS(executable_path=r'/srv/git/mapstory/mapstory/node_modules/phantomjs/lib/phantom/bin/phantomjs')
-        self.browser.implicitly_wait(1)
-        self.browser.set_window_size(1120,600)
-
-    def tearDown(self):
-        self.browser.quit()
-
+from .base import FunctionalTest
 
 class NewVisitorTest(FunctionalTest):
     
@@ -56,7 +32,6 @@ class NewVisitorTest(FunctionalTest):
 
 
 class TestSearchFunctionality(FunctionalTest):
-
     def check_for_text_in_search_results(self, text):
         """Asserts if text is part of search results
 
@@ -83,7 +58,8 @@ class TestSearchFunctionality(FunctionalTest):
         # the page changes to show results if any
         self.assertIn('search', self.browser.current_url, 'search not in URL')
 
-    def test_home_search_story(self):
+    @skip("TODO: Fix this by creating a layer before searching")
+    def test_created_story_is_found_by_search(self):
         # User opens mapstory
         self.browser.get(settings.SITEURL)
         searchBar = self.browser.find_element_by_name('q')
@@ -148,10 +124,8 @@ class TestLayerUpload(FunctionalTest):
         self.assertIsNotNone(createLink)
         createLink.click()
 
-        self.browser.wait(10)
 
         # Click Import Story Layer
-        importStoryLayerLink = self.browser.find_element_by_partial_link_text('Import StoryLayer')
+        importStoryLayerLink = self.browser.find_element_by_partial_link_text('Import Layer')
         self.assertIsNotNone(importStoryLayerLink)
         importStoryLayerLink.click()
-'''

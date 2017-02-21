@@ -4,10 +4,10 @@
 
 'use strict';
 
-require('./waitReady.js');
+require('../tools/waitReady.js');
 
 describe('Journal Page', function(){
-	var journal_page = require('./journal.po');
+	let journal_page = require('../pages/journal.po');
 
 	beforeEach(function(){
 		journal_page.get();

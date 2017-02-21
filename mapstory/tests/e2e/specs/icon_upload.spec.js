@@ -1,7 +1,7 @@
 'use strict';
 
-var home_page = require('./home.po');
-var wizard = require('./icon_upload.po');
+let home_page = require('../pages/home.po');
+let wizard = require('../pages/icon_upload.po');
 
 // var screenHelper = require('./screenHelper');
 

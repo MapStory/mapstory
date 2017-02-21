@@ -5,8 +5,8 @@
 
 'use strict';
 
-require('./waitReady.js');
-var wait_times = require('./wait_times');
+require('../tools/waitReady.js');
+var wait_times = require('../tools/wait_times');
 
 var Search = function() {
 	this.searchForm = element(by.css('#search'));

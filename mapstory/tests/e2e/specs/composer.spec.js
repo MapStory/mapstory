@@ -4,9 +4,9 @@
  */
 'use strict';
 
-var page = require('./composer.po.js');
-var home = require('./home.po.js');
-var wait_times = require('./wait_times.js');
+let page = require('../pages/composer.po.js');
+let home = require('../pages/home.po.js');
+let wait_times = require('../tools/wait_times.js');
 
 describe('Composer', function() {
 	// Our home page object
@@ -120,15 +120,15 @@ describe('Composer', function() {
 			// done();
 		// });
 
-		var chaptersList = $('#chaptersList');
+		let chaptersList = $('#chaptersList');
 		expect(chaptersList.waitReady()).toBeTruthy();
 
-		var chapterLink = chaptersList.$('.menuItem.ng-scope').$('a');
+		let chapterLink = chaptersList.$('.menuItem.ng-scope').$('a');
 		expect(chapterLink.waitReady()).toBeTruthy();
 		chapterLink.click();
 		// browser.pause();
 
-		var chapterInfo = $('#chapterInfoButton');
+		let chapterInfo = $('#chapterInfoButton');
 		expect(chapterInfo.waitReady()).toBeTruthy();
 		done();
 	});

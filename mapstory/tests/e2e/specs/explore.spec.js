@@ -3,10 +3,10 @@
  */
 'use strict';
 
-require('./waitReady.js');
+require('../tools/waitReady.js');
 
 describe('Explore page', function() {
-	var explore_page = require('./explore.po');
+	var explore_page = require('../pages/explore.po');
 
 	beforeEach(function() {
 		explore_page.get();

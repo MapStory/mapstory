@@ -1,9 +1,10 @@
 'use strict';
-require('./waitReady.js');
-var auth = require('./auth.po');
-var wait_times = require('./wait_times');
-var home_page = require('./home.po');
-var layer_metadata = require('./layer_metadata.po');
+require('../tools/waitReady.js');
+
+var auth = require('../pages/auth.po');
+var wait_times = require('../tools/wait_times');
+var home_page = require('../pages/home.po');
+var layer_metadata = require('../pages/layer_metadata.po');
 
 /**
  * Tester object
@@ -14,7 +15,7 @@ var tester = {
 	email: null,
 	timestamp: null,
 	browser: null,
-	resolution: null,
+	resolution: null
 };
 
 
@@ -29,8 +30,6 @@ describe('[Survey Tests] |', function() {
 		browser.get('http://192.168.56.151');
 		browser.waitForAngular();
 	});
-
-
 
 	describe('<<1>> Tester Info |', function () {
 		var randomId = auth.makeid(7);

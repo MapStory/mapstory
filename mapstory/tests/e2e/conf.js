@@ -16,11 +16,11 @@ exports.config = {
 
 	//--------------------------
 	// Use this to run all test files
-	// specs: ['*.spec.js'],
+	specs: ['specs/*.spec.js'],
 
 	//--------------------------
 	// Use this to cherry-pick tests
-	specs: [
+	/*specs: [
 		'auth.spec.js',
 		'composer.spec.js',
 		'home.spec.js',
@@ -30,6 +30,7 @@ exports.config = {
 		'explore.spec.js',
 		'journal.spec.js'
 	],
+	*/
 
 	//---------------------------------------
 	// Use this to run the tests in several browsers simultaniously
@@ -44,11 +45,11 @@ exports.config = {
 				prefs: {
 					'download': {
 						'prompt_for_download': false,
-						'default_directory': '../downloads/',
-					},
-				},
-			},
-		},
+						'default_directory': '../downloads/'
+					}
+				}
+			}
+		}
 		//-----------------------------
 		// Uncomment to use:
 		// {'browserName' : 'firefox'}
@@ -62,5 +63,5 @@ exports.config = {
 	allScriptsTimeout: 30000,
 	//----------------------------------------------
 	// Results output file
-	resultJsonOutputFile:'./result.json',
+	resultJsonOutputFile:'./result.json'
 };
