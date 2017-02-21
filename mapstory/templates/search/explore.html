@@ -4,7 +4,7 @@
 {% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
-<div ng-controller="geonode_search_controller">
+<div ng-controller="searchController">
     <div>
         <ul>
           <li role="presentation" class="active" ng-click="toggle_user(); search();""><a href="#content-searching" data-toggle="tab">Content</a></li>

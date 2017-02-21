@@ -2,7 +2,7 @@
 
 (function(){
 
-  var module = angular.module('geonode_main_search', [], function($locationProvider) {
+  var module = angular.module('mapstorySearch', [], function($locationProvider) {
       if (window.navigator.userAgent.indexOf("MSIE") == -1){
         $locationProvider.html5Mode({
           enabled: true,
@@ -31,7 +31,7 @@
   * Load data from api and defines the multiple and single choice handlers
   * Syncs the browser url with the selections
   */
-  module.controller('geonode_search_controller', function($injector, $scope, $location, $http, $q, Configs, Django){
+  module.controller('searchController', function($injector, $scope, $location, $http, $q, Configs, Django){
     $scope.api_endpoint = '/api/base/search/';
     $scope.query = $location.search();
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
