@@ -486,7 +486,7 @@ NOSE_ARGS = [
     # '--cover-html',
     '--exe',
     # This:
-    '--ignore-files=(^\.|^_|pavement\.py$|fabfile\.py$|_settings\.py$|cf\.py$|search_indexes\.py$)',
+    '--ignore-files=(^\.|^_|pavement\.py$|fabfile\.py$|local_settings\.py$|cf\.py$|search_indexes\.py$)',
     # Is not the same as this:
     # '--exclude=(^\.|^_|pavement\.py$|fabfile\.py$|_settings\.py$|cf\.py$|search_indexes\.py$)',
     '--all-modules',
