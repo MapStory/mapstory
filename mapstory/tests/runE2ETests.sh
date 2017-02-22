@@ -1,7 +1,5 @@
 #!/bin/bash
 # Note: First start the server with: `webdriver-manager start`
-#
-#
 
 exists()
 {
