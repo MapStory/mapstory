@@ -64,10 +64,10 @@ exports.config = {
 	seleniumAddress: selenium_url,
 	//--------------------------
 	// Use this to run all test files
-	// specs: ['*.spec.js'],
+	specs: ['specs/*.spec.js'],
 	//--------------------------
-	// Use this to cherry-pick tests
-	specs: [
+  // Use this to cherry-pick tests
+	/*specs: [
 		'auth.spec.js',
 		'composer.spec.js',
 		'home.spec.js',
@@ -77,13 +77,37 @@ exports.config = {
 		'explore.spec.js',
 		'journal.spec.js'
 	],
-	multiCapabilities: multi_cabapilities,
+	*/
+	//---------------------------------------
+	// Use this to run the tests in several browsers simultaniously
+	multiCapabilities: [
+		{
+			'browserName' : 'chrome',
+			'chromeOptions': {
+				// Get rid of --ignore-certificate yellow warning
+				args: ['--no-sandbox', '--test-type=browser'],
+				// Set download path and avoid prompting for download even though
+				// this is already the default on Chrome but for completeness
+				prefs: {
+					'download': {
+						'prompt_for_download': false,
+						'default_directory': '../downloads/'
+					}
+				}
+			}
+		}
+		//-----------------------------
+		// Uncomment to use:
+		// {'browserName' : 'firefox'}
+		// {'browserName' : 'safari'},
+	],
 	jasmineNodeOpts: {
 		showColors: true, // Use colors in the command line report.
 		defaultTimeoutInterval: 3000
 	},
 	allScriptsTimeout: 3000,
 	// Results output file
+
 	resultJsonOutputFile:'./result.json',
 	// SauceLabs Config
 	sauceUser: process.env.SAUCE_USERNAME,

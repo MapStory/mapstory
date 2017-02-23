@@ -32,7 +32,6 @@
                             <option ng-repeat="option in geometryTypes" ng-selected="option.value == layer.configuration_options.geom_type"
                                     value="{{ option.value }}">{{ option.label }}</option>
                         </select>
-                        <a ng-href="layer.configuration_options.attributes.attribute[0].binding.example">Example</a>
                     </div>
                 </form>
 
@@ -44,11 +43,9 @@
             <wz-step title="Add Attributes">
                 <h3><strong>Add attributes</strong></h3>
                 <form name="attributes" class="form-horizontal import-options-form">
-                    <p>Next you'll need to define the attributes you have for the features in your StoryLayer Attributes are just the pieces of
-                        information you have for features. For example, if you are mapping the spread of libraries in the world, your attributes might
-                        be "Library Name" and "Date Built". The "Location" attribute will be added automatically when you start creating features so
-                        don't worry about that now, but be sure to add all other attributes now because after you set your attributes here you won't
-                        be able to change them later. So think hard!</p>
+                    <p>Now, define your attributes for this StoryLayer. Attributes are pieces of information that explain a feature.
+                        For example, if you are collecting features about libraries, your Attributes might be "Year Founded" and "Library Name".
+                        One thing to note: don't give any of your attributes the title "name". This will cause errors in the creation process.</p>
                     <div style="padding-top: 10px" class="col-md-offset-9">
                         <button class="btn btn-default btn-xs" ng-click="addDefaultAttribute()"><i class="fa fa-plus-circle"></i> Add Field</button>
                     </div>
@@ -159,5 +156,5 @@
 </div>
 <div class="modal-footer">
     <span class="pull-left modal-footer-help"><button class="btn btn-primary" type="button" ng-click="ok()">Close</button></span>
-    <span class="pull-right modal-footer-help">Learn more about<a href="/getskills" target="_blank">creating data.</a></span>
+    <span class="pull-right modal-footer-help">Learn more about<a href="/getstarted" target="_blank">creating data.</a></span>
 </div>

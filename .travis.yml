@@ -24,6 +24,9 @@ virtualenv:
 addons:
   sauce_connect: true
 
+before_install:
+  - chmod +x ./scripts/install_tests.sh
+
 install:
   - cd ..
   - git clone https://github.com/MapStory/geonode.git
@@ -38,14 +41,15 @@ install:
   - pip install -r requirements.txt
   - pip install urllib3[secure] --upgrade
   - pip install coveralls
+
   # Install Protractor
   - rm -rf ~/.nvm
   - git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - npm install
   - npm install protractor
   - webdriver-manager update
-
-
+  - ./scripts/install_tests.sh
+  
 before_script:
   - python manage.py migrate maps --noinput
   - python manage.py migrate layers --noinput
@@ -55,9 +59,10 @@ before_script:
   - sudo chown $USER /var/lib/mapstory/media/
   - sleep 5
 
-
 script:
+  # Run browser tests
   - protractor mapstory/tests/e2e/conf.js
+  # Run Unit tests
   - coverage run ./manage.py test
   - coverage report
   - coverage html -d cover

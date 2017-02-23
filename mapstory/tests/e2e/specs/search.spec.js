@@ -1,23 +1,22 @@
 'use strict';
 
-require('./waitReady.js');
+require('../tools/waitReady.js');
 
-var wait_times = require('./wait_times');
-
+let wait_times = require('../tools/wait_times');
 const deafaultWindowHeight = 900;
 const defaultWindoWidth = 1400;
 
 
 describe('Search', function() {
 
-	var search = null;
+	let search = null;
 
 	beforeEach(function(){
 		// Fetch Home
 		// Search bar cares about window size.
 		browser.driver.manage().window().setSize(defaultWindoWidth, deafaultWindowHeight);
 		browser.get('http://192.168.56.151');
-		search = require('./search.po');
+		search = require('../pages/search.po');
 		browser.waitForAngular();
 	});
 
@@ -63,7 +62,7 @@ describe('Search', function() {
 		expect(search.resultsContainer.waitReady()).toBeTruthy();
 
 		// Refresh search objects
-		search = require('./search.po');
+		search = require('../pages/search.po');
 		expect(search.searchResults.count()).toBeTruthy();
 	});
 
@@ -76,7 +75,7 @@ describe('Search', function() {
 		expect(search.resultsContainer.waitReady()).toBeTruthy();
 
 		// Refresh search objects
-		search = require('./search.po');
+		search = require('../pages/search.po');
 		expect(search.searchResults.count()).toEqual(1);
 
 		search.searchResults.get(0).getText().then(function(text){
@@ -89,11 +88,11 @@ describe('Search', function() {
 		expect(search.storyTellerTab.waitReady()).toBeTruthy();
 		search.storyTellerTab.click();
 
-		browser.sleep(wait_times['search']);
+		browser.sleep(wait_times.search);
 		expect(search.resultsContainer.waitReady()).toBeTruthy();
 
 		// Refresh search objects
-		search = require('./search.po');
+		search = require('../pages/search.po');
 		expect(search.searchResults.count()).toEqual(1, 'Expected to find 1 result!');
 
 		if(search.searchResults.count() > 1){

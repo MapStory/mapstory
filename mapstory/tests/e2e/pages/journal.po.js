@@ -5,9 +5,11 @@
 
 'use strict';
 
-require('./waitReady.js');
+require('../tools/waitReady.js');
 
-var JournalPageObject = function() {
+/* global element, by, browser */
+
+let JournalPageObject = function() {
 	this.title = 'MapStory';
 	this.new_entry_button = element(by.partialLinkText('write an entry'));
 

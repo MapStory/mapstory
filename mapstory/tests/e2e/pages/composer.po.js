@@ -4,8 +4,8 @@
  */
 'use strict';
 
-require('./waitReady.js');
-var wait_times = require('./wait_times.js');
+require('../tools/waitReady.js');
+var wait_times = require('../tools/wait_times.js');
 
 /**
  * Composer Page Object

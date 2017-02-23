@@ -4,7 +4,7 @@
  */
 'use strict';
 
-require('./waitReady.js');
+require('../tools/waitReady.js');
 
 var layer_metadata_wizard = function() {
 	this.titleInput = element(by.css('#id_title'));
