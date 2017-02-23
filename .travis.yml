@@ -47,7 +47,7 @@ install:
   - sudo apt-get autoremove
   - sudo apt-get update
   - sudo apt-get autoremove
-  - ./scripts/geoserver_install.sh
+#  - ./scripts/geoserver_install.sh
   - ./scripts/install_tests.sh
 
 before_script:
@@ -57,7 +57,7 @@ before_script:
   - sudo mkdir -p /var/lib/mapstory/media/
   - sudo chmod 775 /var/lib/mapstory/media/
   - sudo chown $USER /var/lib/mapstory/media/
-  - ./scripts/geoserver_before.sh
+#  - ./scripts/geoserver_before.sh
 
 script:
   - coverage run ./manage.py test
