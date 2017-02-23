@@ -55,3 +55,7 @@ pick
 
 # Mock for testing
 mock
+
+# Selenium testing
+selenium
+

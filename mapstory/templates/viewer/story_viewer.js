@@ -10,6 +10,7 @@
         'storytools.core.boxes',
         'storytools.core.ogc',
         'storytools.core.legend',
+        'loom_media_service',
         'ui.bootstrap'
     ]);
 
@@ -45,7 +46,9 @@
     });
 
     function MapManager($http, $q, $log, $rootScope, $location,
-                        StoryMap, stStoryMapBuilder, stStoryMapBaseBuilder, StoryPinLayerManager, StoryBoxLayerManager) {
+                        StoryMap, stStoryMapBuilder, stStoryMapBaseBuilder,
+                        StoryPinLayerManager, StoryBoxLayerManager,
+                        mediaService) {
         this.storyMap = new StoryMap({target: 'map', returnToExtent: true});
         var _config = {};
         this.title = "";
@@ -79,6 +82,11 @@
 
         this.displayPinInfo = function(pixel, pin) {
             var feature = null;
+            var embed_params = {
+              nowrap: 'on',
+              maxwidth: 250,
+              maxheight: 250
+            };
             if (typeof(pin) == 'undefined' || pin == null) {
                 feature = self.storyMap.getMap().forEachFeatureAtPixel(pixel,
                     function (feature, layer) {
@@ -94,13 +102,13 @@
                 var coord = geometry.getCoordinates();
                 for (var iOverlay = 0; iOverlay < overlays.length; iOverlay += 1) {
                     var overlay = overlays[iOverlay];
-                    if (overlay.getId() == 'popup-' + feature.id) {
+                    if ( overlay.getId && overlay.getId() == 'popup-' + feature.id) {
                         popup = overlay;
                         break;
                     }
                 }
 
-                if (popup == null) {
+                if (popup === null) {
                     var popupOptions = {
                         insertFirst: false,
                         id: 'popup-' + feature.id,
@@ -112,8 +120,26 @@
                     $rootScope.$broadcast('pausePlayback');
                 }
                 popup.setPosition(coord);
-                popup.show(coord, feature.get('content') + feature.get('media'));
+                if (feature.get('media')) {
+                  mediaService.getEmbedContent(feature.get('media'), embed_params).then(function(result) {
+                    var cont = result ? feature.get('content') + result : feature.get('content');
+                    popup.show(coord, cont);
+                  });
+                } else {
+                  popup.show(feature.get('content'), cont);
+                }
             }
+        };
+
+        this.hidePinOverlay = function(pin) {
+          var overlays = self.storyMap.getMap().getOverlays().getArray();
+          for (var iOverlay = 0; iOverlay < overlays.length; iOverlay += 1) {
+              var overlay = overlays[iOverlay];
+              if (overlay.getId() == 'popup-' + pin.id) {
+                var map = self.storyMap.getMap();
+                map.removeOverlay(overlay);
+              }
+          }
         };
 
         this.loadMap = function(options) {
@@ -166,9 +192,13 @@
 
         self.loadConfig(config, chapter);
     });
-        $rootScope.$on('showPin', function(event, pin) {
-            self.displayPinInfo(null, pin);
-        });
+    $rootScope.$on('showPin', function(event, pin) {
+        self.displayPinInfo(null, pin);
+    });
+
+    $rootScope.$on('hidePinOverlay', function(event, pin) {
+        self.hidePinOverlay(pin);
+    });
 }
 
 /* EXACTLY THE SAME AS LAYER VIEWER */

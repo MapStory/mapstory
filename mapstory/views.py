@@ -26,6 +26,7 @@ from geonode.layers.models import Layer
 from geonode.layers.views import _resolve_layer
 from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
 from geonode.people.models import Profile
+from geonode.geoserver.views import layer_acls, resolve_user
 from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
 from geonode.maps.models import Map, MapStory
 from httplib import HTTPConnection, HTTPSConnection
@@ -1322,6 +1323,27 @@ def account_verify(request):
     return HttpResponse('{"id":"%s","first_name":"%s","last_name":"%s","username":"%s","email":"%s"}'
             % (user.id, user.first_name, user.last_name, user.username, user.email), mimetype='application/json')
 
+
 def layer_detail_id(request, layerid):
     layer = get_object_or_404(Layer, pk=layerid)    
     return layer_detail(request, layer.typename)
+
+
+def messages_redirect(request):
+    return HttpResponseRedirect("/storyteller/{}/#messages_list".format(request.user))
+
+
+def layer_acls_mapstory(request):
+    response = layer_acls(request)
+    result = json.loads(response.content)
+    result["fullname"] = request.user.username
+
+    return HttpResponse(json.dumps(result), content_type="application/json")
+
+
+def resolve_user_mapstory(request):
+    response = resolve_user(request)
+    result = json.loads(response.content)
+    result["fullname"] = request.user.username
+
+    return HttpResponse(json.dumps(result), content_type="application/json")

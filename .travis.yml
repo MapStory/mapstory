@@ -28,6 +28,7 @@ virtualenv:
 before_install:
   - chmod +x ./scripts/geoserver_install.sh
   - chmod +x ./scripts/geoserver_before.sh
+  - chmod +x ./scripts/install_tests.sh
 
 install:
   - cd ..
@@ -47,7 +48,7 @@ install:
   - sudo apt-get update
   - sudo apt-get autoremove
   - ./scripts/geoserver_install.sh
-
+  - ./scripts/install_tests.sh
 
 before_script:
   - python manage.py migrate maps --noinput

@@ -18,6 +18,7 @@ from mapstory.views import layer_remove, map_remove
 from mapstory.views import download_append_csv, download_append_shp
 from mapstory.views import MapStoryConfirmEmailView
 from mapstory.views import MapStorySignupView
+from mapstory.views import messages_redirect
 from mapstory.notifications import notify_download, set_profile_notification
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
 from django.core.urlresolvers import reverse_lazy
@@ -28,6 +29,7 @@ from mapstory.views import organization_create, organization_edit, organization_
 from mapstory.views import organization_invite, organization_members_add, organization_member_remove
 from mapstory.views import initiative_create, initiative_edit, initiative_detail, initiative_members
 from mapstory.views import initiative_invite, initiative_members_add, initiative_member_remove
+from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from tastypie.api import Api
 from mapstory.api import UploadedLayerResource
 from annotations.urls import urlpatterns as annotations_urls
@@ -52,7 +54,7 @@ layer_detail_patterns = patterns('',
     )
 
 urlpatterns = patterns('',
-
+    url(r'^messages/inbox/', messages_redirect),
     url(r'^ht/', health_check, name="health_check"),
     # Adding Threaded Comments app
     url(r'^articles/comments/', include('django_comments.urls')),
@@ -124,6 +126,8 @@ urlpatterns = patterns('',
     url(r'^layers/notify-download$', notify_download, name='notify-layer-download'),
     url(r'^layers/download-append-csv$', download_append_csv, name='download_append_csv'),
     url(r'^layers/download-append-shp$', download_append_shp, name='download_append_shp'),
+    url(r'^layers/acls', layer_acls_mapstory, name='layer_acls_mapstory'),
+    url(r'^layers/resolve_user', resolve_user_mapstory, name='resolve_user_mapstory'),
 
 ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 
