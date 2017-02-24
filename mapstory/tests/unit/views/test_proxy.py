@@ -13,20 +13,26 @@ from ....views import proxy
 
 User = get_user_model()
 
-
-
-
 class ProfileDetailViewTest(MapStoryTestMixin):
 
     def setUp(self):
         self.test_username, self.test_password = self.create_user('testingProfiles', 'testingProfiles')
         self.userclient = AdminClient()
+        self.factory = RequestFactory()
 
 
     def tearDown(self):
         pass
 
+
     def test_proxy_view(self):
-        factory = RequestFactory()
-        request = factory.get('/')
+        request = self.factory.get('/')
         proxy(request)
+
+
+    def test_proxy_url_get(self):
+        request = self.factory.get('http://josellausas.com')
+        proxy(request)
+
+
+    # TODO(Zunware): proxy function needs more testing coverage

@@ -15,7 +15,6 @@ class FunctionalTest(TestCase):
     Attributes:
         browser (WebDriver): The Selenium headless browser
     """
-
     def setUp(self):
         self.browser = webdriver.PhantomJS(
             executable_path=r'/srv/git/mapstory/mapstory/node_modules/phantomjs/lib/phantom/bin/phantomjs')
