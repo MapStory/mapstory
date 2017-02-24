@@ -52,7 +52,7 @@ class FavoriteTest(ResourceTestCase):
         self.list_url = reverse(
             'api_dispatch_list',
             kwargs={
-                'api_name': 'api',
+                'api_name': 'favorites-api',
                 'resource_name': 'favorites'})
         self.api_client = TestApiClient()
 

@@ -33,6 +33,7 @@ from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from tastypie.api import Api
 from mapstory.api.api import UploadedLayerResource
 from annotations.urls import urlpatterns as annotations_urls
+from mapstory.apps.favorite.urls import api as favorites_api
 
 
 
@@ -141,6 +142,9 @@ urlpatterns += maploom_urls
 
 urlpatterns += patterns("",
                         url(r'', include(importer_api.urls)))
+
+urlpatterns += patterns("",
+                        url(r'', include(favorites_api.urls)))
 
 urlpatterns += importer_urlpatterns
 
