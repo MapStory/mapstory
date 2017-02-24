@@ -50,10 +50,11 @@ class FavoriteTest(ResourceTestCase):
 
     # tests of Favorite and FavoriteManager methods.
     def test_favorite(self):
-        # assume we created at least one User and two Documents in setUp.
-        test_user = get_user_model().objects.get(id=1)
-        test_document_1 = Document.objects.get(id=1)
-        test_document_2 = Document.objects.get(id=2)
+        # grab a user and two docs from those created during setUp()
+        test_user = get_user_model().objects.get(username="AnonymousUser")
+        test_document_1 = Document.objects.get(title="lorem ipsum")
+        test_document_2 = Document.objects.get(title="ipsum lorem")
+
         # test create favorite.
         Favorite.objects.create_favorite(test_document_1, test_user)
         Favorite.objects.create_favorite(test_document_2, test_user)
@@ -157,8 +158,11 @@ class FavoriteTest(ResourceTestCase):
         """
         self.client.login(username=self.adm_un, password=self.adm_pw)
 
+        # grab the PK of an existing document
+        valid_pk = Document.objects.get(title='lorem ipsum').id
+
         # first, add one to delete.
-        response = self._get_response("add_favorite_document", ("1",))
+        response = self._get_response("add_favorite_document", (valid_pk,))
 
         # check persisted.
         favorites = Favorite.objects.all()
