@@ -52,9 +52,9 @@ let settings = {
 	multiCapabilities: multi_cabapilities,
 	jasmineNodeOpts: {
 		showColors: true, // Use colors in the command line report.
-		defaultTimeoutInterval: 7000
+		defaultTimeoutInterval: 30000
 	},
-	allScriptsTimeout: 7000,
+	allScriptsTimeout: 30000,
 	// Results output file
 	resultJsonOutputFile:'./result.json',
 };
@@ -116,9 +116,9 @@ if(process.env.TRAVIS) {
 		multiCapabilities: multi_cabapilities,
 		jasmineNodeOpts: {
 			showColors: true, // Use colors in the command line report.
-			defaultTimeoutInterval: 7000
+			defaultTimeoutInterval: 30000
 		},
-		allScriptsTimeout: 7000,
+		allScriptsTimeout: 30000,
 		// Results output file
 		resultJsonOutputFile:'./result.json',
 		// SauceLabs Config
