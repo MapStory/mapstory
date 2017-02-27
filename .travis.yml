@@ -73,7 +73,7 @@ before_script:
 
 script:
   # Run browser tests
-  - protractor mapstory/tests/e2e/conf.js
+  # - protractor mapstory/tests/e2e/conf.js
   # Run Tests
   - coverage run ./manage.py test
   - coverage report
