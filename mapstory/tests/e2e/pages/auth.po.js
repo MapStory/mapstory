@@ -12,7 +12,8 @@ const defaullTestPassword = 'testPassword2001!';
 
 require('../tools/waitReady.js');
 
-var AuthWizard = function() {
+let AuthWizard = function() {
+
 	this.loginIcon = element(by.css('.fa.fa-user'));
 	this.loginModal = element(by.css('.modal-content'));
 	this.navigationTabs = element(by.css('.nav.nav-tabs'));
@@ -26,86 +27,84 @@ var AuthWizard = function() {
 	this.loginButton = this.loginForm.element(by.partialButtonText('Sign in'));
 	this.signUpButton = element(by.buttonText('Join MapStory'));
 
+	// Getters
+	this.getUsername = function() { return defaultTestUser; };
+	this.getPassword = function() { return defaullTestPassword; };
+	this.getEmail = function() { return defaultEmail; };
+	this.getLastName = function() { return defaultLastName; };
+
 
 	/**
-	 * Creates a random alpha-numeric string of the length given.
+	 * Gets the Auth Wizard
+	 */
+	this.get = function() {
+		// Refresh page
+		browser.get('http://192.168.56.151');
+		browser.waitForAngular();
+
+		let myself = this;
+
+		// Logout if we are already authorized
+		this.isLoggedIn().then(function(isAuth){
+			if(isAuth == true) {
+				myself.logout();
+			}
+			expect(myself.loginIcon.waitReady()).toBeTruthy();
+			myself.loginIcon.click();
+		});
+	};
+
+
+	/**
+	 * Creates a random string of the length given.
 	 *
-	 * Defaults to length 5 if none given
+	 * Defaults to length 5
 	 *
 	 * @param  {uint} length The length of the string to be generated
-	 * @return {string}        A random alpha-numeric string of the length
+	 * @return {string} A random alpha-numeric string of the length
 	 */
 	this.makeid = function(length)
 	{
-		var text = '';
-		var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		let text = '';
+		const possible_characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 		// Default to 5
 		if (length < 1 ){
 			length = 5;
 		}
 
-		for( var i=0; i < length; i++ )
-			text += possible.charAt(Math.floor(Math.random() * possible.length));
+		// Builds a random string from the possible_characters
+		for( let i=0; i < length; i++ )
+			text += possible_characters.charAt(Math.floor(Math.random() * possible_characters.length));
 
 		return text;
 	};
 
-	this.get = function() {
-		// Refresh page
-		browser.get('http://192.168.56.151');
-		browser.waitForAngular();
 
-		this.isLoggedIn().then(function(isAuth){
-			if(isAuth == true) {
-				this.logout();
-			}
-			expect(this.loginIcon.waitReady()).toBeTruthy();
-			this.loginIcon.click();
-		});
-
-	};
-
-	this.getUsername = function() {
-		return defaultTestUser;
-	};
-
-	this.getPassword = function() {
-		return defaullTestPassword;
-	};
-
-	this.getEmail = function() {
-		return defaultEmail;
-	};
-
-	this.getLastName = function() {
-		return defaultLastName;
-	};
-
-
+	/**
+	 * Logs in with user and password
+	 * @param username The user's name
+	 * @param password The password as a string (not the hash)
+	 */
 	this.login = function(username, password) {
+		// Click the login Icon
 		expect(this.loginIcon.waitReady()).toBeTruthy();
 		this.loginIcon.click();
 
-		if (username == null) {
-			username = defaultTestUser;
-		}
-
-		if (password === null) {
-			password = defaullTestPassword;
-		}
+		if (username === null) { username = defaultTestUser; }
+		if (password === null) { password = defaullTestPassword; }
 
 		if(this.loginForm.isDisplayed() == true) {
-			// Sets username
-			var usernameInput = this.loginForm.element(by.css('input.form-control[name="username"]'));
+			// Type username into box
+			let usernameInput = this.loginForm.element(by.css('input.form-control[name="username"]'));
 			usernameInput.sendKeys(username);
 
-			// Sets password
-			var passwordInput = this.loginForm.element(by.css('input.form-control[name="password"]'));
+			// Type password into box
+			let passwordInput = this.loginForm.element(by.css('input.form-control[name="password"]'));
 			passwordInput.sendKeys(password);
 
-			// Push login button
-			var loginButton = this.loginForm.element(by.partialButtonText('Sign in'));
+			// Press the login button
+			let loginButton = this.loginForm.element(by.partialButtonText('Sign in'));
 			loginButton.click();
 		}
 	};
@@ -134,24 +133,27 @@ var AuthWizard = function() {
 		return this.userAvatar.isDisplayed();
 	};
 
+
 	/**
 	 * Logs out. Assumes this is called from the Home Page.
 	 */
 	this.logout = function() {
+		let myself = this;
 		this.isLoggedIn().then(function(loggedIn){
-			// Click the login button
 			if(loggedIn == true) {
-				this.adminLink.click();
-				expect(this.logoutLink.waitReady()).toBeTruthy();
+				// Click the login button
+				myself.adminLink.click();
+				expect(myself.logoutLink.waitReady()).toBeTruthy();
 
 				// Click the logout link
-				this.logoutLink.click();
+				myself.logoutLink.click();
 
 				// Refresh page
 				browser.get('http://192.168.56.151');
 			}
 		});
 	};
+
 
 	/**
 	 * Signs up a new user
@@ -161,8 +163,7 @@ var AuthWizard = function() {
 	 */
 	this.signUp = function(userData) {
 		if(userData.name === null) {
-			var randomName = defaultTestUser + '_' + this.makeid(7);
-			userData.name = randomName;
+			userData.name = defaultTestUser + '_' + this.makeid(7);
 		}
 
 		if(userData.email === null) {

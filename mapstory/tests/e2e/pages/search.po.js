@@ -6,9 +6,9 @@
 'use strict';
 
 require('../tools/waitReady.js');
-var wait_times = require('../tools/wait_times');
+let wait_times = require('../tools/wait_times');
 
-var Search = function() {
+let Search = function() {
 	this.searchForm = element(by.css('#search'));
 	this.textInput = element(by.css('#quicksearch'));
 	this.searchButton = this.searchForm.element(by.css('button.btn.btn-primary'));

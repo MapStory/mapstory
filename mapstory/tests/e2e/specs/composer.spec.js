@@ -100,7 +100,7 @@ describe('Composer', function() {
 		expect(page.map_properties_location_dropdown.waitReady()).toBeTruthy();
 		expect(page.map_properties_save_button.waitReady()).toBeTruthy();
 
-		var storyTitle = page.makeRandomTitle(5);
+		let storyTitle = page.makeRandomTitle(5);
 
 		// Fill up properties form
 		page.map_properties_title_text.sendKeys(storyTitle);

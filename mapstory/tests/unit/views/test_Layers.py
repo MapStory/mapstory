@@ -295,10 +295,7 @@ class TestLayerViews(MapStoryTestMixin):
         self.login_admin()
         layer = self.get_layer()
         self.assertIsNotNone(layer)
-
-        # print(layer.name)
-        url = '/layers/geonode:%s/viewer/' % (layer.name,)
-        response = self.admin_client.get(url, follow=True)
-        # @FIXME: Getting 404
-        # self.assertEquals(200, response.status_code)
-        # self.assertTemplateUsed(response, 'layers/layer_detail.html')
+        # TODO: (Zunware) Layer needs to implement get_absolute_url() for best practices.
+        response = self.admin_client.get(reverse('layer_detail', kwargs={'layername': 'geonode:%s' % (layer.name,)}))
+        self.assertEquals(200, response.status_code)
+        self.assertTemplateUsed(response, 'layers/layer_detail.html')
