@@ -26,22 +26,29 @@
     };
   });
 
+
+  module.service('elasticSearch', elasticSearch); 
+
+  function elasticSearch(Configs) {
+
+    var get_url = function() {
+      return Configs.url;
+    };
+
+    return {
+      get_url: get_url,
+    };
+  }
+
   /*
   * Main search controller
   * Load data from api and defines the multiple and single choice handlers
   * Syncs the browser url with the selections
   */
-  module.controller('searchController', function($injector, $scope, $location, $http, $q, Configs, Django){
-    $scope.api_endpoint = '/api/base/search/';
-    $scope.query = $location.search();
-    $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
-    $scope.query.offset = $scope.query.offset || 0;
-    //remove is_published: true for a user's drafts to appear in their search
-    $scope.query.is_published = 'true';
-    $scope.trending = [];
-    $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
-    $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
-    $scope.django = Django.all();
+  module.controller('searchController', function($injector, $scope, $location, $http, $q, Configs, Django, elasticSearch){
+    
+
+    console.log(elasticSearch.get_url());
 
     $http.get(CATEGORIES_ENDPOINT, {})
       .success(function(data){ 
@@ -62,6 +69,34 @@
         }
       }
     })
+
+    $scope.type = function(contentType){
+      $scope.query.content.type.push(contentType);
+    }
+
+
+    $scope.query = $location.search();
+    $scope.query.api = $scope.query.api || 'content';
+
+    if ($scope.query.api === 'content'){
+      $scope.api_endpoint = '/api/base/search/';
+      $scope.query.is_published = 'true';
+    } else {
+      $scope.api_endpoint = '/api/owners/';
+    }
+    
+
+    $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
+    $scope.query.offset = $scope.query.offset || 0;
+    //remove is_published: true for a user's drafts to appear in their search
+    
+    $scope.trending = [];
+    $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
+    $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
+    $scope.django = Django.all();
+
+
+    console.log($location.search());
 
     $scope.search = function() {
       return query_api($scope.query).then(function(result) {
@@ -96,8 +131,6 @@
             $scope.text_query = $location.search()['title__icontains'].replace(/\W+/g," ");
           }
         }
-        //pull in $("#types") for subtype&type from geonode/search.js if HAYSTACK_FACET_COUNTS enabled
-        //to Update facet/keyword/category counts from search results
       });
     };
 
@@ -275,12 +308,13 @@
     // Make the content one active, user inactive
     $scope.toggle_content = function() {
       $scope.api_endpoint = '/api/owners/';
-      $scope.query = {limit: CLIENT_RESULTS_LIMIT, offset: 0}; //, q: $scope.query.q
+      //$scope.query.api = 'storytellers';
+      $scope.query = { api: 'storytellers', limit: CLIENT_RESULTS_LIMIT, offset: 0}; //, q: $scope.query.q
     };
     // Make the user one active, content inactive
     $scope.toggle_user = function() {
       $scope.api_endpoint = '/api/base/search/';
-      $scope.query = {is_published: true,limit: CLIENT_RESULTS_LIMIT, offset: 0};//, q: $scope.query.q
+      $scope.query = { api: 'content', is_published: true,limit: CLIENT_RESULTS_LIMIT, offset: 0};//, q: $scope.query.q
     };
 
     // front-end fix until we update or create an api that doesn't include maps
