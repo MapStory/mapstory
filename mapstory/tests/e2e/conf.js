@@ -28,6 +28,37 @@ let multi_cabapilities = [{
 	}}
 ];
 
+let settings = {
+	framework: 'jasmine',
+	seleniumAddress: selenium_url,
+	//--------------------------
+	// Use this to run all test files
+	specs: ['specs/*.spec.js'],
+	//--------------------------
+	// Use this to cherry-pick tests
+	/*specs: [
+		'auth.spec.js',
+		'composer.spec.js',
+		'home.spec.js',
+		'icon_upload.spec.js',
+		'search.spec.js',
+		'survey.spec.js',
+		'explore.spec.js',
+		'journal.spec.js'
+	],
+	*/
+	//---------------------------------------
+	// Use this to run the tests in several browsers simultaniously
+	multiCapabilities: multi_cabapilities,
+	jasmineNodeOpts: {
+		showColors: true, // Use colors in the command line report.
+		defaultTimeoutInterval: 7000
+	},
+	allScriptsTimeout: 7000,
+	// Results output file
+	resultJsonOutputFile:'./result.json',
+};
+
 
 // This overrides the configuration if we are running inside Travis
 if(process.env.TRAVIS) {
@@ -60,38 +91,40 @@ if(process.env.TRAVIS) {
 			}
 		}
 	}];
+
+	settings = {
+		framework: 'jasmine',
+		seleniumAddress: selenium_url,
+		//--------------------------
+		// Use this to run all test files
+		specs: ['specs/*.spec.js'],
+		//--------------------------
+		// Use this to cherry-pick tests
+		/*specs: [
+			'auth.spec.js',
+			'composer.spec.js',
+			'home.spec.js',
+			'icon_upload.spec.js',
+			'search.spec.js',
+			'survey.spec.js',
+			'explore.spec.js',
+			'journal.spec.js'
+		],
+		*/
+		//---------------------------------------
+		// Use this to run the tests in several browsers simultaniously
+		multiCapabilities: multi_cabapilities,
+		jasmineNodeOpts: {
+			showColors: true, // Use colors in the command line report.
+			defaultTimeoutInterval: 7000
+		},
+		allScriptsTimeout: 7000,
+		// Results output file
+		resultJsonOutputFile:'./result.json',
+		// SauceLabs Config
+		sauceUser: process.env.SAUCE_USERNAME,
+		sauceKey: process.env.SAUCE_ACCESS_KEY
+	};
 }
 
-exports.config = {
-	framework: 'jasmine',
-	seleniumAddress: selenium_url,
-	//--------------------------
-	// Use this to run all test files
-	specs: ['specs/*.spec.js'],
-	//--------------------------
-	// Use this to cherry-pick tests
-	/*specs: [
-		'auth.spec.js',
-		'composer.spec.js',
-		'home.spec.js',
-		'icon_upload.spec.js',
-		'search.spec.js',
-		'survey.spec.js',
-		'explore.spec.js',
-		'journal.spec.js'
-	],
-	*/
-	//---------------------------------------
-	// Use this to run the tests in several browsers simultaniously
-	multiCapabilities: multi_cabapilities,
-	jasmineNodeOpts: {
-		showColors: true, // Use colors in the command line report.
-		defaultTimeoutInterval: 3000
-	},
-	allScriptsTimeout: 3000,
-	// Results output file
-	resultJsonOutputFile:'./result.json',
-	// SauceLabs Config
-	sauceUser: process.env.SAUCE_USERNAME,
-	sauceKey: process.env.SAUCE_ACCESS_KEY
-};
+exports.config = settings;
