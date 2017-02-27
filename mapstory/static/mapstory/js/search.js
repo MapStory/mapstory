@@ -26,7 +26,6 @@
     };
   });
 
-
   module.service('elasticSearch', elasticSearch); 
 
   function elasticSearch(Configs) {
@@ -46,15 +45,17 @@
   * Syncs the browser url with the selections
   */
   module.controller('searchController', function($injector, $scope, $location, $http, $q, Configs, Django, elasticSearch){
-    
 
-    console.log(elasticSearch.get_url());
+    //console.log(elasticSearch.get_url());
 
+    //load site categories
     $http.get(CATEGORIES_ENDPOINT, {})
       .success(function(data){ 
         $scope.categories = data.objects;
     })
 
+    //load keywords and establish a very simple trending count
+    $scope.trending = [];
     $http.get(KEYWORDS_ENDPOINT, {}).success(function(data){ 
       $scope.keywords = data.objects
 
@@ -69,44 +70,9 @@
         }
       }
     })
-
-    // $scope.type = function(contentType){
-    //   $scope.query.content.type.push(contentType);
-    // }
-
+ 
     $scope.query = $location.search();
-
-    $scope.query.api = $scope.query.api || 'content';
-
-    if ($scope.query.api === 'content'){
-      //content explore
-      $scope.content = true;
-      $scope.api_endpoint = '/api/base/search/';
-      $scope.query.is_published = 'true';
-    } else {
-      //for storyteller explore
-      $scope.storyteller = true;
-      $scope.api_endpoint = '/api/owners/';
-    }
-
-    $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
-    $scope.query.offset = $scope.query.offset || 0;
-    //remove is_published: true for a user's drafts to appear in their search
     
-    $scope.trending = [];
-    $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
-    $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
-    $scope.django = Django.all();
-
-
-    console.log($location.search());
-
-    $scope.search = function() {
-      return query_api($scope.query).then(function(result) {
-        return result;
-      });
-    };
-
     if (!Configs.hasOwnProperty("disableQuerySync")) {
       // Keep in sync the page location with the query object
       $scope.$watch('query', function(){
@@ -114,10 +80,50 @@
       }, true);
     } 
 
+    /* Persisting content and storyteller view & queries through page refresh */
+    
+    if ($scope.query.storyteller){
+      //storyteller explore
+      $scope.apiEndpoint = '/api/owners/';
+    } else {
+      //default to content explore
+      $scope.apiEndpoint = '/api/base/search/';
+      $scope.query.content = true;
+      $scope.query.is_published = true;
+    }
+
+    $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
+    $scope.query.offset = $scope.query.offset || 0;
+
+    // Make the content one active, user inactive
+    $scope.toUserSearch = function() {
+      $scope.apiEndpoint = '/api/owners/';
+      $scope.query = { storyteller: true, limit: CLIENT_RESULTS_LIMIT, offset: 0 };
+      $scope.search();
+    };
+    // Make the user one active, content inactive
+    $scope.toContentSearch = function() {
+      $scope.apiEndpoint = '/api/base/search/';
+      $scope.query = { content: true, is_published: true, limit: CLIENT_RESULTS_LIMIT, offset: 0 };
+      $scope.search();
+    };
+
+    
+
+
+    $scope.django = Django.all();
+
+
+    $scope.search = function() {
+      return query_api($scope.query).then(function(result) {
+        return result;
+      });
+    };
+
     //Get data from apis and make them available to the page
     function query_api(data){
 
-      return $http.get($scope.api_endpoint, {params: data || {}}).success(function(data){
+      return $http.get($scope.apiEndpoint, {params: data || {}}).success(function(data){
         $scope.results = data.objects;
         $scope.total_counts = data.meta.total_count;
         $scope.$root.query_data = data;
@@ -137,29 +143,14 @@
       });
     };
 
-    //used in detail page 'related' tab and featured content on index page
-    $scope.query_category = function(category, type) {
-      $scope.query.type__in = type; //only needed for detail page
-      $scope.query.category__identifier__in = category;
-      $scope.search();
-    };
-    // // was used in what's-hot for switching to featured and profile
-    // $scope.change_api = function(api_endpoint) {
-    //   $scope.api_endpoint = "/api/" + api_endpoint + "/";
-    //   $scope.query.limit = CLIENT_RESULTS_LIMIT;
-    //   $scope.query.offset = 0;
-    //   return query_api($scope.query).then(function(result) {
-    //     return result;
-    //   });
-    // };
-
-    $scope.get_url = function() {
-      return Configs.url;
-    };
 
     /*
     * Pagination 
     */
+
+    $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
+    $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
+
     // Control what happens when the total results change
     $scope.$watch('total_counts', function(){
       $scope.numpages = Math.round(
@@ -194,14 +185,16 @@
         query_api($scope.query);
       }
     }
-    /*
-    * End pagination
-    */
 
-    /*$scope.multiple_choice_listener from geonode/search.js used to:
-    * Add the selection behavior to the element, it adds/removes the 'active' class
-    * and pushes/removes the value of the element from the query object
-    */
+
+
+
+    //used in detail page 'related' tab and featured content on index page
+    $scope.query_category = function(category, type) {
+      $scope.query.type__in = type; //only needed for detail page
+      $scope.query.category__identifier__in = category;
+      $scope.search();
+    };
 
     /*
     * Setting the query to a single element - replaces single_choice_listener
@@ -307,22 +300,6 @@
       console.log($scope.query);
       query_api($scope.query);
     }
-
-    // Make the content one active, user inactive
-    $scope.toggle_content = function() {
-      $scope.api_endpoint = '/api/owners/';
-      $scope.storyteller = true;
-      $scope.content = false;
-      //$scope.query.api = 'storytellers';
-      $scope.query = { api: 'storytellers', limit: CLIENT_RESULTS_LIMIT, offset: 0}; //, q: $scope.query.q
-    };
-    // Make the user one active, content inactive
-    $scope.toggle_user = function() {
-      $scope.api_endpoint = '/api/base/search/';
-      $scope.content = true;
-      $scope.storyteller = false;
-      $scope.query = { api: 'content', is_published: true,limit: CLIENT_RESULTS_LIMIT, offset: 0};//, q: $scope.query.q
-    };
 
     // front-end fix until we update or create an api that doesn't include maps
     $scope.all_types = function(){
