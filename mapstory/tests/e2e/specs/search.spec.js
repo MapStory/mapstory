@@ -19,7 +19,7 @@ describe('Search', function() {
 		search = require('../pages/search.po');
 		browser.waitForAngular();
 	});
-
+	
 	it('> should hide search if window size is 400 x 600', function() {
 		browser.driver.manage().window().setSize(400, 600);
 		browser.get('http://192.168.56.151');
