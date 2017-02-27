@@ -58,4 +58,4 @@ mock
 
 # Selenium testing
 selenium
-jasmine-data-provider
+#jasmine-data-provider
