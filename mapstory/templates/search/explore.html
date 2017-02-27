@@ -7,13 +7,13 @@
 <div ng-controller="searchController">
     <div>
         <ul>
-          <li role="presentation" class="active" ng-click="toggle_user(); search();""><a href="#content-searching" data-toggle="tab">Content</a></li>
-          <li role="presentation" ng-click="toggle_content(); search();"><a href="#user-searching" data-toggle="tab">StoryTellers</a></li>
+          <li role="presentation" ng-click="toggle_user(); search();"">Content</li>
+          <li role="presentation" ng-click="toggle_content(); search();">StoryTellers</li>
         </ul>
     </div>
-    <div class="tab-content">
+    <div >
         {% comment %} Search for Content {% endcomment %}
-        <div class="tab-pane active" id="content-searching">
+        <div ng-if="content">
             <div class="col-sm-3 search-side">   
                 <div> Filter Results 
                     <span> Clear all </span>
@@ -95,7 +95,7 @@
             </div>
         </div>
         {% comment %} Search for Storytellers {% endcomment %}
-        <div class="tab-pane" id="user-searching">
+        <div ng-if="storyteller">
             <div class="col-sm-3 search-side">
                 <div class="input-group">
                     <input name="user_search_input" id="user_search_input" ng-model="query.q" type="text"

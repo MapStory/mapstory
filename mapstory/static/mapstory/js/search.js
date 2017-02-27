@@ -70,21 +70,24 @@
       }
     })
 
-    $scope.type = function(contentType){
-      $scope.query.content.type.push(contentType);
-    }
-
+    // $scope.type = function(contentType){
+    //   $scope.query.content.type.push(contentType);
+    // }
 
     $scope.query = $location.search();
+
     $scope.query.api = $scope.query.api || 'content';
 
     if ($scope.query.api === 'content'){
+      //content explore
+      $scope.content = true;
       $scope.api_endpoint = '/api/base/search/';
       $scope.query.is_published = 'true';
     } else {
+      //for storyteller explore
+      $scope.storyteller = true;
       $scope.api_endpoint = '/api/owners/';
     }
-    
 
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
@@ -140,15 +143,15 @@
       $scope.query.category__identifier__in = category;
       $scope.search();
     };
-    // was used in what's-hot for switching to featured and profile
-    $scope.change_api = function(api_endpoint) {
-      $scope.api_endpoint = "/api/" + api_endpoint + "/";
-      $scope.query.limit = CLIENT_RESULTS_LIMIT;
-      $scope.query.offset = 0;
-      return query_api($scope.query).then(function(result) {
-        return result;
-      });
-    };
+    // // was used in what's-hot for switching to featured and profile
+    // $scope.change_api = function(api_endpoint) {
+    //   $scope.api_endpoint = "/api/" + api_endpoint + "/";
+    //   $scope.query.limit = CLIENT_RESULTS_LIMIT;
+    //   $scope.query.offset = 0;
+    //   return query_api($scope.query).then(function(result) {
+    //     return result;
+    //   });
+    // };
 
     $scope.get_url = function() {
       return Configs.url;
@@ -308,12 +311,16 @@
     // Make the content one active, user inactive
     $scope.toggle_content = function() {
       $scope.api_endpoint = '/api/owners/';
+      $scope.storyteller = true;
+      $scope.content = false;
       //$scope.query.api = 'storytellers';
       $scope.query = { api: 'storytellers', limit: CLIENT_RESULTS_LIMIT, offset: 0}; //, q: $scope.query.q
     };
     // Make the user one active, content inactive
     $scope.toggle_user = function() {
       $scope.api_endpoint = '/api/base/search/';
+      $scope.content = true;
+      $scope.storyteller = false;
       $scope.query = { api: 'content', is_published: true,limit: CLIENT_RESULTS_LIMIT, offset: 0};//, q: $scope.query.q
     };
 
