@@ -33,27 +33,27 @@ xdescribe('Icon Upload Wizard', function() {
 		expect(home_page.uploadIconsLink.waitReady()).toBeTruthy();
 		home_page.uploadIconsLink.click();
 
-		var tagsInput = element(by.css('#id_tags'));
+		let tagsInput = element(by.css('#id_tags'));
 		expect(tagsInput.waitReady()).toBeTruthy();
 
 		tagsInput.sendKeys('testtag01');
 
 		// Send the file
-		var filePath = wizard.getSVGPath();
+		let filePath = wizard.getSVGPath();
 
-		var fileInput = element(by.css('#id_svg'));
+		let fileInput = element(by.css('#id_svg'));
 		expect(fileInput.waitReady()).toBeTruthy();
 
 		fileInput.sendKeys(filePath);
 
 		// Press send
-		var uploadButton = element(by.css('#icon_submit_btn'));
+		let uploadButton = element(by.css('#icon_submit_btn'));
 		expect(uploadButton.waitReady()).toBeTruthy();
 
 		uploadButton.click();
 
 		// Expect success:
-		var successAlert = element(by.css('.alert.alert-success'));
+		let successAlert = element(by.css('.alert.alert-success'));
 		expect(successAlert.waitReady()).toBeTruthy();
 
 		successAlert.getText(function(text) {

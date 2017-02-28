@@ -49,16 +49,16 @@ install:
   - pip install -r requirements.txt
   - pip install urllib3[secure] --upgrade
   - pip install coveralls
-#  - sudo apt-get autoremove
   - sudo apt-get update
-#  - sudo apt-get autoremove
-#  - ./scripts/geoserver_install.sh
+  # For Image testing
+
   # Install Protractor
   - rm -rf ~/.nvm
   - git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - npm install
   - npm install protractor
   - webdriver-manager update
+  - npm install pix-diff
   - ./scripts/install_tests.sh
   # Install Tests
   - ./scripts/install_tests.sh

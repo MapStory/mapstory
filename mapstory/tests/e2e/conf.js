@@ -9,7 +9,7 @@
  * For multiple-browser testing uncomment browsers inside `multiCapabilities`
  *
  */
-
+let PixDiff = require('pix-diff');
 // Default configuration:
 let selenium_url = 'http://localhost:4444/wd/hub';
 let multi_cabapilities = [{
@@ -33,20 +33,8 @@ let settings = {
 	seleniumAddress: selenium_url,
 	//--------------------------
 	// Use this to run all test files
-	specs: ['specs/*.spec.js'],
-	//--------------------------
-	// Use this to cherry-pick tests
-	/*specs: [
-		'auth.spec.js',
-		'composer.spec.js',
-		'home.spec.js',
-		'icon_upload.spec.js',
-		'search.spec.js',
-		'survey.spec.js',
-		'explore.spec.js',
-		'journal.spec.js'
-	],
-	*/
+	// specs: ['specs/*.spec.js'],
+	specs: ['specs/image.spec.js'],
 	//---------------------------------------
 	// Use this to run the tests in several browsers simultaniously
 	multiCapabilities: multi_cabapilities,
@@ -57,6 +45,14 @@ let settings = {
 	allScriptsTimeout: 30000,
 	// Results output file
 	resultJsonOutputFile:'./result.json',
+	onPrepare: function() {
+		browser.pixDiff = new PixDiff({
+			basePath: 'e2e/images/',
+			diffPath: 'e2e/images/',
+			width: 1440,
+			height: 800
+		});
+	},
 };
 
 
@@ -98,19 +94,6 @@ if(process.env.TRAVIS) {
 		//--------------------------
 		// Use this to run all test files
 		specs: ['specs/*.spec.js'],
-		//--------------------------
-		// Use this to cherry-pick tests
-		/*specs: [
-			'auth.spec.js',
-			'composer.spec.js',
-			'home.spec.js',
-			'icon_upload.spec.js',
-			'search.spec.js',
-			'survey.spec.js',
-			'explore.spec.js',
-			'journal.spec.js'
-		],
-		*/
 		//---------------------------------------
 		// Use this to run the tests in several browsers simultaniously
 		multiCapabilities: multi_cabapilities,
@@ -123,7 +106,15 @@ if(process.env.TRAVIS) {
 		resultJsonOutputFile:'./result.json',
 		// SauceLabs Config
 		sauceUser: process.env.SAUCE_USERNAME,
-		sauceKey: process.env.SAUCE_ACCESS_KEY
+		sauceKey: process.env.SAUCE_ACCESS_KEY,
+		onPrepare: function() {
+			browser.pixDiff = new PixDiff({
+				basePath: 'e2e/images/',
+				diffPath: 'e2e/images/',
+				width: 1440,
+				height: 800
+			});
+		},
 	};
 }
 

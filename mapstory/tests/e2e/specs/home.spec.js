@@ -24,9 +24,9 @@ const wait_times = require('../tools/wait_times');
  */
 describe('Mapstory Home', function() {
 	// Our home page object
-	var page = require('../pages/home.po');
-	var auth = require('../pages/auth.po');
-	var explore_page = require('../pages/explore.po');
+	let page = require('../pages/home.po');
+	let auth = require('../pages/auth.po');
+	let explore_page = require('../pages/explore.po');
 
 	beforeEach(function() {
 		// Fetch the site
@@ -65,7 +65,7 @@ describe('Mapstory Home', function() {
 		page.loginButton.click();
 
 		// Checks for Error #111
-		var exceptionValue = element(by.css('exception_value'));
+		let exceptionValue = element(by.css('exception_value'));
 		expect(exceptionValue.isPresent()).toBe(false);
 
 		// Return to normal
@@ -279,7 +279,7 @@ describe('Mapstory Home', function() {
 				});
 
 				it('> has a "Close button"', function() {
-					var closeButton = element(by.css('i.fa.fa-times.pointer.import-wizard-icon'));
+					let closeButton = element(by.css('i.fa.fa-times.pointer.import-wizard-icon'));
 					expect(closeButton.waitReady()).toBeTruthy();
 					closeButton.click();
 				});
@@ -405,14 +405,14 @@ describe('Mapstory Home', function() {
 				it('> Can edit metadata', function() {
 					page.uploadLayer_Step6();
 					browser.sleep(wait_times['metadata_load']);
-					var titleInput = element(by.css('#id_title'));
-					var categoryDropdown = element(by.css('#id_category'));
-					var summaryText = element(by.css('#id_abstract'));
-					var languageDropdown = element(by.css('#id_language'));
-					var dataSourceText = element(by.css('#id_distribution_url'));
-					var dataQualityText = element(by.css('#id_data_quality_statement'));
-					var purposeText = element(by.css('#id_purpose'));
-					var isPublishedCheckbox = element(by.css('#id_is_published'));
+					let titleInput = element(by.css('#id_title'));
+					let categoryDropdown = element(by.css('#id_category'));
+					let summaryText = element(by.css('#id_abstract'));
+					let languageDropdown = element(by.css('#id_language'));
+					let dataSourceText = element(by.css('#id_distribution_url'));
+					let dataQualityText = element(by.css('#id_data_quality_statement'));
+					let purposeText = element(by.css('#id_purpose'));
+					let isPublishedCheckbox = element(by.css('#id_is_published'));
 					expect(titleInput.waitReady()).toBeTruthy();
 					expect(categoryDropdown.waitReady()).toBeTruthy();
 					expect(summaryText.waitReady()).toBeTruthy();
@@ -452,7 +452,7 @@ describe('Mapstory Home', function() {
 	});
 
 	xit('> should change languages', function() {
-		var languageDropdown = element(by.css('.lang.col-md-6.pull-right'));
+		let languageDropdown = element(by.css('.lang.col-md-6.pull-right'));
 		expect(languageDropdown.waitReady()).toBeTruthy();
 
 		// Try to select spanish
