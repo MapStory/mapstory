@@ -66,6 +66,7 @@ before_script:
   - python manage.py migrate maps --noinput
   - python manage.py migrate layers --noinput
   - python manage.py migrate groups --noinput
+  - python manage.py migrate boxes --noinput
   - python manage.py migrate --noinput
   - sudo mkdir -p /var/lib/mapstory/media/
   - sudo chmod 775 /var/lib/mapstory/media/
