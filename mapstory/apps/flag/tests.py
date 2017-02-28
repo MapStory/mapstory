@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.test import Client
 from django.contrib.auth import get_user_model
 from geonode.base.models import TopicCategory
-from geonode.base.populate_test_data import create_models
+from mapstory.tests.populate_test_data import create_models
 from mapstory.mapstories.models import Map
 from .models import FlaggedContent
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin

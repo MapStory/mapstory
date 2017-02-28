@@ -3,7 +3,7 @@ import json
 from django.test import Client
 from unittest import skip
 from geonode.base.models import TopicCategory
-from geonode.base.populate_test_data import create_models
+from mapstory.tests.populate_test_data import create_models
 from mapstory.mapstories.models import Map
 from django.core.urlresolvers import reverse
 from .forms import StoryBoxForm
@@ -27,9 +27,6 @@ class AdminClient(Client):
         """
         return self.login(**{'username': username, 'password': password})
 
-# TODO need to create dummy Map data for tests here
-from unittest import skip
-@skip
 class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
 
     def setUp(self):
@@ -38,8 +35,6 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         TopicCategory.objects.create(identifier='location')
         TopicCategory.objects.create(identifier='elevation')
 
-        # TODO we need our own Map dummy data set up, unless we're fine with
-        # using geonode map model for tests
         create_models(type='map')
 
     def test_box_form(self):
