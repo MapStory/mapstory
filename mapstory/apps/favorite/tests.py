@@ -109,7 +109,10 @@ class FavoriteTest(ResourceTestCase):
         then call again to check for idempotent.
         """
         self.client.login(username=self.adm_un, password=self.adm_pw)
-        response = self._get_response("add_favorite_document", ("1",))
+
+        # grab the PK of an existing document
+        valid_pk = Document.objects.get(title='lorem ipsum').id
+        response = self._get_response("add_favorite_document", (valid_pk,))
 
         # check persisted.
         favorites = Favorite.objects.all()
@@ -125,7 +128,7 @@ class FavoriteTest(ResourceTestCase):
         self.assertEqual(json_content["delete_url"], expected_delete_url)
 
         # call method again, check for idempotent.
-        response2 = self._get_response("add_favorite_document", ("1",))
+        response2 = self._get_response("add_favorite_document", (valid_pk,))
 
         # check still one only persisted, same as before second call.
         favorites2 = Favorite.objects.all()
@@ -143,7 +146,9 @@ class FavoriteTest(ResourceTestCase):
         call create view, not logged in.
         expect a redirect to login page.
         """
-        response = self._get_response("add_favorite_document", ("1",))
+        # grab the PK of an existing document
+        valid_pk = Document.objects.get(title='lorem ipsum').id
+        response = self._get_response("add_favorite_document", (valid_pk,))
         self.assertEqual(response.status_code, 302)
 
     def test_create_favorite_view_id_not_found(self):
