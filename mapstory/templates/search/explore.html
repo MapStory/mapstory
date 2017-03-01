@@ -5,16 +5,16 @@
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
 <div ng-controller="searchController">
-    <div>
+    <nav class="explore-tabs col-sm-offset-3">
         <ul>
           <li ng-click="toContentSearch();" ng-class="{active: query.content}">Content</li>
           <li ng-click="toUserSearch();" ng-class="{active: query.storyteller}">StoryTellers</li>
         </ul>
-    </div>
+    </nav>
     <div >
         {% comment %} Search for Content {% endcomment %}
         <div ng-if="query.content">
-            <div class="col-sm-3 search-side">   
+            <aside class="col-sm-3 explore-filters">
                 <div> Filter Results 
                     <span> Clear all </span>
                 </div>
@@ -69,8 +69,8 @@
                     </span>                       
                 {% endverbatim %}
                 </div>
-            </div>
-            <div class="col-sm-9">
+            </aside>
+            <aside class="col-sm-9 explore-filters">
                 Sort by:
                 <a ng-click="orderMethodUpdate('-popular_count')"> Popular | </a>
                 <a ng-click="orderMethodUpdate('-date')"> Newest</a>
@@ -92,11 +92,12 @@
                     <span ng-bind="numpages"></span>
                     <a href><i ng-click="paginate_up()" class="fa fa-chevron-right"></i></a>
                 </div>
-            </div>
+            </aside>
         </div>
+
         {% comment %} Search for Storytellers {% endcomment %}
         <div ng-if="query.storyteller">
-            <div class="col-sm-3 search-side">
+            <aside class="col-sm-3 explore-filters">
                 <div class="input-group">
                     <input name="user_search_input" id="user_search_input" ng-model="query.q" type="text"
                         class="form-control" ng-enter="search()" placeholder="Search StoryTellers...">
@@ -115,8 +116,11 @@
                 <div>
                     <input type="checkbox" ng-model="VTCisChecked" ng-click="filterVTC()"> VTC Members
                 </div>
-            </div>
+            </aside>
             <div class="col-sm-9">
+                <div class="showing-results">
+                    Showing 1-9 of 200 results
+                </div>
                 <nav class="filter"></nav>
                 <div class="clearfix user search-results">
                     <ul>{% include 'search/_result_users.html' %}</ul>
