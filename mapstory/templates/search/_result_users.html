@@ -5,31 +5,31 @@
             <div class="avatar-and-social-links">
                 <a href="/storyteller/{{ item.username }}">
                     <img class="thumb img-responsive img-circle"
-                         src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100" 
+                         src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100"
                          ng-src="{{ item.avatar_100 }}"/>
                 </a>
-								<div class="social-icons">
-										<a href="https://twitter.com/{{ item.social_twitter }}" ng-if="item.social_twitter">
+                <div class="social-icons">
+                    <a href="https://twitter.com/{{ item.social_twitter }}" ng-if="item.social_twitter">
                         <i class="fa fa-twitter-square"></i>
                     </a>
-										<a href="https://www.facebook.com/{{ item.social_facebook }}" ng-if="item.social_facebook">
+                    <a href="https://www.facebook.com/{{ item.social_facebook }}" ng-if="item.social_facebook">
                         <i class="fa fa-facebook-square"></i>
                     </a>
-										<a href="https://www.linkedin.com/in/{{ item.social_linkedin }}" ng-if="item.social_linkedin">
+                    <a href="https://www.linkedin.com/in/{{ item.social_linkedin }}" ng-if="item.social_linkedin">
                         <i class="fa fa-linkedin-square"></i>
                     </a>
-										<a href="https://github.com/{{ item.social_github }}" ng-if="item.social_github">
+                    <a href="https://github.com/{{ item.social_github }}" ng-if="item.social_github">
                         <i class="fa fa-github"></i>
                     </a>
-								</div>
+                </div>
             </div>
             <div class="profile-info">
-								<a href="/storyteller/{{ item.username }}" class="storyteller-name">
-									{{ item.first_name ?
-										 item.first_name + ' ' + item.last_name 
-										 : item.username }}
-								</a>
-            
+                <a href="/storyteller/{{ item.username }}" class="storyteller-name">
+                  {{ item.first_name ?
+                     item.first_name + ' ' + item.last_name
+                   : item.username }}
+                </a>
+
                 <div class="storyteller-location">
                     <span ng-if="item.city">{{ item.city }}</span>
                     <span ng-if="item.country">, {{ item.country }}</span>
