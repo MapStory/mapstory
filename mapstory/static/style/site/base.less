@@ -11,6 +11,9 @@
 
 /* --- BASE - Text --- */
 body {
+  font-family: @base-font-family;
+  color: @base-font-color;
+  line-height: @base-line-height;
   font-size: 16px;
   line-height: 22px;
   font-family: "Open Sans", Helvetica, sans-serif;
@@ -35,22 +38,22 @@ h2 {
 
 h3, legend {
   font-size: 20px;
-  font-weight: 100;
+  font-weight: 200;
 }
 
 h4 {
   font-size: 16px;
-  font-weight: 100;
+  font-weight: 200;
 }
 
 h5 {
   font-size: 14px;
-  font-weight: 100;
+  font-weight: 200;
 }
 
 h6 {
   font-size: 10px;
-  font-weight: 100;
+  font-weight: 200;
 }
 
 select {
@@ -63,7 +66,7 @@ select {
 
 p, ul {
   font-size: 18px;
-  font-weight: 100;
+  font-weight: 200;
 }
 
 small {
@@ -75,7 +78,7 @@ small {
 }
 
 strong {
-  font-weight: 600
+  font-weight: 600;
 }
 
 a {
@@ -84,7 +87,7 @@ a {
 
 a:hover, a:focus, a:active {
   color: @gray60;
-  text-decoration: none
+  text-decoration: none;
 }
 
 .page-title {
@@ -101,8 +104,6 @@ a:hover, a:focus, a:active {
 .slice {
   padding: 33px 20px;
   width: 100%;
-  // margin: 0;
-  // border: 0;
   background-color: @white;
   position: relative;
   text-align: center;

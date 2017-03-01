@@ -5,22 +5,23 @@
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
 <div ng-controller="geonode_search_controller">
-    <div>
+    <nav class="explore-tabs col-lg-offset-3">
         <ul>
           <li ng-click="toContentSearch();" ng-class="{active: query.content}">Content</li>
           <li ng-click="toUserSearch();" ng-class="{active: query.storyteller}">StoryTellers</li>
         </ul>
-    </div>
-    <div >
+    </nav>
+
+    <div>
         {% comment %} Search for Content {% endcomment %}
         <div ng-if="query.content">
-            <div class="col-sm-3 search-side">   
-                <div> Filter Results 
-                    <span> Clear all </span>
+            <aside class="col-sm-3 explore-filters">
+                <div> Filter Results
+                    <span>Clear all</span>
                 </div>
-                
-                <div> Search </div>
-                
+
+                <div>Search</div>
+
                 <nav class="filter">
                     <div class="input-group">
                         <input name="text_search_input" id="text_search_input" ng-model="query.q" type="text"
@@ -33,22 +34,22 @@
                     </div>
                 </nav>
 
-                <div> Content Type </div>
+                <div>Content Type</div>
                     <ul>
                         <!-- <li><a href="" ng-click="all_types()">All</a></li> -->
                         <li><a href="" ng-click="add_single_query('type__in', 'layer')"></i> StoryLayer</a></li>
                         <li><a href="" ng-click="add_single_query('type__in', 'mapstory')"></i> {{SITE_NAME}}</a></li>
                     </ul>
-                <div> Category </div>
+                <div>Category</div>
                 <div>
-                    <ul id="categories">   
+                    <ul id="categories">
                         {% verbatim %}
-                        <li ng-repeat="category in categories"> 
+                        <li ng-repeat="category in categories">
                             <a href="" ng-init="toggle=!category.active" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle;" ng-class="{active: (!toggle )}"> {{ category.gn_description }}
                                 <span ng-show="!toggle" class="pull-left"><i class="fa fa-check"></i></span>
-                            </a>                                
+                            </a>
                         </li>
-                        {% endverbatim %}                       
+                        {% endverbatim %}
                     </ul>
                 </div>
                 <div>StoryTeller</div>
@@ -59,29 +60,35 @@
                 <div id="keyword-tab">
                     <input type="text" class="form-control" id="tokenfield-keyword"/>
                 </div>
-                <div id="keywords">{% verbatim %} 
+                <div id="keywords">{% verbatim %}
                     <div> Top Tags </div>
                     <span ng-repeat="item in trending">
                         <a href="" ng-init="toggle=!item.active" ng-click="toggle_query(toggle, 'keywords__slug__in', item.slug); toggle=!toggle;" ng-class="{active: !toggle}">
                             <span ng-show="!toggle"><i class="fa fa-check"></i></span>
-                            {{ item.name }}   
-                        </a>                        
-                    </span>                       
+                            {{ item.name }}
+                        </a>
+                    </span>
                 {% endverbatim %}
                 </div>
-            </div>
+            </aside>
+
             <div class="col-sm-9">
-                Sort by:
-                <a ng-click="orderMethodUpdate('-popular_count')"> Popular | </a>
-                <a ng-click="orderMethodUpdate('-date')"> Newest</a>
-                </span>
-                
-                <div class="clearfix search-results">
+                <div class="showing-results">
+                    Showing 1-9 of 200 results
+                </div>
+                <div class="sort-by">
+                    Sort by:
+                    <a ng-click="orderMethodUpdate('-popular_count')"> Popular | </a>
+                    <a ng-click="orderMethodUpdate('-date')"> Newest</a>
+                </div>
+                <div class="content-results">
                     <ul>
-                        {% verbatim %}
-                        <li ng-repeat="item in results | orderBy: orderMethod" resource-id="{{ item.id }}" class="col-lg-4 col-sm-6 flip-container resource-{{ item.id }}">
-                        {% endverbatim %}
-                        {% include 'search/_result_content.html' %}
+                    {% verbatim %}
+                        <li ng-repeat="item in results | orderBy: orderMethod"
+                            resource-id="{{ item.id }}"
+                            class="col-lg-4 col-sm-6 resource-{{ item.id }}">
+                    {% endverbatim %}
+                            {% include 'search/_result_content.html' %}
                     </ul>
                 </div>
                 <div class="pull-right">
@@ -94,9 +101,10 @@
                 </div>
             </div>
         </div>
+
         {% comment %} Search for Storytellers {% endcomment %}
         <div ng-if="query.storyteller">
-            <div class="col-sm-3 search-side">
+            <aside class="col-sm-3 explore-filters">
                 <div class="input-group">
                     <input name="user_search_input" id="user_search_input" ng-model="query.q" type="text"
                         class="form-control" ng-enter="search()" placeholder="Search StoryTellers...">
@@ -104,21 +112,24 @@
                         <button class="btn" type="submit" ng-click="search()" ng-class="{'disabled': !query.q}" id="user_search_btn"><i class="fa fa-search"></i></button>
                     </span>
                 </div>
-                <div> City </div>
+                <div>City</div>
                 <div>
                     <input type="text" class="form-control" id="tokenfield-city" placeholder="Search for city ..."/>
                 </div>
-                <div> Country </div>
-                <div> 
+                <div>Country</div>
+                <div>
                     <input type="text" class="form-control" id="tokenfield-country" placeholder="Search for country ..."/>
                 </div>
                 <div>
                     <input type="checkbox" ng-model="VTCisChecked" ng-click="filterVTC()"> VTC Members
                 </div>
-            </div>
+            </aside>
+
             <div class="col-sm-9">
-                <nav class="filter"></nav>
-                <div class="clearfix user search-results">
+                <div class="showing-results">
+                    Showing 1-9 of 200 results
+                </div>
+                <div class="storyteller-results">
                     <ul>{% include 'search/_result_users.html' %}</ul>
                 </div>
                 <div class="pull-right">
