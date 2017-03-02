@@ -5,21 +5,22 @@
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
 <div ng-controller="searchController">
-    <nav class="explore-tabs col-sm-offset-3">
+    <nav class="explore-tabs col-lg-offset-3">
         <ul>
           <li ng-click="toContentSearch();" ng-class="{active: query.content}">Content</li>
           <li ng-click="toUserSearch();" ng-class="{active: query.storyteller}">StoryTellers</li>
         </ul>
     </nav>
+
     <div >
         {% comment %} Search for Content {% endcomment %}
         <div ng-if="query.content">
-            <aside class="col-sm-3 explore-filters">
+            <div class="col-sm-3 search-side">
                 <div> Filter Results 
-                    <span> Clear all </span>
+                    <span>Clear all</span>
                 </div>
                 
-                <div> Search </div>
+                <div>Search</div>
                 
                 <nav class="filter">
                     <div class="input-group">
@@ -33,13 +34,13 @@
                     </div>
                 </nav>
 
-                <div> Content Type </div>
+                <div>Content Type</div>
                     <ul>
                         <!-- <li><a href="" ng-click="all_types()">All</a></li> -->
                         <li><a href="" ng-click="add_single_query('type__in', 'layer')"></i> StoryLayer</a></li>
                         <li><a href="" ng-click="add_single_query('type__in', 'mapstory')"></i> {{SITE_NAME}}</a></li>
                     </ul>
-                <div> Category </div>
+                <div>Category</div>
                 <div>
                     <ul id="categories">   
                         {% verbatim %}
@@ -69,8 +70,8 @@
                     </span>                       
                 {% endverbatim %}
                 </div>
-            </aside>
-            <aside class="col-sm-9 explore-filters">
+            </div>
+            <div class="col-sm-9">
                 Sort by:
                 <a ng-click="orderMethodUpdate('-popular_count')"> Popular | </a>
                 <a ng-click="orderMethodUpdate('-date')"> Newest</a>
@@ -92,7 +93,7 @@
                     <span ng-bind="numpages"></span>
                     <a href><i ng-click="paginate_up()" class="fa fa-chevron-right"></i></a>
                 </div>
-            </aside>
+            </div>
         </div>
 
         {% comment %} Search for Storytellers {% endcomment %}
@@ -105,11 +106,11 @@
                         <button class="btn" type="submit" ng-click="search()" ng-class="{'disabled': !query.q}" id="user_search_btn"><i class="fa fa-search"></i></button>
                     </span>
                 </div>
-                <div> City </div>
+                <div>City</div>
                 <div>
                     <input type="text" class="form-control" id="tokenfield-city" placeholder="Search for city ..."/>
                 </div>
-                <div> Country </div>
+                <div>Country</div>
                 <div> 
                     <input type="text" class="form-control" id="tokenfield-country" placeholder="Search for country ..."/>
                 </div>
@@ -117,12 +118,13 @@
                     <input type="checkbox" ng-model="VTCisChecked" ng-click="filterVTC()"> VTC Members
                 </div>
             </aside>
-            <div class="col-sm-9">
+
+            <div class="col-lg-9 storyteller-results">
                 <div class="showing-results">
                     Showing 1-9 of 200 results
                 </div>
                 <nav class="filter"></nav>
-                <div class="clearfix user search-results">
+                <div>
                     <ul>{% include 'search/_result_users.html' %}</ul>
                 </div>
                 <div class="pull-right">

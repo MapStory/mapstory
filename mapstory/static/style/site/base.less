@@ -11,9 +11,10 @@
 
 /* --- BASE - Text --- */
 body {
+  font-family: @base-font-family;
+  color: @base-font-color;
+  line-height: @base-line-height;
   font-size: 16px;
-  line-height: 22px;
-  font-family: "Open Sans", Helvetica, sans-serif;
   padding-top: 40px;
   background: @gray90;
   -webkit-font-smoothing: antialiased; /* Fix for webkit rendering */
@@ -77,7 +78,7 @@ small {
 }
 
 strong {
-  font-weight: 600
+  font-weight: 600;
 }
 
 a {
@@ -86,7 +87,7 @@ a {
 
 a:hover, a:focus, a:active {
   color: @gray60;
-  text-decoration: none
+  text-decoration: none;
 }
 
 .page-title {
@@ -103,8 +104,6 @@ a:hover, a:focus, a:active {
 .slice {
   padding: 33px 20px;
   width: 100%;
-  // margin: 0;
-  // border: 0;
   background-color: @white;
   position: relative;
   text-align: center;
