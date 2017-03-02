@@ -632,10 +632,11 @@ class MapStoryConfirmEmailView(ConfirmEmailView):
         html_content = render_to_string("account/email/welcome_message.html", ctx)
         text_content = render_to_string("account/email/welcome_message.txt", ctx)
         msg = EmailMultiAlternatives(subject, text_content,
-            account_settings.DEFAULT_FROM_EMAIL, [confirmation.email_address.email])
+                                     account_settings.DEFAULT_FROM_EMAIL, [confirmation.email_address.email])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
         super(MapStoryConfirmEmailView, self).after_confirmation(confirmation)
+
 
 @login_required
 def new_map_json(request):
@@ -680,7 +681,7 @@ def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer
     }))
 
 def _resolve_story(request, id, permission='base.change_resourcebase',
-                 msg=_PERMISSION_MSG_GENERIC, **kwargs):
+                   msg=_PERMISSION_MSG_GENERIC, **kwargs):
     '''
     Resolve the Map by the provided typename and check the optional permission.
     '''
@@ -1231,8 +1232,9 @@ def _resolve_map(request, id, permission='base.change_resourcebase',
         key = 'pk'
     else:
         key = 'urlsuffix'
-    return resolve_object(request, MapStory, {key: id}, permission=permission,
+    map_obj = resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
+    return map_obj
 
 def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     '''
