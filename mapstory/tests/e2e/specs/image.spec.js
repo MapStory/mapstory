@@ -11,6 +11,7 @@ describe('Home page image check', () => {
 	beforeEach(() => {
 		browser.get('http://192.168.56.151');
 		browser.waitForAngular();
+
 	});
 
 	it('should have pix-diff installed', () => {
@@ -18,6 +19,7 @@ describe('Home page image check', () => {
 	});
 
 	it('should match the home page', () => {
+		homePage.logout();
 		browser.pixDiff.checkPage('homePage').then(
 			result => {
 				// 5 means identical!
@@ -34,17 +36,20 @@ describe('Home page image check', () => {
 	});
 
 	it('should match login modal', () => {
+		homePage.logout();
 		homePage.loginIcon.click();
 		let loginModal = element(By.id('loginModal'));
 		loginModal.waitReady();
 		browser.sleep(1000);
-		browser.pixDiff.checkRegion(loginModal, 'loginModal').then(
-			result => {
-				expect(result.code).toEqual(PixDiff.RESULT_IDENTICAL);
-			}
-		);
+		// Scroll to top
+		browser.executeScript('window.scrollTo(0,0);').then(function () {
+			browser.pixDiff.checkRegion(loginModal, 'loginModal').then(
+				result => {
+					expect(result.code).toEqual(PixDiff.RESULT_IDENTICAL);
+				}
+			);
+		});
 	});
-
 });
 
 

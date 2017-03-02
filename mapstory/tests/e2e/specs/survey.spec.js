@@ -5,6 +5,10 @@ var auth = require('../pages/auth.po');
 var wait_times = require('../tools/wait_times');
 var home_page = require('../pages/home.po');
 var layer_metadata = require('../pages/layer_metadata.po');
+var mkdirp = require('mkdirp');
+var fs = require('fs');
+var path = require('path');
+
 
 /**
  * Tester object
@@ -19,6 +23,22 @@ var tester = {
 };
 
 
+// Override for screenshots
+let originalAddExpectationResult = jasmine.Spec.prototype.addExpectationResult;
+jasmine.Spec.prototype.addExpectationResult = function() {
+	if (!arguments[0]) {
+		// take screenshot
+		// this.description and arguments[1].message can be useful to constructing the filename.
+		browser.takeScreenshot().then(function(png) {
+			// let filename = 'images/tmp/'+thi
+			let stream = fs.createWriteStream('./screenshot.png');
+			stream.write(new Buffer(png, 'base64'));
+			stream.end();
+		});
+	}
+	return originalAddExpectationResult.apply(this, arguments);
+};
+
 /**
  * Automated Survey tests
  *
@@ -31,8 +51,16 @@ describe('[Survey Tests] |', function() {
 		browser.waitForAngular();
 	});
 
+	// Take a screenshot automatically after each failing test.
+	afterEach(function() {
+		// let passed = jasmine.getEnv().currentSpec.results().passed();
+		// if (!passed) {
+		//
+		// }
+	});
+
 	describe('<<1>> Tester Info |', function () {
-		var randomId = auth.makeid(7);
+		let randomId = auth.makeid(7);
 
 		describe('<a> Tester name', function() {
 			it(': should set a test name', function() {
@@ -76,8 +104,7 @@ describe('[Survey Tests] |', function() {
 	describe('<<2>> User Profile |', function () {
 		describe('<a> Create an account |', function() {
 			it('> should start by logging out', function() {
-				element(by.partialLinkText('admin')).click();
-				element(by.partialLinkText('Log out')).click();
+				home_page.logout();
 				expect(auth.loginIcon.waitReady()).toBeTruthy('Failed to logout!');
 			});
 

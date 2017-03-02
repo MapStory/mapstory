@@ -87,7 +87,7 @@ let home_page = function() {
 		// Only log out if necesary
 		this.isLoggedIn().then(function(loggedIn){
 			// Click the login button
-			if(loggedIn == true) {
+			if(loggedIn) {
 				// Click the admin button
 				myself.adminLink.click();
 
@@ -123,7 +123,7 @@ let home_page = function() {
 	 * @return {Promise} A promise that indicates ifLoggedIn
 	 */
 	this.isLoggedIn = function() {
-		return this.userAvatar.isDisplayed();
+		return this.userAvatar.isPresent();
 	};
 
 

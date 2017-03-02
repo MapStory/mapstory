@@ -35,8 +35,8 @@ let settings = {
 	// Use this to run all test files
 	specs: ['specs/*.spec.js'],
 	// specs: [
-	// 	'specs/image.spec.js',
-	// 	'tools/take_screenshots.js'
+		// 'specs/image.spec.js',
+		// 'tools/take_screenshots.js'
 	// ],
 	//---------------------------------------
 	// Use this to run the tests in several browsers simultaniously
