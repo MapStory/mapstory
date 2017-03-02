@@ -25,7 +25,7 @@ from django.contrib.auth.models import Group
 from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.db.models import F
-from django.http import HttpResponse, HttpResponseServerError
+from django.http import HttpResponse, HttpResponseServerError, Http404
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.http.request import validate_host
 from django.shortcuts import render_to_response, render, redirect, get_object_or_404
@@ -36,6 +36,7 @@ from django.utils.http import is_safe_url
 from django.utils.timezone import now as provider_now
 from django.utils.translation import ugettext as _
 from django.views.decorators.http import require_POST
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
@@ -51,15 +52,14 @@ from geonode.people.models import Profile
 from geonode.geoserver.views import layer_acls, resolve_user
 from geonode.layers.views import _resolve_layer
 from mapstory.mapstories.models import MapStory
-from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
+from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE, _PERMISSION_MSG_LOGIN
 from geonode.people.models import Profile
 from geonode.security.views import _perms_info_json
 from geonode.tasks.deletion import delete_layer
 from tasks import delete_mapstory
-from geonode.utils import GXPLayer, GXPMap
+from geonode.utils import GXPLayer, GXPMap, resolve_object
 from geonode.utils import build_social_links
 from geonode.utils import default_map_config
-from geonode.utils import resolve_object
 from health_check.plugins import plugin_dir
 from icon_commons.models import Icon
 from lxml import etree
@@ -642,6 +642,26 @@ def new_map_json(request):
     from geonode.maps.views import new_map_json
     return new_map_json(request)
 
+
+# TODO this should ultimately be merged with mapstory_view()
+@xframe_options_exempt
+def map_view(request, mapid, snapshot=None, template='maps/map_view.html'):
+    """
+    The view that returns the map composer opened to
+    the map with the given map ID.
+    """
+    map_obj = _resolve_story(request, mapid, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
+
+    if snapshot is None:
+        config = map_obj.viewer_json(request.user)
+    else:
+        config = snapshot_config(snapshot, map_obj, request.user)
+
+    return render_to_response(template, RequestContext(request, {
+        'config': json.dumps(config),
+        'map': map_obj
+    }))
+
 def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer.html'):
     """
     The view that returns the map viewer opened to
@@ -670,6 +690,65 @@ def _resolve_story(request, id, permission='base.change_resourcebase',
         key = 'urlsuffix'
     return resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
+
+
+def save_story(request, storyid):
+    if not request.user.is_authenticated():
+        return HttpResponse(
+                _PERMISSION_MSG_LOGIN,
+                status=401,
+                content_type="text/plain"
+        )
+
+    story_obj = MapStory.objects.get(id=storyid)
+    if not request.user.has_perm('change_resourcebase', story_obj.get_self_resource()):
+        return HttpResponse(
+                _PERMISSION_MSG_SAVE,
+                status=401,
+                content_type="text/plain"
+        )
+
+    try:
+        story_obj.update_from_viewer(request.body)
+        return HttpResponse(json.dumps(story_obj.viewer_json(request.user)))
+    except ValueError as e:
+        return HttpResponse(
+                "The server could not understand the request." + str(e),
+                content_type="text/plain",
+                status=400
+        )
+
+
+def new_story_json(request):
+    if not request.user.is_authenticated():
+        return HttpResponse(
+                'You must be logged in to save new maps',
+                content_type="text/plain",
+                status=401
+        )
+    story_obj = MapStory(owner=request.user)
+    story_obj.save()
+    story_obj.set_default_permissions()
+
+    # If the body has been read already, use an empty string.
+    # See https://github.com/django/django/commit/58d555caf527d6f1bdfeab14527484e4cca68648
+    # for a better exception to catch when we move to Django 1.7.
+    try:
+        body = request.body
+    except Exception:
+        body = ''
+
+    try:
+        story_obj.update_from_viewer(body)
+    except ValueError as e:
+        return HttpResponse(str(e), status=400)
+    else:
+        return HttpResponse(
+                json.dumps({'id': story_obj.id}),
+                status=200,
+                content_type='application/json'
+        )
+
 
 def draft_view(request, storyid, template='composer/maploom.html'):
 
