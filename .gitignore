@@ -28,3 +28,4 @@ result.json
 .noseids
 ghostdriver.log
 mapstory/tests/errors/err*
+mapstory/tests/errors/known/err*

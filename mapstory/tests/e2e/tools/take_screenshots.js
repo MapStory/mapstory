@@ -2,7 +2,7 @@
 
 let homePage = require('../pages/home.po');
 
-let enabled = true;
+let enabled = false;
 
 /**
  * A tool for generating screenshots
@@ -23,7 +23,7 @@ if(enabled === true) {
 			browser.pixDiff.saveRegion(navbar, 'navbar');
 		});
 
-		it('saves the login modal', () => {
+		xit('saves the login modal', () => {
 			homePage.loginIcon.click();
 			let loginModal = element(By.id('loginModal'));
 			loginModal.waitReady();

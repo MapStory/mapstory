@@ -14,18 +14,18 @@
 'use strict';
 
 // Config
-var specTimeoutMs = 10000; // 10 seconds
+let specTimeoutMs = 10000; // 10 seconds
 
 /**
  * Current workaround until https://github.com/angular/protractor/issues/1102
  * @type {Function}
  */
-var ElementFinder = $('').constructor;
+let ElementFinder = $('').constructor;
 
 ElementFinder.prototype.waitReady = function(opt_optStr) {
-	var self = this;
-	var driverWaitIterations = 0;
-	var lastWebdriverError;
+	let self = this;
+	let driverWaitIterations = 0;
+	let lastWebdriverError;
 	function _throwError() {
 		throw new Error('Expected \'' + self.locator().toString() +
 			'\' to be present and visible. ' +

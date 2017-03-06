@@ -3,6 +3,14 @@
 'use strict';
 
 let fs = require('fs');
+
+// TODO(Zunware): Write docs
+// PLEASE READ THE mapstory/tests/errors/notes.md
+
+// TODO(Zunware): Change this to use pix-diff's screenshot
+// TODO(Zunware): Implement checking error against known errors
+// TODO(Zunware): Create a feature for reporting results to central server
+
 let setupScreenshotOnError = function () {
 	this.setup = function() {
 		let originalAddExpectationResult = jasmine.Spec.prototype.addExpectationResult;

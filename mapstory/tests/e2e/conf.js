@@ -10,15 +10,15 @@
  *
  */
 let PixDiff = require('pix-diff');
-// Default configuration:
+
+//----------------------
+// Variable settings
 let selenium_url = 'http://localhost:4444/wd/hub';
+let timeout = 30000;
 let multi_cabapilities = [{
 	'browserName' : 'chrome',
 	'chromeOptions': {
-		// Get rid of --ignore-certificate yellow warning
 		args: ['--no-sandbox', '--test-type=browser'],
-		// Set download path and avoid prompting for download even though
-		// this is already the default on Chrome but for completeness
 		prefs: {
 			'download': {
 				'prompt_for_download': false,
@@ -28,6 +28,9 @@ let multi_cabapilities = [{
 	}}
 ];
 
+
+//----------------------
+// Default settings
 let settings = {
 	framework: 'jasmine',
 	seleniumAddress: selenium_url,
@@ -39,17 +42,16 @@ let settings = {
 		'specs/survey.spec.js'
 		// 'tools/take_screenshots.js'
 	],
-	//---------------------------------------
-	// Use this to run the tests in several browsers simultaniously
 	multiCapabilities: multi_cabapilities,
 	jasmineNodeOpts: {
-		showColors: true, // Use colors in the command line report.
-		defaultTimeoutInterval: 30000
+		showColors: true,
+		defaultTimeoutInterval: timeout
 	},
-	allScriptsTimeout: 30000,
+	allScriptsTimeout: timeout,
 	// Results output file
 	resultJsonOutputFile:'./result.json',
 	onPrepare: function() {
+		// Setup pix-diff directories and resolution
 		browser.pixDiff = new PixDiff({
 			basePath: 'e2e/images/',
 			diffPath: 'e2e/images/',
@@ -60,12 +62,13 @@ let settings = {
 };
 
 
+//----------------------
+// Testing settings
 // This overrides the configuration if we are running inside Travis
 if(process.env.TRAVIS) {
 	// Use sauce labs for cloud browser testing
+	// TODO(Zunware): Use https!!!
 	selenium_url = 'http://' + process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY +'@ondemand.saucelabs.com/wd/hub';
-
-	// Set the browsers we want to test on
 	multi_cabapilities = [{
 		'browserName' : 'firefox',
 		'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
@@ -79,10 +82,7 @@ if(process.env.TRAVIS) {
 		'tags': [process.env.TRAVIS_PYTHON_VERSION, 'CI'],
 		'name': 'Mapstory Chrome Tests',
 		'chromeOptions': {
-			// Get rid of --ignore-certificate yellow warning
 			args: ['--no-sandbox', '--test-type=browser'],
-			// Set download path and avoid prompting for download even though
-			// this is already the default on Chrome but for completeness
 			prefs: {
 				'download': {
 					'prompt_for_download': false,
@@ -91,24 +91,17 @@ if(process.env.TRAVIS) {
 			}
 		}
 	}];
-
 	settings = {
 		framework: 'jasmine',
 		seleniumAddress: selenium_url,
-		//--------------------------
-		// Use this to run all test files
 		specs: ['specs/*.spec.js'],
-		//---------------------------------------
-		// Use this to run the tests in several browsers simultaniously
 		multiCapabilities: multi_cabapilities,
 		jasmineNodeOpts: {
-			showColors: true, // Use colors in the command line report.
-			defaultTimeoutInterval: 30000
+			showColors: true,
+			defaultTimeoutInterval: timeout
 		},
-		allScriptsTimeout: 30000,
-		// Results output file
+		allScriptsTimeout: timeout,
 		resultJsonOutputFile:'./result.json',
-		// SauceLabs Config
 		sauceUser: process.env.SAUCE_USERNAME,
 		sauceKey: process.env.SAUCE_ACCESS_KEY,
 		onPrepare: function() {
