@@ -5,7 +5,6 @@ let auth = require('../pages/auth.po');
 let wait_times = require('../tools/wait_times');
 let home_page = require('../pages/home.po');
 let layer_metadata = require('../pages/layer_metadata.po');
-let mkdirp = require('mkdirp');
 let path = require('path');
 let screenshot_helper = require('../tools/screenshot_helper');
 
