@@ -27,3 +27,4 @@ cover
 result.json
 .noseids
 ghostdriver.log
+mapstory/tests/errors/err*

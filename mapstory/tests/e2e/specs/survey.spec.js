@@ -1,20 +1,20 @@
 'use strict';
 require('../tools/waitReady.js');
 
-var auth = require('../pages/auth.po');
-var wait_times = require('../tools/wait_times');
-var home_page = require('../pages/home.po');
-var layer_metadata = require('../pages/layer_metadata.po');
-var mkdirp = require('mkdirp');
-var fs = require('fs');
-var path = require('path');
+let auth = require('../pages/auth.po');
+let wait_times = require('../tools/wait_times');
+let home_page = require('../pages/home.po');
+let layer_metadata = require('../pages/layer_metadata.po');
+let mkdirp = require('mkdirp');
+let path = require('path');
+let screenshot_helper = require('../tools/screenshot_helper');
 
 
 /**
  * Tester object
  * @type {Object}
  */
-var tester = {
+let tester = {
 	name: null,
 	email: null,
 	timestamp: null,
@@ -22,22 +22,8 @@ var tester = {
 	resolution: null
 };
 
-
-// Override for screenshots
-let originalAddExpectationResult = jasmine.Spec.prototype.addExpectationResult;
-jasmine.Spec.prototype.addExpectationResult = function() {
-	if (!arguments[0]) {
-		// take screenshot
-		// this.description and arguments[1].message can be useful to constructing the filename.
-		browser.takeScreenshot().then(function(png) {
-			// let filename = 'images/tmp/'+thi
-			let stream = fs.createWriteStream('./screenshot.png');
-			stream.write(new Buffer(png, 'base64'));
-			stream.end();
-		});
-	}
-	return originalAddExpectationResult.apply(this, arguments);
-};
+// Setup the screenshot on error feature
+screenshot_helper.setup();
 
 /**
  * Automated Survey tests
@@ -295,7 +281,7 @@ describe('[Survey Tests] |', function() {
 			});
 
 			it('> has a "Close button"', function() {
-				var closeButton = element(by.css('i.fa.fa-times.pointer.import-wizard-icon'));
+				let closeButton = element(by.css('i.fa.fa-times.pointer.import-wizard-icon'));
 				expect(closeButton.isDisplayed()).toBe(true);
 				closeButton.click();
 			});
@@ -450,13 +436,13 @@ describe('[Survey Tests] |', function() {
 
 			it('should download CSV', function(){
 				browser.sleep(2000);
-				var downloadLink = element(by.linkText('Download'));
+				let downloadLink = element(by.linkText('Download'));
 				expect(downloadLink.waitReady()).toBeTruthy();
 
 				downloadLink.click();
 				browser.sleep(1000);
 
-				var CSVlink = element(by.linkText('CSV'));
+				let CSVlink = element(by.linkText('CSV'));
 				expect(CSVlink.waitReady()).toBeTruthy();
 
 				CSVlink.click();

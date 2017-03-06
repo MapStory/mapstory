@@ -2,7 +2,6 @@
 require('../tools/waitReady.js');
 
 // This is an example of how to use image-diff tests
-
 let PixDiff  = require('pix-diff');
 let homePage = require('../pages/home.po');
 

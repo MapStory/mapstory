@@ -1,11 +1,11 @@
 'use strict';
 
 // Change this to a larger number if you want to wait longer.
-var waitFactor = 1.0;
+let waitFactor = 1.0;
 
 // The wait times in milliseconds
-var timings =  {
-	layerUpload : 3000 * waitFactor,
+let timings =  {
+	layerUpload : 4500 * waitFactor,
 	layerCreate : 3000 * waitFactor,
 	newLayer: 4500 * waitFactor,
 	metadata_load: 3000 * waitFactor,
