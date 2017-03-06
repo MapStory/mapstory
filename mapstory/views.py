@@ -89,9 +89,11 @@ from mapstory.search.utils import update_es_index
 
 from django.http import HttpResponse, HttpResponseServerError
 from django.template import loader
+from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
 from health_check.plugins import plugin_dir
-
 from journal.models import get_group_journals
+
+plugin_dir.register(GeoServerHealthCheck)
 
 
 class IndexView(TemplateView):
@@ -196,6 +198,8 @@ def profile_edit(request, username=None):
 
 @login_required
 def health_check(request):
+    # import ipdb
+    # ipdb.sset_trace(context=5)
     plugins = []
     working = True
     for plugin_class, plugin in plugin_dir._registry.items():
@@ -204,6 +208,7 @@ def health_check(request):
             working = False
         plugins.append(plugin)
     plugins.sort(key=lambda x: x.identifier())
+
 
     if working:
         return HttpResponse(loader.render_to_string("health_check/dashboard.html", {'plugins': plugins}))
