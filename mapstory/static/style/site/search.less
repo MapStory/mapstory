@@ -39,6 +39,7 @@
 .storyteller-results, .content-results {
     clear: both;
     overflow: auto;
+    text-align: left;
     ul {
         padding: 0;
     }
@@ -176,111 +177,9 @@
     font-weight: 400;
 }
 
-/* --- Search --- */
-.search-results {
-    ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
-    li {
-        margin-bottom: 15px;
-    }
-    img.thumb {
-        min-height: 150px;
-        margin-left: auto;
-        margin-right: auto;
-        border: 1px solid @gray90;
-    }
-    li > div {
-        height: 380px;
-        width: 245px;
-        border-radius: 5px;
-        background: #eaeaea;
-        text-align: left;
-        padding: 20px;
-        margin-bottom: 20px;
-        border: 1px solid @gray90;
-        -webkit-box-shadow: 3px 8px 6px -6px black;
-           -moz-box-shadow: 3px 8px 6px -6px black;
-                box-shadow: 3px 8px 6px -6px black;
-    }
-    .result-view {
-        border-top: 1px solid lightgrey;
-        .btn {
-            padding: 6px 40px;
-            margin: 8px 0;
-            border-radius: 5px;
-            background: #eaeaea;
-            &:hover{
-                background: @gray80;
-            }
-        }
-    }
-    padding:20px 0;
-}
-
-.search-results.user{
-    li > div{
-        height: 250px;
-        width: 190px;
-        border-radius: 5px;
-    }
-    .profile-view{
-        border-top: 1px solid lightgrey;
-        margin-top: 10px;
-    }
-    .btn{
-        padding: 4px 30px;
-        margin-top: 5px;
-        background: #eaeaea;
-            &:hover{
-                background: @gray80;
-            }
-    }
-}
-
-.search-results-min{
-    min-height: 200px;
-}
-
-.result-title h3 {
-   text-transform: capitalize;
-   overflow-wrap: break-word;
-}
-
-.result-category {
-    text-transform: capitalize;
-}
-
-.result-date {
-    padding-bottom: 10px;
-}
-
-.result-region, .result-tags{
-    height: 40px;
-}
-.result-summary {
-    height: 180px;
-}
-
-//drafts on profile page
 .unpublished {
-    position:absolute;
-    top:10px;
-    right:45px;
-    opacity: .6;
-}
-
-.result-stats {
-    border-top: 1px lightgrey solid;
-    padding: 10px;
-    margin-top: 15px;
-    a, span {
-        border-right: 1px lightgrey solid;
-        padding: 0 15px;
-        &:last-child {
-            border: none;
-        }
-    }
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    opacity: 0.75;
 }
