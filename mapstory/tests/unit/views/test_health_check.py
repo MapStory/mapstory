@@ -28,7 +28,6 @@ class HealthCheckViewTest(MapStoryTestMixin):
 
         return username, password
 
-    @skip("TODO: Fix not passing on CI tests")
     def test_template(self):
         self.create_user(username='test_admin', password='test_admin', is_superuser=True)
         self.userclient.login_as_non_admin('test_admin', 'test_admin')
