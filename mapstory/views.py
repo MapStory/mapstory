@@ -680,6 +680,7 @@ def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer
         'config': json.dumps(config)
     }))
 
+# TODO this should be moved to a mapstory.util
 def _resolve_story(request, id, permission='base.change_resourcebase',
                    msg=_PERMISSION_MSG_GENERIC, **kwargs):
     '''
