@@ -68,7 +68,7 @@ urlpatterns = patterns('',
     url(r"^account/confirm_email/(?P<key>\w+)/$", MapStoryConfirmEmailView.as_view(), name="account_confirm_email"),
 
     url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
-    url(r'^maps/new/data$', 'mapstory.mapstories.views.new_map_json', name='new_map_json'),
+    url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
     url(r'^maps/new/story$', 'mapstory.views.new_story_json', name='new_story_json'),
     url(r'^maps/new_map', new_map, name='new_map'),
 

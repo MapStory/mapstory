@@ -1,3 +1,4 @@
+import math
 import contextlib
 import csv
 import datetime
@@ -24,6 +25,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import F
 from django.http import HttpResponse, HttpResponseServerError, Http404
 from django.http import HttpResponseRedirect, HttpResponseForbidden
@@ -51,8 +54,9 @@ from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, 
 from geonode.people.models import Profile
 from geonode.geoserver.views import layer_acls, resolve_user
 from geonode.layers.views import _resolve_layer
-from mapstory.mapstories.models import MapStory
+from mapstory.mapstories.models import MapStory, Map
 from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE, _PERMISSION_MSG_LOGIN
+from geonode.maps.models import MapLayer, MapSnapshot
 from geonode.people.models import Profile
 from geonode.security.views import _perms_info_json
 from geonode.tasks.deletion import delete_layer
@@ -60,6 +64,10 @@ from tasks import delete_mapstory
 from geonode.utils import GXPLayer, GXPMap, resolve_object
 from geonode.utils import build_social_links
 from geonode.utils import default_map_config
+from geonode.utils import forward_mercator, llbbox_to_mercator
+from geonode.utils import DEFAULT_TITLE
+from geonode.utils import DEFAULT_ABSTRACT
+from geonode.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from health_check.plugins import plugin_dir
 from icon_commons.models import Icon
 from lxml import etree
@@ -638,6 +646,54 @@ class MapStoryConfirmEmailView(ConfirmEmailView):
         super(MapStoryConfirmEmailView, self).after_confirmation(confirmation)
 
 
+@login_required
+def new_map_json(request):
+    if request.method == 'GET':
+        config = new_map_config(request)
+        if isinstance(config, HttpResponse):
+            return config
+        else:
+            return HttpResponse(config)
+
+    elif request.method == 'POST':
+        if not request.user.is_authenticated():
+            return HttpResponse(
+                'You must be logged in to save new maps',
+                content_type="text/plain",
+                status=401
+            )
+
+        map_obj = Map(owner=request.user, zoom=0,
+                      center_x=0, center_y=0)
+        map_obj.save()
+        map_obj.set_default_permissions()
+
+        # If the body has been read already, use an empty string.
+        # See https://github.com/django/django/commit/58d555caf527d6f1bdfeab14527484e4cca68648
+        # for a better exception to catch when we move to Django 1.7.
+        try:
+            body = request.body
+        except Exception:
+            body = ''
+
+        try:
+            map_obj.update_from_viewer(body)
+            MapSnapshot.objects.create(
+                config=clean_config(body),
+                map=map_obj,
+                user=request.user)
+        except ValueError as e:
+            return HttpResponse(str(e), status=400)
+        else:
+            return HttpResponse(
+                json.dumps({'id': map_obj.id}),
+                status=200,
+                content_type='application/json'
+            )
+    else:
+        return HttpResponse(status=405)
+
+
 @xframe_options_exempt
 def map_view(request, mapid, snapshot=None, template='maps/map_view.html'):
     """
@@ -763,8 +819,13 @@ def mapstory_draft(request, storyid, template):
 
 @login_required
 def new_map(request, template):
-    from geonode.maps.views import new_map
-    return new_map(request, template)
+    config = new_map_config(request)
+    if isinstance(config, HttpResponse):
+        return config
+    else:
+        return render_to_response(template, RequestContext(request, {
+            'config': config,
+        }))
 
 @login_required
 def layer_create(request, template='upload/layer_create.html'):
@@ -1423,3 +1484,159 @@ def resolve_user_mapstory(request):
     result["fullname"] = request.user.username
 
     return HttpResponse(json.dumps(result), content_type="application/json")
+
+
+def new_map_config(request):
+    '''
+    View that creates a new map.
+
+    If the query argument 'copy' is given, the initial map is
+    a copy of the map with the id specified, otherwise the
+    default map configuration is used.  If copy is specified
+    and the map specified does not exist a 404 is returned.
+    '''
+    DEFAULT_MAP_CONFIG, DEFAULT_BASE_LAYERS = default_map_config()
+    map_obj = None
+    if request.method == 'GET' and 'copy' in request.GET:
+        mapid = request.GET['copy']
+        map_obj = _resolve_map(request, mapid, 'base.view_resourcebase')
+
+        map_obj.abstract = DEFAULT_ABSTRACT
+        map_obj.title = DEFAULT_TITLE
+        map_obj.viewer_playbackmode = DEFAULT_VIEWER_PLAYBACKMODE
+        if request.user.is_authenticated():
+            map_obj.owner = request.user
+        config = map_obj.viewer_json(request.user)
+        del config['id']
+    else:
+        if request.method == 'GET':
+            params = request.GET
+        elif request.method == 'POST':
+            params = request.POST
+        else:
+            return HttpResponse(status=405)
+
+        if 'layer' in params:
+            bbox = None
+            map_obj = Map(projection=getattr(settings, 'DEFAULT_MAP_CRS',
+                          'EPSG:900913'))
+            layers = []
+            for layer_name in params.getlist('layer'):
+                try:
+                    layer = _resolve_layer(request, layer_name)
+                except ObjectDoesNotExist:
+                    # bad layer, skip
+                    continue
+
+                if not request.user.has_perm(
+                        'view_resourcebase',
+                        obj=layer.get_self_resource()):
+                    # invisible layer, skip inclusion
+                    continue
+
+                layer_bbox = layer.bbox
+                # assert False, str(layer_bbox)
+                if bbox is None:
+                    bbox = list(layer_bbox[0:4])
+                else:
+                    bbox[0] = min(bbox[0], layer_bbox[0])
+                    bbox[1] = max(bbox[1], layer_bbox[1])
+                    bbox[2] = min(bbox[2], layer_bbox[2])
+                    bbox[3] = max(bbox[3], layer_bbox[3])
+
+                config = layer.attribute_config()
+
+                # Add required parameters for GXP lazy-loading
+                config["title"] = layer.title
+                config["queryable"] = True
+
+                config["srs"] = getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913')
+                config["bbox"] = bbox if config["srs"] != 'EPSG:900913' \
+                    else llbbox_to_mercator([float(coord) for coord in bbox])
+
+                if layer.storeType == "remoteStore":
+                    service = layer.service
+                    maplayer = MapLayer(map=map_obj,
+                                        name=layer.typename,
+                                        ows_url=layer.ows_url,
+                                        layer_params=json.dumps(config),
+                                        visibility=True,
+                                        source_params=json.dumps({
+                                            "ptype": service.ptype,
+                                            "remote": True,
+                                            "url": service.base_url,
+                                            "name": service.name}))
+                else:
+                    maplayer = MapLayer(
+                        map=map_obj,
+                        name=layer.name,
+                        ows_url=layer.ows_url,
+                        # use DjangoJSONEncoder to handle Decimal values
+                        layer_params=json.dumps(config, cls=DjangoJSONEncoder),
+                        visibility=True
+                    )
+
+                layers.append(maplayer)
+
+            if bbox is not None:
+                minx, miny, maxx, maxy = [float(c) for c in bbox]
+                x = (minx + maxx) / 2
+                y = (miny + maxy) / 2
+
+                if getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913') == "EPSG:4326":
+                    center = list((x, y))
+                else:
+                    center = list(forward_mercator((x, y)))
+
+                if center[1] == float('-inf'):
+                    center[1] = 0
+
+                BBOX_DIFFERENCE_THRESHOLD = 1e-5
+
+                # Check if the bbox is invalid
+                valid_x = (maxx - minx) ** 2 > BBOX_DIFFERENCE_THRESHOLD
+                valid_y = (maxy - miny) ** 2 > BBOX_DIFFERENCE_THRESHOLD
+
+                if valid_x:
+                    width_zoom = math.log(360 / abs(maxx - minx), 2)
+                else:
+                    width_zoom = 15
+
+                if valid_y:
+                    height_zoom = math.log(360 / abs(maxy - miny), 2)
+                else:
+                    height_zoom = 15
+
+                map_obj.center_x = center[0]
+                map_obj.center_y = center[1]
+                map_obj.zoom = math.ceil(min(width_zoom, height_zoom))
+
+            config = map_obj.viewer_json(
+                request.user, *(DEFAULT_BASE_LAYERS + layers))
+            config['fromLayer'] = True
+        else:
+            config = DEFAULT_MAP_CONFIG
+    return json.dumps(config)
+
+
+### TODO should be a util
+
+def clean_config(conf):
+    if isinstance(conf, basestring):
+        config = json.loads(conf)
+        config_extras = [
+            "rest",
+            "homeUrl",
+            "localGeoServerBaseUrl",
+            "localCSWBaseUrl",
+            "csrfToken",
+            "db_datastore",
+            "authorizedRoles"]
+        for config_item in config_extras:
+            if config_item in config:
+                del config[config_item]
+            if config_item in config["map"]:
+                del config["map"][config_item]
+        return json.dumps(config)
+    else:
+        return conf
