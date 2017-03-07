@@ -83,6 +83,10 @@ class Map(geonode.maps.models.Map):
     chapter_index = db.models.IntegerField(_('chapter index'), null=True, blank=True)
 
     def update_from_viewer(self, conf):
+
+        if isinstance(conf, basestring):
+            conf = json.loads(conf)
+
         #super allows us to call base class function implementation from geonode
         super(Map, self).update_from_viewer(conf)
 
