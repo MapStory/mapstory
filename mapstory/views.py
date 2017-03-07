@@ -638,13 +638,6 @@ class MapStoryConfirmEmailView(ConfirmEmailView):
         super(MapStoryConfirmEmailView, self).after_confirmation(confirmation)
 
 
-@login_required
-def new_map_json(request):
-    from geonode.maps.views import new_map_json
-    return new_map_json(request)
-
-
-# TODO this should ultimately be merged with mapstory_view()
 @xframe_options_exempt
 def map_view(request, mapid, snapshot=None, template='maps/map_view.html'):
     """
