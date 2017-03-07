@@ -1,4 +1,3 @@
-import mapstory
 import geonode
 import json
 import uuid
