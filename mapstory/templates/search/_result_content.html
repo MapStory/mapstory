@@ -17,29 +17,29 @@
 
 <!-- If a private item, add respective red badge.
 Draft links to resume draft, 'Private' will link to detail page metadata modal once access is implemented -->
-		<div ng-if="item.is_published === false">
-				<a href="{{item.type === 'mapstory' ? item.detail_url +'/draft' : item.detail_url }}">
-						<div class="btn btn-danger unpublished">
-								<i class="fa fa-lock"></i>
-								<span ng-if="item.type === 'mapstory'">Draft</span>
-								<span ng-if="item.type === 'layer'">Private</span>
-						</div>
-				</a>
-		</div>
+    <div ng-if="item.is_published === false">
+      <a href="{{item.type === 'mapstory' ? item.detail_url +'/draft' : item.detail_url }}">
+          <div class="btn btn-danger unpublished">
+                <i class="fa fa-lock"></i>
+                <span ng-if="item.type === 'mapstory'">Draft</span>
+                <span ng-if="item.type === 'layer'">Private</span>
+            </div>
+        </a>
+    </div>
 
-		<a href="{{ item.detail_url }}">
-				<h3 class="content-title">{{ item.title.toLowerCase() | limitTo:19 }}</h3>
-		</a>
+    <a href="{{ item.detail_url }}">
+        <h3 class="content-title">{{ item.title.toLowerCase() | limitTo:19 }}</h3>
+    </a>
 
-		<div class="content-category">
-				{{ item.category ? item.category : 'Uncategorized' }}
-		</div>
+    <div class="content-category">
+        {{ item.category ? item.category : 'Uncategorized' }}
+    </div>
 
     <div class="content-abstract">
         {{ item.abstract | limitTo:90 }}{{ item.abstract.length > 90 ? '...' : '' }}
     </div>
 
-		<div class="content-date">
+    <div class="content-date">
         {{ item.date|date }}
     </div>
 
@@ -47,11 +47,11 @@ Draft links to resume draft, 'Private' will link to detail page metadata modal o
         {{ item.popular_count }} views
     </div>
 
-		<a href="/storyteller/{{ item.owner__username }}" class="content-owner">
-		{{ item.owner__first_name ?
-				 item.owner__first_name + ' ' + item.owner__last_name
-				 : item.owner__username }}
-		</a>
+    <a href="/storyteller/{{ item.owner__username }}" class="content-owner">
+        {{ item.owner__first_name ?
+           item.owner__first_name + ' ' + item.owner__last_name
+         : item.owner__username }}
+    </a>
 </div>
 </li>
 {% endverbatim %}

@@ -16,12 +16,12 @@
         {% comment %} Search for Content {% endcomment %}
         <div ng-if="query.content">
             <aside class="col-sm-3 explore-filters">
-                <div> Filter Results 
+                <div> Filter Results
                     <span>Clear all</span>
                 </div>
-                
+
                 <div>Search</div>
-                
+
                 <nav class="filter">
                     <div class="input-group">
                         <input name="text_search_input" id="text_search_input" ng-model="query.q" type="text"
@@ -42,14 +42,14 @@
                     </ul>
                 <div>Category</div>
                 <div>
-                    <ul id="categories">   
+                    <ul id="categories">
                         {% verbatim %}
-                        <li ng-repeat="category in categories"> 
+                        <li ng-repeat="category in categories">
                             <a href="" ng-init="toggle=!category.active" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle;" ng-class="{active: (!toggle )}"> {{ category.gn_description }}
                                 <span ng-show="!toggle" class="pull-left"><i class="fa fa-check"></i></span>
-                            </a>                                
+                            </a>
                         </li>
-                        {% endverbatim %}                       
+                        {% endverbatim %}
                     </ul>
                 </div>
                 <div>StoryTeller</div>
@@ -60,14 +60,14 @@
                 <div id="keyword-tab">
                     <input type="text" class="form-control" id="tokenfield-keyword"/>
                 </div>
-                <div id="keywords">{% verbatim %} 
+                <div id="keywords">{% verbatim %}
                     <div> Top Tags </div>
                     <span ng-repeat="item in trending">
                         <a href="" ng-init="toggle=!item.active" ng-click="toggle_query(toggle, 'keywords__slug__in', item.slug); toggle=!toggle;" ng-class="{active: !toggle}">
                             <span ng-show="!toggle"><i class="fa fa-check"></i></span>
-                            {{ item.name }}   
-                        </a>                        
-                    </span>                       
+                            {{ item.name }}
+                        </a>
+                    </span>
                 {% endverbatim %}
                 </div>
             </aside>
@@ -76,29 +76,29 @@
                 <div class="showing-results">
                     Showing 1-9 of 200 results
                 </div>
-								<div class="sort-by">
-										Sort by:
-										<a ng-click="orderMethodUpdate('-popular_count')"> Popular | </a>
-										<a ng-click="orderMethodUpdate('-date')"> Newest</a>
-								</div>
-								<div class="content-results">
-								    <ul>
-										{% verbatim %}
-										    <li ng-repeat="item in results | orderBy: orderMethod"
+                <div class="sort-by">
+                    Sort by:
+                    <a ng-click="orderMethodUpdate('-popular_count')"> Popular | </a>
+                    <a ng-click="orderMethodUpdate('-date')"> Newest</a>
+                </div>
+                <div class="content-results">
+                    <ul>
+                    {% verbatim %}
+                        <li ng-repeat="item in results | orderBy: orderMethod"
                             resource-id="{{ item.id }}"
                             class="col-lg-4 col-sm-6 resource-{{ item.id }}">
-										{% endverbatim %}
-										        {% include 'search/_result_content.html' %}
-										</ul>
-								</div>
-								<div class="pull-right">
-										<a href><i ng-click="paginate_down()" class="fa fa-chevron-left"></i></a>
-										<span>page </span>
-										<span ng-model="page" ng-bind="page"></span>
-										<span> of </span>
-										<span ng-bind="numpages"></span>
-										<a href><i ng-click="paginate_up()" class="fa fa-chevron-right"></i></a>
-								</div>
+                    {% endverbatim %}
+                            {% include 'search/_result_content.html' %}
+                    </ul>
+                </div>
+                <div class="pull-right">
+                    <a href><i ng-click="paginate_down()" class="fa fa-chevron-left"></i></a>
+                    <span>page </span>
+                    <span ng-model="page" ng-bind="page"></span>
+                    <span> of </span>
+                    <span ng-bind="numpages"></span>
+                    <a href><i ng-click="paginate_up()" class="fa fa-chevron-right"></i></a>
+                </div>
             </div>
         </div>
 
@@ -117,7 +117,7 @@
                     <input type="text" class="form-control" id="tokenfield-city" placeholder="Search for city ..."/>
                 </div>
                 <div>Country</div>
-                <div> 
+                <div>
                     <input type="text" class="form-control" id="tokenfield-country" placeholder="Search for country ..."/>
                 </div>
                 <div>
