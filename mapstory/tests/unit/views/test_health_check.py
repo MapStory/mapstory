@@ -34,6 +34,7 @@ class HealthCheckViewTest(MapStoryTestMixin):
         response = self.userclient.get(reverse('health_check'), follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'health_check/dashboard.html')
+        #TODO(Zunware): Assert that health check is passing
 
 
 
