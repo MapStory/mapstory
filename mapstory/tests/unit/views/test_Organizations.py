@@ -22,7 +22,7 @@ class TestOrganizationsView(TestCase):
         # Should use the correct template
         c = Client()
         response = c.get(reverse('index_view'))
-        self.assertContains(response, "<!DOCTYPE html>", count=1, status_code=200, html=False)
+        self.assertContains(response, "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">", count=1, status_code=200, html=False)
         # self.assertTemplateUsed()
         # 
     

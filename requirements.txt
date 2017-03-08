@@ -29,7 +29,7 @@ oauth2==1.5.211
 
 # Add new social login app
 requests>=2.5.1
-python-social-auth
+python-social-auth==0.2.21
 
 #AWS S3 dependencies
 django-storages==1.1.8
