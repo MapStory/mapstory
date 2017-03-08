@@ -19,7 +19,6 @@ let auth = require('./auth.po');
  * Home Page Object
  */
 let home_page = function() {
-
 	this.loginIcon = element(by.css('[data-target="#loginModal"]'));
 	this.loginModal = element(by.css('.modal-content'));
 	this.navigationTabs = element(by.css('.nav.nav-tabs'));
@@ -45,6 +44,11 @@ let home_page = function() {
 	this.uploadIconsLink = element(by.linkText('Upload Icons'));
 	this.composeStoryLink = this.navBar.element(by.linkText('Compose Story'));
 
+	this.get = function(){
+		browser.get('http://192.168.56.151');
+		browser.waitForAngular();
+	};
+
 	/**
 	 * Signs in a user
 	 *
@@ -55,7 +59,7 @@ let home_page = function() {
 	 */
 	this.login = function(user, password){
 
-		if(this.loginForm.isDisplayed() == true) {
+		if(this.loginForm.isDisplayed() === true) {
 
 			// Sets username
 			let usernameInput = this.loginForm.element(by.css('input.form-control[name="username"]'));

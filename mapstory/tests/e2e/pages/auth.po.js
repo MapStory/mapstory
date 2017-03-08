@@ -10,6 +10,8 @@ const defaultLastName = 'Test';
 const defaultEmail = 'testing@testmail.com';
 const defaullTestPassword = 'testPassword2001!';
 
+let EC = protractor.ExpectedConditions;
+
 require('../tools/waitReady.js');
 
 let AuthWizard = function() {
@@ -91,22 +93,23 @@ let AuthWizard = function() {
 		expect(this.loginIcon.waitReady()).toBeTruthy();
 		this.loginIcon.click();
 
-		if (username === null) { username = defaultTestUser; }
-		if (password === null) { password = defaullTestPassword; }
+		expect(this.loginForm.isPresent()).toBe(true);
+		browser.wait(EC.visibilityOf(this.loginForm), 5000);
+		expect(this.loginForm.isDisplayed()).toBeTruthy();
 
-		if(this.loginForm.isDisplayed() == true) {
-			// Type username into box
-			let usernameInput = this.loginForm.element(by.css('input.form-control[name="username"]'));
-			usernameInput.sendKeys(username);
 
-			// Type password into box
-			let passwordInput = this.loginForm.element(by.css('input.form-control[name="password"]'));
-			passwordInput.sendKeys(password);
+		// Input username
+		expect(this.usernameInput.isPresent()).toBe(true);
+		this.usernameInput.sendKeys(username);
 
-			// Press the login button
-			let loginButton = this.loginForm.element(by.partialButtonText('Sign in'));
-			loginButton.click();
-		}
+		// Input password
+		expect(this.passwordInput.isPresent()).toBe(true);
+		this.passwordInput.sendKeys(password);
+
+		// Press the login button
+		expect(this.loginButton.isPresent()).toBe(true);
+		this.loginButton.click();
+
 	};
 
 
@@ -130,7 +133,7 @@ let AuthWizard = function() {
 	 * @return {Promise} A promise that indicates ifLoggedIn
 	 */
 	this.isLoggedIn = function() {
-		return this.userAvatar.isDisplayed();
+		return this.userAvatar.isPresent();
 	};
 
 

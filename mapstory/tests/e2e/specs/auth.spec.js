@@ -97,7 +97,7 @@ describe('User auth', function() {
 				auth.loginIcon.click();
 				expect(auth.loginForm.waitReady()).toBeTruthy();
 
-				// Clock submit
+				// Click submit
 				element(by.css('.login-auth-btn.btn.btn-md.btn-block')).click();
 
 				// Expect error messages
@@ -161,6 +161,7 @@ describe('User auth', function() {
 			}
 			expect(auth.loginIcon.waitReady()).toBeTruthy();
 			auth.loginIcon.click();
+
 			expect(auth.loginForm.isPresent()).toBe(true);
 			browser.wait(EC.visibilityOf(auth.loginForm), 5000);
 			expect(auth.loginForm.isDisplayed()).toBeTruthy();
