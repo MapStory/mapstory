@@ -1,7 +1,7 @@
 'use strict';
 
 // Change this to a larger number if you want to wait longer.
-let waitFactor = 1.0;
+let waitFactor = 1.5;
 
 // The wait times in milliseconds
 let timings =  {

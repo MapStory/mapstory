@@ -36,12 +36,12 @@ let settings = {
 	seleniumAddress: selenium_url,
 	//--------------------------
 	// Use this to run all test files
-	// specs: ['specs/*.spec.js'],
-	specs: [
-		'specs/image.spec.js',
-		'specs/survey.spec.js'
+	specs: ['specs/*.spec.js'],
+	// specs: [
+		// 'specs/image.spec.js',
+		// 'specs/survey.spec.js',
 		// 'tools/take_screenshots.js'
-	],
+	// ],
 	multiCapabilities: multi_cabapilities,
 	jasmineNodeOpts: {
 		showColors: true,

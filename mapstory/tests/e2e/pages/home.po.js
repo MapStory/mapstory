@@ -37,7 +37,7 @@ let home_page = function() {
 	this.step1 = element(by.css('[title="Check Your Data"]'));
 	this.step2 = element(by.css('.row.step.ng-isolate-scope.current'));
 	this.step3 = element(by.css('.row.step.ng-isolate-scope.current[title="Title"]'));
-	this.step4 = element(by.xpath('/html/body/div[5]/div/div/div[2]/div/div/div/section[8]'));
+	this.step4 = element(by.xpath('/html/body/div[6]/div/div/div[2]/div/div/div/section[8]'));
 	this.step5 = element(by.css('section[title="Editing"]'));
 	this.step6 = element(by.css('section[title="Import"]'));
 	this.importLayerLink = element(by.linkText('Import StoryLayer'));
@@ -211,13 +211,13 @@ let home_page = function() {
 	 * Completes Upload Layer - Step 4
 	 */
 	this.uploadLayer_Step4 = function() {
-
-		let step =  element(by.xpath('/html/body/div[5]/div/div/div[2]/div/div/div/section[8]'));
+		let step = element(by.xpath('/html/body/div[6]/div/div/div[2]/div/div/div/section[8]'));
 		let startTimeDropdown = step.element(by.id('start_date'));
 		expect(startTimeDropdown.waitReady()).toBeTruthy();
-		startTimeDropdown.click()
+		// startTimeDropdown.click();
 		startTimeDropdown.$('[value="e_date"]').click();
-		startTimeDropdown.sendKeys(protractor.Key.ENTER)
+		// startTimeDropdown.$('[value="e_date"]').click();
+		startTimeDropdown.sendKeys(protractor.Key.ENTER);
 
 		let nextButton4 = this.step4.element(by.css('button[value="Next Step"]'));
 		expect(nextButton4.waitReady()).toBeTruthy();
