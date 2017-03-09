@@ -21,6 +21,7 @@ let JournalPageObject = function() {
 	this.new_content_input = $('#id_content');
 	this.new_publish_option = $('#id_publish');
 	this.new_save_button = element(by.buttonText('Save'));
+	this.comment_box = $('#id_comment');
 	this.get = function() {
 		browser.get('http://192.168.56.151/journal');
 		browser.waitForAngular();
