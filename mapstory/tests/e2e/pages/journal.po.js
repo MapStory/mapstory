@@ -20,7 +20,7 @@ let JournalPageObject = function() {
 	this.new_title_input = $('#id_title');
 	this.new_content_input = $('#id_content');
 	this.new_publish_option = $('#id_publish');
-	this.new_save_button = element(by.partialLinkText('Save'));
+	this.new_save_button = element(by.buttonText('Save'));
 	this.get = function() {
 		browser.get('http://192.168.56.151/journal');
 		browser.waitForAngular();
