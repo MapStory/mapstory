@@ -1,7 +1,8 @@
 psycopg2==2.4.5
 numpy==1.8.2
 
--e ../geonode
+# -e ../geonode
+-e git://github.com/GeoNode/geonode.git#2.5.9egg=geonode
 
 -e git://github.com/pinax/django-mailer.git#egg=django-mailer
 -e git://github.com/MapStory/icon-commons.git#egg=icon-commons
