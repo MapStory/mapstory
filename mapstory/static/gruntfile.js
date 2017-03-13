@@ -120,6 +120,6 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['jshint', 'less:development', 'replace', 'copy:development']);
 
   // build production
-  grunt.registerTask('production', ['jshint', 'less:production', 'replace', 'copy:development' ]);
+  grunt.registerTask('production', ['jshint', 'less:development', 'replace', 'copy:development' ]);
 
 };
