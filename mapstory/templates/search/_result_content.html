@@ -1,90 +1,47 @@
 {% load i18n avatar_tags %}
 {% verbatim %}
 
-    <div class="flipper result-content">
-        <div class="front">
-            <!-- front content -->
-            <div>
-                <a href="{{ item.detail_url }}">
-                    <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}" />
-                </a>
-    <!-- If a private item, add respective red badge. 
-        Draft links to resume draft, 'Private' will link to detail page metadata modal once access is implemented -->
-                <div ng-if="item.is_published === false">
-                    <a href="{{item.type === 'mapstory' ? item.detail_url +'/draft' : item.detail_url }}">
-                        <div class="btn btn-danger unpublished"> 
-                            <i class="fa fa-lock"></i> 
-                            <span ng-if="item.type === 'mapstory'">Draft</span>
-                            <span ng-if="item.type === 'layer'">Private</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="result-type">
-                <span ng-if="item.type === 'mapstory'"><i class="fa fa-comments-o"></i> 
-                    {% endverbatim %}{{SITE_NAME}}{% verbatim %}
-                </span>
-                <span ng-if="item.type === 'layer'"><i class="fa fa-comment-o"></i> StoryLayer</span>
-            </div>
-            <div class="result-title">
-                <a href="{{ item.detail_url }}">
-                    <h3>{{ item.title.toLowerCase() | limitTo:19 }}</h3>
-                </a>
-            </div>
-            <div class="owner">
-                <span>
-                    <i class="fa fa-user"></i>
-                    {% endverbatim %} {% comment %}
-                    <!-- stashing avatar until django access to item.owner__username -->
-                    <img class="img-circle" src="{% avatar_url user 35 %}"/>
-                    {% endcomment %}{% verbatim %}
-                    <a href="/storyteller/{{ item.owner__username }}">
-                    {{ item.owner__first_name ?
-                         item.owner__first_name + ' ' + item.owner__last_name 
-                         : item.owner__username }}
-                    </a>
-                </span>
-            </div>
-            <div class="result-category">
-                <span><i class="fa fa-flag-o"></i></span> 
-                <span class="result-category">{{ item.category ? item.category : 'Uncategorized' }}</span>
-            </div>
-            <div class="result-date"><i class="fa fa-clock-o"></i><span> Created {{ item.date|date }}</span></div>
-                {% endverbatim %}
-{% comment %}
-                {% if THEME == 'orange' %}{% verbatim %} 
-                <!-- stashing favorites, rating, and views until functional for both layers & stories -->
-                <div class="result-stats">
-                    <a href="{{ item.detail_url }}">
-                        <i class="fa fa-star"></i> 
-                        {{ item.rating }}
-                    </a>
-                    <a href="{{ item.detail_url }}">
-                        <i class="fa fa-heart"></i> 
-                    <!--  TODO: implement, index, and post-save favorite tally per resource -->
-                        0<!-- {{ item.favorites }} -->
-                    </a>
-                    <a href="{{ item.detail_url }}">
-                        <i class="fa fa-eye"></i> 
-                        {{ item.popular_count }}
-                    </a>
-                </div>
-                {% endverbatim %}
-                {% else %}
-{% endcomment %}  
-                {% verbatim %}
-                <div class="result-view">
-                    <a href="{{ item.detail_url }}">
-                        <button class="btn"> View this              
-                            <span ng-if="item.type === 'mapstory'"> {% endverbatim %}{{SITE_NAME}}{% verbatim %}</span>
-                            <span ng-if="item.type === 'layer'">StoryLayer</span>
-                        </button>
-                    </a>
-                </div>
-              <!--   <i class="fa fa-mail-forward turn" ng-click="flip(item.id)" tooltip-append-to-body="true" tooltip-placement="left" tooltip="More Info"></i> -->
-            {% endverbatim %}
-        </div>
-       
+<div class="content-card">
+		<div class="content-result-type">
+				<span ng-if="item.type === 'mapstory'"><i class="fa fa-map-o"></i>
+						{% endverbatim %}{{SITE_NAME}}{% verbatim %}
+				</span>
+				<span ng-if="item.type === 'layer'"><i class="fa fa-clone"></i> StoryLayer</span>
+		</div>
+
+		<a href="{{ item.detail_url }}">
+				<img class="thumb img-responsive" ng-src="{{ item.thumbnail_url | decodeURIComponent }}" />
+		</a>
+
+<!-- If a private item, add respective red badge.
+Draft links to resume draft, 'Private' will link to detail page metadata modal once access is implemented -->
+		<div ng-if="item.is_published === false">
+				<a href="{{item.type === 'mapstory' ? item.detail_url +'/draft' : item.detail_url }}">
+						<div class="btn btn-danger unpublished">
+								<i class="fa fa-lock"></i>
+								<span ng-if="item.type === 'mapstory'">Draft</span>
+								<span ng-if="item.type === 'layer'">Private</span>
+						</div>
+				</a>
+		</div>
+
+		<a href="{{ item.detail_url }}">
+				<h3 class="content-title">{{ item.title.toLowerCase() | limitTo:19 }}</h3>
+		</a>
+
+		<div class="content-category">
+				{{ item.category ? item.category : 'Uncategorized' }}
+		</div>
+
+		<div class="content-date">
+        {{ item.date|date }}
     </div>
 
+		<a href="/storyteller/{{ item.owner__username }}" class="content-owner">
+		{{ item.owner__first_name ?
+				 item.owner__first_name + ' ' + item.owner__last_name
+				 : item.owner__username }}
+		</a>
+</div>
 </li>
+{% endverbatim %}
