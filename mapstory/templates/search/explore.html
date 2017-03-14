@@ -5,13 +5,12 @@
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
 <div ng-controller="geonode_search_controller">
-    <nav class="explore-tabs col-lg-offset-3">
+    <nav class="explore-tabs col-sm-offset-3">
         <ul>
           <li ng-click="toContentSearch();" ng-class="{active: query.content}">Content</li>
           <li ng-click="toUserSearch();" ng-class="{active: query.storyteller}">StoryTellers</li>
         </ul>
     </nav>
-
     <div>
         {% comment %} Search for Content {% endcomment %}
         <div ng-if="query.content">
@@ -21,7 +20,6 @@
                 </div>
 
                 <div>Search</div>
-
                 <nav class="filter">
                     <div class="input-group">
                         <input name="text_search_input" id="text_search_input" ng-model="query.q" type="text"
@@ -33,48 +31,59 @@
                         </span>
                     </div>
                 </nav>
-
-                <div>Content Type</div>
-                    <ul>
-                        <!-- <li><a href="" ng-click="all_types()">All</a></li> -->
-                        <li><a href="" ng-click="add_single_query('type__in', 'layer')"></i> StoryLayer</a></li>
-                        <li><a href="" ng-click="add_single_query('type__in', 'mapstory')"></i> {{SITE_NAME}}</a></li>
-                    </ul>
-                <div>Category</div>
+                <div>{% verbatim %}
+                    <h3> Content Type </h3>
+                    <input type="checkbox" data-value="layer" data-filter="type__in" ng-click="multiple_choice_listener($event)" ng-checked="{{ 'layer' | activated:'type__in':query}}"></i> StoryLayer</input>
+                    
+                    <input type="checkbox" data-value="mapstory" data-filter="type__in" ng-click="multiple_choice_listener($event)" ng-checked="{{'mapstory' | activated:'type__in':query}}"></i> {{sitename}}</input>
+                </div>
                 <div>
-                    <ul id="categories">
-                        {% verbatim %}
-                        <li ng-repeat="category in categories">
-                            <a href="" ng-init="toggle=!category.active" ng-click="toggle_query(toggle, 'category__identifier__in', category.identifier); toggle=!toggle;" ng-class="{active: (!toggle )}"> {{ category.gn_description }}
-                                <span ng-show="!toggle" class="pull-left"><i class="fa fa-check"></i></span>
-                            </a>
-                        </li>
-                        {% endverbatim %}
-                    </ul>
+                    <h3> Category </h3>
+                    <div ng-repeat="category in categories"> 
+                        <input type="checkbox" data-value="{{ category.identifier }}" data-filter="category__identifier__in" ng-click="multiple_choice_listener($event)" ng-checked="{{ category.identifier | activated:'category__identifier__in':query}}"> {{ category.gn_description }}
+                        </input>                       
+                    </div>
+                    {% endverbatim %}
                 </div>
-                <div>StoryTeller</div>
-                <div id="user-tab">
-                    <input type="text" class="form-control" id="tokenfield-profile"/>
-                </div>
-                <div>Tag</div>
-                <div id="keyword-tab">
-                    <input type="text" class="form-control" id="tokenfield-keyword"/>
-                </div>
-                <div id="keywords">{% verbatim %}
-                    <div> Top Tags </div>
-                    <span ng-repeat="item in trending">
-                        <a href="" ng-init="toggle=!item.active" ng-click="toggle_query(toggle, 'keywords__slug__in', item.slug); toggle=!toggle;" ng-class="{active: !toggle}">
-                            <span ng-show="!toggle"><i class="fa fa-check"></i></span>
-                            {{ item.name }}
-                        </a>
+                <h3>StoryTeller</h3>
+                {% verbatim %}
+                <md-content class="md-padding" layout="column">
+                <md-chips ng-model="selectedUsers" 
+                    md-autocomplete-snap 
+                    md-require-match="true"
+                    md-on-add="add_query('owner__username__in', $chip.username)"
+                    md-on-remove="remove_query('owner__username__in', $chip.username)">
+                  <md-autocomplete
+                  md-selected-item="selectedItem"
+                      md-search-text="searchText"
+                      md-items="item in tellerSearch(searchText)"
+                      md-item-text="item.code"
+                      placeholder="Search for a username">
+                    <span md-highlight-text="searchText">{{item.first_name}} {{item.last_name}}</span>
+                  </md-autocomplete>
+                  <md-chip-template>
+                    <span>
+                      <strong>{{$chip.first_name}} {{$chip.last_name}}</strong>
                     </span>
-                {% endverbatim %}
+                  </md-chip-template>
+                </md-chips>
+                </md-content>
+                <div id="keywords"> 
+                    <div> Top Tags: 
+                        <span ng-repeat="item in keywords">
+                            <a href="" data-value="{{ item.slug }}" data-filter="keywords__slug__in" ng-click="multiple_choice_listener($event)"> {{ item.name }}</a>                         
+                        </span>
+                    </div>{% endverbatim %}
+                </div>
+                <div>
+                    <h3> Material Tag </h3>
+                    <md-chips ng-model="query.keywords__slug__in"></md-chips>
                 </div>
             </aside>
-
             <div class="col-sm-9">
                 <div class="showing-results">
-                    Showing 1-9 of 200 results
+                    Showing 1-9 of <span ng-bind="total_counts"></span> results
+
                 </div>
                 <div class="sort-by">
                     Sort by:
@@ -112,22 +121,54 @@
                         <button class="btn" type="submit" ng-click="search()" ng-class="{'disabled': !query.q}" id="user_search_btn"><i class="fa fa-search"></i></button>
                     </span>
                 </div>
-                <div>City</div>
-                <div>
-                    <input type="text" class="form-control" id="tokenfield-city" placeholder="Search for city ..."/>
-                </div>
+                {% verbatim %}
+                <md-autocomplete flex
+                    md-input-name="autocompleteField"
+                    md-selected-item="selectedItem"
+                    md-search-text="searchText"
+                    md-items="item in ctrl.querySearch(ctrl.searchText)"
+                    md-item-text="item.display"
+                    md-floating-label="City">
+                  <md-item-template>
+                    <span md-highlight-text="ctrl.searchText">{{item.display}}</span>
+                  </md-item-template>
+                </md-autocomplete>
+
                 <div>Country</div>
-                <div>
-                    <input type="text" class="form-control" id="tokenfield-country" placeholder="Search for country ..."/>
+                <md-content class="md-padding" layout="column">
+                <md-chips ng-model="selectedCountries" 
+                    md-autocomplete-snap 
+                    md-require-match="true"
+                    md-on-add="add_query('country', $chip.code)"
+                    md-on-remove="remove_query('country', $chip.code)">
+                  <md-autocomplete
+                  md-selected-item="selectedItem"
+                      md-search-text="searchText"
+                      md-items="item in querySearch(searchText)"
+                      md-item-text="item.code"
+                      placeholder="Search for a country">
+                    <span md-highlight-text="searchText">{{item.name}} :: {{item.code}}</span>
+                  </md-autocomplete>
+                  <md-chip-template>
+                    <span>
+                      <strong>{{$chip.name}}</strong>
+                      <em>({{$chip.code}})</em>
+                    </span>
+                  </md-chip-template>
+                </md-chips>
+                </md-content>
+                {% endverbatim %}
+                 <div>
+                    <h3> Material Interest</h3>
+                    <md-chips ng-model="query.interest_list"></md-chips>
                 </div>
                 <div>
                     <input type="checkbox" ng-model="VTCisChecked" ng-click="filterVTC()"> VTC Members
                 </div>
             </aside>
-
             <div class="col-sm-9">
                 <div class="showing-results">
-                    Showing 1-9 of 200 results
+                    Showing 1-9 of <span ng-bind="total_counts"></span> results
                 </div>
                 <div class="storyteller-results">
                     <ul>{% include 'search/_result_users.html' %}</ul>
@@ -144,4 +185,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}
