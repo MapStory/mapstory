@@ -29,7 +29,8 @@ class MetadataForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(MetadataForm, self).__init__(*args, **kwargs)
-        self.fields['distribution_url'].label = "Data Source"
+        # TODO this was removed upstream in 3ff5dff
+        # self.fields['distribution_url'].label = "Data Source"
         self.fields['abstract'].label = "Summary"
 
     class Meta:
@@ -39,7 +40,8 @@ class MetadataForm(forms.ModelForm):
             'category',
             'abstract',
             'language',
-            'distribution_url',
+            # TODO this was removed upstream in 3ff5dff
+            # 'distribution_url',
             'data_quality_statement',
             'purpose',
             'is_published',
