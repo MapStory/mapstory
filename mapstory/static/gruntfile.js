@@ -16,6 +16,23 @@ module.exports = function(grunt) {
       }
     },
 
+    concat: {  
+      options: {},
+      dist: {
+        files: {
+          'mapstory/js/mapstory.js': [
+             'mapstory/js/src/mapstory.module.js',
+             'mapstory/js/src/create-layer.controller.js',
+             'mapstory/js/src/carousel.controller.js',
+             'mapstory/js/src/profile.controller.js',
+             'mapstory/js/src/collection.controller.js',
+             'mapstory/js/src/detail.controller.js',
+             //'mapstory/js/src/search.js'
+           ]
+        }
+      }
+    },
+
     less: {
       development: {
         options: {
@@ -104,6 +121,7 @@ module.exports = function(grunt) {
   // Load libs
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-text-replace');
@@ -117,9 +135,9 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['jshint']);
 
   // build development
-  grunt.registerTask('default', ['jshint', 'less:development', 'replace', 'copy:development']);
+  grunt.registerTask('default', ['jshint', 'concat', 'less:development', 'replace', 'copy:development']);
 
   // build production
-  grunt.registerTask('production', ['jshint', 'less:development', 'replace', 'copy:development' ]);
+  grunt.registerTask('production', ['jshint', 'concat', 'less:development', 'replace', 'copy:development' ]);
 
 };

@@ -5,7 +5,7 @@
 {% block title %} {% trans "Profile of " %}{{ profile.first_name|default_if_none:profile.username }}{% endblock %}
 {% block body_class %}people{% endblock %}
 {% block body %}
-    <div ng-controller="profile_search_controller">
+    <div ng-controller="profileController">
         <div class="container">
             <div class="row profile-banner">
                 <div class="col-sm-1">
