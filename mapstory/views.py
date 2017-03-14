@@ -44,7 +44,6 @@ from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from geonode.base.models import TopicCategory, Region
-from geonode.contrib.collections.models import Collection
 from geonode.documents.models import get_related_documents
 from geonode.geoserver.helpers import ogc_server_settings
 from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
@@ -72,6 +71,7 @@ from health_check.plugins import plugin_dir
 from icon_commons.models import Icon
 from lxml import etree
 from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
+from mapstory.apps.collections.models import Collection
 from mapstory.apps.favorite.models import Favorite
 from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
 from mapstory.forms import DeactivateProfileForm, EditProfileForm
