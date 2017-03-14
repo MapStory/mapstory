@@ -43,11 +43,6 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(LOCAL_ROOT, "static_root")
 MEDIA_ROOT = os.path.join(LOCAL_ROOT, "uploaded")
 
-# Note that Django automatically includes the "templates" dir in all the
-# INSTALLED_APPS, se there is no need to add maps/templates or admin/templates
-TEMPLATE_DIRS = (
-                    os.path.join(LOCAL_ROOT, "templates"),
-                ) + TEMPLATE_DIRS
 
 # Location of url mappings
 ROOT_URLCONF = 'mapstory.urls'
@@ -100,10 +95,20 @@ INSTALLED_APPS += (
 FLUENT_COMMENTS_EXCLUDE_FIELDS = ('name', 'email', 'url', 'title')
 COMMENTS_APP = 'fluent_comments'
 
-TEMPLATE_CONTEXT_PROCESSORS += (
-    'mapstory.context_processors.context',
-    'user_messages.context_processors.user_messages'
-)
+# Note that Django automatically includes the "templates" dir in all the
+# INSTALLED_APPS, se there is no need to add maps/templates or admin/templates
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(LOCAL_ROOT, 'templates')],
+        'OPTIONS': {
+            'context_processors': [
+            'mapstory.context_processors.context',
+            'user_messages.context_processors.user_messages'
+            ],
+        },
+    },
+]
 
 OGC_SERVER = {
     'default': {
