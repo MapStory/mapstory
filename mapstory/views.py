@@ -76,7 +76,6 @@ from mapstory.apps.favorite.models import Favorite
 from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
 from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditGeonodeProfileForm
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm
-from mapstory.forms import OrganizationForm, OrganizationUpdateForm
 from mapstory.forms import SignupForm
 from mapstory.importers import GeoServerLayerCreator
 from mapstory.models import GetPage
@@ -283,7 +282,7 @@ def initiative_detail(request, slug):
 @login_required
 def organization_create(request):
     if request.method == "POST":
-        form = OrganizationForm(request.POST, request.FILES)
+        form = GroupForm(request.POST, request.FILES)
         if form.is_valid():
             group = form.save(commit=False)
             group.profile_type = 'org'
@@ -302,7 +301,7 @@ def organization_create(request):
                     args=[
                         group.slug]))
     else:
-        form = OrganizationForm(initial={'profile_type': 'org'})
+        form = GroupForm(initial={'profile_type': 'org'})
 
     if request.user.is_superuser:
         return render_to_response("groups/group_create.html", {
@@ -352,7 +351,7 @@ def organization_edit(request, slug):
         return HttpResponseForbidden()
 
     if request.method == "POST":
-        form = OrganizationUpdateForm(request.POST, request.FILES, instance=group)
+        form = GroupUpdateForm(request.POST, request.FILES, instance=group)
         if form.is_valid():
             group = form.save(commit=False)
             group.save()
@@ -363,7 +362,7 @@ def organization_edit(request, slug):
                     args=[
                         group.slug]))
     else:
-        form = OrganizationForm(instance=group)
+        form = GroupForm(instance=group)
 
     return render_to_response("groups/group_update.html", {
         "form": form,

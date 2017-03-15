@@ -87,17 +87,3 @@ class EditGeonodeProfileForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'keywords', 'city', 'country',
                   'profile']
 
-
-# Organization forms
-class OrganizationForm(GroupForm):
-
-    class Meta:
-        model = GroupProfile
-        exclude = ['group', 'profile_type', 'tasks', 'featured']
-
-
-class OrganizationUpdateForm(GroupUpdateForm):
-
-    class Meta:
-        model = GroupProfile
-        exclude = ['group', 'profile_type', 'tasks', 'featured']
