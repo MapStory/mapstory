@@ -97,16 +97,29 @@ INSTALLED_APPS += (
 FLUENT_COMMENTS_EXCLUDE_FIELDS = ('name', 'email', 'url', 'title')
 COMMENTS_APP = 'fluent_comments'
 
+
 # Note that Django automatically includes the "templates" dir in all the
 # INSTALLED_APPS, se there is no need to add maps/templates or admin/templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(LOCAL_ROOT, 'templates')],
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-            'mapstory.context_processors.context',
-            'user_messages.context_processors.user_messages'
+                'django.contrib.auth.context_processors.auth',
+                'django.core.context_processors.debug',
+                'django.core.context_processors.i18n',
+                'django.core.context_processors.tz',
+                'django.core.context_processors.media',
+                'django.core.context_processors.static',
+                'django.core.context_processors.request',
+                'django.contrib.messages.context_processors.messages',
+                'account.context_processors.account',
+                'geonode.context_processors.resource_urls',
+                'geonode.geoserver.context_processors.geoserver_urls',
+                'mapstory.context_processors.context',
+                'user_messages.context_processors.user_messages'
             ],
         },
     },
