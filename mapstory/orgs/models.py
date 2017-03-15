@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import signals
 from geonode.base.enumerations import COUNTRIES
 from geonode.groups.models import Group as Geonode_Group
 
@@ -57,3 +58,13 @@ class Org(models.Model):
         Returns a list of the Group's interests.
         """
         return [interest.name for interest in self.interests.all()]
+
+def create_org(sender, instance, created, **kwargs):
+    if created:
+        Geonode_Group.objects.create(user=instance)
+
+def save_org(sender, instance, **kwargs):
+    instance.org.save()
+
+signals.post_save.connect(create_org, sender=Geonode_Group)
+signals.post_save.connect(save_org, sender=Geonode_Group)

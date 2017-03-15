@@ -13,6 +13,7 @@ import notifications, search
 from apps.journal import models
 
 from mapstory.mapstories.models import MapStory, Map
+from mapstory.orgs.models import Org
 
 
 notifications.set_mapstory_notifications()
@@ -197,7 +198,7 @@ def get_sponsors():
 
 
 def get_featured_groups():
-    return geonode.people.models.GroupProfile.objects.filter(featured=True)
+    return Org.objects.filter(featured=True)
 
 
 def get_group_layers(gProfile):
