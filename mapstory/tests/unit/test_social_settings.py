@@ -13,7 +13,7 @@ class SocialSettingsUnitTest(TestCase):
         self.assertIsNotNone(flag_handler)
         flag_handler(flagged_instance_mock, flagged_content_mock)
 
-        # Test the othery type of flag
+        # Test the other type of flag
         flagged_instance_mock.flag_type = 'broken'
         flag_handler(flagged_instance_mock, flagged_content_mock)
 

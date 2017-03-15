@@ -130,21 +130,29 @@ def _boxes_post(req, mapid):
     if action != 'upsert':
         return HttpResponse('%s not supported' % action, status=400)
 
-    errors = _write_boxes(data, get_props, id_collector, mapobj, overwrite, form_mode)
-
-    if errors:
-        transaction.rollback()
+    try:
+        with transaction.atomic():
+            errors = _try_write_boxes(data, get_props, id_collector, mapobj, overwrite, form_mode)
+    except RuntimeError as e:
         body = None
         if error_format:
-            return HttpResponse(error_format(errors), status=400)
-    else:
-        finish()
-        transaction.commit()
-        body = {'success': True}
-        if created:
-            body['ids'] = created
+            return HttpResponse(error_format(['Runtime Error']), status=400)
+
+    finish()
+    body = {'success': True}
+    if created:
+        body['ids'] = created
 
     return json_response(body=body, errors=errors, content_type=content_type)
+
+
+def _try_write_boxes(data, get_props, id_collector, mapobj, overwrite, form_mode):
+    errors = _write_boxes(data, get_props, id_collector, mapobj, overwrite, form_mode)
+
+    if len(errors) > 0:
+        raise RuntimeError
+
+    return errors
 
 
 def _write_boxes(data, get_props, id_collector, mapobj, overwrite, form_mode):
