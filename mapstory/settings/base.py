@@ -88,6 +88,8 @@ INSTALLED_APPS += (
     'mapstory.annotations',
     'mapstory.apps.journal',
     'mapstory.apps.favorite',
+    'mapstory.orgs',
+    'mapstory.mapstory_profile',
     'mapstory.mapstories',
 )
 

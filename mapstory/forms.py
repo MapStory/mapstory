@@ -2,7 +2,8 @@ import autocomplete_light
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 from geonode.layers.models import Layer
-from geonode.base.forms import Profile
+from mapstory.mapstory_profile.models import MapstoryProfile
+from geonode.people.models import Profile
 from geonode.base.models import ResourceBase
 import taggit
 from geonode.groups.models import GroupProfile
@@ -62,8 +63,9 @@ class DeactivateProfileForm(forms.ModelForm):
         model = Profile
         fields = ['is_active']
 
-# A form for the fields we want the user to be able to edit
-class EditProfileForm(forms.ModelForm):
+
+# A form for the mapstory-specific fields we want the user to be able to edit
+class EditMapstoryProfileForm(forms.ModelForm):
     Volunteer_Technical_Community = forms.BooleanField(help_text=_("Join the Volunteer Technical Community (What's this? <a href='http://wiki.mapstory.org/Volunteer_Technical_Community'>Learn more here</a>)"), required=False)
     keywords = taggit.forms.TagField(
         required=False,
@@ -71,8 +73,20 @@ class EditProfileForm(forms.ModelForm):
         help_text=_("A list of personal interests (separate each interest with a comma)"))
 
     class Meta:
+        model = MapstoryProfile
+        fields = ['education', 'expertise', 'social_twitter',
+                  'social_facebook', 'social_linkedin', 'social_github',
+                  'Volunteer_Technical_Community']
+
+
+# Form with fields from the GeoNode Profile model to be edited
+class EditGeonodeProfileForm(forms.ModelForm):
+
+    class Meta:
         model = Profile
-        fields = ['first_name', 'last_name', 'keywords', 'city', 'country', 'profile', 'education', 'expertise', 'social_twitter', 'social_facebook', 'social_linkedin', 'social_github', 'Volunteer_Technical_Community']
+        fields = ['first_name', 'last_name', 'keywords', 'city', 'country',
+                  'profile']
+
 
 # Organization forms
 class OrganizationForm(GroupForm):

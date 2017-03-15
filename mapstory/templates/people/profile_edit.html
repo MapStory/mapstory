@@ -15,7 +15,8 @@
     <form action="" method="post" class="form-horizontal">
       {% csrf_token %}
       <div class="form-controls">
-        {{ form|as_bootstrap }}
+        {{ geonode_profile_form|as_bootstrap }}
+        {{ mapstory_profile_form|as_bootstrap }}
       </div>
       <div class="form-actions">
         <input type="submit" class="btn btn-primary" value="{% trans "Update profile" %}" />
