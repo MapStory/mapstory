@@ -66,7 +66,7 @@ from geonode.utils import default_map_config
 from geonode.utils import forward_mercator, llbbox_to_mercator
 from geonode.utils import DEFAULT_TITLE
 from geonode.utils import DEFAULT_ABSTRACT
-from geonode.utils import DEFAULT_VIEWER_PLAYBACKMODE
+from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from health_check.plugins import plugin_dir
 from icon_commons.models import Icon
 from lxml import etree

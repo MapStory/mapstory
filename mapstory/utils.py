@@ -8,6 +8,7 @@ from lxml import etree
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_VIEWER_PLAYBACKMODE = "Instant"
 
 def parse_schema(schema_xml_str):
     xml = etree.XML(schema_xml_str)
