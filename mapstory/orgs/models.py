@@ -9,9 +9,6 @@ from geonode.groups.models import Group as Geonode_Group
 class Org(models.Model):
     group = models.OneToOneField(Geonode_Group, on_delete=models.CASCADE)
 
-    class Meta:
-        app_label = "mapstory_groups"
-
     social_twitter = models.CharField(
         _('Twitter Handle'),
         help_text=_('Provide your Twitter handle or URL'),
@@ -61,7 +58,7 @@ class Org(models.Model):
 
 def create_org(sender, instance, created, **kwargs):
     if created:
-        Geonode_Group.objects.create(user=instance)
+        Org.objects.create(group=instance)
 
 def save_org(sender, instance, **kwargs):
     instance.org.save()
