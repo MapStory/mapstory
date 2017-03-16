@@ -2,7 +2,7 @@
 
 let homePage = require('../pages/home.po');
 
-let enabled = false;
+let enabled = true;
 
 /**
  * A tool for generating screenshots
