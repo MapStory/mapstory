@@ -83,6 +83,7 @@ INSTALLED_APPS += (
     'health_check_celery3',
     'health_check_db',
     'health_check_storage',
+    'notification',
     'mapstory.apps.health_check_geoserver',
     'mapstory.apps.thumbnails',
     'mapstory.annotations',
