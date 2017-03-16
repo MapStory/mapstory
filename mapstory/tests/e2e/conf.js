@@ -28,6 +28,9 @@ let multi_cabapilities = [{
 	}}
 ];
 
+const browser_width = 1440;
+const browser_height = 800;
+
 
 //----------------------
 // Default settings
@@ -56,8 +59,8 @@ let settings = {
 		browser.pixDiff = new PixDiff({
 			basePath: 'e2e/images/',
 			diffPath: 'e2e/images/',
-			width: 1440,
-			height: 800
+			width: browser_width,
+			height: browser_height
 		});
 	},
 };
@@ -83,7 +86,11 @@ if(process.env.TRAVIS) {
 		'tags': [process.env.TRAVIS_PYTHON_VERSION, 'CI'],
 		'name': 'Mapstory Chrome Tests',
 		'chromeOptions': {
-			args: ['--no-sandbox', '--test-type=browser'],
+			args: [
+				'--no-sandbox',
+				'--test-type=browser',
+				'--window-size=' + browser_width + ',' + browser_height
+			],
 			prefs: {
 				'download': {
 					'prompt_for_download': false,
@@ -109,8 +116,8 @@ if(process.env.TRAVIS) {
 			browser.pixDiff = new PixDiff({
 				basePath: 'e2e/images/',
 				diffPath: 'e2e/images/',
-				width: 1440,
-				height: 800
+				width: browser_width,
+				height: browser_height
 			});
 		},
 	};

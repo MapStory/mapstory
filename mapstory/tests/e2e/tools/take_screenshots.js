@@ -15,12 +15,20 @@ if(enabled) {
 		});
 
 		it('saves the homepage', () => {
-			browser.pixDiff.savePage('homePage');
+			// Scroll to top
+			browser.executeScript('window.scrollTo(0,0);').then(function () {
+				browser.pixDiff.savePage('homePage');
+			});
 		});
 
 		it('saves all the little pieces', () => {
-			let navbar = element(By.id('navbar'));
-			browser.pixDiff.saveRegion(navbar, 'navbar');
+
+			// Scroll to top
+			browser.executeScript('window.scrollTo(0,0);').then(function () {
+				let navbar = element(By.id('navbar'));
+				browser.pixDiff.saveRegion(navbar, 'navbar');
+			});
+
 		});
 
 		it('saves the login modal', () => {
