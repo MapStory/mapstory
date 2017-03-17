@@ -25,5 +25,5 @@ class TestOrganizations(MapStoryTestMixin):
         soup = BeautifulSoup(response.content)
 
         # Should have 28 fields total
-        self.assertEqual(len(soup.find_all('input')), 28)
+        self.assertEqual(len(soup.find_all('input')), 27)
 
