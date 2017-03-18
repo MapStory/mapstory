@@ -27,7 +27,11 @@ module.exports = function(grunt) {
              'mapstory/js/src/profile.controller.js',
              'mapstory/js/src/collection.controller.js',
              'mapstory/js/src/detail.controller.js',
-             //'mapstory/js/src/search.js'
+             'mapstory/js/src/search.module.js',
+             'mapstory/js/src/autocomplete.service.js',
+             'mapstory/js/src/dataservice.factory.js',
+             'mapstory/js/src/explore.controller.js',
+             'mapstory/js/src/autocomplete.controllers.js'
            ]
         }
       }
@@ -98,6 +102,12 @@ module.exports = function(grunt) {
           'style/themes/**/*.less'  
           ],
         tasks: ['less:development']
+      },
+      concat: {
+        files: [
+          'mapstory/js/src/*.js'
+        ], 
+        tasks: ['concat']
       }
     },
 

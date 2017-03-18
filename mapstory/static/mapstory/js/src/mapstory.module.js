@@ -8,7 +8,7 @@
 	angular.module('mapstory', [
     'osgeoImporter.uploader',
     'ui.bootstrap',
-    'geonode_main_search',
+    'mapstory.search',
     'slick'
   ], function($locationProvider) {
     if (window.navigator.userAgent.indexOf("MSIE") == -1){

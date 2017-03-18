@@ -1,57 +1,57 @@
 {% load i18n avatar_tags %}
 {% verbatim %}
 
-<div class="content-card">
-    <div class="thumbnail-and-content-type">
-        <div class="content-result-type">
-            <span ng-if="item.type === 'mapstory'"><i class="fa fa-map-o"></i>
-                {% endverbatim %}{{SITE_NAME}}{% verbatim %}
-            </span>
-            <span ng-if="item.type === 'layer'"><i class="fa fa-clone"></i> StoryLayer</span>
-        </div>
-        <a href="{{ item.detail_url }}">
-            <img ng-src="{{ item.thumbnail_url | decodeURIComponent }}" />
-        </a>
-    </div>
-
-
-<!-- If a private item, add respective red badge.
-Draft links to resume draft, 'Private' will link to detail page metadata modal once access is implemented -->
-    <div ng-if="item.is_published === false">
-      <a href="{{item.type === 'mapstory' ? item.detail_url +'/draft' : item.detail_url }}">
-          <div class="btn btn-danger unpublished">
-                <i class="fa fa-lock"></i>
-                <span ng-if="item.type === 'mapstory'">Draft</span>
-                <span ng-if="item.type === 'layer'">Private</span>
+    <div class="content-card">
+        <div class="thumbnail-and-content-type">
+            <div class="content-result-type">
+                <span ng-if="item.type === 'mapstory'"><i class="fa fa-map-o"></i>
+                    {% endverbatim %}{{SITE_NAME}}{% verbatim %}
+                </span>
+                <span ng-if="item.type === 'layer'"><i class="fa fa-clone"></i> StoryLayer</span>
             </div>
+            <a href="{{ item.detail_url }}">
+                <img ng-src="{{ item.thumbnail_url | decodeURIComponent }}" />
+            </a>
+        </div>
+
+
+    <!-- If a private item, add respective red badge.
+    Draft links to resume draft, 'Private' will link to detail page metadata modal once access is implemented -->
+        <div ng-if="item.is_published === false">
+          <a href="{{item.type === 'mapstory' ? item.detail_url +'/draft' : item.detail_url }}">
+              <div class="btn btn-danger unpublished">
+                    <i class="fa fa-lock"></i>
+                    <span ng-if="item.type === 'mapstory'">Draft</span>
+                    <span ng-if="item.type === 'layer'">Private</span>
+                </div>
+            </a>
+        </div>
+
+        <a href="{{ item.detail_url }}">
+            <h3 class="content-title">{{ item.title.toLowerCase() | limitTo:19 }}</h3>
+        </a>
+
+        <div class="content-category">
+            {{ item.category ? item.category : 'Uncategorized' }}
+        </div>
+
+        <div class="content-abstract">
+            {{ item.abstract | limitTo:75 }}{{ item.abstract.length > 75 ? '...' : '' }}
+        </div>
+
+        <div class="content-date">
+            {{ item.date|date }}
+        </div>
+
+        <div class="content-views">
+            {{ item.popular_count }} views
+        </div>
+
+        <a href="/storyteller/{{ item.owner__username }}" class="content-owner">
+            {{ item.owner__first_name ?
+               item.owner__first_name + ' ' + item.owner__last_name
+             : item.owner__username }}
         </a>
     </div>
-
-    <a href="{{ item.detail_url }}">
-        <h3 class="content-title">{{ item.title.toLowerCase() | limitTo:19 }}</h3>
-    </a>
-
-    <div class="content-category">
-        {{ item.category ? item.category : 'Uncategorized' }}
-    </div>
-
-    <div class="content-abstract">
-        {{ item.abstract | limitTo:75 }}{{ item.abstract.length > 75 ? '...' : '' }}
-    </div>
-
-    <div class="content-date">
-        {{ item.date|date }}
-    </div>
-
-    <div class="content-views">
-        {{ item.popular_count }} views
-    </div>
-
-    <a href="/storyteller/{{ item.owner__username }}" class="content-owner">
-        {{ item.owner__first_name ?
-           item.owner__first_name + ' ' + item.owner__last_name
-         : item.owner__username }}
-    </a>
-</div>
 </li>
 {% endverbatim %}
