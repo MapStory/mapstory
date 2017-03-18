@@ -4,7 +4,7 @@
 {% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
-<div ng-controller="geonode_search_controller">
+<div ng-controller="exploreController">
     <nav class="explore-tabs col-sm-offset-3">
         <ul>
           <li ng-click="toContentSearch();" ng-class="{active: query.content}">Content</li>
@@ -12,156 +12,13 @@
         </ul>
     </nav>
     <div>
-        {% comment %} Filter sidebar for Content {% endcomment %}
         <div ng-if="query.content">
-            <aside class="col-sm-3 explore-filters">
-                <section>
-                    <h2>Filter Results</h2>
-                    <div class="clear-filters">
-                        <a href="#">Clear all</a>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>Search</h3>
-                    <div class="clear-filters">
-                        <a href="#">Clear</a>
-                    </div>
-                    <div class="filter-content">
-                        <div class="search-bar">
-                            <form role="search">
-                                <div>
-                                    <input name="text_search_input"
-                                           id="text_search_input"
-                                           ng-model="query.q"
-                                           type="search"
-                                           class="form-control"
-                                           ng-enter="search()"
-                                           placeholder="Filter by content...">
-                                     <button class="btn" type="submit" ng-click="search()">
-                                         <i class="fa fa-search"></i>
-                                     </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    {% verbatim %}
-                        <h3>Content Type</h3>
-                        <div class="clear-filters">
-                            <a href="#">Clear</a>
-                        </div>
-                        <div class="filter-content">
-                            <div>
-                                <input type="checkbox"
-                                       data-value="layer"
-                                       data-filter="type__in"
-                                       ng-click="multiple_choice_listener($event)"
-                                       ng-checked="{{ 'layer' | activated:'type__in':query}}">
-                                    StoryLayer
-                                </input>
-                            </div>
-                            <div>
-                                <input type="checkbox"
-                                       data-value="mapstory"
-                                       data-filter="type__in"
-                                       ng-click="multiple_choice_listener($event)"
-                                       ng-checked="{{'mapstory' | activated:'type__in':query}}">
-                                    {{sitename}}
-                                </input>
-                            </div>
-                        </div>
-                    {% endverbatim %}
-                </section>
-
-                <section>
-                    {% verbatim %}
-                        <h3>Category</h3>
-                        <div class="clear-filters">
-                            <a href="#">Clear</a>
-                        </div>
-                        <div class="filter-content">
-                            <div ng-repeat="category in categories">
-                                <input type="checkbox" data-value="{{ category.identifier }}" data-filter="category__identifier__in" ng-click="multiple_choice_listener($event)" ng-checked="{{ category.identifier | activated:'category__identifier__in':query}}"> {{ category.gn_description }}
-                                </input>
-                            </div>
-                        </div>
-                    {% endverbatim %}
-                </section>
-
-                <section>
-                    <h3>StoryTeller</h3>
-                    <div class="clear-filters">
-                        <a href="#">Clear</a>
-                    </div>
-                    <div class="filter-content">
-                        {% verbatim %}
-                            <md-content class="md-padding" layout="column">
-                                <md-chips ng-model="selectedUsers"
-                                          md-autocomplete-snap
-                                          md-require-match="true"
-                                          md-on-add="add_query('owner__username__in', $chip.username)"
-                                          md-on-remove="remove_query('owner__username__in', $chip.username)">
-                                    <md-autocomplete md-selected-item="selectedItem"
-                                                     md-search-text="searchText"
-                                                     md-items="item in tellerSearch(searchText)"
-                                                     md-item-text="item.code"
-                                                     placeholder="Filter by StoryTeller...">
-                                        <span class="autocomplete-dropdown-text" md-highlight-text="searchText">{{item.first_name}} {{item.last_name}}</span>
-                                    </md-autocomplete>
-                                    <md-chip-template>
-                                        <span>
-                                          {{$chip.first_name}} {{$chip.last_name}}
-                                        </span>
-                                    </md-chip-template>
-                                </md-chips>
-                                <button class="btn" type="submit" ng-click="search()">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </md-content>
-                        {% endverbatim %}
-                    </div>
-                </section>
-
-                <section>
-                    <h3>Tags</h3>
-                    <div class="clear-filters">
-                        <a href="#">Clear</a>
-                    </div>
-                    <div class="filter-content">
-                        <p>Add your own tags or choose from the popular tags below to filter your search.</p>
-                        <md-content class="md-padding" layout="column">
-                            <md-chips ng-model="query.keywords__slug__in"
-                                      placeholder="Filter by tag...">
-                            </md-chips>
-                            <button class="btn" type="submit" ng-click="search()">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </md-content>
-                    </div>
-                </section>
-
-                <section>
-                    <div class="filter-content">
-                        {% verbatim %}
-                            <h4>Popular Tags on MapStory</h4>
-                            <div id="keywords">
-                                <span ng-repeat="item in keywords">
-                                    <a href="" class="tag" data-value="{{ item.slug }}" data-filter="keywords__slug__in" ng-click="multiple_choice_listener($event)">{{ item.name }}</a>
-                                </span>
-                            </div>
-                        {% endverbatim %}
-                    </div>
-                </section>
-            </aside>
-            {% comment %} End filter sidebar for Content {% endcomment %}
+            {% include 'search/_content_sidebar.html' %}
 
             {% comment %} Content results {% endcomment %}
             <div class="col-sm-9">
                 <div class="showing-results">
-                    Showing 1-9 of <span ng-bind="total_counts"></span> results
-
+                    Showing <span ng-bind="startnumresults"></span>-<span ng-bind="numresults"></span> of <span ng-bind="total_counts"></span> results
                 </div>
                 <div class="sort-by">
                     Sort by:
@@ -170,167 +27,41 @@
                 </div>
                 <div class="content-results">
                     <ul>
-                    {% verbatim %}
+                        {% verbatim %}
                         <li ng-repeat="item in results | orderBy: orderMethod"
                             resource-id="{{ item.id }}"
                             class="col-lg-4 col-sm-6 resource-{{ item.id }}">
-                    {% endverbatim %}
-                            {% include 'search/_result_content.html' %}
+                        {% endverbatim %}
+                        
+                        {% include 'search/_result_content.html' %}
+                        
                     </ul>
-                </div>
-                <div class="pull-right">
-                    <a href><i ng-click="paginate_down()" class="fa fa-chevron-left"></i></a>
-                    <span>page </span>
-                    <span ng-model="page" ng-bind="page"></span>
-                    <span> of </span>
-                    <span ng-bind="numpages"></span>
-                    <a href><i ng-click="paginate_up()" class="fa fa-chevron-right"></i></a>
                 </div>
             </div>
             {% comment %} End Content results {% endcomment %}
         </div>
-
-        {% comment %} Filter sidebar for StoryTellers {% endcomment %}
-        <div ng-if="query.storyteller">
-            <aside class="col-sm-3 explore-filters">
-                <section>
-                    <h2>Filter Results</h2>
-                    <div class="clear-filters">
-                        <a href="#">Clear all</a>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>StoryTeller</h3>
-                    <div class="clear-filters">
-                        <a href="#">Clear</a>
-                    </div>
-                    <div class="filter-content">
-                        <div class="search-bar">
-                            <form role="search">
-                                <div>
-                                    <input name="user_search_input"
-                                           id="user_search_input"
-                                           ng-model="query.q"
-                                           type="search"
-                                           class="form-control"
-                                           ng-enter="search()"
-                                           placeholder="Filter by StoryTeller...">
-                                    <button class="btn" type="submit" ng-click="search()">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </section>
-                <section>
-                    <h3>City</h3>
-                    <div class="clear-filters">
-                        <a href="#">Clear</a>
-                    </div>
-                    {% verbatim %}
-                        <md-autocomplete flex
-                            md-input-name="autocompleteField"
-                            md-selected-item="selectedItem"
-                            md-search-text="searchText"
-                            md-items="item in ctrl.querySearch(ctrl.searchText)"
-                            md-item-text="item.display"
-                            md-floating-label="City">
-                            <md-item-template>
-                                <span md-highlight-text="ctrl.searchText">{{item.display}}</span>
-                            </md-item-template>
-                        </md-autocomplete>
-                    {% endverbatim %}
-                </section>
-
-                <section>
-                    <h3>Country</h3>
-                    <div class="clear-filters">
-                        <a href="#">Clear</a>
-                    </div>
-                    <div class="filter-content">
-                        {% verbatim %}
-                            <md-content class="md-padding" layout="column">
-                                <md-chips ng-model="selectedCountries"
-                                          md-autocomplete-snap
-                                          md-require-match="true"
-                                          md-on-add="add_query('country', $chip.code)"
-                                          md-on-remove="remove_query('country', $chip.code)">
-                                    <md-autocomplete
-                                          md-selected-item="selectedItem"
-                                          md-search-text="searchText"
-                                          md-items="item in querySearch(searchText)"
-                                          md-item-text="item.code"
-                                          placeholder="Filter by country...">
-                                        <span md-highlight-text="searchText">
-                                            {{item.name}} ({{item.code}})
-                                        </span>
-                                    </md-autocomplete>
-                                    <md-chip-template>
-                                        <span>
-                                            {{$chip.name}}
-                                            <em>({{$chip.code}})</em>
-                                        </span>
-                                    </md-chip-template>
-                                </md-chips>
-                                <button class="btn" type="submit" ng-click="search()">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </md-content>
-                        {% endverbatim %}
-                    </div>
-                </section>
-                <section>
-                    <h3>Interest</h3>
-                    <div class="clear-filters">
-                        <a href="#">Clear</a>
-                    </div>
-                    <div class="filter-content">
-                        <md-content class="md-padding" layout="column">
-                            <md-chips ng-model="query.interest_list" placeholder="Filter by interest..."></md-chips>
-                            <button class="btn" type="submit" ng-click="search()">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </md-content>
-                    </div>
-                </section>
-                <section>
-                    <h3>VTC Members</h3>
-                    <div class="clear-filters">
-                        <a href="#">Clear</a>
-                    </div>
-                    <div class="filter-content">
-                        <p>
-                            <a href="{% url 'getpage' 'started' %}#Join%20the%20Volunteer%20Technical%20Community">
-                                Volunteer Technical Community (VTC) members
-                            </a>
-                            can answer questions and help if you send them a message.
-                        </p>
-                        <input type="checkbox" ng-model="VTCisChecked" ng-click="filterVTC()"> VTC Members only
-                    </div>
-                </section>
-            </aside>
-            {% comment %} End filter sidebar for StoryTellers {% endcomment %}
+        <div ng-if="query.storyteller" ng-controller="exploreController">
+            {% include 'search/_users_sidebar.html' %}
 
             {% comment %} StoryTeller results {% endcomment %}
             <div class="col-sm-9">
                 <div class="showing-results">
-                    Showing 1-9 of <span ng-bind="total_counts"></span> results
+                    Showing <span ng-bind="startnumresults"></span>-<span ng-bind="numresults"></span> of <span ng-bind="total_counts"></span> results
                 </div>
                 <div class="storyteller-results">
                     <ul>{% include 'search/_result_users.html' %}</ul>
                 </div>
-                <div class="pull-right">
-                    <a href><i ng-click="paginate_down()" class="fa fa-chevron-left"></i></a>
-                    <span>page </span>
-                    <span ng-model="page" ng-bind="page"></span>
-                    <span> of </span>
-                    <span ng-bind="numpages"></span>
-                    <a href><i ng-click="paginate_up()" class="fa fa-chevron-right"></i></a>
-                </div>
+
             </div>
             {% comment %} End StoryTeller results {% endcomment %}
+        </div>
+        <div class="pull-right">
+            <a href><i ng-click="paginate_down()" class="fa fa-chevron-left"></i></a>
+            <span>page </span>
+            <span ng-model="page" ng-bind="page"></span>
+            <span> of </span>
+            <span ng-bind="numpages"></span>
+            <a href><i ng-click="paginate_up()" class="fa fa-chevron-right"></i></a>
         </div>
     </div>
 </div>
