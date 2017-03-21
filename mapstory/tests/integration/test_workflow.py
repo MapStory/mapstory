@@ -12,7 +12,7 @@ from django.test.utils import override_settings
 
 from geonode.base.models import TopicCategory
 from geonode.base.populate_test_data import create_models
-from geonode.contrib.collections.models import Collection
+from mapstory.apps.collections.models import Collection
 from geonode.geoserver.helpers import gs_catalog
 from geonode.groups.models import GroupProfile
 from geonode.layers.models import Layer
@@ -63,7 +63,7 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
             self.skipTest('Authorize layer function does not exist.')
 
         layer = Layer.objects.first()
-        
+
         cursor = connection.cursor()
 
         def geonode_authorize_layer(username, typename):

@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
 from django.test.utils import override_settings
 
-from geonode.contrib.collections.models import Collection
+from mapstory.apps.collections.models import Collection
 from geonode.groups.models import GroupProfile
 
 from mapstory.views import organization_create, organization_edit, organization_detail, organization_members

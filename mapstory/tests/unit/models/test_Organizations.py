@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from datetime import datetime
 from bs4 import BeautifulSoup
 from django.test import TestCase, Client
-from geonode.contrib.collections.models import Collection
+from mapstory.apps.collections.models import Collection
 from geonode.groups.models import GroupProfile
 
 from mapstory.tests.AdminClient import AdminClient
