@@ -64,6 +64,7 @@ INSTALLED_APPS += (
     'django_nose',
     'mapstory',
     'django.contrib.webdesign',
+    'geonode',
     'geonode.contrib.geogig',
     'mapstory.apps.collections',
     'icon_commons',
