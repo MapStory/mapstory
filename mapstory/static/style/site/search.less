@@ -17,8 +17,118 @@
 
 .explore-filters {
     clear: both;
+
     h2 {
-        font-size: 1em;
+        font-size: 1.15em;
+        font-weight: 600;
+        float: left;
+    }
+    h3 {
+        font-size: 0.9em;
+        font-weight: 600;
+        float: left;
+        text-transform: uppercase;
+    }
+    .clear-filters {
+        a {
+            font-size: 0.8em;
+            float: right;
+            margin-top: 18px;
+            margin-bottom: 10px;
+            &:active, &:hover {
+                color: @blue-300;
+            }
+        }
+    }
+    .filter-content {
+        clear: both;
+        p {
+            font-family: @base-font-family;
+            font-weight: 400;
+            font-size: 0.85em;
+        }
+        h4 {
+            font-family: @base-font-family;
+            color: @gray-800;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin: 15px 0 0 0;
+        }
+        .tag {
+            background: rgb(224,224,224);
+            color: rgb(66,66,66);
+            cursor: default;
+            border-radius: 16px;
+            display: block;
+            height: 32px;
+            line-height: 32px;
+            margin: 8px 8px 0 0;
+            padding: 0 12px;
+            float: left;
+            box-sizing: border-box;
+            max-width: 100%;
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            &:hover, &:active, a:hover, a:active {
+                background: @primary;
+                color: @gray-50;
+            }
+        }
+    }
+    section {
+        clear: both;
+        margin-bottom: 10px;
+    }
+    .search-bar {
+        form {
+            position: relative;
+
+            input[type=search] {
+                font-family: @base-font-family;
+                font-weight: 400;
+                font-size: 0.85em;
+                background: @white;
+                border: 1px solid @gray-400;
+                border-radius: 6px;
+                box-sizing: border-box;
+                color: @gray-900;
+                font-style: italic;
+                margin: 0;
+                padding: 3px 8px;
+                width: 100%;
+                box-shadow: none;
+                -webkit-box-shadow: none;
+
+                @media @desktops {
+                    width: 100%;
+                }
+            }
+
+            button[type=submit] {
+                background: @white;
+                border: 0;
+                bottom: 0.3em;
+                left: auto;
+                outline: none;
+                padding: 0 9px;
+                position: absolute;
+                right: 0.3em;
+                top: 0.3em;
+                color: @gray-700;
+
+                img {
+                    height: 12px;
+                    opacity: 0.7;
+                    padding: 1px;
+                }
+
+                &:active {
+                    box-shadow: none;
+                    -webkit-box-shadow: none;
+                }
+            }
+        }
     }
 }
 

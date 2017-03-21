@@ -15,71 +15,147 @@
         {% comment %} Search for Content {% endcomment %}
         <div ng-if="query.content">
             <aside class="col-sm-3 explore-filters">
-                <div> Filter Results
-                    <span>Clear all</span>
-                </div>
+                <section>
+                    <h2>Filter Results</h2>
+                    <div class="clear-filters">
+                        <a href="#">Clear all</a>
+                    </div>
+                </section>
 
-                <div>Search</div>
-                <nav class="filter">
-                    <div class="input-group">
-                        <input name="text_search_input" id="text_search_input" ng-model="query.q" type="text"
-                            class="form-control" ng-enter="search()" placeholder="Search content...">
-                        <span class="input-group-btn">
-                            <button class="btn" ng-click="search()" type="submit" id="text_search_btn">
+                <section>
+                    <h3>Search</h3>
+                    <div class="clear-filters">
+                        <a href="#">Clear</a>
+                    </div>
+                    <div class="filter-content">
+                        <div class="search-bar">
+                            <form role="search">
+                                <div>
+                                    <input name="text_search_input"
+                                           id="text_search_input"
+                                           ng-model="query.q"
+                                           type="search"
+                                           class="form-control"
+                                           ng-enter="search()"
+                                           placeholder="Search content...">
+                                     <button class="btn" type="submit" ng-click="search()">
+                                         <i class="fa fa-search"></i>
+                                     </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    {% verbatim %}
+                        <h3>Content Type</h3>
+                        <div class="clear-filters">
+                            <a href="#">Clear</a>
+                        </div>
+                        <div class="filter-content">
+                            <div>
+                                <input type="checkbox"
+                                       data-value="layer"
+                                       data-filter="type__in"
+                                       ng-click="multiple_choice_listener($event)"
+                                       ng-checked="{{ 'layer' | activated:'type__in':query}}">
+                                    StoryLayer
+                                </input>
+                            </div>
+                            <div>
+                                <input type="checkbox"
+                                       data-value="mapstory"
+                                       data-filter="type__in"
+                                       ng-click="multiple_choice_listener($event)"
+                                       ng-checked="{{'mapstory' | activated:'type__in':query}}">
+                                    {{sitename}}
+                                </input>
+                            </div>
+                        </div>
+                    {% endverbatim %}
+                </section>
+
+                <section>
+                    {% verbatim %}
+                        <h3>Category</h3>
+                        <div class="clear-filters">
+                            <a href="#">Clear</a>
+                        </div>
+                        <div class="filter-content">
+                            <div ng-repeat="category in categories">
+                                <input type="checkbox" data-value="{{ category.identifier }}" data-filter="category__identifier__in" ng-click="multiple_choice_listener($event)" ng-checked="{{ category.identifier | activated:'category__identifier__in':query}}"> {{ category.gn_description }}
+                                </input>
+                            </div>
+                        </div>
+                    {% endverbatim %}
+                </section>
+
+                <section>
+                    <h3>StoryTeller</h3>
+                    <div class="clear-filters">
+                        <a href="#">Clear</a>
+                    </div>
+                    <div class="filter-content">
+                        {% verbatim %}
+                            <md-content class="md-padding" layout="column">
+                                <md-chips ng-model="selectedUsers"
+                                          md-autocomplete-snap
+                                          md-require-match="true"
+                                          md-on-add="add_query('owner__username__in', $chip.username)"
+                                          md-on-remove="remove_query('owner__username__in', $chip.username)">
+                                    <md-autocomplete md-selected-item="selectedItem"
+                                                     md-search-text="searchText"
+                                                     md-items="item in tellerSearch(searchText)"
+                                                     md-item-text="item.code"
+                                                     placeholder="Filter by StoryTeller...">
+                                        <span class="autocomplete-dropdown-text" md-highlight-text="searchText">{{item.first_name}} {{item.last_name}}</span>
+                                    </md-autocomplete>
+                                    <md-chip-template>
+                                        <span>
+                                          {{$chip.first_name}} {{$chip.last_name}}
+                                        </span>
+                                    </md-chip-template>
+                                </md-chips>
+                                <button class="btn" type="submit" ng-click="search()">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </md-content>
+                        {% endverbatim %}
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Tags</h3>
+                    <div class="clear-filters">
+                        <a href="#">Clear</a>
+                    </div>
+                    <div class="filter-content">
+                        <p>Add your own tags or choose from the popular tags below to filter your search.</p>
+                        <md-content class="md-padding" layout="column">
+                            <md-chips ng-model="query.keywords__slug__in"
+                                      placeholder="Filter by tag...">
+                            </md-chips>
+                            <button class="btn" type="submit" ng-click="search()">
                                 <i class="fa fa-search"></i>
                             </button>
-                        </span>
+                        </md-content>
                     </div>
-                </nav>
-                <div>{% verbatim %}
-                    <h3> Content Type </h3>
-                    <input type="checkbox" data-value="layer" data-filter="type__in" ng-click="multiple_choice_listener($event)" ng-checked="{{ 'layer' | activated:'type__in':query}}"></i> StoryLayer</input>
-                    
-                    <input type="checkbox" data-value="mapstory" data-filter="type__in" ng-click="multiple_choice_listener($event)" ng-checked="{{'mapstory' | activated:'type__in':query}}"></i> {{sitename}}</input>
-                </div>
-                <div>
-                    <h3> Category </h3>
-                    <div ng-repeat="category in categories"> 
-                        <input type="checkbox" data-value="{{ category.identifier }}" data-filter="category__identifier__in" ng-click="multiple_choice_listener($event)" ng-checked="{{ category.identifier | activated:'category__identifier__in':query}}"> {{ category.gn_description }}
-                        </input>                       
+                </section>
+
+                <section>
+                    <div class="filter-content">
+                        {% verbatim %}
+                            <h4>Popular Tags on MapStory</h4>
+                            <div id="keywords">
+                                <span ng-repeat="item in keywords" class="tag">
+                                    <a href="" data-value="{{ item.slug }}" data-filter="keywords__slug__in" ng-click="multiple_choice_listener($event)">{{ item.name }}</a>
+                                </span>
+                            </div>
+                        {% endverbatim %}
                     </div>
-                    {% endverbatim %}
-                </div>
-                <h3>StoryTeller</h3>
-                {% verbatim %}
-                <md-content class="md-padding" layout="column">
-                <md-chips ng-model="selectedUsers" 
-                    md-autocomplete-snap 
-                    md-require-match="true"
-                    md-on-add="add_query('owner__username__in', $chip.username)"
-                    md-on-remove="remove_query('owner__username__in', $chip.username)">
-                  <md-autocomplete
-                  md-selected-item="selectedItem"
-                      md-search-text="searchText"
-                      md-items="item in tellerSearch(searchText)"
-                      md-item-text="item.code"
-                      placeholder="Search for a username">
-                    <span md-highlight-text="searchText">{{item.first_name}} {{item.last_name}}</span>
-                  </md-autocomplete>
-                  <md-chip-template>
-                    <span>
-                      <strong>{{$chip.first_name}} {{$chip.last_name}}</strong>
-                    </span>
-                  </md-chip-template>
-                </md-chips>
-                </md-content>
-                <div id="keywords"> 
-                    <div> Top Tags: 
-                        <span ng-repeat="item in keywords">
-                            <a href="" data-value="{{ item.slug }}" data-filter="keywords__slug__in" ng-click="multiple_choice_listener($event)"> {{ item.name }}</a>                         
-                        </span>
-                    </div>{% endverbatim %}
-                </div>
-                <div>
-                    <h3> Material Tag </h3>
-                    <md-chips ng-model="query.keywords__slug__in"></md-chips>
-                </div>
+                </section>
             </aside>
+
             <div class="col-sm-9">
                 <div class="showing-results">
                     Showing 1-9 of <span ng-bind="total_counts"></span> results
@@ -136,8 +212,8 @@
 
                 <div>Country</div>
                 <md-content class="md-padding" layout="column">
-                <md-chips ng-model="selectedCountries" 
-                    md-autocomplete-snap 
+                <md-chips ng-model="selectedCountries"
+                    md-autocomplete-snap
                     md-require-match="true"
                     md-on-add="add_query('country', $chip.code)"
                     md-on-remove="remove_query('country', $chip.code)">
