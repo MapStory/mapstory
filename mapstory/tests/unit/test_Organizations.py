@@ -39,7 +39,8 @@ class TestOrganizations(MapStoryTestMixin):
             'slug': 'Test-Organization'
         }
 
-        response = admin_client.post(reverse('organization_create'), data=form_data, follow=True)
+        form_url = reverse('organization_create')
+        response = admin_client.post(form_url, data=form_data, follow=True)
         # Test for final status code = HTTP OK
         self.assertEqual(response.status_code, 200)
 
@@ -62,9 +63,9 @@ class TestOrganizations(MapStoryTestMixin):
 
         # Test correct redirect to login page
         last_url, status_code = response.redirect_chain[-1]
-        self.assertRedirects(response, '/account/login/?next=/organizations/create/', status_code=302,
+        self.assertRedirects(response, '/account/login/?next=/organizations/create', status_code=302,
                              target_status_code=200)
-        self.assertEqual(last_url, 'http://testserver/account/login/?next=/organizations/create/')
+        self.assertEqual(last_url, 'http://testserver/account/login/?next=/organizations/create')
 
     def test_user_access_denied(self):
         """Regular users should not get access

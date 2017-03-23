@@ -99,7 +99,7 @@ urlpatterns = patterns('',
     url(r"^storyteller/edit/(?P<username>[^/]*)/set-notification$", set_profile_notification, name="set_profile_notification"),
 
 
-    url(r'^organizations/create/$', organization_create, name='organization_create'),
+    url(r'^organizations/create/?$', organization_create, name='organization_create'),
     url(r'^organizations/(?P<slug>[^/]*)$', organization_detail, name='organization_detail'),
     url(r'^organizations/edit/(?P<slug>[^/]*)$', organization_edit, name='organization_edit'),
     url(r'^organizations/members/(?P<slug>[^/]*)$', organization_members, name='organization_members'),
