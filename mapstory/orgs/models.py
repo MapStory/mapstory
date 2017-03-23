@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import signals
 from geonode.base.enumerations import COUNTRIES
-from geonode.groups.models import Group as Geonode_Group
+from geonode.groups.models import GroupProfile as Geonode_Group
 
 
 class Org(models.Model):
