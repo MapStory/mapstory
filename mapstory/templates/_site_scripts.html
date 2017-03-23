@@ -35,7 +35,7 @@
 
     $(document).ready(function() {
         var menuToggle = $("#js-mobile-menu").unbind();
-        var submenuToggle = $(".nav-link.more").unbind();
+        var submenuToggle = $("li.nav-link.more").unbind();
 
         $("#js-navigation-menu").removeClass("show");
 
@@ -54,7 +54,9 @@
         otherSubmenus.slideUp();
         thisSubmenu.slideToggle();
 
-        $(this).mouseleave(function() {
+        clicked = $(this);
+        menuElements = $(this).children(".nav-avatar");
+        $(clicked, menuElements).mouseleave(function() {
             thisSubmenu.slideUp();
         });
     });
