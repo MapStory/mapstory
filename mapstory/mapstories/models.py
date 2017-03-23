@@ -70,6 +70,24 @@ class MapStory(geonode.base.models.ResourceBase):
     def class_name(self):
         return self.__class__.__name__
 
+
+    distribution_url_help_text = _(
+        'information about on-line sources from which the dataset, specification, or '
+        'community profile name and extended metadata elements can be obtained')
+    distribution_description_help_text = _(
+        'detailed text description of what the online resource is/does')
+    distribution_url = db.models.TextField(
+        _('distribution URL'),
+        blank=True,
+        null=True,
+        help_text=distribution_url_help_text)
+    distribution_description = db.models.TextField(
+        _('distribution description'),
+        blank=True,
+        null=True,
+        help_text=distribution_description_help_text)
+
+
     class Meta(geonode.base.models.ResourceBase.Meta):
         verbose_name_plural = 'MapStories'
         db_table = 'maps_mapstory'
