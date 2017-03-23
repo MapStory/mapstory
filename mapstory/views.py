@@ -74,6 +74,7 @@ from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHe
 from mapstory.apps.collections.models import Collection
 from mapstory.apps.favorite.models import Favorite
 from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
+from mapstory.orgs.forms import OrgForm
 from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditGeonodeProfileForm
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm
 from mapstory.forms import SignupForm
@@ -282,12 +283,16 @@ def initiative_detail(request, slug):
 @login_required
 def organization_create(request):
     if request.method == "POST":
-        form = GroupForm(request.POST, request.FILES)
-        if form.is_valid():
-            group = form.save(commit=False)
-            group.org.profile_type = 'org'
+        group_form = GroupForm(request.POST, request.FILES)
+        org_form = OrgForm(request.POST, request.FILES)
+        if group_form.is_valid() and org_form.is_valid():
+            group = group_form.save(commit=False)
             group.save()
-            form.save_m2m()
+            group.org.profile_type = 'org'
+            # org_form.save() # TODO we don't call save on the org_form, since
+            # post_save signals will trigger an org save after group is saved
+            group.save()  # TODO save again now that we've set profile_type
+            group_form.save_m2m()
             group.join(request.user, role="manager")
             # Create the collection corresponding to this organization
             collection = Collection()
@@ -301,11 +306,13 @@ def organization_create(request):
                     args=[
                         group.slug]))
     else:
-        form = GroupForm(initial={'profile_type': 'org'})
+        group_form = GroupForm(initial={'profile_type': 'org'})
+        org_form = OrgForm()
 
     if request.user.is_superuser:
-        return render_to_response("groups/group_create.html", {
-            "form": form,
+        return render_to_response("groups/mapstory_group_create.html", {
+            "group_form": group_form,
+            "org_form": org_form,
             }, context_instance=RequestContext(request))
     else:
         return HttpResponse(status=403)
