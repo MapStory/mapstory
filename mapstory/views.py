@@ -256,7 +256,7 @@ def profile_delete(request, username=None):
 def organization_detail(request, slug):
     group = GroupProfile.objects.get(slug=slug)
 
-    if not group.profile_type == 'org':
+    if not group.org.profile_type == 'org':
         return HttpResponse(status=404)
 
     return render_to_response("groups/organization_detail.html", {
@@ -269,7 +269,7 @@ def organization_detail(request, slug):
 def initiative_detail(request, slug):
     group = GroupProfile.objects.get(slug=slug)
 
-    if not group.profile_type == 'ini':
+    if not group.org.profile_type == 'ini':
         return HttpResponse(status=404)
 
     return render_to_response("groups/initiative_detail.html", {
@@ -285,7 +285,7 @@ def organization_create(request):
         form = GroupForm(request.POST, request.FILES)
         if form.is_valid():
             group = form.save(commit=False)
-            group.profile_type = 'org'
+            group.org.profile_type = 'org'
             group.save()
             form.save_m2m()
             group.join(request.user, role="manager")
@@ -316,7 +316,7 @@ def initiative_create(request):
         form = GroupForm(request.POST, request.FILES)
         if form.is_valid():
             group = form.save(commit=False)
-            group.profile_type = 'ini'
+            group.org.profile_type = 'ini'
             group.save()
             form.save_m2m()
             group.join(request.user, role="manager")
@@ -344,7 +344,7 @@ def initiative_create(request):
 @login_required
 def organization_edit(request, slug):
     group = GroupProfile.objects.get(slug=slug)
-    if not group.profile_type == 'org':
+    if not group.org.profile_type == 'org':
         return HttpResponse(status=404)
     # Can use this function to toggle manager view
     if not group.user_is_role(request.user, role="manager"):
@@ -372,7 +372,7 @@ def organization_edit(request, slug):
 @login_required
 def initiative_edit(request, slug):
     group = GroupProfile.objects.get(slug=slug)
-    if not group.profile_type == 'ini':
+    if not group.org.profile_type == 'ini':
         return HttpResponse(status=404)
     # Can use this function to toggle manager view
     if not group.user_is_role(request.user, role="manager"):

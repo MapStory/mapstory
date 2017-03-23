@@ -122,7 +122,7 @@ class TestOrganizations(MapStoryTestMixin):
         manager = group.get_managers().all()
         # Should only have 1 manager
         self.assertEqual(len(manager), 1)
-        self.assertEqual(group.profile_type, 'org')
+        self.assertEqual(group.org.profile_type, 'org')
 
     def test_organization_create_post(self):
         """Should create a new organization
@@ -155,7 +155,7 @@ class TestOrganizations(MapStoryTestMixin):
         self.assertEqual(collection.group, group)
         self.assertEqual(collection.name, group.title)
         self.assertEqual(collection.slug, group.slug)
-        self.assertEqual(group.profile_type, 'org')
+        self.assertEqual(group.org.profile_type, 'org')
 
     def test_organization_create_get(self):
         """Should return an empty form.
