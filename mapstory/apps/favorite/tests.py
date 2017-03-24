@@ -30,7 +30,7 @@ from tastypie.test import ResourceTestCase, TestApiClient
 
 from .models import Favorite
 from geonode.base.models import TopicCategory
-from geonode.base.populate_test_data import create_models
+from mapstory.tests.populate_test_data import create_models
 from geonode.documents.models import Document
 
 
@@ -39,11 +39,6 @@ class FavoriteTest(ResourceTestCase):
     Tests mapstory.apps.favorite app/module
     """
     def setUp(self):
-
-        # these are needed for the geonode fixtures
-        TopicCategory.objects.create(identifier='biota')
-        TopicCategory.objects.create(identifier='location')
-        TopicCategory.objects.create(identifier='elevation')
 
         super(FavoriteTest, self).setUp()
         self.adm_un = "admin"

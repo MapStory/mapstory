@@ -11,7 +11,7 @@ from django.test import Client
 from django.test.utils import override_settings
 
 from geonode.base.models import TopicCategory
-from geonode.base.populate_test_data import create_models
+from mapstory.tests.populate_test_data import create_models
 from mapstory.apps.collections.models import Collection
 from geonode.geoserver.helpers import gs_catalog
 from geonode.groups.models import GroupProfile
