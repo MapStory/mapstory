@@ -31,8 +31,9 @@
                 </a>
 
                 <div class="storyteller-location">
-                    <span ng-if="item.city">{{ item.city }}</span>
-                    <span ng-if="item.country">, {{ item.country }}</span>
+                    <span ng-if="item.city">{{ item.city }}{{ item.city && item.country ? ', ':'' }}</span>
+
+                    <span ng-if="item.country">{{ item.country }}</span>
                 </div>
                 <div class="profile-text" ng-if="item.profile">
                     {{ item.profile | limitTo: 100 }}{{ item.profile.length > 100 ? '...' : '' }}
