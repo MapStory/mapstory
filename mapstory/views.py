@@ -1332,7 +1332,6 @@ def layer_detail_id(request, layerid):
 def messages_redirect(request):
     return HttpResponseRedirect("/storyteller/{}/#messages_list".format(request.user))
 
-
 def layer_acls_mapstory(request):
     response = layer_acls(request)
     result = json.loads(response.content)
@@ -1347,3 +1346,4 @@ def resolve_user_mapstory(request):
     result["fullname"] = request.user.username
 
     return HttpResponse(json.dumps(result), content_type="application/json")
+

@@ -11,10 +11,18 @@ python:
   - "2.7"
 
 env:
-- DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
+  global:
+    - DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
+    - TRAVIS_NODE_VERSION="6"
+    # For sauce_connect
+    - secure: "IMm6jAeLGJ1Vo3L81JIEh2/Z2jIARYFBviQ5cxTTH88ndN2Oj03rPDjvkP44YZwZT7Gd768Ve1PuEgq5oVmqd+oZF7hUEh08LalUV9aOkIRFEc8SjuUJVFhFzUGovqDr+Kg+Y7OqDODhZjvORqnNpOkWNUUnR26MsRY/x9vNO50="
+    - secure: "FJobmS7HNb2L95ZN0s81r/MpmM5kizgyoG6bUpgIaYhQMweJgLPinHOWB+54VAr7jkdDjN5b+4hHa1pcWNSWGLDgxMZxj9pPej7Aiq0wvFMlbzai3W+/FcNENHjd3sBTLNpWiBrpQNyUXP2/+2QWPMqCbUfiS90AkA5Du198pjE="
 
 virtualenv:
   system_site_packages: true
+
+addons:
+  sauce_connect: true
 
 before_install:
   - chmod +x ./scripts/install_tests.sh
@@ -33,8 +41,15 @@ install:
   - pip install -r requirements.txt
   - pip install urllib3[secure] --upgrade
   - pip install coveralls
-  - ./scripts/install_tests.sh
 
+  # Install Protractor
+  - rm -rf ~/.nvm
+  - git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
+  - npm install
+  - npm install protractor
+  - webdriver-manager update
+  - ./scripts/install_tests.sh
+  
 before_script:
   - python manage.py migrate maps --noinput
   - python manage.py migrate layers --noinput
@@ -42,8 +57,12 @@ before_script:
   - sudo mkdir -p /var/lib/mapstory/media/
   - sudo chmod 775 /var/lib/mapstory/media/
   - sudo chown $USER /var/lib/mapstory/media/
+  - sleep 5
 
 script:
+  # Run browser tests
+  - protractor mapstory/tests/e2e/conf.js
+  # Run Unit tests
   - coverage run ./manage.py test
   - coverage report
   - coverage html -d cover
