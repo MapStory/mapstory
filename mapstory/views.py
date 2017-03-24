@@ -320,12 +320,14 @@ def organization_create(request):
 @login_required
 def initiative_create(request):
     if request.method == "POST":
-        form = GroupForm(request.POST, request.FILES)
-        if form.is_valid():
-            group = form.save(commit=False)
+        group_form = GroupForm(request.POST, request.FILES)
+        org_form = OrgForm(request.POST, request.FILES)
+        if group_form.is_valid() and org_form.is_valid():
+            group = group_form.save(commit=False)
+            group.save()
             group.org.profile_type = 'ini'
             group.save()
-            form.save_m2m()
+            group_form.save_m2m()
             group.join(request.user, role="manager")
             # Create the collection corresponding to this initiative
             collection = Collection()
@@ -339,11 +341,13 @@ def initiative_create(request):
                     args=[
                         group.slug]))
     else:
-        form = GroupForm(initial={'profile_type': 'ini'})
+        group_form = GroupForm(initial={'profile_type': 'ini'})
+        org_form = OrgForm()
 
     if request.user.is_superuser:
-        return render_to_response("groups/group_create.html", {
-            "form": form,
+        return render_to_response("groups/mapstory_group_create.html", {
+            "group_form": group_form,
+            "org_form": org_form,
             }, context_instance=RequestContext(request))
     else:
         return HttpResponse(status=403)
