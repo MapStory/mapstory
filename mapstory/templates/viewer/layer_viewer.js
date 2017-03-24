@@ -69,7 +69,7 @@
             extent = a.get('latlonBBOX');
           }
 
-          map.getView().fitExtent(extent, map.getSize());
+          map.getView().fit(extent, map.getSize());
 
           self.storyMap.setCenter(map.getView().getCenter());
           self.storyMap.setZoom(map.getView().getZoom());
