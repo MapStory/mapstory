@@ -27,10 +27,6 @@ class AdminClient(Client):
 
 class FlagsTest(MapStoryTestMixin):
     def setUp(self):
-        # these are needed for the geonode fixtures
-        TopicCategory.objects.create(identifier='biota')
-        TopicCategory.objects.create(identifier='location')
-        TopicCategory.objects.create(identifier='elevation')
 
         create_models(type='map')
 
