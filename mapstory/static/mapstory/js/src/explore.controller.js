@@ -17,6 +17,13 @@
     $scope.query.offset = $scope.query.offset || 0;
     $scope.orderMethod = '-popular_count';
 
+    $scope.orderMethods = {
+                            content:[
+                            {name:'Popular', filter:'-popular_count'},
+                            {name:'Newest', filter:'-date'}
+                          ]
+                          };
+
     $scope.lists = {};
 
     if (!Configs.hasOwnProperty("disableQuerySync")) {

@@ -16,14 +16,24 @@
             {% include 'search/_content_sidebar.html' %}
 
             {% comment %} Content results {% endcomment %}
-            <div class="col-sm-9">
+             <div ng-hide="numresults" class="col-sm-9">
+                 No stories or layers matched your selections. Please adjust or clear your filters.
+             </div>
+            <div ng-if="numresults" class="col-sm-9">
                 <div class="showing-results">
                     Showing <span ng-bind="startnumresults"></span>-<span ng-bind="numresults"></span> of <span ng-bind="total_counts"></span> results
                 </div>
                 <div class="sort-by">
-                    Sort by:
-                    <a ng-click="orderMethodUpdate('-popular_count')"> Popular | </a>
-                    <a ng-click="orderMethodUpdate('-date')"> Newest</a>
+                {% verbatim %}
+                    <md-input-container class="md-block" flex-gt-md>
+                        <label>Sort by</label>
+                        <md-select ng-model="orderMethod">
+                          <md-option ng-repeat="state in orderMethods.content" value="{{state.filter}}">
+                            {{state.name}}
+                          </md-option>
+                        </md-select>
+                      </md-input-container>
+                {% endverbatim %}
                 </div>
                 <div class="content-results">
                     <ul>
@@ -44,7 +54,10 @@
             {% include 'search/_users_sidebar.html' %}
 
             {% comment %} StoryTeller results {% endcomment %}
-            <div class="col-sm-9">
+            <div ng-hide="numresults" class="col-sm-9">
+                 No StoryTellers matched your selections. Please adjust or clear your filters.
+             </div>
+            <div ng-if="numresults" class="col-sm-9">
                 <div class="showing-results">
                     Showing <span ng-bind="startnumresults"></span>-<span ng-bind="numresults"></span> of <span ng-bind="total_counts"></span> results
                 </div>
@@ -55,7 +68,7 @@
             </div>
             {% comment %} End StoryTeller results {% endcomment %}
         </div>
-        <div class="pull-right">
+        <div ng-if="numresults" class="pull-right">
             <a href><i ng-click="paginate_down()" class="fa fa-chevron-left"></i></a>
             <span>page </span>
             <span ng-model="page" ng-bind="page"></span>
