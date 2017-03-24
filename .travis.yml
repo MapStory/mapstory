@@ -2,54 +2,38 @@ branches:
   only:
     - master
 
-language: python
+sudo: required
 
 services:
-  - elasticsearch
-
-python:
-  - "2.7"
+  - docker
 
 env:
-- DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
-
-virtualenv:
-  system_site_packages: true
+  - DOCKER_COMPOSE_VERSION: 1.11.2
 
 before_install:
-  - chmod +x ./scripts/install_tests.sh
-
-install:
-  - cd ..
-  - git clone https://github.com/MapStory/geonode.git
-  - cd mapstory
-  - sudo apt-get -qq -y update
-  - sudo apt-get install -y libgdal1h python-gdal
-  - sudo apt-get install -y python-virtualenv python-imaging python-lxml python-pyproj python-shapely python-nose python-httplib2 python-httplib2 gettext
-  - sudo add-apt-repository -y ppa:webupd8team/java
+  # Install Docker Engine
   - sudo apt-get update
-  - sudo apt-get install -y --force-yes oracle-java8-installer ant maven2 libjai-imageio-core-java --no-install-recommends
-  - sudo update-java-alternatives --set java-8-oracle
-  - pip install -r requirements.txt
-  - pip install urllib3[secure] --upgrade
-  - pip install coveralls
-  - ./scripts/install_tests.sh
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+  - docker --version
+  # Install Docker Compose
+  - sudo rm /usr/local/bin/docker-compose
+  - sudo curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - sudo chmod +x /usr/local/bin/docker-compose
+  - docker-compose --version
+  - alias dco="docker-compose -f docker-compose.yml -f docker/docker-compose.override.yml -f docker/docker-compose.test.yml"
 
-before_script:
-  - python manage.py migrate maps --noinput
-  - python manage.py migrate layers --noinput
-  - python manage.py migrate groups --noinput
-  - sudo mkdir -p /var/lib/mapstory/media/
-  - sudo chmod 775 /var/lib/mapstory/media/
-  - sudo chown $USER /var/lib/mapstory/media/
+  - dco pull
+  - dco build
+  - dco up -d pgadmin
+  - dco up -d celery
 
 script:
-  - coverage run ./manage.py test
-  - coverage report
-  - coverage html -d cover
+  - dco up django
 
 after_success:
   - coveralls
+  - dco kill
+  - dco rm -f
 
 notifications:
   slack: mapstory:E2W57xKNNOKDDqRmtQHNUlBK
