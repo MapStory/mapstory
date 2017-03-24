@@ -1,4 +1,3 @@
-'''
 """Functional Tests for Mapstory
 
 Uses selenium and PhantomJS.
@@ -19,7 +18,6 @@ from selenium.webdriver.common.keys import Keys
 
 from .base import FunctionalTest
 
-
 class NewVisitorTest(FunctionalTest):
     
     def test_home_has_titles(self):
@@ -28,7 +26,7 @@ class NewVisitorTest(FunctionalTest):
         # She sees the title and confirms she is on the correct site
         self.assertIn(u'MapStory', self.browser.title)
         body = self.browser.find_element_by_tag_name('body').text
-        # self.assertIn(u'The atlas of change anyone can edit', body )
+        self.assertIn(u'The atlas of change anyone can edit', body )
         # She also sees sponsors
         self.assertIn(u'Our Sponsors', body )
 
@@ -131,4 +129,3 @@ class TestLayerUpload(FunctionalTest):
         importStoryLayerLink = self.browser.find_element_by_partial_link_text('Import Layer')
         self.assertIsNotNone(importStoryLayerLink)
         importStoryLayerLink.click()
-'''

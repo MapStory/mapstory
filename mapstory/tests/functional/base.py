@@ -1,4 +1,3 @@
-'''
 from unittest import skip
 
 from django.test import TestCase
@@ -26,4 +25,3 @@ class FunctionalTest(TestCase):
 
     def tearDown(self):
         self.browser.quit()
-'''
