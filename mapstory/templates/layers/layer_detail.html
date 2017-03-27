@@ -19,6 +19,8 @@
 {% endblock %}
 
 {% block extra_script %}
+<script src="{{ STATIC_URL }}vendor/jquery-ui/jquery-ui.min.js"></script>
+<script src="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js"></script>
 {% if GEOGIG_ENABLED and resource.link_set.geogig %}
     {% include "layers/_geogig_scripts.html" %}
 {% endif %}

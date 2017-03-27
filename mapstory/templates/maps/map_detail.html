@@ -11,6 +11,8 @@
 {% include "maps/_story_details.html" %}
 {% endblock %}
 {% block extra_script %}
+<script src="{{ STATIC_URL }}vendor/jquery-ui/jquery-ui.min.js"></script>
+<script src="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js"></script>
 <script type="text/javascript">
   var app;
   $(document).ready(function() {

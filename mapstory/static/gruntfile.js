@@ -20,7 +20,7 @@ module.exports = function(grunt) {
       options: {},
       dist: {
         files: {
-          'mapstory/js/mapstory.js': [
+          'mapstory/js/dist/mapstory.js': [
              'mapstory/js/src/mapstory.module.js',
              'mapstory/js/src/create-layer.controller.js',
              'mapstory/js/src/carousel.controller.js',
