@@ -356,29 +356,29 @@
         return false;
     };
 
-    /* Tokenization of user interests */
-    // For some reason it gets it all as a string, so parse for the ' and grab the content in between them
-    keyword_list = keyword_list.split('\'');
-    var interests = [];
-    // Grab every odd numbered index - hack to grab the keywords only
-    for (var i = 1; i < keyword_list.length; i += 2) {
-      interests.push(keyword_list[i]);
-    }
-    // Manually set the value field
-    var value = $('#tokenfield-interests').val(interests);
-    // Only initialize the tokenfield once the values are set
-    if (value) {
-      $('#tokenfield-interests').tokenfield({
-        limit: 10
-      });
-      $('#tokenfield-interests').tokenfield('readonly');
-    }
-    // If a label is clicked, do a manual redirect to the explore page with the value
-    // of the token as the keyword search filter
-    $('.token-label').click(function(e) {
-      var interest = $(e.target).text();
-      window.location.href = '/search/?limit=30&offset=0&type__in=user&interest_list=' + interest;
-    });
+    // /* Tokenization of user interests */
+    // // For some reason it gets it all as a string, so parse for the ' and grab the content in between them
+    // keyword_list = keyword_list.split('\'');
+    // var interests = [];
+    // // Grab every odd numbered index - hack to grab the keywords only
+    // for (var i = 1; i < keyword_list.length; i += 2) {
+    //   interests.push(keyword_list[i]);
+    // }
+    // // Manually set the value field
+    // var value = $('#tokenfield-interests').val(interests);
+    // // Only initialize the tokenfield once the values are set
+    // if (value) {
+    //   $('#tokenfield-interests').tokenfield({
+    //     limit: 10
+    //   });
+    //   $('#tokenfield-interests').tokenfield('readonly');
+    // }
+    // // If a label is clicked, do a manual redirect to the explore page with the value
+    // // of the token as the keyword search filter
+    // $('.token-label').click(function(e) {
+    //   var interest = $(e.target).text();
+    //   window.location.href = '/search/?limit=30&offset=0&type__in=user&interest_list=' + interest;
+    // });
   }
 })();
 /*
@@ -800,6 +800,13 @@
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
     $scope.orderMethod = '-popular_count';
+
+    $scope.orderMethods = {
+                            content:[
+                            {name:'Popular', filter:'-popular_count'},
+                            {name:'Newest', filter:'-date'}
+                          ]
+                          };
 
     $scope.lists = {};
 
