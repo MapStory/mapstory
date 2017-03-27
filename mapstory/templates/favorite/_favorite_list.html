@@ -12,7 +12,13 @@
         <tr>
             <td><a href='{{ favorite.content_object.detail_url }}' >{{ favorite.content_object.title }}</a></td>
             <td>{{ favorite.content_type }}</td>
-            <td><button data-url="{% url 'delete_favorite' favorite.pk %}" class="btn btn-primary delete-btn">{% trans "Delete from Favorites" %}</button></td>
+            {% if user == profile %}
+                <td>
+                    <button data-url="{% url 'delete_favorite' favorite.pk %}" class="btn btn-primary delete-btn">
+                        {% trans "Delete from Favorites" %}
+                    </button>
+                </td>
+            {% endif %}
         </tr>
         {% empty %}
         <tr><td>No favorites</td></tr>
