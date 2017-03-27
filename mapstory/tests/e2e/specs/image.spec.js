@@ -4,13 +4,16 @@ require('../tools/waitReady.js');
 // This is an example of how to use image-diff tests
 let PixDiff  = require('pix-diff');
 let homePage = require('../pages/home.po');
+let images_page = require('../pages/images.po');
 
 describe('Home page image check', () => {
 
 	beforeEach(() => {
+		browser.driver.manage().window().setSize(1440, 800);
+		browser.driver.manage().window().setPosition(0, 0);
 		browser.get('http://192.168.56.151');
 		browser.waitForAngular();
-
+		browser.sleep(1000);
 	});
 
 	it('should have pix-diff installed', () => {
@@ -19,30 +22,36 @@ describe('Home page image check', () => {
 
 	it('should match the home page', () => {
 		homePage.logout();
-		browser.pixDiff.checkPage('homePage').then(
-			result => {
-				// 5 means identical!
-				expect(result.code).toEqual(PixDiff.RESULT_IDENTICAL);
-			}
-		);
 
-		let navbar = element(By.id('navbar'));
-		browser.pixDiff.checkRegion(navbar, 'navbar').then(
-			result => {
-				expect(result.code).toEqual(PixDiff.RESULT_IDENTICAL);
-			}
-		);
+
+		browser.executeScript('window.scrollTo(0,0);').then(function () {
+			browser.pixDiff.checkPage('homePage').then(
+				result => {
+					// 5 means identical!
+					expect(result.code).toEqual(PixDiff.RESULT_IDENTICAL);
+				}
+			);
+		});
+
+		browser.executeScript('window.scrollTo(0,0);').then(function () {
+			browser.sleep(1200);
+			browser.pixDiff.checkRegion(images_page.navbar, 'navbar').then(
+				result => {
+					expect(result.code).toEqual(PixDiff.RESULT_IDENTICAL);
+				}
+			);
+		});
 	});
 
 	it('should match login modal', () => {
 		homePage.logout();
 		homePage.loginIcon.click();
-		let loginModal = element(By.id('loginModal'));
-		loginModal.waitReady();
+		images_page.loginModal.waitReady();
 		browser.sleep(1000);
+
 		// Scroll to top
 		browser.executeScript('window.scrollTo(0,0);').then(function () {
-			browser.pixDiff.checkRegion(loginModal, 'loginModal').then(
+			browser.pixDiff.checkRegion(images_page.loginModal, 'loginModal').then(
 				result => {
 					expect(result.code).toEqual(PixDiff.RESULT_IDENTICAL);
 				}

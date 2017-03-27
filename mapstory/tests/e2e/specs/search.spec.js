@@ -20,12 +20,12 @@ describe('Search', function() {
 		browser.waitForAngular();
 	});
 	
-	it('> should hide search if window size is 400 x 600', function() {
+	it('> should show search bar even if window size is 400 x 600', function() {
 		browser.driver.manage().window().setSize(400, 600);
 		browser.get('http://192.168.56.151');
 		browser.waitForAngular();
 		search.textInput.isDisplayed().then(function(isVisible){
-			expect(isVisible).toBe(false);
+			expect(isVisible).toBe(true);
 		});
 	});
 

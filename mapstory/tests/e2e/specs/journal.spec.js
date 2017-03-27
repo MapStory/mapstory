@@ -56,7 +56,8 @@ describe('Journal Page', function(){
 		}).then( () => {
 			browser.waitForAngular();
 			// The Content ID should be inside the content
-			let content = element(by.xpath('//*[@id="wrap"]/div[1]/div/div[2]/p'));
+
+			let content = element(by.css('.col-lg-10.col-xs-6.blog-content.bl'));
 			content.getText().then((text) => {
 				expect(text).toContain(content_id);
 			});

@@ -10,6 +10,8 @@ Install Phantom JS inside the mapstory directory with:
 `npm install phantomjs-prebuilt`
 """
 '''
+
+'''
 from unittest import skip
 
 from django.conf import settings

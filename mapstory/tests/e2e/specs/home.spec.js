@@ -126,10 +126,10 @@ describe('Mapstory Home', function() {
 				page.menuCreate.click();
 
 				// The links inside the dropdown
-				expect(page.importLayerLink.isDisplayed()).toBe(true);
-				expect(page.createLayerLink.isDisplayed()).toBe(true);
-				expect(page.uploadIconsLink.isDisplayed()).toBe(true);
-				expect(page.composeStoryLink.isDisplayed()).toBe(true);
+				expect(page.importLayerLink.waitReady()).toBe(true);
+				expect(page.createLayerLink.waitReady()).toBe(true);
+				expect(page.uploadIconsLink.waitReady()).toBe(true);
+				expect(page.composeStoryLink.waitReady()).toBe(true);
 			});
 
 			it('> should show "Create Layer"', function() {

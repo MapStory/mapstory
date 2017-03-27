@@ -16,13 +16,13 @@ require('../tools/waitReady.js');
 
 let AuthWizard = function() {
 
-	this.loginIcon = element(by.css('.fa.fa-user'));
+	this.loginIcon = element(by.linkText('Log In'));
 	this.loginModal = element(by.css('.modal-content'));
 	this.navigationTabs = element(by.css('.nav.nav-tabs'));
 	this.adminLink = element(by.linkText('admin'));
 	this.logoutLink =  element(by.linkText('Log out'));
 	this.login_close_button = element(by.css('.close.pull-right'));
-	this.loginForm = element(by.css('form.form[action="/account/login/?next=/"]'));
+	this.loginForm = element(by.css('form[action="/account/login/?next=/"]'));
 	this.userAvatar = element(by.css('.nav-avatar'));
 	this.usernameInput = this.loginForm.element(by.css('input.form-control[name="username"]'));
 	this.passwordInput = this.loginForm.element(by.css('input.form-control[name="password"]'));

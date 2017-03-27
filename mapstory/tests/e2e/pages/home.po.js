@@ -19,10 +19,10 @@ let auth = require('./auth.po');
  * Home Page Object
  */
 let home_page = function() {
-	this.loginIcon = element(by.css('[data-target="#loginModal"]'));
+	this.loginIcon = element(by.linkText('Log In'));
 	this.loginModal = element(by.css('.modal-content'));
 	this.navigationTabs = element(by.css('.nav.nav-tabs'));
-	this.adminLink = element(by.linkText('admin'));
+	this.adminLink = element(by.css('.nav-avatar'));
 	this.logoutLink =  element(by.linkText('Log out'));
 	this.login_close_button = element(by.css('.close.pull-right'));
 	this.loginForm = element(by.css('form.form[action="/account/login/?next=/"]'));
@@ -30,7 +30,7 @@ let home_page = function() {
 	this.usernameInput = this.loginForm.element(by.css('input.form-control[name="username"]'));
 	this.passwordInput = this.loginForm.element(by.css('input.form-control[name="password"]'));
 	this.loginButton = this.loginForm.element(by.partialButtonText('Sign in'));
-	this.navBar = element(by.css('#navbar'));
+	this.navBar = element(by.css('.navigation'));
 	this.menuCreate = element(by.linkText('Create'));
 	this.menu_explore = element(by.linkText('Explore'));
 	this.step1 = element(by.css('[title="Check Your Data"]'));
@@ -39,9 +39,9 @@ let home_page = function() {
 	this.step4 = element(by.xpath('/html/body/div[6]/div/div/div[2]/div/div/div/section[8]'));
 	this.step5 = element(by.css('section[title="Editing"]'));
 	this.step6 = element(by.css('section[title="Import"]'));
-	this.importLayerLink = element(by.linkText('Import StoryLayer'));
-	this.createLayerLink = element(by.linkText('Create StoryLayer'));
-	this.uploadIconsLink = element(by.linkText('Upload Icons'));
+	this.importLayerLink = this.navBar.element(by.linkText('Import StoryLayer'));
+	this.createLayerLink = this.navBar.element(by.linkText('Create StoryLayer'));
+	this.uploadIconsLink = this.navBar.element(by.linkText('Upload Icons'));
 	this.composeStoryLink = this.navBar.element(by.linkText('Compose Story'));
 
 	this.get = function(){

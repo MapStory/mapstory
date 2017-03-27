@@ -9,9 +9,9 @@ require('../tools/waitReady.js');
 let wait_times = require('../tools/wait_times');
 
 let Search = function() {
-	this.searchForm = element(by.css('#search'));
-	this.textInput = element(by.css('#quicksearch'));
-	this.searchButton = this.searchForm.element(by.css('button.btn.btn-primary'));
+	this.searchForm = element(by.css('.search-bar'));
+	this.textInput = element(by.css('[placeholder="Quick Search"]'));
+	this.searchButton = element(by.css('button[type="submit"]'));
 	this.storyTellerTab = element(by.partialLinkText('Search for Storytellers'));
 	this.resultsContainer = element(by.css('.clearfix.user.search-results'));
 	this.searchResults = element.all(by.repeater('item in results | filter:itemFilter'));

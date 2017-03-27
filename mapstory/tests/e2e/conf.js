@@ -41,10 +41,16 @@ let settings = {
 	// Use this to run all test files
 	specs: ['specs/*.spec.js'],
 	// specs: [
-		// 'specs/image.spec.js',
-		// 'specs/survey.spec.js',
 		// 'tools/take_screenshots.js',
-		// 'specs/journal.spec.js'
+		// 'specs/auth.spec.js',
+		// 'specs/composer.spec.js',
+		// 'specs/explore.spec.js',
+		// 'specs/home.spec.js',
+		// 'specs/icon_upload.spec.js',
+		// 'specs/image.spec.js',
+		// 'specs/journal.spec.js',
+		// 'specs/search.spec.js',
+		// 'specs/survey.spec.js',
 	// ],
 	multiCapabilities: multi_cabapilities,
 	jasmineNodeOpts: {

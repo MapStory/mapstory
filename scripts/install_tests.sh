@@ -9,4 +9,6 @@ then
     pip install ddt
     # Behavior-driven tests with behave:
     pip install behave
+    # Mock
+    pip install mock
 fi

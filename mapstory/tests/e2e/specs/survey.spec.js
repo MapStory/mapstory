@@ -183,7 +183,8 @@ describe('[Survey Tests] |', function() {
 		describe('<e> Update profile info |', function() {
 			it('> should update profile info', function() {
 				// Click on your name
-				var userIcon = element(by.partialLinkText(tester.name));
+
+				var userIcon = $('.nav-avatar');
 				expect(userIcon.waitReady()).toBeTruthy('Did not find the user icon');
 
 				userIcon.click();
