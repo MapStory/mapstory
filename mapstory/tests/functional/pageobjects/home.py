@@ -1,5 +1,5 @@
 from django.conf import settings
-'''
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -73,6 +73,12 @@ class HomePage(BasePage):
         pass
 
     def signup(self, username, first, last, password, email, accepts=False):
+        '''
+        Assumes:
+            Given:
+                - We are on home page
+                - User is not logged in
+        '''
         self.login_icon.click()
         self.signup_tab.click()
         form = self.signup_form
@@ -92,4 +98,3 @@ class HomePage(BasePage):
         button = wait.until(EC.visibility_of_element_located((By.ID, 'join-mapstory-button')))
         button.click()
         self.browser.save_screenshot('screenshot01.png')
-'''

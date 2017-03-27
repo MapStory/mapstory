@@ -1,446 +1,144 @@
-.logo-wrapper {
-    position: relative;
-    width: 200px;
-    margin-top: 5px;
+.navbar-header {
+    .navbar-toggle {
+        text-transform: uppercase;
+        float: right;
+        font-size: 0.9em;
+        margin: 13px;
+    }
 }
 
-h1.site-title {
-    width: 200px;
-    height: 45px;
-    text-indent: -9999px;
-    margin: 0;
-    float: left;
+.navbar-collapse {
+    max-height: none !important;
+}
+
+
+/*--- NavBar ---*/
+
+.navbar-logo {
+    width: 195px;
+    @media only screen and (max-width: 768px) {
+        // For small screens when nav changes to collapsed hamburger menu
+        margin: 0 20px;
+    }
+}
+
+.navbar-brand {
+    background-size: 100%;
+    width: 196px;
+    margin: 10px 10px 0;
+    text-indent: -9999em;
 }
 
 .beta-tag {
     text-transform: uppercase;
     font-family: "Lato", Helvetica, sans-serif;
     clear: both;
-    color: @gray-500;
+    color: #999;
     font-size: 10px;
-    position: absolute;
-    top: 27px;
-    right: 16px;
+    float: right;
+    margin: -23px 30px;
+    @media only screen and (max-width: 768px) {
+        // For small screens when nav changes to collapsed hamburger menu
+        margin: -23px 5px;
+    }
+}
+
+.navbar-nav > li > a {
+    font-weight: 500;
+    padding-top: 25px;
+    cursor: pointer;
+    @media @tablets {
+        font-size: 0.85em;
+    }
+    @media @desktops {
+        font-size: 0.9em;
+    }
+    @media only screen and (min-width: 1200px) {
+        font-size: 1em;
+    }
+}
+
+.navbar .search {
+    width: 220px;
+    margin-left: -15px;
+    margin-top: 10px;
+    @media only screen and (min-width: 1200px) {
+        width: 285px;
+    }
+}
+
+.dropdown-menu {
+    border-radius: 4px;
+    border: none;
+    padding: 8px 15px;
+}
+
+.nav-icon {
+    font-size: 1.3em;
 }
 
 .nav-avatar {
+    margin: -8px -10px;
+    @media only screen and (max-width: 768px) {
+        display: none !important;
+    }
+    @media @tablets, @desktops {
+        margin-left: 25px;
+        margin-right: -10px;
+    }
+}
+
+#createDropdown {
     display: none;
-
-    @media @desktops {
-        display: inline;
-        width: 25px;
-        border-radius: 50%;
-        border: 1px solid @gray-800;
-        margin: 2px 8px 8px 8px;
+    @media @tablets, @desktops {
+        display: block;
     }
 }
 
-li.divider {
+.quicksearchcontainer {
+    display: none;
     @media @desktops {
-        background-color: @gray-900;
-        margin-right: 15px;
-        height: 1px;
+        display: block;
+        width: 200px;
+        input[type='text'] {
+            width: 190px;
+        }
+        .input-group-btn {
+            width: 20%;
+        }
+    }
+    @media only screen and (min-width: 1200px) {
+        width: 290px;
+        input[type='text'] {
+            width: 230px !important;
+        }
     }
 }
 
-header.navigation {
-    @base-border-color: red;
-    @base-border-radius: 6px;
-    @action-color: blue;
-    @navigation-padding: 1em;
-    @navigation-background: @gray-950;
-    @navigation-color: @gray-400;
-    @navigation-color-hover: @white;
-    @navigation-height: 50px;
-    @navigation-nav-button-background: @action-color;
-    @navigation-nav-button-background-hover: shade(@navigation-background, 50%);
-    @navigation-nav-button-border: 1px solid shade(@navigation-nav-button-background, 20%);
-    @navigation-search-background: @gray-50;
-    @navigation-search-border: 1px solid @gray-200;
-    @navigation-active-link-color: @white;
-    @navigation-submenu-padding: 1em;
-    @navigation-submenu-width: 12em;
+.quicksearchcontainer .fa-search{
+    padding: 3px 0;
+}
 
-    background: @navigation-background; // Fallback for IE9 since it doesn't support gradients
-    background: @navigation-gradient;
-    min-height: @navigation-height;
+#logout_form {
+    text-align: right;
+    padding-right: 15px;
+}
+
+/*--- Footer ---*/
+
+footer {
+    color: @gray55;
+    background: @primary;
+    border-top: 1px solid @gray40;
+    padding: 20px 10px;
     width: 100%;
-    z-index: 999;
-
-    .navigation-wrapper {
-        clear: both;
-        position: relative;
-        // Modals have z-index 1050, so anything > 1050 will show menus
-        // and other nav elements on top of modals, which is bad
-        z-index: 1000;
-    }
-
-    // Mobile view
-
-    .navigation-menu-button {
-        font-family: @base-font-family;
-        font-weight: 400;
-        font-size: 0.85em;
-        color: @navigation-color;
-        display: block;
-        float: right;
-        line-height: @navigation-height;
-        margin: 0;
-        padding-right: 1em;
-        text-decoration: none;
-        text-transform: uppercase;
-
-        @media @desktops {
-            display: none;
-        }
-
-        &:focus,
-        &:hover {
-            color: @navigation-color-hover;
-        }
-    }
-
-    // Nav menu
-
-    nav {
-        float: none;
-        min-height: @navigation-height;
-        z-index: 9999999;
-
-        @media @desktops {
-            float: right;
-
-        }
-    }
-
-    ul.navigation-menu {
-        clear: both;
-        display: none;
-        margin: 0 auto;
-        overflow: visible;
-        padding: 0;
-        width: 100%;
-        z-index: 9999;
-
-        &.show {
-            display: block;
-        }
-
-        @media @desktops {
-            display: inline;
-            margin: 0 0 0 40px;
-            padding: 0;
-        }
-    }
-
-    // The nav items
-
-    ul li.nav-link {
-        font-family: @base-font-family;
-        font-weight: 400;
-        font-size: 0.85em;
-        display: block;
-        line-height: @navigation-height;
-        overflow: hidden;
-        padding-right: 0.8em;
-        text-align: left;
-        width: 100%;
-        z-index: 9999;
-
-        @media @desktops {
-            background: transparent;
-            display: inline;
-            line-height: @navigation-height;
-            text-decoration: none;
-            width: auto;
-            text-align: right;
-
-            &.mobile-menu-only {
-                display: none;
-            }
-        }
-
-        a {
-            color: @navigation-color;
-            display: inline-block;
-            text-decoration: none;
-
-            @media @desktops {
-                padding-right: 1em;
-            }
-
-            &:focus,
-            &:hover {
-                color: @navigation-color-hover;
-                &:after {
-                    color: @gray-50;
-                }
-            }
-        }
-    }
-
-    .active-nav-item a {
-        border-bottom: 1px solid @navigation-active-link-color;
-        padding-bottom: 3px;
-    }
-
-    // Sub menus
-
-    li.more.nav-link {
-        padding-right: 0;
-
-        @media @desktops {
-            padding-right: @navigation-submenu-padding;
-        }
-
-        > ul > li:first-child a  {
-            padding-top: 5px;
-        }
-
-        a {
-            margin-right: @navigation-submenu-padding;
-        }
-
-        > a {
-            padding-right: 0.6em;
-        }
-
-        > a::after {
-            color: @navigation-color;
-            content: "\25BE";
-            position: absolute;
-            right: -5px;
-            font-size: 0.85em;
-        }
-
-        &.user-menu > a::after {
-            color: @navigation-color;
-            top: -16px;
-            right: 5px;
-        }
-
-        &.user-menu {
-            .mobile-menu-only {
-                position: relative;
-                display: inline;
-                &:after {
-                    top: -16px;
-                    right: -5px;
-                }
-            }
-
-            .desktop-menu-only {
-                display: none;
-            }
-
-            @media @desktops {
-                .mobile-menu-only {
-                    display: none;
-                }
-                .desktop-menu-only {
-                    display: inline;
-                }
-            }
-        }
-
-        &.user-menu:hover {
-            a::after {
-                color: @gray-50;
-            }
-        }
-    }
-
-    li.more {
-        overflow: visible;
-        padding-right: 0;
-
-        a {
-            padding-right: 0.8em;
-        }
-
-        > a {
-            padding-right: 1.6em;
-            position: relative;
-
-            @media @desktops {
-                margin-right: @navigation-submenu-padding;
-            }
-
-            &::after {
-                content: "›";
-                font-size: 1.2em;
-                position: absolute;
-                right: @navigation-submenu-padding / 2;
-            }
-        }
-
-
-        @media @desktops {
-            padding-right: 0.8em;
-            position: relative;
-        }
-    }
-
-    ul.submenu {
-        display: none;
-        padding-left: 0;
-
-        @media @desktops {
-            left: -@navigation-submenu-padding;
-            position: absolute;
-            top: 1.5em;
-            z-index: 1;
-        }
-
-        .submenu.fly-out-right {
-            @media @desktops {
-                left: @navigation-submenu-width - 0.2em;
-                top: 0;
-            }
-        }
-
-        .submenu.fly-out-left {
-            @media @desktops {
-                left: -@navigation-submenu-width + 0.2em;
-                top: 0;
-            }
-        }
-
-        .submenu {
-            @media @desktops {
-                left: @navigation-submenu-width - 0.2em;
-                top: 0;
-            }
-        }
-
-        li {
-            display: block;
-            padding-right: 0;
-            font-family: @base-font-family;
-            font-weight: 400;
-            font-size: 0.85em;
-
-            @media @desktops {
-                line-height: @navigation-height / 1.3;
-
-                &:first-child > a {
-                    border-top-left-radius: @base-border-radius;
-                    border-top-right-radius: @base-border-radius;
-                }
-
-                &:last-child > a, &:last-child > form > a {
-                    border-bottom-left-radius: @base-border-radius;
-                    border-bottom-right-radius: @base-border-radius;
-                    padding-bottom: 0.7em;
-                }
-            }
-
-            a {
-                display: inline-block;
-                text-align: left;
-                width: 100%;
-                padding-left: 30px;
-
-                @media @desktops {
-                    background-color: @navigation-background;
-                    padding-left: @navigation-submenu-padding;
-                    text-align: left;
-                    width: @navigation-submenu-width;
-                }
-            }
-        }
-    }
-
-    // Elements on the far right
-
-    .navigation-tools {
-        clear: both;
-        display: block;
-        height: @navigation-height;
-
-        @media @desktops {
-            background: transparent;
-            clear: none;
-            float: right;
-        }
-    }
-
-    // Search bar
-
-    .search-bar {
-        float: right;
-        padding: 8px;
-        width: 100%;
-
-        form {
-            position: relative;
-
-            input[type=search] {
-                font-family: @base-font-family;
-                font-weight: 400;
-                font-size: 0.85em;
-                background: @navigation-search-background;
-                border: @navigation-search-border;
-                border-radius: @base-border-radius;
-                box-sizing: border-box;
-                color: @gray-900;
-                font-style: italic;
-                margin: 0;
-                padding: 3px 8px;
-                width: 100%;
-
-                @media @desktops {
-                    width: 100%;
-                }
-            }
-
-            button[type=submit] {
-                background: @navigation-search-background;
-                border: 0;
-                bottom: 0.3em;
-                left: auto;
-                outline: none;
-                padding: 0 9px;
-                position: absolute;
-                right: 0.3em;
-                top: 0.3em;
-                color: @gray-700;
-
-                img {
-                    height: 12px;
-                    opacity: 0.7;
-                    padding: 1px;
-                }
-            }
-        }
-
-        @media @desktops {
-            display: inline-block;
-            position: relative;
-            width: 16em;
-
-            input {
-                box-sizing: border-box;
-                display: block;
-            }
-        }
-    }
 }
 
+.footerWidget {
+    color: @white;
+}
 
-// Footer
-
-footer.site-footer {
-    color: @gray-300;
-    background: @gray-950;
-    font-family: @base-font-family;
-    font-weight: 400;
-    font-size: 0.9em;
-    padding: 2em 0;
-
-    .version-number {
-        color: @gray-600;
-        font-size: 0.8em;
-        float: right;
-    }
+select .lang {
+    background-color: transparent;
+    color: @white;
 }

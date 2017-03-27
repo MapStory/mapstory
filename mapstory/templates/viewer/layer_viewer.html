@@ -7,8 +7,341 @@
 {% block head %}
     {{ block.super }}
     <link rel="stylesheet" href="{{ STATIC_URL }}style/vis.min.css" type="text/css"/>
-    <link rel="stylesheet" href="{{ STATIC_URL }}vendor/nouislider/distribute/jquery.nouislider.min.css" type="text/css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}vendor/nouislider/distribute/nouislider.min.css" type="text/css">
     <link href="{{ STATIC_URL }}style/themes/{{THEME}}/maps-theme.css" rel="stylesheet" />
+    <style>
+    /*
+      @TODO: replace all but '.map' style with *-all.css once it is added to build
+    */
+    .map {
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 0px solid #ccc;
+        background-color: white;
+    }
+    .feature-info-box-popup {
+      position: absolute;
+      bottom: 12px;
+      left: -50px;
+      display: block;
+      min-width: 250px;
+      padding: 0 10px 10px 10px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      background-color: #fff;
+      border: 1px solid #e6e6e6;
+      border-radius: 10px;
+      -webkit-box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2)
+    }
+    .feature-info-box-popup:after,.feature-info-box-popup:before {
+      position: absolute;
+      top: 100%;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+      border: solid transparent;
+      content: " "
+    }
+    .feature-info-box-popup:after {
+    left: 48px;
+    margin-left: -10px;
+    border-top-color: #fff;
+    border-width: 10px
+    }
+    .feature-info-box-popup:before {
+    left: 48px;
+    margin-left: -11px;
+    border-top-color: #e6e6e6;
+    border-width: 11px
+    }
+    #feature-info-box-button-group {
+    padding-top: 5px
+    }
+    .info-box-mixin {
+    max-height: 150px;
+    min-width: 50px;
+    overflow: hidden
+    }
+    .list-group-info-box {
+    max-height: 150px;
+    min-width: 50px;
+    overflow: hidden
+    }
+    .feature-info-box {
+    max-height: 150px;
+    min-width: 50px;
+    overflow: hidden;
+    overflow-y: auto;
+    white-space: normal
+    }
+    .list-group-item-info-box {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    padding: 4px 4px 4px 4px;
+    margin-bottom: -1px;
+    font: bold 11px "Helvetica Neue","Helvetica",Arial;
+    color: #696969;
+    background-color: #fff;
+    background-color: rgba(251,247,255,0.32);
+    border: 1px solid #ddd;
+    border: 1px solid #e6e6e6
+    }
+    .list-group-item-info-box:first-child {
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px
+    }
+    .list-group-item-info-box:last-child {
+    margin-bottom: 0;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px
+    }
+    .list-group-item-info-box>.badge {
+    float: right
+    }
+    .list-group-item-info-box>.badge+.badge {
+    margin-right: 5px
+    }
+    a.list-group-item-info-box {
+    color: #555
+    }
+    a.list-group-item-info-box .list-group-item-heading {
+    color: #333
+    }
+    a.list-group-item-info-box:hover,a.list-group-item-info-box:focus {
+    text-decoration: none;
+    background-color: #f5f5f5
+    }
+    .list-group-item-info-box.active,.list-group-item-info-box.active:hover,.list-group-item-info-box.active:focus {
+    z-index: 2;
+    color: #fff;
+    background-color: #428bca;
+    border-color: #428bca
+    }
+    .list-group-item-info-box.active .list-group-item-heading,.list-group-item-info-box.active:hover .list-group-item-heading,.list-group-item-info-box.active:focus .list-group-item-heading {
+    color: inherit
+    }
+    .list-group-item-info-box.active .list-group-item-text,.list-group-item-info-box.active:hover .list-group-item-text,.list-group-item-info-box.active:focus .list-group-item-text {
+    color: #e1edf7
+    }
+    .list-group-item-info-box:hover {
+    background-color: #d3d3d3
+    }
+    .info-box-title-row {
+    padding-top: 5px;
+    padding-bottom: 5px
+    }
+    .info-box-back {
+    display: inline-block;
+    width: 10%;
+    text-align: right
+    }
+    .info-box-close {
+    display: inline-block;
+    width: 10%
+    }
+    .info-box-title {
+    display: inline-block;
+    width: 75%;
+    font: bold 11px "Helvetica Neue","Helvetica",Arial;
+    color: #696969;
+    text-align: center;
+    word-wrap: break-word
+    }
+    .info-box-attribute {
+    display: block;
+    width: 190px;
+    padding: 0;
+    margin: 0;
+    font: bold 11px "Helvetica Neue","Helvetica",Arial;
+    color: #696969;
+    word-wrap: break-word
+    }
+    .info-box-attribute-value {
+    display: block;
+    width: 190px;
+    max-width: 190px;
+    padding: 0 0 7px;
+    margin: 0;
+    font: normal 12px "Helvetica",Arial;
+    word-wrap: break-word;
+    white-space: normal
+    }
+    #feature-info-box-bottom {
+    border-top: 1px solid #e6e6e6
+    }
+    #pic-carousel-container {
+    width: 230px;
+    height: 172px;
+    margin-bottom: 10px;
+    overflow: hidden
+    }
+    #feature-info-box-carousel {
+    top: 10px
+    }
+    #feature-info-box-carousel .carousel-indicators {
+    top: 5px;
+    bottom: initial
+    }
+    #blueimp-gallery .modal {
+    position: relative
+    }
+    #blueimp-gallery .slides .slide-loading {
+    background: url(loading.gif) center no-repeat
+    }
+    #blueimp-gallery .slides .slide-error {
+    background: url(error.png) center no-repeat
+    }
+    #blueimp-gallery .play-pause {
+    background: url(play-pause.png) 0 0 no-repeat
+    }
+    #blueimp-gallery .modal-body .video-loading a {
+    background: url(loading.gif) center no-repeat
+    }
+    body:last-child .blueimp-gallery .slides .slide-error {
+    background-image: url(error.svg)
+    }
+    body:last-child .blueimp-gallery .play-pause {
+    background-image: url(play-pause.svg)
+    }
+    .wrapper {
+    padding: 15px 20px;
+    overflow: auto
+    }
+    .custom-control-label {
+    width: 90%;
+    color: #000;
+    word-wrap: break-word
+    }
+    .custom-form-control {
+    color: #000;
+    background-color: #fff;
+    border: 1px solid #fff
+    }
+    #attribute-edit-dialog .modal-header {
+    color: #fff;
+    background-color: #155481
+    }
+    #attribute-edit-dialog .modal-footer {
+    background-color: #e6f3ff;
+    border-top: 0
+    }
+    #attribute-edit-dialog .modal-body {
+    min-height: 200px;
+    padding: 0;
+    overflow: hidden;
+    overflow-y: auto;
+    background-color: #e6f3ff
+    }
+    #attribute-edit-dialog button .loading-container {
+    position: relative!important;
+    top: 10px!important
+    }
+    #attribute-edit-dialog button .text-transparent {
+    opacity: 0
+    }
+    .fade-mixin {
+    position: absolute;
+    left: 0;
+    width: 97%;
+    height: 30px;
+    padding: 0;
+    margin: 0
+    }
+    .top-fade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 97%;
+    height: 30px;
+    padding: 0;
+    margin: 0;
+    background: linear-gradient(#e6f3ff,rgba(255,255,255,0))
+    }
+    .bottom-fade {
+    position: absolute;
+    bottom: 73px;
+    left: 0;
+    z-index: 10;
+    width: 97%;
+    height: 30px;
+    padding: 0;
+    margin: 0;
+    background: linear-gradient(rgba(255,255,255,0),#e6f3ff)
+    }
+    .photo-group .close {
+    position: relative;
+    top: 25px;
+    left: -5px;
+    z-index: 10000;
+    color: white;
+    text-shadow: 0 0 10px #000;
+    opacity: .7
+    }
+    .photo-group .close:hover {
+    opacity: 1
+    }
+    .bootstrap-filestyle {
+    float: left
+    }
+    .media-list {
+    display: -webkit-box;
+    max-height: 70px;
+    margin-bottom: 4px;
+    overflow-y: hidden
+    }
+    .media-item {
+    max-width: 100px;
+    max-height: 70px
+    }
+    .media-item-thumbnail {
+    display: block;
+    height: auto;
+    max-width: 100%
+    }
+    .media-item-remove {
+    position: absolute;
+    top: -2px;
+    right: -5px;
+    font-size: 14px;
+    font-weight: normal;
+    color: red;
+    opacity: .2;
+    filter: alpha(opacity=20)
+    }
+    .media-item-remove:hover {
+    opacity: .8
+    }
+    #exclusive-mode-container {
+    position: absolute;
+    top: 0;
+    right: 50%;
+    left: auto;
+    z-index: 500;
+    width: auto;
+    max-height: 100%;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    overflow: hidden;
+    color: #fff;
+    background-color: rgba(100,150,200,0.75)!important
+    }
+    #exclusive-mode-container button .loading-container {
+    position: relative!important;
+    top: 10px!important
+    }
+    #exclusive-mode-container button .text-transparent {
+    opacity: 0
+    }
+    </style>
 
     <style>
         .map {
@@ -22,7 +355,7 @@
             border: 0px solid #ccc;
             background-color: white;
         }
-    </style>    
+    </style>
 {% endblock head %}
 
 {% block middle %}
@@ -45,6 +378,9 @@
                                               time-controls="timeControlsManager.timeControls"></st-playback-settings>
                     </div>
                     <div id="timeline" style="display:none;"></div>
+                    <div featureinfobox id="info-box" ng-show="featureInfoService.getSelectedItem() && featureInfoService.getEnabled()"
+                        class="feature-info-box-popup">
+                   </div>
                 </div>
             </div>
         </div>
@@ -53,14 +389,10 @@
 {% block extra_script %}
 <script src="{{ STATIC_URL }}vendor/jquery/dist/jquery.min.js"></script>
 <script src="{{ STATIC_URL }}vendor/angular/angular.min.js"></script>
-<script src="{{ STATIC_URL }}vendor/nouislider/distribute/jquery.nouislider.min.js"></script>
+<script src="{{ STATIC_URL }}vendor/nouislider/distribute/nouislider.min.js"></script>
 <script src="{{ STATIC_URL }}vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-<script src="{{ STATIC_URL }}mapstory/js/ol.js"></script>
-<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-core-tpls.js"></script>
-<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-core.js"></script>
-<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-edit.js"></script>
-<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-core-ng.js"></script>
-<script src="{{ STATIC_URL }}vendor/story-tools/dist/ows.js"></script>
+<script src="{{ STATIC_URL }}mapstory/js/ol-debug.js"></script>
+<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-core-all.js"></script>
 <script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-mapstory.js"></script>
 {% include 'viewer/layer_viewer.js' %}
-{% endblock extra_script %} 
+{% endblock extra_script %}
