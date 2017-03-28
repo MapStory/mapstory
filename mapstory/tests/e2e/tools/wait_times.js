@@ -1,7 +1,7 @@
 'use strict';
 
 // Change this to a larger number if you want to wait longer.
-var waitFactor = 1.0;
+var waitFactor = 2.1;
 
 // The wait times in milliseconds
 var timings =  {

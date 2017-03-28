@@ -31,25 +31,23 @@
             <h1>You are using an outdated browser that is not supported by GeoNode.</h1>
             <p>Please use a <strong>modern browser</strong> like Mozilla Firefox, Google Chrome or Safari.</p>
         </div>
-        <div id="wrap">
-            {% block middle %}
-                <div class="container">
-                    {% include "_status_message.html" %}
-                    {% include "_announcements.html" %}
-                    {% include "_messages.html" %}
-                    {% block body_outer %}
-                        <div class="row">
-                            <div class="col-md-8">
-                                {% block body %}{% endblock %}
-                            </div>
-                            <div class="col-md-4">
-                                {% block sidebar %}{% endblock %}
-                            </div>
+        {% block middle %}
+            <div class="container">
+                {% include "_status_message.html" %}
+                {% include "_announcements.html" %}
+                {% include "_messages.html" %}
+                {% block body_outer %}
+                    <div class="row">
+                        <div class="col-md-8">
+                            {% block body %}{% endblock %}
                         </div>
-                    {% endblock %}
-                </div>
-            {% endblock middle %}
-        </div>
+                        <div class="col-md-4">
+                            {% block sidebar %}{% endblock %}
+                        </div>
+                    </div>
+                {% endblock %}
+            </div>
+        {% endblock middle %}
         {% block footer %}{% include '_footer.html' %}{% endblock footer%}
         {% include "_site_scripts.html" %}
         {% block extra_script %}{% endblock extra_script %}

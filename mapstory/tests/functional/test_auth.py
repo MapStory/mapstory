@@ -1,3 +1,4 @@
+'''
 """Functional Tests for Mapstory
 
 Uses selenium and PhantomJS.
@@ -25,6 +26,8 @@ from django.contrib.sites.models import Site
 from ..AdminClient import AdminClient
 from .pageobjects.home import HomePage
 from .base import FunctionalTest
+
+
 
 class AuthFunctionalTests(FunctionalTest):
 
@@ -105,3 +108,5 @@ class AuthFunctionalTests(FunctionalTest):
     # Then:
         # - Will receive error
         pass
+
+'''
