@@ -18,21 +18,29 @@ module.exports = function(grunt) {
 
     concat: {  
       options: {},
-      dist: {
+      mapstory: {
         files: {
           'mapstory/js/dist/mapstory.js': [
              'mapstory/js/src/mapstory.module.js',
-             'mapstory/js/src/carousel.controller.js',
-             'mapstory/js/src/collection.controller.js',
-             'mapstory/js/src/create-layer.controller.js',
-             'mapstory/js/src/detail.controller.js',
-             'mapstory/js/src/profile.controller.js',
+             'mapstory/js/src/*.js',
              'mapstory/js/src/search/search.module.js',
-             'mapstory/js/src/search/autocomplete.service.js',
-             'mapstory/js/src/search/dataservice.factory.js',
-             'mapstory/js/src/search/explore.controller.js',
-             'mapstory/js/src/search/autocomplete.controllers.js'
+             'mapstory/js/src/search/*.js'
            ]
+          }
+        },
+      vendor:{
+        files: {
+           'mapstory/js/dist/vendor-assets-min.js':[
+            'vendor/jquery/dist/jquery.min.js',
+            'vendor/bootstrap/dist/js/bootstrap.min.js',
+            'vendor/angular/angular.min.js',
+            'vendor/angular-animate/angular-animate.min.js',
+            'vendor/angular-aria/angular-aria.min.js',
+            'vendor/angular-material/angular-material.min.js',
+            'vendor/slick-carousel/slick/slick.min.js',
+            'vendor/angular-slick/dist/slick.min.js',
+            'vendor/clipboard/dist/clipboard.min.js'
+          ]
         }
       }
     },
@@ -105,9 +113,9 @@ module.exports = function(grunt) {
       },
       concat: {
         files: [
-          'mapstory/js/src/*.js'
+          'mapstory/js/src/**/*.js'
         ], 
-        tasks: ['concat']
+        tasks: ['concat:mapstory']
       }
     },
 
@@ -145,9 +153,9 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['jshint']);
 
   // build development
-  grunt.registerTask('default', ['jshint', 'concat', 'less:development', 'replace', 'copy:development']);
+  grunt.registerTask('default', ['jshint', 'concat:mapstory', 'concat:vendor', 'less:development', 'replace', 'copy:development']);
 
   // build production
-  grunt.registerTask('production', ['jshint', 'concat', 'less:development', 'replace', 'copy:development' ]);
+  grunt.registerTask('production', ['jshint', 'concat:mapstory', 'concat:vendor', 'less:development', 'replace', 'copy:development' ]);
 
 };

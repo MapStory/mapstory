@@ -1,16 +1,27 @@
 {% load i18n %}
+<script type="text/javascript">
+    CATEGORIES_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='categories' %}';
+    KEYWORDS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='keywords' %}';
+    REGIONS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='regions' %}';
+    HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
+    HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
+    CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
+    AUTOCOMPLETE_URL_RESOURCEBASE = '{% url "autocomplete_light_autocomplete" "ResourceBaseAutocomplete" %}';
+    AUTOCOMPLETE_URL_REGION = '{% url "autocomplete_light_autocomplete" "RegionAutocomplete" %}';
+    AUTOCOMPLETE_URL_KEYWORD = '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}';
+    {% if HAYSTACK_SEARCH %}
+        SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}'
+    {% else %}
+        SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'
+    {% endif %}
+    SITE_NAME = "{{SITE_NAME}}";
+    USER = "{{ user }}";
+</script>
 
-<script src="{{ STATIC_URL }}vendor/jquery/dist/jquery.min.js"></script>
-<script src="{{ STATIC_URL }}vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="{{ STATIC_URL }}mapstory/js/dist/vendor-assets-min.js"></script>
 <script src="{{ STATIC_URL }}lib/js/moment-with-locales.min.js"></script>
 
-<script src="{{ STATIC_URL }}vendor/angular/angular.min.js"></script>
-<script src="{{ STATIC_URL }}vendor/angular-animate/angular-animate.min.js"></script>
-<script src="{{ STATIC_URL }}vendor/angular-aria/angular-aria.min.js"></script>
-<script src="{{ STATIC_URL }}vendor/angular-material/angular-material.js"></script>
-
-<script src="{{ STATIC_URL }}vendor/slick-carousel/slick/slick.js"></script>
-<script src="{{ STATIC_URL }}vendor/angular-slick/dist/slick.js"></script>
+<script src="{{ STATIC_URL }}mapstory/js/dist/mapstory.js"></script>
 
 <!-- Script for animating navigation submenus -->
 <script type="text/javascript">
@@ -62,30 +73,11 @@
     });
 });
 </script>
-<script type="text/javascript">
-    CATEGORIES_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='categories' %}';
-    KEYWORDS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='keywords' %}';
-    REGIONS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='regions' %}';
-    HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
-    HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
-    CLIENT_RESULTS_LIMIT = {{ CLIENT_RESULTS_LIMIT }};
-    AUTOCOMPLETE_URL_RESOURCEBASE = '{% url "autocomplete_light_autocomplete" "ResourceBaseAutocomplete" %}';
-    AUTOCOMPLETE_URL_REGION = '{% url "autocomplete_light_autocomplete" "RegionAutocomplete" %}';
-    AUTOCOMPLETE_URL_KEYWORD = '{% url "autocomplete_light_autocomplete" "TagAutocomplete" %}';
-    {% if HAYSTACK_SEARCH %}
-        SEARCH_URL = '{% url 'api_get_search' api_name='api' resource_name='base' %}'
-    {% else %}
-        SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'
-    {% endif %}
-    SITE_NAME = "{{SITE_NAME}}";
-    USER = "{{ user }}";
-</script>
 
-<script src="{{ STATIC_URL }}mapstory/js/dist/mapstory.js"></script>
-<script src="{{ STATIC_URL }}vendor/clipboard/dist/clipboard.min.js"></script>
 {% include "osgeo_importer/_importer_scripts.html" %}
 {% include 'autocomplete_light/static.html' %}
 {% include "favorite/_favorite_js.html" %}
+
 <script src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
 <script type="text/javascript" src="{% url "lang" %}"></script>
 {% if  USER_SNAP %}

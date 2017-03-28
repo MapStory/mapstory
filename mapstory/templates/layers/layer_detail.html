@@ -7,9 +7,10 @@
 {% load guardian_tags %}
 
 {% block title %}{{ resource.title|default:resource.typename }} — {{ block.super }}{% endblock %}
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css"/>
-    {{ block.super }}
+    <link href="{{ STATIC_URL }}lib/css/jquery-ui.css" rel="stylesheet"/>
+    <link href="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css" rel="stylesheet"/>
 {% endblock %}
 
 {% block body_class %}layers{% endblock %}
