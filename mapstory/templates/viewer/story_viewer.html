@@ -353,8 +353,7 @@ opacity: 0
         <div class="content">
             {% verbatim %}
             <a target="_blank" href="/story/{{ mapManager.storyMap.get('id') - 1 }}/view" class="viewer-story-title" ng-bind="mapManager.title"></a>
-            {% endverbatim %}
-            <a target="_blank" href="/storyteller/{{ mapManager.username }}" class="viewer-author">{{ SITE_NAME }} {% verbatim %}by {{ mapManager.owner }}</a>
+            <a target="_blank" href="/storyteller/{{ mapManager.username }}" class="viewer-author">{% endverbatim %}{{ SITE_NAME }} {% verbatim %}by {{ mapManager.owner }}</a>
             <div class="viewer-chapter-number">Chapter {{ mapManager.storyChapter}}</div>
             <div class="viewer-chapter-title" ng-bind="mapManager.storyMap.getStoryTitle()"></div>
             <p ng-bind="mapManager.storyMap.getStoryAbstract()"></p>
