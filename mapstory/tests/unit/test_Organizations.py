@@ -15,7 +15,9 @@ from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 from mapstory.tests.AdminClient import AdminClient
 
 class TestOrganizations(MapStoryTestMixin):
+
     def setUp(self):
+
         self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
         self.non_admin_username, self.non_admin_password = self.create_user('non_admin', 'non_admin')
 

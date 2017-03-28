@@ -1,11 +1,12 @@
 """
 Test Utilities and helpers
 """
+import string
+import random
 from django.contrib.auth import get_user_model
 from geonode.maps.models import Map, MapStory
 
 User = get_user_model()
-
 
 def get_test_user():
     """
@@ -22,7 +23,6 @@ def get_test_user():
         return User.objects.create_user(username='modeltester',
                                  email='modeltester@models.com',
                                  password='glassonion232123')
-
 
 
 def create_user(username, password, **kwargs):
@@ -45,16 +45,15 @@ def create_user(username, password, **kwargs):
     return username, password
 
 
-
 def create_admin_user(username, password):
     """
     Creates a superuser
+
     :param username: The username
     :param password: The password
     :return: (username, password)
     """
     return create_user(username, password, is_superuser=True)
-
 
 
 def create_map(owner, title):
@@ -67,6 +66,37 @@ def create_map(owner, title):
     """
     return Map.objects.create(owner=owner, zoom=1, center_x=0, center_y=0, title=title)
 
+
 def create_mapstory(owner, title):
+    """
+    Cretes a new mapstory
+
+    :param owner: The owner of the story
+    :param title: The story title
+    :return: MapStory
+    """
     return MapStory.objects.create(owner=owner, title=title)
+
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    """
+    Generages a random string
+
+    :param size: The size of the string
+    :param chars: The chars to randomly select from
+    :return: String
+    """
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def generate_testname(prefix="test", size=6, chars=string.ascii_uppercase + string.ascii_lowercase):
+    """
+    Generates a test name by appending a random string after the prefix
+
+    :param prefix: Prefix string
+    :param size: Size of random suffix
+    :return: String
+    """
+    return "%s_%s" % (prefix, id_generator(size=size, chars=chars))
+
 

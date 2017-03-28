@@ -9,7 +9,7 @@ Install Phantom JS inside the mapstory directory with:
 `npm install phantomjs-prebuilt`
 
 """
-
+'''
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -105,3 +105,4 @@ class AuthFunctionalTests(FunctionalTest):
     # Then:
         # - Will receive error
         pass
+'''

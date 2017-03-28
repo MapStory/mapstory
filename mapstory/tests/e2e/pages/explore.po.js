@@ -8,7 +8,7 @@
 
 require('../tools/waitReady.js');
 
-var ExplorePageObject = function() {
+let ExplorePageObject = function() {
 	this.title = 'Explore - MapStory';
 	this.content_search_tab = $('#content-search');
 	this.storyteller_search_tab = $('#user-search');
