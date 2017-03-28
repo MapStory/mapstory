@@ -78,6 +78,7 @@
         SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'
     {% endif %}
     SITE_NAME = "{{SITE_NAME}}";
+    USER = "{{ user }}";
 </script>
 
 <script src="{{ STATIC_URL }}mapstory/js/dist/mapstory.js"></script>
@@ -112,8 +113,4 @@
     $('.nav-tabs a').on('shown', function (e) {
         window.location.hash = e.target.hash.replace("#", "#" + prefix);
     });
-//add any django values you'd like to use in angular to this object
-  angular.module('mapstory').constant("DjangoConstants", {
-    user: '{{ user }}'
-  });
 </script>

@@ -22,16 +22,16 @@ module.exports = function(grunt) {
         files: {
           'mapstory/js/dist/mapstory.js': [
              'mapstory/js/src/mapstory.module.js',
-             'mapstory/js/src/create-layer.controller.js',
              'mapstory/js/src/carousel.controller.js',
-             'mapstory/js/src/profile.controller.js',
              'mapstory/js/src/collection.controller.js',
+             'mapstory/js/src/create-layer.controller.js',
              'mapstory/js/src/detail.controller.js',
-             'mapstory/js/src/search.module.js',
-             'mapstory/js/src/autocomplete.service.js',
-             'mapstory/js/src/dataservice.factory.js',
-             'mapstory/js/src/explore.controller.js',
-             'mapstory/js/src/autocomplete.controllers.js'
+             'mapstory/js/src/profile.controller.js',
+             'mapstory/js/src/search/search.module.js',
+             'mapstory/js/src/search/autocomplete.service.js',
+             'mapstory/js/src/search/dataservice.factory.js',
+             'mapstory/js/src/search/explore.controller.js',
+             'mapstory/js/src/search/autocomplete.controllers.js'
            ]
         }
       }

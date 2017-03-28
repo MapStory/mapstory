@@ -53,17 +53,6 @@ TODO: change help text in /geonode/geonode/people/models.py to encourage correct
     </div>
 {% endif %}
 
-{% if THEME == 'default' %}
-{# only show interests in development environment until bugs fixed #}
-    <!-- tags and interests -->
-    {% if profile.keyword_list %}
-        <div class="sidebar-header"><h3>tags & interests </h3></div>
-        <div>
-            <input type="text" class="form-control"/>
-        </div>
-    {% endif %}
-{% endif %}
-
 {% if user == profile %}
     <div style= "padding-top: 40px">
         <button class="btn btn-danger"><a href="{% url "profile_delete" user.username %}">{% trans "delete profile" %}</a> </button>

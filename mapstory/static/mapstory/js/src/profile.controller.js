@@ -8,9 +8,7 @@
     .module('mapstory')
     .controller('profileController', profileController);
 
-  function profileController($injector, $scope, $location, $http, Django, UploadedData, $rootScope) {
-    $scope.django = Django.all();
-    
+  function profileController($injector, $scope, $location, $http, UploadedData, $rootScope) {    
     //resources: stories, layers
     $scope.query = {}
     $scope.query.owner__username__in = PROFILE_USERNAME;
@@ -21,7 +19,7 @@
 
     //if not the owner, don't retrieve unpublished resources
     // needs better permissions management for superusers/admin
-    if ($scope.django.user != PROFILE_USERNAME && $scope.django.user != 'admin'){
+    if (USER != PROFILE_USERNAME && USER != 'admin'){
       $scope.query.is_published = true;
     }
 
@@ -117,29 +115,5 @@
           }
         return false;
     };
-
-    /* Tokenization of user interests */
-    // For some reason it gets it all as a string, so parse for the ' and grab the content in between them
-    keyword_list = keyword_list.split('\'');
-    var interests = [];
-    // Grab every odd numbered index - hack to grab the keywords only
-    for (var i = 1; i < keyword_list.length; i += 2) {
-      interests.push(keyword_list[i]);
-    }
-    // Manually set the value field
-    var value = $('#tokenfield-interests').val(interests);
-    // Only initialize the tokenfield once the values are set
-    if (value) {
-      $('#tokenfield-interests').tokenfield({
-        limit: 10
-      });
-      $('#tokenfield-interests').tokenfield('readonly');
-    }
-    // If a label is clicked, do a manual redirect to the explore page with the value
-    // of the token as the keyword search filter
-    $('.token-label').click(function(e) {
-      var interest = $(e.target).text();
-      window.location.href = '/search/?limit=30&offset=0&type__in=user&interest_list=' + interest;
-    });
   }
 })();

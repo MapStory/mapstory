@@ -1,5 +1,5 @@
   /*
-  * 
+  * Explore Page Controller
   */
 
   (function() {
