@@ -36,7 +36,7 @@ Draft links to resume draft, 'Private' will link to detail page metadata modal o
     </div>
 
     <div class="content-abstract">
-        {{ item.abstract | limitTo:90 }}{{ item.abstract.length > 90 ? '...' : '' }}
+        {{ item.abstract | limitTo:75 }}{{ item.abstract.length > 75 ? '...' : '' }}
     </div>
 
     <div class="content-date">
