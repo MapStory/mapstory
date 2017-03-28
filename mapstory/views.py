@@ -89,9 +89,11 @@ from mapstory.search.utils import update_es_index
 
 from django.http import HttpResponse, HttpResponseServerError
 from django.template import loader
+from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
 from health_check.plugins import plugin_dir
-
 from journal.models import get_group_journals
+
+plugin_dir.register(GeoServerHealthCheck)
 
 
 class IndexView(TemplateView):
@@ -196,6 +198,8 @@ def profile_edit(request, username=None):
 
 @login_required
 def health_check(request):
+    # import ipdb
+    # ipdb.sset_trace(context=5)
     plugins = []
     working = True
     for plugin_class, plugin in plugin_dir._registry.items():
@@ -204,6 +208,7 @@ def health_check(request):
             working = False
         plugins.append(plugin)
     plugins.sort(key=lambda x: x.identifier())
+
 
     if working:
         return HttpResponse(loader.render_to_string("health_check/dashboard.html", {'plugins': plugins}))
@@ -1130,12 +1135,14 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     shapefile_link = layer.link_set.download().filter(mime='SHAPE-ZIP').first()
     if shapefile_link is not None:
         shapefile_link = shapefile_link.url + '&featureID=fakeID' + '&propertyName=' + layer_attrib_string
-        context_dict["shapefile_link"] = shapefile_link
+        request.session['shp_name'] = layer.typename
+        request.session['shp_link'] = shapefile_link
 
     csv_link = layer.link_set.download().filter(mime='csv').first()
     if csv_link is not None:
         csv_link = csv_link.url + '&featureID=fakeID'  + '&propertyName=' + layer_attrib_string
-        context_dict["csv_link"] = csv_link
+        request.session['csv_name'] = layer.typename
+        request.session['csv_link'] = csv_link
 
     if settings.SOCIAL_ORIGINS:
         context_dict["social_links"] = build_social_links(request, layer)

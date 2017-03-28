@@ -1,76 +1,27 @@
 {% load i18n avatar_tags %}
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-                    aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                Menu
-            </button>
-            {% if site.assets.logo %}
-                <div class="navbar-logo">
-                    <a class="navbar-brand"
-                       style="background:url('{{ MEDIA_URL }}{{ site.assets.logo.name }}') no-repeat; background-size:100%;"
-                       href="{% url "home" %}">{{ SITE_NAME }}</a>
-                    {% if THEME == 'orange' %}
-                        <div class="beta-tag">Beta</div>
-                    {% endif %}
-                </div>
-            {% endif %}
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                {% if user.is_authenticated %}
-                    <li class="nav-avatar">
-                        <a href="{% url 'profile_detail' slug=user.username %}">
-                            <img class="img-circle" src="{% avatar_url user 35 %}"/>
-                        </a>
-                    </li>
-                    <li class="dropdown"><a href="#" id="id_userlink" class="dropdown-toggle" data-toggle="dropdown">{{ user.username }}<b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url 'profile_detail' slug=user.username %}">{% trans "Profile" %}</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{% url 'edit_profile' user.username %}">{% trans "Edit Profile" %}</a></li>
-                            <li><a href="{% url 'account_password' %}">{% trans "Change Password" %}</a> </li>
-                            <li><a href="{% url 'profile_detail' slug=user.username %}?showNotifications=true">{% trans "Notification Settings" %}</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{% url 'getpage' 'started' %}">{% trans "Help" %}</a></li>
-                            <li class="divider"></li>
-                        {% if user.is_staff %}
-                            <li><a href="{% url 'admin:index' %}">{% trans "Admin Panel" %}</a></li>
-                        {% endif %}
-                        {% if perms.announcements.can_manage %}
-                            <li><a href="{% url 'announcements_list' %}">{% trans "Announcements" %}</a></li>
-                        {% endif %} 
-                        {% if user.is_superuser %}
-                            <li><a href="{% url 'account_invite_user' %}">{% trans "Invite User" %}</a></li>
-                            <li><a href="{% url 'services' %}">{% trans "Remote Services" %}</a></li>
-                            <li><a href="{{ GEOSERVER_BASE_URL }}">{% trans "GeoServer" %}</a></li>
-                            <li class="divider"></li>
-                        {% endif %} 
-                            <li>
-                                <form action="{% url 'account_logout' %}" id="logout_form" method="post">
-                                    {% csrf_token %}
-                                    <a href="javascript:{}" onclick="document.getElementById('logout_form').submit();">
-                                        <i class="fa fa-sign-out"></i> {% trans "Log out" %}</a>
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
-                {% else %}
-                    <li>
-                        <a role="button" class="nav-icon" data-toggle="modal" data-target="#loginModal">
-                            <i class="fa fa-user"></i>
-                        </a>
-                    </li>
+<header class="navigation" role="banner">
+    <div class="navigation-wrapper container">
+        {% if site.assets.logo %}
+            <div class="logo-wrapper">
+                <a href="{% url "home" %}">
+                    <h1 class="site-title" style="background:url('{{ MEDIA_URL }}{{ site.assets.logo.name }}') no-repeat; background-size:100%;">
+                        {{ SITE_NAME }}
+                    </h1>
+                </a>
+                {% if THEME == 'orange' %}
+                    <div class="beta-tag">Beta</div>
                 {% endif %}
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="{% url 'search' %}">{% trans "Explore" %}</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">{% trans 'Create' %}<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
+            </div>
+        {% endif %}
+
+        <a href="javascript:void(0)" class="navigation-menu-button" id="js-mobile-menu" aria-expanded="false" area-controls="navbar">MENU</a>
+        <nav role="navigation">
+            <ul id="js-navigation-menu" class="navigation-menu show">
+
+                <li class="nav-link"><a href="{% url 'search' %}">{% trans "Explore" %}</a></li>
+                <li id="js-navigation-more" class="nav-link more">
+                    <a href="javascript:void(0)">{% trans 'Create' %}</a>
+                    <ul class="submenu">
                         {% if user.is_authenticated %}
                             <li>
                                 <a class="pointer" ng-controller="ImportController"
@@ -83,7 +34,9 @@
                             <li>
                                 <a href="{% url 'upload' %}">{% trans "Upload Icons" %}</a>
                             </li>
-                            <li><a href="{% url 'new_map' %}?tour">{% trans "Compose Story" %}</a></li>
+                            <li>
+                                <a href="{% url 'new_map' %}?tour">{% trans "Compose Story" %}</a>
+                            </li>
                         {% else %}
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Import Layer" %}</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Create Layer" %}</a></li>
@@ -92,29 +45,78 @@
                         {% endif %}
                     </ul>
                 </li>
-                <li><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></li>
-                <li><a href="{% url 'journal' %}">{% trans "Journal" %}</a></li>
-                <li>
-                    <form class="navbar-form quicksearchcontainer" id="search" action="{% url 'search' %}">
-                        <div class="col-md-3 search">
-                            <div class="input-group">
-                                <input id="quicksearch" type="text" class="form-control" 
-                                    placeholder="Quick Search"
-                                    {% if HAYSTACK_SEARCH %} name="q" 
-                                    {% else %} name="keywords__slug__in"
-                                    {% endif %}
-                                >
-                                <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="submit">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
+                <li class="nav-link"><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></li>
+                <li class="nav-link"><a href="{% url 'journal' %}">{% trans "Journal" %}</a></li>
+
+                {% if user.is_authenticated %}
+                    <li id="js-navigation-more" class="nav-link more user-menu">
+                        <a href="javascript:void(0)" class="desktop-menu-only">
+                            <img class="nav-avatar" src="{% avatar_url user 35 %}"/>
+                        </a>
+                        <a href="javascript:void(0)" class="mobile-menu-only">
+                            {{ user.username }}
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="{% url 'profile_detail' slug=user.username %}">{{ user.username }}</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{% url 'edit_profile' user.username %}">{% trans "Edit Profile" %}</a></li>
+                            <li><a href="{% url 'account_password' %}">{% trans "Change Password" %}</a></li>
+                            <li><a href="{% url 'profile_detail' slug=user.username %}?showNotifications=true">{% trans "Notification Settings" %}</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{% url 'getpage' 'started' %}">{% trans "Help" %}</a></li>
+                            <li class="divider"></li>
+                        {% if user.is_staff %}
+                            <li><a href="{% url 'admin:index' %}">{% trans "Admin Panel" %}</a></li>
+                        {% endif %}
+                        {% if perms.announcements.can_manage %}
+                            <li><a href="{% url 'announcements_list' %}">{% trans "Announcements" %}</a></li>
+                        {% endif %}
+                        {% if user.is_superuser %}
+                            <li><a href="{% url 'account_invite_user' %}">{% trans "Invite User" %}</a></li>
+                            <li><a href="{% url 'services' %}">{% trans "Remote Services" %}</a></li>
+                            <li><a href="{{ GEOSERVER_BASE_URL }}">{% trans "GeoServer" %}</a></li>
+                            <li class="divider"></li>
+                        {% endif %}
+                            <li class="desktop-menu-only">
+                                <form action="{% url 'account_logout' %}" id="logout_form" method="post">
+                                    {% csrf_token %}
+                                    <a href="javascript:{}" onclick="document.getElementById('logout_form').submit();">
+                                        {% trans "Log out" %}
+                                    </a>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-link mobile-menu-only">
+                        <form action="{% url 'account_logout' %}" id="logout_form" method="post">
+                            {% csrf_token %}
+                            <a href="javascript:{}" onclick="document.getElementById('logout_form').submit();">
+                                {% trans "Log out" %}
+                            </a>
+                        </form>
+                    </li>
+                {% else %}
+                    <li class="nav-link"><a data-toggle="modal" data-target="#loginModal">{% trans "Log In" %}</a></li>
+                {% endif %}
+            </ul>
+            <div class="navigation-tools">
+                <div class="search-bar">
+                    <form action="{% url 'search' %}" role="search">
+                        <div>
+                            <input type="search"
+                                placeholder="Quick Search"
+                                {% if HAYSTACK_SEARCH %} name="q"
+                                {% else %} name="keywords__slug__in"
+                                {% endif %}
+                            >
+                            <button class="btn" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
                         </div>
                     </form>
-                </li>
-            </ul>
-        </div><!--/.nav-collapse -->
-    </div><!--/.container-fluid -->
-</nav>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>
 {% if not hide_menu %} {% include '_login_register.html' %} {% endif %}

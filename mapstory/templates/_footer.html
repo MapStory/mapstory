@@ -1,43 +1,26 @@
 {% load i18n %}
-<footer id="sitebase_footer">
-    <section>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="footerWidget">
-                        {{ site.assets.footer_text |safe }}
-                    </div>
-                </div>
-            </div>
+<footer class="site-footer">
+    <div class="container">
+        {{ site.assets.footer_text |safe }}
+        <div class="version-number">
+            {% trans "version" %} {{ VERSION }}
         </div>
-    </section>
-    <section>
-        <div class="container">
-            <hr>
-            <div class="row">
-                <div class="col-sm-8">
-                    {% trans "version" %} {{ VERSION }}
-                </div>
-                <div class="col-sm-4">
+    </div>
     {% if THEME == 'default' %}
     {# only show language trans in development environment until bugs fixed #}
-                    <label class="hidden">{% trans "Language" %}</label>
-                    {% if csrf_token != "NOTPROVIDED" %}
-                        {% get_current_language as LANGUAGE %}
-                        <form class="form-inline" action="/i18n/setlang/" method="post">
-                            {% csrf_token %}
-                            <select class="lang col-md-6 pull-right" name="language" onchange="javascript:form.submit()">
-                                {% for lang in LANGUAGES %}
-                                    <option value="{{ lang.0 }}" {% ifequal LANGUAGE_CODE lang.0 %} selected="selected"{% endifequal %}>
-                                        {{ lang.1 }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </form>
-                    {% endif %}
+        <label class="hidden">{% trans "Language" %}</label>
+        {% if csrf_token != "NOTPROVIDED" %}
+            {% get_current_language as LANGUAGE %}
+            <form action="/i18n/setlang/" method="post">
+                {% csrf_token %}
+                <select name="language" onchange="javascript:form.submit()">
+                    {% for lang in LANGUAGES %}
+                        <option value="{{ lang.0 }}" {% ifequal LANGUAGE_CODE lang.0 %} selected="selected"{% endifequal %}>
+                            {{ lang.1 }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+        {% endif %}
     {% endif %}
-                </div>
-            </div>
-        </div>
-    </section>
 </footer>
