@@ -3,7 +3,7 @@ describe('mapstory.search.autocomplete', function() {
   var Autocomplete;
   beforeEach(module('mapstory.search'));
   beforeEach(inject(function($injector) {
-    Autocomplete = $injector.get('autocomplete');
+    Autocomplete = $injector.get('autocompleteService');
   }));
 
   it('should exist', function () {

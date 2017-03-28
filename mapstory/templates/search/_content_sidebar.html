@@ -78,7 +78,7 @@
     {% endverbatim %}
     </section>
 
-    <section ng-controller="storytellerController as st">
+    <section ng-controller="storytellerController as author">
     {% verbatim %}
         <h3>StoryTeller</h3>
         <div class="clear-filters">
@@ -86,14 +86,14 @@
         </div>
         <div class="filter-content">
             <md-content class="md-padding" layout="column">
-                <md-chips ng-model="st.selectedUsers"
+                <md-chips ng-model="author.userChips"
                           md-autocomplete-snap
                           md-require-match="true"
                           md-on-add="add_query('owner__username__in', $chip.username)"
                           md-on-remove="remove_query('owner__username__in', $chip.username)">
                     <md-autocomplete md-selected-item="selectedItem"
                                      md-search-text="searchText"
-                                     md-items="item in st.auto.querySearch(searchText)"
+                                     md-items="item in author.author.querySearch(searchText)"
                                      md-item-text="item.username"
                                      placeholder="Filter by StoryTeller...">
                         <span class="autocomplete-dropdown-text" md-highlight-text="searchText">{{item.first_name}} {{item.last_name}}</span>
@@ -121,15 +121,15 @@
         <div class="filter-content">
             <p>Add your own tags or choose from the popular tags below to filter your search.</p>
             <md-content class="md-padding" layout="column">
-                <md-chips ng-model="tgs.selectedTags" 
+                <md-chips ng-model="tgs.tagChips" 
                 md-autocomplete-snap 
                 md-on-add="add_query('keywords__slug__in', $chip.slug)"
                 md-on-remove="remove_query('keywords__slug__in', $chip.slug)"
-                md-transform-chip="tgs.newTag($chip)">
+                md-transform-chip="tgs.tags.newChip($chip)">
                     <md-autocomplete
                         md-selected-item="selectedItem"
                         md-search-text="searchText"
-                        md-items="item in tgs.auto.querySearch(searchText)"
+                        md-items="item in tgs.tags.querySearch(searchText)"
                         md-item-text="item.slug"
                         placeholder="Filter by tag...">
                         <span md-highlight-text="searchText">{{item.slug}}</span>

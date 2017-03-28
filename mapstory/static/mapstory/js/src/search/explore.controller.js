@@ -9,7 +9,7 @@
     .module('mapstory.search')
     .controller('exploreController', exploreController);
 
-  function exploreController($injector, $scope, $location, $http, $q, Configs, dataservice, autocomplete) {
+  function exploreController($injector, $scope, $location, $http, $q, Configs, dataservice) {
     $scope.query = $location.search();
     $scope.sitename = SITE_NAME;
     $scope.query = $location.search();
@@ -25,6 +25,7 @@
                           };
 
     $scope.lists = {};
+    $scope.autocomplete = {};
 
     if (!Configs.hasOwnProperty("disableQuerySync")) {
       // Keep in sync the page location with the query object
@@ -230,13 +231,13 @@
     var getOwners = _.once(dataservice.getOwners);
 
     getOwners().then(function(data) {
-      $scope.lists['profiles'] = data.profiles;
-      $scope.lists['cities'] = data.cities;
+      $scope.autocomplete['authors'] = data.profiles;
+      $scope.autocomplete['cities'] = data.cities;
       $scope.$broadcast('loadedOwners')
     });
 
     getRegions().then(function(data) {
-      $scope.lists['countries'] = data;
+      $scope.autocomplete['countries'] = data;
       $scope.$broadcast('loadedCountries')
     });
 

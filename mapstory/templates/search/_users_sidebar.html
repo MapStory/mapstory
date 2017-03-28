@@ -42,15 +42,15 @@
                     <div class="filter-content">
                         {% verbatim %}
                         <md-content class="md-padding" layout="column">
-                          <md-chips ng-model="cit.selectedCities" 
+                          <md-chips ng-model="cit.cityChips" 
                               md-autocomplete-snap 
                               md-on-add="add_query('city', $chip.city)"
                               md-on-remove="remove_query('city', $chip.city)"
-                              md-transform-chip="cit.newCity($chip)">
+                              md-transform-chip="cit.cities.newChip($chip)">
                             <md-autocomplete
                             md-selected-item="selectedItem"
                                 md-search-text="searchText"
-                                md-items="item in cit.auto.querySearch(searchText)"
+                                md-items="item in cit.cities.querySearch(searchText)"
                                 md-item-text="item.city"
                                 placeholder="Filter by city...">
                               <span md-highlight-text="searchText">{{item.city}}</span>
@@ -67,7 +67,7 @@
                     </div>
                 </section>
 
-                <section ng-controller="countriesController as cnt">
+                <section ng-controller="countriesController as reg">
                     <h3>Country</h3>
                     <div class="clear-filters">
                         <a href="" ng-click="clear('country')">Clear</a>
@@ -75,7 +75,7 @@
                     <div class="filter-content">
                         {% verbatim %}
                             <md-content class="md-padding" layout="column">
-                                <md-chips ng-model="cnt.selectedCountries"
+                                <md-chips ng-model="reg.countryChips"
                                           md-autocomplete-snap
                                           md-require-match="true"
                                           md-on-add="add_query('country', $chip.code)"
@@ -83,7 +83,7 @@
                                     <md-autocomplete
                                           md-selected-item="selectedItem"
                                           md-search-text="searchText"
-                                          md-items="item in cnt.auto.querySearch(searchText)"
+                                          md-items="item in reg.country.querySearch(searchText)"
                                           md-item-text="item.code"
                                           placeholder="Filter by country...">
                                         <span md-highlight-text="searchText">
@@ -112,15 +112,15 @@
                     <div class="filter-content">
                         {% verbatim %}
                         <md-content class="md-padding" layout="column">
-                            <md-chips ng-model="int.selectedInterests" 
+                            <md-chips ng-model="int.interestChips" 
                                 md-autocomplete-snap 
                                 md-on-add="add_query('interest_list', $chip.slug)"
                                 md-on-remove="remove_query('interest_list', $chip.slug)"
-                                md-transform-chip="int.newInterest($chip)">
+                                md-transform-chip="int.interests.newChip($chip)">
                               <md-autocomplete
                               md-selected-item="selectedItem"
                                   md-search-text="searchText"
-                                  md-items="item in int.auto.querySearch(searchText)"
+                                  md-items="item in int.interests.querySearch(searchText)"
                                   md-item-text="item.code"
                                   placeholder="Filter by interest...">
                                 <span md-highlight-text="searchText">{{item.slug}}</span>

@@ -43,7 +43,7 @@ module.exports = function(grunt) {
             'mapstory/js/src/*.js',
             // search module
             'mapstory/js/src/search/search.module.js',
-            'mapstory/js/src/search/*.js',
+            'mapstory/js/src/search/**/*.js',
             // exclude test files
             '!mapstory/js/**/*.spec.js'
            ]
