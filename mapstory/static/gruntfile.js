@@ -4,10 +4,11 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
 
     jshint: {
-      // files to lint
-      files: ['gruntfile.js'],
-      // configure JSHint (see http://www.jshint.com/docs/)
+      files: ['mapstory/js/src/**/*.js', 'mapstory/js/spec/*.js'],
       options: {
+        force: true,
+        //Bypass`'$' is not defined` errors
+        '-W117': true,
         globals: {
           jQuery: true,
           console: true,
@@ -16,15 +17,35 @@ module.exports = function(grunt) {
       }
     },
 
+    lesslint: {
+      src: ['style/themes/**/maps.less', 'style/themes/**/site.less'],
+      options: {
+        less: {
+          paths: ['includes']
+        },
+        failOnError: false
+      }
+    },
+
+    karma: {  
+      unit: {
+         configFile: 'karma.conf.js'
+      }
+    },
+
     concat: {  
       options: {},
       mapstory: {
         files: {
           'mapstory/js/dist/mapstory.js': [
-             'mapstory/js/src/mapstory.module.js',
-             'mapstory/js/src/*.js',
-             'mapstory/js/src/search/search.module.js',
-             'mapstory/js/src/search/*.js'
+            // mapstory module
+            'mapstory/js/src/mapstory.module.js',
+            'mapstory/js/src/*.js',
+            // search module
+            'mapstory/js/src/search/search.module.js',
+            'mapstory/js/src/search/*.js',
+            // exclude test files
+            '!mapstory/js/**/*.spec.js'
            ]
           }
         },
@@ -42,7 +63,7 @@ module.exports = function(grunt) {
             'vendor/clipboard/dist/clipboard.min.js'
           ]
         }
-      }
+      },
     },
 
     less: {
@@ -137,25 +158,30 @@ module.exports = function(grunt) {
     }
   });
   // Load libs
+  grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-lesslint');
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-subgrunt');
-  grunt.loadNpmTasks('grunt-concurrent');
 
   grunt.registerTask('watchall', ['less:development', 'concurrent:watch']);
 
-  // test
-  grunt.registerTask('test', ['jshint']);
+  // todo: init .lesshintrc and jshint configs to reflect our style guidelines
+  grunt.registerTask('lint', ['jshint', 'lesslint']);
+
+  // test -- to run this locally you may have to `npm rebuild` for correct phantom binary file
+  grunt.registerTask('test', ['karma']);
 
   // build development
-  grunt.registerTask('default', ['jshint', 'concat:mapstory', 'concat:vendor', 'less:development', 'replace', 'copy:development']);
+  grunt.registerTask('default', ['concat:mapstory', 'concat:vendor', 'less:development', 'replace', 'copy:development']);
 
   // build production
-  grunt.registerTask('production', ['jshint', 'concat:mapstory', 'concat:vendor', 'less:development', 'replace', 'copy:development' ]);
+  grunt.registerTask('production', ['concat:mapstory', 'concat:vendor', 'less:development', 'replace', 'copy:development' ]);
 
 };
