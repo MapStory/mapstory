@@ -41,7 +41,6 @@
             if(list[i]['count'] != 0)
               trending.push(list[i]['slug']);
           } 
-
           return {
             list: list,
             index: index,
@@ -54,17 +53,19 @@
     return $http.get('/api/regions/')
             .then(getRegionsComplete);
     
-      function getRegionsComplete(response) {
-        var index = {};
-        var list = _.map(response.data.objects, function (region) {
+      function getRegionsComplete(response) { 
+        var results = response.data.objects;
+        var codes = {};
+
+        var countryResults = _.map(results, function (region) {
             region._lower = [ region.name.toLowerCase() , region.code.toLowerCase() ];
-            index[region.code] = region;
+            codes[region.code] = region;
           return region;
         });
 
         return {
-          list: list,
-          index: index,
+          all: countryResults,
+          byCodes: codes,
         } 
       }
     }
@@ -74,18 +75,18 @@
               .then(getOwnersComplete);
       
         function getOwnersComplete(response) {
-          var profiles = { list: [], index:{} };
-          var cities = { list: [] };
+          var profiles = { all: [], byUsername:{} };
+          var cities = { all: [] };
           
           _.reduce(response.data.objects, function ( profile, user) {
             user._lower = [ user.first_name.toLowerCase(), user.last_name.toLowerCase(), user.username.toLowerCase() ];
-            profiles.list.push(user);
-            profiles.index[user.username] = user;
+            profiles.all.push(user);
+            profiles.byUsername[user.username] = user;
 
             if(user.city){
               var city = { city: user.city};
               city._lower = [ user.city.toLowerCase() ];
-              cities.list.push(city);
+              cities.all.push(city);
             }
             
             return profile;

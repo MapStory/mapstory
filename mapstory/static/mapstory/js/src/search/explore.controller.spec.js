@@ -12,7 +12,7 @@ describe('exploreController', function() {
     // $q = $injector.get('$q');
     Configs = $injector.get('Configs')
     dataservice = $injector.get('dataservice'); 
-    autocomplete = $injector.get('autocomplete');
+    autocompleteService = $injector.get('autocompleteService');
     $location = $injector.get('$location');
 
     $scope = $rootScope.$new();
@@ -27,7 +27,7 @@ describe('exploreController', function() {
         $q: $q, 
         Configs: Configs, 
         dataservice: dataservice, 
-        autocomplete: autocomplete
+        autocompleteService: autocompleteService
       });
     };
 
