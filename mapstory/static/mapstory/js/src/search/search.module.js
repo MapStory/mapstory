@@ -38,8 +38,6 @@
 
   .filter('activated', function (){
     return function(value, property, query){
-
-      //console.log(query);
       if(_.has(query,property)){
         return _.contains(query[property], value) || query[property] == value;
       }else{
