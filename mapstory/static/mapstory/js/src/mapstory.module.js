@@ -23,18 +23,6 @@
       angular.element(document.getElementsByClassName("new-tab")).prop("target", "_blank");
     }
   })
-	    
-	// enables angular access to select django values (passed in _site_scripts.html)
-	.factory('Django', function(DjangoConstants) {
-	  return {
-	    get: function(key) {
-	      return DjangoConstants[key];
-	    },
-	    all: function() {
-	      return DjangoConstants;
-	    }
-	  };
-	})
 
 	.config(function($httpProvider, $sceDelegateProvider) {
     // this makes request.is_ajax() == True in Django
