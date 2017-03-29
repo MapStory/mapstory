@@ -78,7 +78,7 @@
           var profiles = { all: [], byUsername:{} };
           var cities = { all: [] };
           
-          _.reduce(response.data.objects, function ( profile, user) {
+          _.reduce(response.data.objects, function ( profiles, user) {
             user._lower = [ user.first_name.toLowerCase(), user.last_name.toLowerCase(), user.username.toLowerCase() ];
             profiles.all.push(user);
             profiles.byUsername[user.username] = user;
@@ -89,8 +89,8 @@
               cities.all.push(city);
             }
             
-            return profile;
-          });
+            return profiles;
+          }, profiles);
 
           return {
             profiles: profiles,
