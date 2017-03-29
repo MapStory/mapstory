@@ -79,7 +79,12 @@
           var cities = { all: [] };
           
           _.reduce(response.data.objects, function ( profiles, user) {
-            user._lower = [ user.first_name.toLowerCase(), user.last_name.toLowerCase(), user.username.toLowerCase() ];
+            var first = user.first_name.toLowerCase();
+            var last = user.last_name.toLowerCase();
+            var firstLast = first + " " + last;
+            var username = user.last_name.toLowerCase();
+            user._lower = [ first, last, firstLast, username ];
+            
             profiles.all.push(user);
             profiles.byUsername[user.username] = user;
 
