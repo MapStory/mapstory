@@ -1338,9 +1338,8 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         published_form = PublishStatusForm(instance=map_obj)
         if 'keywords' in request.POST:
             if keywords_form.is_valid():
-                keywords_form.save()
                 new_keywords = keywords_form.cleaned_data['keywords']
-                map_obj.keywords.set(*new_keywords)
+                map_obj.keywords.add(*new_keywords)
                 map_obj.save()
             published_form = PublishStatusForm(instance=map_obj)
         elif 'published_submit_btn' in request.POST:
