@@ -3,6 +3,7 @@ import json
 import uuid
 
 from django import core, db
+from django.db.models import signals
 from django.utils.translation import ugettext_lazy as _
 # Redefining Map Model and adding additional fields
 
@@ -114,3 +115,16 @@ class Map(geonode.maps.models.Map):
         story_obj = MapStory.objects.get(id=story_id)
         self.story = story_obj
         self.save()
+
+
+def default_is_published(sender, **kwargs):
+    """
+    GeoNode's resourcebase model defaults is_published to True; override this
+    so that new MapStory/Map objects are not published by default.
+    """
+    instance = kwargs["instance"]
+    if instance.id is None:  # only reset default when object is first created
+        instance.is_published = False
+
+signals.post_init.connect(default_is_published, sender=MapStory)
+signals.post_init.connect(default_is_published, sender=Map)
