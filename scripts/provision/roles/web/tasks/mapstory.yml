@@ -158,7 +158,7 @@
   shell: >
     PYTHONPATH=. DJANGO_SETTINGS_MODULE={{ application_name }}.settings
     {{ venv }}/bin/python -c
-    "import django; from geonode.people.models import Profile; django.setup(); p,_ = Profile.objects.get_or_create(username='admin'); p.is_staff=p.is_superuser=True; p.set_password('{{django_su_pass}}'); p.save()"
+    "import django; django.setup(); from geonode.people.models import Profile; p,_ = Profile.objects.get_or_create(username='admin'); p.is_staff=p.is_superuser=True; p.set_password('{{django_su_pass}}'); p.save()"
     chdir={{ project_path }}
   tags: [superuser]
 
