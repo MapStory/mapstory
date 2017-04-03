@@ -16,3 +16,4 @@ RUN adduser -D -g '' pgadmin
 USER pgadmin
 
 ENTRYPOINT ["/run.sh"]
+CMD ["--init-db", "--serve"]

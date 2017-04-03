@@ -1,4 +1,4 @@
-version: '3'
+version: '3.1'
 services:
 
   pgadmin:
@@ -65,10 +65,14 @@ services:
       - django
       - geoserver
     volumes:
-      - mapstory_media:/var/lib/mapstory/media/
-      - mapstory_static:/var/lib/mapstory/static/
+      - mapstory_media:/var/lib/mapstory/media/:ro
+      - mapstory_static:/var/lib/mapstory/static/:ro
     expose:
       - "80"
+      - "443"
+    ports:
+      - "80:80"
+      - "443:443"
 
 volumes:
   geoserver:

@@ -1,13 +1,20 @@
 FROM mapstory/python-gdal
 MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
 
-ENV MEDIA_ROOT /var/lib/mapstory/media/
-ENV STATIC_ROOT /var/lib/mapstory/static/
+ENV MEDIA_ROOT /var/lib/mapstory/media
+ENV STATIC_ROOT /var/lib/mapstory/static
 ENV APP_PATH /srv
 ENV TMP /tmp
 ENV DJANGO_PORT 8000
 
 WORKDIR $TMP
+
+# Install tools
+RUN set -ex \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        unzip \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install misc libs
 RUN apt-get update \
@@ -21,7 +28,8 @@ RUN apt-get update \
 RUN set -ex \
     && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
     && apt-get update \
-    && apt-get install -y nodejs \
+    && apt-get install -y --no-install-recommends \
+        nodejs \
     && npm install -g bower grunt \
     && rm -rf /var/lib/apt/lists/*
 
@@ -38,12 +46,24 @@ RUN mkdir -p $STATIC_ROOT && chown mapstory $STATIC_ROOT
 USER mapstory
 WORKDIR $APP_PATH
 
-RUN git clone git://github.com/MapStory/geonode.git $APP_PATH/geonode
-
+# Fetch GeoNode
+RUN set -ex \
+    && wget https://github.com/MapStory/geonode/archive/master.zip \
+    && unzip master.zip \
+    && mv geonode-master geonode \
+    && rm master.zip
 RUN sed -i 's/Paver==1.2.1/Paver==1.2.4/' $APP_PATH/geonode/setup.py
+
 WORKDIR $APP_PATH/mapstory
 COPY requirements.txt ./
 USER root
+
+# Fetch MapLoom
+RUN set -ex \
+    && wget https://github.com/MapStory/django-maploom/archive/composer.zip \
+    && unzip composer.zip \
+    && cp -r django-maploom-composer/maploom /usr/local/lib/python2.7/maploom \
+    && rm composer.zip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # cache these
@@ -79,9 +99,12 @@ RUN set -ex \
     && grunt copy
 
 USER root
-RUN chown mapstory:mapstory $STATIC_ROOT
+RUN chown -R mapstory:mapstory $STATIC_ROOT
+RUN chown -R mapstory:mapstory $MEDIA_ROOT
 
 USER mapstory
+VOLUME $STATIC_ROOT
+VOLUME $MEDIA_ROOT
 WORKDIR $APP_PATH/mapstory/
 EXPOSE $DJANGO_PORT
 ENTRYPOINT ["docker/django/run.sh"]

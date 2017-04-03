@@ -1,15 +1,31 @@
 FROM nginx
 MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
 
-ENV MEDIA_ROOT=/var/lib/mapstory/media/
-ENV STATIC_ROOT=/var/lib/mapstory/static/
+ENV MEDIA_ROOT=/var/lib/mapstory/media
+ENV STATIC_ROOT=/var/lib/mapstory/static
 ENV NGINX_CLIENT_MAX_BODY_SIZE=500m
+ENV CONSUL_TEMPLATE_VERSION=0.18.1
 
-### Hardcoded settings.
-### These should be templated in the config file.
-# MEDIA_ROOT
-# STATIC_ROOT
-# NGINX_CLIENT_MAX_BODY_SIZE
+VOLUME $MEDIA_ROOT
 
-#VOLUME $MEDIA_ROOT
-COPY nginx.conf /etc/nginx/nginx.conf
+# Install wget
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install consul-template
+RUN set -ex \
+    && wget -qO /opt/consul-template.tgz https://releases.hashicorp.com/consul-template/$CONSUL_TEMPLATE_VERSION/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.tgz \
+    && tar xf /opt/consul-template.tgz -C /opt/ consul-template \
+    && rm /opt/consul-template.tgz
+
+COPY self_signed.crt /etc/nginx/
+COPY self_signed.key /etc/nginx/
+
+COPY config.hcl /opt/
+COPY templates/ /opt/templates
+
+COPY run.sh /opt/
+
+CMD /opt/run.sh
