@@ -74,6 +74,8 @@ services:
       - "8080:8080"
 
   nginx:
+    env_file:
+      - docker/env/lab/public_host.env
     secrets:
       - ssl_cert
       - ssl_key

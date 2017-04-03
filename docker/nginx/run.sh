@@ -1,6 +1,6 @@
 #/bin/sh
 if [ -e /run/secrets/ssl_cert ]; then
-    export e=/run/secrets/ssl_cert
+    export SSL_CERT=/run/secrets/ssl_cert
     export SSL_KEY=/run/secrets/ssl_key
 else
     export SSL_CERT=/etc/nginx/self_signed.crt
