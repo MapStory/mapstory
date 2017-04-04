@@ -18,11 +18,12 @@
     $scope.orderMethod = '-popular_count';
 
     $scope.orderMethods = {
-                            content:[
-                            {name:'Popular', filter:'-popular_count'},
-                            {name:'Newest', filter:'-date'}
-                          ]
-                          };
+      content:
+        [
+          {name:'Popular', filter:'-popular_count'},
+          {name:'Newest', filter:'-date'}
+        ]
+    };
 
     $scope.lists = {};
     $scope.autocomplete = {};
@@ -181,7 +182,12 @@
       }
     };
 
-    
+    //Checkbox selection syncing with query
+    $scope.isActivated = function (item, list, filter) {
+      if(list[filter]){
+        return list[filter].indexOf(item) > -1;
+      } 
+    };
 
     // Allow the user to choose an order method using the What's Hot section.
     $scope.orderMethodUpdate = function(orderMethod) {
@@ -196,7 +202,6 @@
     /*
     * Pagination 
     */
-
     $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
     $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
     
@@ -255,6 +260,5 @@
 
     $scope.filterVTC();
     $scope.search();
-
   }
 })();

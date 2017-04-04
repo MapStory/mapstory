@@ -46,7 +46,7 @@
                        data-value="layer"
                        data-filter="type__in"
                        ng-click="multiple_choice_listener($event)"
-                       ng-checked="{{ 'layer' | activated:'type__in':query}}">
+                       ng-checked="isActivated('layer', query, 'type__in')">
                     StoryLayer
                 </input>
             </div>
@@ -55,7 +55,7 @@
                        data-value="mapstory"
                        data-filter="type__in"
                        ng-click="multiple_choice_listener($event)"
-                       ng-checked="{{'mapstory' | activated:'type__in':query}}">
+                       ng-checked="isActivated('mapstory', query, 'type__in')">
                     {{sitename}}
                 </input>
             </div>
@@ -71,7 +71,7 @@
         </div>
         <div class="filter-content">
             <div ng-repeat="category in categories">
-                <input type="checkbox" data-value="{{ category.identifier }}" data-filter="category__identifier__in" ng-click="multiple_choice_listener($event)" ng-checked="{{ category.identifier | activated:'category__identifier__in':query}}"> {{ category.gn_description }}
+                <input type="checkbox" data-value="{{ category.identifier }}" data-filter="category__identifier__in" ng-click="multiple_choice_listener($event)" ng-checked="isActivated(category.identifier, query, 'category__identifier__in')"> {{ category.gn_description }}
                 </input>
             </div>
         </div>

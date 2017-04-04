@@ -49,7 +49,7 @@
     }
 
     function createFilter(query) {
-      var lowercaseQuery = angular.lowercase(query);    
+      var lowercaseQuery = query.toLowerCase();    
       return function filterFn(entry) {
         return _.some(entry._lower, function(i){
             return i.indexOf(lowercaseQuery) > -1
