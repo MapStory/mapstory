@@ -76,7 +76,7 @@ from mapstory.apps.favorite.models import Favorite
 from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
 from mapstory.orgs.forms import OrgForm
 from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditGeonodeProfileForm
-from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm
+from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm #, DistributionUrlForm
 from mapstory.forms import SignupForm
 from mapstory.importers import GeoServerLayerCreator
 from mapstory.models import GetPage
@@ -1176,6 +1176,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     if request.method == "POST":
         keywords_form = KeywordsForm(request.POST, instance=layer)
         metadata_form = MetadataForm(instance=layer)
+        # TODO need to pull distribution_url from mapstory model
+        # distributionurl_form = DistributionUrlForm(instance=layer)
         if 'keywords' in request.POST:
             if keywords_form.is_valid():
                 keywords_form.save()
@@ -1186,6 +1188,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             published_form = PublishStatusForm(instance=layer)
         elif 'title' in request.POST:
             metadata_form = MetadataForm(request.POST, instance=layer)
+            # distributionurl_form = MetadataForm(request.POST, instance=layer)
             if metadata_form.is_valid():
                 metadata_form.save()
                 # update all the metadata
@@ -1194,7 +1197,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                     Layer.objects.filter(id=layer.id).update(category=new_category)
                 layer.title = metadata_form.cleaned_data['title']
                 layer.language = metadata_form.cleaned_data['language']
-                layer.distribution_url = metadata_form.cleaned_data['distribution_url']
+                # layer.distribution_url = metadata_form.cleaned_data['distribution_url']
                 layer.data_quality_statement = metadata_form.cleaned_data['data_quality_statement']
                 layer.purpose = metadata_form.cleaned_data['purpose']
                 layer.is_published = metadata_form.cleaned_data['is_published']
@@ -1258,7 +1261,9 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     }
 
     context_dict["viewer"] = json.dumps(
-        map_obj.viewer_json(request.user, * (NON_WMS_BASE_LAYERS + [maplayer])))
+        map_obj.viewer_json(
+            request.user,
+            * (NON_WMS_BASE_LAYERS + [maplayer])))
     context_dict["preview"] = getattr(
         settings,
         'LAYER_PREVIEW_LIBRARY')
