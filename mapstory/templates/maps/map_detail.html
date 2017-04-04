@@ -6,17 +6,11 @@
 {% load guardian_tags %}
 
 {% block title %}{{ resource.title }} — {{ block.super }}{% endblock %}
-{% block extra_head %}
-    <link href="{{ STATIC_URL }}lib/css/jquery-ui.css" rel="stylesheet"/>
-    <link href="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css" rel="stylesheet"/>
-{% endblock %}
 {% block body_class %}maps{% endblock %}
 {% block body_outer %}
 {% include "maps/_story_details.html" %}
 {% endblock %}
 {% block extra_script %}
-<script src="{{ STATIC_URL }}vendor/jquery-ui/jquery-ui.min.js"></script>
-<script src="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js"></script>
 <script type="text/javascript">
   var app;
   $(document).ready(function() {

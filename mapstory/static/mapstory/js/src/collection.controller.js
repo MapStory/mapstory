@@ -68,16 +68,16 @@
 
         var keywords_list = data.group.keywords;
 
-        var MAX_TOKENS = 10;
-        $('#tokenfield-interests').val(keywords_list);
-        $('#tokenfield-interests').tokenfield({
-          limit: MAX_TOKENS
-        });
-        $('#tokenfield-interests').tokenfield('readonly');
-        $('.token-label').click(function(e) {
-          var tag = $(e.target).text();
-          window.location.href = '/search/?limit=100&offset=0&keywords__slug__in=' + tag;
-        });
+        // var MAX_TOKENS = 10;
+        // $('#tokenfield-interests').val(keywords_list);
+        // $('#tokenfield-interests').tokenfield({
+        //   limit: MAX_TOKENS
+        // });
+        // $('#tokenfield-interests').tokenfield('readonly');
+        // $('.token-label').click(function(e) {
+        //   var tag = $(e.target).text();
+        //   window.location.href = '/search/?limit=100&offset=0&keywords__slug__in=' + tag;
+        // });
       });
     };
   }
