@@ -9,8 +9,6 @@
 {% block title %}{{ resource.title|default:resource.typename }} — {{ block.super }}{% endblock %}
 {% block extra_head %}
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css"/>
-    <link href="{{ STATIC_URL }}lib/css/jquery-ui.css" rel="stylesheet"/>
-    <link href="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/css/bootstrap-tokenfield.css" rel="stylesheet"/>
 {% endblock %}
 
 {% block body_class %}layers{% endblock %}
@@ -20,8 +18,6 @@
 {% endblock %}
 
 {% block extra_script %}
-<script src="{{ STATIC_URL }}vendor/jquery-ui/jquery-ui.min.js"></script>
-<script src="{{ STATIC_URL }}vendor/bootstrap-tokenfield/dist/bootstrap-tokenfield.min.js"></script>
 {% if GEOGIG_ENABLED and resource.link_set.geogig %}
     {% include "layers/_geogig_scripts.html" %}
 {% endif %}
