@@ -6,8 +6,10 @@
 	'use strict';
 
 	angular.module('mapstory', [
+    //osgeo-importer
     'osgeoImporter.uploader',
-    'ui.bootstrap', //an osgeo-importer dependency
+    'ui.bootstrap',
+    //maspstory
     'mapstory.search',
     'slick'
   ], function($locationProvider) {

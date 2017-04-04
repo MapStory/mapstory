@@ -30,6 +30,7 @@
           /* success */
           function(response) {
            $rootScope[api] = response.data.objects
+           //used for homepage carousel and explore/content_sidebar
           },
           /* failure */
           function(error) {
@@ -42,15 +43,6 @@
           CATEGORIES_ENDPOINT,'category__identifier__in');
   })
 
-  .filter('activated', function (){
-    return function(value, property, query){
-      if(_.has(query,property)){
-        return _.contains(query[property], value) || query[property] == value;
-      }else{
-        return false;
-      }
-    }
-  })
     // add filter to decode uri
   .filter('decodeURIComponent', function() {
     return window.decodeURIComponent;
