@@ -44,6 +44,7 @@
                         <md-content class="md-padding" layout="column">
                           <md-chips ng-model="cit.cityChips" 
                               md-autocomplete-snap 
+                              md-require-match="true"
                               md-on-add="add_query('city', $chip.city)"
                               md-on-remove="remove_query('city', $chip.city)"
                               md-transform-chip="cit.cities.newChip($chip)">
