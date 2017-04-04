@@ -1,6 +1,19 @@
 #!/bin/sh
+set -e
+
+echo Testing permissions...
+touch $MEDIA_ROOT/.ignore
+touch $STATIC_ROOT/.ignore
+rm $MEDIA_ROOT/.ignore
+rm $STATIC_ROOT/.ignore
+echo Permissions look good
 
 cd $APP_PATH/mapstory
+
+# Load social auth settings
+if [ -e /run/secrets/social_auth ]; then
+    source /run/secrets/social_auth
+fi
 
 for i do # loop over $@
 
