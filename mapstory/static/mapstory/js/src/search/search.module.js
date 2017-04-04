@@ -25,11 +25,17 @@
 
     function load_active_list ($http, $rootScope, $location, api, endpoint, filter){
       var params = typeof FILTER_TYPE == 'undefined' ? {} : {'type': FILTER_TYPE};
-      $http.get(endpoint, {params: params}).success(function(data){
-        //sets an active property if category already selected in a url query
-        
-        $rootScope[api]= data.objects;
-      });
+      $http.get(endpoint, {params: params})
+        .then(
+          /* success */
+          function(response) {
+           $rootScope[api] = response.data.objects
+          },
+          /* failure */
+          function(error) {
+            console.log("The request failed: ", error);
+          }
+        )
     }
     
     load_active_list($http, $rootScope, $location, 'categories',

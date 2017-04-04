@@ -44,13 +44,20 @@
     //Get data from apis and make them available to the page
     function query_api(data){
 
-      return $http.get($scope.apiEndpoint, {params: data || {}}).success(function(data){
-        $scope.results = data.objects;
-        $scope.total_counts = data.meta.total_count;
-        $scope.startnumresults = Number($scope.query.offset) + 1;
-        $scope.numresults = Number($scope.query.offset) + Number($scope.results.length);
-        
-      });
+      return $http.get($scope.apiEndpoint, {params: data || {}})
+        .then(
+          /* success */
+          function(response) {
+            $scope.results = response.data.objects;
+            $scope.total_counts = response.data.meta.total_count;
+            $scope.startnumresults = Number($scope.query.offset) + 1;
+            $scope.numresults = Number($scope.query.offset) + Number($scope.results.length);
+          },
+          /* failure */
+          function(error) {
+            console.log("The request failed: ", error);
+          }
+        )
     };
 
     $scope.clearVTC= function(){
