@@ -7,7 +7,7 @@
 
 	angular.module('mapstory', [
     'osgeoImporter.uploader',
-    'ui.bootstrap',
+    'ui.bootstrap', //an osgeo-importer dependency
     'mapstory.search',
     'slick'
   ], function($locationProvider) {
