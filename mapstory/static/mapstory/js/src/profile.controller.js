@@ -45,11 +45,18 @@
     //Get data from apis and make them available to the page
     function query_api(data){
       return $http.get('/api/base/search/', {params: data || {}})
-        .success(function(data){
-          $scope.results = data.objects;
-          $scope.total_counts = data.meta.total_count;
-          $scope.$root.query_data = data;
-      });
+      .then(
+        /* success */
+        function(response) {
+          $scope.results = response.data.objects;
+          $scope.total_counts = response.data.meta.total_count;
+          $scope.$root.query_data = response.data;
+        },
+        /* failure */
+        function(error) {
+          console.log("The request failed: ", error);
+        }
+      )
     };
 
     // count and & stash results for layers & stories 
