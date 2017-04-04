@@ -99,6 +99,7 @@ class Map(geonode.maps.models.Map):
     story = db.models.ForeignKey(MapStory, related_name='chapter_list', blank=True, null=True)
 
     chapter_index = db.models.IntegerField(_('chapter index'), null=True, blank=True)
+    viewer_playbackmode = db.models.CharField(_('Viewer Playback'), max_length=32, blank=True, null=True)
 
     def update_from_viewer(self, conf):
 
