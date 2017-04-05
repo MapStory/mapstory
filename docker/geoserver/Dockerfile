@@ -21,6 +21,7 @@ RUN set -ex \
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libgeos-dev \
+        libproj-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install GeoServer WAR

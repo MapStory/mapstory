@@ -12,7 +12,9 @@ cd $APP_PATH/mapstory
 
 # Load social auth settings
 if [ -e /run/secrets/social_auth ]; then
-    source /run/secrets/social_auth
+    set -a
+    . /run/secrets/social_auth
+    set +a
 fi
 
 for i do # loop over $@
@@ -29,7 +31,7 @@ for i do # loop over $@
     fi
 
     if [ "$i" = "--collect-static" ]; then
-        rm -r $STATIC_ROOT/*
+        rm -rf $STATIC_ROOT/*
         python manage.py collectstatic --noinput --ignore node_modules
     fi
 
@@ -42,7 +44,6 @@ for i do # loop over $@
         coverage run ./manage.py test
         coverage report
         coverage html -d cover
-#        sleep infinity
     fi
 
     if [ "$i" = "--celery" ]; then

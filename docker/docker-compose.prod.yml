@@ -62,7 +62,7 @@ services:
 
 secrets:
   ssl_cert:
-    file: secrests/ssl_cert
+    file: secrets/ssl_cert
 #    external: true
   ssl_key:
     file: secrets/ssl_key
