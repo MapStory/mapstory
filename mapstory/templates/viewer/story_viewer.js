@@ -126,7 +126,7 @@
                     popup.show(coord, cont);
                   });
                 } else {
-                  popup.show(feature.get('content'), cont);
+                  popup.show(coord, feature.get('content'));
                 }
             }
         };
@@ -192,8 +192,17 @@
 
         self.loadConfig(config, chapter);
     });
+
     $rootScope.$on('showPin', function(event, pin) {
-        self.displayPinInfo(null, pin);
+      self.displayPinInfo(null, pin);
+    });
+
+    $rootScope.$on('rangeChange', function(event, range) {
+      StoryPinLayerManager.autoDisplayPins(range);
+    });
+
+    $rootScope.$on('hidePinOverlay', function(event, pin) {
+      self.hidePinOverlay(pin);
     });
 
     $rootScope.$on('hidePinOverlay', function(event, pin) {

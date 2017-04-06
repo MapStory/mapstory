@@ -285,20 +285,21 @@ MAP_BASELAYERS = [
         'title': 'World Dark',
         'group': 'background'
     },
-    {
-        "source": {"ptype": "gxp_arcrestsource",
-                   "url": "https://services.arcgisonline.com/arcgis/rest/services/NGS_Topo_US_2D/MapServer/",
-                   "alwaysAnonymous": True,
-                   'proj': 'EPSG:4326'},
-        "type": "OpenLayers.Layer",
-        "args": ["Worldmap", "https://services.arcgisonline.com/arcgis/rest/services/NGS_Topo_US_2D/MapServer/",
-                 {"layers": 'basic'}],
-        "visibility": False,
-        "fixed": True,
-        "group": "background",
-        "name": "NGS_Topo_US_2D",
-        "title": "Esri NGS"
-    },
+    ## remove esri basemap until supported by storytools
+    ##    {
+    ##        "source": {"ptype": "gxp_arcrestsource",
+    ##                   "url": "https://services.arcgisonline.com/arcgis/rest/services/NGS_Topo_US_2D/MapServer/",
+    ##                   "alwaysAnonymous": True,
+    ##                   'proj': 'EPSG:4326'},
+    ##        "type": "OpenLayers.Layer",
+    ##        "args": ["Worldmap", "https://services.arcgisonline.com/arcgis/rest/services/NGS_Topo_US_2D/MapServer/",
+    ##                 {"layers": 'basic'}],
+    ##        "visibility": False,
+    ##        "fixed": True,
+    ##        "group": "background",
+    ##        "name": "NGS_Topo_US_2D",
+    ##        "title": "Esri NGS"
+    ##    },
     {
         'source': {
             'ptype': 'gxp_mapboxsource',

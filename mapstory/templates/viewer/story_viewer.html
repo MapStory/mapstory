@@ -353,8 +353,7 @@ opacity: 0
         <div class="content">
             {% verbatim %}
             <a target="_blank" href="/story/{{ mapManager.storyMap.get('id') - 1 }}/view" class="viewer-story-title" ng-bind="mapManager.title"></a>
-            {% endverbatim %}
-            <a target="_blank" href="/storyteller/{{ mapManager.username }}" class="viewer-author">{{ SITE_NAME }} {% verbatim %}by {{ mapManager.owner }}</a>
+            <a target="_blank" href="/storyteller/{{ mapManager.username }}" class="viewer-author">{% endverbatim %}{{ SITE_NAME }} {% verbatim %}by {{ mapManager.owner }}</a>
             <div class="viewer-chapter-number">Chapter {{ mapManager.storyChapter}}</div>
             <div class="viewer-chapter-title" ng-bind="mapManager.storyMap.getStoryTitle()"></div>
             <p ng-bind="mapManager.storyMap.getStoryAbstract()"></p>
@@ -402,7 +401,7 @@ opacity: 0
 <script src="{{ STATIC_URL }}vendor/angular/angular.js"></script>
 <script src="{{ STATIC_URL }}vendor/nouislider/distribute/nouislider.min.js"></script>
 <script src="{{ STATIC_URL }}vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-<script src="{{ STATIC_URL }}mapstory/js/ol-debug.js"></script>
+<script src="{{ STATIC_URL }}vendor/story-tools/examples/ol-debug.js"></script>
 <script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-core-all.js"></script>
 <script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-mapstory.js"></script>
 {% include 'viewer/ol3-popup.js' %}
