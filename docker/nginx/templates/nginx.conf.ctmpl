@@ -68,11 +68,12 @@ http {
       proxy_pass http://geoserver:8080/geoserver/;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
       proxy_set_header Host $http_host;
       proxy_redirect off;
     }
 
-    # gunicorn wsgi proxy
+    # wsgi proxy
     location / {
       client_max_body_size {{ env "NGINX_CLIENT_MAX_BODY_SIZE" }};
       proxy_pass_header Server;

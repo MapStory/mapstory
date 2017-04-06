@@ -6,7 +6,7 @@ exec {
 
 template {
   source = "templates/context.xml.ctmpl"
-  destination = "/var/lib/tomcat/conf/context.xml"
+  destination = "{{ env "CATALINA_HOME" }}/conf/context.xml"
   perms = 0644
 }
 
@@ -42,6 +42,6 @@ template {
 
 template {
   source = "templates/web.xml.ctmpl"
-  destination = "/var/lib/tomcat/webapps/geoserver/WEB_INF/web.xml"
+  destination = "{{ env "WEBAPPS_DIR" }}/geoserver/WEB-INF/web.xml"
   perms = 0644
 }
