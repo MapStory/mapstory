@@ -86,12 +86,38 @@ html, body {
   }
 }
 
+.legend-item-header {
+  text-transform: none;
+  background: none;
+  color: #ffffff;
+  width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  color: #333333 !important;
+  border-radius: 0;
+}
+
+#legend-container {
+  background-color: #999999;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+  .panel {
+    overflow-y: hidden;
+    -webkit-box-shadow: 0 0 0 0;
+    box-shadow: 0 0 0 0;
+  }
+}
+
 .st-legend {
-  color:white;
-  position:absolute;
+  color: white;
+  position: absolute;
   right: 12px;
   top: 63px;
-  z-index:99999;
+  z-index: 99999;
 
   #legend-container {
     position: relative;
@@ -107,11 +133,6 @@ html, body {
     color: black;
     font-size: 20px;
   }
-
-  .panel {
-    background-color: #757575
-  }
-
 }
 
 .viewer-nav {
@@ -131,7 +152,7 @@ html, body {
   font-weight: 600;
   line-height: 10px;
   margin: 0;
-  padding: 5px 0; 
+  padding: 5px 0;
   &:hover, &:active {
     color: @link-color-hover;
   }
