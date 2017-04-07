@@ -7,7 +7,6 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0003_alter_resourcebase_fields'),
         ('mapstories', '0001_initial'),
     ]
 
