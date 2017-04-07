@@ -112,13 +112,10 @@ class MapViewsTest(MapStoryTestMixin):
         form_data = {'is_published': True, 'published_submit_btn': True}
         form = PublishStatusForm(data=form_data)
         self.assertTrue(form.is_valid())
-        response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": testMapstory.id}), form_data)
+        response = self.client.post(reverse('mapstory_detail',
+                                            kwargs={"mapid": testMapstory.id}), form_data)
         self.assertEquals(response.status_code, 200)
 
         # Should be published
         testMapstory = MapStory.objects.get(id=testMapstory.id)
         self.assertTrue(testMapstory.is_published)
-
-
-
-

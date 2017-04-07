@@ -38,7 +38,6 @@ from taggit.models import TaggedItem
 from uuid import uuid4
 import os.path
 
-
 if 'geonode.geoserver' in settings.INSTALLED_APPS:
     from django.db.models import signals
     from geonode.geoserver.signals import geoserver_pre_save_maplayer
