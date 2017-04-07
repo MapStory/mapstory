@@ -16,6 +16,12 @@ RUN set -ex \
         unzip \
     && rm -rf /var/lib/apt/lists/*
 
+# Install WSGI server and paver
+RUN set -ex \
+    && pip install --no-cache-dir \
+        gunicorn \
+        paver
+
 # Install misc libs
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -32,8 +38,6 @@ RUN set -ex \
         nodejs \
     && npm install -g bower grunt \
     && rm -rf /var/lib/apt/lists/*
-
-RUN pip install --no-cache-dir paver
 
 #RUN mkdir -p $MEDIA_ROOT && chown www-data $MEDIA_ROOT
 #RUN mkdir -p $STATIC_ROOT && chown www-data $STATIC_ROOT

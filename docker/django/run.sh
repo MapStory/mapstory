@@ -51,6 +51,7 @@ for i do # loop over $@
     fi
 
     if [ "$i" = "--serve" ]; then
-        python manage.py runserver 0.0.0.0:$DJANGO_PORT
+        echo 'Running WSGI server'
+        python /usr/local/bin/gunicorn --pythonpath=$APP_PATH/mapstory --workers=4 --timeout=120 --bind=0.0.0.0:8000 --log-level=error mapstory.wsgi
     fi
 done
