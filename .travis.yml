@@ -20,20 +20,20 @@ before_install:
   - sudo curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   - sudo chmod +x /usr/local/bin/docker-compose
   - docker-compose --version
-  - alias dco="docker-compose -f docker-compose.yml -f docker/docker-compose.override.yml -f docker/docker-compose.test.yml"
+  - DCO="docker-compose -f docker-compose.yml -f docker/docker-compose.override.yml -f docker/docker-compose.test.yml"
 
-  - dco pull
-  - dco build
-  - dco up -d pgadmin
-  - dco up -d celery
+  - $DCO pull
+  - $DCO build
+  - $DCO up -d pgadmin
+  - $DCO up -d celery
 
 script:
-  - dco up django
+  - $DCO up django
 
 after_success:
   - coveralls
-  - dco kill
-  - dco rm -f
+  - $DCO kill
+  - $DCO rm -f
 
 notifications:
   slack: mapstory:E2W57xKNNOKDDqRmtQHNUlBK
