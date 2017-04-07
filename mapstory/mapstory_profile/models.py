@@ -20,27 +20,27 @@ class MapstoryProfile(models.Model):
 
     social_twitter = models.CharField(
         _('Twitter Handle'),
-        help_text=_('Provide your Twitter username'),
+        help_text=_("Provide your Twitter username, e.g. 'mapstory'."),
         max_length=255,
         null=True,
         blank=True)
 
     social_facebook = models.CharField(
         _('Facebook Profile'),
-        help_text=_('Provide your Facebook username'),
+        help_text=_("Provide your Facebook username. From your profile page, this is what comes after 'facebook.com/' in the URL."),
         max_length=255,
         null=True,
         blank=True)
 
     social_github = models.CharField(_('GitHub Profile'),
-                                     help_text=_('Provide your GitHub username'),
+                                     help_text=_("Provide your Github username, e.g. 'mapstory'."),
                                      max_length=255,
                                      null=True,
                                      blank=True)
 
     social_linkedin = models.CharField(
         _('LinkedIn Profile'),
-        help_text=_('Provide your LinkedIn username'),
+        help_text=_("Provide your LinkedIn username. From your profile page, this is what comes after 'linkedin.com/in/' in the URL"),
         max_length=255,
         null=True,
         blank=True)
