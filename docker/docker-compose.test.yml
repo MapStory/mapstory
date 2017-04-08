@@ -1,4 +1,6 @@
-version: '3'
+# configuration for running tests
+# it assumes that the local 'override' config has been loaded
+version: '3.1'
 services:
   django:
     command: --init-db --test
