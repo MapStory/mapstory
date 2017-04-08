@@ -27,7 +27,7 @@ before_install:
   - DCO="docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker/docker-compose.test.yml"
 
   - $DCO pull
-  - $DCO build
+  - $DCO build django celery
   - $DCO up -d pgadmin
   - $DCO up -d celery
 
