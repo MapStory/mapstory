@@ -7,6 +7,10 @@ sudo: required
 services:
   - docker
 
+language: python
+python:
+  - "2.7"
+
 env:
   - DOCKER_COMPOSE_VERSION: 1.11.2
 
@@ -20,7 +24,7 @@ before_install:
   - sudo curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   - sudo chmod +x /usr/local/bin/docker-compose
   - docker-compose --version
-  - DCO="docker-compose -f docker-compose.yml -f docker/docker-compose.override.yml -f docker/docker-compose.test.yml"
+  - DCO="docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker/docker-compose.test.yml"
 
   - $DCO pull
   - $DCO build
