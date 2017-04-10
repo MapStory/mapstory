@@ -34,6 +34,8 @@ before_install:
   - $DCO up -d pgadmin
   - $DCO up -d celery
 
+install: true # skip install step
+
 script:
   - $DCO up django
 
