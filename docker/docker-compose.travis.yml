@@ -8,6 +8,8 @@ services:
       - docker/env/dev/postgres.env
     volumes:
       - postgres:/var/lib/postgresql/data
+    networks:
+      internal:
     expose:
       - "5432"
 
