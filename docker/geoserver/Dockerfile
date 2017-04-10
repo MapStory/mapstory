@@ -6,7 +6,9 @@ ENV WEBAPPS_DIR=$CATALINA_HOME/webapps
 ENV DOWNLOAD_URL=https://s3-us-west-2.amazonaws.com/mapstory-resources/geoserver/2.9/geoserver.war
 ENV GEOSERVER_DATA_DIR /var/lib/geoserver/data
 
-RUN apt-get update \
+# Install tools
+RUN set -ex \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
         unzip \
     && rm -rf /var/lib/apt/lists/*
@@ -18,7 +20,8 @@ RUN set -ex \
     && rm /opt/consul-template.tgz
 
 # Install native dependencies
-RUN apt-get update \
+RUN set -ex \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
         libgeos-dev \
         libproj-dev \

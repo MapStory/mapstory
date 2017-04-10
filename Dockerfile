@@ -83,9 +83,12 @@ RUN set -ex \
 USER root
 WORKDIR $APP_PATH/mapstory
 
-COPY . .
+#COPY . .
+COPY mapstory ./mapstory
+COPY docker/django/local_settings.py ./mapstory/settings/
+COPY scripts ./scripts
+COPY ./*.py ./
 RUN pip install --no-deps --no-cache-dir -r requirements.txt
-RUN mv ./docker/django/local_settings.py ./mapstory/settings
 RUN chown -R mapstory:mapstory $APP_PATH/mapstory
 
 USER mapstory
@@ -106,10 +109,12 @@ USER root
 RUN chown -R mapstory:mapstory $STATIC_ROOT
 RUN chown -R mapstory:mapstory $MEDIA_ROOT
 
+COPY docker/django/run.sh /opt/
+
 USER mapstory
 VOLUME $STATIC_ROOT
 VOLUME $MEDIA_ROOT
 WORKDIR $APP_PATH/mapstory/
 EXPOSE $DJANGO_PORT
-ENTRYPOINT ["docker/django/run.sh"]
+ENTRYPOINT ["/opt/run.sh"]
 CMD ["--init-db", "--collect-static", "--reindex", "--serve"]

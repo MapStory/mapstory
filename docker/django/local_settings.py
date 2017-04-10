@@ -36,21 +36,21 @@ SKIP_PERMS_FILTER = False
 HAYSTACK_FACET_COUNTS = False
 HAYSTACK_URL = "%s://%s:%d" % (os.environ['PRIVATE_PROTOCOL'], os.environ['ELASTIC_HOST'], int(os.environ['ELASTIC_PORT']))
 HAYSTACK_CONNECTIONS = {
-   'default': {
-       'ENGINE': 'mapstory.search.elasticsearch_backend.MapStoryElasticsearchSearchEngine',
-       'URL': HAYSTACK_URL,
-       'INDEX_NAME': 'geonode',
-       'EXCLUDED_INDEXES': ['geonode.layers.search_indexes.LayerIndex'],
-       },
-   }
+    'default': {
+        'ENGINE': 'mapstory.search.elasticsearch_backend.MapStoryElasticsearchSearchEngine',
+        'URL': HAYSTACK_URL,
+        'INDEX_NAME': 'geonode',
+        'EXCLUDED_INDEXES': ['geonode.layers.search_indexes.LayerIndex'],
+    },
+}
 SKIP_PERMS_FILTER = True
 HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
 
 
 MAPSTORY_APPS = (
 
- 'mapstory.apps.boxes',
- 'mapstory.apps.flag', # - temporarily using this instead of the flag app for django because they need to use AUTH_USER_MODEL
+    'mapstory.apps.boxes',
+    'mapstory.apps.flag', # - temporarily using this instead of the flag app for django because they need to use AUTH_USER_MODEL
 
 )
 
