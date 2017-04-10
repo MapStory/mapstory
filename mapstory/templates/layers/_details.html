@@ -108,16 +108,17 @@
                                                 <a href="{{ thumbnail }}"><img ng-src="{{ thumbnail }}" src="{{ thumbnail }}" id="change-thumbnail-image"></a>
 
                                                 <form action="" method="post" enctype="multipart/form-data">
-                                              {% csrf_token %}
-                                              <p>{{ thumb_form.non_field_errors }}</p>
-                                              <p>{{ thumb_form.docfile.label_tag }} </p>
-                                              <p>
+                                                {% csrf_token %}
+                                                <p>{{ thumb_form.non_field_errors }}</p>
+                                                <p>{{ thumb_form.docfile.label_tag }} </p>
+                                                <p>
                                                   {{ thumb_form.thumbnail_image.errors }}
                                                   {{ thumb_form.thumbnail_image }}
-                                              </p>
-                                              <button style="width:200px" class="btn btn-primary btn-md btn-block" type="submit">
-                                                Change Image
-                                              </button>
+                                                </p>
+                                                <p>MapStory supports jpeg, gif, png, and bitmap file types.</p>
+                                                <button style="width:200px" class="btn btn-primary btn-md btn-block" type="submit">
+                                                    Change Image
+                                                </button>
                                           </form>
                                             </td>
                                         </tr>
