@@ -13,6 +13,12 @@ RUN set -ex \
         unzip \
     && rm -rf /var/lib/apt/lists/*
 
+# Add CA cert for self signing
+COPY ca.crt /usr/local/share/ca-certificates/
+RUN set -ex \
+    && update-ca-certificates \
+    && keytool -import -v -trustcacerts -alias server-alias -file /usr/local/share/ca-certificates/ca.crt -keystore cacerts.jks -keypass changeit -storepass changeit -noprompt
+
 # Install consul-template
 RUN set -ex \
     && wget -qO /opt/consul-template.tgz https://releases.hashicorp.com/consul-template/$CONSUL_TEMPLATE_VERSION/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.tgz \

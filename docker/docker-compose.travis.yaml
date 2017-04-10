@@ -8,20 +8,14 @@ services:
       - docker/env/dev/postgres.env
     volumes:
       - postgres:/var/lib/postgresql/data
-    networks:
-      internal:
     expose:
       - "5432"
-    ports:
-      - "5432:5432"
 
   pgadmin:
     links:
       - postgres
     env_file:
       - docker/env/dev/db_auth.env
-    ports:
-      - "5050:5050"
 
   elasticsearch:
     ports:
@@ -33,49 +27,52 @@ services:
       - RABBITMQ_DEFAULT_USER=mapstory
       - RABBITMQ_DEFAULT_PASS=password
       - RABBITMQ_DEFAULT_VHOST=mapstory
-    ports:
-      - "15671:15671"
-      - "15672:15672"
 
   django:
     links:
       - postgres
+    extra_hosts:
+      - docker:nginx
     env_file:
       - docker/env/dev/public_host.env
       - docker/env/dev/geoserver.env
       - docker/env/dev/mapstory.env
       - docker/env/dev/db_auth.env
-    ports:
-      - "8000:8000"
+    command: --init-db --test
+    volumes:
+      - ./cover:/srv/mapstory/cover
 
   celery:
     links:
       - postgres
-    environment:
-      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
+    extra_hosts:
+      - docker:nginx
     env_file:
       - docker/env/dev/public_host.env
       - docker/env/dev/geoserver.env
       - docker/env/dev/mapstory.env
       - docker/env/dev/db_auth.env
+    volumes:
+      - mapstory_media:/var/lib/mapstory/media/
+      - mapstory_static:/var/lib/mapstory/static/
 
   geoserver:
     links:
       - postgres
+    extra_hosts:
+      - docker:nginx
     env_file:
       - docker/env/dev/public_host.env
       - docker/env/dev/geoserver.env
       - docker/env/dev/db_auth.env
-    ports:
-      - "8080:8080"
+    volumes:
+      - geoserver:/var/lib/geoserver
 
   nginx:
     env_file:
       - docker/env/dev/public_host.env
-    networks:
-      internal:
-        aliases:
-          - docker
+    extra_hosts:
+      - docker:nginx
 
 volumes:
   postgres:

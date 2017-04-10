@@ -20,8 +20,8 @@ RUN set -ex \
     && tar xf /opt/consul-template.tgz -C /opt/ consul-template \
     && rm /opt/consul-template.tgz
 
-COPY self_signed.crt /etc/nginx/
-COPY self_signed.key /etc/nginx/
+COPY docker.crt /etc/nginx/
+COPY docker.key /etc/nginx/
 
 COPY config.hcl /opt/
 COPY templates/ /opt/templates

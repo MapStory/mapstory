@@ -9,6 +9,11 @@ ENV DJANGO_PORT 8000
 
 WORKDIR $TMP
 
+# Add CA cert for self signing
+COPY docker/nginx/ca.crt /usr/local/share/ca-certificates/
+RUN set -ex \
+    && update-ca-certificates
+
 # Install tools
 RUN set -ex \
     && apt-get update \
