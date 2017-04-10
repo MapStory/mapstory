@@ -107,6 +107,7 @@ WORKDIR $APP_PATH/mapstory/mapstory/static
 RUN set -ex \
     && npm install \
     && bower install \
+    && grunt concat \
     && grunt less \
     && grunt copy
 
