@@ -12,6 +12,7 @@ services:
       - "5432"
 
   pgadmin:
+    command: --init-db
     links:
       - postgres
     env_file:
@@ -48,9 +49,6 @@ services:
       - docker/env/dev/geoserver.env
       - docker/env/dev/mapstory.env
       - docker/env/dev/db_auth.env
-    volumes:
-      - mapstory_media:/var/lib/mapstory/media/
-      - mapstory_static:/var/lib/mapstory/static/
 
   geoserver:
     links:
@@ -59,8 +57,6 @@ services:
       - docker/env/dev/public_host.env
       - docker/env/dev/geoserver.env
       - docker/env/dev/db_auth.env
-    volumes:
-      - geoserver:/var/lib/geoserver
 
   nginx:
     env_file:

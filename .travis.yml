@@ -31,13 +31,16 @@ before_install:
 
   - $DCO pull
   - $DCO build django celery
-  - $DCO up -d pgadmin
-  - $DCO up -d celery
+  - $DCO up -d postgres elasticsearch rabbitmq
+  - $DCO up pgadmin
+  - $DCO run --command "--init-db --collect-static --reindex" django
 
 install: true # skip install step
 
 script:
-  - $DCO up django
+  - $DCO up -d django celery
+  - $DCO up -d nginx
+  - $DCO logs -f django
 
 after_success:
   - coveralls
