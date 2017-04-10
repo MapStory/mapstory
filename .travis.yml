@@ -38,12 +38,15 @@ before_install:
 install: true # skip install step
 
 script:
-  - $DCO up -d django celery
   - $DCO up -d nginx
+  - $DCO kill django celery
+  - $DCO up -d django celery
   - $DCO logs -f django
 
 after_success:
   - coveralls
+
+after_script:
   - $DCO kill
   - $DCO rm -f
 
