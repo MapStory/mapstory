@@ -40,7 +40,7 @@ for i do # loop over $@
     fi
 
     if [ "$i" = "--test" ]; then
-        rm cover/*
+        rm -f cover/*
         coverage run ./manage.py test
         coverage report
         coverage html -d cover
