@@ -6,7 +6,7 @@
 {% load fluent_comments_tags %}
 
 {% block body_outer %}
-<div ng-controller="collection_controller">
+<div ng-controller="collectionController">
         <div ng-init="query({{id}})">
         </div>
         <section class="parallax">
@@ -100,9 +100,9 @@
                 <hr style="margin:5px" ng-if="twitter">
                 {% endverbatim %}
                 
-                <h3>Interests</h3>
+         <!--        <h3>Interests</h3>
                 <input type="text" class="form-control" id="tokenfield-interests"/>
-
+ -->
                 <hr style="margin:5px">
                 <h3>Org summary <br/>
                   <div style="max-height:200px; overflow-y:scroll; overflow-x:hidden;font-size:0.9em">

@@ -1,86 +1,44 @@
 {% verbatim %}
 <div>
-    <li ng-repeat="item in results | filter:itemFilter" resource-id="{{ item.id }}" class="col-lg-4 col-sm-6 ">
-        <div style="text-align: center;">
-            <a href="/storyteller/{{ item.username }}">
-                <img class="thumb img-responsive img-circle" src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100" ng-src="{{ item.avatar_100 }}"/>
-            </a>
-            <div>{{ item.first_name ?
-                 item.first_name + ' ' + item.last_name 
-                 : item.username }}
-            </div>
-            {% endverbatim %}
-            
-            {% comment %} Stashing content for clean appearance before implementing next mock up 
-            <!-- If both exist, comma separated... otherwise no comma separation -->
-            <div ng-if="item.position || item.organization">
-                <p ng-show="item.position && item.organization">
-                    <i class="fa fa-briefcase"></i> 
-                    {{ item.position }}, {{ item.organization }}
-                </p>
-                <p ng-hide="item.position && item.organization">
-                    <i class="fa fa-briefcase"></i>
-                    {{ item.position }} {{ item.organization }}
-                </p>
-            </div>
-            <div ng-if="item.city || item.country">
-                <p ng-show="item.city && item.country">
-                    <i class="fa fa-map-marker"></i> 
-                    {{ item.city }}, {{ item.country }}
-                </p>
-                <p ng-hide="item.city && item.country">
-                    <i class="fa fa-map-marker"></i> 
-                    {{ item.city }} {{ item.country }}
-                </p>
-            </div>
-            <p style="font-size:10px">{{ item.profile | limitTo:50 }}</p>
-            <a href="/messages/create/{{ item.id }}/">
-                <button class="btn btn-primary btn-xs">
-                    <i class="fa fa-envelope"></i> message
-                </button>
-            </a>
-            {% endcomment %}
-            
-            {% verbatim %}
-            <div class="profile-view">
+    <li ng-repeat="item in results | filter:itemFilter" resource-id="{{ item.id }}" class="col-lg-6">
+        <div class="storyteller-card">
+            <div class="avatar-and-social-links">
                 <a href="/storyteller/{{ item.username }}">
-                    <button class="btn"> View Profile </button>
+                    <img class="thumb img-responsive img-circle"
+                         src="http://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100"
+                         ng-src="{{ item.avatar_100 }}"/>
                 </a>
+                <div class="social-icons">
+                    <a href="https://twitter.com/{{ item.social_twitter }}" ng-if="item.social_twitter">
+                        <i class="fa fa-twitter-square"></i>
+                    </a>
+                    <a href="https://www.facebook.com/{{ item.social_facebook }}" ng-if="item.social_facebook">
+                        <i class="fa fa-facebook-square"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/{{ item.social_linkedin }}" ng-if="item.social_linkedin">
+                        <i class="fa fa-linkedin-square"></i>
+                    </a>
+                    <a href="https://github.com/{{ item.social_github }}" ng-if="item.social_github">
+                        <i class="fa fa-github"></i>
+                    </a>
+                </div>
             </div>
-        </div>
-    </li>
-</div>
-<!-- Outdated -->
-<div ng-show="query.type__in==='group'">
-    <li ng-repeat="item in results" resource_id="{{ item.id }}" class="col-md-3" ng-if="item.type==='group'">
-        <div style="text-align: left;">
-            <a href="{{ item.detail_url}}">
-                <img class="thumb img-responsive" ng-src="{{ item.logo}}"/>
-            </a>
-            <a href="{{ item.detail_url}}">{{ item.title }}</a>
-            <!-- There's supposed to be some kind of 'topic' here e.g. 'Science and Education' -->
-            <p ng-show="item.city && item.country">
-                {{ item.city }}, {{ item.country }}
-            </p>
-            <p ng-hide="item.city && item.country">
-                {{ item.city }} {{ item.country }}
-            </p>
-            <p>{{ item.description }}</p>
-            <a href="{{ item.detail_url}}">
-                <button class="btn btn-primary btn-xs">
-                    <i class="fa fa-home"></i> Organization
-                </button>
-            </a>    
-            <a href="{{ item.detail_url}}">
-                <button class="btn btn-primary btn-xs">
-                    <i class="fa fa-rss"></i> Subscribe
-                </button>
-            </a>
-            <a href="{{ item.detail_url}}">
-                <button class="btn btn-primary btn-xs">
-                    <i class="fa fa-code-fork"></i> Share
-                </button>
-            </a>
+            <div class="profile-info">
+                <a href="/storyteller/{{ item.username }}" class="storyteller-name">
+                  {{ item.first_name ?
+                     item.first_name + ' ' + item.last_name
+                   : item.username }}
+                </a>
+
+                <div class="storyteller-location">
+                    <span ng-if="item.city">{{ item.city }}{{ item.city && item.country ? ', ':'' }}</span>
+
+                    <span ng-if="item.country">{{ item.country }}</span>
+                </div>
+                <div class="profile-text" ng-if="item.profile">
+                    {{ item.profile | limitTo: 100 }}{{ item.profile.length > 100 ? '...' : '' }}
+                </div>
+            </div>
         </div>
     </li>
 </div>

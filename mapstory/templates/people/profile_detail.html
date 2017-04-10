@@ -5,7 +5,7 @@
 {% block title %} {% trans "Profile of " %}{{ profile.first_name|default_if_none:profile.username }}{% endblock %}
 {% block body_class %}people{% endblock %}
 {% block body %}
-    <div ng-controller="profile_search_controller">
+    <div ng-controller="profileController">
         <div class="container">
             <div class="row profile-banner">
                 <div class="col-sm-1">
@@ -38,11 +38,11 @@
                                         <h2>No MapStories.</h2>
                                         <h4>Create your first {% trans "Story" %} now.</h4>
                                     </div>
-                                    <div class="clearfix search-results">
+                                    <div class="clearfix content-results">
                                         <ul>
                                             {% verbatim %}
                                                 <li ng-repeat="item in stories" resource-id="{{ item.id }}"
-                                                    class="col-md-4 flip-container resource-{{ item.id }}">
+                                                    class="col-lg-4 col-sm-6 resource-{{ item.id }}">
                                             {% endverbatim %}
                                             {% include 'search/_result_content.html' %}
                                         </ul>
@@ -53,11 +53,11 @@
                                         <h2>{% trans "No Layers" %}.</h2>
                                         <h4>Import your first {% trans "Layer" %} now.</h4>
                                     </div>
-                                    <div class="clearfix search-results">
+                                    <div class="clearfix content-results">
                                         <ul>
                                             {% verbatim %}
                                                 <li ng-repeat="item in layers" resource-id="{{ item.id }}"
-                                                    class="col-md-4 flip-container resource-{{ item.id }}">
+                                                    class="col-lg-4 col-sm-6 resource-{{ item.id }}">
                                             {% endverbatim %}
                                             {% include 'search/_result_content.html' %}</ul>
                                     </div>
