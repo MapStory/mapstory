@@ -29,19 +29,24 @@ before_install:
   - docker-compose --version
   - DCO="docker-compose -f docker-compose.yml -f docker/docker-compose.travis.yml"
 
+  - $DCO kill
+  - $DCO rm -f
+  - docker volume list -q | xargs docker volume rm -f
+
   - $DCO pull
+
+install:
   - $DCO build django celery
   - $DCO up -d postgres elasticsearch rabbitmq
   - $DCO up pgadmin
   - $DCO run django "--init-db --collect-static --reindex"
 
-install: true # skip install step
-
 script:
+  - $DCO up -d django
   - $DCO up -d nginx
   - $DCO kill django celery
-  - $DCO up -d django celery
-  - $DCO logs -f django
+  - $DCO up -d celery
+  - $DCO up django
 
 after_success:
   - coveralls
