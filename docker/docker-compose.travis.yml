@@ -31,8 +31,6 @@ services:
   django:
     links:
       - postgres
-    extra_hosts:
-      - docker:nginx
     env_file:
       - docker/env/dev/public_host.env
       - docker/env/dev/geoserver.env
@@ -45,8 +43,6 @@ services:
   celery:
     links:
       - postgres
-    extra_hosts:
-      - docker:nginx
     env_file:
       - docker/env/dev/public_host.env
       - docker/env/dev/geoserver.env
@@ -59,8 +55,6 @@ services:
   geoserver:
     links:
       - postgres
-    extra_hosts:
-      - docker:nginx
     env_file:
       - docker/env/dev/public_host.env
       - docker/env/dev/geoserver.env
@@ -71,8 +65,10 @@ services:
   nginx:
     env_file:
       - docker/env/dev/public_host.env
-    extra_hosts:
-      - docker:nginx
+    networks:
+      internal:
+        aliases:
+          - docker
 
 volumes:
   postgres:
