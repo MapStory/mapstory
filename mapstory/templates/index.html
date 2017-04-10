@@ -2,6 +2,11 @@
 {% load i18n %}
 {% load mapstory_tags %}{# mapstory/templatetags/mapstory_tags.py, only used here for images|byname filter parallax #}
 
+{% block extra_head %}
+    <link href="{{ STATIC_URL }}vendor/slick-carousel/slick/slick.css" rel="stylesheet" >
+    <link href="{{ STATIC_URL }}vendor/slick-carousel/slick/slick-theme.css" rel="stylesheet">
+{% endblock %}
+
 {% block middle %}
 <div>
     <section class="parallax splash">
@@ -60,7 +65,7 @@
             </div>
         </div>
     </section>
-    <div ng-controller="featured_carousel">
+    <div ng-controller="carouselController">
         <section class="slice carousel category">
             <div class="container">
                 <nav id="filter" class="col-sm-10 col-sm-offset-1 col-md-12 col-md-offset-0 text-center">
