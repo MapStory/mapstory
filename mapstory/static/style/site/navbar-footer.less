@@ -37,32 +37,21 @@ h1.site-title {
 
 li.divider {
     @media @desktops {
-        background-color: @gray-900;
+        background-color: @navigation-divider-color;
         margin-right: 15px;
         height: 1px;
     }
 }
 
 header.navigation {
-    @base-border-color: red;
     @base-border-radius: 6px;
-    @action-color: blue;
     @navigation-padding: 1em;
-    @navigation-background: @gray-950;
-    @navigation-color: @gray-400;
-    @navigation-color-hover: @white;
     @navigation-height: 50px;
-    @navigation-nav-button-background: @action-color;
-    @navigation-nav-button-background-hover: shade(@navigation-background, 50%);
-    @navigation-nav-button-border: 1px solid shade(@navigation-nav-button-background, 20%);
-    @navigation-search-background: @gray-50;
-    @navigation-search-border: 1px solid @gray-200;
-    @navigation-active-link-color: @white;
     @navigation-submenu-padding: 1em;
     @navigation-submenu-width: 12em;
 
-    background: @navigation-background; // Fallback for IE9 since it doesn't support gradients
-    background: @navigation-gradient;
+    background: @navigation-background-fallback; // Fallback for IE9 since it doesn't support gradients
+    background: @navigation-background;
     min-height: @navigation-height;
     width: 100%;
     z-index: 999;
@@ -173,14 +162,21 @@ header.navigation {
             &:hover {
                 color: @navigation-color-hover;
                 &:after {
-                    color: @gray-50;
+                    color: @navigation-color-hover;
+                }
+            }
+
+            &:active {
+                color: @navigation-color-active;
+                &:after {
+                    color: @navigation-color-active;
                 }
             }
         }
     }
 
     .active-nav-item a {
-        border-bottom: 1px solid @navigation-active-link-color;
+        border-bottom: 1px solid @navigation-color-active;
         padding-bottom: 3px;
     }
 
@@ -244,9 +240,15 @@ header.navigation {
             }
         }
 
-        &.user-menu:hover {
+        &.user-menu:hover,
+        &.user-menu:focus {
             a::after {
-                color: @gray-50;
+                color: @navigation-color-hover;
+            }
+        }
+        &.user-menu:active {
+            a::after {
+                color: @navigation-color-active;
             }
         }
     }
@@ -327,12 +329,20 @@ header.navigation {
                 &:first-child > a {
                     border-top-left-radius: @base-border-radius;
                     border-top-right-radius: @base-border-radius;
+                    border-style: solid;
+                    border-width: 1px;
+                    border-color: @navigation-submenu-border-color;
+                    border-bottom: 0;
                 }
 
                 &:last-child > a, &:last-child > form > a {
                     border-bottom-left-radius: @base-border-radius;
                     border-bottom-right-radius: @base-border-radius;
                     padding-bottom: 0.7em;
+                    border-style: solid;
+                    border-width: 1px;
+                    border-color: @navigation-submenu-border-color;
+                    border-top: 0;
                 }
             }
 
@@ -343,10 +353,15 @@ header.navigation {
                 padding-left: 30px;
 
                 @media @desktops {
-                    background-color: @navigation-background;
+                    background-color: @navigation-background-fallback;
                     padding-left: @navigation-submenu-padding;
                     text-align: left;
                     width: @navigation-submenu-width;
+                    border-style: solid;
+                    border-width: 1px;
+                    border-color: @navigation-submenu-border-color;
+                    border-top: 0;
+                    border-bottom: 0;
                 }
             }
         }
