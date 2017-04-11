@@ -29,9 +29,10 @@ before_install:
   - docker-compose --version
   - DCO="docker-compose -f docker-compose.yml -f docker/docker-compose.travis.yml"
 
+  # Ensure a clean environment
   - $DCO kill
   - $DCO rm -f
-  - docker volume list -q | xargs docker volume rm -f
+  - docker volume list -q | xargs --no-run-if-empty docker volume rm -f
 
   - $DCO pull
 
