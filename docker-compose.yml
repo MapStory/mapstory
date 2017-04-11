@@ -1,0 +1,99 @@
+version: '3.1'
+services:
+
+  pgadmin:
+    build: ./docker/pgadmin
+    image: mapstory/pgadmin
+    networks:
+      internal:
+    expose:
+      - "5050"
+
+  elasticsearch:
+    image: elasticsearch:1.6
+    networks:
+      internal:
+    expose:
+      - "9200"
+
+  rabbitmq:
+    image: rabbitmq:3.6-management
+    networks:
+      internal:
+    expose:
+      - "15671"
+      - "15672"
+
+  python-gdal:
+    build: docker/python-gdal
+    image: mapstory/python-gdal
+    command: /bin/true
+
+  django:
+    build: .
+    image: mapstory/django
+    depends_on:
+      - python-gdal
+    links:
+      - elasticsearch
+      - rabbitmq
+    volumes:
+      - mapstory_media:/var/lib/mapstory/media/
+      - mapstory_static:/var/lib/mapstory/static/
+    networks:
+      internal:
+    expose:
+      - "8000"
+
+  celery:
+    build: .
+    image: mapstory/django
+    depends_on:
+      - python-gdal
+    links:
+      - elasticsearch
+      - rabbitmq
+    command: --celery
+    volumes:
+      - mapstory_media:/var/lib/mapstory/media/
+      - mapstory_static:/var/lib/mapstory/static/
+    networks:
+      internal:
+    expose:
+      - "8000"
+
+  geoserver:
+    build: ./docker/geoserver
+    image: mapstory/geoserver
+    volumes:
+      - geoserver:/var/lib/geoserver
+    networks:
+      internal:
+    expose:
+      - "8080"
+
+  nginx:
+    build: ./docker/nginx
+    image: mapstory/nginx
+    links:
+      - django
+      - geoserver
+    volumes:
+      - mapstory_media:/var/lib/mapstory/media/:ro
+      - mapstory_static:/var/lib/mapstory/static/:ro
+    networks:
+      internal:
+    expose:
+      - "80"
+      - "443"
+    ports:
+      - "80:80"
+      - "443:443"
+
+networks:
+  internal:
+
+volumes:
+  geoserver:
+  mapstory_static:
+  mapstory_media:

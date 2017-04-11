@@ -1,0 +1,11 @@
+**/*.DS_Store
+**/*.pyc
+.git/
+.vagrant/
+docker/*
+!docker/django
+!docker/nginx/ca.crt
+docker-compose.yml
+Dockerfile
+scripts/misc
+scripts/provision
