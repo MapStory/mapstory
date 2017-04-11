@@ -34,6 +34,8 @@ before_install:
   - $DCO rm -f
   - docker volume list -q | xargs --no-run-if-empty docker volume rm -f
 
+  - mkdir -p cover
+  - chmod a+rwx cover
   - $DCO pull
 
 install:
