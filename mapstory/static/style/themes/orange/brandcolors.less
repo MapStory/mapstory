@@ -7,4 +7,17 @@
 @secondary-highlight: lighten(@secondary, 10%);
 @secondary-shadow: darken(@secondary, 6%);
 
-@navigation-gradient: linear-gradient(107deg, #383635 8%, #f1642e 140%);
+// Navigation variables
+
+@navigation-color: @gray-800;
+@navigation-color-hover: @gray-600;
+@navigation-color-active: @gray-600;
+@navigation-search-background: @gray-50;
+@navigation-search-border: 1px solid @gray-200;
+@navigation-divider-color: @gray-100;
+@navigation-background: @white;
+@navigation-submenu-border-color: @gray-100;
+
+// This var is require by other themes, which use gradients and need a fallback
+// color for IE9 since it doesn't support gradients.
+@navigation-background-fallback: @white;
