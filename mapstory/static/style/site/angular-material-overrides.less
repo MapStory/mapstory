@@ -1,0 +1,107 @@
+.md-chips .md-chip-input-container {
+    margin: 0 0 0 0;
+    width: 100%;
+}
+
+.md-chips {
+    padding: 0 0 0 0;
+}
+
+.md-padding {
+    padding: 0 0 0 0;
+}
+
+.md-chips .md-chip .md-chip-content {
+    font-size: 0.9em;
+    font-family: @base-font-family;
+}
+
+.md-chips .md-chip .md-chip-remove md-icon {
+    height: 14px;
+    width: 14px;
+}
+
+.md-chips .md-chip {
+    margin: 0 8px 8px 0;
+
+    &.md-focused, &:hover, &:active {
+        background: @primary;
+        color: @gray-50;
+        .md-chip-remove md-icon {
+            color: @gray-50;
+            &:hover {
+                color: @gray-900;
+            }
+            &:active {
+                color: @gray-900;
+            }
+        }
+    }
+}
+
+.md-chips .md-chip-input-container input {
+    border-radius: 6px;
+    font-family: @base-font-family;
+    font-weight: 400;
+    font-size: 0.85em;
+    background: @white;
+    border: 1px solid @gray-400 !important; // Important is necessary to override angular-material
+    padding: 3px 8px !important; // Important is necessary to override angular-material
+    border-radius: 6px;
+    box-sizing: border-box;
+    color: @gray-900;
+    font-style: italic;
+    margin: 0;
+    width: 100%;
+}
+
+.md-chips .md-chip-input-container {
+    padding: 0;
+}
+
+md-content {
+    position: relative;
+
+    button[type=submit] {
+        background: @white;
+        border: 0;
+        bottom: 0.3em;
+        left: auto;
+        outline: none;
+        padding: 0 9px;
+        position: absolute;
+        right: 0.3em;
+        bottom: 0.7em;
+        color: @gray-700;
+
+        img {
+            height: 12px;
+            opacity: 0.7;
+            padding: 1px;
+        }
+
+        &:active {
+            box-shadow: none;
+            -webkit-box-shadow: none;
+        }
+    }
+}
+
+// Filter autocomplete styles
+.md-virtual-repeat-container .md-virtual-repeat-offsetter {
+    right: 0;
+}
+.md-autocomplete-suggestions li {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: @base-font-family;
+    overflow: hidden;
+    padding: 0 15px;
+    line-height: 48px;
+    height: 48px;
+    transition: background .15s linear;
+    margin: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+} // End filter autocomplete styles

@@ -205,6 +205,13 @@
   become_user: '{{ application_user }}'
   tags: [update]
 
+- name: mapstory grunt concat
+  shell: grunt concat
+  args:
+    chdir: '{{ project_path }}/mapstory/static'
+  become_user: '{{ application_user }}'
+  tags: [update]
+
 - name: mapstory grunt less
   shell: grunt less:development
   args:

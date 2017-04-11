@@ -1,0 +1,94 @@
+# demo.mapstory.org configuration
+version: '3.1'
+services:
+  postgres:
+    image: mdillon/postgis:9.5
+    env_file:
+      - docker/env/lab/db_auth.env
+      - docker/env/lab/postgres.env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      internal:
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    links:
+      - postgres
+    env_file:
+      - docker/env/lab/db_auth.env
+    ports:
+      - "5050:5050"
+
+  elasticsearch:
+    ports:
+      - "9200:9200"
+
+  rabbitmq:
+    image: rabbitmq:3.6-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=mapstory
+      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_DEFAULT_VHOST=mapstory
+    ports:
+      - "15672:15672"
+
+  django:
+    links:
+      - postgres
+    env_file:
+      - docker/env/lab/public_host.env
+      - docker/env/lab/geoserver.env
+      - docker/env/lab/mapstory.env
+      - docker/env/lab/db_auth.env
+    ports:
+      - "8000:8000"
+
+  celery:
+    links:
+      - postgres
+    env_file:
+      - docker/env/lab/public_host.env
+      - docker/env/lab/geoserver.env
+      - docker/env/lab/mapstory.env
+      - docker/env/lab/db_auth.env
+    volumes:
+      - mapstory_media:/var/lib/mapstory/media/
+      - mapstory_static:/var/lib/mapstory/static/
+
+  geoserver:
+    build:
+      context: ./docker/geoserver
+      dockerfile: Dockerfile_geogig-1.1rc
+    image: mapstory/geoserver:geogig-1.1rc
+    links:
+      - postgres
+    env_file:
+      - docker/env/lab/public_host.env
+      - docker/env/lab/geoserver.env
+      - docker/env/lab/db_auth.env
+    volumes:
+      - geoserver:/var/lib/geoserver
+    ports:
+      - "8080:8080"
+
+  nginx:
+    env_file:
+      - docker/env/lab/public_host.env
+    secrets:
+      - ssl_cert
+      - ssl_key
+
+volumes:
+  postgres:
+
+secrets:
+  ssl_cert:
+    file: ssl_cert
+#    external: true
+  ssl_key:
+    file: ssl_key
+#    external: true

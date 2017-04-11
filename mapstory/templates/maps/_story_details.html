@@ -8,7 +8,7 @@
 {% load guardian_tags %}
 {% load flag_tags %}
 {% load avatar_tags %}
-<div ng-controller="detail_page_controller">
+<div ng-controller="detailController">
     <section class="slice" id="dashboard">
         <div class="container">
             <div class="row">
@@ -71,7 +71,7 @@
                         </div>
                         {% if resource.chapters %}
                         <div class="embed"> Embed
-                            <input id="embedStory" value="<iframe style='border: none;' height='400' width='600' src='http://{{ request.get_host }}/story/{{ resource.id }}/embed'></iframe>">
+                            <input id="embedStory" value="<iframe style='border: none;' height='400' width='600' src='https://{{ request.get_host }}/story/{{ resource.id }}/embed'></iframe>">
                             <button  class="copyclip btn" data-clipboard-target="#embedStory">
                                 <i class="fa fa-clipboard" aria-hidden="true"></i>
                             </button>
@@ -110,18 +110,18 @@
                                 // Pass the keyword list from the django template into the javascript
                                 var keywords = {{keywords|safe}};
                                 var url = "{{ resource.detail_url }}";
+                                var loggedIn = "{{user.is_authenticated}}";
                             </script>
-                            {% if user.is_authenticated %}
-                                <input type="text" class="form-control" id="tokenfield-tags"/>
-                                {% verbatim %}
-                                    <!-- <span class="label label-default" ng-show="tags.length > 10">{{ tags.length - 10 }} more</span> -->
-                                {% endverbatim %}
-                            {% else %}
-                                <input type="text" class="form-control" id="tokenfield-tags-readonly"/>
-                                {% verbatim %}
-                                    <!-- <span class="label label-default" ng-show="tags.length > 10" ng-click="showAllTags()">{{ tags.length - 10 }} more</span> -->
-                                {% endverbatim %}
-                            {% endif %}
+                            <md-content class="md-padding" layout="column">
+                                <md-chips ng-model="chips" 
+                                readonly="readOnly"
+                                md-on-add="addTag($chip)"
+                                md-on-remove="removeTag($chip)"
+                                md-transform-chip="newChip($chip)"
+                                md-separator-keys="separateOn"
+                                placeholder="Add tags for this StoryLayer...">
+                                </md-chips>
+                            </md-content>
                         </div>
                     </div>
                     {% if resource.chapters.count > 1 %}

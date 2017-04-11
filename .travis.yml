@@ -2,86 +2,60 @@ branches:
   only:
     - master
 
-language: python
-
 sudo: required
 
-addons:
-  postgresql: "9.3"
-  sauce_connect: true
-
 services:
-  - elasticsearch
-  - postgresql
+  - docker
 
+language: python
 python:
   - "2.7"
 
 env:
-  global:
-    - DJANGO_SETTINGS_MODULE='mapstory.settings.test_settings'
-    - GS_VERSION=2.7.x
-    - GDAL_DATA="/usr/local/lib/gdal/share/gdal/"
-    - TRAVIS_NODE_VERSION="6"
-    # For sauce_connect
-    - secure: "IMm6jAeLGJ1Vo3L81JIEh2/Z2jIARYFBviQ5cxTTH88ndN2Oj03rPDjvkP44YZwZT7Gd768Ve1PuEgq5oVmqd+oZF7hUEh08LalUV9aOkIRFEc8SjuUJVFhFzUGovqDr+Kg+Y7OqDODhZjvORqnNpOkWNUUnR26MsRY/x9vNO50="
-    - secure: "FJobmS7HNb2L95ZN0s81r/MpmM5kizgyoG6bUpgIaYhQMweJgLPinHOWB+54VAr7jkdDjN5b+4hHa1pcWNSWGLDgxMZxj9pPej7Aiq0wvFMlbzai3W+/FcNENHjd3sBTLNpWiBrpQNyUXP2/+2QWPMqCbUfiS90AkA5Du198pjE="
+  - DOCKER_COMPOSE_VERSION: 1.11.2
 
-virtualenv:
-  system_site_packages: true
+addons:
+  hostname: docker
 
 before_install:
-  - chmod +x ./scripts/geoserver_install.sh
-  - chmod +x ./scripts/geoserver_before.sh
-  - chmod +x ./scripts/install_tests.sh
+  # Install Docker Engine
+  - sudo apt-get update
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
+  - docker --version
+  # Install Docker Compose
+  - sudo rm /usr/local/bin/docker-compose
+  - sudo curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - sudo chmod +x /usr/local/bin/docker-compose
+  - docker-compose --version
+  - DCO="docker-compose -f docker-compose.yml -f docker/docker-compose.travis.yml"
+
+  # Ensure a clean environment
+  - $DCO kill
+  - $DCO rm -f
+  - docker volume list -q | xargs --no-run-if-empty docker volume rm -f
+
+  - mkdir -p cover
+  - chmod a+rwx cover
+  - $DCO pull
 
 install:
-  - cd ..
-  - git clone https://github.com/MapStory/geonode.git
-  - cd mapstory
-  - sudo apt-get -qq -y update
-  - sudo apt-get install -y libgdal1h python-gdal
-  - sudo apt-get install -y python-virtualenv python-imaging python-lxml python-pyproj python-shapely python-nose python-httplib2 python-httplib2 gettext
-  - sudo add-apt-repository -y ppa:webupd8team/java
-  - sudo apt-get update
-  - sudo apt-get install -y --force-yes oracle-java8-installer ant maven2 libjai-imageio-core-java --no-install-recommends
-  - sudo update-java-alternatives --set java-8-oracle
-  - pip install -r requirements.txt
-  - pip install urllib3[secure] --upgrade
-  - pip install coveralls
-  - sudo apt-get update
-  # For Image testing
-
-  # Install Protractor
-  - rm -rf ~/.nvm
-  - git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
-  - npm install
-  - npm install protractor
-  - webdriver-manager update
-  - npm install pix-diff
-  - ./scripts/install_tests.sh
-  # Install Tests
-  - ./scripts/install_tests.sh
-
-before_script:
-  - python manage.py migrate maps --noinput
-  - python manage.py migrate layers --noinput
-  - python manage.py migrate groups --noinput
-  - sudo mkdir -p /var/lib/mapstory/media/
-  - sudo chmod 775 /var/lib/mapstory/media/
-  - sudo chown $USER /var/lib/mapstory/media/
-#  - ./scripts/geoserver_before.sh
+  - $DCO build django celery
+  - $DCO up -d postgres elasticsearch rabbitmq
+  - $DCO up pgadmin
+  - $DCO run django "--init-db --collect-static --reindex"
 
 script:
-  # Run browser tests
-  - protractor mapstory/tests/e2e/conf.js
-  # Run Tests
-  - coverage run ./manage.py test
-  - coverage report
-  - coverage html -d cover
+  - $DCO up -d nginx
+  - $DCO kill django
+  - $DCO ps
+  - $DCO run django --test
 
 after_success:
   - coveralls
+
+after_script:
+  - $DCO kill
+  - $DCO rm -f
 
 notifications:
   slack: mapstory:E2W57xKNNOKDDqRmtQHNUlBK

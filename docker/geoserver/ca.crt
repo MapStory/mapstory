@@ -1,0 +1,79 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            e1:b5:c1:80:54:4f:52:f9
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=US, ST=Some-State, O=MapStory, CN=mapstory.org
+        Validity
+            Not Before: Apr  8 05:31:20 2017 GMT
+            Not After : Apr  6 05:31:20 2027 GMT
+        Subject: C=US, ST=Some-State, O=MapStory, CN=mapstory.org
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:de:5f:bd:ee:c8:25:f9:69:9e:95:e2:58:3d:70:
+                    a1:22:0c:24:38:fa:3d:89:52:93:4e:76:85:41:38:
+                    0b:71:36:61:2a:a7:e2:e3:17:d4:2a:22:37:6d:47:
+                    44:43:fa:85:c1:1c:70:d7:a5:e3:9b:b3:09:ef:bc:
+                    4b:08:03:bb:a9:14:1b:08:27:8a:f5:fe:5d:d5:8e:
+                    c6:62:25:ae:33:68:ec:cc:19:8e:20:5b:64:06:95:
+                    3a:56:b5:78:96:f6:01:94:65:13:f4:cb:a8:a6:73:
+                    08:6a:e0:9c:2a:aa:e6:a4:7c:ba:da:c8:d9:08:43:
+                    53:89:9f:08:a0:d8:fd:47:de:3b:74:c9:37:2b:1f:
+                    82:99:4e:0d:ef:79:87:36:63:42:df:c9:96:5f:a4:
+                    3b:9d:a2:13:3e:54:8a:cd:1b:b2:e2:56:11:31:e9:
+                    39:6b:0c:34:62:8d:c7:e9:52:3e:c5:cc:c4:b0:48:
+                    04:47:2a:36:ca:f1:49:41:98:f0:c2:fa:cd:ae:ce:
+                    4f:01:c7:ac:a8:e0:4a:d4:f0:a2:8f:e7:db:38:f8:
+                    96:22:2b:92:a4:70:3b:43:3d:a5:04:ac:a6:74:d9:
+                    06:89:ca:fa:22:98:6a:4c:ed:92:8e:4d:5b:df:4c:
+                    49:93:a7:bf:92:61:19:77:92:ef:d2:d3:2e:e0:1e:
+                    82:97
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Subject Key Identifier:
+                68:21:39:E5:16:D4:5D:82:E8:F1:0A:98:2D:3A:C6:F0:1C:A4:77:84
+            X509v3 Authority Key Identifier:
+                keyid:68:21:39:E5:16:D4:5D:82:E8:F1:0A:98:2D:3A:C6:F0:1C:A4:77:84
+
+            X509v3 Basic Constraints:
+                CA:TRUE
+    Signature Algorithm: sha256WithRSAEncryption
+         9c:dd:fa:25:22:ae:44:b8:60:73:cc:3f:ac:d6:a4:33:37:a2:
+         db:b7:3a:59:8b:de:c0:6f:0e:76:3b:55:77:e0:f6:cc:c3:52:
+         92:96:49:35:03:36:b1:5d:56:49:03:3e:ee:af:a5:4b:f7:33:
+         ee:09:5a:94:dc:4d:f5:34:4c:11:94:88:32:3d:5c:65:04:c1:
+         d1:77:8a:3d:cf:6c:24:11:5c:43:62:aa:c3:d9:a3:ac:8a:ee:
+         88:c4:01:16:93:db:6b:a6:95:b0:82:c4:2f:ab:5d:56:5e:66:
+         3d:d1:2a:46:fd:65:0b:0e:9a:1d:55:09:b1:88:8f:de:52:f3:
+         5f:3a:e6:2a:aa:95:e1:b0:57:ea:fe:20:0c:88:94:b4:3c:7b:
+         c9:e2:50:0f:a1:82:b9:b5:e7:4f:89:50:01:d9:e7:e0:9b:14:
+         dc:3f:f4:33:db:6a:9e:30:a6:44:63:0f:90:36:2a:da:99:85:
+         5b:98:d2:47:80:9a:41:28:cf:d0:07:d2:c8:b0:de:cd:9d:10:
+         b9:60:cc:2e:42:e0:a1:d9:63:b7:25:21:b6:c2:75:c9:48:de:
+         cf:7f:88:65:4a:39:b9:d9:96:b3:5c:62:97:c1:87:23:40:22:
+         09:59:f0:2f:fb:4f:c7:2d:3a:61:da:7a:b9:ae:79:c3:29:80:
+         4b:de:54:35
+-----BEGIN CERTIFICATE-----
+MIIDazCCAlOgAwIBAgIJAOG1wYBUT1L5MA0GCSqGSIb3DQEBCwUAMEwxCzAJBgNV
+BAYTAlVTMRMwEQYDVQQIDApTb21lLVN0YXRlMREwDwYDVQQKDAhNYXBTdG9yeTEV
+MBMGA1UEAwwMbWFwc3Rvcnkub3JnMB4XDTE3MDQwODA1MzEyMFoXDTI3MDQwNjA1
+MzEyMFowTDELMAkGA1UEBhMCVVMxEzARBgNVBAgMClNvbWUtU3RhdGUxETAPBgNV
+BAoMCE1hcFN0b3J5MRUwEwYDVQQDDAxtYXBzdG9yeS5vcmcwggEiMA0GCSqGSIb3
+DQEBAQUAA4IBDwAwggEKAoIBAQDeX73uyCX5aZ6V4lg9cKEiDCQ4+j2JUpNOdoVB
+OAtxNmEqp+LjF9QqIjdtR0RD+oXBHHDXpeObswnvvEsIA7upFBsIJ4r1/l3VjsZi
+Ja4zaOzMGY4gW2QGlTpWtXiW9gGUZRP0y6imcwhq4JwqquakfLrayNkIQ1OJnwig
+2P1H3jt0yTcrH4KZTg3veYc2Y0LfyZZfpDudohM+VIrNG7LiVhEx6TlrDDRijcfp
+Uj7FzMSwSARHKjbK8UlBmPDC+s2uzk8Bx6yo4ErU8KKP59s4+JYiK5KkcDtDPaUE
+rKZ02QaJyvoimGpM7ZKOTVvfTEmTp7+SYRl3ku/S0y7gHoKXAgMBAAGjUDBOMB0G
+A1UdDgQWBBRoITnlFtRdgujxCpgtOsbwHKR3hDAfBgNVHSMEGDAWgBRoITnlFtRd
+gujxCpgtOsbwHKR3hDAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQCc
+3folIq5EuGBzzD+s1qQzN6LbtzpZi97Abw52O1V34PbMw1KSlkk1AzaxXVZJAz7u
+r6VL9zPuCVqU3E31NEwRlIgyPVxlBMHRd4o9z2wkEVxDYqrD2aOsiu6IxAEWk9tr
+ppWwgsQvq11WXmY90SpG/WULDpodVQmxiI/eUvNfOuYqqpXhsFfq/iAMiJS0PHvJ
+4lAPoYK5tedPiVAB2efgmxTcP/Qz22qeMKZEYw+QNiramYVbmNJHgJpBKM/QB9LI
+sN7NnRC5YMwuQuCh2WO3JSG2wnXJSN7Pf4hlSjm52ZazXGKXwYcjQCIJWfAv+0/H
+LTph2nq5rnnDKYBL3lQ1
+-----END CERTIFICATE-----

@@ -1,3 +1,6 @@
+psycopg2==2.4.5
+numpy==1.8.2
+
 -e ../geonode
 
 -e git://github.com/pinax/django-mailer.git#egg=django-mailer
