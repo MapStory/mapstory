@@ -112,8 +112,12 @@ RUN set -ex \
     && grunt copy
 
 USER root
-RUN chown -R mapstory:mapstory $STATIC_ROOT
-RUN chown -R mapstory:mapstory $MEDIA_ROOT
+RUN set -ex \
+    && chown -R mapstory:mapstory $STATIC_ROOT \
+    && chown -R mapstory:mapstory $MEDIA_ROOT \
+    && mkdir -p $APP_PATH/mapstory/cover \
+    && chown -R mapstory:mapstory $APP_PATH/mapstory/cover
+
 
 COPY docker/django/run.sh /opt/
 
