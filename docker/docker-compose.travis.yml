@@ -1,0 +1,72 @@
+# Dev configuration
+version: '3.1'
+services:
+  postgres:
+    image: mdillon/postgis:9.5
+    env_file:
+      - docker/env/dev/db_auth.env
+      - docker/env/dev/postgres.env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      internal:
+    expose:
+      - "5432"
+
+  pgadmin:
+    command: --init-db
+    links:
+      - postgres
+    env_file:
+      - docker/env/dev/db_auth.env
+
+  elasticsearch:
+    ports:
+      - "9200:9200"
+
+  rabbitmq:
+    image: rabbitmq:3.6-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=mapstory
+      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_DEFAULT_VHOST=mapstory
+
+  django:
+    links:
+      - postgres
+    env_file:
+      - docker/env/dev/public_host.env
+      - docker/env/dev/geoserver.env
+      - docker/env/dev/mapstory.env
+      - docker/env/dev/db_auth.env
+    command: --init-db --test
+    volumes:
+      - ./cover:/srv/mapstory/cover
+
+  celery:
+    links:
+      - postgres
+    env_file:
+      - docker/env/dev/public_host.env
+      - docker/env/dev/geoserver.env
+      - docker/env/dev/mapstory.env
+      - docker/env/dev/db_auth.env
+
+  geoserver:
+    links:
+      - postgres
+    env_file:
+      - docker/env/dev/public_host.env
+      - docker/env/dev/geoserver.env
+      - docker/env/dev/db_auth.env
+
+  nginx:
+    env_file:
+      - docker/env/dev/public_host.env
+    networks:
+      internal:
+        aliases:
+          - docker
+
+volumes:
+  postgres:

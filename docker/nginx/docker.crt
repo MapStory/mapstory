@@ -1,0 +1,88 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            e1:b5:c1:80:54:4f:52:fb
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=US, ST=Some-State, O=MapStory, CN=mapstory.org
+        Validity
+            Not Before: Apr  9 18:35:17 2017 GMT
+            Not After : Apr  7 18:35:17 2027 GMT
+        Subject: C=US, ST=Some-State, O=MapStory, CN=docker
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (3072 bit)
+                Modulus:
+                    00:d9:ef:c7:03:90:1d:35:b0:88:34:94:39:cc:1a:
+                    1b:01:97:4a:a0:e8:02:6c:a9:92:25:f9:e6:08:28:
+                    74:25:0a:6c:86:52:a2:0f:e2:4a:13:29:17:d1:1e:
+                    72:6e:e8:b6:2b:01:b1:f6:f7:fd:7d:fd:b9:fe:82:
+                    a5:c8:55:26:a9:e5:5e:7f:aa:15:38:49:68:6c:77:
+                    6e:75:9c:cb:3d:14:54:fa:ff:92:00:ca:ab:6d:af:
+                    80:56:33:9d:0c:c7:84:61:b9:a1:19:2d:0c:c5:ca:
+                    1c:de:3e:4d:40:4f:01:4d:93:1e:6e:0c:9b:c6:53:
+                    f7:e7:76:53:c5:3f:46:83:bc:7c:d5:7f:ad:6e:0e:
+                    b4:a0:1d:39:e4:b2:48:d2:5b:ce:0f:e7:fc:cf:15:
+                    10:bf:38:00:49:7f:a2:81:65:0d:99:fc:04:8a:62:
+                    d7:12:64:0e:4b:69:fa:3d:c7:e7:38:5d:67:e1:45:
+                    c3:12:04:5c:a5:e2:4d:80:75:d4:b8:80:26:a1:8c:
+                    cd:5f:8e:de:8c:38:d3:8a:ed:c2:d7:75:84:c2:a0:
+                    99:15:ef:96:a1:d7:53:41:d1:ad:cc:c4:8e:d9:a0:
+                    35:71:bc:d4:85:1d:88:3a:25:29:c6:12:cb:f8:1a:
+                    4c:b2:86:03:77:92:88:94:bd:ae:65:5a:b9:06:b7:
+                    5a:35:7f:f2:e5:3b:70:7e:0d:93:70:97:5b:68:1d:
+                    f5:95:e2:89:82:36:a1:36:3d:b5:fb:91:88:4d:aa:
+                    0e:9c:02:8a:05:a9:28:ad:1a:4e:ed:83:37:df:b5:
+                    0e:a5:db:7f:ba:c0:13:d0:c8:51:1d:0e:65:0c:32:
+                    13:84:93:df:a7:04:09:ee:56:84:88:2a:b6:28:b7:
+                    d5:2c:07:f3:2e:83:0a:1c:93:93:7a:16:b4:60:fd:
+                    54:92:ae:bb:a3:97:94:d3:47:9b:78:31:fa:66:f7:
+                    d0:05:64:81:37:e9:b9:b6:6d:08:a6:06:57:76:03:
+                    ec:de:34:4e:c6:b6:c4:a1:2c:03
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Subject Alternative Name:
+                DNS:docker, DNS:localhost, DNS:local.mapstory.org, DNS:nginx
+            X509v3 Basic Constraints:
+                CA:FALSE
+            X509v3 Key Usage:
+                Digital Signature, Non Repudiation, Key Encipherment
+    Signature Algorithm: sha256WithRSAEncryption
+         27:5e:8e:45:69:90:88:ac:f1:86:9b:c7:c0:b0:d8:ed:34:85:
+         a0:4f:21:1e:5b:a6:15:e6:8e:0a:8b:61:02:8a:de:b0:a3:69:
+         4f:94:66:99:08:d5:a4:08:05:68:9a:a0:83:18:53:f8:e7:dd:
+         ee:42:33:45:5a:99:af:6e:3a:57:b4:68:88:24:05:02:e9:82:
+         02:af:84:e8:85:ae:07:8f:df:1a:d8:4d:e4:d4:8c:9c:da:8e:
+         74:1b:7d:2a:6b:1d:a0:17:42:3b:25:89:44:a4:51:3f:9f:b2:
+         9d:54:bd:87:2a:09:90:1c:e8:71:3d:8a:93:cc:bf:8a:99:ba:
+         00:ae:f8:d2:64:db:f3:1f:29:e7:c3:a9:ef:a0:20:2b:b0:22:
+         8b:66:09:54:71:96:b6:c0:84:11:0f:e2:20:87:75:14:7b:34:
+         2d:64:28:3e:5c:68:28:77:5e:84:d2:8f:fd:ab:b3:cd:86:07:
+         a2:32:e7:16:ef:cd:6d:20:a1:0f:d2:65:52:c3:65:5c:b4:d5:
+         e1:3a:d0:7d:ec:76:0c:db:4e:34:51:75:bc:17:e4:6c:cf:3f:
+         02:b6:6a:df:a9:72:57:29:06:01:46:be:a7:15:7e:5e:01:4d:
+         e0:0a:ea:bd:6c:13:9c:b8:32:a9:b6:65:5b:7e:45:8d:69:c4:
+         2a:e9:13:b5
+-----BEGIN CERTIFICATE-----
+MIID6DCCAtCgAwIBAgIJAOG1wYBUT1L7MA0GCSqGSIb3DQEBCwUAMEwxCzAJBgNV
+BAYTAlVTMRMwEQYDVQQIDApTb21lLVN0YXRlMREwDwYDVQQKDAhNYXBTdG9yeTEV
+MBMGA1UEAwwMbWFwc3Rvcnkub3JnMB4XDTE3MDQwOTE4MzUxN1oXDTI3MDQwNzE4
+MzUxN1owRjELMAkGA1UEBhMCVVMxEzARBgNVBAgMClNvbWUtU3RhdGUxETAPBgNV
+BAoMCE1hcFN0b3J5MQ8wDQYDVQQDDAZkb2NrZXIwggGiMA0GCSqGSIb3DQEBAQUA
+A4IBjwAwggGKAoIBgQDZ78cDkB01sIg0lDnMGhsBl0qg6AJsqZIl+eYIKHQlCmyG
+UqIP4koTKRfRHnJu6LYrAbH29/19/bn+gqXIVSap5V5/qhU4SWhsd251nMs9FFT6
+/5IAyqttr4BWM50Mx4RhuaEZLQzFyhzePk1ATwFNkx5uDJvGU/fndlPFP0aDvHzV
+f61uDrSgHTnkskjSW84P5/zPFRC/OABJf6KBZQ2Z/ASKYtcSZA5Lafo9x+c4XWfh
+RcMSBFyl4k2AddS4gCahjM1fjt6MONOK7cLXdYTCoJkV75ah11NB0a3MxI7ZoDVx
+vNSFHYg6JSnGEsv4GkyyhgN3koiUva5lWrkGt1o1f/LlO3B+DZNwl1toHfWV4omC
+NqE2PbX7kYhNqg6cAooFqSitGk7tgzfftQ6l23+6wBPQyFEdDmUMMhOEk9+nBAnu
+VoSIKrYot9UsB/Mugwock5N6FrRg/VSSrrujl5TTR5t4Mfpm99AFZIE36bm2bQim
+Bld2A+zeNE7GtsShLAMCAwEAAaNTMFEwNwYDVR0RBDAwLoIGZG9ja2Vygglsb2Nh
+bGhvc3SCEmxvY2FsLm1hcHN0b3J5Lm9yZ4IFbmdpbngwCQYDVR0TBAIwADALBgNV
+HQ8EBAMCBeAwDQYJKoZIhvcNAQELBQADggEBACdejkVpkIis8Yabx8Cw2O00haBP
+IR5bphXmjgqLYQKK3rCjaU+UZpkI1aQIBWiaoIMYU/jn3e5CM0Vama9uOle0aIgk
+BQLpggKvhOiFrgeP3xrYTeTUjJzajnQbfSprHaAXQjsliUSkUT+fsp1UvYcqCZAc
+6HE9ipPMv4qZugCu+NJk2/MfKefDqe+gICuwIotmCVRxlrbAhBEP4iCHdRR7NC1k
+KD5caCh3XoTSj/2rs82GB6Iy5xbvzW0goQ/SZVLDZVy01eE60H3sdgzbTjRRdbwX
+5GzPPwK2at+pclcpBgFGvqcVfl4BTeAK6r1sE5y4Mqm2ZVt+RY1pxCrpE7U=
+-----END CERTIFICATE-----
