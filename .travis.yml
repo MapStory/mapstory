@@ -43,11 +43,10 @@ install:
   - $DCO run django "--init-db --collect-static --reindex"
 
 script:
-  - $DCO up -d django
   - $DCO up -d nginx
-  - $DCO kill django celery
-  - $DCO up -d celery
-  - $DCO up django
+  - $DCO kill django
+  - $DCO ps
+  - $DCO run django --test
 
 after_success:
   - coveralls
