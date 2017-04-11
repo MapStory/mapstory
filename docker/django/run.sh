@@ -4,8 +4,10 @@ set -e
 echo Testing permissions...
 touch $MEDIA_ROOT/.ignore
 touch $STATIC_ROOT/.ignore
+touch $APP_PATH/mapstory/cover/.ignore
 rm $MEDIA_ROOT/.ignore
 rm $STATIC_ROOT/.ignore
+rm $APP_PATH/mapstory/cover/.ignore
 echo Permissions look good
 
 cd $APP_PATH/mapstory
