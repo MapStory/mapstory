@@ -1,0 +1,13 @@
+FROM mapstory/geoserver:latest
+MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
+
+ENV GS_LIB=$WEBAPPS_DIR/geoserver/WEB-INF/lib
+
+COPY geoserver-2.9-SNAPSHOT-geogig-plugin.zip /tmp/
+RUN set -e \
+    && rm $GS_LIB/*geogig* \
+    && rm $GS_LIB/compress-lzf* \
+    && rm $GS_LIB/gson* \
+    && rm $GS_LIB/rocksdb* \
+    && unzip -o /tmp/geoserver-2.9-SNAPSHOT-geogig-plugin.zip -d $GS_LIB \
+    && rm /tmp/geoserver-2.9-SNAPSHOT-geogig-plugin.zip

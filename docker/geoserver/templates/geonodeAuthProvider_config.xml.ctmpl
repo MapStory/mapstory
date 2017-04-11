@@ -1,0 +1,6 @@
+<org.geonode.security.GeoNodeAuthProviderConfig>
+  <id>-54fbcd7b:1402c24f6bc:-7fe9</id>
+  <name>geonodeAuthProvider</name>
+  <className>org.geonode.security.GeoNodeAuthenticationProvider</className>
+  <baseUrl>http://django:8000/</baseUrl>
+</org.geonode.security.GeoNodeAuthProviderConfig>

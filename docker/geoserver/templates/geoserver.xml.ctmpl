@@ -1,0 +1,5 @@
+<Context path="/geoserver"
+    antiResourceLocking="false" >
+  <Parameter name="org.geonode.security.databaseSecurityClient.url"
+    value="jdbc:postgresql://{{ env "DATABASE_HOST" }}:5432/mapstory?user={{ env "DATABASE_USER" }}&amp;password={{ env "DATABASE_PASSWORD" }}"/>
+</Context>
