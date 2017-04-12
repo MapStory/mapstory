@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.apps import apps
 from django.db.models import signals
 from django.utils.translation import ugettext_noop as _
 import logging
@@ -80,7 +81,9 @@ if "notification" in settings.INSTALLED_APPS:
                 _("Document for Map"),
                 _("A rating was given to a document"))
 
-        signals.post_migrate.connect(create_notifications, sender=None)
+        signals.post_migrate.connect(
+            create_notifications,
+            sender=apps.get_app_config('notification'))
 
     else:
         logger.info(
