@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('groups', '24_initial'),
-        ('base', '0025_auto_20170411_1412'),
+        ('base', '__first__'),
     ]
 
     operations = [
