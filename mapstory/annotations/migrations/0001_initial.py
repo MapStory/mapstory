@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mapstories', '0006_map_viewer_playbackmode'),
+        ('mapstories', '0001_initial'),
     ]
 
     operations = [
