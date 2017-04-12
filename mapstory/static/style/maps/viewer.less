@@ -86,54 +86,134 @@ html, body {
   }
 }
 
-.legend-item-header {
-  text-transform: none;
-  background: none;
-  color: #ffffff;
-  width: 180px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 14px;
-  color: #333333 !important;
-  border-radius: 0;
-}
+// Composer legend styles
+.maploom-body {
+    .legend-item-header {
+      text-transform: none;
+      background: none;
+      color: @white;
+      width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 14px;
+      color: @gray-950 !important;
+      border-radius: 0;
+    }
 
-#legend-container {
-  background-color: #999999;
-  padding-right: 10px;
-  padding-left: 10px;
-  padding-bottom: 10px;
-  padding-top: 10px;
-  .panel {
-    overflow-y: hidden;
-    -webkit-box-shadow: 0 0 0 0;
-    box-shadow: 0 0 0 0;
-  }
-}
+    #legend-container {
+      background-color: @gray-600;
+      padding-right: 10px;
+      padding-left: 10px;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      .panel {
+        overflow-y: hidden;
+        -webkit-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+      }
+    }
 
-.st-legend {
-  color: white;
-  position: absolute;
-  right: 12px;
-  top: 63px;
-  z-index: 99999;
+    .st-legend {
+      color: @white;
+      position: absolute;
+      right: 12px;
+      top: 63px;
+      z-index: 99999;
 
-  #legend-container {
-    position: relative;
-    margin-right: 0px;
-    margin-top: 32px;
-  }
+      #legend-container {
+        position: relative;
+        margin-right: 0px;
+        margin-top: 32px;
+      }
 
-  #legend-btn-border{
-    float: right;
-  }
+      #legend-btn-border{
+        float: right;
+      }
 
-  #legend-btn {
-    color: black;
-    font-size: 20px;
-  }
-}
+      #legend-btn {
+        color: @black;
+        font-size: 20px;
+      }
+    }
+} // End Composer legend styles
+
+// Viewer legend styles
+.viewerbody {
+    .legend-item-header {
+      text-transform: none;
+      background: none;
+      color: @white;
+      width: 180px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 14px;
+      color: @gray-950 !important;
+      border-radius: 0;
+    }
+
+    .legend-panel-title {
+        font-weight: 600;
+        color: @gray-950;
+        font-size: 15px;
+    }
+
+    #legend-container {
+      background-color: transparent;
+      padding-right: 0;
+      padding-left: 10px;
+      padding-bottom: 10px;
+      padding-top: 10px;
+      .panel {
+        overflow-y: hidden;
+        -webkit-box-shadow: 0 0 0 0;
+        box-shadow: 0 0 0 0;
+        background-color: @gray-600;
+        width: 100%;
+        padding: 5px;
+      }
+    }
+
+    .st-legend {
+      color: white;
+      position: absolute;
+      right: 12px;
+      top: 63px;
+      z-index: 99999;
+
+      .glyphicon-remove {
+          color: @gray-800;
+          margin-right: 0;
+          font-size: 13px;
+      }
+
+      #legend-container {
+        position: relative;
+        margin-right: 0px;
+        margin-top: 30px;
+      }
+
+      #legend-btn-border{
+        float: right;
+      }
+
+      #legend-btn {
+        color: @white;
+        background-color: @primary;
+        border-radius: 2px;
+        margin-top: 10px;
+        padding: 3px;
+        font-size: 16px;
+        height: 25px;
+        width: 24px;
+        .glyphicon {
+            margin-right: 0;
+        }
+      }
+    }
+
+} // End Viewer legend styles
 
 .viewer-nav {
   background: @primary;
