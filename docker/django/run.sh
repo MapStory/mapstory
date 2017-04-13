@@ -1,23 +1,26 @@
 #!/bin/sh
 set -e
 
-echo Testing permissions...
+echo 'Testing permissions...'
 touch $MEDIA_ROOT/.ignore
 touch $STATIC_ROOT/.ignore
 touch $APP_PATH/mapstory/cover/.ignore
 rm $MEDIA_ROOT/.ignore
 rm $STATIC_ROOT/.ignore
 rm $APP_PATH/mapstory/cover/.ignore
-echo Permissions look good
+echo 'Permissions look good'
 
 cd $APP_PATH/mapstory
 
-# Load social auth settings
-if [ -e /run/secrets/social_auth ]; then
+# Load secrets as environment variables
+for secret in /run/secrets/env_*; do
+    # Pattern matches with no results are treated as string literals.
+    # Verify that the file actually exists.
+    [ -f "$secret" ] || continue
     set -a
-    . /run/secrets/social_auth
+    . $secret
     set +a
-fi
+done
 
 for i do # loop over $@
 
