@@ -75,6 +75,7 @@ urlpatterns = patterns('',
 
     url(r'^story/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
     url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
+    url(r'^story/chapter/new$', 'mapstory.views.new_map_json', name='new_map_json'),
 
     # MapLoom
     url(r'^story/new$', 'geonode.maps.views.new_map', {'template': 'composer/maploom.html'},
