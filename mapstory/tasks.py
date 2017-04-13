@@ -11,7 +11,7 @@ def append_feature_chunks(features, wfst_insert_template,get_features_request,ta
                                                           workspace_uri='http://www.geonode.org/', handle=handle)
 
     insert_features_request = requests.post(
-            '{}/wfs/WfsDispatcher'.format(ogc_server_settings.public_url),
+            '{}/wfs/WfsDispatcher'.format(ogc_server_settings.LOCATION),
             auth=ogc_server_settings.credentials,
             headers={'Content-Type': 'application/xml'},
             data=wfs_transaction_payload
