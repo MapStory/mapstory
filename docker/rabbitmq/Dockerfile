@@ -1,0 +1,7 @@
+FROM rabbitmq:3.6-management
+MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
+
+# The run script loads env vars from Docker secrets
+COPY run.sh /usr/local/bin/
+ENTRYPOINT ["run.sh"]
+CMD ["rabbitmq-server"]

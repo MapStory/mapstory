@@ -28,7 +28,6 @@ services:
       - "9200:9200"
 
   rabbitmq:
-    image: rabbitmq:3.6-management
     environment:
       - RABBITMQ_DEFAULT_USER=mapstory
       - RABBITMQ_DEFAULT_PASS=password

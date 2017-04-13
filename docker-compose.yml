@@ -17,7 +17,8 @@ services:
       - "9200"
 
   rabbitmq:
-    image: rabbitmq:3.6-management
+    build: ./docker/rabbitmq
+    image: mapstory/rabbitmq
     networks:
       internal:
     expose:

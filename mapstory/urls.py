@@ -70,12 +70,16 @@ urlpatterns = patterns('',
     url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
     url(r'^maps/new_map', new_map, name='new_map'),
 
+    url(r'^story$', 'geonode.maps.views.new_story_json', name='new_story_json'),
+    url(r'^story/(?P<storyid>[^/]+)/save$', 'geonode.maps.views.save_story', name='save_story'),
+
     url(r'^story/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
     url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
+    url(r'^story/chapter/new$', 'mapstory.views.new_map_json', name='new_map_json'),
 
     # MapLoom
-    url(r'^maps/new$', 'geonode.maps.views.new_map', {'template': 'composer/maploom.html'},
-        name='maploom-map-new'),
+    url(r'^story/new$', 'geonode.maps.views.new_map', {'template': 'composer/maploom.html'},
+        name='new-story'),
     url(r'^maps/edit$', 'geonode.maps.views.new_map', {'template': 'composer/maploom.html'}, name='map-edit'),
     url(r'^maps/(?P<mapid>\d+)/view$', 'geonode.maps.views.map_view', {'template': 'composer/maploom.html'}, name='map-view'),
     url(r'^story/(?P<storyid>[^/]+)/draft$',
