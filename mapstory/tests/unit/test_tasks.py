@@ -23,5 +23,4 @@ class TestTasks(MapStoryTestMixin):
         pass
 
     def test_append_feature_chunks(self):
-        # append_feature_chunks(['a','b','c'], WFST_Template(), "A", "B")
-        pass
+        append_feature_chunks(['a','b','c'], WFST_Template(), "A", "B")
