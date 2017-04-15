@@ -57,7 +57,7 @@
         {% endif %}
 
         <div class="side-column-header">Use this Layer</div>
-        <a href="{% url "new_map" %}?layer={{ resource.service_typename }}" target="_blank">
+        <a href="{% url "new-story" %}?layer={{ resource.service_typename }}" target="_blank">
             <button class="btn btn-block btn-detailpage">{% trans "Compose Story" %}</button>
         </a> 
         {% if resource.storeType != "remoteStore" and "download_resourcebase" in perms %}
