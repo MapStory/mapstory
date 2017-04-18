@@ -46,7 +46,7 @@ for i do # loop over $@
 
     if [ "$i" = "--test" ]; then
         rm -f cover/*
-        coverage run ./manage.py test
+        CELERY_ALWAYS_EAGER=true CELERY_EAGER_PROPAGATES_EXCEPTIONS=true coverage run ./manage.py test
         coverage report
         coverage html -d cover
     fi
