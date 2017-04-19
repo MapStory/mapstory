@@ -5,10 +5,5 @@ then
     #sudo su mapstory
     #workon mapstory
     pip install selenium
-    # data-driven tests with ddt:
-    pip install ddt
-    # Behavior-driven tests with behave:
-    pip install behave
-    # Mock
-    pip install mock
+    npm install pix-diff
 fi
