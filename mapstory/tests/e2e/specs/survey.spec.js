@@ -7,7 +7,7 @@ let home_page = require('../pages/home.po');
 let layer_metadata = require('../pages/layer_metadata.po');
 let path = require('path');
 let screenshot_helper = require('../tools/screenshot_helper');
-
+let constants = require("../tools/constants");
 
 /**
  * Tester object
@@ -32,7 +32,7 @@ screenshot_helper.setup();
 describe('[Survey Tests] |', function() {
 	beforeEach(function(){
 		// Fetch Home
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		browser.waitForAngular();
 	});
 

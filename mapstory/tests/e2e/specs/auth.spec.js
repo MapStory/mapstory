@@ -8,6 +8,7 @@
 
 let EC = protractor.ExpectedConditions;
 require('../tools/waitReady.js');
+let constants = require("../tools/constants");
 
 describe('User auth', function() {
 
@@ -15,7 +16,7 @@ describe('User auth', function() {
 
 	beforeEach(function(){
 		// Fetch Home
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		browser.waitForAngular();
 	});
 
@@ -179,7 +180,7 @@ describe('User auth', function() {
 			auth.loginButton.click();
 
 			// Should show the avatar after login
-			browser.get('http://192.168.56.151');
+			browser.get(constants.baseURL);
 			expect(auth.userAvatar.waitReady()).toBeTruthy();
 		});
 	});

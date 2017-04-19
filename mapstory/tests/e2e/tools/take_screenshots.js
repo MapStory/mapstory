@@ -4,6 +4,7 @@ let homePage = require('../pages/home.po');
 let images_page = require('../pages/images.po');
 
 let enabled = true;
+let constants = require("../tools/constants");
 
 /**
  * A tool for generating screenshots
@@ -15,7 +16,7 @@ if(enabled) {
 			// browser.driver.manage().window().maximize();
 			browser.driver.manage().window().setSize(1440, 800);
 			browser.driver.manage().window().setPosition(0, 0);
-			browser.get('http://192.168.56.151');
+			browser.get(constants.baseURL);
 			browser.waitForAngular();
 			browser.sleep(1000);
 		});

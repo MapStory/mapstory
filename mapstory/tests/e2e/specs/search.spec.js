@@ -5,7 +5,7 @@ require('../tools/waitReady.js');
 let wait_times = require('../tools/wait_times');
 const deafaultWindowHeight = 900;
 const defaultWindoWidth = 1400;
-
+let constants = require("../tools/constants");
 
 describe('Search', function() {
 
@@ -15,14 +15,14 @@ describe('Search', function() {
 		// Fetch Home
 		// Search bar cares about window size.
 		browser.driver.manage().window().setSize(defaultWindoWidth, deafaultWindowHeight);
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		search = require('../pages/search.po');
 		browser.waitForAngular();
 	});
 	
 	it('> should show search bar even if window size is 400 x 600', function() {
 		browser.driver.manage().window().setSize(400, 600);
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		browser.waitForAngular();
 		search.textInput.isDisplayed().then(function(isVisible){
 			expect(isVisible).toBe(true);

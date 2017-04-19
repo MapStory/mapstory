@@ -13,6 +13,7 @@ const defaullTestPassword = 'testPassword2001!';
 let EC = protractor.ExpectedConditions;
 
 require('../tools/waitReady.js');
+let constants = require("../tools/constants");
 
 let AuthWizard = function() {
 
@@ -41,7 +42,7 @@ let AuthWizard = function() {
 	 */
 	this.get = function() {
 		// Refresh page
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		browser.waitForAngular();
 
 		let myself = this;
@@ -143,7 +144,7 @@ let AuthWizard = function() {
 	this.logout = function() {
 		let myself = this;
 		this.isLoggedIn().then(function(loggedIn){
-			if(loggedIn == true) {
+			if(loggedIn === true) {
 				// Click the login button
 				myself.adminLink.click();
 				expect(myself.logoutLink.waitReady()).toBeTruthy();
@@ -152,7 +153,7 @@ let AuthWizard = function() {
 				myself.logoutLink.click();
 
 				// Refresh page
-				browser.get('http://192.168.56.151');
+				browser.get(constants.baseURL);
 			}
 		});
 	};

@@ -5,13 +5,14 @@ require('../tools/waitReady.js');
 let PixDiff  = require('pix-diff');
 let homePage = require('../pages/home.po');
 let images_page = require('../pages/images.po');
+let constants = require("../tools/constants");
 
 describe('Home page image check', () => {
 
 	beforeEach(() => {
 		browser.driver.manage().window().setSize(1440, 800);
 		browser.driver.manage().window().setPosition(0, 0);
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		browser.waitForAngular();
 		browser.sleep(1000);
 	});

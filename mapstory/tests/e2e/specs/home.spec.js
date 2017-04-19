@@ -18,6 +18,7 @@
 
 require('../tools/waitReady.js');
 const wait_times = require('../tools/wait_times');
+let constants = require("../tools/constants");
 
 /**
  * Mapstory Home Page
@@ -30,7 +31,7 @@ describe('Mapstory Home', function() {
 
 	beforeEach(function() {
 		// Fetch the site
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		browser.waitForAngular();
 	});
 
@@ -72,7 +73,7 @@ describe('Mapstory Home', function() {
 		page.logout();
 
 		// Fetch the site
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		browser.waitForAngular();
 
 		// Fetch the elements

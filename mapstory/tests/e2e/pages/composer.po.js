@@ -7,6 +7,7 @@
 require('../tools/waitReady.js');
 let make_id = require('../tools/make_id.js');
 let wait_times = require('../tools/wait_times.js');
+let constants = require("../tools/constants");
 
 /**
  * Composer Page Object
@@ -38,7 +39,8 @@ let composer = function() {
 	this.get = function() {
 		// Angular sync fails on Composer. So we need to turn it off
 		browser.ignoreSynchronization = true;
-		browser.get('http://192.168.56.151/maps/new?tour');
+		let url = constants.baseURL + '/maps/new?tour';
+		browser.get(url);
 		browser.sleep(wait_times['composer_tour_modal']);
 	};
 

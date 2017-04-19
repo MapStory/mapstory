@@ -8,6 +8,7 @@
 require('../tools/waitReady.js');
 let auth = require('./auth.po');
 let home_page = require('./home.po');
+let constants = require("../tools/constants");
 
 /* global element, by, browser */
 
@@ -23,7 +24,7 @@ let JournalPageObject = function() {
 	this.new_save_button = element(by.buttonText('Save'));
 	this.comment_box = $('#id_comment');
 	this.get = function() {
-		browser.get('http://192.168.56.151/journal');
+		browser.get(constants.baseURL + '/journal');
 		browser.waitForAngular();
 	};
 	this.make_new_entry = function (title, content, published) {

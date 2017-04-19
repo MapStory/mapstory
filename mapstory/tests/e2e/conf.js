@@ -28,6 +28,7 @@ let multi_cabapilities = [{
 	}}
 ];
 
+
 const browser_width = 1440;
 const browser_height = 800;
 
@@ -68,7 +69,7 @@ let settings = {
 			width: browser_width,
 			height: browser_height
 		});
-	},
+	}
 };
 
 
@@ -125,7 +126,7 @@ if(process.env.TRAVIS) {
 				width: browser_width,
 				height: browser_height
 			});
-		},
+		}
 	};
 }
 

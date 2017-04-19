@@ -13,6 +13,7 @@ const testLayerFileRelative = '../../sampledata/lewisandclarktrail.csv';
 const testLayerFile = path.resolve(__dirname, testLayerFileRelative);
 let wait_times = require('../tools/wait_times');
 let auth = require('./auth.po');
+let constants = require("../tools/constants");
 
 
 /**
@@ -45,7 +46,7 @@ let home_page = function() {
 	this.composeStoryLink = this.navBar.element(by.linkText('Compose Story'));
 
 	this.get = function(){
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		browser.waitForAngular();
 	};
 
@@ -101,7 +102,7 @@ let home_page = function() {
 
 				// Refresh page
 				// TODO: Get the webpage dynamically
-				browser.get('http://192.168.56.151');
+				browser.get(constants.baseURL);
 			}
 		});
 	};
