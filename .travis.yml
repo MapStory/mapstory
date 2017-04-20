@@ -7,15 +7,24 @@ sudo: required
 services:
   - docker
 
+
+
 language: python
 python:
   - "2.7"
 
 env:
   - DOCKER_COMPOSE_VERSION: 1.11.2
+  # For sauce_connect (DO NOT REMOVE)
+  - secure: "IMm6jAeLGJ1Vo3L81JIEh2/Z2jIARYFBviQ5cxTTH88ndN2Oj03rPDjvkP44YZwZT7Gd768Ve1PuEgq5oVmqd+oZF7hUEh08LalUV9aOkIRFEc8SjuUJVFhFzUGovqDr+Kg+Y7OqDODhZjvORqnNpOkWNUUnR26MsRY/x9vNO50="
+  - secure: "FJobmS7HNb2L95ZN0s81r/MpmM5kizgyoG6bUpgIaYhQMweJgLPinHOWB+54VAr7jkdDjN5b+4hHa1pcWNSWGLDgxMZxj9pPej7Aiq0wvFMlbzai3W+/FcNENHjd3sBTLNpWiBrpQNyUXP2/+2QWPMqCbUfiS90AkA5Du198pjE="
+
 
 addons:
   hostname: docker
+  # For sauceLabs (DO NOT REMOVE)
+  sauce_connect: true
+
 
 before_install:
   # Install Docker Engine
@@ -49,7 +58,8 @@ script:
   - $DCO kill django
   - $DCO ps
   - $DCO run django --test
-  - $DCO run protractor protractor conf.js
+  # Protractor tests are run with SauceLabs
+#  - $DCO run protractor protractor conf.js
 
 after_success:
   - coveralls
