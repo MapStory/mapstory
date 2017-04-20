@@ -5,4 +5,8 @@ function define(name, value) {
     });
 }
 
-define("baseURL", 'https://nginx');
+if(process.env.TRAVIS) {
+    define("baseURL", 'https://localhost');
+} else {
+    define("baseURL", "http://192.168.56.151")
+}
