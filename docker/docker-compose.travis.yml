@@ -1,6 +1,29 @@
 # Dev configuration
 version: '3.1'
 services:
+  selenium:
+    image: selenium/standalone-chrome
+    links:
+      - nginx
+    networks:
+      internal:
+    expose:
+      - "4444"
+
+  protractor:
+    build:
+      context: .
+      dockerfile: Dockerfile.protractor
+    image: mapstory/protractor
+    links:
+      - selenium
+      - nginx
+    command: /bin/true
+    volumes:
+      - ./mapstory/tests/errors:/opt/mapstory/tests/e2e/errors
+    networks:
+      internal:
+
   postgres:
     image: mdillon/postgis:9.5
     env_file:

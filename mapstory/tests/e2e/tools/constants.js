@@ -5,6 +5,4 @@ function define(name, value) {
     });
 }
 
-define("baseURL", 'http://192.168.56.151');
-
-
+define("baseURL", 'https://nginx');
