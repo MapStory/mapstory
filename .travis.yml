@@ -49,6 +49,7 @@ script:
   - $DCO kill django
   - $DCO ps
   - $DCO run django --test
+  - $DCO run protractor protractor conf.js
 
 after_success:
   - coveralls
