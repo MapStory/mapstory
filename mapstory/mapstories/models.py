@@ -117,7 +117,8 @@ class Map(geonode.maps.models.Map):
         self.story = story_obj
         self.save()
 
-    def viewer_json(self, user, access_token=None, *added_layers):
+    def viewer_json(self, user, *added_layers):
+        access_token = None
         base_config = super(Map, self).viewer_json(user, access_token, *added_layers)
         base_config['viewer_playbackmode'] = self.viewer_playbackmode
         base_config['tools'] = [{'outputConfig': {'playbackMode': self.viewer_playbackmode}, 'ptype': 'gxp_playback'}]
