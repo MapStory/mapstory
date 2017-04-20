@@ -59,7 +59,7 @@ script:
   - $DCO ps
   - $DCO run django --test
   # Protractor tests are run with SauceLabs
-#  - $DCO run protractor protractor conf.js
+
 
 after_success:
   - coveralls
