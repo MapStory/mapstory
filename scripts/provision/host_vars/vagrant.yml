@@ -130,7 +130,7 @@ slack_channel:
 slack_icon_emoji:
 slack_username:
 
-fixtures: '../geonode/geonode/base/fixtures/initial_data.json mapstory/fixtures/initial_data.json'
+fixtures: 'mapstory/fixtures/initial_data.json'
 
 # AWS S3 Settings
 
