@@ -13,7 +13,14 @@ let PixDiff = require('pix-diff');
 
 //----------------------
 // Variable settings
-let selenium_url = 'http://selenium:4444/wd/hub';
+let selenium_url = "http://#";
+
+if(process.env.TRAVIS){
+	selenium_url = 'http://selenium:4444/wd/hub';
+}else{
+	selenium_url = 'http://localhost:4444/wd/hub';
+}
+
 let timeout = 30000;
 let multi_cabapilities = [{
 	'browserName' : 'chrome',
@@ -41,7 +48,18 @@ let settings = {
 	//--------------------------
 	// Use this to run all test files
 	specs: ['specs/*.spec.js'],
-
+	// specs: [
+		// 'tools/take_screenshots.js',
+		// 'specs/auth.spec.js',
+		// 'specs/composer.spec.js',
+		// 'specs/explore.spec.js',
+		// 'specs/home.spec.js',
+		// 'specs/icon_upload.spec.js',
+		// 'specs/image.spec.js',
+		// 'specs/journal.spec.js',
+		// 'specs/search.spec.js',
+		// 'specs/survey.spec.js',
+	// ],
 	multiCapabilities: multi_cabapilities,
 	jasmineNodeOpts: {
 		showColors: true,
