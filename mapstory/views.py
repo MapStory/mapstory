@@ -1588,10 +1588,18 @@ def new_map_config(request):
                                             "url": service.base_url,
                                             "name": service.name}))
                 else:
+                    # for non-remoteStore layers, MapLoom expects layer.ows_url
+                    # to actually be this individual layer's full path (e.g.,
+                    # mapstory.org.geoserver/workspace/layername/wms)
+
+                    ows_url = '{0}{1}/{2}/wms'.format(
+                        settings.OGC_SERVER['default']['PUBLIC_LOCATION'],
+                        layer.workspace,
+                        layer.name)
                     maplayer = MapLayer(
                         map=map_obj,
                         name=layer.name,
-                        ows_url=layer.ows_url,
+                        ows_url=ows_url,
                         # use DjangoJSONEncoder to handle Decimal values
                         layer_params=json.dumps(config, cls=DjangoJSONEncoder),
                         visibility=True
