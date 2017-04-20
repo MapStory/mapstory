@@ -56,8 +56,8 @@ script:
   - $DCO up -d nginx
   - $DCO kill django
   - $DCO ps
-#  - $DCO run protractor protractor conf.js
-  - protractor mapstory/tests/e2e/conf.js
+  - $DCO run protractor protractor conf.js
+#  - protractor mapstory/tests/e2e/conf.js
   - $DCO run django --test
 
 after_success:
