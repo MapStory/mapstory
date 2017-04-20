@@ -51,7 +51,7 @@
                     </div>
                     <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}">
                         {% if user.is_authenticated %}
-                            <a href="{% url 'new_map' %}?tour">
+                            <a href="{% url 'new-story' %}?tour">
                         {% else %}
                             <a data-toggle="modal" data-target="#loginModal">
                         {% endif %}
