@@ -3,7 +3,13 @@ from django.conf.urls import patterns
 from django.conf.urls import url
 from django.conf.urls import include
 from django.conf.urls.static import static
+
+# replace /api/owners route from GeoNode with our own:
+# need to unregister old route before geonode.urls.urlpatterns is imported
+from geonode.api.urls import api as geonode_api
+geonode_api.unregister('owners')
 from geonode.urls import urlpatterns
+
 from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstory.views import IndexView
 from mapstory.views import GetPageView
@@ -32,13 +38,13 @@ from mapstory.views import initiative_invite, initiative_members_add, initiative
 from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from tastypie.api import Api
 from mapstory.api.api import UploadedLayerResource
+from mapstory.api.urls import api as mapstory_api
 from annotations.urls import urlpatterns as annotations_urls
 from mapstory.apps.favorite.urls import api as favorites_api
 
-
-
 importer_api = Api(api_name='importer-api')
 importer_api.register(UploadedLayerResource())
+
 # -- Deprecated url routes for Geoserver authentication -- remove after GeoNode 2.1
 # -- Use /gs/acls, gs/resolve_user/, gs/download instead
 if 'geonode.geoserver' in settings.INSTALLED_APPS:
@@ -142,6 +148,9 @@ urlpatterns += annotations_urls
 urlpatterns += maploom_urls
 
 urlpatterns += patterns("",
+                        url(r'', include(mapstory_api.urls)))
+
+urlpatterns += patterns("",
                         url(r'', include(importer_api.urls)))
 
 urlpatterns += patterns("",
@@ -167,3 +176,4 @@ if settings.ENABLE_SOCIAL_LOGIN:
         url('', include('social.apps.django_app.urls', namespace='social')),
         url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
     )
+

@@ -1,7 +1,6 @@
-from tastypie.api import Api
-
 from resourcebase_api import MapStoryResource
-
-api = Api(api_name='api')
+from api import MapstoryOwnersResource
+from geonode.api.urls import api
 
 api.register(MapStoryResource())
+api.register(MapstoryOwnersResource())
