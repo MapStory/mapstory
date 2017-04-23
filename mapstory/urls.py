@@ -4,10 +4,11 @@ from django.conf.urls import url
 from django.conf.urls import include
 from django.conf.urls.static import static
 
-# replace /api/owners route from GeoNode with our own:
-# need to unregister old route before geonode.urls.urlpatterns is imported
+# to replace /api/base & /api/owners GeoNode routes with our own:
+# unregister old routes before geonode.urls.urlpatterns is imported
 from geonode.api.urls import api as geonode_api
 geonode_api.unregister('owners')
+geonode_api.unregister('base')
 from geonode.urls import urlpatterns
 
 from maploom.geonode.urls import urlpatterns as maploom_urls
