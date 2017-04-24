@@ -105,14 +105,10 @@ describe('Mapstory Home', function() {
 
 		it('> should navigate to "Get Started"', function() {
 			expect(element(by.linkText('Get Started')).isDisplayed()).toBe(true);
-
-			// TODO: Expect title
 		});
 
 		it('> should navigate to "Journal"', function() {
 			expect(element(by.linkText('Journal')).isDisplayed()).toBe(true);
-
-			// TODO: Expect title
 		});
 
 		/**
@@ -292,14 +288,6 @@ describe('Mapstory Home', function() {
 					it('> should complete step 1', function() {
 						page.uploadLayer_Step1();
 					});
-
-					xit('> can close the form', function() {
-
-					});
-
-					xit('> highlights the correct step', function() {
-
-					});
 				});
 
 				/**
@@ -310,32 +298,12 @@ describe('Mapstory Home', function() {
 						page.uploadLayer_Step1();
 						page.uploadLayer_Step2();
 					});
-
-					it('> can go to next step', function() {
-
-					});
-
-					it('> can close form', function() {
-
-					});
-
-					it('> highlights the correct step', function() {
-
-					});
-
-					it('> should not continue without file', function() {
-
-					});
 				});
 
 				/**
 				 * Step 3
 				 */
 				describe('> Step 3', function() {
-					xit('should edit title', function() {
-
-					});
-
 					it('> should complete step 3', function() {
 						page.uploadLayer_Step1();
 						page.uploadLayer_Step2();
@@ -359,10 +327,6 @@ describe('Mapstory Home', function() {
 				 * Step 5
 				 */
 				describe('> Step 5', function() {
-					xit('should set community settings', function() {
-
-					});
-
 					it('> should complete step 5', function() {
 						page.uploadLayer_Step1();
 						page.uploadLayer_Step2();
@@ -387,9 +351,6 @@ describe('Mapstory Home', function() {
 					});
 				});
 
-				xit('> should show summary when succesful', function() {
-
-				});
 			});
 
 			describe('> Layer Edit Metadata', function() {
@@ -404,8 +365,17 @@ describe('Mapstory Home', function() {
 				});
 
 				it('> Can edit metadata', function() {
+					// Complete last step
 					page.uploadLayer_Step6();
 					browser.sleep(wait_times['metadata_load']);
+
+					// Click 'Update Metadata'
+					let update_metadata_button = element(by.partialButtonText('Update Metadata'));
+					expect(update_metadata_button.waitReady()).toBeTruthy();
+					update_metadata_button.click();
+					browser.sleep(2000);
+
+					//Expect things to show up on metadata edit
 					let titleInput = element(by.css('#id_title'));
 					let categoryDropdown = element(by.css('#id_category'));
 					let summaryText = element(by.css('#id_abstract'));
@@ -414,6 +384,7 @@ describe('Mapstory Home', function() {
 					let dataQualityText = element(by.css('#id_data_quality_statement'));
 					let purposeText = element(by.css('#id_purpose'));
 					let isPublishedCheckbox = element(by.css('#id_is_published'));
+
 					expect(titleInput.waitReady()).toBeTruthy();
 					expect(categoryDropdown.waitReady()).toBeTruthy();
 					expect(summaryText.waitReady()).toBeTruthy();
@@ -422,35 +393,20 @@ describe('Mapstory Home', function() {
 					expect(dataQualityText.waitReady()).toBeTruthy();
 					expect(purposeText.waitReady()).toBeTruthy();
 					expect(isPublishedCheckbox.waitReady()).toBeTruthy();
+
+					// Click 'Is Published'
+					let is_published_checkbox = element(by.css('#id_is_published'));
+					expect(is_published_checkbox.waitReady()).toBeTruthy();
+					is_published_checkbox.click();
+
+					// Click 'Save'
+            		let saveButton = element(by.partialButtonText('Save'));
+            		saveButton.click();
 				});
 			});
 		});
 	});
 
-	/**
-	 * The search bar
-	 */
-	xdescribe('> The "Search bar"', function() {
-		it('> should show', function() {
-
-		});
-
-		it('> has a button', function() {
-
-		});
-
-		it('> searches for things', function() {
-
-		});
-
-		it('> filters bad test input', function() {
-
-		});
-	});
-
-	xit('> should logout', function() {
-
-	});
 
 	xit('> should change languages', function() {
 		let languageDropdown = element(by.css('.lang.col-md-6.pull-right'));
@@ -458,9 +414,5 @@ describe('Mapstory Home', function() {
 
 		// Try to select spanish
 		languageDropdown.$('[value="es"]').click();
-	});
-
-	it('> should get here', function() {
-		expect(true).toBe(true);
 	});
 });

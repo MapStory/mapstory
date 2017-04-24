@@ -39,7 +39,7 @@ let composer = function() {
 	this.get = function() {
 		// Angular sync fails on Composer. So we need to turn it off
 		browser.ignoreSynchronization = true;
-		let url = constants.baseURL + '/maps/new?tour';
+		let url = constants.baseURL + '/story/new?tour';
 		browser.get(url);
 		browser.sleep(wait_times['composer_tour_modal']);
 	};
