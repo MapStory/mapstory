@@ -22,16 +22,36 @@ html, body {
     }
 }
 
+.expand-button {
+    display: none;
+}
+
 .sidebarHidden {
     display: block;
     position: absolute;
-    background: @gray97;
-    width: 20%;
+    background: transparent;
+    width: 28%;
     height: 100%;
     margin: 0;
     color: @gray40;
     left: -17.25%;
     z-index: 2;
+    display: inline;
+    .content {
+        display: none;
+    }
+    .expand-button {
+        float: right;
+        display: inline;
+        p {
+            font-family: @base-font-family;
+            color: @white;
+            font-size: 13px;
+            text-transform: uppercase;
+            padding-top: 6px;
+            float: left;
+        }
+    }
 }
 
 .sidebar p {
@@ -49,9 +69,6 @@ html, body {
     font-size: 15px;
     margin: 10px;
     cursor: pointer;
-    &.fa-caret-right {
-        display: none;
-    }
 }
 
 .sidebarHidden i {
@@ -63,8 +80,7 @@ html, body {
         display: none;
     }
     &.fa-caret-right {
-        cursor: pointer;
-        display: block;
+        display: inline;
     }
 }
 
