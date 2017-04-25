@@ -3,6 +3,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from geonode.layers.models import Layer
 from mapstory.mapstory_profile.models import MapstoryProfile
+from mapstory.mapstories.models import MapStory
 from geonode.people.models import Profile
 from geonode.base.models import ResourceBase
 import taggit
@@ -25,13 +26,23 @@ class KeywordsForm(forms.ModelForm):
         fields = ['keywords']
 
 
+# A form for a Mapstory-specific distribution_url field
+class DistURLForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(DistURLForm, self).__init__(*args, **kwargs)
+        self.fields['distribution_url'].label = "Data Source"
+
+    class Meta:
+        model = MapStory
+        fields = ['distribution_url']
+
+
 # A form for just Metadata
 class MetadataForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(MetadataForm, self).__init__(*args, **kwargs)
-        # TODO this was removed upstream in 3ff5dff
-        # self.fields['distribution_url'].label = "Data Source"
         self.fields['abstract'].label = "Summary"
 
     class Meta:
@@ -41,8 +52,6 @@ class MetadataForm(forms.ModelForm):
             'category',
             'abstract',
             'language',
-            # TODO this was removed upstream in 3ff5dff
-            # 'distribution_url',
             'data_quality_statement',
             'purpose',
             'is_published',
