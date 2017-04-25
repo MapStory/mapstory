@@ -65,7 +65,7 @@ script:
   - $DCO run --name tester django --test
 
 after_success:
-  - docker cp tester:/srv/mapstory.coverage .coverage
+  - docker cp tester:/srv/mapstory/.coverage .coverage
   - coveralls
 
 after_script:
