@@ -1,10 +1,12 @@
 FROM node:7.9
 MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
 
+ENV DOCKER true
+
 RUN set -ex \
     && npm install -g \
-        protractor
-    #&& webdriver-manager update \
+        protractor \
+    && webdriver-manager update
 
 RUN mkdir -p /opt/mapstory/tests/e2e/errors
 WORKDIR /opt/mapstory/tests/e2e/

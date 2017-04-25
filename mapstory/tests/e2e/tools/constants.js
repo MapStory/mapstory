@@ -7,8 +7,8 @@ function define(name, value) {
 	});
 }
 
-if(process.env.TRAVIS) {
+if(process.env.DOCKER) {
 	define('baseURL', 'https://nginx');
 } else {
-	define('baseURL', 'http://192.168.56.151');
+	define("baseURL", "http://192.168.56.151")
 }

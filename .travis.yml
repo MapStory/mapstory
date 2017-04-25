@@ -36,6 +36,9 @@ before_install:
   - docker-compose --version
   - DCO="docker-compose -f docker-compose.yml -f docker/docker-compose.travis.yml"
 
+  # Install other tools
+  - pip install coveralls
+
   # Ensure a clean environment
   - $DCO kill
   - $DCO rm -f

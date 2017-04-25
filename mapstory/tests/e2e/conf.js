@@ -15,9 +15,9 @@ let PixDiff = require('pix-diff');
 // Variable settings
 let selenium_url = "http://#";
 
-if(process.env.TRAVIS){
+if(process.env.DOCKER){
 	selenium_url = 'http://selenium:4444/wd/hub';
-}else{
+} else {
 	selenium_url = 'http://localhost:4444/wd/hub';
 }
 
