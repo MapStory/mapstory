@@ -65,6 +65,7 @@ script:
   - $DCO run django --test
 
 after_success:
+  - ls cover
   - coveralls
 
 after_script:

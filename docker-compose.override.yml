@@ -67,6 +67,8 @@ services:
       - docker/env/dev/geoserver.env
       - docker/env/dev/mapstory.env
       - docker/env/dev/db_auth.env
+    volumes:
+      - ./cover:/srv/mapstory/cover
     ports:
       - "8000:8000"
 
