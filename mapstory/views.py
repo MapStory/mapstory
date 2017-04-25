@@ -76,7 +76,7 @@ from mapstory.apps.favorite.models import Favorite
 from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
 from mapstory.orgs.forms import OrgForm
 from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditGeonodeProfileForm
-from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm #, DistributionUrlForm
+from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm, DistributionUrlForm
 from mapstory.forms import SignupForm
 from mapstory.importers import GeoServerLayerCreator
 from mapstory.models import GetPage
@@ -1176,8 +1176,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     if request.method == "POST":
         keywords_form = KeywordsForm(request.POST, instance=layer)
         metadata_form = MetadataForm(instance=layer)
-        # TODO need to pull distribution_url from mapstory model
-        # distributionurl_form = DistributionUrlForm(instance=layer)
+        distributionurl_form = DistributionUrlForm(request.POST, instance=layer)
         if 'keywords' in request.POST:
             if keywords_form.is_valid():
                 keywords_form.save()
@@ -1185,10 +1184,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                 layer.keywords.set(*new_keywords)
                 layer.save()
             metadata_form = MetadataForm(instance=layer)
-            published_form = PublishStatusForm(instance=layer)
         elif 'title' in request.POST:
             metadata_form = MetadataForm(request.POST, instance=layer)
-            # distributionurl_form = MetadataForm(request.POST, instance=layer)
             if metadata_form.is_valid():
                 metadata_form.save()
                 # update all the metadata
@@ -1197,11 +1194,13 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                     Layer.objects.filter(id=layer.id).update(category=new_category)
                 layer.title = metadata_form.cleaned_data['title']
                 layer.language = metadata_form.cleaned_data['language']
-                # layer.distribution_url = metadata_form.cleaned_data['distribution_url']
                 layer.data_quality_statement = metadata_form.cleaned_data['data_quality_statement']
                 layer.purpose = metadata_form.cleaned_data['purpose']
                 layer.is_published = metadata_form.cleaned_data['is_published']
                 layer.save()
+        if distributionurl_form.is_valid():
+            layer.distribution_url = distributionurl_form.cleaned_data['distribution_url']
+
             keywords_form = KeywordsForm(instance=layer)
         elif 'add_keyword' in request.POST:
             layer.keywords.add(request.POST['add_keyword'])
@@ -1212,6 +1211,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     else:
         keywords_form = KeywordsForm(instance=layer)
         metadata_form = MetadataForm(instance=layer)
+        distributionurl_form = DistributionUrlForm(instance=layer)
 
     content_moderators = Group.objects.filter(name='content_moderator').first()
 
@@ -1255,6 +1255,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "wps_enabled": settings.OGC_SERVER['default']['WPS_ENABLED'],
         "keywords_form": keywords_form,
         "metadata_form": metadata_form,
+        "distributionurl_form": distributionurl_form,
         "content_moderators": content_moderators,
         "thumbnail": thumbnail,
         "thumb_form": thumb_form

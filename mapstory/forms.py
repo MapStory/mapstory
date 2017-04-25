@@ -27,10 +27,10 @@ class KeywordsForm(forms.ModelForm):
 
 
 # A form for a Mapstory-specific distribution_url field
-class DistURLForm(forms.ModelForm):
+class DistributionUrlForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super(DistURLForm, self).__init__(*args, **kwargs)
+        super(DistributionUrlForm, self).__init__(*args, **kwargs)
         self.fields['distribution_url'].label = "Data Source"
 
     class Meta:
