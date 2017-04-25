@@ -66,7 +66,9 @@ script:
 
 after_success:
   - ls cover
-  - coveralls
+  - coveralls --output=coverage.out
+  - echo "Coverage.out:"
+  - cat coverage.out
 
 after_script:
   - $DCO kill
