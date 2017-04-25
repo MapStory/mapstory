@@ -62,13 +62,11 @@ script:
   # TODO: Fix Protractor tests
 #  - $DCO run protractor protractor conf.js
 #  - protractor mapstory/tests/e2e/conf.js
-  - $DCO run django --test
+  - $DCO run --name tester django --test
 
 after_success:
-  - ls cover
-  - coveralls --output=coverage.out
-  - echo "Coverage.out:"
-  - cat coverage.out
+  - docker cp tester:/srv/mapstory.coverage .coverage
+  - coveralls
 
 after_script:
   - $DCO kill
