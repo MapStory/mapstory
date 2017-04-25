@@ -38,10 +38,14 @@ from mapstory.views import initiative_create, initiative_edit, initiative_detail
 from mapstory.views import initiative_invite, initiative_members_add, initiative_member_remove
 from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from tastypie.api import Api
-from mapstory.api.api import UploadedLayerResource
+from mapstory.api.api import UploadedLayerResource, MapstoryOwnersResource
+from mapstory.api.resourcebase_api import ResourceBaseResource
 from mapstory.api.urls import api as mapstory_api
 from annotations.urls import urlpatterns as annotations_urls
 from mapstory.apps.favorite.urls import api as favorites_api
+
+geonode_api.register(ResourceBaseResource())
+geonode_api.register(MapstoryOwnersResource())
 
 importer_api = Api(api_name='importer-api')
 importer_api.register(UploadedLayerResource())
