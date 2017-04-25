@@ -271,14 +271,15 @@ let home_page = function() {
 		expect(layerName.waitReady()).toBeTruthy();
 
 		// This creates a random id to avoid name collision
-		let layerStringName = 'testLayer_' + this.makeid(7);
-		layerName.sendKeys(layerStringName);
+		let randomId = this.makeid(12);
+		let layerStringName = 'testLayer_' + randomId;
+		layerName.sendKeys(layerStringName).then(() => {
+            let currentSection = element(by.css('section.step.ng-isolate-scope.current'));
+            let continueButton = currentSection.$('.import-wizard-button').element(by.css('button.btn'));
 
-		let currentSection = element(by.css('section.step.ng-isolate-scope.current'));
-		let continueButton = currentSection.$('.import-wizard-button').element(by.css('button.btn'));
-
-		// Continue to Step 2
-		continueButton.click();
+            // Continue to Step 2
+            continueButton.click();
+		});
 	};
 
 
@@ -353,7 +354,7 @@ let home_page = function() {
 		// Wait x seconds
 		browser.driver.sleep(wait_times['layerCreate']);
 
-		let doneButton = element(by.linkText('StoryLayer'));
+		let doneButton = element(by.partialButtonText('StoryLayer'));
 		expect(doneButton.waitReady()).toBeTruthy();
 
 		doneButton.click();

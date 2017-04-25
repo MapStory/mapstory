@@ -138,8 +138,8 @@ describe('Mapstory Home', function() {
 				page.createLayerLink.click();
 			});
 
-			describe('> Create Layer Wizard', function() {
-				it('> step 1', function() {
+			xdescribe('> Create Layer Wizard', function() {
+				xit('> step 1', function() {
 					// Open the Create menu
 					expect(page.isLoggedIn()).toBeTruthy();
 					expect(page.navBar.isDisplayed()).toBe(true);
@@ -152,21 +152,7 @@ describe('Mapstory Home', function() {
 					page.createLayer_Step1();
 				});
 
-				it('> step 2', function() {
-					// Open the Create menu
-					expect(page.isLoggedIn()).toBeTruthy();
-					expect(page.navBar.isDisplayed()).toBe(true);
-					page.menuCreate.click();
-
-					// Click the create story layer link
-					expect(page.createLayerLink.waitReady()).toBeTruthy();
-					page.createLayerLink.click();
-
-					page.createLayer_Step1();
-					page.createLayer_Step2();
-				});
-
-				it('> step 3', function() {
+				xit('> step 2', function() {
 					// Open the Create menu
 					expect(page.isLoggedIn()).toBeTruthy();
 					expect(page.navBar.isDisplayed()).toBe(true);
@@ -178,10 +164,9 @@ describe('Mapstory Home', function() {
 
 					page.createLayer_Step1();
 					page.createLayer_Step2();
-					page.createLayer_Step3();
 				});
 
-				it('> step 4', function() {
+				xit('> step 3', function() {
 					// Open the Create menu
 					expect(page.isLoggedIn()).toBeTruthy();
 					expect(page.navBar.isDisplayed()).toBe(true);
@@ -194,10 +179,9 @@ describe('Mapstory Home', function() {
 					page.createLayer_Step1();
 					page.createLayer_Step2();
 					page.createLayer_Step3();
-					page.createLayer_Step4();
 				});
 
-				it('> step 5', function() {
+				xit('> step 4', function() {
 					// Open the Create menu
 					expect(page.isLoggedIn()).toBeTruthy();
 					expect(page.navBar.isDisplayed()).toBe(true);
@@ -211,11 +195,11 @@ describe('Mapstory Home', function() {
 					page.createLayer_Step2();
 					page.createLayer_Step3();
 					page.createLayer_Step4();
-					page.createLayer_Step5();
 				});
 
-				it('> step 6', function() {
+				it('> All steps', function() {
 					// Open the Create menu
+					expect(page.isLoggedIn()).toBeTruthy();
 					expect(page.navBar.isDisplayed()).toBe(true);
 					page.menuCreate.click();
 

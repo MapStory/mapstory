@@ -5,7 +5,7 @@ require('../tools/waitReady.js');
 let wait_times = require('../tools/wait_times');
 const deafaultWindowHeight = 900;
 const defaultWindoWidth = 1400;
-let constants = require("../tools/constants");
+let constants = require('../tools/constants');
 
 describe('Search', function() {
 
@@ -53,7 +53,7 @@ describe('Search', function() {
 
 	});
 
-	it('> should find all users', function() {
+	xit('> should find all users', function() {
 		search.searchFor('');
 		expect(search.storyTellerTab.waitReady()).toBeTruthy();
 		search.storyTellerTab.click();

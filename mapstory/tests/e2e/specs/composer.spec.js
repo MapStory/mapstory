@@ -7,7 +7,7 @@
 let page = require('../pages/composer.po.js');
 let home = require('../pages/home.po.js');
 let wait_times = require('../tools/wait_times.js');
-let constants = require("../tools/constants");
+let constants = require('../tools/constants');
 
 describe('Composer', function() {
 	// Our home page object
