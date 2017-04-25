@@ -1,12 +1,14 @@
+'use strict';
+
 function define(name, value) {
-    Object.defineProperty(exports, name, {
-        value:      value,
-        enumerable: true
-    });
+	Object.defineProperty(exports, name, {
+		value:      value,
+		enumerable: true
+	});
 }
 
 if(process.env.TRAVIS) {
-    define("baseURL", 'http://nginx');
+	define('baseURL', 'https://nginx');
 } else {
-    define("baseURL", "http://192.168.56.151")
+	define('baseURL', 'http://192.168.56.151');
 }
