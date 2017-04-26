@@ -64,6 +64,7 @@ services:
     command: --init-db --test
     volumes:
       - ./cover:/srv/mapstory/cover
+      - ./.git:/srv/mapstory/.git
 
   celery:
     links:
