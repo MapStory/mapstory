@@ -65,11 +65,14 @@ script:
   - $DCO run --name tester django --test
 
 after_success:
-  - docker cp tester:/srv/mapstory/.coverage .coverage
+  - docker cp tester:/srv/mapstory/.coverage .coverage.docker
   - docker cp tester:/srv/mapstory/src src
   - docker cp tester:/srv/geonode geonode
-  - sed -i 's#/srv/geonode#geonode#g' .coverage
-  - sed -i 's#/srv/mapstory/##g' .coverage
+  - sed -i 's#/srv/geonode#geonode#g' .coverage.docker
+  - sed -i 's#/srv/mapstory/##g' .coverage.docker
+  - coverage report
+  - coverage combine
+  - coverage report
   - coveralls --output=coverage.out
   - coveralls
   - cat .coverage
