@@ -49,6 +49,9 @@ for i do # loop over $@
         CELERY_ALWAYS_EAGER=true CELERY_EAGER_PROPAGATES_EXCEPTIONS=true coverage run ./manage.py test
         coverage report
         coverage html -d cover
+        if [ "$TRAVIS" ]; then
+            coveralls
+        fi
     fi
 
     if [ "$i" = "--celery" ]; then

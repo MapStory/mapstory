@@ -21,9 +21,10 @@ RUN set -ex \
         unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install WSGI server and paver
+# Install WSGI server and python tools
 RUN set -ex \
     && pip install --no-cache-dir \
+        coveralls \
         gunicorn \
         paver
 
