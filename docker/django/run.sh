@@ -50,6 +50,7 @@ for i do # loop over $@
         coverage report
         coverage html -d cover
         if [ "$TRAVIS" ]; then
+            echo "Running coveralls"
             coveralls
         fi
     fi
