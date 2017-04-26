@@ -1,16 +1,19 @@
 'use strict';
 require('../tools/waitReady.js');
 
-var auth = require('../pages/auth.po');
-var wait_times = require('../tools/wait_times');
-var home_page = require('../pages/home.po');
-var layer_metadata = require('../pages/layer_metadata.po');
+let auth = require('../pages/auth.po');
+let wait_times = require('../tools/wait_times');
+let home_page = require('../pages/home.po');
+let layer_metadata = require('../pages/layer_metadata.po');
+let path = require('path');
+let screenshot_helper = require('../tools/screenshot_helper');
+let constants = require("../tools/constants");
 
 /**
  * Tester object
  * @type {Object}
  */
-var tester = {
+let tester = {
 	name: null,
 	email: null,
 	timestamp: null,
@@ -18,6 +21,8 @@ var tester = {
 	resolution: null
 };
 
+// Setup the screenshot on error feature
+screenshot_helper.setup();
 
 /**
  * Automated Survey tests
@@ -27,12 +32,20 @@ var tester = {
 describe('[Survey Tests] |', function() {
 	beforeEach(function(){
 		// Fetch Home
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		browser.waitForAngular();
 	});
 
+	// Take a screenshot automatically after each failing test.
+	afterEach(function() {
+		// let passed = jasmine.getEnv().currentSpec.results().passed();
+		// if (!passed) {
+		//
+		// }
+	});
+
 	describe('<<1>> Tester Info |', function () {
-		var randomId = auth.makeid(7);
+		let randomId = auth.makeid(7);
 
 		describe('<a> Tester name', function() {
 			it(': should set a test name', function() {
@@ -76,8 +89,7 @@ describe('[Survey Tests] |', function() {
 	describe('<<2>> User Profile |', function () {
 		describe('<a> Create an account |', function() {
 			it('> should start by logging out', function() {
-				element(by.partialLinkText('admin')).click();
-				element(by.partialLinkText('Log out')).click();
+				home_page.logout();
 				expect(auth.loginIcon.waitReady()).toBeTruthy('Failed to logout!');
 			});
 
@@ -171,7 +183,8 @@ describe('[Survey Tests] |', function() {
 		describe('<e> Update profile info |', function() {
 			it('> should update profile info', function() {
 				// Click on your name
-				var userIcon = element(by.partialLinkText(tester.name));
+
+				var userIcon = $('.nav-avatar');
 				expect(userIcon.waitReady()).toBeTruthy('Did not find the user icon');
 
 				userIcon.click();
@@ -268,7 +281,7 @@ describe('[Survey Tests] |', function() {
 			});
 
 			it('> has a "Close button"', function() {
-				var closeButton = element(by.css('i.fa.fa-times.pointer.import-wizard-icon'));
+				let closeButton = element(by.css('i.fa.fa-times.pointer.import-wizard-icon'));
 				expect(closeButton.isDisplayed()).toBe(true);
 				closeButton.click();
 			});
@@ -423,13 +436,13 @@ describe('[Survey Tests] |', function() {
 
 			it('should download CSV', function(){
 				browser.sleep(2000);
-				var downloadLink = element(by.linkText('Download'));
+				let downloadLink = element(by.linkText('Download'));
 				expect(downloadLink.waitReady()).toBeTruthy();
 
 				downloadLink.click();
 				browser.sleep(1000);
 
-				var CSVlink = element(by.linkText('CSV'));
+				let CSVlink = element(by.linkText('CSV'));
 				expect(CSVlink.waitReady()).toBeTruthy();
 
 				CSVlink.click();

@@ -7,8 +7,9 @@
 'use strict';
 
 require('../tools/waitReady.js');
+let constants = require("../tools/constants");
 
-var ExplorePageObject = function() {
+let ExplorePageObject = function() {
 	this.title = 'Explore - MapStory';
 	this.content_search_tab = $('#content-search');
 	this.storyteller_search_tab = $('#user-search');
@@ -21,7 +22,7 @@ var ExplorePageObject = function() {
 	this.sort_newest = element(by.linkText('Newest'));
 
 	this.get = function() {
-		browser.get('http://192.168.56.151/search');
+		browser.get(constants.baseURL + '/search');
 		browser.waitForAngular();
 	};
 };

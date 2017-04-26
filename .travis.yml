@@ -12,10 +12,17 @@ python:
   - "2.7"
 
 env:
-  - DOCKER_COMPOSE_VERSION: 1.11.2
+  global:
+    - DOCKER_COMPOSE_VERSION=1.11.2
+    - secure: "IMm6jAeLGJ1Vo3L81JIEh2/Z2jIARYFBviQ5cxTTH88ndN2Oj03rPDjvkP44YZwZT7Gd768Ve1PuEgq5oVmqd+oZF7hUEh08LalUV9aOkIRFEc8SjuUJVFhFzUGovqDr+Kg+Y7OqDODhZjvORqnNpOkWNUUnR26MsRY/x9vNO50="
+    - secure: "FJobmS7HNb2L95ZN0s81r/MpmM5kizgyoG6bUpgIaYhQMweJgLPinHOWB+54VAr7jkdDjN5b+4hHa1pcWNSWGLDgxMZxj9pPej7Aiq0wvFMlbzai3W+/FcNENHjd3sBTLNpWiBrpQNyUXP2/+2QWPMqCbUfiS90AkA5Du198pjE="
+
 
 addons:
   hostname: docker
+  # For sauceLabs (DO NOT REMOVE)
+  sauce_connect: true
+
 
 before_install:
   # Install Docker Engine
@@ -28,6 +35,9 @@ before_install:
   - sudo chmod +x /usr/local/bin/docker-compose
   - docker-compose --version
   - DCO="docker-compose -f docker-compose.yml -f docker/docker-compose.travis.yml"
+
+  # Install other tools
+  - pip install coveralls
 
   # Ensure a clean environment
   - $DCO kill
@@ -43,15 +53,16 @@ install:
   - $DCO up -d postgres elasticsearch rabbitmq
   - $DCO up pgadmin
   - $DCO run django "--init-db --collect-static --reindex"
+  - npm install -g protractor
 
 script:
   - $DCO up -d nginx
   - $DCO kill django
   - $DCO ps
-  - $DCO run django --test
-
-after_success:
-  - coveralls
+  # TODO: Fix Protractor tests
+#  - $DCO run protractor protractor conf.js
+#  - protractor mapstory/tests/e2e/conf.js
+  - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
 
 after_script:
   - $DCO kill

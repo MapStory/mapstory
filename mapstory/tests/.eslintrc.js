@@ -5,7 +5,7 @@ module.exports = {
         "es6": true,
         "node": true,
         "protractor": true,
-        "jasmine": true,
+        "jasmine": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {

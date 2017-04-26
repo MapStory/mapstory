@@ -56,5 +56,9 @@ pycsw==2.0.2
 #command line picker
 pick
 
+# Mock for testing
+mock
+
 # Selenium testing
 selenium
+#jasmine-data-provider
