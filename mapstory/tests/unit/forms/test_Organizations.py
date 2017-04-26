@@ -21,9 +21,3 @@ class TestOrganizations(MapStoryTestMixin):
         # Get an empty form
         response = admin.get(reverse('organization_create'))
         self.assertEqual(response.status_code, 200)
-
-        soup = BeautifulSoup(response.content)
-
-        # Should have 28 fields total
-        self.assertEqual(len(soup.find_all('input')), 28)
-
