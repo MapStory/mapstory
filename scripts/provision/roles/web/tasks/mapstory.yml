@@ -226,6 +226,13 @@
   become_user: '{{ application_user }}'
   tags: [update]
 
+- name: mapstory bower update
+  shell: bower update
+  args:
+    chdir: '{{ project_path }}/mapstory/static'
+  become_user: '{{ application_user }}'
+  tags: [update]
+
 - name: collect-static local
   django_manage: app_path={{ project_path }} virtualenv={{ venv }} command='collectstatic --link --noinput --ignore node_modules'
   become_user: '{{ application_user }}'
@@ -233,7 +240,6 @@
   tags: [update, reload]
   ignore_errors: True
   tags: [update]
-
 
 - name: reload indexes
   django_manage: app_path={{ project_path }} virtualenv={{ venv }} command='rebuild_index --noinput'
