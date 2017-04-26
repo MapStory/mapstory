@@ -134,6 +134,7 @@ def collect():
         with cd('/srv/git/mapstory/mapstory/mapstory/static'):
             run('npm install')
             run('bower install --noinput')
+            run('bower update --noinput')
             sudo('grunt less', user='mapstory')
             sudo('grunt copy', user='mapstory')
 
