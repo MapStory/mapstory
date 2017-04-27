@@ -21,9 +21,10 @@ RUN set -ex \
         unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install WSGI server and paver
+# Install WSGI server and python tools
 RUN set -ex \
     && pip install --no-cache-dir \
+        coveralls \
         gunicorn \
         paver
 
@@ -124,6 +125,7 @@ COPY docker/django/run.sh /opt/
 USER mapstory
 VOLUME $STATIC_ROOT
 VOLUME $MEDIA_ROOT
+VOLUME $APP_PATH/mapstory/cover
 WORKDIR $APP_PATH/mapstory/
 EXPOSE $DJANGO_PORT
 ENTRYPOINT ["/opt/run.sh"]

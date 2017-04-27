@@ -6,3 +6,7 @@ services:
     command: --init-db --test
     volumes:
       - ./cover:/srv/mapstory/cover
+
+  celery:
+    environment:
+      CELERY_NUM_WORKERS: 1

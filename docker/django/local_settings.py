@@ -151,7 +151,8 @@ CELERY_DEFAULT_EXCHANGE_TYPE = "direct"
 CELERY_DEFAULT_ROUTING_KEY = "default"
 CELERY_CREATE_MISSING_QUEUES = True
 
-CELERY_ALWAYS_EAGER = False  # False makes tasks run asynchronously
+CELERY_ALWAYS_EAGER = str_to_bool(os.environ.get('CELERY_ALWAYS_EAGER', 'False'))  # False makes tasks run asynchronously
+CELERY_EAGER_PROPAGATES_EXCEPTIONS = str_to_bool(os.environ.get('CELERY_EAGER_PROPAGATES_EXCEPTIONS', 'False'))
 
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 CELERY_IGNORE_RESULT = False

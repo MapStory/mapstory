@@ -8,6 +8,7 @@
 
 let EC = protractor.ExpectedConditions;
 require('../tools/waitReady.js');
+let constants = require("../tools/constants");
 
 describe('User auth', function() {
 
@@ -15,7 +16,7 @@ describe('User auth', function() {
 
 	beforeEach(function(){
 		// Fetch Home
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		browser.waitForAngular();
 	});
 
@@ -97,7 +98,7 @@ describe('User auth', function() {
 				auth.loginIcon.click();
 				expect(auth.loginForm.waitReady()).toBeTruthy();
 
-				// Clock submit
+				// Click submit
 				element(by.css('.login-auth-btn.btn.btn-md.btn-block')).click();
 
 				// Expect error messages
@@ -161,6 +162,7 @@ describe('User auth', function() {
 			}
 			expect(auth.loginIcon.waitReady()).toBeTruthy();
 			auth.loginIcon.click();
+
 			expect(auth.loginForm.isPresent()).toBe(true);
 			browser.wait(EC.visibilityOf(auth.loginForm), 5000);
 			expect(auth.loginForm.isDisplayed()).toBeTruthy();
@@ -178,7 +180,7 @@ describe('User auth', function() {
 			auth.loginButton.click();
 
 			// Should show the avatar after login
-			browser.get('http://192.168.56.151');
+			browser.get(constants.baseURL);
 			expect(auth.userAvatar.waitReady()).toBeTruthy();
 		});
 	});

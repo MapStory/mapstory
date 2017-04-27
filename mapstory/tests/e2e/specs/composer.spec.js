@@ -7,6 +7,7 @@
 let page = require('../pages/composer.po.js');
 let home = require('../pages/home.po.js');
 let wait_times = require('../tools/wait_times.js');
+let constants = require('../tools/constants');
 
 describe('Composer', function() {
 	// Our home page object
@@ -16,7 +17,7 @@ describe('Composer', function() {
 	});
 
 	it('> should start logged in', function() {
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		home.login('admin', 'admin');
 	});
 
@@ -25,7 +26,7 @@ describe('Composer', function() {
 	});
 
 	it('> should be navigated to from home', function(done){
-		browser.get('http://192.168.56.151');
+		browser.get(constants.baseURL);
 		expect(home.menuCreate.waitReady()).toBeTruthy();
 		// Click create
 		home.menuCreate.click();
@@ -100,7 +101,7 @@ describe('Composer', function() {
 		expect(page.map_properties_location_dropdown.waitReady()).toBeTruthy();
 		expect(page.map_properties_save_button.waitReady()).toBeTruthy();
 
-		var storyTitle = page.makeRandomTitle(5);
+		let storyTitle = page.makeRandomTitle(5);
 
 		// Fill up properties form
 		page.map_properties_title_text.sendKeys(storyTitle);
