@@ -8,9 +8,10 @@ ENV CONSUL_TEMPLATE_VERSION=0.18.1
 
 VOLUME $MEDIA_ROOT
 
-# Install wget
+# Install tools and openssl/cert support
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        ca-certificates \
         wget \
     && rm -rf /var/lib/apt/lists/*
 
