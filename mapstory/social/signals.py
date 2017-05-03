@@ -161,8 +161,8 @@ if activity:
     signals.post_delete.connect(activity_post_modify_object, sender=Layer)
 
     # Removed chapters
-    # signals.post_save.connect(activity_post_modify_object, sender=Map)
-    # signals.post_delete.connect(activity_post_modify_object, sender=Map)
+    signals.post_save.connect(activity_post_modify_object, sender=Map)
+    signals.post_delete.connect(activity_post_modify_object, sender=Map)
 
 
 if notification_app:
