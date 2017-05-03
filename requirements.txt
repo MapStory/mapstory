@@ -62,3 +62,6 @@ mock
 # Selenium testing
 selenium
 #jasmine-data-provider
+
+# Activity streams
+django-activity-stream
