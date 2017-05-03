@@ -90,14 +90,23 @@ def activity_post_modify_object(sender, instance, created=None, **kwargs):
                                                updated_verb=_('updated'),
                                                ))
 
-    # action_settings['map'].update(object_name='Chapter',)
-    action_settings['map'].update(created_verb=_('chaptered'),)
+    # In MapStory a Chapter is a Map
+    action_settings['map'].update(
+        object_name ='Chapter',
+        created_verb = _('created'),
+        deleted_verb = _('deleted'),
+        # TODO: (Zunware) Add chapter name here,
+        # object_name = 'Chapter',
+        target = None,
+        updated_verb = _('updated')
+    )
 
     action_settings['comment'].update(actor=getattr(instance, 'author', None),
                                       created_verb=_("added a comment"),
                                       target=getattr(instance, 'content_object', None),
                                       updated_verb=_("updated a comment"),
                                       )
+
     action_settings['layer'].update(created_verb=_('uploaded'))
 
     action = action_settings[obj_type]
@@ -151,8 +160,9 @@ if activity:
     signals.post_save.connect(activity_post_modify_object, sender=Layer)
     signals.post_delete.connect(activity_post_modify_object, sender=Layer)
 
-    signals.post_save.connect(activity_post_modify_object, sender=Map)
-    signals.post_delete.connect(activity_post_modify_object, sender=Map)
+    # Removed chapters
+    # signals.post_save.connect(activity_post_modify_object, sender=Map)
+    # signals.post_delete.connect(activity_post_modify_object, sender=Map)
 
 
 if notification_app:
@@ -189,7 +199,8 @@ if notification_app:
 
     # signals
     # layer/map/document notifications
-    for resource in (Layer, Map, Document):
+    # for resource in (Layer, Map, Document):
+    for resource in (Layer, Document):
         signals.post_save.connect(notification_post_save_resource, sender=resource)
         signals.post_delete.connect(notification_post_delete_resource, sender=resource)
 

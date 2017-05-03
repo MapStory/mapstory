@@ -6,6 +6,7 @@ class SocialConfig(AppConfig):
     name = 'mapstory.social'
 
     def ready(self):
+
         registry.register(apps.get_app_config('layers').get_model('Layer'))
         # registry.register(apps.get_app_config('maps').get_model('Map'))
         registry.register(apps.get_app_config('documents').get_model('Document'))

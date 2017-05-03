@@ -93,6 +93,7 @@ INSTALLED_APPS += (
     'mapstory.journal',
     'mapstory.apps.thumbnails',
     'mapstory.annotations',
+    'mapstory.social'
 )
 
 # Adding Threaded Comments app
