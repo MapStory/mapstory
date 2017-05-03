@@ -65,6 +65,14 @@ DATABASES = {
     },
 }
 
+# Activity Stream
+ACTSTREAM_SETTINGS = {
+    'FETCH_RELATIONS': True,
+    'USE_PREFETCH': False,
+    'USE_JSONFIELD': True,
+    'GFK_FETCH_DEPTH': 1,
+}
+
 INSTALLED_APPS += (
     'django_nose',
     'mapstory',
@@ -93,6 +101,8 @@ INSTALLED_APPS += (
     'mapstory.journal',
     'mapstory.apps.thumbnails',
     'mapstory.annotations',
+    'mapstory.social',
+    'actstream',
 )
 
 # Adding Threaded Comments app

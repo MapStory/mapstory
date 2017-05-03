@@ -3,7 +3,7 @@ from unittest import skip
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from geonode.maps.models import MapStory
+from geonode.maps.models import Map, MapStory, MapLayer, Layer
 
 from ...version import get_version
 from ... import __version__ as version
@@ -11,8 +11,14 @@ from ..MapStoryTestMixin import MapStoryTestMixin
 from ..utils import get_test_user, create_mapstory
 from ...forms import KeywordsForm, PublishStatusForm
 
-testUser = get_test_user()
+from django.db.models import signals
+from geonode.geoserver.signals import geoserver_pre_save_maplayer
+from geonode.geoserver.signals import geoserver_post_save_map, geoserver_pre_save, geoserver_post_save
+from geonode.base.models import TopicCategory
 
+from mapstory.tests.helper import map_layers, create_test_map
+
+testUser = get_test_user()
 
 class TestMapstory(TestCase):
     """
@@ -23,7 +29,8 @@ class TestMapstory(TestCase):
         self.assertIsInstance(self.mapstory, MapStory, "Should be instance of MapStory")
         self.mapstory.title = "Test story"
         self.mapstory.owner = testUser
-    
+
+
     def test_save_and_retrieve(self):
         """
         Should save in database
@@ -35,6 +42,7 @@ class TestMapstory(TestCase):
         self.assertEqual(savedMapStory.title, "Test story", "Should have the same title")
         self.assertEqual(savedMapStory.owner, self.mapstory.owner, "Should have the same owner")
 
+
     def test_remove(self):
         self.assertEqual(0, MapStory.objects.all().count())
         self.mapstory.save()
@@ -42,9 +50,11 @@ class TestMapstory(TestCase):
         MapStory.objects.filter(id=self.mapstory.id).delete()
         self.assertEqual(0, MapStory.objects.all().count())
 
+
     @skip("TODO: Fix")
     def test_get_abosolute_url(self):
         self.assertIsNotNone(self.mapstory.get_absolute_url())
+
 
     @skip("TODO: Fix this test")
     def test_update_from_viewer(self):
@@ -57,8 +67,11 @@ class TestMapstory(TestCase):
 
 
 class TestMapstoryVersion(TestCase):
+
+
     def test_did_import(self):
         self.assertIsNotNone(get_version)
+
 
     def test_get_version(self):
         self.assertIsNotNone(get_version(None))
@@ -68,6 +81,9 @@ class TestMapstoryVersion(TestCase):
 
 
 class MapViewsTest(MapStoryTestMixin):
+
+
+
     def test_mapstory_detail_view(self):
         testMapstory = create_mapstory(testUser, 'Testing Map 01')
         self.assertIsNotNone(testMapstory)
@@ -83,6 +99,7 @@ class MapViewsTest(MapStoryTestMixin):
         # Should use the correct template
         self.assertTemplateUsed(response, 'maps/map_detail.html')
         self.assertContains(response, testMapstory.title)
+
 
     def test_post_mapstory_detail_keyword_post(self):
         # Should create add a keyword
@@ -103,6 +120,7 @@ class MapViewsTest(MapStoryTestMixin):
         response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": testMapstory.id}), form_data)
         self.assertEquals(response.status_code, 200)
 
+
     def test_mapstory_detail_publish_status_form(self):
         # Should not be published yet
         testMapstory = create_mapstory(testUser, 'Testing Map 03')
@@ -120,5 +138,29 @@ class MapViewsTest(MapStoryTestMixin):
         self.assertTrue(testMapstory.is_published)
 
 
+    def test_create_map_layer(self):
+        create_test_map()
+        signals.pre_save.disconnect(
+            geoserver_pre_save_maplayer,
+            sender=MapLayer
+        )
+        signals.post_save.disconnect(geoserver_post_save_map, sender=Map)
 
+        initial_layer_count = MapLayer.objects.count()
+        for test_layer in map_layers:
+            MapLayer.objects.create(
+                fixed=test_layer['fixed'],
+                group=test_layer['group'],
+                name=test_layer['name'],
+                layer_params=test_layer['layer_params'],
+                map=Map.objects.filter(title=test_layer['map'])[0],
+                source_params=test_layer['source_params'],
+                stack_order=test_layer['stack_order'],
+                opacity=test_layer['opacity'],
+                transparent=test_layer['stack_order'],
+                visibility=test_layer['stack_order'],
+            )
+
+        # new_count = initial_count + map_layers
+        self.assertEqual(MapLayer.objects.count(), initial_layer_count + len(map_layers))
 
