@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 
 from geonode.groups.models import GroupProfile, GroupMember
-from geonode.contrib.collections.models import Collection
+from mapstory.apps.collections.models import Collection
 
 from ...AdminClient import AdminClient
 from ...MapStoryTestMixin import MapStoryTestMixin
