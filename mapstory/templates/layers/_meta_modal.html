@@ -19,6 +19,7 @@
                 <div class="modal-body">
                     {% csrf_token %}
                     {{ metadata_form|as_bootstrap }}
+                    {{ distributionurl_form|as_bootstrap }}
                 </div>
                 <div class="modal-footer">
                     <button class="btn" data-dismiss="modal" aria-hidden="true">

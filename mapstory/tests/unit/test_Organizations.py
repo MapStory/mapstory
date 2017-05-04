@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
 from django.test.utils import override_settings
 
-from geonode.contrib.collections.models import Collection
+from mapstory.apps.collections.models import Collection
 from geonode.groups.models import GroupProfile
 
 from mapstory.views import organization_create, organization_edit, organization_detail, organization_members
@@ -39,7 +39,8 @@ class TestOrganizations(MapStoryTestMixin):
             'slug': 'Test-Organization'
         }
 
-        response = admin_client.post(reverse('organization_create'), data=form_data, follow=True)
+        form_url = reverse('organization_create')
+        response = admin_client.post(form_url, data=form_data, follow=True)
         # Test for final status code = HTTP OK
         self.assertEqual(response.status_code, 200)
 
@@ -62,9 +63,9 @@ class TestOrganizations(MapStoryTestMixin):
 
         # Test correct redirect to login page
         last_url, status_code = response.redirect_chain[-1]
-        self.assertRedirects(response, '/account/login/?next=/organizations/create/', status_code=302,
+        self.assertRedirects(response, '/account/login/?next=/organizations/create', status_code=302,
                              target_status_code=200)
-        self.assertEqual(last_url, 'http://testserver/account/login/?next=/organizations/create/')
+        self.assertEqual(last_url, 'http://testserver/account/login/?next=/organizations/create')
 
     def test_user_access_denied(self):
         """Regular users should not get access
@@ -122,7 +123,7 @@ class TestOrganizations(MapStoryTestMixin):
         manager = group.get_managers().all()
         # Should only have 1 manager
         self.assertEqual(len(manager), 1)
-        self.assertEqual(group.profile_type, 'org')
+        self.assertEqual(group.org.profile_type, 'org')
 
     def test_organization_create_post(self):
         """Should create a new organization
@@ -155,7 +156,7 @@ class TestOrganizations(MapStoryTestMixin):
         self.assertEqual(collection.group, group)
         self.assertEqual(collection.name, group.title)
         self.assertEqual(collection.slug, group.slug)
-        self.assertEqual(group.profile_type, 'org')
+        self.assertEqual(group.org.profile_type, 'org')
 
     def test_organization_create_get(self):
         """Should return an empty form.

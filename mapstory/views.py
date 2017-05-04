@@ -1,3 +1,4 @@
+import math
 import contextlib
 import csv
 import datetime
@@ -6,92 +7,93 @@ import shutil
 import StringIO
 import tempfile
 import zipfile
+import json
+import os
+from httplib import HTTPConnection, HTTPSConnection
+from urlparse import urlsplit
+
+import requests
+from account.conf import settings as account_settings
 from account.views import ConfirmEmailView
 from account.views import SignupView
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_POST
-from django.core.urlresolvers import reverse
+from actstream.models import actor_stream
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.core.mail import EmailMultiAlternatives
+from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import F
+from django.http import HttpResponse, HttpResponseServerError, Http404
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.http.request import validate_host
 from django.shortcuts import render_to_response, render, redirect, get_object_or_404
+from django.template import RequestContext
+from django.template import loader
+from django.template.loader import render_to_string
+from django.utils.http import is_safe_url
+from django.utils.timezone import now as provider_now
+from django.utils.translation import ugettext as _
+from django.views.decorators.http import require_POST
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.template import RequestContext
-from django.utils.http import is_safe_url
-from django.utils.translation import ugettext as _
 from geonode.base.models import TopicCategory, Region
+from geonode.documents.models import get_related_documents
+from geonode.geoserver.helpers import ogc_server_settings
+from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
+from geonode.groups.models import GroupProfile, GroupMember
 from geonode.layers.models import Layer
-from geonode.layers.views import _resolve_layer
 from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
 from geonode.people.models import Profile
 from geonode.geoserver.views import layer_acls, resolve_user
-from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE
-from geonode.maps.models import Map, MapStory
-from httplib import HTTPConnection, HTTPSConnection
-from mapstory import tasks
-from mapstory.importers import GeoServerLayerCreator
-from mapstory.utils import has_exception, parse_wfst_response, print_exception
-from mapstory.models import get_sponsors, get_images, get_featured_groups
-from mapstory.models import GetPage
-from mapstory.models import NewsItem
-from journal.models import JournalEntry
-from mapstory.models import Leader
-from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
-from icon_commons.models import Icon
-from geonode.contrib.favorite.models import Favorite
-from geonode.contrib.collections.models import Collection
-from geonode.geoserver.helpers import ogc_server_settings
-from urlparse import urlsplit
-from user_messages.models import Thread
-from actstream.models import actor_stream
-
-
-from geonode.utils import GXPLayer, GXPMap
-from geonode.utils import resolve_object
+from geonode.layers.views import _resolve_layer
+from mapstory.mapstories.models import MapStory, Map
+from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE, _PERMISSION_MSG_LOGIN
+from geonode.maps.models import MapLayer, MapSnapshot
+from geonode.people.models import Profile
+from geonode.security.views import _perms_info_json
+from geonode.tasks.deletion import delete_layer
+from tasks import delete_mapstory
+from geonode.utils import GXPLayer, GXPMap, resolve_object
 from geonode.utils import build_social_links
 from geonode.utils import default_map_config
-from mapstory.forms import DeactivateProfileForm, EditProfileForm
-from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm
-from mapstory.forms import OrganizationForm, OrganizationUpdateForm
-from mapstory.forms import SignupForm
-from geonode.security.views import _perms_info_json
-from geonode.documents.models import get_related_documents
-
-from django.db.models import F
-from django.contrib.auth.models import Group
-from django.contrib import messages
-from django.contrib.auth import logout
-from django.contrib.auth import get_user_model
-
-from geonode.tasks.deletion import delete_mapstory, delete_layer
-from provider.oauth2.models import AccessToken
-from django.utils.timezone import now as provider_now
-from account.conf import settings as account_settings
-from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
-from osgeo_importer.forms import UploadFileForm
-from celery import group
+from geonode.utils import forward_mercator, llbbox_to_mercator
+from geonode.utils import DEFAULT_TITLE
+from geonode.utils import DEFAULT_ABSTRACT
+from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
+from health_check.plugins import plugin_dir
+from icon_commons.models import Icon
 from lxml import etree
+from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
+from mapstory.apps.collections.models import Collection
+from mapstory.apps.favorite.models import Favorite
+from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
+from mapstory.orgs.forms import OrgForm
+from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditGeonodeProfileForm
+from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm, DistributionUrlForm
+from mapstory.forms import SignupForm
+from mapstory.importers import GeoServerLayerCreator
+from mapstory.models import GetPage
+from mapstory.models import Leader
+from mapstory.models import NewsItem
+from mapstory.models import get_sponsors, get_images, get_featured_groups
+from mapstory.search.utils import update_es_index
+from mapstory.utils import has_exception, parse_wfst_response, print_exception
 from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
-
 from .notifications import PROFILE_NOTICE_SETTINGS
 from osgeo_importer.utils import UploadError, launder
+from osgeo_importer.forms import UploadFileForm
+from provider.oauth2.models import AccessToken
+from user_messages.models import Thread
 
-import json
-import os
-import requests
-from geonode.groups.models import GroupProfile, GroupMember
-from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
-from mapstory.search.utils import update_es_index
-
-
-from django.http import HttpResponse, HttpResponseServerError
-from django.template import loader
-from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
-from health_check.plugins import plugin_dir
-from journal.models import get_group_journals
+from apps.journal.models import JournalEntry
+from apps.journal.models import get_group_journals
 
 plugin_dir.register(GeoServerHealthCheck)
 
@@ -167,6 +169,7 @@ class ProfileDetail(DetailView):
 
 @login_required
 def profile_edit(request, username=None):
+    # TODO this if/else needs updated for mapstoryprofile
     if username is None:
         try:
             profile = request.user.profile
@@ -177,9 +180,13 @@ def profile_edit(request, username=None):
 
     if username == request.user.username:
         if request.method == "POST":
-            form = EditProfileForm(request.POST, instance=profile)
-            if form.is_valid():
-                form.save()
+            geonode_form = EditGeonodeProfileForm(request.POST,
+                                                  instance=request.user)
+            mapstory_form = EditMapstoryProfileForm(request.POST,
+                                                    instance=request.user.mapstoryprofile)
+            if geonode_form.is_valid() and mapstory_form.is_valid():
+                geonode_form.save()
+                mapstory_form.save()
                 messages.success(request, "Profile profile updated.")
                 return redirect(
                     reverse(
@@ -187,10 +194,12 @@ def profile_edit(request, username=None):
                         args=[
                             request.user.username]))
         else:
-            form = EditProfileForm(instance=profile)
-          
+            geonode_form = EditGeonodeProfileForm(instance=request.user)
+            mapstory_form = EditMapstoryProfileForm(instance=request.user.mapstoryprofile)
+
         return render(request, "people/profile_edit.html", {
-            "form": form
+            "geonode_profile_form": geonode_form,
+            "mapstory_profile_form": mapstory_form
         })
     else:
         return HttpResponseForbidden(
@@ -248,7 +257,7 @@ def profile_delete(request, username=None):
 def organization_detail(request, slug):
     group = GroupProfile.objects.get(slug=slug)
 
-    if not group.profile_type == 'org':
+    if not group.org.profile_type == 'org':
         return HttpResponse(status=404)
 
     return render_to_response("groups/organization_detail.html", {
@@ -261,7 +270,7 @@ def organization_detail(request, slug):
 def initiative_detail(request, slug):
     group = GroupProfile.objects.get(slug=slug)
 
-    if not group.profile_type == 'ini':
+    if not group.org.profile_type == 'ini':
         return HttpResponse(status=404)
 
     return render_to_response("groups/initiative_detail.html", {
@@ -274,12 +283,16 @@ def initiative_detail(request, slug):
 @login_required
 def organization_create(request):
     if request.method == "POST":
-        form = OrganizationForm(request.POST, request.FILES)
-        if form.is_valid():
-            group = form.save(commit=False)
-            group.profile_type = 'org'
+        group_form = GroupForm(request.POST, request.FILES)
+        org_form = OrgForm(request.POST, request.FILES)
+        if group_form.is_valid() and org_form.is_valid():
+            group = group_form.save(commit=False)
             group.save()
-            form.save_m2m()
+            group.org.profile_type = 'org'
+            # org_form.save() # TODO we don't call save on the org_form, since
+            # post_save signals will trigger an org save after group is saved
+            group.save()  # TODO save again now that we've set profile_type
+            group_form.save_m2m()
             group.join(request.user, role="manager")
             # Create the collection corresponding to this organization
             collection = Collection()
@@ -293,11 +306,13 @@ def organization_create(request):
                     args=[
                         group.slug]))
     else:
-        form = OrganizationForm(initial={'profile_type': 'org'})
+        group_form = GroupForm(initial={'profile_type': 'org'})
+        org_form = OrgForm()
 
     if request.user.is_superuser:
-        return render_to_response("groups/group_create.html", {
-            "form": form,
+        return render_to_response("groups/mapstory_group_create.html", {
+            "group_form": group_form,
+            "org_form": org_form,
             }, context_instance=RequestContext(request))
     else:
         return HttpResponse(status=403)
@@ -305,12 +320,14 @@ def organization_create(request):
 @login_required
 def initiative_create(request):
     if request.method == "POST":
-        form = GroupForm(request.POST, request.FILES)
-        if form.is_valid():
-            group = form.save(commit=False)
-            group.profile_type = 'ini'
+        group_form = GroupForm(request.POST, request.FILES)
+        org_form = OrgForm(request.POST, request.FILES)
+        if group_form.is_valid() and org_form.is_valid():
+            group = group_form.save(commit=False)
             group.save()
-            form.save_m2m()
+            group.org.profile_type = 'ini'
+            group.save()
+            group_form.save_m2m()
             group.join(request.user, role="manager")
             # Create the collection corresponding to this initiative
             collection = Collection()
@@ -324,11 +341,13 @@ def initiative_create(request):
                     args=[
                         group.slug]))
     else:
-        form = GroupForm(initial={'profile_type': 'ini'})
+        group_form = GroupForm(initial={'profile_type': 'ini'})
+        org_form = OrgForm()
 
     if request.user.is_superuser:
-        return render_to_response("groups/group_create.html", {
-            "form": form,
+        return render_to_response("groups/mapstory_group_create.html", {
+            "group_form": group_form,
+            "org_form": org_form,
             }, context_instance=RequestContext(request))
     else:
         return HttpResponse(status=403)
@@ -336,14 +355,14 @@ def initiative_create(request):
 @login_required
 def organization_edit(request, slug):
     group = GroupProfile.objects.get(slug=slug)
-    if not group.profile_type == 'org':
+    if not group.org.profile_type == 'org':
         return HttpResponse(status=404)
     # Can use this function to toggle manager view
     if not group.user_is_role(request.user, role="manager"):
         return HttpResponseForbidden()
 
     if request.method == "POST":
-        form = OrganizationUpdateForm(request.POST, request.FILES, instance=group)
+        form = GroupUpdateForm(request.POST, request.FILES, instance=group)
         if form.is_valid():
             group = form.save(commit=False)
             group.save()
@@ -354,7 +373,7 @@ def organization_edit(request, slug):
                     args=[
                         group.slug]))
     else:
-        form = OrganizationForm(instance=group)
+        form = GroupForm(instance=group)
 
     return render_to_response("groups/group_update.html", {
         "form": form,
@@ -364,7 +383,7 @@ def organization_edit(request, slug):
 @login_required
 def initiative_edit(request, slug):
     group = GroupProfile.objects.get(slug=slug)
-    if not group.profile_type == 'ini':
+    if not group.org.profile_type == 'ini':
         return HttpResponse(status=404)
     # Can use this function to toggle manager view
     if not group.user_is_role(request.user, role="manager"):
@@ -638,15 +657,77 @@ class MapStoryConfirmEmailView(ConfirmEmailView):
         html_content = render_to_string("account/email/welcome_message.html", ctx)
         text_content = render_to_string("account/email/welcome_message.txt", ctx)
         msg = EmailMultiAlternatives(subject, text_content,
-            account_settings.DEFAULT_FROM_EMAIL, [confirmation.email_address.email])
+                                     account_settings.DEFAULT_FROM_EMAIL, [confirmation.email_address.email])
         msg.attach_alternative(html_content, "text/html")
         msg.send()
         super(MapStoryConfirmEmailView, self).after_confirmation(confirmation)
 
+
 @login_required
 def new_map_json(request):
-    from geonode.maps.views import new_map_json
-    return new_map_json(request)
+    if request.method == 'GET':
+        config = new_map_config(request)
+        if isinstance(config, HttpResponse):
+            return config
+        else:
+            return HttpResponse(config)
+
+    elif request.method == 'POST':
+        if not request.user.is_authenticated():
+            return HttpResponse(
+                'You must be logged in to save new maps',
+                content_type="text/plain",
+                status=401
+            )
+
+        map_obj = Map(owner=request.user, zoom=0,
+                      center_x=0, center_y=0)
+        map_obj.save()
+        map_obj.set_default_permissions()
+
+        # If the body has been read already, use an empty string.
+        # See https://github.com/django/django/commit/58d555caf527d6f1bdfeab14527484e4cca68648
+        # for a better exception to catch when we move to Django 1.7.
+        try:
+            body = request.body
+        except Exception:
+            body = ''
+
+        try:
+            map_obj.update_from_viewer(body)
+            MapSnapshot.objects.create(
+                config=clean_config(body),
+                map=map_obj,
+                user=request.user)
+        except ValueError as e:
+            return HttpResponse(str(e), status=400)
+        else:
+            return HttpResponse(
+                json.dumps({'id': map_obj.id}),
+                status=200,
+                content_type='application/json'
+            )
+    else:
+        return HttpResponse(status=405)
+
+
+@xframe_options_exempt
+def map_view(request, mapid, snapshot=None, template='maps/map_view.html'):
+    """
+    The view that returns the map composer opened to
+    the map with the given map ID.
+    """
+    map_obj = _resolve_story(request, mapid, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
+
+    if snapshot is None:
+        config = map_obj.viewer_json(request.user)
+    else:
+        config = snapshot_config(snapshot, map_obj, request.user)
+
+    return render_to_response(template, RequestContext(request, {
+        'config': json.dumps(config),
+        'map': map_obj
+    }))
 
 def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer.html'):
     """
@@ -665,8 +746,9 @@ def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer
         'config': json.dumps(config)
     }))
 
+# TODO this should be moved to a mapstory.util
 def _resolve_story(request, id, permission='base.change_resourcebase',
-                 msg=_PERMISSION_MSG_GENERIC, **kwargs):
+                   msg=_PERMISSION_MSG_GENERIC, **kwargs):
     '''
     Resolve the Map by the provided typename and check the optional permission.
     '''
@@ -676,6 +758,65 @@ def _resolve_story(request, id, permission='base.change_resourcebase',
         key = 'urlsuffix'
     return resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
+
+
+def save_story(request, storyid):
+    if not request.user.is_authenticated():
+        return HttpResponse(
+                _PERMISSION_MSG_LOGIN,
+                status=401,
+                content_type="text/plain"
+        )
+
+    story_obj = MapStory.objects.get(id=storyid)
+    if not request.user.has_perm('change_resourcebase', story_obj.get_self_resource()):
+        return HttpResponse(
+                _PERMISSION_MSG_SAVE,
+                status=401,
+                content_type="text/plain"
+        )
+
+    try:
+        story_obj.update_from_viewer(request.body)
+        return HttpResponse(json.dumps(story_obj.viewer_json(request.user)))
+    except ValueError as e:
+        return HttpResponse(
+                "The server could not understand the request." + str(e),
+                content_type="text/plain",
+                status=400
+        )
+
+
+def new_story_json(request):
+    if not request.user.is_authenticated():
+        return HttpResponse(
+                'You must be logged in to save new maps',
+                content_type="text/plain",
+                status=401
+        )
+    story_obj = MapStory(owner=request.user)
+    story_obj.save()
+    story_obj.set_default_permissions()
+
+    # If the body has been read already, use an empty string.
+    # See https://github.com/django/django/commit/58d555caf527d6f1bdfeab14527484e4cca68648
+    # for a better exception to catch when we move to Django 1.7.
+    try:
+        body = request.body
+    except Exception:
+        body = ''
+
+    try:
+        story_obj.update_from_viewer(body)
+    except ValueError as e:
+        return HttpResponse(str(e), status=400)
+    else:
+        return HttpResponse(
+                json.dumps({'id': story_obj.id}),
+                status=200,
+                content_type='application/json'
+        )
+
 
 def draft_view(request, storyid, template='composer/maploom.html'):
 
@@ -695,15 +836,20 @@ def mapstory_draft(request, storyid, template):
 
 @login_required
 def new_map(request, template):
-    from geonode.maps.views import new_map
-    return new_map(request, template)
+    config = new_map_config(request)
+    if isinstance(config, HttpResponse):
+        return config
+    else:
+        return render_to_response(template, RequestContext(request, {
+            'config': config,
+        }))
 
 @login_required
 def layer_create(request, template='upload/layer_create.html'):
     if request.method == 'POST':
         errors = False
         error_messages = []
-        
+
         if request.is_ajax():
             configuration_options = json.loads(request.body)
         else:
@@ -1020,7 +1166,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     # center/zoom don't matter; the viewer will center on the layer bounds
     map_obj = GXPMap(projection="EPSG:900913")
     NON_WMS_BASE_LAYERS = [
-        la for la in default_map_config()[1] if la.ows_url is None]
+        la for la in default_map_config(None)[1] if la.ows_url is None]
 
     metadata = layer.link_set.metadata().filter(
         name__in=settings.DOWNLOAD_FORMATS_METADATA)
@@ -1030,6 +1176,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     if request.method == "POST":
         keywords_form = KeywordsForm(request.POST, instance=layer)
         metadata_form = MetadataForm(instance=layer)
+        distributionurl_form = DistributionUrlForm(request.POST, instance=layer)
         if 'keywords' in request.POST:
             if keywords_form.is_valid():
                 keywords_form.save()
@@ -1037,7 +1184,6 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                 layer.keywords.set(*new_keywords)
                 layer.save()
             metadata_form = MetadataForm(instance=layer)
-            published_form = PublishStatusForm(instance=layer)
         elif 'title' in request.POST:
             metadata_form = MetadataForm(request.POST, instance=layer)
             if metadata_form.is_valid():
@@ -1048,11 +1194,13 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                     Layer.objects.filter(id=layer.id).update(category=new_category)
                 layer.title = metadata_form.cleaned_data['title']
                 layer.language = metadata_form.cleaned_data['language']
-                layer.distribution_url = metadata_form.cleaned_data['distribution_url']
                 layer.data_quality_statement = metadata_form.cleaned_data['data_quality_statement']
                 layer.purpose = metadata_form.cleaned_data['purpose']
                 layer.is_published = metadata_form.cleaned_data['is_published']
-                layer.save()                
+                layer.save()
+        if distributionurl_form.is_valid():
+            layer.distribution_url = distributionurl_form.cleaned_data['distribution_url']
+
             keywords_form = KeywordsForm(instance=layer)
         elif 'add_keyword' in request.POST:
             layer.keywords.add(request.POST['add_keyword'])
@@ -1063,6 +1211,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     else:
         keywords_form = KeywordsForm(instance=layer)
         metadata_form = MetadataForm(instance=layer)
+        distributionurl_form = DistributionUrlForm(instance=layer)
 
     content_moderators = Group.objects.filter(name='content_moderator').first()
 
@@ -1106,13 +1255,16 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "wps_enabled": settings.OGC_SERVER['default']['WPS_ENABLED'],
         "keywords_form": keywords_form,
         "metadata_form": metadata_form,
+        "distributionurl_form": distributionurl_form,
         "content_moderators": content_moderators,
         "thumbnail": thumbnail,
         "thumb_form": thumb_form
     }
 
     context_dict["viewer"] = json.dumps(
-        map_obj.viewer_json(request.user, * (NON_WMS_BASE_LAYERS + [maplayer])))
+        map_obj.viewer_json(
+            request.user,
+            * (NON_WMS_BASE_LAYERS + [maplayer])))
     context_dict["preview"] = getattr(
         settings,
         'LAYER_PREVIEW_LIBRARY')
@@ -1158,8 +1310,9 @@ def _resolve_map(request, id, permission='base.change_resourcebase',
         key = 'pk'
     else:
         key = 'urlsuffix'
-    return resolve_object(request, MapStory, {key: id}, permission=permission,
+    map_obj = resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
+    return map_obj
 
 def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     '''
@@ -1191,9 +1344,8 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         published_form = PublishStatusForm(instance=map_obj)
         if 'keywords' in request.POST:
             if keywords_form.is_valid():
-                keywords_form.save()
                 new_keywords = keywords_form.cleaned_data['keywords']
-                map_obj.keywords.set(*new_keywords)
+                map_obj.keywords.add(*new_keywords)
                 map_obj.save()
             published_form = PublishStatusForm(instance=map_obj)
         elif 'published_submit_btn' in request.POST:
@@ -1332,7 +1484,7 @@ def account_verify(request):
 
 
 def layer_detail_id(request, layerid):
-    layer = get_object_or_404(Layer, pk=layerid)    
+    layer = get_object_or_404(Layer, pk=layerid)
     return layer_detail(request, layer.typename)
 
 
@@ -1354,3 +1506,167 @@ def resolve_user_mapstory(request):
     result["fullname"] = request.user.username
 
     return HttpResponse(json.dumps(result), content_type="application/json")
+
+
+def new_map_config(request):
+    '''
+    View that creates a new map.
+
+    If the query argument 'copy' is given, the initial map is
+    a copy of the map with the id specified, otherwise the
+    default map configuration is used.  If copy is specified
+    and the map specified does not exist a 404 is returned.
+    '''
+    DEFAULT_MAP_CONFIG, DEFAULT_BASE_LAYERS = default_map_config(None)
+    map_obj = None
+    if request.method == 'GET' and 'copy' in request.GET:
+        mapid = request.GET['copy']
+        map_obj = _resolve_map(request, mapid, 'base.view_resourcebase')
+
+        map_obj.abstract = DEFAULT_ABSTRACT
+        map_obj.title = DEFAULT_TITLE
+        map_obj.viewer_playbackmode = DEFAULT_VIEWER_PLAYBACKMODE
+        if request.user.is_authenticated():
+            map_obj.owner = request.user
+        config = map_obj.viewer_json(request.user)
+        del config['id']
+    else:
+        if request.method == 'GET':
+            params = request.GET
+        elif request.method == 'POST':
+            params = request.POST
+        else:
+            return HttpResponse(status=405)
+
+        if 'layer' in params:
+            bbox = None
+            map_obj = Map(projection=getattr(settings, 'DEFAULT_MAP_CRS',
+                          'EPSG:900913'))
+            layers = []
+            for layer_name in params.getlist('layer'):
+                try:
+                    layer = _resolve_layer(request, layer_name)
+                except ObjectDoesNotExist:
+                    # bad layer, skip
+                    continue
+
+                if not request.user.has_perm(
+                        'view_resourcebase',
+                        obj=layer.get_self_resource()):
+                    # invisible layer, skip inclusion
+                    continue
+
+                layer_bbox = layer.bbox
+                # assert False, str(layer_bbox)
+                if bbox is None:
+                    bbox = list(layer_bbox[0:4])
+                else:
+                    bbox[0] = min(bbox[0], layer_bbox[0])
+                    bbox[1] = max(bbox[1], layer_bbox[1])
+                    bbox[2] = min(bbox[2], layer_bbox[2])
+                    bbox[3] = max(bbox[3], layer_bbox[3])
+
+                config = layer.attribute_config()
+
+                # Add required parameters for GXP lazy-loading
+                config["title"] = layer.title
+                config["queryable"] = True
+
+                config["srs"] = getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913')
+                config["bbox"] = bbox if config["srs"] != 'EPSG:900913' \
+                    else llbbox_to_mercator([float(coord) for coord in bbox])
+
+                if layer.storeType == "remoteStore":
+                    service = layer.service
+                    maplayer = MapLayer(map=map_obj,
+                                        name=layer.typename,
+                                        ows_url=layer.ows_url,
+                                        layer_params=json.dumps(config),
+                                        visibility=True,
+                                        source_params=json.dumps({
+                                            "ptype": service.ptype,
+                                            "remote": True,
+                                            "url": service.base_url,
+                                            "name": service.name}))
+                else:
+                    # for non-remoteStore layers, MapLoom expects layer.ows_url
+                    # to actually be this individual layer's full path (e.g.,
+                    # mapstory.org.geoserver/workspace/layername/wms)
+
+                    ows_url = '{0}{1}/{2}/wms'.format(
+                        settings.OGC_SERVER['default']['PUBLIC_LOCATION'],
+                        layer.workspace,
+                        layer.name)
+                    maplayer = MapLayer(
+                        map=map_obj,
+                        name=layer.name,
+                        ows_url=ows_url,
+                        # use DjangoJSONEncoder to handle Decimal values
+                        layer_params=json.dumps(config, cls=DjangoJSONEncoder),
+                        visibility=True
+                    )
+
+                layers.append(maplayer)
+
+            if bbox is not None:
+                minx, miny, maxx, maxy = [float(c) for c in bbox]
+                x = (minx + maxx) / 2
+                y = (miny + maxy) / 2
+
+                if getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913') == "EPSG:4326":
+                    center = list((x, y))
+                else:
+                    center = list(forward_mercator((x, y)))
+
+                if center[1] == float('-inf'):
+                    center[1] = 0
+
+                BBOX_DIFFERENCE_THRESHOLD = 1e-5
+
+                # Check if the bbox is invalid
+                valid_x = (maxx - minx) ** 2 > BBOX_DIFFERENCE_THRESHOLD
+                valid_y = (maxy - miny) ** 2 > BBOX_DIFFERENCE_THRESHOLD
+
+                if valid_x:
+                    width_zoom = math.log(360 / abs(maxx - minx), 2)
+                else:
+                    width_zoom = 15
+
+                if valid_y:
+                    height_zoom = math.log(360 / abs(maxy - miny), 2)
+                else:
+                    height_zoom = 15
+
+                map_obj.center_x = center[0]
+                map_obj.center_y = center[1]
+                map_obj.zoom = math.ceil(min(width_zoom, height_zoom))
+
+            config = map_obj.viewer_json(
+                request.user, *(DEFAULT_BASE_LAYERS + layers))
+            config['fromLayer'] = True
+        else:
+            config = DEFAULT_MAP_CONFIG
+    return json.dumps(config)
+
+
+### TODO should be a util
+
+def clean_config(conf):
+    if isinstance(conf, basestring):
+        config = json.loads(conf)
+        config_extras = [
+            "rest",
+            "homeUrl",
+            "localGeoServerBaseUrl",
+            "localCSWBaseUrl",
+            "csrfToken",
+            "db_datastore",
+            "authorizedRoles"]
+        for config_item in config_extras:
+            if config_item in config:
+                del config[config_item]
+            if config_item in config["map"]:
+                del config["map"][config_item]
+        return json.dumps(config)
+    else:
+        return conf

@@ -12,7 +12,7 @@ class TestOrganizationsView(TestCase):
         self.assertIsNotNone(organization_members, "Failed to import 'organization_members'")
 
     def test_url_api(self):
-        self.assertEqual(reverse('organization_create'), u'/organizations/create/')
+        self.assertEqual(reverse('organization_create'), u'/organizations/create')
         self.assertEqual(reverse('organization_edit', kwargs={'slug': 'testslug'}), u'/organizations/edit/testslug')
         self.assertEqual(reverse('organization_detail', kwargs={'slug': 'testslug'}), u'/organizations/testslug')
         self.assertEqual(reverse('organization_members', kwargs={'slug': 'testslug'}), u'/organizations/members/testslug')
@@ -24,8 +24,8 @@ class TestOrganizationsView(TestCase):
         response = c.get(reverse('index_view'))
         self.assertContains(response, "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">", count=1, status_code=200, html=False)
         # self.assertTemplateUsed()
-        # 
-    
+        #
+
     def test_organization_create_auth_required(self):
         """Guests should not be allowed.
 
@@ -36,6 +36,6 @@ class TestOrganizationsView(TestCase):
 
         # Test correct redirect to login page
         last_url, status_code = response.redirect_chain[-1]
-        self.assertRedirects(response, '/account/login/?next=/organizations/create/', status_code=302,
+        self.assertRedirects(response, '/account/login/?next=/organizations/create', status_code=302,
                              target_status_code=200)
-        self.assertEqual(last_url, 'http://testserver/account/login/?next=/organizations/create/')
+        self.assertEqual(last_url, 'http://testserver/account/login/?next=/organizations/create')

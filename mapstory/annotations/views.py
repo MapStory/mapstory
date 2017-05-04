@@ -4,7 +4,7 @@ from mapstory.annotations.models import Annotation
 from mapstory.annotations.forms import AnnotationForm
 from mapstory.annotations.utils import unicode_csv_dict_reader
 from geonode.utils import resolve_object
-from geonode.maps.models import Map
+from mapstory.mapstories.models import Map
 from geonode.utils import json_response
 
 import csv

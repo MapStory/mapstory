@@ -3,13 +3,13 @@
 {% if profile.profile %}
     <div class="sidebar-header"><h3>About</h3></div>
     <div class="sidebar-content">{{ profile.profile }}</div>{% endif %}
-{% if profile.city or profile.country %}
+{% if profile.org.city or profile.org.country %}
     <div class="sidebar-header"><h3>Location</h3></div>
-    {% if profile.city %}
-        <div class="sidebar-content">{{ profile.city }}</div>
+    {% if profile.org.city %}
+        <div class="sidebar-content">{{ profile.org.city }}</div>
     {% endif %}
-    {% if profile.country %}
-        <div class="sidebar-content">{{ profile.country }}</div>
+    {% if profile.org.country %}
+        <div class="sidebar-content">{{ profile.org.country }}</div>
     {% endif %}
 {% endif %}
 {% if profile.education %}
@@ -29,17 +29,17 @@
     {% if user != profile %}
     <a href='{% url "message_create" user_id=profile.pk %}' class="btn btn-primary">message</a>
     {% endif %}
-{% comment %} 
+{% comment %}
 TODO: change help text in /geonode/geonode/people/models.py to encourage correct format of handle for each link or init a controller that checks what is given and creates these links accordingly {% endcomment %}
-{% if profile.social_twitter %}
+{% if profile.org.social_twitter %}
     <div class="sidebar-content">
-        <a href="https://twitter.com/{{ profile.social_twitter }}"><i class="fa fa-twitter"></i> {{ profile.social_twitter }}
+        <a href="https://twitter.com/{{ profile.org.social_twitter }}"><i class="fa fa-twitter"></i> {{ profile.org.social_twitter }}
         </a>
     </div>
 {% endif %}
-{% if profile.social_facebook %}
+{% if profile.org.social_facebook %}
     <div class="sidebar-content">
-        <a href="https://www.facebook.com/{{ profile.social_facebook }}"><i class="fa fa-facebook"></i> {{ profile.social_facebook }}</a>
+        <a href="https://www.facebook.com/{{ profile.org.social_facebook }}"><i class="fa fa-facebook"></i> {{ profile.org.social_facebook }}</a>
     </div>
 {% endif %}
 {% if profile.social_linkedin %}

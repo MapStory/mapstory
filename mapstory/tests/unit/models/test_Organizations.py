@@ -2,7 +2,7 @@ from django.core.urlresolvers import reverse
 from datetime import datetime
 from bs4 import BeautifulSoup
 from django.test import TestCase, Client
-from geonode.contrib.collections.models import Collection
+from mapstory.apps.collections.models import Collection
 from geonode.groups.models import GroupProfile
 
 from mapstory.tests.AdminClient import AdminClient
@@ -53,7 +53,7 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         manager = group.get_managers().all()
         # Should only have 1 manager
         self.assertEqual(len(manager), 1)
-        self.assertEqual(group.profile_type, 'org')
+        self.assertEqual(group.org.profile_type, 'org')
 
     def test_organization_create_get(self):
         """Should return an empty form.
@@ -92,6 +92,6 @@ class MapStoryOrganizationTests(MapStoryTestMixin):
         self.assertEqual(collection.group, group)
         self.assertEqual(collection.name, group.title)
         self.assertEqual(collection.slug, group.slug)
-        self.assertEqual(group.profile_type, 'org')
+        self.assertEqual(group.org.profile_type, 'org')
 
 

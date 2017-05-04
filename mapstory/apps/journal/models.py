@@ -4,7 +4,6 @@ from django.core.urlresolvers import reverse
 from datetime import datetime
 import textile
 
-
 class ContentMixin(models.Model):
     content = models.TextField(
         help_text="use <a href=%s target='_'>textile</a> for the content" %

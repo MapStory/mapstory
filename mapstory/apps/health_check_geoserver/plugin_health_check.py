@@ -5,9 +5,9 @@ import traceback
 
 from geonode.geoserver.helpers import check_geoserver_is_up
 
-from health_check.backends.base import (
-    BaseHealthCheckBackend, ServiceReturnedUnexpectedResult, ServiceUnavailable
-)
+from health_check.backends import BaseHealthCheckBackend
+from health_check.exceptions import ServiceReturnedUnexpectedResult, ServiceUnavailable
+from health_check.plugins import plugin_dir
 
 logger = logging.getLogger(__name__)
 

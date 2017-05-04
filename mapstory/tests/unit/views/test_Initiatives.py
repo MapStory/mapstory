@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 
 from geonode.groups.models import GroupProfile, GroupMember
-from geonode.contrib.collections.models import Collection
+from mapstory.apps.collections.models import Collection
 
 from ...AdminClient import AdminClient
 from ...MapStoryTestMixin import MapStoryTestMixin
@@ -29,7 +29,7 @@ class TestInitiativesViews(MapStoryTestMixin):
             raise RuntimeError
 
         for g in groups:
-            if (g.profile_type == 'ini'):
+            if (g.org.profile_type == 'ini'):
                 return g
 
     def addUserAsManagerToGroup(user, group):

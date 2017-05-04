@@ -2,21 +2,21 @@ from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
 
 from ...admin import (
-    GetPageAdmin, 
-    GetPageChoiceField, 
-    GetPageContentForm, 
-    GetPageContentAdmin, 
-    SponsorAdmin, 
-    TaskInline, 
-    CommunityAdmin, 
-    NewsItemForm, 
-    LeaderAdmin, 
-    ParallaxImageAdmin, 
+    GetPageAdmin,
+    GetPageChoiceField,
+    GetPageContentForm,
+    GetPageContentAdmin,
+    SponsorAdmin,
+    TaskInline,
+    CommunityAdmin,
+    NewsItemForm,
+    LeaderAdmin,
+    ParallaxImageAdmin,
     CustomSiteAdmin,
     content_html
 )
 
-from ...journal.admin import JournalEntryAdmin
+from mapstory.apps.journal.admin import JournalEntryAdmin
 from ...models import GetPage, GetPageContent
 
 class DummyHTMLObj(object):

@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from geonode.maps.models import Map,MapStory
+from mapstory.mapstories.models import Map,MapStory
 import re
 
 class Command(BaseCommand):

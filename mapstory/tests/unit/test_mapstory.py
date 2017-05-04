@@ -3,7 +3,7 @@ from unittest import skip
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from geonode.maps.models import MapStory
+from mapstory.mapstories.models import MapStory
 
 from ...version import get_version
 from ... import __version__ as version
@@ -23,7 +23,7 @@ class TestMapstory(TestCase):
         self.assertIsInstance(self.mapstory, MapStory, "Should be instance of MapStory")
         self.mapstory.title = "Test story"
         self.mapstory.owner = testUser
-    
+
     def test_save_and_retrieve(self):
         """
         Should save in database
@@ -112,13 +112,10 @@ class MapViewsTest(MapStoryTestMixin):
         form_data = {'is_published': True, 'published_submit_btn': True}
         form = PublishStatusForm(data=form_data)
         self.assertTrue(form.is_valid())
-        response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": testMapstory.id}), form_data)
+        response = self.client.post(reverse('mapstory_detail',
+                                            kwargs={"mapid": testMapstory.id}), form_data)
         self.assertEquals(response.status_code, 200)
 
         # Should be published
         testMapstory = MapStory.objects.get(id=testMapstory.id)
         self.assertTrue(testMapstory.is_published)
-
-
-
-

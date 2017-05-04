@@ -3,8 +3,8 @@ import json
 from django.test import Client
 from unittest import skip
 from geonode.base.models import TopicCategory
-from geonode.base.populate_test_data import create_models
-from geonode.maps.models import Map
+from mapstory.tests.populate_test_data import create_models
+from mapstory.mapstories.models import Map
 from django.core.urlresolvers import reverse
 from .forms import StoryBoxForm
 from .utils import parse_date_time, datetime_to_seconds, make_point
@@ -27,14 +27,9 @@ class AdminClient(Client):
         """
         return self.login(**{'username': username, 'password': password})
 
-
 class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
 
     def setUp(self):
-        # these are needed for the geonode fixtures
-        TopicCategory.objects.create(identifier='biota')
-        TopicCategory.objects.create(identifier='location')
-        TopicCategory.objects.create(identifier='elevation')
 
         create_models(type='map')
 

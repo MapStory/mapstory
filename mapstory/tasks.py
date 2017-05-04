@@ -1,5 +1,6 @@
 from geonode.geoserver.helpers import ogc_server_settings
 from mapstory.utils import parse_wfst_response, has_exception, error_response, print_exception
+from mapstory.mapstories.models import MapStory
 import requests
 from celery import app
 
@@ -21,5 +22,23 @@ def append_feature_chunks(features, wfst_insert_template,get_features_request,ta
     else:
         summary = parse_wfst_response(insert_features_request.content)
 
-
     return summary
+
+
+@app.task(name='tasks.deletion.delete_mapstory', queue='cleanup')
+def delete_mapstory(object_id):
+    """
+    Deletes a mapstory and the associated maps and the associated map layers.
+    """
+
+    try:
+        map_obj = MapStory.objects.get(id=object_id)
+    except MapStory.DoesNotExist:
+        return
+
+    chapters = map_obj.chapters
+    for chapter in chapters:
+        chapter.layer_set.all().delete()
+        chapter.delete()
+
+    map_obj.delete()

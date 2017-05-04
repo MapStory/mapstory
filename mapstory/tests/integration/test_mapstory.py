@@ -7,8 +7,8 @@ from django.contrib.auth import get_user_model, authenticate
 from django.test import TestCase, Client
 from django.test.utils import override_settings
 
-from geonode.maps.models import Map
-from geonode.maps.models import MapStory
+from mapstory.mapstories.models import Map
+from mapstory.mapstories.models import MapStory
 
 from ..AdminClient import AdminClient
 from ..MapStoryTestMixin import MapStoryTestMixin
@@ -262,8 +262,8 @@ class ExtraMapstoryTests(MapStoryTestMixin):
     def test_home(self):
         c = Client()
         response = c.get(reverse('index_view'))
-        
-        self.assertEqual(reverse('index_view'), u'/', 'Named url "index_view" should resolve to "/"') 
+
+        self.assertEqual(reverse('index_view'), u'/', 'Named url "index_view" should resolve to "/"')
         self.assertEqual(response.template_name[0], 'index.html', 'Home should be using index.html template')
 
     def test_create_new_mapStory(self):

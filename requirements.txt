@@ -1,11 +1,19 @@
 psycopg2==2.4.5
 numpy==1.8.2
 
--e ../geonode
+# -e ../geonode
+-e git://github.com/GeoNode/geonode.git@2.6a1#egg=geonode
+
+# Force Django 1.8.7: GeoNode's setup.py pulls in newer
+# despite GeoNode requirements.txt pinning 1.8.7
+Django==1.8.7
 
 -e git://github.com/pinax/django-mailer.git#egg=django-mailer
 -e git://github.com/MapStory/icon-commons.git#egg=icon-commons
--e git://github.com/GeoNode/django-osgeo-importer.git@mapstory-wip#egg=osgeo_importer
+
+# temporary shim until https://github.com/MapStory/mapstory/issues/642 resolved
+# -e git://github.com/GeoNode/django-osgeo-importer.git@mapstory-wip#egg=osgeo_importer
+-e git://github.com/sarasafavi/django-osgeo-importer.git@mapstory-wip-shim#egg=osgeo_importer
 
 docutils
 textile
@@ -23,7 +31,7 @@ celery==3.1.23
 django-celery==3.1.16
 
 SQLAlchemy==1.0.14
-django-health-check==1.1.2
+django-health-check==2.2.1
 
 #specific dependency versions from mapstory v1 to support oauth and social authnz
 django-oauth2-provider==0.2.6.1

@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('maps', '0003_map_viewer_playbackmode'),
+        ('mapstories', '0001_initial'),
     ]
 
     operations = [
@@ -24,7 +24,9 @@ class Migration(migrations.Migration):
                 ('in_timeline', models.BooleanField(default=False)),
                 ('in_map', models.BooleanField(default=False)),
                 ('appearance', models.TextField(null=True, blank=True)),
-                ('map', models.ForeignKey(to='maps.Map')),
+                ('auto_show', models.BooleanField(default=False)),
+                ('pause_playback', models.BooleanField(default=False)),
+                ('map', models.ForeignKey(to='mapstories.Map')),
             ],
         ),
     ]

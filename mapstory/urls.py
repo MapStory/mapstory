@@ -3,7 +3,14 @@ from django.conf.urls import patterns
 from django.conf.urls import url
 from django.conf.urls import include
 from django.conf.urls.static import static
+
+# to replace /api/base & /api/owners GeoNode routes with our own:
+# unregister old routes before geonode.urls.urlpatterns is imported
+from geonode.api.urls import api as geonode_api
+geonode_api.unregister('owners')
+geonode_api.unregister('base')
 from geonode.urls import urlpatterns
+
 from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstory.views import IndexView
 from mapstory.views import GetPageView
@@ -31,13 +38,18 @@ from mapstory.views import initiative_create, initiative_edit, initiative_detail
 from mapstory.views import initiative_invite, initiative_members_add, initiative_member_remove
 from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from tastypie.api import Api
-from mapstory.api import UploadedLayerResource
+from mapstory.api.api import UploadedLayerResource, MapstoryOwnersResource
+from mapstory.api.resourcebase_api import ResourceBaseResource
+from mapstory.api.urls import api as mapstory_api
 from annotations.urls import urlpatterns as annotations_urls
+from mapstory.apps.favorite.urls import api as favorites_api
 
-
+geonode_api.register(ResourceBaseResource())
+geonode_api.register(MapstoryOwnersResource())
 
 importer_api = Api(api_name='importer-api')
 importer_api.register(UploadedLayerResource())
+
 # -- Deprecated url routes for Geoserver authentication -- remove after GeoNode 2.1
 # -- Use /gs/acls, gs/resolve_user/, gs/download instead
 if 'geonode.geoserver' in settings.INSTALLED_APPS:
@@ -70,40 +82,41 @@ urlpatterns = patterns('',
     url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
     url(r'^maps/new_map', new_map, name='new_map'),
 
-    url(r'^story$', 'geonode.maps.views.new_story_json', name='new_story_json'),
-    url(r'^story/(?P<storyid>[^/]+)/save$', 'geonode.maps.views.save_story', name='save_story'),
+    url(r'^story$', 'mapstory.views.new_story_json', name='new_story_json'),
+    url(r'^story/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
 
     url(r'^story/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
     url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
     url(r'^story/chapter/new$', 'mapstory.views.new_map_json', name='new_map_json'),
+    url(r'^maps/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
 
     # MapLoom
-    url(r'^story/new$', 'geonode.maps.views.new_map', {'template': 'composer/maploom.html'},
+    url(r'^story/new$', new_map, {'template': 'composer/maploom.html'},
         name='new-story'),
-    url(r'^maps/edit$', 'geonode.maps.views.new_map', {'template': 'composer/maploom.html'}, name='map-edit'),
-    url(r'^maps/(?P<mapid>\d+)/view$', 'geonode.maps.views.map_view', {'template': 'composer/maploom.html'}, name='map-view'),
+    url(r'^maps/edit$', new_map, {'template': 'composer/maploom.html'}, name='map-edit'),
+    url(r'^maps/(?P<mapid>\d+)/view$', 'mapstory.views.map_view', {'template': 'composer/maploom.html'}, name='map-view'),
     url(r'^story/(?P<storyid>[^/]+)/draft$',
     'mapstory.views.draft_view', {'template': 'composer/maploom.html'}, name='maploom-map-view'),
     url(r'^frame/(?P<storyid>[^/]+)/draft','mapstory.views.draft_view',name='draft_view'),
 
     # StoryTools
-    url(r'^maps/(?P<mapid>\d+)/viewer$', 'geonode.maps.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
-    url(r'^maps/(?P<mapid>\d+)/embed$', 'geonode.maps.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
-    url(r'^story/(?P<mapid>\d+)/embed$', 'geonode.maps.views.mapstory_view', {'template': 'viewer/story_viewer.html'}, name='mapstory-viewer'),
+    url(r'^maps/(?P<mapid>\d+)/viewer$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
+    url(r'^maps/(?P<mapid>\d+)/embed$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
+    url(r'^story/(?P<storyid>\d+)/embed$', 'mapstory.views.mapstory_view', {'template': 'viewer/story_viewer.html'}, name='mapstory-viewer'),
 
     url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/set-notification$", set_profile_notification, name="set_profile_notification"),
 
 
-    url(r'^organizations/create/$', organization_create, name='organization_create'),
+    url(r'^organizations/create/?$', organization_create, name='organization_create'),
     url(r'^organizations/(?P<slug>[^/]*)$', organization_detail, name='organization_detail'),
     url(r'^organizations/edit/(?P<slug>[^/]*)$', organization_edit, name='organization_edit'),
     url(r'^organizations/members/(?P<slug>[^/]*)$', organization_members, name='organization_members'),
     url(r'^organizations/invite/(?P<slug>[^/]*)$', organization_invite, name='organization_invite'),
     url(r'^organizations/(?P<slug>[^/]*)/members_add/$', organization_members_add, name='organization_members_add'),
     url(r'^organizations/(?P<slug>[^/]*)/member_remove/(?P<username>.+)$', organization_member_remove, name='organization_member_remove'),
-    url(r'^initiatives/create/$', initiative_create, name='initiative_create'),
+    url(r'^initiatives/create/?$', initiative_create, name='initiative_create'),
     url(r'^initiatives/(?P<slug>[^/]*)$', initiative_detail, name='initiative_detail'),
     url(r'^initiatives/edit/(?P<slug>[^/]*)$', initiative_edit, name='initiative_edit'),
     url(r'^initiatives/members/(?P<slug>[^/]*)$', initiative_members, name='initiative_members'),
@@ -115,11 +128,11 @@ urlpatterns = patterns('',
     url(r'^search/$', SearchView.as_view(), name='search'),
     url(r'^about/leadership$', LeaderListView.as_view(template_name='mapstory/leaders.html'), name='about-leaders'),
     url(r'^icons/', include('icon_commons.urls')),
-    url(r'^journal/', include('mapstory.journal.urls')),
+    url(r'^journal/', include('mapstory.apps.journal.urls')),
 
     url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
     url(r'^proxy/', proxy),
-    url(r'^favorite/', include('geonode.contrib.favorite.urls')),
+    url(r'^favorite/', include('mapstory.apps.favorite.urls')),
     url(r'^notifications/', include('notification.urls')),
 
     url(r"^flag/", include('mapstory.apps.flag.urls')),
@@ -140,7 +153,13 @@ urlpatterns += annotations_urls
 urlpatterns += maploom_urls
 
 urlpatterns += patterns("",
+                        url(r'', include(mapstory_api.urls)))
+
+urlpatterns += patterns("",
                         url(r'', include(importer_api.urls)))
+
+urlpatterns += patterns("",
+                        url(r'', include(favorites_api.urls)))
 
 urlpatterns += importer_urlpatterns
 
@@ -162,3 +181,4 @@ if settings.ENABLE_SOCIAL_LOGIN:
         url('', include('social.apps.django_app.urls', namespace='social')),
         url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
     )
+
