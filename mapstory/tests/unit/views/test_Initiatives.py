@@ -29,7 +29,7 @@ class TestInitiativesViews(MapStoryTestMixin):
             raise RuntimeError
 
         for g in groups:
-            if (g.profile_type == 'ini'):
+            if (g.org.profile_type == 'ini'):
                 return g
 
     def addUserAsManagerToGroup(user, group):
