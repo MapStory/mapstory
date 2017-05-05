@@ -13,7 +13,6 @@ import notifications, search
 from apps.journal import models
 
 from mapstory.mapstories.models import MapStory, Map
-from mapstory.orgs.models import Org
 
 
 notifications.set_mapstory_notifications()
@@ -156,28 +155,6 @@ def get_sponsors():
     return Sponsor.objects.filter(order__gte=0)
 
 
-def get_featured_groups():
-    return Org.objects.filter(featured=True)
-
-
-def get_group_layers(gProfile):
-    users = gProfile.group.user_set.all()
-    layers = []
-    for user in users:
-        layers.append(guardian.shortcuts.get_objects_for_user(user, 'base.view_resourcebase').instance_of(geonode.layers.models.Layer))
-
-    return [item for sublist in layers for item in sublist]
-
-
-def get_group_maps(gProfile):
-    users = gProfile.group.user_set.all()
-    maps = []
-    for user in users:
-        maps.append(guardian.shortcuts.get_objects_for_user(user, 'base.view_resourcebase').instance_of(Map))
-
-    return [item for sublist in maps for item in sublist]
-
-
 def mapstory_profile_post_save(instance, sender, **kwargs):
     geonode.people.models.profile_post_save(instance, sender, **kwargs)
     registered_group, created = contrib.auth.models.Group.objects.get_or_create(name='registered')
@@ -200,4 +177,3 @@ def mapstory_map_post_save(instance, sender, **kwargs):
 db.models.signals.post_save.connect(mapstory_profile_post_save, sender=geonode.people.models.Profile)
 db.models.signals.post_save.connect(geonode.base.models.resourcebase_post_save, sender=MapStory)
 db.models.signals.post_save.connect(mapstory_map_post_save, sender=Map)
-
