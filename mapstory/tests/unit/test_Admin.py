@@ -7,8 +7,6 @@ from ...admin import (
     GetPageContentForm,
     GetPageContentAdmin,
     SponsorAdmin,
-    TaskInline,
-    CommunityAdmin,
     NewsItemForm,
     LeaderAdmin,
     ParallaxImageAdmin,
@@ -41,8 +39,6 @@ class TestAdmin(TestCase):
         self.assertIsNotNone(GetPageContentForm)
         self.assertIsNotNone(GetPageContentAdmin)
         self.assertIsNotNone(SponsorAdmin)
-        self.assertIsNotNone(TaskInline)
-        self.assertIsNotNone(CommunityAdmin)
         self.assertIsNotNone(NewsItemForm)
         self.assertIsNotNone(JournalEntryAdmin)
         self.assertIsNotNone(LeaderAdmin)
