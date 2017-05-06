@@ -38,7 +38,7 @@
 
     {% if request.GET.showMetadata == 'true'%}
         // prompt user to fill out metadata if the showMetadata GET param is true
-        $(window).load(function () {
+        $(window).on('load',function () {
             $('#metaForm').modal('show');
         });
     {% endif %}
