@@ -35,7 +35,7 @@
         auth="Container"
         type="javax.sql.DataSource"
         driverClassName="org.postgresql.Driver"
-        url="jdbc:postgresql://{{ env "DATABASE_HOST" }}:5432/mapstory_data"
+        url="jdbc:postgresql://{{ env "DATABASE_HOST" }}:{{ env "DATABASE_PORT" }}/mapstory_data"
         username="{{ env "DATABASE_USER" }}" password="{{ env "DATABASE_PASSWORD" }}"
         maxActive="50"
         initialSize="0"

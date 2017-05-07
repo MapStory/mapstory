@@ -39,6 +39,7 @@ services:
       - elasticsearch
       - rabbitmq
     volumes:
+      - .:/srv/mapstory/
       - mapstory_media:/var/lib/mapstory/media/
       - mapstory_static:/var/lib/mapstory/static/
     networks:
