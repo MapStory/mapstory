@@ -8,7 +8,7 @@
 
 let EC = protractor.ExpectedConditions;
 require('../tools/waitReady.js');
-let constants = require("../tools/constants");
+let constants = require('../tools/constants');
 
 describe('User auth', function() {
 
@@ -23,7 +23,7 @@ describe('User auth', function() {
 	/**
 	 * Login Button
 	 */
-	it('> should display a Login Form', function(done) {
+	it('Should display a Login Form', function(done) {
 
 		auth.loginIcon.isDisplayed().then(function(displayed){
 
@@ -44,7 +44,7 @@ describe('User auth', function() {
 	/**
 	 * The Auth Form
 	 */
-	describe('> The "Login Form"', function() {
+	describe('The "Login Form"', function() {
 
 		beforeEach(function() {});
 

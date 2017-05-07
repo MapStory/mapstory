@@ -31,7 +31,7 @@ let home_page = function() {
 	this.usernameInput = this.loginForm.element(by.css('input.form-control[name="username"]'));
 	this.passwordInput = this.loginForm.element(by.css('input.form-control[name="password"]'));
 	this.loginButton = this.loginForm.element(by.partialButtonText('Sign in'));
-	this.navBar = element(by.css('.navigation'));
+	this.navBar = element(by.css('.navigation-menu'));
 	this.menuCreate = element(by.linkText('Create'));
 	this.menu_explore = element(by.linkText('Explore'));
 	this.step1 = element(by.css('[title="Check Your Data"]'));
@@ -267,18 +267,17 @@ let home_page = function() {
 	 * Create Layer - Step 1
 	 */
 	this.createLayer_Step1 = function() {
-		let layerName = element(by.model('layer.configuration_options.name'));
+		let layerName = element(by.css('#layerName'));
 		expect(layerName.waitReady()).toBeTruthy();
 
 		// This creates a random id to avoid name collision
 		let randomId = this.makeid(12);
 		let layerStringName = 'testLayer_' + randomId;
 		layerName.sendKeys(layerStringName).then(() => {
-            let currentSection = element(by.css('section.step.ng-isolate-scope.current'));
-            let continueButton = currentSection.$('.import-wizard-button').element(by.css('button.btn'));
-
-            // Continue to Step 2
-            continueButton.click();
+			let currentSection = element(by.css('section.step.ng-isolate-scope.current'));
+			let continueButton = currentSection.$('.import-wizard-button').element(by.css('button.btn'));
+			// Continue to Step 2
+			continueButton.click();
 		});
 	};
 
@@ -287,7 +286,7 @@ let home_page = function() {
 	 * Create Layer - Step 2
 	 */
 	this.createLayer_Step2 = function() {
-		let geometryTypeDropdown = element(by.css('select#geometry_type'));
+		let geometryTypeDropdown = element(by.css('#geometry_type'));
 		expect(geometryTypeDropdown.waitReady()).toBeTruthy();
 
 		/*
@@ -347,22 +346,22 @@ let home_page = function() {
 	 */
 	this.createLayer_Step6 = function() {
 		let currentSection = element(by.css('section[title="Create"]'));
-		let continueButton = currentSection.$('.btn[value="Continue"]');
+		let continueButton = currentSection.$('.btn[type="submit"]');
 		expect(continueButton.waitReady()).toBeTruthy();
 		continueButton.click();
 
 		// Wait x seconds
-		browser.driver.sleep(wait_times['layerCreate']);
+		browser.driver.sleep(wait_times.layerCreate);
 
-		let doneButton = element(by.partialButtonText('StoryLayer'));
+		let doneButton = element(by.partialLinkText('StoryLayer'));
 		expect(doneButton.waitReady()).toBeTruthy();
 
-		doneButton.click();
+		// doneButton.click();
 
-		browser.driver.sleep(wait_times['newLayer']);
-		let saveButton = element(by.partialButtonText('Save'));
-		expect(saveButton.waitReady()).toBeTruthy();
-		saveButton.click();
+		// browser.driver.sleep(wait_times['newLayer']);
+		// let saveButton = element(by.partialButtonText('Save'));
+		// expect(saveButton.waitReady()).toBeTruthy();
+		// saveButton.click();
 	};
 
 
