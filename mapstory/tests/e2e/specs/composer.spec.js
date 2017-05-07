@@ -21,38 +21,12 @@ describe('Composer', function() {
 		home.login('admin', 'admin');
 	});
 
-	xit('> should require login', function() {
-
-	});
-
-	it('> should be navigated to from home', function(done){
-		browser.get(constants.baseURL);
-		expect(home.menuCreate.waitReady()).toBeTruthy();
-		// Click create
-		home.menuCreate.click();
-		expect(home.composeStoryLink.waitReady()).toBeTruthy();
-
-		// Click compose
-		home.composeStoryLink.click();
-		browser.sleep(wait_times['composer_tour_modal']);
-		expect(page.go_back_home.waitReady()).toBeTruthy();
-		done();
-	});
-
 	it('> should display welcome modal', function() {
 		page.get();
 		expect(page.compose_story.waitReady()).toBeTruthy();
 		expect(page.take_tour.waitReady()).toBeTruthy();
-		expect(page.go_back_home.waitReady()).toBeTruthy();
 	});
 
-	it('> should navigate back to home', function() {
-		page.get();
-		page.go_back_home.click();
-
-		browser.ignoreSynchronization = false;
-		expect(home.userAvatar.waitReady()).toBeTruthy();
-	});
 
 	// @TODO: Update this test. The behavior has changed.
 	xit('> should give a tour', function() {
@@ -113,13 +87,6 @@ describe('Composer', function() {
 		page.story_title.getText().then(function(text){
 			expect(text).toBe(storyTitle);
 		});
-
-
-		// element.all(by.repeater('chapter in mapstories.chapters')).then(function(chapter){
-			// expect(chapter[0].waitReady()).toBeTruthy();
-			// chapter[0].$('a').click();
-			// done();
-		// });
 
 		let chaptersList = $('#chaptersList');
 		expect(chaptersList.waitReady()).toBeTruthy();
