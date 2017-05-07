@@ -18,7 +18,7 @@
 
 require('../tools/waitReady.js');
 const wait_times = require('../tools/wait_times');
-let constants = require("../tools/constants");
+let constants = require('../tools/constants');
 
 /**
  * Mapstory Home Page
@@ -33,51 +33,6 @@ describe('Mapstory Home', function() {
 		// Fetch the site
 		browser.get(constants.baseURL);
 		browser.waitForAngular();
-	});
-
-	/**
-	 * Error 111 tests
-	 */
-	xit('> should check for "error #111"', function() {
-		// Wait for login icon to show
-		expect(page.loginIcon.isDisplayed()).toBeTruthy();
-		page.loginIcon.click();
-
-		// Wait for login form
-		expect(page.loginForm.waitReady()).toBeTruthy();
-		page.loginForm.isDisplayed().then(function(displayed){
-			expect(displayed).toBe(true);
-		});
-
-		// Input username
-		page.usernameInput.isDisplayed().then(function(displayed){
-			expect(displayed).toBe(true);
-		});
-		page.usernameInput.sendKeys('admin');
-
-		// Input password
-		page.passwordInput.isDisplayed().then(function(displayed){
-			expect(displayed).toBe(true);
-		});
-		page.passwordInput.sendKeys('admin');
-
-		// Press the login button
-		expect(page.loginButton.isPresent()).toBe(true);
-		page.loginButton.click();
-
-		// Checks for Error #111
-		let exceptionValue = element(by.css('exception_value'));
-		expect(exceptionValue.isPresent()).toBe(false);
-
-		// Return to normal
-		page.logout();
-
-		// Fetch the site
-		browser.get(constants.baseURL);
-		browser.waitForAngular();
-
-		// Fetch the elements
-		page = require('./home.po');
 	});
 
 	it('> should have a title', function() {
@@ -139,10 +94,10 @@ describe('Mapstory Home', function() {
 			});
 
 			xdescribe('> Create Layer Wizard', function() {
-				xit('> step 1', function() {
+				it('> step 1', function() {
 					// Open the Create menu
 					expect(page.isLoggedIn()).toBeTruthy();
-					expect(page.navBar.isDisplayed()).toBe(true);
+					expect(page.menuCreate.isDisplayed()).toBe(true);
 					page.menuCreate.click();
 
 					// Click the create story layer link
@@ -152,10 +107,10 @@ describe('Mapstory Home', function() {
 					page.createLayer_Step1();
 				});
 
-				xit('> step 2', function() {
+				it('> step 2', function() {
 					// Open the Create menu
 					expect(page.isLoggedIn()).toBeTruthy();
-					expect(page.navBar.isDisplayed()).toBe(true);
+					expect(page.menuCreate.isDisplayed()).toBe(true);
 					page.menuCreate.click();
 
 					// Click the create story layer link
@@ -166,10 +121,10 @@ describe('Mapstory Home', function() {
 					page.createLayer_Step2();
 				});
 
-				xit('> step 3', function() {
+				it('> step 3', function() {
 					// Open the Create menu
 					expect(page.isLoggedIn()).toBeTruthy();
-					expect(page.navBar.isDisplayed()).toBe(true);
+					expect(page.menuCreate.isDisplayed()).toBe(true);
 					page.menuCreate.click();
 
 					// Click the create story layer link
@@ -181,10 +136,10 @@ describe('Mapstory Home', function() {
 					page.createLayer_Step3();
 				});
 
-				xit('> step 4', function() {
+				it('> step 4', function() {
 					// Open the Create menu
 					expect(page.isLoggedIn()).toBeTruthy();
-					expect(page.navBar.isDisplayed()).toBe(true);
+					expect(page.menuCreate.isDisplayed()).toBe(true);
 					page.menuCreate.click();
 
 					// Click the create story layer link
@@ -197,10 +152,29 @@ describe('Mapstory Home', function() {
 					page.createLayer_Step4();
 				});
 
-				it('> All steps', function() {
+				it('> step 5', function() {
 					// Open the Create menu
 					expect(page.isLoggedIn()).toBeTruthy();
-					expect(page.navBar.isDisplayed()).toBe(true);
+					expect(page.menuCreate.isDisplayed()).toBe(true);
+					page.menuCreate.click();
+
+					// Click the create story layer link
+					expect(page.createLayerLink.waitReady()).toBeTruthy();
+					page.createLayerLink.click();
+
+					page.createLayer_Step1();
+					page.createLayer_Step2();
+					page.createLayer_Step3();
+					page.createLayer_Step4();
+					page.createLayer_Step5();
+				});
+
+
+
+				it('> All steps', function(done) {
+					// Open the Create menu
+					expect(page.isLoggedIn()).toBeTruthy();
+					expect(page.menuCreate.isDisplayed()).toBe(true);
 					page.menuCreate.click();
 
 					// Click the create story layer link
@@ -213,13 +187,16 @@ describe('Mapstory Home', function() {
 					page.createLayer_Step4();
 					page.createLayer_Step5();
 					page.createLayer_Step6();
+
+					done();
 				});
 			});
 
 			it('> should create layer', function() {
 				// Open the Create menu
 				expect(page.isLoggedIn()).toBeTruthy();
-				expect(page.navBar.isDisplayed()).toBe(true);
+				expect(page.menuCreate.waitReady())
+                    .toBeTruthy('"Create" was not found in navigation menu');
 				page.menuCreate.click();
 
 				// Click the create story layer link
@@ -230,8 +207,10 @@ describe('Mapstory Home', function() {
 				page.createStoryLayer();
 			});
 
+
 			it('> should show "Upload Icons"', function() {
 				expect(page.isLoggedIn()).toBeTruthy();
+
 				expect(page.navBar.isDisplayed()).toBe(true);
 				page.menuCreate.click();
 
@@ -384,19 +363,10 @@ describe('Mapstory Home', function() {
 					is_published_checkbox.click();
 
 					// Click 'Save'
-            		let saveButton = element(by.partialButtonText('Save'));
-            		saveButton.click();
+					let saveButton = element(by.partialButtonText('Save'));
+					saveButton.click();
 				});
 			});
 		});
-	});
-
-
-	xit('> should change languages', function() {
-		let languageDropdown = element(by.css('.lang.col-md-6.pull-right'));
-		expect(languageDropdown.waitReady()).toBeTruthy();
-
-		// Try to select spanish
-		languageDropdown.$('[value="es"]').click();
 	});
 });
