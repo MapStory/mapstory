@@ -1,14 +1,10 @@
 from unittest import skip
 from django.test import TestCase
 
-from geonode.groups.models import GroupProfile
 from mapstory.models import _stamp
-from mapstory.models import name_post_save
 from mapstory.models import get_images
 from mapstory.models import get_sponsors
-from mapstory.models import get_featured_groups
-from mapstory.models import get_group_layers
-from mapstory.models import get_group_maps
+
 
 class MockInstance(object):
     """
@@ -43,12 +39,6 @@ class TestHelperMethods(TestCase):
         self.assertEqual(len(_stamp("")), 8)
         self.assertEqual(len(_stamp("AaaaaaaaaAAaaAAAAaaA")), 8)
 
-    def test_name_post_save(self):
-        """
-        name_post_save() tests
-        """
-        name_post_save(MockInstance())
-
     def test_get_images(self):
         self.assertIsNotNone(get_images())
         # Should return an array
@@ -59,19 +49,6 @@ class TestHelperMethods(TestCase):
         sponsors = get_sponsors()
         self.assertIsNotNone(sponsors)
         self.assertEqual(sponsors.count(), 0)
-
-    def test_get_featured_groups(self):
-        self.assertEqual(get_featured_groups().count(), 0)
-
-    @skip("TODO")
-    def test_group_layers(self):
-        gp = GroupProfile()
-        self.assertEqual(get_group_layers(gp).count(), 0)
-
-    @skip("TODO")
-    def test_group_maps(self):
-        gp = GroupProfile()
-        self.assertEqual(get_group_maps(gp).count(), 0)
 
     @skip("TODO")
     def test_group_journals(self):

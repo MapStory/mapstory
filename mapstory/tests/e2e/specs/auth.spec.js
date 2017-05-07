@@ -8,7 +8,7 @@
 
 let EC = protractor.ExpectedConditions;
 require('../tools/waitReady.js');
-let constants = require("../tools/constants");
+let constants = require('../tools/constants');
 
 describe('User auth', function() {
 
@@ -23,7 +23,7 @@ describe('User auth', function() {
 	/**
 	 * Login Button
 	 */
-	it('> should display a Login Form', function(done) {
+	it('Should display a Login Form', function(done) {
 
 		auth.loginIcon.isDisplayed().then(function(displayed){
 
@@ -44,7 +44,7 @@ describe('User auth', function() {
 	/**
 	 * The Auth Form
 	 */
-	describe('> The "Login Form"', function() {
+	describe('The "Login Form"', function() {
 
 		beforeEach(function() {});
 
@@ -106,10 +106,6 @@ describe('User auth', function() {
 				expect(element(by.css('#div_id_password.form-group.has-error')).isDisplayed()).toBeTruthy();
 
 			});
-
-			xit('> should deny wrong credentials', function() {});
-
-			xit('> should filter bad text input', function() {});
 		});
 
 		/**
@@ -183,20 +179,5 @@ describe('User auth', function() {
 			browser.get(constants.baseURL);
 			expect(auth.userAvatar.waitReady()).toBeTruthy();
 		});
-	});
-
-	xit('> should login admin', function() {
-		auth.login('admin', 'admin');
-
-		auth.isLoggedIn().then(function(loggedIn) {
-			expect(loggedIn).toBeTruthy();
-		});
-	});
-
-	xit('> should logout', function() {
-		auth.logout();
-	});
-
-	xit('> should error on incorrect passwords', function() {
 	});
 });

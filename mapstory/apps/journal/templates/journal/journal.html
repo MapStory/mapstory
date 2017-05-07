@@ -36,8 +36,8 @@
     {% if user.is_authenticated %}
         {% if drafts %}
             <span class="dropdown" id="draft-button">
-		 		<a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
-                complete a draft entry <span class="caret"></span>
+                <a id="dLabel" role="button" data-toggle="dropdown" class="dropdown-toggle">
+		 		complete a draft entry <span class="caret"></span>
             </a>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                 {% for d in drafts %}

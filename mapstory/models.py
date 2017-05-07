@@ -13,7 +13,6 @@ import notifications, search
 from apps.journal import models
 
 from mapstory.mapstories.models import MapStory, Map
-from mapstory.orgs.models import Org
 
 
 notifications.set_mapstory_notifications()
@@ -89,47 +88,6 @@ class ContentMixin(db.models.Model):
         ordering = ['-date']
 
 
-class Community(db.models.Model):
-    name = db.models.CharField(max_length=64, unique=True)
-    icon = db.models.ImageField(blank=False, upload_to='communities')
-    description = db.models.TextField(blank=True)
-    order = db.models.IntegerField(blank=True, default=0)
-    stamp = db.models.CharField(max_length=8, blank=True)
-    slug = db.models.SlugField(max_length=64, unique=True, blank=True)
-    layer = db.models.ManyToManyField(geonode.layers.models.Layer, blank=True)
-    leads = db.models.ManyToManyField(geonode.people.models.Profile, blank=True)
-    journals = db.models.ManyToManyField(models.JournalEntry, blank=True)
-
-    def url(self):
-        return self.icon.url + "?" + self.stamp
-
-    def save(self, *args, **kwargs):
-        if self.icon.name:
-            self.stamp = _stamp(self.icon.read())
-        super(Community, self).save(*args, **kwargs)
-
-    def __unicode__(self):
-        return 'Community - %s' % self.name
-
-    class Meta:
-        ordering = ['order']
-        verbose_name_plural = 'communities'
-
-    def image_tag(self):
-        return u'<img src="%s" />' % self.url()
-    image_tag.short_description = 'Image'
-    image_tag.allow_tags = True
-
-
-class Task(db.models.Model):
-    task = db.models.TextField(blank=True)
-    community = db.models.ForeignKey(Community, related_name='tasks')
-
-
-def name_post_save(instance, *args, **kwargs):
-    Community.objects.filter(name=instance.name).update(slug=(template.defaultfilters.slugify(instance.name)))
-
-
 class NewsItem(ContentMixin ):
     title = db.models.CharField(max_length=64)
 
@@ -197,28 +155,6 @@ def get_sponsors():
     return Sponsor.objects.filter(order__gte=0)
 
 
-def get_featured_groups():
-    return Org.objects.filter(featured=True)
-
-
-def get_group_layers(gProfile):
-    users = gProfile.group.user_set.all()
-    layers = []
-    for user in users:
-        layers.append(guardian.shortcuts.get_objects_for_user(user, 'base.view_resourcebase').instance_of(geonode.layers.models.Layer))
-
-    return [item for sublist in layers for item in sublist]
-
-
-def get_group_maps(gProfile):
-    users = gProfile.group.user_set.all()
-    maps = []
-    for user in users:
-        maps.append(guardian.shortcuts.get_objects_for_user(user, 'base.view_resourcebase').instance_of(Map))
-
-    return [item for sublist in maps for item in sublist]
-
-
 def mapstory_profile_post_save(instance, sender, **kwargs):
     geonode.people.models.profile_post_save(instance, sender, **kwargs)
     registered_group, created = contrib.auth.models.Group.objects.get_or_create(name='registered')
@@ -238,8 +174,6 @@ def mapstory_map_post_save(instance, sender, **kwargs):
     except:
         pass
 
-db.models.signals.post_save.connect(name_post_save, sender=Community)
 db.models.signals.post_save.connect(mapstory_profile_post_save, sender=geonode.people.models.Profile)
 db.models.signals.post_save.connect(geonode.base.models.resourcebase_post_save, sender=MapStory)
 db.models.signals.post_save.connect(mapstory_map_post_save, sender=Map)
-
