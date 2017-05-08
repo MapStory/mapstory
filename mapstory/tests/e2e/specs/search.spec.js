@@ -66,12 +66,11 @@ describe('Search', function() {
 		expect(search.searchResults.count()).toBeTruthy();
 	});
 
-	it('> should find admin by name', function() {
-		search.searchFor('admin');
-		expect(search.storyTellerTab.waitReady()).toBeTruthy();
-		search.storyTellerTab.click();
 
-		browser.sleep(wait_times['search']);
+	xit('> should search for admin', function() {
+		search.searchFor('admin');
+
+		browser.sleep(wait_times.search);
 		expect(search.resultsContainer.waitReady()).toBeTruthy();
 
 		// Refresh search objects
