@@ -1,6 +1,7 @@
 import csv
 from django.http import HttpResponse
 
+
 def export_via_model(model, request, queryset, fields=None, exclude=None):
         opts = model._meta
         field_names = set([field.name for field in opts.fields])

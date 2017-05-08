@@ -3,8 +3,6 @@ import json
 import geonode
 import mapstory.apps.favorite.models
 from mapstory.mapstories.models import Map, MapStory
-from django import contrib, db, http, views
-from mapstory.apps import flag
 
 from agon_ratings.models import Rating
 from django.contrib.auth.decorators import login_required
@@ -33,6 +31,7 @@ def send_notification(notice_type_label, user, extra_content=None):
     if send:
         notification.send([user], notice_type_label, {"extra_content": extra_content})
         send_queued_notifications.delay()
+
 
 def post_save_flag(instance, sender, **kwargs):
     notice_type_label = '%s_flagged' % instance.flagged_content.content_type.name
@@ -133,6 +132,7 @@ def pre_save_profile(instance, sender, **kwargs):
         if instance.password != cur_pwd:
             send_notification('password_updated', instance)
 
+
 def post_save_rating(instance, sender, **kwargs):
     author = instance.content_object.owner
     notice_type_label = '%s_rated' % instance.content_object.class_name.lower()
@@ -142,6 +142,7 @@ def post_save_rating(instance, sender, **kwargs):
     }
     send_notification(notice_type_label, author, extra_content=extra_content)
     send_queued_notifications.delay()
+
 
 def set_mapstory_notifications():
     signals.post_save.connect(comment_post_save, sender=ThreadedComment)

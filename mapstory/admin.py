@@ -75,12 +75,14 @@ class GetPageAdmin(admin.ModelAdmin):
 class GetPageChoiceField(forms.ModelChoiceField):
     def __init__(self):
         super(GetPageChoiceField, self).__init__(GetPage.objects.all())
+
     def label_from_instance(self, obj):
         return obj.title
 
 
 class GetPageContentForm(forms.ModelForm):
     page = GetPageChoiceField()
+
     class Meta:
         model = GetPageContent
         fields = '__all__'
@@ -120,6 +122,7 @@ class NewsItemAdmin(admin.ModelAdmin):
 class LeaderAdmin(admin.ModelAdmin):
     model = Leader
     list_display = 'user',
+
 
 class ParallaxImageAdmin(admin.ModelAdmin):
     model = ParallaxImage

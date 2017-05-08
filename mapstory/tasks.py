@@ -4,6 +4,7 @@ from mapstory.mapstories.models import MapStory
 import requests
 from celery import app
 
+
 @app.task(name="tasks.append_feature_chunks")
 def append_feature_chunks(features, wfst_insert_template,get_features_request,target):
     summary = None

@@ -50,4 +50,3 @@ class TruncatedNameHandler(ImportHandlerMixin):
                 for date_option in ('start_date', 'end_date'):
                     if layer_config.get(date_option) == date_field:
                         layer_config[date_option] = new_field_name.lower()
-

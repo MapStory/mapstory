@@ -1,16 +1,12 @@
 import datetime
 import hashlib
-import json
 import os
-import uuid
 
 import geonode
-import guardian
 import textile
 from django import conf, db, contrib, template
 from django.contrib.sites.models import Site
 import notifications, search
-from apps.journal import models
 
 from mapstory.mapstories.models import MapStory, Map
 
@@ -160,6 +156,7 @@ def mapstory_profile_post_save(instance, sender, **kwargs):
     registered_group, created = contrib.auth.models.Group.objects.get_or_create(name='registered')
     instance.groups.add(registered_group)
     geonode.people.models.Profile.objects.filter(id=instance.id).update()
+
 
 def mapstory_map_post_save(instance, sender, **kwargs):
     # Call basic post save map functionality from geonode

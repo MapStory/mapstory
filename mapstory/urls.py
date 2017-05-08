@@ -143,7 +143,7 @@ urlpatterns += patterns("",
 
 urlpatterns += importer_urlpatterns
 
-#this is last to catch reverse lookup from geonode views
+# this is last to catch reverse lookup from geonode views
 urlpatterns += patterns("",url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
                             url(r'^story/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'))
 
@@ -161,4 +161,3 @@ if settings.ENABLE_SOCIAL_LOGIN:
         url('', include('social.apps.django_app.urls', namespace='social')),
         url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
     )
-
