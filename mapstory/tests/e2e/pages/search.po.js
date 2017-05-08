@@ -13,7 +13,7 @@ let Search = function() {
 	this.textInput = element(by.css('[placeholder="Quick Search"]'));
 	this.searchButton = element(by.css('button[type="submit"]'));
 	this.storyTellerTab = element(by.partialLinkText('Search for Storytellers'));
-	this.resultsContainer = element(by.css('.clearfix.user.search-results'));
+	this.resultsContainer = element(by.css('.storyteller-results'));
 	this.searchResults = element.all(by.repeater('item in results | filter:itemFilter'));
 
 	this.searchFor = function(searchString) {
