@@ -19,7 +19,6 @@ from account.views import SignupView
 from actstream.models import actor_stream
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
@@ -38,7 +37,6 @@ from django.template.loader import render_to_string
 from django.utils.http import is_safe_url
 from django.utils.timezone import now as provider_now
 from django.utils.translation import ugettext as _
-from django.views.decorators.http import require_POST
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
@@ -46,11 +44,8 @@ from django.views.generic.list import ListView
 from geonode.base.models import TopicCategory, Region
 from geonode.documents.models import get_related_documents
 from geonode.geoserver.helpers import ogc_server_settings
-from geonode.groups.forms import GroupInviteForm, GroupForm, GroupUpdateForm, GroupMemberForm
-from geonode.groups.models import GroupProfile, GroupMember
 from geonode.layers.models import Layer
 from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
-from geonode.people.models import Profile
 from geonode.geoserver.views import layer_acls, resolve_user
 from geonode.layers.views import _resolve_layer
 from mapstory.mapstories.models import MapStory, Map
@@ -71,10 +66,8 @@ from health_check.plugins import plugin_dir
 from icon_commons.models import Icon
 from lxml import etree
 from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
-from mapstory.apps.collections.models import Collection
 from mapstory.apps.favorite.models import Favorite
 from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
-from mapstory.orgs.forms import OrgForm
 from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditGeonodeProfileForm
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm, DistributionUrlForm
 from mapstory.forms import SignupForm
@@ -82,7 +75,7 @@ from mapstory.importers import GeoServerLayerCreator
 from mapstory.models import GetPage
 from mapstory.models import Leader
 from mapstory.models import NewsItem
-from mapstory.models import get_sponsors, get_images, get_featured_groups
+from mapstory.models import get_sponsors, get_images
 from mapstory.search.utils import update_es_index
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
 from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
@@ -93,7 +86,6 @@ from provider.oauth2.models import AccessToken
 from user_messages.models import Thread
 
 from apps.journal.models import JournalEntry
-from apps.journal.models import get_group_journals
 
 plugin_dir.register(GeoServerHealthCheck)
 
@@ -104,7 +96,6 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super(IndexView, self).get_context_data(**kwargs)
         ctx['sponsors'] = get_sponsors()
-        ctx['communities'] = get_featured_groups()
         news_items = NewsItem.objects.filter(date__lte=datetime.datetime.now())
         ctx['news_items'] = news_items[:3]
         ctx['images'] = get_images()
@@ -253,306 +244,6 @@ def profile_delete(request, username=None):
         return HttpResponseForbidden(
             'You are not allowed to delete other users profile')
 
-# TODO: Refactor this code to use content mixins and class based views so it avoids repetition
-def organization_detail(request, slug):
-    group = GroupProfile.objects.get(slug=slug)
-
-    if not group.org.profile_type == 'org':
-        return HttpResponse(status=404)
-
-    return render_to_response("groups/organization_detail.html", {
-        "id": group.id,
-        "images": get_images(),
-        "journals": get_group_journals(group),
-        "managers": group.get_managers().all()
-        }, context_instance=RequestContext(request))
-
-def initiative_detail(request, slug):
-    group = GroupProfile.objects.get(slug=slug)
-
-    if not group.org.profile_type == 'ini':
-        return HttpResponse(status=404)
-
-    return render_to_response("groups/initiative_detail.html", {
-        "id": group.id,
-        "images": get_images(),
-        "journals": get_group_journals(group),
-        "managers": group.get_managers().all()
-        }, context_instance=RequestContext(request))
-
-@login_required
-def organization_create(request):
-    if request.method == "POST":
-        group_form = GroupForm(request.POST, request.FILES)
-        org_form = OrgForm(request.POST, request.FILES)
-        if group_form.is_valid() and org_form.is_valid():
-            group = group_form.save(commit=False)
-            group.save()
-            group.org.profile_type = 'org'
-            # org_form.save() # TODO we don't call save on the org_form, since
-            # post_save signals will trigger an org save after group is saved
-            group.save()  # TODO save again now that we've set profile_type
-            group_form.save_m2m()
-            group.join(request.user, role="manager")
-            # Create the collection corresponding to this organization
-            collection = Collection()
-            collection.name = group.title
-            collection.slug = group.slug
-            collection.group = group
-            collection.save()
-            return HttpResponseRedirect(
-                reverse(
-                    "organization_detail",
-                    args=[
-                        group.slug]))
-    else:
-        group_form = GroupForm(initial={'profile_type': 'org'})
-        org_form = OrgForm()
-
-    if request.user.is_superuser:
-        return render_to_response("groups/mapstory_group_create.html", {
-            "group_form": group_form,
-            "org_form": org_form,
-            }, context_instance=RequestContext(request))
-    else:
-        return HttpResponse(status=403)
-
-@login_required
-def initiative_create(request):
-    if request.method == "POST":
-        group_form = GroupForm(request.POST, request.FILES)
-        org_form = OrgForm(request.POST, request.FILES)
-        if group_form.is_valid() and org_form.is_valid():
-            group = group_form.save(commit=False)
-            group.save()
-            group.org.profile_type = 'ini'
-            group.save()
-            group_form.save_m2m()
-            group.join(request.user, role="manager")
-            # Create the collection corresponding to this initiative
-            collection = Collection()
-            collection.name = group.title
-            collection.slug = group.slug
-            collection.group = group
-            collection.save()
-            return HttpResponseRedirect(
-                reverse(
-                    "initiative_detail",
-                    args=[
-                        group.slug]))
-    else:
-        group_form = GroupForm(initial={'profile_type': 'ini'})
-        org_form = OrgForm()
-
-    if request.user.is_superuser:
-        return render_to_response("groups/mapstory_group_create.html", {
-            "group_form": group_form,
-            "org_form": org_form,
-            }, context_instance=RequestContext(request))
-    else:
-        return HttpResponse(status=403)
-
-@login_required
-def organization_edit(request, slug):
-    group = GroupProfile.objects.get(slug=slug)
-    if not group.org.profile_type == 'org':
-        return HttpResponse(status=404)
-    # Can use this function to toggle manager view
-    if not group.user_is_role(request.user, role="manager"):
-        return HttpResponseForbidden()
-
-    if request.method == "POST":
-        form = GroupUpdateForm(request.POST, request.FILES, instance=group)
-        if form.is_valid():
-            group = form.save(commit=False)
-            group.save()
-            form.save_m2m()
-            return HttpResponseRedirect(
-                reverse(
-                    "organization_detail",
-                    args=[
-                        group.slug]))
-    else:
-        form = GroupForm(instance=group)
-
-    return render_to_response("groups/group_update.html", {
-        "form": form,
-        "group": group,
-    }, context_instance=RequestContext(request))
-
-@login_required
-def initiative_edit(request, slug):
-    group = GroupProfile.objects.get(slug=slug)
-    if not group.org.profile_type == 'ini':
-        return HttpResponse(status=404)
-    # Can use this function to toggle manager view
-    if not group.user_is_role(request.user, role="manager"):
-        return HttpResponseForbidden()
-
-    if request.method == "POST":
-        form = GroupUpdateForm(request.POST, request.FILES, instance=group)
-        if form.is_valid():
-            group = form.save(commit=False)
-            group.save()
-            form.save_m2m()
-            return HttpResponseRedirect(
-                reverse(
-                    "organization_detail",
-                    args=[
-                        group.slug]))
-    else:
-        form = GroupForm(instance=group)
-
-    return render_to_response("groups/group_update.html", {
-        "form": form,
-        "group": group,
-    }, context_instance=RequestContext(request))
-
-def organization_members(request, slug):
-    group = get_object_or_404(GroupProfile, slug=slug)
-    ctx = {}
-
-    if not group.can_view(request.user):
-        raise Http404()
-
-    if group.access in [
-            "public-invite",
-            "private"] and group.user_is_role(
-            request.user,
-            "manager"):
-        ctx["invite_form"] = GroupInviteForm()
-
-    if group.user_is_role(request.user, "manager"):
-        ctx["member_form"] = GroupMemberForm()
-
-    ctx.update({
-        "group": group,
-        "members": group.member_queryset(),
-        "is_member": group.user_is_member(request.user),
-        "is_manager": group.user_is_role(request.user, "manager"),
-    })
-    ctx = RequestContext(request, ctx)
-    return render_to_response("groups/organization_members.html", ctx)
-
-@require_POST
-@login_required
-def organization_members_add(request, slug):
-    group = get_object_or_404(GroupProfile, slug=slug)
-
-    if not group.user_is_role(request.user, role="manager"):
-        return HttpResponseForbidden()
-
-    form = GroupMemberForm(request.POST)
-
-    if form.is_valid():
-        role = form.cleaned_data["role"]
-        for user in form.cleaned_data["user_identifiers"]:
-            group.join(user, role=role)
-
-    return redirect("organization_detail", slug=group.slug)
-
-@login_required
-def organization_member_remove(request, slug, username):
-    group = get_object_or_404(GroupProfile, slug=slug)
-    user = get_object_or_404(get_user_model(), username=username)
-
-    if not group.user_is_role(request.user, role="manager"):
-        return HttpResponseForbidden()
-    else:
-        GroupMember.objects.get(group=group, user=user).delete()
-        user.groups.remove(group.group)
-        return redirect("organization_detail", slug=group.slug)
-
-@require_POST
-def organization_invite(request, slug):
-    group = get_object_or_404(GroupProfile, slug=slug)
-
-    if not group.can_invite(request.user):
-        raise Http404()
-
-    form = GroupInviteForm(request.POST)
-
-    if form.is_valid():
-        for user in form.cleaned_data["invite_user_identifiers"].split("\n"):
-            group.invite(
-                user,
-                request.user,
-                role=form.cleaned_data["invite_role"])
-
-    return redirect("organization_members", slug=group.slug)
-
-def initiative_members(request, slug):
-    group = get_object_or_404(GroupProfile, slug=slug)
-    ctx = {}
-
-    if not group.can_view(request.user):
-        raise Http404()
-
-    if group.access in [
-            "public-invite",
-            "private"] and group.user_is_role(
-            request.user,
-            "manager"):
-        ctx["invite_form"] = GroupInviteForm()
-
-    if group.user_is_role(request.user, "manager"):
-        ctx["member_form"] = GroupMemberForm()
-
-    ctx.update({
-        "group": group,
-        "members": group.member_queryset(),
-        "is_member": group.user_is_member(request.user),
-        "is_manager": group.user_is_role(request.user, "manager"),
-    })
-    ctx = RequestContext(request, ctx)
-    return render_to_response("groups/initiative_members.html", ctx)
-
-@require_POST
-@login_required
-def initiative_members_add(request, slug):
-    group = get_object_or_404(GroupProfile, slug=slug)
-
-    if not group.user_is_role(request.user, role="manager"):
-        return HttpResponseForbidden()
-
-    form = GroupMemberForm(request.POST)
-
-    if form.is_valid():
-        role = form.cleaned_data["role"]
-        for user in form.cleaned_data["user_identifiers"]:
-            group.join(user, role=role)
-
-    return redirect("initiative_detail", slug=group.slug)
-
-@login_required
-def initiative_member_remove(request, slug, username):
-    group = get_object_or_404(GroupProfile, slug=slug)
-    user = get_object_or_404(get_user_model(), username=username)
-
-    if not group.user_is_role(request.user, role="manager"):
-        return HttpResponseForbidden()
-    else:
-        GroupMember.objects.get(group=group, user=user).delete()
-        user.groups.remove(group.group)
-        return redirect("initiative_detail", slug=group.slug)
-
-@require_POST
-def initiative_invite(request, slug):
-    group = get_object_or_404(GroupProfile, slug=slug)
-
-    if not group.can_invite(request.user):
-        raise Http404()
-
-    form = GroupInviteForm(request.POST)
-
-    if form.is_valid():
-        for user in form.cleaned_data["invite_user_identifiers"].split("\n"):
-            group.invite(
-                user,
-                request.user,
-                role=form.cleaned_data["invite_role"])
-
-    return redirect("initiative_members", slug=group.slug)
 
 class LeaderListView(ListView):
     context_object_name = 'leaders'
@@ -996,9 +687,6 @@ def layer_append_minimal(source, target, request_cookies):
         else:
             summary = parse_wfst_response(insert_features_request.content)
             summary_aggregate.append(summary)
-    #insert_tasks = group(tasks.append_feature_chunks.subtask((features,wfst_insert_template,get_features_request,target)) for features in features_chunks)
-    #results = insert_tasks.apply_async()
-    #insert_summary = results.join()
 
     return summary_aggregate
 

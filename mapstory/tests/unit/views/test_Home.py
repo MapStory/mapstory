@@ -24,7 +24,6 @@ class TestHomeView(TestCase):
         context = homeView.get_context_data()
         self.assertIsNotNone(context, "Should have a context")
         self.assertIsNotNone(context['sponsors'], "Should have Sponsors context")
-        self.assertIsNotNone(context['communities'], "Should have Communities context")
         self.assertIsNotNone(context['news_items'], "Should have news_items context")
         self.assertIsNotNone(context['images'], "Shoudl have Images context")
         self.assertIsNotNone(context['journal_entries'], "Should have Journal context")
