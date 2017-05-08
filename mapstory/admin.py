@@ -3,13 +3,11 @@ from django.contrib import admin
 from django import forms
 
 from mapstory.models import Sponsor
-from mapstory.models import Community
 from mapstory.models import NewsItem
 from mapstory.models import GetPage
 from mapstory.models import GetPageContent
 from mapstory.models import Leader
 from mapstory.models import ParallaxImage
-from mapstory.models import Task
 from mapstory.models import CustomSite
 from mapstory.models import MapStory
 
@@ -103,17 +101,6 @@ class SponsorAdmin(admin.ModelAdmin):
     list_editable = 'name', 'link', 'icon', 'description', 'order'
     list_display_links = 'image_tag',
 
-class TaskInline(admin.StackedInline):
-    model = Task
-
-class CommunityAdmin(admin.ModelAdmin):
-    inlines = [TaskInline, ]
-    model = Community
-    exclude = 'stamp', 'slug'
-    list_display = 'name', 'icon', 'image_tag', 'description', 'order'
-    list_editable = 'icon', 'description', 'order'
-    list_display_links = 'name', 'image_tag',
-
 
 class NewsItemForm(forms.ModelForm):
     date = forms.DateTimeField(
@@ -151,7 +138,6 @@ admin.site.register(MapStory)
 admin.site.register(GetPage, GetPageAdmin)
 admin.site.register(GetPageContent, GetPageContentAdmin)
 admin.site.register(Sponsor, SponsorAdmin)
-admin.site.register(Community, CommunityAdmin)
 admin.site.register(NewsItem, NewsItemAdmin)
 admin.site.register(Leader, LeaderAdmin)
 admin.site.register(ParallaxImage, ParallaxImageAdmin)
