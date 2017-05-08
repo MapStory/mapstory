@@ -3,8 +3,9 @@ from django.db.models import Q
 from mailer import send_html_mail
 from geonode.people.models import Profile
 
+
 def flag_handler(flagged_instance, flagged_content, **kw):
-    from django.conf import settings # circular deps
+    from django.conf import settings  # circular deps
     target = flagged_content.content_object
     # Does this need to be our custom user?
     has_email = Profile.objects.exclude(email='').exclude(email__isnull=True)
@@ -16,13 +17,13 @@ def flag_handler(flagged_instance, flagged_content, **kw):
     recps = has_email.filter(q)
     if recps.count() == 0:
         # What do we do here?
-        #_logger.warning('No recipients for flag')
+        # _logger.warning('No recipients for flag')
         return
     link = settings.SITEURL + 'admin/flag/flaginstance/%s' % flagged_instance.pk
     message = loader.render_to_string("flag/email.txt", {
-        'flag' : flagged_instance,
-        'url' : link,
-        'display' : '%s[%s]' % (target._meta.object_name, target.id)
+        'flag': flagged_instance,
+        'url': link,
+        'display': '%s[%s]' % (target._meta.object_name, target.id)
     })
     send_html_mail("[MapStory] Notification",
                    message=message,

@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_VIEWER_PLAYBACKMODE = "Instant"
 
+
 def parse_schema(schema_xml_str):
     xml = etree.XML(schema_xml_str)
     tree = etree.ElementTree(xml)
@@ -46,7 +47,7 @@ def print_exception(response_xml):
     root = tree.getroot()
     exceptions = root.findall('.//ows:Exception',root.nsmap)
     for exception in exceptions:
-         logger.warning('Insert exception {0}: {1}'.format(exception.tag,exception.text))
+        logger.warning('Insert exception {0}: {1}'.format(exception.tag, exception.text))
 
 
 def parse_wfst_response(schema_xml_str):

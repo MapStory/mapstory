@@ -127,7 +127,8 @@ class GetPageView(DetailView):
 
 
 class SearchView(TemplateView):
-    template_name='search/explore.html'
+    template_name = 'search/explore.html'
+
     def get_context_data(self, **kwargs):
         context = super(TemplateView, self).get_context_data(**kwargs)
         context['regions'] = Region.objects.filter(level=1)
@@ -157,6 +158,7 @@ class ProfileDetail(DetailView):
         ctx['notice_settings'] = notice_settings
 
         return ctx
+
 
 @login_required
 def profile_edit(request, username=None):
@@ -196,10 +198,9 @@ def profile_edit(request, username=None):
         return HttpResponseForbidden(
             'You are not allowed to edit other users profile')
 
+
 @login_required
 def health_check(request):
-    # import ipdb
-    # ipdb.sset_trace(context=5)
     plugins = []
     working = True
     for plugin_class, plugin in plugin_dir._registry.items():
@@ -208,7 +209,6 @@ def health_check(request):
             working = False
         plugins.append(plugin)
     plugins.sort(key=lambda x: x.identifier())
-
 
     if working:
         return HttpResponse(loader.render_to_string("health_check/dashboard.html", {'plugins': plugins}))
@@ -420,6 +420,7 @@ def map_view(request, mapid, snapshot=None, template='maps/map_view.html'):
         'map': map_obj
     }))
 
+
 def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer.html'):
     """
     The view that returns the map viewer opened to
@@ -436,6 +437,7 @@ def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer
     return render_to_response(template, RequestContext(request, {
         'config': json.dumps(config)
     }))
+
 
 # TODO this should be moved to a mapstory.util
 def _resolve_story(request, id, permission='base.change_resourcebase',
@@ -520,6 +522,7 @@ def draft_view(request, storyid, template='composer/maploom.html'):
         'story': story_obj
     }))
 
+
 @login_required
 def mapstory_draft(request, storyid, template):
     return draft_view(request, storyid, template)
@@ -534,6 +537,7 @@ def new_map(request, template):
         return render_to_response(template, RequestContext(request, {
             'config': config,
         }))
+
 
 @login_required
 def layer_create(request, template='upload/layer_create.html'):
@@ -591,6 +595,7 @@ def layer_append_minimal(source, target, request_cookies):
     The main layer_append logic that can run outside of a request.
     """
     source = 'geonode:' + source
+
     def chunk_list(list, chunk_size):
         """Yield successive chunk_size chunks from list."""
         for i in xrange(0, len(list), chunk_size):
@@ -810,23 +815,6 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         if request.user != layer.owner and not request.user.is_superuser:
             return HttpResponse(_PERMISSION_MSG_VIEW, status=403, content_type="text/plain")
 
-    # TODO (Mapstory): This has been commented out to force the client to make a getCapabilities request in order
-    # to pull in the time dimension data.  Ideally we would cache time data just like the srs and bbox data to prevent
-    # making the getCapabilities request.
-
-    # Add required parameters for GXP lazy-loading
-    #layer_bbox = layer.bbox
-    #bbox = [float(coord) for coord in list(layer_bbox[0:4])]
-    #srid = layer.srid
-
-    # Transform WGS84 to Mercator.
-    #config["srs"] = srid if srid != "EPSG:4326" else "EPSG:900913"
-    #config["bbox"] = llbbox_to_mercator([float(coord) for coord in bbox])
-
-    #config["title"] = layer.title
-    #config["queryable"] = True
-
-
     if layer.storeType == "remoteStore":
         service = layer.service
         source_params = {
@@ -989,6 +977,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     return render_to_response(template, RequestContext(request, context_dict))
 
+
 def _resolve_map(request, id, permission='base.change_resourcebase',
                  msg=_PERMISSION_MSG_GENERIC, **kwargs):
     '''
@@ -1001,6 +990,7 @@ def _resolve_map(request, id, permission='base.change_resourcebase',
     map_obj = resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
     return map_obj
+
 
 def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     '''
@@ -1099,6 +1089,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         context_dict["social_links"] = build_social_links(request, map_obj)
     return render_to_response(template, RequestContext(request, context_dict))
 
+
 @login_required
 def layer_remove(request, layername, template='layers/layer_remove.html'):
     layer = _resolve_layer(
@@ -1126,6 +1117,7 @@ def layer_remove(request, layername, template='layers/layer_remove.html'):
         return HttpResponseRedirect(reverse("index_view"))
     else:
         return HttpResponse("Not allowed", status=403)
+
 
 @login_required
 def map_remove(request, mapid, template='maps/map_remove.html'):
@@ -1337,7 +1329,7 @@ def new_map_config(request):
     return json.dumps(config)
 
 
-### TODO should be a util
+# TODO should be a util
 
 def clean_config(conf):
     if isinstance(conf, basestring):
