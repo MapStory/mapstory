@@ -1,7 +1,9 @@
-from mapstory.apps.flag.signals import content_flagged
 from django.db.models import Q
-from mailer import send_html_mail
+
 from geonode.people.models import Profile
+from mailer import send_html_mail
+
+from mapstory.apps.flag.signals import content_flagged
 
 
 def flag_handler(flagged_instance, flagged_content, **kw):

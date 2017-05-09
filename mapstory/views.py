@@ -1,22 +1,17 @@
-import math
 import contextlib
 import csv
 import datetime
+from httplib import HTTPConnection, HTTPSConnection
+import json
+import math
 import ogr
+import os
 import shutil
 import StringIO
 import tempfile
-import zipfile
-import json
-import os
-from httplib import HTTPConnection, HTTPSConnection
 from urlparse import urlsplit
+import zipfile
 
-import requests
-from account.conf import settings as account_settings
-from account.views import ConfirmEmailView
-from account.views import SignupView
-from actstream.models import actor_stream
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout
@@ -41,6 +36,12 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+
+import requests
+from account.conf import settings as account_settings
+from account.views import ConfirmEmailView
+from account.views import SignupView
+from actstream.models import actor_stream
 from geonode.base.models import TopicCategory, Region
 from geonode.documents.models import get_related_documents
 from geonode.geoserver.helpers import ogc_server_settings
@@ -48,23 +49,27 @@ from geonode.layers.models import Layer
 from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
 from geonode.geoserver.views import layer_acls, resolve_user
 from geonode.layers.views import _resolve_layer
-from mapstory.mapstories.models import MapStory, Map
 from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE, _PERMISSION_MSG_LOGIN
 from geonode.maps.models import MapLayer, MapSnapshot
 from geonode.people.models import Profile
 from geonode.security.views import _perms_info_json
 from geonode.tasks.deletion import delete_layer
-from tasks import delete_mapstory
 from geonode.utils import GXPLayer, GXPMap, resolve_object
 from geonode.utils import build_social_links
 from geonode.utils import default_map_config
 from geonode.utils import forward_mercator, llbbox_to_mercator
 from geonode.utils import DEFAULT_TITLE
 from geonode.utils import DEFAULT_ABSTRACT
-from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from health_check.plugins import plugin_dir
 from icon_commons.models import Icon
 from lxml import etree
+from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
+from osgeo_importer.utils import UploadError, launder
+from osgeo_importer.forms import UploadFileForm
+from provider.oauth2.models import AccessToken
+from user_messages.models import Thread
+
+from apps.journal.models import JournalEntry
 from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
 from mapstory.apps.favorite.models import Favorite
 from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
@@ -72,20 +77,17 @@ from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditG
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm, DistributionUrlForm
 from mapstory.forms import SignupForm
 from mapstory.importers import GeoServerLayerCreator
+from mapstory.mapstories.models import MapStory, Map
 from mapstory.models import GetPage
 from mapstory.models import Leader
 from mapstory.models import NewsItem
 from mapstory.models import get_sponsors, get_images
 from mapstory.search.utils import update_es_index
+from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
-from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 from .notifications import PROFILE_NOTICE_SETTINGS
-from osgeo_importer.utils import UploadError, launder
-from osgeo_importer.forms import UploadFileForm
-from provider.oauth2.models import AccessToken
-from user_messages.models import Thread
+from tasks import delete_mapstory
 
-from apps.journal.models import JournalEntry
 
 plugin_dir.register(GeoServerHealthCheck)
 

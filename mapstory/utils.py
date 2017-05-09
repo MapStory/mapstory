@@ -4,6 +4,7 @@ import re
 
 from django.contrib.staticfiles.templatetags import staticfiles
 from django.http import HttpResponse
+
 from lxml import etree
 
 logger = logging.getLogger(__name__)
