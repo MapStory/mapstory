@@ -1,11 +1,13 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from mapstory.mapstory_profile.models import MapstoryProfile
-from mapstory.mapstories.models import MapStory
+
+import account.forms
 from geonode.people.models import Profile
 from geonode.base.models import ResourceBase
 import taggit
-import account.forms
+
+from mapstory.mapstory_profile.models import MapstoryProfile
+from mapstory.mapstories.models import MapStory
 
 
 class SignupForm(account.forms.SignupForm):

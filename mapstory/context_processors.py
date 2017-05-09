@@ -1,11 +1,11 @@
-from django.conf import settings
+import json
 
-from .context_processors_favorite import get_favorite_info
+from django.conf import settings
 from django.contrib.sites.models import Site
 
-from mapstory.version import get_version
+from .context_processors_favorite import get_favorite_info
 
-import json
+from mapstory.version import get_version
 
 
 def context(req):

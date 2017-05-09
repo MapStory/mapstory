@@ -1,12 +1,14 @@
 import datetime
 import hashlib
+import notifications
 import os
+import search
+
+from django import conf, db, contrib, template
+from django.contrib.sites.models import Site
 
 import geonode
 import textile
-from django import conf, db, contrib, template
-from django.contrib.sites.models import Site
-import notifications, search
 
 from mapstory.mapstories.models import MapStory, Map
 

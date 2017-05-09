@@ -1,21 +1,18 @@
+from django import forms
 from django.contrib import admin
 
-from django import forms
+from geonode.people.admin import ProfileAdmin as UserAdmin
 
-from mapstory.models import Sponsor
-from mapstory.models import NewsItem
+from mapstory.apps.flag import admin as flag_admin
+from mapstory.export import export_via_model
+from mapstory.models import CustomSite
 from mapstory.models import GetPage
 from mapstory.models import GetPageContent
 from mapstory.models import Leader
-from mapstory.models import ParallaxImage
-from mapstory.models import CustomSite
 from mapstory.models import MapStory
-
-from mapstory.export import export_via_model
-
-from mapstory.apps.flag import admin as flag_admin
-
-from geonode.people.admin import ProfileAdmin as UserAdmin
+from mapstory.models import NewsItem
+from mapstory.models import ParallaxImage
+from mapstory.models import Sponsor
 
 
 def content_html(obj):

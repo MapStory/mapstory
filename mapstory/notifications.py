@@ -1,20 +1,20 @@
 import json
 
-import geonode
-import mapstory.apps.favorite.models
-from mapstory.mapstories.models import Map, MapStory
-
-from agon_ratings.models import Rating
 from django.contrib.auth.decorators import login_required
 from django.db.models import signals
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
+
+from agon_ratings.models import Rating
+import geonode
 from geonode.tasks.email import send_queued_notifications
-from mapstory.apps.flag.models import FlagInstance
+
 from notification import models as notification
 from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 from threadedcomments.models import ThreadedComment
 from user_messages.models import Message
+
+from mapstory.apps.flag.models import FlagInstance
 
 PROFILE_NOTICE_SETTINGS = ['layer_comment', 'layer_rated', 'layer_favorited', 'layer_flagged',
     'layer_downloaded', 'layer_used', 'map_comment', 'map_rated', 'map_favorited',

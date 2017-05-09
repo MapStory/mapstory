@@ -1,7 +1,8 @@
 from django import db
 
-from osgeo_importer.inspectors import OGRTruncatedConverter
 from osgeo_importer.handlers import ImportHandlerMixin, ensure_can_run
+from osgeo_importer.inspectors import OGRTruncatedConverter
+
 from .views import layer_append_minimal
 
 
