@@ -21,26 +21,25 @@
 	  url: SEARCH_URL
 	})
 
-  .run(function($http, $rootScope, $location){
-
-    function load_active_list ($http, $rootScope, $location, api, endpoint, filter){
-      var params = typeof FILTER_TYPE == 'undefined' ? {} : {'type': FILTER_TYPE};
-      $http.get(endpoint, {params: params})
-        .then(
-          /* success */
-          function(response) {
-           $rootScope[api] = response.data.objects
-           //used for homepage carousel and explore/content_sidebar
-          },
-          /* failure */
-          function(error) {
-            console.log("The request failed: ", error);
-          }
-        )
-    }
+  .run(function($http, $rootScope, $location){    
+    var params = typeof FILTER_TYPE == 'undefined' ? {} : {'type': FILTER_TYPE};
     
-    load_active_list($http, $rootScope, $location, 'categories',
-          CATEGORIES_ENDPOINT,'category__identifier__in');
+    function getCategories(){
+      $http.get(CATEGORIES_ENDPOINT, {params: params})
+      .then(
+        /* success */
+        function(response) {
+         $rootScope['categories'] = response.data.objects
+         //populates homepage carousel categories and explore sidebar categories
+        },
+        /* failure */
+        function(error) {
+          console.log("The request failed: ", error);
+        }
+      )
+    }
+
+    getCategories();
   })
 
     // add filter to decode uri

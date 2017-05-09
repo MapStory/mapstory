@@ -82,7 +82,7 @@ describe('Data Service', function() {
 	      - will bark if API has changed in a way that affects our autocomplete
 	   */
 	  
-	  xdescribe('[dev hack] mock JSON of /api/regions response', function(){
+	  describe('[dev hack] mock JSON of /api/regions response', function(){
 	    it('should be the same length as geonode APIs expected list of regions', function(){
 	      var regions = mockRegions.data.objects;
 
@@ -101,22 +101,3 @@ describe('Data Service', function() {
 	});
 
 });
-
-/*
-related:
-
-storyteller result cards expect 
- .username
-
- optional
- .first_name
- .last_name
- .city
- .country
- .profile
- .avatar_100
- .social_twitter
- .social_facebook
- .social_linkedIn
- .social_github
-*/

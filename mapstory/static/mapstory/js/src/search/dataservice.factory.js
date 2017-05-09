@@ -33,6 +33,8 @@
           });   
     }
 
+    /// regions needs to be updated to async
+
     function getRegions(){
       return $http.get(REGIONS_ENDPOINT)
               .then(regionsForAutocomplete);

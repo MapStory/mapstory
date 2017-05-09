@@ -5,12 +5,16 @@
     <section>
         <h2>Filter Results</h2>
         <div class="clear-filters">
-            <a href="" ng-click="toContentSearch()">Clear all</a>
+            <a href="" ng-click="defaultContent()">Clear all</a>
         </div>
     </section>
 
     <section>
-        <h3>Search</h3>
+        <h3>Search         
+            <i class="fa fa-info-circle">
+                <md-tooltip md-direction="right">use keywords 'AND' or 'OR' to narrow or expand your search</md-tooltip>
+            </i>
+        </h3>
         <div class="clear-filters">
             <a href="" ng-click="clear('q')">Clear</a>
         </div>
@@ -32,8 +36,8 @@
                 </form>
             </div>
         </div>
-    </section>
 
+    </section>
     <section>
     {% verbatim %}
         <h3>Content Type</h3>
@@ -93,14 +97,16 @@
                           md-on-remove="remove_query('owner__username__in', $chip.username)">
                     <md-autocomplete md-selected-item="selectedItem"
                                      md-search-text="searchText"
-                                     md-items="item in author.author.querySearch(searchText)"
+                                     md-delay= "400"
+                                     md-items="item in author.async(searchText)"
                                      md-item-text="item.username"
-                                     placeholder="Filter by StoryTeller...">
-                        <span class="autocomplete-dropdown-text" md-highlight-text="searchText">{{item.first_name}} {{item.last_name}}</span>
+                                     placeholder={{author.placeholder}}>
+                        <span class="autocomplete-dropdown-text" md-highlight-text="searchText">{{item.first_name}} {{item.last_name}} ({{item.username}})</span>
+                        <md-not-found>No matching users found.</md-not-found>
                     </md-autocomplete>
                     <md-chip-template>
                         <span>
-                          {{$chip.first_name}} {{$chip.last_name}}
+                          {{$chip.username}}
                         </span>
                     </md-chip-template>
                 </md-chips>
@@ -112,27 +118,26 @@
     {% endverbatim %}
     </section>
 
-    <section ng-controller="tagsController as tgs">
+    <section ng-controller="tagsController as tags">
     {% verbatim %}
         <h3>Tags</h3>
         <div class="clear-filters">
             <a href="" ng-click="clear('keywords__slug__in')">Clear</a>
         </div>
         <div class="filter-content">
-            <p>Add your own tags or choose from the popular tags below to filter your search.</p>
             <md-content class="md-padding" layout="column">
-                <md-chips ng-model="tgs.tagChips" 
+                <md-chips ng-model="tags.chips" 
                 md-autocomplete-snap 
                 md-on-add="add_query('keywords__slug__in', $chip.slug)"
                 md-on-remove="remove_query('keywords__slug__in', $chip.slug)"
-                md-transform-chip="tgs.tags.newChip($chip)">
+                md-transform-chip="tags.field.newChip($chip)">
                     <md-autocomplete
                         md-selected-item="selectedItem"
                         md-search-text="searchText"
-                        md-items="item in tgs.tags.querySearch(searchText)"
+                        md-items="item in tags.async(searchText)"
                         md-item-text="item.slug"
-                        placeholder="Filter by tag...">
-                        <span md-highlight-text="searchText">{{item.slug}}</span>
+                        placeholder={{tags.placeholder}}>
+                        <span class="autocomplete-dropdown-text" md-highlight-text="searchText">{{item.slug}}</span>
                     </md-autocomplete>
                   <md-chip-template>
                     {{$chip.slug}}
@@ -142,14 +147,6 @@
                     <i class="fa fa-search"></i>
                 </button>
             </md-content>
-        </div>
-        <div class="filter-content">
-            <h4>Popular Tags on MapStory</h4>
-            <div id="keywords">
-                <span ng-repeat="item in tgs.topDisplay">
-                    <a href="" class="tag" data-value="{{ item }}" data-filter="keywords__slug__in" ng-click="multiple_choice_listener($event)">{{ item }}</a>
-                </span>
-            </div>
         </div>
     {% endverbatim %}
     </section>
