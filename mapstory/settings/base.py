@@ -527,3 +527,13 @@ NOSE_ARGS = [
 
 # Override number of results per page listed in the GeoNode search pages
 CLIENT_RESULTS_LIMIT = 30
+
+# Activity Stream Settings
+ACTSTREAM_SETTINGS = {
+    'FETCH_RELATIONS': True,
+    'USE_PREFETCH': False,
+    'USE_JSONFIELD': True,
+    'GFK_FETCH_DEPTH': 1,
+    'MAPSTORY_CUSTOM': 'payload',
+}
+
