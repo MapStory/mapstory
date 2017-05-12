@@ -1,14 +1,16 @@
-from django.db import transaction
-from django.http import HttpResponse
-from mapstory.annotations.models import Annotation
-from mapstory.annotations.forms import AnnotationForm
-from mapstory.annotations.utils import unicode_csv_dict_reader
-from geonode.utils import resolve_object
-from mapstory.mapstories.models import Map
-from geonode.utils import json_response
-
 import csv
 import json
+
+from django.db import transaction
+from django.http import HttpResponse
+
+from geonode.utils import json_response
+from geonode.utils import resolve_object
+
+from mapstory.annotations.forms import AnnotationForm
+from mapstory.annotations.models import Annotation
+from mapstory.annotations.utils import unicode_csv_dict_reader
+from mapstory.mapstories.models import Map
 
 
 def _annotations_get(req, mapid):
@@ -51,7 +53,7 @@ def _annotations_get(req, mapid):
     def encode(query_set):
         results = []
         for res in query_set:
-            feature = { 'id' : res.id}
+            feature = {'id': res.id}
             if res.the_geom:
                 feature['geometry'] = res.the_geom
 
@@ -173,7 +175,3 @@ def annotations(req, mapid):
         return _annotations_post(req, mapid)
 
     return HttpResponse(status=400)
-
-
-
-
