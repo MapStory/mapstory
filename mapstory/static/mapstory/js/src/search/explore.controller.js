@@ -9,15 +9,16 @@
     .module('mapstory.search')
     .controller('exploreController', exploreController);
 
-  function exploreController($injector, $scope, $location, $http, $q, Configs) {
+  function exploreController($injector, $scope, $location, $http, $q, Configs, page) {
     $scope.query = $location.search();
     $scope.sitename = SITE_NAME; //used in content_sidebar
 
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
 
-    $scope.lists = {};
     $scope.autocomplete = {};
+
+    var vm = this;
 
     if (!Configs.hasOwnProperty("disableQuerySync")) {
       // Keep in sync the page location with the query object
@@ -28,30 +29,39 @@
     } 
 
     $scope.search = function() {
-      return query_api($scope.query).then(function(result) {
-        return result;
-      });
-    };
+      if($scope.query.limit == 0){
+        console.log("Reseting to default CLIENT_RESULTS_LIMIT, cannot query API with a 0 limit")
+        $scope.query.limit = CLIENT_RESULTS_LIMIT;
+      }
+      // verify that offset is a multiple of limit before querying API
+      if($scope.query.limit != 0 && $scope.query.offset % $scope.query.limit != 0) {
+        $scope.query.offset = page.roundOffset($scope);
+      }
 
-    //Get data from apis and make them available to the page
-    function query_api(data){
-
-      return $http.get($scope.apiEndpoint, {params: data || {}})
+      return $http.get($scope.apiEndpoint, {params: $scope.query || {}})
         .then(
           /* success */
           function(response) {
-            $scope.results = response.data.objects;
-            $scope.total_counts = response.data.meta.total_count;
-            $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
-            $scope.numresults = Number($scope.query.offset) + Number($scope.results.length);
-            $scope.resultStart = Number($scope.query.offset) + 1;
+            $scope.cards = response.data.objects;
+            page.paginate(response, vm, $scope);
           },
           /* failure */
           function(error) {
-            console.log("The request failed: ", error);
+            if( error.data.error_message === "Sorry, no results on that page." ){
+              console.log("Setting offset to 0 and searching again.");
+              page.resetOffset($scope);
+            } else {
+              console.log(error);
+            }
           }
         )
     };
+    
+    /* Pagination */
+
+    $scope.pageDown = page.down(vm, $scope);
+    $scope.pageUp = page.up(vm, $scope);
+
 
     $scope.clearVTC = function(){
       $scope.VTCisChecked = false;
@@ -65,16 +75,16 @@
         $scope.VTCisChecked = false;
         $scope.itemFilter = { is_active: true };
         
-        console.log($scope.itemFilter);
+        // console.log($scope.itemFilter);
       } else {
         $scope.VTCisChecked = true;
         $scope.itemFilter = {Volunteer_Technical_Community: true};
         
-        console.log($scope.itemFilter);
+        // console.log($scope.itemFilter);
       }
     };
 
-    // REINSTATE AFTER API HAS BEEN UPDATED FOR VTC FILTER
+    // // REINSTATE AFTER API HAS BEEN UPDATED FOR VTC FILTER
     // /* handling checkboxy on/off filters and display */
     // $scope.VTC = function(){
     //   if($scope.query.Volunteer_Technical_Community == false){
@@ -175,15 +185,19 @@
     };
 
     /* ORDERING */
+    //set default order methods for content and storyteller
     $scope.orderMethodContent = '-popular_count';
     $scope.orderMethodStoryteller = 'username';
 
+    //expose additional sorting to the dropdown "sort by"
     $scope.orderMethods = {
+      //for general content results
       content:
         [
           {name:'Popular', filter:'-popular_count'},
           {name:'Newest', filter:'-date'}
         ], 
+        //for the storyteller results
       storyteller:
         [
           {name: 'Username Z-A', filter: '-username'},
@@ -191,35 +205,7 @@
         ]
     };
 
-    /*
-    * Pagination 
-    */
-    $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
-    $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
-    $scope.resultStart = Number($scope.query.offset) + 1;
-
-    function updateOffset(){
-      $scope.query.offset =  $scope.query.limit * ($scope.page - 1);
-    }
-
-    $scope.pageDown = function(){
-      if($scope.page > 1){
-        $scope.page -= 1;
-        updateOffset();
-        $scope.search();
-      }   
-    };
-
-    $scope.pageUp = function(){
-      if($scope.page < $scope.numpages){
-        $scope.page += 1;
-        updateOffset();
-        $scope.search();
-      }
-    };
-
     /* USER VS CONTENT EXPLORE SETTINGS
-
     Persisting content and storyteller view & queries through page refresh */
 
     // Make the content one active, user inactive
@@ -232,9 +218,10 @@
       };
      $scope.search();
     };
+
     // Make the user one active, content inactive
     $scope.defaultContent = function() {
-      $scope.apiEndpoint = '/api/base/search/';
+      $scope.apiEndpoint = SEARCH_URL;
       $scope.query = { 
         content: true, 
         is_published: true, 
@@ -252,7 +239,7 @@
       $scope.query.content = true;
 
       //default to content explore
-      $scope.apiEndpoint = '/api/base/search/';
+      $scope.apiEndpoint = SEARCH_URL;
 
       //add is_published even if they've removed it,
       //but persist all other filters

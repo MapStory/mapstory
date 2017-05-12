@@ -4,7 +4,7 @@
 {% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
-<div ng-controller="exploreController">
+<div ng-controller="exploreController as exp">
     <nav class="explore-tabs col-sm-offset-3">
         <ul>
           <li ng-click="defaultContent();" ng-class="{active: query.content}">Content</li>
@@ -16,15 +16,16 @@
             {% include 'search/_content_sidebar.html' %}
 
             {% comment %} Content results {% endcomment %}
-             <div ng-hide="numresults" class="col-sm-9">
+             <div ng-hide="exp.resultsShowing" class="col-sm-9">
                  No stories or layers matched your selections. Please adjust or clear your filters.
              </div>
-            <div ng-if="numresults" class="col-sm-9">
+             {% verbatim %}
+            <div ng-if="exp.resultsShowing" class="col-sm-9">
                 <div class="showing-results">
-                    Showing <span ng-bind="resultStart"></span>-<span ng-bind="numresults"></span> of <span ng-bind="total_counts"></span> results
+                    Showing {{exp.resultStart}}-{{exp.resultsShowing}} of {{exp.resultCount}} results
                 </div>
                 <div class="sort-by">
-                {% verbatim %}
+                
                     <md-input-container class="md-block" flex-gt-md>
                         <label>Sort by</label>
                         <md-select ng-model="orderMethodContent">
@@ -38,7 +39,7 @@
                 <div class="content-results">
                     <ul>
                         {% verbatim %}
-                        <li ng-repeat="item in results | orderBy: orderMethodContent"
+                        <li ng-repeat="item in cards | orderBy: orderMethodContent"
                             resource-id="{{ item.id }}"
                             class="col-lg-4 col-sm-6 resource-{{ item.id }}">
                         {% endverbatim %}
@@ -54,15 +55,16 @@
             {% include 'search/_users_sidebar.html' %}
 
             {% comment %} StoryTeller results {% endcomment %}
-            <div ng-hide="numresults" class="col-sm-9">
+            <div ng-hide="exp.resultsShowing" class="col-sm-9">
                  No StoryTellers matched your selections. Please adjust or clear your filters.
              </div>
-            <div ng-if="numresults" class="col-sm-9">
+                {% verbatim %}
+                  <div ng-if="exp.resultsShowing" class="col-sm-9">
                 <div class="showing-results">
-                    Showing <span ng-bind="resultStart"></span>-<span ng-bind="numresults"></span> of <span ng-bind="total_counts"></span> results
+                    Showing {{exp.resultStart}}-{{exp.resultsShowing}} of {{exp.resultCount}} results
                 </div>
                 <div class="sort-by">
-                {% verbatim %}
+             
                     <md-input-container class="md-block" flex-gt-md>
                         <label>Sort by</label>
                         <md-select ng-model="orderMethodStoryteller">
@@ -80,14 +82,13 @@
             </div>
             {% comment %} End StoryTeller results {% endcomment %}
         </div>
-        <div ng-if="numresults" class="pull-right">
+        {% verbatim %}
+        <div ng-if="exp.resultsShowing" class="pull-right">
             <a href><i ng-click="pageDown()" class="fa fa-chevron-left"></i></a>
-            <span>page </span>
-            <span ng-model="page" ng-bind="page"></span>
-            <span> of </span>
-            <span ng-bind="numpages"></span>
+                page {{exp.thisPage}} of {{exp.pages}}
             <a href><i ng-click="pageUp()" class="fa fa-chevron-right"></i></a>
         </div>
+        {% endverbatim %}
     </div>
 </div>
 

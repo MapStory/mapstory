@@ -32,7 +32,6 @@ module.exports = function(config) {
       'mapstory/js/spec/django-context.js',
       // mock response from geonode APIs
       'mapstory/js/spec/mockRegionsAPI.js',
-      'mapstory/js/spec/mockKeywordsAPI.js',
       
       // our app code
       'mapstory/js/dist/mapstory.js',
