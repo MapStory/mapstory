@@ -1,10 +1,11 @@
+import json
+
 from django import forms
+
 from mapstory.annotations.models import Annotation
 from mapstory.annotations.utils import datetime_to_seconds
 from mapstory.annotations.utils import make_point
 from mapstory.annotations.utils import parse_date_time
-
-import json
 
 
 class AnnotationForm(forms.ModelForm):
