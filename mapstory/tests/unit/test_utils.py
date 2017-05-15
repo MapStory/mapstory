@@ -26,6 +26,19 @@ class TestUtils(MapStoryTestMixin):
         self.assertIsInstance(error, HttpResponse)
         self.assertEqual(error.status_code, status_code)
 
+    def test_create_layer(self):
+        """
+        Tests the layer creation helper method
+        """
+        owner = utils.get_test_user()
+        initial_count = Layer.objects.all().count()
+        layer = utils.create_layer("Test title", "A descriptiion", owner)
+        final_count = Layer.objects.all().count()
+        self.assertEqual(final_count, initial_count + 1)
+        self.assertIsInstance(layer, Layer)
+        self.assertEqual(layer.owner_id, owner.id)
+        self.assertEqual(layer.title, "Test title")
+
 
 class TestLinkUtil(TestCase):
     def setUp(self):
@@ -64,16 +77,3 @@ class TestLinkUtil(TestCase):
         link = Link(video_link, name)
         self.assertTrue(video_id in link.render())
         self.assertEqual(name, link.name)
-
-    def test_create_layer(self):
-        """
-        Tests the layer creation helper method
-        """
-        owner = utils.get_test_user()
-        initial_count = Layer.objects.all().count()
-        layer = utils.create_layer("Test title", "A descriptiion", owner)
-        final_count = Layer.objects.all().count()
-        self.assertEqual(final_count, initial_count + 1)
-        self.assertIsInstance(layer, Layer)
-        self.assertEqual(layer.owner_id, owner.id)
-        self.assertEqual(layer.title, "Test title")
