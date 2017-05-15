@@ -108,5 +108,7 @@ class MapstoryOwnersResource(TypeFilteredResource):
 
         filtering = {
             'username': ALL,
+            'city': ALL,
+            'country': ALL,
         }
         serializer = OwnerProfileSerializer()
