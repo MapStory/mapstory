@@ -134,7 +134,7 @@ class MapstoryOwnersResource(TypeFilteredResource):
         return semi_filtered
 
     class Meta:
-        queryset = get_user_model().objects.exclude(username='AnonymousUser')
+        queryset = get_user_model().objects.exclude(username='AnonymousUser').exclude(is_active=False)
 
         resource_name = 'owners'
         allowed_methods = ['get']
