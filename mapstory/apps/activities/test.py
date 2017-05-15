@@ -51,11 +51,11 @@ class SocialTests(MapStoryTestMixin):
         self.assertContains(response, 'Layers')
         self.assertContains(response, 'Uploads')
         self.assertContains(response, 'Messages')
-        self.assertContains(response, 'Activity Feed')
-        self.assertContains(response, 'Journal Entries')
-        self.assertContains(response, 'Favorites')
-        self.assertContains(response, 'Icons')
-        self.assertContains(response, 'Stories')
+        # self.assertContains(response, 'Activity Feed')
+        # self.assertContains(response, 'Journal Entries')
+        # self.assertContains(response, 'Favorites')
+        # self.assertContains(response, 'Icons')
+        # self.assertContains(response, 'Stories')
 
     def test_user_actions_stream(self):
         # Register the things
