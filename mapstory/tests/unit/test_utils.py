@@ -7,6 +7,9 @@ from django.test import TestCase
 from ...tests.MapStoryTestMixin import MapStoryTestMixin
 from ...tests.AdminClient import AdminClient
 from ...utils import parse_schema, error_response, Link
+from mapstory.tests import utils
+from geonode.maps.models import Layer
+
 
 class TestUtils(MapStoryTestMixin):
     def setUp(self):
@@ -16,12 +19,12 @@ class TestUtils(MapStoryTestMixin):
         pass
 
     def test_error_response(self):
-        statusCode = 111,
+        status_code = 111,
         text = "Test error 111"
 
-        error = error_response(statusCode, text)
+        error = error_response(status_code, text)
         self.assertIsInstance(error, HttpResponse)
-        self.assertEqual(error.status_code, statusCode)
+        self.assertEqual(error.status_code, status_code)
 
 
 class TestLinkUtil(TestCase):
@@ -61,3 +64,16 @@ class TestLinkUtil(TestCase):
         link = Link(video_link, name)
         self.assertTrue(video_id in link.render())
         self.assertEqual(name, link.name)
+
+    def test_create_layer(self):
+        """
+        Tests the layer creation helper method
+        """
+        owner = utils.get_test_user()
+        initial_count = Layer.objects.all().count()
+        layer = utils.create_layer("Test title", "A descriptiion", owner)
+        final_count = Layer.objects.all().count()
+        self.assertEqual(final_count, initial_count + 1)
+        self.assertIsInstance(layer, Layer)
+        self.assertEqual(layer.owner_id, owner.id)
+        self.assertEqual(layer.title, "Test title")
