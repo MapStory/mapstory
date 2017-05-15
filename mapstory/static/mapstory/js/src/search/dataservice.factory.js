@@ -1,107 +1,59 @@
  /*
-  * Data Service Factory
   */
 (function() {
 'use strict';
 
   angular
     .module('mapstory.search')
-    .factory('dataservice', dataservice);
+    .factory('dataService', dataService);
 
-  dataservice.$inject = ['$http'];
+  dataService.$inject = ['$http'];
   
-  function dataservice($http, logger) {
+  function dataService($http) {
     return {
-        getKeywords: getKeywords,
-        getRegions: getRegions,
-        getOwners: getOwners
-      }
-
-    function getKeywords() {
-        return $http.get('/api/keywords/')
-            .then(getKeywordsComplete);
-
-        function getKeywordsComplete(response) {
-          var index = {};
-          var list = _.map(response.data.objects, function (tag) {
-            tag._lower = [tag.slug.toLowerCase()];
-            index[tag.slug] = tag;
-            return tag;
-          });
-
-          list = _.sortBy(list, function(tag) {
-            return -tag.count;
-          });
-
-          var trending = [];
-
-          var displayLength = (list.length > 10) ? 10 : list.length;
-
-          for (var i = 0; i < displayLength; i++) {
-            if(list[i]['count'] != 0)
-              trending.push(list[i]['slug']);
-          } 
-          return {
-            list: list,
-            index: index,
-            trending: trending
-          } 
-        }
+      getKeywords: getKeywords,
+      getOwners: getOwners,
+      getRegions: getRegions,
+      _modify: regionsForAutocomplete
     }
+  
+    //////////////////////
+
+    function getKeywords(query) {
+      return $http.get(KEYWORDS_ENDPOINT,  {params: query || {}})
+           .then(function(response){ 
+              return response.data.objects;
+          });   
+    }
+
+    function getOwners(query){
+      return $http.get('/api/owners/', {params: query || {}})
+          .then(function(response){ 
+              return response.data.objects;
+          });   
+    }
+
+    /// regions needs to be updated to async
 
     function getRegions(){
-    return $http.get('/api/regions/')
-            .then(getRegionsComplete);
-    
-      function getRegionsComplete(response) { 
-        var results = response.data.objects;
-        var codes = {};
+      return $http.get(REGIONS_ENDPOINT)
+              .then(regionsForAutocomplete);
+    } 
 
-        var countryResults = _.map(results, function (region) {
-            region._lower = [ region.name.toLowerCase() , region.code.toLowerCase() ];
-            codes[region.code] = region;
-          return region;
-        });
+    function regionsForAutocomplete(response) { 
+      var results = response.data.objects;
+      var codes = {};
 
-        return {
-          all: countryResults,
-          byCodes: codes,
-        } 
-      }
-    }
+      var countryResults = _.map(results, function (region) {
+          region._lower = [ region.name.toLowerCase() , region.code.toLowerCase() ];
+          codes[region.code] = region;
+        return region;
+      });
 
-    function getOwners(){
-      return $http.get('/api/owners/')
-              .then(getOwnersComplete);
-      
-        function getOwnersComplete(response) {
-          var profiles = { all: [], byUsername:{} };
-          var cities = { all: [] };
-          
-          _.reduce(response.data.objects, function ( profiles, user) {
-            var first = user.first_name.toLowerCase();
-            var last = user.last_name.toLowerCase();
-            var firstLast = first + " " + last;
-            var username = user.last_name.toLowerCase();
-            user._lower = [ first, last, firstLast, username ];
-            
-            profiles.all.push(user);
-            profiles.byUsername[user.username] = user;
-
-            if(user.city){
-              var city = { city: user.city};
-              city._lower = [ user.city.toLowerCase() ];
-              cities.all.push(city);
-            }
-            
-            return profiles;
-          }, profiles);
-
-          return {
-            profiles: profiles,
-            cities: cities
-          } 
-        }
-    }
+      return {
+        all: countryResults,
+        byCodes: codes,
+      } 
+    }  
   };
 })();

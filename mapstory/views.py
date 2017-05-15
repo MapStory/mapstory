@@ -890,10 +890,10 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             layer.distribution_url = distributionurl_form.cleaned_data['distribution_url']
 
             keywords_form = KeywordsForm(instance=layer)
-        elif 'add_keyword' in request.POST:
+        if 'add_keyword' in request.POST:
             layer.keywords.add(request.POST['add_keyword'])
             layer.save()
-        elif 'remove_keyword' in request.POST:
+        if 'remove_keyword' in request.POST:
             layer.keywords.remove(request.POST['remove_keyword'])
             layer.save()
     else:

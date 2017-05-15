@@ -13,7 +13,7 @@ let PixDiff = require('pix-diff');
 
 //----------------------
 // Variable settings
-let selenium_url = "http://#";
+let selenium_url = 'http://#';
 
 if(process.env.DOCKER){
 	selenium_url = 'http://selenium:4444/wd/hub';
@@ -59,6 +59,7 @@ let settings = {
 		'specs/journal.spec.js',
 		'specs/search.spec.js',
 		// 'specs/survey.spec.js',
+		'specs/icons.spec.js'
 	],
 	multiCapabilities: multi_cabapilities,
 	jasmineNodeOpts: {
