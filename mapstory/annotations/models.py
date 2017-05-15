@@ -1,9 +1,10 @@
 from django.db import models
-from mapstory.mapstories.models import Map
-#from geonode.maps.signals import map_copied_signal
-from mapstory.annotations.utils import parse_date_time
+
 from datetime import datetime
-from django.contrib.gis.db import models as gis
+
+from mapstory.annotations.utils import parse_date_time
+from mapstory.mapstories.models import Map
+
 
 class AnnotationManager(models.Manager):
 
@@ -37,7 +38,6 @@ class Annotation(models.Model):
     auto_show = models.BooleanField(default=False)
     pause_playback = models.BooleanField(default=False)
 
-
     def _timefmt(self, val):
         return datetime.isoformat(datetime.utcfromtimestamp(val))
 
@@ -63,6 +63,3 @@ def map_copied(sender, source_id, **kw):
         print 'dammit jim'
         import traceback
         traceback.print_exc()
-
-
-#map_copied_signal.connect(map_copied)

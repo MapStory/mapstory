@@ -1,15 +1,13 @@
-import autocomplete_light
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from geonode.layers.models import Layer
-from mapstory.mapstory_profile.models import MapstoryProfile
-from mapstory.mapstories.models import MapStory
+
+import account.forms
 from geonode.people.models import Profile
 from geonode.base.models import ResourceBase
 import taggit
-from geonode.groups.models import GroupProfile
-from geonode.groups.forms import GroupForm, GroupUpdateForm
-import account.forms
+
+from mapstory.mapstory_profile.models import MapstoryProfile
+from mapstory.mapstories.models import MapStory
 
 
 class SignupForm(account.forms.SignupForm):
@@ -57,12 +55,14 @@ class MetadataForm(forms.ModelForm):
             'is_published',
         ]
 
+
 # A form for just publishing status
 class PublishStatusForm(forms.ModelForm):
 
     class Meta:
         model = ResourceBase
         fields = ['is_published']
+
 
 # A form for just deactivating profile
 class DeactivateProfileForm(forms.ModelForm):
@@ -95,4 +95,3 @@ class EditGeonodeProfileForm(forms.ModelForm):
         model = Profile
         fields = ['first_name', 'last_name', 'keywords', 'city', 'country',
                   'profile']
-

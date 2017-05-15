@@ -1,15 +1,17 @@
-from django.core.urlresolvers import reverse
-from django.contrib.auth import get_user_model
-from django.test.utils import override_settings
-from django.test.client import Client
-from django.test import TransactionTestCase
-from mapstory.annotations.models import Annotation
-from mapstory.annotations.utils import make_point
-from mapstory.annotations.utils import unicode_csv_dict_reader
-from mapstory.mapstories.models import Map
 import json
 import re
 import tempfile
+
+from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
+from django.test import TransactionTestCase
+from django.test.client import Client
+from django.test.utils import override_settings
+
+from mapstory.annotations.models import Annotation
+from mapstory.annotations.utils import unicode_csv_dict_reader
+from mapstory.annotations.utils import make_point
+from mapstory.mapstories.models import Map
 
 
 @override_settings(DEBUG=True)
@@ -81,7 +83,7 @@ class AnnotationsTest(TransactionTestCase):
         '''make 100 annotations and get them all as well as paging through'''
         self.make_annotations(self.dummy)
 
-        response = self.c.get(reverse('annotations',args=[self.dummy.id]))
+        response = self.c.get(reverse('annotations', args=[self.dummy.id]))
         rows = json.loads(response.content)['features']
         self.assertEqual(100, len(rows))
 
@@ -103,23 +105,23 @@ class AnnotationsTest(TransactionTestCase):
         self.make_annotations(self.dummy, 1)
         ann = Annotation.objects.filter(map=self.dummy)[0]
         data = json.dumps({
-            'features' : [{
-                'geometry' : {'type' : 'Point', 'coordinates' : [ 5.000000, 23.000000 ]},
-                "id" : ann.id,
-                'properties' : {
-                    "title" : "new title",
-                    "start_time" : "2001-01-01",
-                    "end_time" : 1371136048
+            'features': [{
+                'geometry': {'type': 'Point', 'coordinates': [5.000000, 23.000000]},
+                "id": ann.id,
+                'properties': {
+                    "title": "new title",
+                    "start_time": "2001-01-01",
+                    "end_time": 1371136048
                 }
             }]
         })
         # without login, expect failure
-        resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
+        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), data, "application/json")
         self.assertEqual(403, resp.status_code)
 
         # login and verify change accepted
         self.c.login(username="test_admin", password="test_admin")
-        resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
+        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), data, "application/json")
         self.assertEqual(200, resp.status_code)
         ann = Annotation.objects.get(id=ann.id)
         self.assertEqual(ann.title, "new title")
@@ -129,14 +131,14 @@ class AnnotationsTest(TransactionTestCase):
 
         # now make a new one with just a title and null stuff
         data = json.dumps({
-            'features' : [{
-                'properties' : {
-                    "title" : "new ann",
-                    "geometry" : None
+            'features': [{
+                'properties': {
+                    "title": "new ann",
+                    "geometry": None
                 }
             }]
         })
-        resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
+        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), data, "application/json")
         self.assertEqual(200, resp.status_code)
         resp = json.loads(resp.content)
         self.assertEqual(resp['success'], True)
@@ -151,14 +153,14 @@ class AnnotationsTest(TransactionTestCase):
         current_anns = Annotation.objects.filter(map=self.dummy)
         titles_to_delete = [u'ann 4', u'ann 5', u'ann 6', u'ann 7']
         ids_to_delete = [ann.id for ann in current_anns if ann.title in titles_to_delete]
-        data = json.dumps({'action':'delete', 'ids':ids_to_delete})
+        data = json.dumps({'action': 'delete', 'ids': ids_to_delete})
         # verify failure before login
-        resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
+        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), data, "application/json")
         self.assertEqual(403, resp.status_code)
 
         # now check success
         self.c.login(username="test_admin", password="test_admin")
-        resp = self.c.post(reverse('annotations',args=[self.dummy.id]), data, "application/json")
+        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), data, "application/json")
         self.assertEqual(200, resp.status_code)
 
         # these are gone
@@ -171,7 +173,7 @@ class AnnotationsTest(TransactionTestCase):
     def test_csv_upload(self):
         '''test csv upload with update and insert'''
 
-        #@todo cleanup and break out into simpler cases
+        # @todo cleanup and break out into simpler cases
 
         self.make_annotations(self.dummy, 2)
 
@@ -188,7 +190,7 @@ class AnnotationsTest(TransactionTestCase):
         fp.seek(0)
 
         # verify failure before login
-        resp = self.c.post(reverse('annotations',args=[self.dummy.id]),{'csv':fp})
+        resp = self.c.post(reverse('annotations', args=[self.dummy.id]),{'csv':fp})
         self.assertEqual(403, resp.status_code)
 
         # still only 2 annotations
@@ -198,7 +200,7 @@ class AnnotationsTest(TransactionTestCase):
         self.c.login(username="test_admin", password="test_admin")
 
         fp.seek(0)
-        resp = self.c.post(reverse('annotations',args=[self.dummy.id]),{'csv':fp})
+        resp = self.c.post(reverse('annotations', args=[self.dummy.id]),{'csv':fp})
         self.assertEqual(200, resp.status_code)
         # response type must be text/html for ext fileupload
         self.assertEqual('text/html', resp['content-type'])
@@ -223,7 +225,7 @@ class AnnotationsTest(TransactionTestCase):
                 self.assertEqual(10, len(l.split(',')))
         x = list(unicode_csv_dict_reader(resp.content))
         self.assertEqual(3, len(x))
-        by_title = dict( [(v['title'],v) for v in x] )
+        by_title = dict([(v['title'], v) for v in x])
         # verify round trip of unicode quote
         self.assertEqual(u'\u201c', by_title['bunk']['content'])
         # and times
@@ -238,7 +240,7 @@ class AnnotationsTest(TransactionTestCase):
             ',\x93windows quotes\x94,yay,,,,'
         ))
         fp.seek(0)
-        resp = self.c.post(reverse('annotations',args=[self.dummy.id]),{'csv':fp})
+        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), {'csv': fp})
         ann = Annotation.objects.get(map=self.dummy.id)
         # windows quotes are unicode now
         self.assertEqual(u'\u201cwindows quotes\u201d', ann.title)
@@ -249,7 +251,7 @@ class AnnotationsTest(TransactionTestCase):
             str(header) * 2
         ))
         fp.seek(0)
-        resp = self.c.post(reverse('annotations',args=[self.dummy.id]),{'csv':fp})
+        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), {'csv': fp})
         self.assertEqual(400, resp.status_code)
         # there should only be one that we uploaded before
         Annotation.objects.get(map=self.dummy.id)

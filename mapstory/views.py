@@ -1,22 +1,17 @@
-import math
 import contextlib
 import csv
 import datetime
+from httplib import HTTPConnection, HTTPSConnection
+import json
+import math
 import ogr
+import os
 import shutil
 import StringIO
 import tempfile
-import zipfile
-import json
-import os
-from httplib import HTTPConnection, HTTPSConnection
 from urlparse import urlsplit
+import zipfile
 
-import requests
-from account.conf import settings as account_settings
-from account.views import ConfirmEmailView
-from account.views import SignupView
-from actstream.models import actor_stream
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout
@@ -41,6 +36,12 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
+
+import requests
+from account.conf import settings as account_settings
+from account.views import ConfirmEmailView
+from account.views import SignupView
+from actstream.models import actor_stream
 from geonode.base.models import TopicCategory, Region
 from geonode.documents.models import get_related_documents
 from geonode.geoserver.helpers import ogc_server_settings
@@ -48,23 +49,27 @@ from geonode.layers.models import Layer
 from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
 from geonode.geoserver.views import layer_acls, resolve_user
 from geonode.layers.views import _resolve_layer
-from mapstory.mapstories.models import MapStory, Map
 from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE, _PERMISSION_MSG_LOGIN
 from geonode.maps.models import MapLayer, MapSnapshot
 from geonode.people.models import Profile
 from geonode.security.views import _perms_info_json
 from geonode.tasks.deletion import delete_layer
-from tasks import delete_mapstory
 from geonode.utils import GXPLayer, GXPMap, resolve_object
 from geonode.utils import build_social_links
 from geonode.utils import default_map_config
 from geonode.utils import forward_mercator, llbbox_to_mercator
 from geonode.utils import DEFAULT_TITLE
 from geonode.utils import DEFAULT_ABSTRACT
-from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from health_check.plugins import plugin_dir
 from icon_commons.models import Icon
 from lxml import etree
+from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
+from osgeo_importer.utils import UploadError, launder
+from osgeo_importer.forms import UploadFileForm
+from provider.oauth2.models import AccessToken
+from user_messages.models import Thread
+
+from apps.journal.models import JournalEntry
 from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
 from mapstory.apps.favorite.models import Favorite
 from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
@@ -72,20 +77,17 @@ from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditG
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm, DistributionUrlForm
 from mapstory.forms import SignupForm
 from mapstory.importers import GeoServerLayerCreator
+from mapstory.mapstories.models import MapStory, Map
 from mapstory.models import GetPage
 from mapstory.models import Leader
 from mapstory.models import NewsItem
 from mapstory.models import get_sponsors, get_images
 from mapstory.search.utils import update_es_index
+from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
-from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 from .notifications import PROFILE_NOTICE_SETTINGS
-from osgeo_importer.utils import UploadError, launder
-from osgeo_importer.forms import UploadFileForm
-from provider.oauth2.models import AccessToken
-from user_messages.models import Thread
+from tasks import delete_mapstory
 
-from apps.journal.models import JournalEntry
 
 plugin_dir.register(GeoServerHealthCheck)
 
@@ -127,7 +129,8 @@ class GetPageView(DetailView):
 
 
 class SearchView(TemplateView):
-    template_name='search/explore.html'
+    template_name = 'search/explore.html'
+
     def get_context_data(self, **kwargs):
         context = super(TemplateView, self).get_context_data(**kwargs)
         context['regions'] = Region.objects.filter(level=1)
@@ -157,6 +160,7 @@ class ProfileDetail(DetailView):
         ctx['notice_settings'] = notice_settings
 
         return ctx
+
 
 @login_required
 def profile_edit(request, username=None):
@@ -196,10 +200,9 @@ def profile_edit(request, username=None):
         return HttpResponseForbidden(
             'You are not allowed to edit other users profile')
 
+
 @login_required
 def health_check(request):
-    # import ipdb
-    # ipdb.sset_trace(context=5)
     plugins = []
     working = True
     for plugin_class, plugin in plugin_dir._registry.items():
@@ -208,7 +211,6 @@ def health_check(request):
             working = False
         plugins.append(plugin)
     plugins.sort(key=lambda x: x.identifier())
-
 
     if working:
         return HttpResponse(loader.render_to_string("health_check/dashboard.html", {'plugins': plugins}))
@@ -420,6 +422,7 @@ def map_view(request, mapid, snapshot=None, template='maps/map_view.html'):
         'map': map_obj
     }))
 
+
 def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer.html'):
     """
     The view that returns the map viewer opened to
@@ -436,6 +439,7 @@ def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer
     return render_to_response(template, RequestContext(request, {
         'config': json.dumps(config)
     }))
+
 
 # TODO this should be moved to a mapstory.util
 def _resolve_story(request, id, permission='base.change_resourcebase',
@@ -520,6 +524,7 @@ def draft_view(request, storyid, template='composer/maploom.html'):
         'story': story_obj
     }))
 
+
 @login_required
 def mapstory_draft(request, storyid, template):
     return draft_view(request, storyid, template)
@@ -534,6 +539,7 @@ def new_map(request, template):
         return render_to_response(template, RequestContext(request, {
             'config': config,
         }))
+
 
 @login_required
 def layer_create(request, template='upload/layer_create.html'):
@@ -591,6 +597,7 @@ def layer_append_minimal(source, target, request_cookies):
     The main layer_append logic that can run outside of a request.
     """
     source = 'geonode:' + source
+
     def chunk_list(list, chunk_size):
         """Yield successive chunk_size chunks from list."""
         for i in xrange(0, len(list), chunk_size):
@@ -810,23 +817,6 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         if request.user != layer.owner and not request.user.is_superuser:
             return HttpResponse(_PERMISSION_MSG_VIEW, status=403, content_type="text/plain")
 
-    # TODO (Mapstory): This has been commented out to force the client to make a getCapabilities request in order
-    # to pull in the time dimension data.  Ideally we would cache time data just like the srs and bbox data to prevent
-    # making the getCapabilities request.
-
-    # Add required parameters for GXP lazy-loading
-    #layer_bbox = layer.bbox
-    #bbox = [float(coord) for coord in list(layer_bbox[0:4])]
-    #srid = layer.srid
-
-    # Transform WGS84 to Mercator.
-    #config["srs"] = srid if srid != "EPSG:4326" else "EPSG:900913"
-    #config["bbox"] = llbbox_to_mercator([float(coord) for coord in bbox])
-
-    #config["title"] = layer.title
-    #config["queryable"] = True
-
-
     if layer.storeType == "remoteStore":
         service = layer.service
         source_params = {
@@ -989,6 +979,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     return render_to_response(template, RequestContext(request, context_dict))
 
+
 def _resolve_map(request, id, permission='base.change_resourcebase',
                  msg=_PERMISSION_MSG_GENERIC, **kwargs):
     '''
@@ -1001,6 +992,7 @@ def _resolve_map(request, id, permission='base.change_resourcebase',
     map_obj = resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
     return map_obj
+
 
 def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     '''
@@ -1099,6 +1091,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         context_dict["social_links"] = build_social_links(request, map_obj)
     return render_to_response(template, RequestContext(request, context_dict))
 
+
 @login_required
 def layer_remove(request, layername, template='layers/layer_remove.html'):
     layer = _resolve_layer(
@@ -1126,6 +1119,7 @@ def layer_remove(request, layername, template='layers/layer_remove.html'):
         return HttpResponseRedirect(reverse("index_view"))
     else:
         return HttpResponse("Not allowed", status=403)
+
 
 @login_required
 def map_remove(request, mapid, template='maps/map_remove.html'):
@@ -1337,7 +1331,7 @@ def new_map_config(request):
     return json.dumps(config)
 
 
-### TODO should be a util
+# TODO should be a util
 
 def clean_config(conf):
     if isinstance(conf, basestring):
