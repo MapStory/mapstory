@@ -1,21 +1,18 @@
+from django import forms
 from django.contrib import admin
 
-from django import forms
+from geonode.people.admin import ProfileAdmin as UserAdmin
 
-from mapstory.models import Sponsor
-from mapstory.models import NewsItem
+from mapstory.apps.flag import admin as flag_admin
+from mapstory.export import export_via_model
+from mapstory.models import CustomSite
 from mapstory.models import GetPage
 from mapstory.models import GetPageContent
 from mapstory.models import Leader
-from mapstory.models import ParallaxImage
-from mapstory.models import CustomSite
 from mapstory.models import MapStory
-
-from mapstory.export import export_via_model
-
-from mapstory.apps.flag import admin as flag_admin
-
-from geonode.people.admin import ProfileAdmin as UserAdmin
+from mapstory.models import NewsItem
+from mapstory.models import ParallaxImage
+from mapstory.models import Sponsor
 
 
 def content_html(obj):
@@ -75,12 +72,14 @@ class GetPageAdmin(admin.ModelAdmin):
 class GetPageChoiceField(forms.ModelChoiceField):
     def __init__(self):
         super(GetPageChoiceField, self).__init__(GetPage.objects.all())
+
     def label_from_instance(self, obj):
         return obj.title
 
 
 class GetPageContentForm(forms.ModelForm):
     page = GetPageChoiceField()
+
     class Meta:
         model = GetPageContent
         fields = '__all__'
@@ -120,6 +119,7 @@ class NewsItemAdmin(admin.ModelAdmin):
 class LeaderAdmin(admin.ModelAdmin):
     model = Leader
     list_display = 'user',
+
 
 class ParallaxImageAdmin(admin.ModelAdmin):
     model = ParallaxImage

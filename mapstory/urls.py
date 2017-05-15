@@ -3,42 +3,42 @@ from django.conf.urls import patterns
 from django.conf.urls import url
 from django.conf.urls import include
 from django.conf.urls.static import static
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic import RedirectView
 
+from annotations.urls import urlpatterns as annotations_urls
 # to replace /api/base & /api/owners GeoNode routes with our own:
 # unregister old routes before geonode.urls.urlpatterns is imported
 from geonode.api.urls import api as geonode_api
 geonode_api.unregister('owners')
 geonode_api.unregister('base')
-from geonode.urls import urlpatterns
-
-from maploom.geonode.urls import urlpatterns as maploom_urls
-from mapstory.views import IndexView
-from mapstory.views import GetPageView
-from mapstory.views import ProfileDetail, profile_delete, profile_edit
-from mapstory.views import SearchView
-from mapstory.views import LeaderListView
-from mapstory.views import proxy
-from mapstory.views import health_check
-from mapstory.views import map_detail
-from mapstory.views import layer_detail, layer_detail_id, layer_create
-from mapstory.views import layer_remove, map_remove
-from mapstory.views import download_append_csv, download_append_shp
-from mapstory.views import MapStoryConfirmEmailView
-from mapstory.views import MapStorySignupView
-from mapstory.views import messages_redirect
-from mapstory.notifications import notify_download, set_profile_notification
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
-from django.core.urlresolvers import reverse_lazy
-from django.views.generic import RedirectView
+from geonode.urls import urlpatterns
+from maploom.geonode.urls import urlpatterns as maploom_urls
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
-from mapstory.views import new_map
-from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from tastypie.api import Api
+
 from mapstory.api.api import UploadedLayerResource, MapstoryOwnersResource
 from mapstory.api.resourcebase_api import ResourceBaseResource
 from mapstory.api.urls import api as mapstory_api
-from annotations.urls import urlpatterns as annotations_urls
 from mapstory.apps.favorite.urls import api as favorites_api
+from mapstory.notifications import notify_download, set_profile_notification
+from mapstory.views import download_append_csv, download_append_shp
+from mapstory.views import GetPageView
+from mapstory.views import health_check
+from mapstory.views import IndexView
+from mapstory.views import LeaderListView
+from mapstory.views import MapStoryConfirmEmailView
+from mapstory.views import MapStorySignupView
+from mapstory.views import layer_detail, layer_detail_id, layer_create
+from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
+from mapstory.views import layer_remove, map_remove
+from mapstory.views import map_detail
+from mapstory.views import messages_redirect
+from mapstory.views import new_map
+from mapstory.views import ProfileDetail, profile_delete, profile_edit, proxy
+from mapstory.views import SearchView
+
 
 geonode_api.register(ResourceBaseResource())
 geonode_api.register(MapstoryOwnersResource())
@@ -143,7 +143,7 @@ urlpatterns += patterns("",
 
 urlpatterns += importer_urlpatterns
 
-#this is last to catch reverse lookup from geonode views
+# this is last to catch reverse lookup from geonode views
 urlpatterns += patterns("",url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
                             url(r'^story/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'))
 
@@ -161,4 +161,3 @@ if settings.ENABLE_SOCIAL_LOGIN:
         url('', include('social.apps.django_app.urls', namespace='social')),
         url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
     )
-

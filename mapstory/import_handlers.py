@@ -1,7 +1,8 @@
 from django import db
 
-from osgeo_importer.inspectors import OGRTruncatedConverter
 from osgeo_importer.handlers import ImportHandlerMixin, ensure_can_run
+from osgeo_importer.inspectors import OGRTruncatedConverter
+
 from .views import layer_append_minimal
 
 
@@ -50,4 +51,3 @@ class TruncatedNameHandler(ImportHandlerMixin):
                 for date_option in ('start_date', 'end_date'):
                     if layer_config.get(date_option) == date_field:
                         layer_config[date_option] = new_field_name.lower()
-
