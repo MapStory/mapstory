@@ -1,5 +1,7 @@
 import csv
+
 from django.http import HttpResponse
+
 
 def export_via_model(model, request, queryset, fields=None, exclude=None):
         opts = model._meta

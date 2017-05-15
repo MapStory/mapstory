@@ -2,25 +2,23 @@ import json
 import requests
 
 from django.conf import settings
+from django.http import HttpResponseForbidden
+from django.utils.text import slugify
+
+from geonode.geoserver.helpers import ogc_server_settings
+from geonode.upload.utils import create_geoserver_db_featurestore
 from osgeo_importer.importers import Import
 from osgeo_importer.utils import UploadError, launder
-from django.utils.text import slugify
-from geonode.upload.utils import create_geoserver_db_featurestore
-from django.http import HttpResponseForbidden
-from geonode.geoserver.helpers import ogc_server_settings
-from django.utils.text import slugify
 
 
 class GeoServerLayerCreator(Import):
     upload_file = None
     handlers_to_ignore = ['GeoserverPublishHandler']
 
-
     def _initialize_handlers(self):
         super(GeoServerLayerCreator, self)._initialize_handlers()
         self._import_handlers = filter(lambda handler: type(handler).__name__ not in self.handlers_to_ignore,
                                        self._import_handlers)
-
 
     def import_file(self, *args, **kwargs):
         """

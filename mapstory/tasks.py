@@ -1,8 +1,10 @@
-from geonode.geoserver.helpers import ogc_server_settings
-from mapstory.utils import parse_wfst_response, has_exception, error_response, print_exception
-from mapstory.mapstories.models import MapStory
-import requests
 from celery import app
+from geonode.geoserver.helpers import ogc_server_settings
+import requests
+
+from mapstory.mapstories.models import MapStory
+from mapstory.utils import parse_wfst_response, has_exception, error_response, print_exception
+
 
 @app.task(name="tasks.append_feature_chunks")
 def append_feature_chunks(features, wfst_insert_template,get_features_request,target):
