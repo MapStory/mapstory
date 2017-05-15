@@ -3,6 +3,10 @@ Test Utilities and helpers
 """
 import string
 import random
+from datetime import datetime
+from datetime import timedelta
+from itertools import cycle
+from uuid import uuid4
 
 from django.contrib.auth import get_user_model
 from django.db.models import signals
@@ -12,10 +16,12 @@ from geonode.geoserver.signals import geoserver_pre_save_maplayer
 from geonode.geoserver.signals import geoserver_post_save_map, geoserver_pre_save, geoserver_post_save
 from geonode.maps.models import MapLayer, Layer
 
+
 from mapstory.mapstories.models import Map
 from mapstory.mapstories.models import MapStory
 
 User = get_user_model()
+
 
 def get_test_user():
     """
@@ -25,13 +31,15 @@ def get_test_user():
     Returns:
         TYPE: User
     """
-    allUsers = User.objects.all()
-    if allUsers.count() > 0 :
-        return allUsers[0]
-    else :
-        return User.objects.create_user(username='modeltester',
-                                 email='modeltester@models.com',
-                                 password='glassonion232123')
+    all_users = User.objects.all()
+    if all_users.count() > 0:
+        return all_users[0]
+    else:
+        return User.objects.create_user(
+            username='modeltester',
+            email='modeltester@models.com',
+            password='glassonion232123'
+        )
 
 
 def create_user(username, password, **kwargs):
@@ -109,7 +117,6 @@ def generate_testname(prefix="test", size=6, chars=string.ascii_uppercase + stri
     return "%s_%s" % (prefix, id_generator(size=size, chars=chars))
 
 
-
 map_layers = [
     {
         "fixed": False,
@@ -123,7 +130,8 @@ map_layers = [
         "stack_order": 0,
         "visibility": True,
         "opacity": 1,
-    },{
+    },
+    {
         "fixed": True,
         "group": "background",
         "layer_params": "{\"args\": [\"bluemarble\", \"http://maps.opengeo.org/geowebcache/service/wms\", \
@@ -136,7 +144,8 @@ map_layers = [
         "stack_order": 0,
         "transparent": False,
         "visibility": True
-    },{
+    },
+    {
         "fixed": True,
         "group": "background",
         "layer_params": "{\"args\": [\"geonode:CA\", \"http://localhost:8080/geoserver/wms\", {\"layers\": \
@@ -149,7 +158,8 @@ map_layers = [
         "stack_order": 1,
         "transparent": False,
         "visibility": False
-    },{
+    },
+    {
         "fixed": True,
         "group": "background",
         "layer_params": "{}",
@@ -162,7 +172,8 @@ map_layers = [
         "stack_order": 2,
         "transparent": False,
         "visibility": False
-    },{
+    },
+    {
         "fixed": True,
         "group": "background",
         "layer_params": "{\"args\": [\"No background\"], \"type\": \"OpenLayers.Layer\"}",
@@ -176,12 +187,11 @@ map_layers = [
     }
 ]
 
+
 def create_test_map():
     if not Map.objects.filter(title='GeoNode Default Map').exists():
         if not TopicCategory.objects.filter(identifier='biota').exists():
             TopicCategory.objects.create(identifier='biota')
-
-        biota = TopicCategory.objects.get(identifier='biota')
 
         signals.pre_save.disconnect(geoserver_pre_save_maplayer, sender=MapLayer)
         signals.post_save.disconnect(geoserver_post_save_map, sender=Map)
@@ -212,14 +222,9 @@ def create_test_map():
             m.save()
 
 
-def create_test_layers():
+def create_test_layers_no_disconnect():
     create_test_map()
-    signals.pre_save.disconnect(
-        geoserver_pre_save_maplayer,
-        sender=MapLayer
-    )
-    signals.post_save.disconnect(geoserver_post_save_map, sender=Map)
-
+    # Register only for actionstreams
     for test_layer in map_layers:
         MapLayer.objects.create(
             fixed=test_layer['fixed'],
@@ -235,4 +240,69 @@ def create_test_layers():
         )
 
 
+def create_test_map_layers():
+    create_test_map()
+    signals.pre_save.disconnect(
+        geoserver_pre_save_maplayer,
+        sender=MapLayer
+    )
+    signals.post_save.disconnect(geoserver_post_save_map, sender=Map)
+    # Register only for actionstreams
+    for test_layer in map_layers:
+        MapLayer.objects.create(
+            fixed=test_layer['fixed'],
+            group=test_layer['group'],
+            name=test_layer['name'],
+            layer_params=test_layer['layer_params'],
+            map=Map.objects.filter(title=test_layer['map'])[0],
+            source_params=test_layer['source_params'],
+            stack_order=test_layer['stack_order'],
+            opacity=test_layer['opacity'],
+            transparent=test_layer['stack_order'],
+            visibility=test_layer['stack_order'],
+        )
 
+
+def create_layer(title, abstract, owner):
+    """
+    Creates a Layer with some default data for testing
+    :param title: (string) Layer title
+    :param abstract: (string) Layer abstract description
+    :param owner: (User) The user that owns the layer
+    :return: (Layer) A Layer object
+    """
+    elevation = TopicCategory.objects.get(identifier='elevation')
+    world_extent = [-180, 180, -90, 90]
+    title, abstract, name, typename, (bbox_x0, bbox_x1, bbox_y0, bbox_y1), dt, kws, category = (
+        'layer2',
+        'abstract2',
+        'layer2',
+        'geonode:layer2',
+        world_extent,
+        '19800501',
+        ('populartag',),
+        elevation
+    )
+
+    year, month, day = map(int, (dt[:4], dt[4:6], dt[6:]))
+    start = datetime(year, month, day)
+    end = start + timedelta(days=365)
+    layer = Layer(
+        title=title,
+        abstract=abstract,
+        name=name,
+        typename=typename,
+        bbox_x0=bbox_x0,
+        bbox_x1=bbox_x1,
+        bbox_y0=bbox_y0,
+        bbox_y1=bbox_y1,
+        uuid=str(uuid4()),
+        owner=owner,
+        temporal_extent_start=start,
+        temporal_extent_end=end,
+        date=start,
+        storeType='dataStore',
+        category=category,
+          )
+    layer.save()
+    return layer
