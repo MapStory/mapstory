@@ -176,7 +176,7 @@ module.exports = function(grunt) {
   grunt.registerTask('lint', ['jshint', 'lesslint']);
 
   // test -- to run this locally you may have to `npm rebuild` for correct phantom binary file
-  grunt.registerTask('test', ['karma']);
+  grunt.registerTask('test', ['concat:mapstory', 'karma']);
 
   // build development
   grunt.registerTask('default', ['concat:mapstory', 'concat:vendor', 'less:development', 'replace', 'copy:development']);

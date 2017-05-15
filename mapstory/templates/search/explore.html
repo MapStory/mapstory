@@ -7,8 +7,8 @@
 <div ng-controller="exploreController">
     <nav class="explore-tabs col-sm-offset-3">
         <ul>
-          <li ng-click="toContentSearch();" ng-class="{active: query.content}">Content</li>
-          <li ng-click="toUserSearch();" ng-class="{active: query.storyteller}">StoryTellers</li>
+          <li ng-click="defaultContent();" ng-class="{active: query.content}">Content</li>
+          <li ng-click="defaultOwners();" ng-class="{active: query.storyteller}">StoryTellers</li>
         </ul>
     </nav>
     <div>
@@ -21,13 +21,13 @@
              </div>
             <div ng-if="numresults" class="col-sm-9">
                 <div class="showing-results">
-                    Showing <span ng-bind="startnumresults"></span>-<span ng-bind="numresults"></span> of <span ng-bind="total_counts"></span> results
+                    Showing <span ng-bind="resultStart"></span>-<span ng-bind="numresults"></span> of <span ng-bind="total_counts"></span> results
                 </div>
                 <div class="sort-by">
                 {% verbatim %}
                     <md-input-container class="md-block" flex-gt-md>
                         <label>Sort by</label>
-                        <md-select ng-model="orderMethod">
+                        <md-select ng-model="orderMethodContent">
                           <md-option ng-repeat="state in orderMethods.content" value="{{state.filter}}">
                             {{state.name}}
                           </md-option>
@@ -38,7 +38,7 @@
                 <div class="content-results">
                     <ul>
                         {% verbatim %}
-                        <li ng-repeat="item in results | orderBy: orderMethod"
+                        <li ng-repeat="item in results | orderBy: orderMethodContent"
                             resource-id="{{ item.id }}"
                             class="col-lg-4 col-sm-6 resource-{{ item.id }}">
                         {% endverbatim %}
@@ -50,7 +50,7 @@
             </div>
             {% comment %} End Content results {% endcomment %}
         </div>
-        <div ng-if="query.storyteller" ng-controller="exploreController">
+        <div ng-if="query.storyteller">
             {% include 'search/_users_sidebar.html' %}
 
             {% comment %} StoryTeller results {% endcomment %}
@@ -59,7 +59,19 @@
              </div>
             <div ng-if="numresults" class="col-sm-9">
                 <div class="showing-results">
-                    Showing <span ng-bind="startnumresults"></span>-<span ng-bind="numresults"></span> of <span ng-bind="total_counts"></span> results
+                    Showing <span ng-bind="resultStart"></span>-<span ng-bind="numresults"></span> of <span ng-bind="total_counts"></span> results
+                </div>
+                <div class="sort-by">
+                {% verbatim %}
+                    <md-input-container class="md-block" flex-gt-md>
+                        <label>Sort by</label>
+                        <md-select ng-model="orderMethodStoryteller">
+                          <md-option ng-repeat="state in orderMethods.storyteller" value="{{state.filter}}">
+                            {{state.name}}
+                          </md-option>
+                        </md-select>
+                      </md-input-container>
+                {% endverbatim %}
                 </div>
                 <div class="storyteller-results">
                     <ul>{% include 'search/_result_users.html' %}</ul>
@@ -69,12 +81,12 @@
             {% comment %} End StoryTeller results {% endcomment %}
         </div>
         <div ng-if="numresults" class="pull-right">
-            <a href><i ng-click="paginate_down()" class="fa fa-chevron-left"></i></a>
+            <a href><i ng-click="pageDown()" class="fa fa-chevron-left"></i></a>
             <span>page </span>
             <span ng-model="page" ng-bind="page"></span>
             <span> of </span>
             <span ng-bind="numpages"></span>
-            <a href><i ng-click="paginate_up()" class="fa fa-chevron-right"></i></a>
+            <a href><i ng-click="pageUp()" class="fa fa-chevron-right"></i></a>
         </div>
     </div>
 </div>

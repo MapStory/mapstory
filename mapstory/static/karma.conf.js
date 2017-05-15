@@ -2,6 +2,7 @@
 module.exports = function(config) {
   config.set({
     frameworks: [ 'mocha', 'chai'],
+    reporters: ["spec"],
     singleRun: true,
     browsers: ['PhantomJS'],
     files: [
@@ -13,6 +14,9 @@ module.exports = function(config) {
       'vendor/angular-material/angular-material.js',
       'vendor/angular-slick/dist/slick.min.js',
       'vendor/angular-mocks/angular-mocks.js',
+
+      //
+      'vendor/underscore/underscore-min.js',
       
       // jerry-rigged importer source, have to create directory manually
       'vendor/osgeo_importer/js/angular-resource.js',
@@ -26,6 +30,9 @@ module.exports = function(config) {
 
       // our django site variables
       'mapstory/js/spec/django-context.js',
+      // mock response from geonode APIs
+      'mapstory/js/spec/mockRegionsAPI.js',
+      'mapstory/js/spec/mockKeywordsAPI.js',
       
       // our app code
       'mapstory/js/dist/mapstory.js',

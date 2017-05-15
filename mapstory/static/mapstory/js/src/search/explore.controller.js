@@ -9,21 +9,12 @@
     .module('mapstory.search')
     .controller('exploreController', exploreController);
 
-  function exploreController($injector, $scope, $location, $http, $q, Configs, dataservice) {
+  function exploreController($injector, $scope, $location, $http, $q, Configs) {
     $scope.query = $location.search();
-    $scope.sitename = SITE_NAME;
-    $scope.query = $location.search();
+    $scope.sitename = SITE_NAME; //used in content_sidebar
+
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
-    $scope.orderMethod = '-popular_count';
-
-    $scope.orderMethods = {
-      content:
-        [
-          {name:'Popular', filter:'-popular_count'},
-          {name:'Newest', filter:'-date'}
-        ]
-    };
 
     $scope.lists = {};
     $scope.autocomplete = {};
@@ -32,7 +23,7 @@
       // Keep in sync the page location with the query object
       $scope.$watch('query', function(newValue, oldValue){
         $location.search($scope.query);
-        $scope.$broadcast('topEvent');
+        $scope.$broadcast('updateSelection');
       }, true);
     } 
 
@@ -51,8 +42,9 @@
           function(response) {
             $scope.results = response.data.objects;
             $scope.total_counts = response.data.meta.total_count;
-            $scope.startnumresults = Number($scope.query.offset) + 1;
+            $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
             $scope.numresults = Number($scope.query.offset) + Number($scope.results.length);
+            $scope.resultStart = Number($scope.query.offset) + 1;
           },
           /* failure */
           function(error) {
@@ -61,46 +53,41 @@
         )
     };
 
-    $scope.clearVTC= function(){
+    $scope.clearVTC = function(){
       $scope.VTCisChecked = false;
       $scope.filterVTC();
       $scope.search();
-    }
+    };
 
     $scope.filterVTC = function() {
       // When VTC check box is clicked, also filter by VTC; when unchecked, reset it
       if ($scope.VTCisChecked == true) {
-        $scope.itemFilter['Volunteer_Technical_Community'] = true;
-      } else {
+        $scope.VTCisChecked = false;
         $scope.itemFilter = { is_active: true };
+        
+        console.log($scope.itemFilter);
+      } else {
+        $scope.VTCisChecked = true;
+        $scope.itemFilter = {Volunteer_Technical_Community: true};
+        
+        console.log($scope.itemFilter);
       }
     };
 
-    /* USER VS CONTENT EXPLORE SETTINGS
-    Persisting content and storyteller view & queries through page refresh */
-    if ($scope.query.storyteller){
-      //storyteller explore
-      $scope.apiEndpoint = '/api/owners/';
-    } else {
-      //default to content explore
-      $scope.apiEndpoint = '/api/base/search/';
-      $scope.query.content = true;
-      $scope.query.is_published = true;
-    }
+    // REINSTATE AFTER API HAS BEEN UPDATED FOR VTC FILTER
+    // /* handling checkboxy on/off filters and display */
+    // $scope.VTC = function(){
+    //   if($scope.query.Volunteer_Technical_Community == false){
+    //     delete($scope.query.Volunteer_Technical_Community);
+    //   }
+    //   $scope.search();
+    // };
 
-    // Make the content one active, user inactive
-    $scope.toUserSearch = function() {
-      $scope.apiEndpoint = '/api/owners/';
-      $scope.query = { storyteller: true, limit: CLIENT_RESULTS_LIMIT, offset: 0 };
-      $scope.clearVTC()
-     // $scope.search();
-    };
-    // Make the user one active, content inactive
-    $scope.toContentSearch = function() {
-      $scope.apiEndpoint = '/api/base/search/';
-      $scope.query = { content: true, is_published: true, limit: CLIENT_RESULTS_LIMIT, offset: 0 };
-  
-      $scope.search();
+    //Checkbox selection syncing with query
+    $scope.isActivated = function (item, list, filter) {
+      if(list[filter]){
+        return list[filter].indexOf(item) > -1;
+      } 
     };
 
     /*
@@ -139,8 +126,8 @@
         delete($scope.query[data_filter]);
       }
 
-      query_api($scope.query);
-    }
+      $scope.search();
+    };
 
     /* functionality for tagging and queries */     
     $scope.add_query = function(filter, value) {
@@ -161,7 +148,7 @@
         query_entry = [value];
       }
       $scope.query[filter] = query_entry;
-      query_api($scope.query);
+      $scope.search();
     };
 
     $scope.remove_query = function (filter, value) {
@@ -182,21 +169,26 @@
       }
     };
 
-    //Checkbox selection syncing with query
-    $scope.isActivated = function (item, list, filter) {
-      if(list[filter]){
-        return list[filter].indexOf(item) > -1;
-      } 
-    };
-
-    // Allow the user to choose an order method using the What's Hot section.
-    $scope.orderMethodUpdate = function(orderMethod) {
-      $scope.orderMethod = orderMethod;
-    };
-
     $scope.clear = function(filter){
       delete($scope.query[filter]);
       $scope.search();
+    };
+
+    /* ORDERING */
+    $scope.orderMethodContent = '-popular_count';
+    $scope.orderMethodStoryteller = 'username';
+
+    $scope.orderMethods = {
+      content:
+        [
+          {name:'Popular', filter:'-popular_count'},
+          {name:'Newest', filter:'-date'}
+        ], 
+      storyteller:
+        [
+          {name: 'Username Z-A', filter: '-username'},
+          {name: 'Username A-Z', filter: 'username'}
+        ]
     };
 
     /*
@@ -204,61 +196,69 @@
     */
     $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
     $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
-    
-    // Control what happens when the total results change
-    $scope.$watch('total_counts', function(){
-      $scope.numpages = Math.round(
-        ($scope.total_counts / $scope.query.limit) + 0.49
-      );
-      // In case the user is viewing a page > 1 and a 
-      // subsequent query returns less pages, then 
-      // reset the page to one and search again.
-      if($scope.numpages < $scope.page){
-        $scope.page = 1;
-        $scope.query.offset = 0;
-        query_api($scope.query);
-      }
-    });
+    $scope.resultStart = Number($scope.query.offset) + 1;
 
-    $scope.paginate_down = function(){
+    function updateOffset(){
+      $scope.query.offset =  $scope.query.limit * ($scope.page - 1);
+    }
+
+    $scope.pageDown = function(){
       if($scope.page > 1){
         $scope.page -= 1;
-        $scope.query.offset =  $scope.query.limit * ($scope.page - 1);
-        query_api($scope.query);
+        updateOffset();
+        $scope.search();
       }   
-    }
+    };
 
-    $scope.paginate_up = function(){
-      if($scope.numpages > $scope.page){
+    $scope.pageUp = function(){
+      if($scope.page < $scope.numpages){
         $scope.page += 1;
-        $scope.query.offset = $scope.query.limit * ($scope.page - 1);
-        query_api($scope.query);
+        updateOffset();
+        $scope.search();
       }
+    };
+
+    /* USER VS CONTENT EXPLORE SETTINGS
+
+    Persisting content and storyteller view & queries through page refresh */
+
+    // Make the content one active, user inactive
+    $scope.defaultOwners = function() {
+      $scope.apiEndpoint = '/api/owners/';
+      $scope.query = { 
+        storyteller: true, 
+        limit: CLIENT_RESULTS_LIMIT, 
+        offset: 0 
+      };
+     $scope.search();
+    };
+    // Make the user one active, content inactive
+    $scope.defaultContent = function() {
+      $scope.apiEndpoint = '/api/base/search/';
+      $scope.query = { 
+        content: true, 
+        is_published: true, 
+        limit: CLIENT_RESULTS_LIMIT, 
+        offset: 0 
+      };
+      $scope.search();
+    };
+    
+    if ($scope.query.storyteller){
+      //storyteller explore
+      $scope.apiEndpoint = '/api/owners/';
+    } else {
+      //set it to content
+      $scope.query.content = true;
+
+      //default to content explore
+      $scope.apiEndpoint = '/api/base/search/';
+
+      //add is_published even if they've removed it,
+      //but persist all other filters
+      $scope.query.is_published = true;
     }
 
-  //// get the things
-
-    var getKeywords = _.once(dataservice.getKeywords);
-    var getRegions = _.once(dataservice.getRegions);
-    var getOwners = _.once(dataservice.getOwners);
-
-    getOwners().then(function(data) {
-      $scope.autocomplete['authors'] = data.profiles;
-      $scope.autocomplete['cities'] = data.cities;
-      $scope.$broadcast('loadedOwners')
-    });
-
-    getRegions().then(function(data) {
-      $scope.autocomplete['countries'] = data;
-      $scope.$broadcast('loadedCountries')
-    });
-
-    getKeywords().then(function(data) {
-      $scope.lists['keywords'] = data;
-      $scope.$broadcast('loaded');
-    });
-
-    $scope.filterVTC();
     $scope.search();
   }
 })();
