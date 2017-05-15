@@ -6,7 +6,7 @@
                 <section>
                     <h2>Filter Results</h2>
                     <div class="clear-filters">
-                        <a href="" ng-click="toUserSearch()">Clear all</a>
+                        <a href="" ng-click="defaultOwners()">Clear all</a>
                     </div>
                 </section>
 
@@ -37,30 +37,30 @@
                 <section ng-controller="citiesController as cit">
                     <h3>City</h3>
                     <div class="clear-filters">
-                        <a href="" ng-click="clear('city')">Clear</a>
+                        <a href="" ng-click="clear('city__icontains')">Clear</a>
                     </div>
                     <div class="filter-content">
                         {% verbatim %}
                         <md-content class="md-padding" layout="column">
                           <md-chips ng-model="cit.cityChips" 
                               md-autocomplete-snap 
-                              md-require-match="true"
-                              md-on-add="add_query('city', $chip.city)"
-                              md-on-remove="remove_query('city', $chip.city)"
+                              md-on-add="add_query('city__icontains', $chip.city)"
+                              md-on-remove="remove_query('city__icontains', $chip.city)"
                               md-transform-chip="cit.cities.newChip($chip)">
                             <md-autocomplete
-                            md-selected-item="selectedItem"
+                                ng-hide="cit.disabled"
+                                md-selected-item="selectedItem"
                                 md-search-text="searchText"
-                                md-items="item in cit.cities.querySearch(searchText)"
+                                md-items="item in cit.async(searchText)"
                                 md-item-text="item.city"
-                                placeholder="Filter by city...">
+                                placeholder="Filter by a city...">
                               <span md-highlight-text="searchText">{{item.city}}</span>
                             </md-autocomplete>
                             <md-chip-template>
                               {{$chip.city}}
                             </md-chip-template>
                           </md-chips>
-                           <button class="btn" type="submit" ng-click="search()">
+                           <button class="btn" type="submit" ng-click="search()" ng-hide="cit.disabled">
                                 <i class="fa fa-search"></i>
                            </button>
                         </md-content>
@@ -78,18 +78,21 @@
                             <md-content class="md-padding" layout="column">
                                 <md-chips ng-model="reg.countryChips"
                                           md-autocomplete-snap
+                                          md-max-chips="1"
                                           md-require-match="true"
                                           md-on-add="add_query('country', $chip.code)"
                                           md-on-remove="remove_query('country', $chip.code)">
                                     <md-autocomplete
+                                          ng-hide="reg.disabled"
                                           md-selected-item="selectedItem"
                                           md-search-text="searchText"
                                           md-items="item in reg.country.querySearch(searchText)"
                                           md-item-text="item.code"
-                                          placeholder="Filter by country...">
+                                          placeholder="Filter by a country...">
                                         <span md-highlight-text="searchText">
                                             {{item.name}} ({{item.code}})
                                         </span>
+                                        <md-not-found>No matching code found.</md-not-found>
                                     </md-autocomplete>
                                     <md-chip-template>
                                         <span>
@@ -98,7 +101,7 @@
                                         </span>
                                     </md-chip-template>
                                 </md-chips>
-                                <button class="btn" type="submit" ng-click="search()">
+                                <button class="btn" type="submit" ng-click="search()" ng-hide="reg.disabled">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </md-content>
@@ -113,24 +116,25 @@
                     <div class="filter-content">
                         {% verbatim %}
                         <md-content class="md-padding" layout="column">
-                            <md-chips ng-model="int.interestChips" 
+                            <md-chips ng-model="int.chips" 
                                 md-autocomplete-snap 
                                 md-on-add="add_query('interest_list', $chip.slug)"
                                 md-on-remove="remove_query('interest_list', $chip.slug)"
                                 md-transform-chip="int.interests.newChip($chip)">
                               <md-autocomplete
-                              md-selected-item="selectedItem"
+                                  ng-hide="int.disabled"
+                                  md-selected-item="selectedItem"
                                   md-search-text="searchText"
-                                  md-items="item in int.interests.querySearch(searchText)"
+                                  md-items="item in int.async(searchText)"
                                   md-item-text="item.code"
-                                  placeholder="Filter by interest...">
+                                  placeholder="Filter by an interest...">
                                 <span md-highlight-text="searchText">{{item.slug}}</span>
                               </md-autocomplete>
                               <md-chip-template>
                                 {{$chip.slug}}
                               </md-chip-template>
                             </md-chips>
-                            <button class="btn" type="submit" ng-click="search()">
+                            <button class="btn" type="submit" ng-click="search()" ng-hide="int.disabled">
                                 <i class="fa fa-search"></i>
                             </button>
                         </md-content>
@@ -139,9 +143,6 @@
                 </section>
                 <section>
                     <h3>VTC Members</h3>
-                    <div class="clear-filters">
-                        <a href="" ng-click="clearVTC()">Clear</a>
-                    </div>
                     <div class="filter-content">
                         <p>
                             <a href="{% url 'getpage' 'started' %}#Join%20the%20Volunteer%20Technical%20Community">
@@ -149,7 +150,8 @@
                             </a>
                             can answer questions and help if you send them a message.
                         </p>
-                        <input type="checkbox" ng-model="VTCisChecked" ng-click="filterVTC()"> VTC Members only
+                        <input type="checkbox" ng-model="VTCisChecked" ng-click="filterVTC()""> VTC Members only
+                    <!--     <input type="checkbox" ng-model="query.Volunteer_Technical_Community" ng-click="VTC()"> VTC Members only -->
                     </div>
                 </section>
             </aside>

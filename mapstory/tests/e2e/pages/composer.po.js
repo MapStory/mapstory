@@ -32,6 +32,8 @@ let composer = function() {
 	this.story_title = element(by.css('#mapstory-title'));
 	this.story_chapter_01_div = element(by.css('.menuItem.ng-scope'));
 	this.story_chapter_01_link = this.story_chapter_01_div.element(by.css('a'));
+	this.publish_link = element(by.css('span[style="display: inline-block;width: 25%;float: left;text-align: center;"]'))
+	this.confirm_publish_button = element(by.buttonText('Publish'));
 
 	/**
 	 * Gets the Composer page

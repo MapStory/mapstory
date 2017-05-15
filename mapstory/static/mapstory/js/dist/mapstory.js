@@ -69,7 +69,8 @@
     $scope.query = {
       'is_published': true,
       'featured': true,
-      'limit': 80
+      'limit': 80,
+      'offset': 0
     };
 
     //Get data from apis and make them available to the page
@@ -91,6 +92,7 @@
     query_api($scope.query);
   }
 })();
+
 /*
  *  Collections Controller
  */

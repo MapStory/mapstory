@@ -2,17 +2,16 @@ describe('exploreController', function() {
   beforeEach(module('mapstory.search'));
 
   var $controller;
-  var $scope, $rootScope, $location, createController, $http, $q, Configs, dataservice, autocompleteService;
+  var $scope, $rootScope, $location, createController, $http, $q, Configs;
 
  beforeEach(inject(function ($injector) {
 
     // mock out our dependencies
     $rootScope = $injector.get('$rootScope');
     $http = $injector.get('$http');
-    // $q = $injector.get('$q');
+    $q = $injector.get('$q');
     Configs = $injector.get('Configs')
-    dataservice = $injector.get('dataservice'); 
-    autocompleteService = $injector.get('autocompleteService');
+  
     $location = $injector.get('$location');
 
     $scope = $rootScope.$new();
@@ -26,8 +25,6 @@ describe('exploreController', function() {
         $http: $http, 
         $q: $q, 
         Configs: Configs, 
-        dataservice: dataservice, 
-        autocompleteService: autocompleteService
       });
     };
 
@@ -35,7 +32,7 @@ describe('exploreController', function() {
   }));
 
   it('should have a default order method of Popular', function () {
-    expect($scope.orderMethod).to.equal('-popular_count');
+    expect($scope.orderMethodContent).to.equal('-popular_count');
   });
 
 });
