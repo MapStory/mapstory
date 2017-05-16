@@ -273,7 +273,8 @@ def create_layer(title, abstract, owner):
     """
     elevation = TopicCategory.objects.get(identifier='elevation')
     world_extent = [-180, 180, -90, 90]
-    title, abstract, name, typename, (bbox_x0, bbox_x1, bbox_y0, bbox_y1), dt, kws, category = (
+
+    _a, _b, _c, typename, (bbox_x0, bbox_x1, bbox_y0, bbox_y1), dt, kws, category = (
         'layer2',
         'abstract2',
         'layer2',
@@ -290,7 +291,7 @@ def create_layer(title, abstract, owner):
     layer = Layer(
         title=title,
         abstract=abstract,
-        name=name,
+        name=title,
         typename=typename,
         bbox_x0=bbox_x0,
         bbox_x1=bbox_x1,
@@ -305,4 +306,5 @@ def create_layer(title, abstract, owner):
         category=category,
           )
     layer.save()
+
     return layer

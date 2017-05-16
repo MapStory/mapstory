@@ -3,6 +3,7 @@ downloaded
 geoserver
 local_settings.py
 mapstory/static/maploom
+mapstory/static/mapstory/js/dist/
 mapstory/static/style/fonts
 mapstory/static/style/site/font-awesome.css
 mapstory/static/style/themes/**/*.css
