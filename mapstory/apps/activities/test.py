@@ -10,6 +10,9 @@ from django.conf import settings
 from geonode.maps.models import Layer
 from geonode.people.models import Profile
 
+from icon_commons.models import Icon
+from icon_commons.models import Collection
+
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 from mapstory.tests.AdminClient import AdminClient
 from mapstory.tests import utils as test_utils
@@ -37,7 +40,7 @@ class SocialTests(MapStoryTestMixin):
         self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
         self.user = get_user_model().objects.filter(username='admin')[0]
 
-    def test_social_page_should_render(self):
+    def test_social_page_renders(self):
         admin_client = AdminClient()
         admin_client.login_as_admin()
         response = admin_client.get(reverse('profile_detail', args=[self.username]))
@@ -72,7 +75,7 @@ class SocialTests(MapStoryTestMixin):
         admin_actions = actor_stream(self.user)
         self.assertEqual(admin_actions.count(), 1)
 
-    def test_mapstory_create_triggers_action(self):
+    def test_create_models_triggers_actions(self):
         """
         Test that layer creation triggers an action stream
         """
@@ -99,7 +102,7 @@ class SocialTests(MapStoryTestMixin):
         # Should only trigger 1 action per mapstory
         self.assertTrue(initial_action_count < final_action_count)
 
-    def test_mapstory_actions(self):
+    def test_mapstory_actor_streams(self):
         action_list = get_actions_for_model('MapStory')
         initial_count = len(action_list)
 
@@ -108,6 +111,39 @@ class SocialTests(MapStoryTestMixin):
 
         # Action count should increase by one
         self.assertTrue(initial_count + 1, final_count)
+
+        stream = actor_stream(self.user)
+        self.assertEqual(len(stream), 1)
+        self.assertEqual(self.user.id, stream[0].actor.id)
+
+        test_utils.create_mapstory(self.user, "Action Mapstory Test 2")
+        stream = actor_stream(self.user)
+        self.assertEqual(len(stream), 2)
+
+        # Create another actor and stream
+        self.create_user('testactor', 'testactor1232432', is_superuser=False)
+        other_user = get_user_model().objects.filter(username='testactor')[0]
+        test_utils.create_mapstory(other_user, "Action Mapstory Test 3")
+        other_stream = actor_stream(other_user)
+        self.assertEqual(len(other_stream), 1)
+
+        # The other actor's stream should not change
+        same_stream = actor_stream(self.user)
+        self.assertEqual(len(same_stream), 2)
+
+        c = Collection.objects.create(name='default')
+        icon = Icon.objects.create(collection=c, name='icon', owner=self.user)
+        same_stream = actor_stream(self.user)
+        self.assertEqual(len(same_stream), 3)
+
+    def test_icon_upload_streams(self):
+        initial_count = len(actor_stream(self.user))
+
+        c = Collection.objects.create(name='default')
+        icon = Icon.objects.create(collection=c, name='icon', owner=self.user)
+
+        final_count = len(actor_stream(self.user))
+        self.assertEqual(initial_count + 1, final_count)
 
 
 def get_actions_for_model(model_name):
@@ -120,3 +156,12 @@ def get_actions_for_model(model_name):
         public=True,
         action_object_content_type__model=model_name
     )
+
+
+def get_actions_for_actor(actor):
+    """
+    Returns a list of actions for the given actor
+    :param actor: (User) The action actor
+    :return: (Action[]) An array of acstream Actions
+    """
+    return actor_stream(actor)

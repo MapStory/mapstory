@@ -148,7 +148,7 @@ class ProfileDetail(DetailView):
         ctx['journal_entries_total'] = JournalEntry.objects.filter(author=self.object).count()
         ctx['journal_entries_published'] = JournalEntry.objects.filter(author=self.object, publish=True).count()
         ctx['favorites'] = Favorite.objects.filter(user=self.object).order_by('-created_on')
-        ctx['icons'] = Icon.objects.filter(owner=self.object)
+        ctx['``'] = Icon.objects.filter(owner=self.object)
         ctx['threads_all'] = Thread.ordered(Thread.objects.inbox(self.object))
         ctx['threads_unread'] = Thread.ordered(Thread.objects.unread(self.object))
         ctx['action_list'] = actor_stream(ctx['profile'])
