@@ -1,15 +1,17 @@
 from django.http import HttpResponse
 from django.test import TestCase
 
-from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
-from mapstory.utils import error_response, Link
+from ...tests.MapStoryTestMixin import MapStoryTestMixin
+from ...tests.AdminClient import AdminClient
+from ...utils import parse_schema, error_response, Link
+from mapstory.tests import utils
+from geonode.maps.models import Layer
 
 
 class TestUtils(MapStoryTestMixin):
-
     def setUp(self):
         pass
-
+      
     def tearDown(self):
         pass
 
@@ -21,6 +23,20 @@ class TestUtils(MapStoryTestMixin):
         self.assertIsInstance(error, HttpResponse)
         self.assertEqual(error.status_code, status_code)
 
+    def test_create_layer(self):
+        """
+        Tests the layer creation helper method
+        """
+        owner = utils.get_test_user()
+        initial_count = Layer.objects.all().count()
+        layer = utils.create_layer("Test title", "A descriptiion", owner)
+        final_count = Layer.objects.all().count()
+        self.assertEqual(final_count, initial_count + 1)
+        self.assertIsInstance(layer, Layer)
+        self.assertEqual(layer.owner_id, owner.id)
+        self.assertEqual(layer.title, "Test title")
+
+        
 
 class TestLinkUtil(TestCase):
 
