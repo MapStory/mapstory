@@ -95,7 +95,19 @@ class SocialTests(MapStoryTestMixin):
 
         actions_list = get_actions_for_model('layer')
         final_action_count = actions_list.count()
+
+        # Should only trigger 1 action per mapstory
         self.assertTrue(initial_action_count < final_action_count)
+
+    def test_mapstory_actions(self):
+        action_list = get_actions_for_model('MapStory')
+        initial_count = len(action_list)
+
+        test_utils.create_mapstory(self.user, "Action Mapstory Test")
+        final_count = len(action_list)
+
+        # Action count should increase by one
+        self.assertTrue(initial_count + 1, final_count)
 
 
 def get_actions_for_model(model_name):

@@ -106,7 +106,7 @@ class Map(geonode.maps.models.Map):
         if isinstance(conf, basestring):
             conf = json.loads(conf)
 
-        #super allows us to call base class function implementation from geonode
+        # super allows us to call base class function implementation from geonode
         super(Map, self).update_from_viewer(conf)
 
         self.viewer_playbackmode = conf['viewer_playbackmode'] or 'Instant'
@@ -136,4 +136,4 @@ def default_is_published(sender, **kwargs):
         instance.is_published = False
 
 signals.post_init.connect(default_is_published, sender=MapStory)
-signals.post_init.connect(default_is_published, sender=Map)
+# signals.post_init.connect(default_is_published, sender=Map)

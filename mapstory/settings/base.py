@@ -98,10 +98,12 @@ INSTALLED_APPS += (
     'mapstory.apps.favorite',
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
-    'mapstory.apps.activities',
 )
 # DO NOT REMOVE (read commment above)
-INSTALLED_APPS += ('actstream',)
+INSTALLED_APPS += (
+    'mapstory.apps.activities',
+    'actstream',
+)
 # Thanks !
 
 # Adding Threaded Comments app
@@ -550,5 +552,3 @@ ACTSTREAM_SETTINGS = {
     'MAPSTORY_CUSTOM': 'payload',
     # 'MANAGER': 'mapstory.social.manager'
 }
-
-
