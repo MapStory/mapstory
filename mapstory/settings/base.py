@@ -527,3 +527,5 @@ NOSE_ARGS = [
 
 # Override number of results per page listed in the GeoNode search pages
 CLIENT_RESULTS_LIMIT = 30
+
+PROJECTION_DIRECTORY = '/usr/local/lib/python2.7/dist-packages/pyproj/data'

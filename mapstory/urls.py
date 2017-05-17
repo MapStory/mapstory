@@ -18,7 +18,7 @@ from maploom.geonode.urls import urlpatterns as maploom_urls
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
 from tastypie.api import Api
 
-from mapstory.api.api import UploadedLayerResource, MapstoryOwnersResource
+from mapstory.api.api import MapstoryOwnersResource
 from mapstory.api.resourcebase_api import ResourceBaseResource
 from mapstory.api.urls import api as mapstory_api
 from mapstory.apps.favorite.urls import api as favorites_api
@@ -44,7 +44,6 @@ geonode_api.register(ResourceBaseResource())
 geonode_api.register(MapstoryOwnersResource())
 
 importer_api = Api(api_name='importer-api')
-importer_api.register(UploadedLayerResource())
 
 # -- Deprecated url routes for Geoserver authentication -- remove after GeoNode 2.1
 # -- Use /gs/acls, gs/resolve_user/, gs/download instead
