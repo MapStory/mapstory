@@ -9,12 +9,12 @@ from mapstory.mapstories.models import MapStory
 
 def post_save_mapstory_actstream_handler(sender, instance, created, **kwargs):
     actor = getattr(instance, "owner", None)
-    action.send(actor, verb='created', action_object=instance)
+    action.send(actor, verb='created', action_object=instance, target=instance)
 
 
 def post_save_icon_actstream_handler(sender, instance, created, **kwargs):
     actor = getattr(instance, "owner", None)
-    action.send(actor, verb='uploaded', action_object=instance)
+    action.send(actor, verb='uploaded', action_object=instance, target=instance)
 
 
 signals.post_save.connect(
