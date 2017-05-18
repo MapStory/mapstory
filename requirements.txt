@@ -70,3 +70,6 @@ mock
 # Selenium testing
 selenium
 #jasmine-data-provider
+
+# Activity Streams
+django-activity-stream==0.6.1
