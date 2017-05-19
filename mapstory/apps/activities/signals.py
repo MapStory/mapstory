@@ -2,7 +2,6 @@ from actstream import action
 from icon_commons.models import Icon
 
 from django.db.models import signals
-
 from mapstory.mapstories.models import MapStory
 
 
@@ -13,7 +12,11 @@ def post_save_mapstory_actstream_handler(sender, instance, created, **kwargs):
 
 def post_save_icon_actstream_handler(sender, instance, created, **kwargs):
     actor = getattr(instance, "owner", None)
-    action.send(actor, verb='uploaded', action_object=instance, target=instance)
+    icon_name = getattr(instance, "name", None)
+    if icon_name is None:
+        instance.name = "An icon"
+
+    action.send(actor, verb='uploaded', action_object=instance)
 
 
 # signals.post_save.connect(
