@@ -60,24 +60,30 @@ RUN set -ex \
 # Clone submodules temporarily. They're needed for the install.
 # These will be overwrriten when we load the code volume.
 # We don't use COPY because it will force rebuilds on any changes.
-USER mapstory
+#USER mapstory
 WORKDIR $APP_PATH/deps
 RUN set -ex \
-    && git clone -b master --depth 1 https://github.com/MapStory/geonode.git \
+    && git clone -b 2.6.x --depth 1 https://github.com/GeoNode/geonode.git \
+    && sed -i 's/Paver==1.2.1/Paver==1.2.4/' ./geonode/setup.py \
+    && pip install -e geonode \
     && git clone -b composer --depth 1 https://github.com/MapStory/django-maploom.git \
+    && pip install -e django-maploom \
     && git clone -b master --depth 1 https://github.com/pinax/django-mailer.git \
+    && pip install -e django-mailer \
     && git clone -b master --depth 1 https://github.com/MapStory/icon-commons.git \
+    && pip install -e icon-commons \
     && git clone -b mapstory-wip --depth 1 https://github.com/GeoNode/django-osgeo-importer.git \
-    && sed -i 's/Paver==1.2.1/Paver==1.2.4/' ./geonode/setup.py
+    && pip install -e django-osgeo-importer \
+    && chown -R mapstory:mapstory .
 
 # Install dependencies from requirements.txt
 WORKDIR $APP_PATH
 COPY requirements.txt ./
-USER root
+#USER root
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Cache these. Hopefully it will speed up the later steps.
-USER mapstory
+# USER mapstory
 # WORKDIR $APP_PATH/deps/geonode/geonode/static
 # RUN set -ex \
 #     && npm install \
@@ -86,6 +92,9 @@ USER mapstory
 #     && bower install \
 #     && rm -rf ~/.cache/bower
 COPY mapstory/static $APP_PATH/mapstory/static
+WORKDIR $APP_PATH/mapstory/static
+RUN chown -R mapstory:mapstory .
+USER mapstory
 RUN set -ex \
     && npm install \
     && rm -rf ~/.npm \
@@ -102,14 +111,14 @@ COPY ./*.py ./
 RUN chown -R mapstory:mapstory $APP_PATH
 
 USER mapstory
-WORKDIR $APP_PATH/deps/geonode/geonode/static
-RUN set -ex \
-    && npm install \
-    && rm -rf ~/.npm \
-    && rm -rf /tmp/npm-* \
-    && bower install \
-    && rm -rf ~/.cache/bower \
-    && grunt copy
+# WORKDIR $APP_PATH/deps/geonode/geonode/static
+# RUN set -ex \
+#     && npm install \
+#     && rm -rf ~/.npm \
+#     && rm -rf /tmp/npm-* \
+#     && bower install \
+#     && rm -rf ~/.cache/bower \
+#     && grunt copy
 
 WORKDIR $APP_PATH/mapstory/static
 RUN set -ex \
