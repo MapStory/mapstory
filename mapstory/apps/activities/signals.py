@@ -11,12 +11,9 @@ def post_save_mapstory_actstream_handler(sender, instance, created, **kwargs):
 
 
 def post_save_icon_actstream_handler(sender, instance, created, **kwargs):
-    actor = getattr(instance, "owner", None)
-    icon_name = getattr(instance, "name", None)
-    if icon_name is None:
-        instance.name = "An icon"
-
-    action.send(actor, verb='uploaded', action_object=instance)
+    if created:
+        actor = getattr(instance, "owner", None)
+        action.send(actor, verb='uploaded an Icon')
 
 
 # signals.post_save.connect(
