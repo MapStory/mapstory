@@ -6,51 +6,44 @@
 
   angular
     .module('mapstory')
-    .controller('profileController', profileController);
+    .controller('profileController', profileController)
+    .controller('layersController', layersController)
+    .controller('storiesController', storiesController);
 
-  function profileController($injector, $scope, $location, $http, UploadedData, $rootScope) {    
-    //resources: stories, layers
-    $scope.query = {}
-    $scope.query.owner__username__in = PROFILE_USERNAME;
-    $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
-    //todo: complete pagination directive for profile resources > than 30 item limit
-    // $scope.query.offset = $scope.query.offset || 0;
-    // $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
+  function profileController($injector, $scope, $http) {
+    $scope.counts = {};
+
+    $scope.query = {
+      owner__username__in: PROFILE_USERNAME,
+      limit: CLIENT_RESULTS_LIMIT,
+      offset: 0
+    }
 
     //if not the owner, don't retrieve unpublished resources
     // needs better permissions management for superusers/admin
     if (USER != PROFILE_USERNAME && USER != 'admin'){
       $scope.query.is_published = true;
     }
-
-    //uploads
-    $scope.uploads = [];
-    $scope.loading = true;
-    $scope.currentPage = 0;
-    $scope.offset = 0;
-    $scope.limit = 10;
-
-    $scope.init = function(user) {
-      get_stories_and_layers();
-      getUploads({offset: $scope.offset, limit: $scope.limit, user__username: user});
-    };
-
-    /* Resource Methods */
-    $scope.search = function() {
-      return query_api($scope.query).then(function(result) {
-          return result;
-      });
-    };
-
+  
     //Get data from apis and make them available to the page
-    function query_api(data){
-      return $http.get('/api/base/search/', {params: data || {}})
+    function getResourceCounts() {
+      return $http.get(SEARCH_URL, {params: $scope.query || {}})
       .then(
         /* success */
         function(response) {
-          $scope.results = response.data.objects;
-          $scope.total_counts = response.data.meta.total_count;
-          $scope.$root.query_data = response.data;
+          var facets = response.data.meta.facets;
+          var layerCount, storyCount;
+
+          // if type facets are present, store them
+          if (facets.type){
+            layerCount = facets.type.layer;
+            storyCount = facets.type.mapstory;
+          }
+
+          // assign type facet counts or a default of 0 
+          // displays as a total on the profile tabs
+          $scope.counts.layers = layerCount || 0;
+          $scope.counts.maps = storyCount || 0;
         },
         /* failure */
         function(error) {
@@ -59,68 +52,51 @@
       )
     };
 
-    // count and & stash results for layers & stories 
-    function get_stories_and_layers() {
-      $scope.query.type__in = 'layer';
-      $scope.search().then(function(result) {
-        $scope.total_layers = $scope.total_counts;
-        $scope.layers = $scope.results;
-        $scope.query.type__in = 'mapstory';
-        $scope.search().then(function(result) {
-          $scope.total_maps = $scope.total_counts;
-          $scope.stories = $scope.results;
-        });
-      });
-    };
+    getResourceCounts();
+  };
 
-    //content card animation
-    $scope.flip = function(id){
-      $('.resource-'+id).toggleClass('flip');
-    };
+  function layersController($injector, $scope, $http) { 
+    var vm = this;
+    var query = _.extend({type__in: 'layer'}, $scope.query);
 
-    /* Uploads Methods */
-    $scope.pageChanged = function() {
-      $scope.offset = ($scope.currentPage - 1) * $scope.limit;
-      var query = {offset: $scope.offset, limit: $scope.limit};
-      getUploads(query);
-    };
-
-    function getUploads(query) {
-      if (query == null) {
-        query = {offset: $scope.offset, limit: $scope.limit, user__username: $scope.user}
-      }
-      
-      UploadedData.query(query).$promise.then(function(data) {
-        $scope.uploads = data.objects;
-        $scope.offset = data.meta.offset;
-        $scope.totalItems = data.meta.total_count;
-        $scope.loading = false;
-      });
-    }
-
-    $rootScope.$on('upload:complete', function(event, args) {
-        if (args.hasOwnProperty('id')) {
-            getUploads();
+    vm.search = function() {
+      return $http.get(SEARCH_URL, {params: query || {}})
+      .then(
+        /* success */
+        function(response) {
+          var meta = response.data.meta;
+          vm.cards = response.data.objects;
+        },
+        /* failure */
+        function(error) {
+          console.log("The request failed: ", error);
         }
-    });
-
-    /* Collection Methods(?) */
-    $scope.showUserGroup = function() {
-        if ($location.search().hasOwnProperty('type__in')) {
-            var typeInParam = $location.search()['type__in'];
-            if (typeof(typeInParam) === "string") {
-                if (typeInParam === 'user' || typeInParam === 'group') {
-                    return true;
-                }
-            } else if (typeof(typeInParam) === "object") {
-                for(var i = 0; i < typeInParam.length; i++) {
-                  if(typeInParam[i] === 'user' || typeInParam[i] === 'group') {
-                      return true;
-                    }
-                };
-            }
-          }
-        return false;
+      )
     };
-  }
+
+    vm.search()
+  };
+
+  function storiesController($injector, $scope, $http) {  
+    var vm = this;
+    var query = _.extend({type__in: 'mapstory'}, $scope.query);
+
+    //Get data from apis and make them available to the page
+    vm.search = function() {
+      return $http.get(SEARCH_URL, {params: query || {}})
+      .then(
+        /* success */
+        function(response) {
+          var meta = response.data.meta;
+          vm.cards = response.data.objects;
+        },
+        /* failure */
+        function(error) {
+          console.log("The request failed: ", error);
+        }
+      )
+    };
+
+    vm.search()
+  };
 })();
