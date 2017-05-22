@@ -1,5 +1,6 @@
 from django.test import Client
 
+
 class AdminClient(Client):
     def login_as_admin(self, username='admin', password='admin'):
         """
