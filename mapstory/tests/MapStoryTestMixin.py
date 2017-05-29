@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class MapStoryTestMixin(TestCase):
     def assertLoginRequired(self, response):
         self.assertEqual(response.status_code, 302)

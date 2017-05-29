@@ -7,6 +7,7 @@ from geoserver.catalog import FailedRequestError
 
 from ..MapStoryTestMixin import MapStoryTestMixin
 
+
 class LayersCreateTest(MapStoryTestMixin):
 
     def create_datastore(self, connection, catalog):
@@ -44,7 +45,7 @@ class LayersCreateTest(MapStoryTestMixin):
         self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
         self.non_admin, self.non_admin_password = self.create_user('non_admin', 'non_admin', is_superuser=True)
         self.layer_name = 'testz'
-        self.workspace ='geonode'
+        self.workspace = 'geonode'
         self.postgis = db.connections['datastore']
         self.datastore = self.create_datastore(self.postgis, gs_catalog)
 
@@ -61,4 +62,3 @@ class LayersCreateTest(MapStoryTestMixin):
 
         if self.datastore:
             gs_catalog.delete(self.datastore, recurse=True)
-

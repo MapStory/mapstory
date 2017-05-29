@@ -5,12 +5,10 @@ class ActivitiesAppConfig(AppConfig):
     name = 'mapstory.apps.activities'
 
     def ready(self):
+        # Imports need to happen here once things are ready.
+        # Please do not move these.
         from actstream import registry
-        from django.contrib.auth import get_user_model
-        from mapstory.mapstories.models import MapStory
         from icon_commons.models import Icon
-        # Register for activity streams
-        # actstream_registry.register(get_user_model())
-        # actstream_registry.register(MapStory)
-        # actstream_registry.register(self.get_model('MapStory'))
+
+        # Register Icon for Activity Strreams
         registry.register(Icon)

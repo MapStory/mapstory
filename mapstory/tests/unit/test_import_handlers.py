@@ -2,6 +2,7 @@ from mapstory.import_handlers import LayerAppendHandler, TruncatedNameHandler
 from osgeo_importer.handlers import ImportHandlerMixin
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 
+
 class ImportHandlerTests(MapStoryTestMixin):
     def test_layer_append_handler(self):
         self.assertIsNotNone(LayerAppendHandler)
