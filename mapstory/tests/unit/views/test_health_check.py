@@ -36,6 +36,3 @@ class HealthCheckViewTest(MapStoryTestMixin):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'health_check/dashboard.html')
         #TODO(Zunware): Assert that health check is passing
-
-
-

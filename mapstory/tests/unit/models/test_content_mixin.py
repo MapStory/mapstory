@@ -2,6 +2,7 @@ from unittest import skip
 from django.test import TestCase
 from mapstory.models import ContentMixin
 
+
 class TestContentMixin(TestCase):
     def setUp(self):
         self.contentMixin = ContentMixin(content="<a href=%s target='_'>")

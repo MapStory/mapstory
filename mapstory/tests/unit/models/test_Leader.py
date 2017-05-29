@@ -3,6 +3,7 @@ from django.test import TestCase
 
 from mapstory.models import Leader
 
+
 class TestLeader(TestCase):
     """
     Leader model tests

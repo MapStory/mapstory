@@ -8,7 +8,6 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.conf import settings
 
-
 from geonode.maps.models import Layer
 from geonode.people.models import Profile
 
@@ -80,7 +79,6 @@ class SocialTests(MapStoryTestMixin):
         """
         Test that layer creation triggers an action stream
         """
-        # signals.post_save.connect(activity_post_modify_object, sender=Layer)
         actions_list = get_actions_for_model('layer')
         initial_action_count = actions_list.count()
 

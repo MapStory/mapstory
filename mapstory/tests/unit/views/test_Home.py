@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse, resolve
 
 from mapstory.views import IndexView
 
+
 class TestHomeView(TestCase):
     def test_home_responds_OK(self):
         c = Client()

@@ -16,6 +16,7 @@ from ..MapStoryTestMixin import MapStoryTestMixin
 # Gets the custom user model
 User = get_user_model()
 
+
 class TestMapstoryIntegrations(TestCase):
     def test_create_new_mapStory(self):
         user = User.objects.create_user(username='john',
@@ -30,6 +31,7 @@ class TestMapstoryIntegrations(TestCase):
     def test_create_new_map(self):
         testMap = Map()
         self.assertIsInstance(testMap, Map)
+
 
 class MapStoryTests(MapStoryTestMixin):
     """
@@ -79,7 +81,6 @@ class MapStoryTests(MapStoryTestMixin):
         response = c.get(reverse('account_signup'))
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
-
 
     def test_new_map_renders(self):
         """
@@ -255,6 +256,7 @@ class MapStoryTests(MapStoryTestMixin):
         # Regardless of email content used, ensure it personally addresses the user
         self.assertTrue(user.username in mail.outbox[1].body or user.first_name in mail.outbox[1].body)
 
+
 class ExtraMapstoryTests(MapStoryTestMixin):
     def setUp(self):
         pass
@@ -276,8 +278,6 @@ class ExtraMapstoryTests(MapStoryTestMixin):
         mapstory.owner = user
         mapstory.save()
 
-
     def test_create_new_map(self):
         testMap = Map()
         self.assertIsInstance(testMap, Map)
-

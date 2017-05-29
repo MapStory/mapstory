@@ -216,12 +216,7 @@ class LayerTests(MapStoryTestMixin):
                 self.assertIsNotNone(json_response)
 
                 if json_response[u'status'] == u'SUCCESS':
-                    # print("SUCCESS!!")
                     break
                 else:
-                    # print("retrying")
                     retries += 1
-
                     # @FIXME: Success is not happening
-                    # self.assertEquals(json_response[u'status'], u'SUCCESS')
-                    # self.assertEquals(1, len(Layer.objects.all()))

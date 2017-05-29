@@ -8,6 +8,7 @@ from ..MapStoryTestMixin import MapStoryTestMixin
 
 User = get_user_model()
 
+
 class MapStoryAdminTests(MapStoryTestMixin):
 
     def test_csv_user_export(self):
@@ -18,4 +19,3 @@ class MapStoryAdminTests(MapStoryTestMixin):
         request = c.get(reverse('index_view'))
         response = export_via_model(User, request, User.objects.all(), exclude=['password'])
         self.assertEqual(response['Content-Type'], 'text/csv')
-        

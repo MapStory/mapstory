@@ -4,6 +4,7 @@ from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 
 from django.core.urlresolvers import reverse
 
+
 class TestGetStartedView(MapStoryTestMixin):
     def test_get_started_renders(self):
         """

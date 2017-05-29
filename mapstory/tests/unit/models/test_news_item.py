@@ -3,6 +3,7 @@ from django.test import TestCase
 
 from mapstory.models import NewsItem
 
+
 class TestNewsItem(TestCase):
     """
     NewsItem model tests

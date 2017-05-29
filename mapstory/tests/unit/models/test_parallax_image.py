@@ -3,6 +3,7 @@ from django.test import TestCase
 
 from mapstory.models import ParallaxImage
 
+
 class TestParallaxImage(TestCase):
     """
     ParallaxImage model tests
