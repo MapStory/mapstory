@@ -540,6 +540,8 @@ NOSE_ARGS = [
 # Override number of results per page listed in the GeoNode search pages
 CLIENT_RESULTS_LIMIT = 30
 
+PROJECTION_DIRECTORY = '/usr/local/lib/python2.7/dist-packages/pyproj/data'
+
 # Activity Stream Settings
 SITE_ID = 1
 ACTSTREAM_SETTINGS = {
@@ -548,3 +550,4 @@ ACTSTREAM_SETTINGS = {
     'USE_JSONFIELD': True,
     'GFK_FETCH_DEPTH': 1,
 }
+

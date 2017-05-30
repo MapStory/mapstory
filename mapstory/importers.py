@@ -54,11 +54,13 @@ class GeoServerLayerCreator(Import):
 
         for layer in configuration_options:
             feature_type = layer.get('featureType')
-            datastore = feature_type['store']['name']
+            store_name = feature_type['store']['name']
             store_create_geogig = layer.get(u'storeCreateGeogig', 'false')
             owner = layer.get('layer_owner')
             username = owner.username
             email = owner.email
+            layer['layer_type'] = 'vector'
+            layer['fields'] = None
 
             feature_type['title'] = feature_type['name']
             feature_type['name'] = launder(slugify(unicode(feature_type['name'])))
@@ -68,15 +70,15 @@ class GeoServerLayerCreator(Import):
                 feature_type['nativeBoundingBox'] = {'minx': -180, 'maxx': 180, 'miny': -90, 'maxy': 90, 'crs': 'EPSG:4326'}
 
             if store_create_geogig and store_create_geogig != 'false':
-                store_created = create_geoserver_db_featurestore(store_type='geogig', store_name=feature_type['store']['name'], author_name=username,
+                store_created = create_geoserver_db_featurestore(store_type='geogig', store_name=store_name, author_name=username,
                                                                  author_email=email)
                 feature_type['store']['name'] = store_created.name
 
-            if datastore not in getattr(settings, 'ALLOWED_DATASTORE_LAYER_CREATE', []) and '*' not in getattr(settings, 'ALLOWED_DATASTORE_LAYER_CREATE', []):
+            if store_name not in getattr(settings, 'ALLOWED_DATASTORE_LAYER_CREATE', []) and '*' not in getattr(settings, 'ALLOWED_DATASTORE_LAYER_CREATE', []):
                 return HttpResponseForbidden(content='Datastore specified in featureType is not in the ALLOWED_DATASTORE_LAYER_CREATE whitelist.')
 
             post_request = requests.post(
-                '{}/workspaces/{}/datastores/{}/featuretypes.json'.format(ogc_server_settings.rest, feature_type['namespace']['name'], datastore),
+                '{}/workspaces/{}/datastores/{}/featuretypes.json'.format(ogc_server_settings.rest, feature_type['namespace']['name'], store_name),
                 data='{{"featureType":{}}}'.format(json.dumps(feature_type)),
                 auth=ogc_server_settings.credentials,
                 headers={'content-type': 'application/json'}
