@@ -55,7 +55,6 @@ class TestMapstory(TestCase):
         self.mapstory.update_from_viewer(conf)
 
 
-
 class TestMapstoryVersion(TestCase):
     def test_did_import(self):
         self.assertIsNotNone(get_version)
@@ -64,7 +63,6 @@ class TestMapstoryVersion(TestCase):
         self.assertIsNotNone(get_version(None))
         self.assertEqual(get_version(), "1.0c0")
         self.assertEqual(get_version(version=version), "1.0c0")
-
 
 
 class MapViewsTest(MapStoryTestMixin):

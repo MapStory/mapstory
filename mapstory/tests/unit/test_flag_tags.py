@@ -1,6 +1,7 @@
 from django.test import TestCase
 from mapstory.apps.flag.templatetags.flag_tags import flag
 
+
 class Test_flag_tags(TestCase):
     def test_flag(self):
         self.assertIsNotNone(flag)
@@ -17,6 +18,7 @@ class Test_flag_tags(TestCase):
         except Exception as inst:
             self.assertEqual(inst.message, "ContentType matching query does not exist.")
 
+
 class ContentObjectMock:
     id = '3445'
     class _meta:
@@ -27,5 +29,3 @@ class ContentObjectMock:
 contextMock = {
     "request": {"testing": "123"}
 }
-
-

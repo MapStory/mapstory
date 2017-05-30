@@ -12,6 +12,7 @@ class MockInstance(object):
     """
     name = 'A name'
 
+
 class TestHelperMethods(TestCase):
     """
     Model helper methods tests

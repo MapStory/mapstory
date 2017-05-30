@@ -3,6 +3,7 @@ from django.test import TestCase
 
 from mapstory.models import GetPage
 
+
 class TestGetPage(TestCase):
     """
     GetPage model tests

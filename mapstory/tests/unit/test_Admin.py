@@ -17,9 +17,11 @@ from ...admin import (
 from mapstory.apps.journal.admin import JournalEntryAdmin
 from ...models import GetPage, GetPageContent
 
+
 class DummyHTMLObj(object):
     def html(self):
         return "<html>Testing</html>"
+
 
 class TestAdmin(TestCase):
     def setUp(self):

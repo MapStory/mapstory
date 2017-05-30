@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 
 from geonode.api.api import TypeFilteredResource, CountJSONSerializer
 from tastypie import http, fields
@@ -47,8 +48,42 @@ class MapstoryOwnersResource(TypeFilteredResource):
         return super(MapstoryOwnersResource, self).serialize(
             request, data, format, options)
 
+    def build_filters(self, filters={}):
+
+        orm_filters = super(MapstoryOwnersResource, self).build_filters(filters)
+
+        if 'q' in filters:
+            orm_filters['q'] = filters['q']
+
+        return orm_filters
+
+    def apply_filters(self, request, applicable_filters):
+
+        q = applicable_filters.pop('q', None)
+
+        semi_filtered = super(
+            MapstoryOwnersResource,
+            self).apply_filters(
+            request,
+            applicable_filters)
+
+        if q:
+            names = [
+                w for w in re.split(
+                    '\W',
+                    q,
+                    flags=re.UNICODE) if w]
+            for i, search_name in enumerate(names):
+                semi_filtered = semi_filtered.filter(
+                    Q(username__icontains=search_name) | 
+                    Q(first_name__icontains=search_name) | 
+                    Q(last_name__icontains=search_name) 
+                )
+
+        return semi_filtered
+
     class Meta:
-        queryset = get_user_model().objects.exclude(username='AnonymousUser')
+        queryset = get_user_model().objects.exclude(username='AnonymousUser').exclude(is_active=False)
 
         resource_name = 'owners'
         allowed_methods = ['get']
@@ -58,5 +93,7 @@ class MapstoryOwnersResource(TypeFilteredResource):
 
         filtering = {
             'username': ALL,
+            'city': ALL,
+            'country': ALL,
         }
         serializer = OwnerProfileSerializer()

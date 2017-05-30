@@ -10,6 +10,7 @@ from ...utils import parse_schema, error_response, Link
 
 from mapstory.tasks import append_feature_chunks
 
+
 class WFST_Template(object):
     def format(self, features, workspace, workspace_uri, handle):
         pass
