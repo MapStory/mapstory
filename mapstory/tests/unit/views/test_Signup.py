@@ -1,6 +1,7 @@
 from django.test import Client, TestCase
 from django.core.urlresolvers import reverse
 
+
 class TestSignupView(TestCase):
     def test_uses_template(self):
         response = self.client.get(reverse('account_signup'))

@@ -6,6 +6,7 @@ from django.test import TestCase
 
 from mapstory.models import CustomSite, Site
 
+
 class TestCustomSite(TestCase):
     """
     CustomSite model testing

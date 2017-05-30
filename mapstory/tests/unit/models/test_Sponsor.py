@@ -6,6 +6,7 @@ from django.test import TestCase
 
 from mapstory.models import Sponsor, _stamp
 
+
 class TestSponsor(TestCase):
     """
     Sponsor model tests
