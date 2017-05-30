@@ -69,6 +69,7 @@ services:
       - docker/env/dev/db_auth.env
     command: [--collect-static-dev, --init-db, --reindex, --serve-dev]
     volumes:
+      - .:/srv/mapstory/
       - ./cover:/srv/mapstory/cover
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
     ports:
@@ -84,6 +85,10 @@ services:
       - docker/env/dev/geoserver.env
       - docker/env/dev/mapstory.env
       - docker/env/dev/db_auth.env
+    volumes:
+      - .:/srv/mapstory/
+      - ./cover:/srv/mapstory/cover
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   geoserver:
     links:
