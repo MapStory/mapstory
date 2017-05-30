@@ -60,6 +60,12 @@ DATABASES = {
     },
 }
 
+# This removes actstream in order to add it at the end of installed apps.
+# This is recommended by the actstream docs:
+# http://django-activity-stream.readthedocs.io/en/latest/installation.html#basic-app-configuration
+installed_apps_list = list(INSTALLED_APPS)
+installed_apps_list.remove('actstream')
+INSTALLED_APPS = tuple(installed_apps_list)
 INSTALLED_APPS += (
     'django_nose',
     'mapstory',
@@ -93,6 +99,12 @@ INSTALLED_APPS += (
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
 )
+# DO NOT REMOVE (read commment above)
+INSTALLED_APPS += (
+    'mapstory.apps.activities',
+    'actstream',
+)
+# Thanks !
 
 # Adding Threaded Comments app
 FLUENT_COMMENTS_EXCLUDE_FIELDS = ('name', 'email', 'url', 'title')
@@ -372,7 +384,8 @@ if DATABASE_PASSWORD:
         'OPTIONS': {
             'TIME_ENABLED': True,
             'GEOGIG_ENABLED': True,
-        }
+        },
+        'MANAGER': 'mapstory.social.manager'
     }
 
     USE_BIG_DATE = True
@@ -527,3 +540,15 @@ NOSE_ARGS = [
 
 # Override number of results per page listed in the GeoNode search pages
 CLIENT_RESULTS_LIMIT = 30
+
+# Activity Stream Settings
+SITE_ID = 1
+
+ACTSTREAM_SETTINGS = {
+    'FETCH_RELATIONS': True,
+    'USE_PREFETCH': False,
+    'USE_JSONFIELD': True,
+    'GFK_FETCH_DEPTH': 1,
+    'MAPSTORY_CUSTOM': 'payload',
+    # 'MANAGER': 'mapstory.social.manager'
+}

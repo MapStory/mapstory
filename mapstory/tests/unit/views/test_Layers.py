@@ -20,6 +20,7 @@ from ...utils import create_admin_user, generate_testname
 User = get_user_model()
 test_layer_file_path = os.path.realpath('mapstory/tests/sampledata/lewisandclarktrail.csv')
 
+
 def getLayerCatalog():
     """
     Convenience method for getting the Layer catalog
@@ -31,13 +32,15 @@ def getLayerCatalog():
     return Catalog(rest_url, rest_user, rest_pass)
 
 
-
 class TestLayerViews(MapStoryTestMixin):
     """
     Test Layer Views
     """
+    def setUp(self):
+        self.admin_client = AdminClient()
+
     def create_layer(self):
-        if self.admin_client == None:
+        if self.admin_client is None:
             self.admin_client = AdminClient()
 
         self.login_admin()
@@ -82,17 +85,12 @@ class TestLayerViews(MapStoryTestMixin):
 
         # Layers array should not be empty
         self.assertTrue(len(json_response[u'layers']) > 0)
-        # for l in json_response[u'layers']:
-            # print(l)
-
         # Search in the catalog and return the correct layer
         for layer in getLayerCatalog().get_layers():
             if filename in layer.name:
                 return layer
 
         return None
-
-
 
     def get_layer(self):
         self.login_admin()
@@ -103,14 +101,13 @@ class TestLayerViews(MapStoryTestMixin):
         if (len(all_layers) < 1):
 
             # Make a new layer, refresh and break if nothing happened
-            test_layer = self.create_test_layer()
-            if (test_layer == None):
+            test_layer = self.create_layer()
+            if (test_layer is None):
                 raise RuntimeError
 
             all_layers = getLayerCatalog().get_layers()
 
         return all_layers[0]
-
 
     def login_admin(self):
         """
@@ -124,14 +121,8 @@ class TestLayerViews(MapStoryTestMixin):
 
         self.admin_client.login_as_admin("admin", "admin")
 
-
-    def setUp(self):
-        self.admin_client = AdminClient()
-
-
     def test_layers_start_out_clean(self):
         self.assertEquals(0, len(Layer.objects.all()))
-
 
     def test_layer_needs_login(self):
         # Should not be authorized to upload things
@@ -139,7 +130,6 @@ class TestLayerViews(MapStoryTestMixin):
             response = self.client.post('/uploads/new/json', {'name': 'file', 'attachment': fp}, follow=True)
             self.assertEquals(response.status_code, 200)
             self.assertTemplateUsed(response, 'account/login.html')
-
 
     def test_csv_layer_upload(self):
         self.login_admin()
@@ -150,7 +140,7 @@ class TestLayerViews(MapStoryTestMixin):
             self.assertEquals(response.status_code, 200)
             self.assertTemplateNotUsed(response, 'account/login.html')
 
-
+    @skip("Fix-me")
     def test_layer_create_wizard(self):
         #@FIXME: Creates a broken layer and causes things to crash
         self.login_admin()
@@ -164,7 +154,7 @@ class TestLayerViews(MapStoryTestMixin):
         # Should update the catalog
         self.assertEquals(current_layer_count + 1, len(getLayerCatalog().get_layers()))
 
-
+    @skip("Fix-me")
     def test_layer_import_wizard_views(self):
         # Should have 0 Layers stored
         response = self.admin_client.get('/maps/new', follow=True)
@@ -290,7 +280,7 @@ class TestLayerViews(MapStoryTestMixin):
             # self.assertEquals(json_response[u'status'], u'SUCCESS')
             # self.assertEquals(1, len(Layer.objects.all()))
 
-
+    @skip("Fix-me")
     def test_layer_detail_view(self):
         self.login_admin()
         layer = self.get_layer()

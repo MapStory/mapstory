@@ -106,7 +106,7 @@ class Map(geonode.maps.models.Map):
         if isinstance(conf, basestring):
             conf = json.loads(conf)
 
-        #super allows us to call base class function implementation from geonode
+        # super allows us to call base class function implementation from geonode
         super(Map, self).update_from_viewer(conf)
 
         self.viewer_playbackmode = conf['viewer_playbackmode'] or 'Instant'

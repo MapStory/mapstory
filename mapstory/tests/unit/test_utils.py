@@ -1,6 +1,3 @@
-from unittest import skip
-
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.test import TestCase
 
@@ -14,7 +11,7 @@ from geonode.maps.models import Layer
 class TestUtils(MapStoryTestMixin):
     def setUp(self):
         pass
-
+      
     def tearDown(self):
         pass
 
@@ -39,8 +36,10 @@ class TestUtils(MapStoryTestMixin):
         self.assertEqual(layer.owner_id, owner.id)
         self.assertEqual(layer.title, "Test title")
 
+        
 
 class TestLinkUtil(TestCase):
+
     def setUp(self):
         pass
 
