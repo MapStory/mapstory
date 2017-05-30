@@ -72,7 +72,7 @@ RUN set -ex \
     && pip install -e ./django-mailer \
     && git clone -b master --depth 1 https://github.com/MapStory/icon-commons.git \
     && pip install -e ./icon-commons \
-    && git clone -b mapstory-wip --depth 1 https://github.com/GeoNode/django-osgeo-importer.git \
+    && git clone -b v0.2.1 --depth 1 https://github.com/GeoNode/django-osgeo-importer.git \
     && pip install -e ./django-osgeo-importer \
     && chown -R mapstory:mapstory .
 

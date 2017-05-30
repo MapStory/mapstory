@@ -8,8 +8,8 @@
 	branch = master
 [submodule "deps/django-osgeo-importer"]
 	path = deps/django-osgeo-importer
-	url = git://github.com/sarasafavi/django-osgeo-importer.git
-	branch = mapstory-wip-shim
+	url = git://github.com/GeoNode/django-osgeo-importer.git
+	branch = v0.2.1
 [submodule "deps/django-maploom"]
 	path = deps/django-maploom
 	url = git@github.com:MapStory/django-maploom.git
