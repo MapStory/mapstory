@@ -5,7 +5,7 @@
     <li class="active">
         <a href="#stories_list" data-toggle="tab">
             <div class="counter">
-            <span ng-bind="total_maps"></span>
+            <span ng-bind="counts.maps"></span>
             </div>
             {% trans "Stories" %} 
         </a>
@@ -13,7 +13,7 @@
     <li>
         <a href="#layers_list" data-toggle="tab">
             <div class="counter">
-            <span ng-bind="total_layers"></span>
+            <span ng-bind="counts.layers"></span>
             </div>
             {% trans "Layers" %} 
         </a>
@@ -22,7 +22,7 @@
         <li>
             <a href="#uploads_list" data-toggle="tab">
                 <div class="counter">
-                    <span ng-bind="totalItems"></span>
+                    <span ng-bind="counts.uploads"></span>
                 </div>
                 Uploads
             </a>

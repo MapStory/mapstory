@@ -1,0 +1,35 @@
+{% load i18n %}
+<div class="tab-pane" id="uploads_list" ng-controller="uploadsController as up">
+    <div class="no-content" ng-hide="up.uploads.length">
+        <h2>No Uploads.</h2>
+        <h4>
+            <a style="cursor: pointer" ng-controller="ImportController"
+               ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}')">
+               Click here</a> to upload your data!.
+        </h4>
+    </div>
+    <div class="" ng-show="up.uploads.length">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div ng-show="up.loading">
+                        <i class="fa fa-spinner fa-spin fa-3x"></i>
+                    </div>
+                    {% verbatim %}
+                        <div class="layer-upload-counts">Showing {{ up.startIndex }}-{{ up.endIndex }}
+                            of {{ counts.uploads }} uploads.
+                        </div>
+                    {% endverbatim %}
+                    <div ng-repeat="upload in up.uploads">
+                        <upload upload-object="upload" i="$index" static-url="{{ STATIC_URL }}"
+                            template-url="{{ STATIC_URL }}mapstory/partials/upload.html">
+                        </upload>
+                    </div>
+                    <uib-pagination total-items="counts.uploads" ng-change="up.pageChanged()" max-size="7" 
+                        class="pagination-sm" items-per-page="up.limit" ng-model="up.currentPage">
+                    </uib-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
