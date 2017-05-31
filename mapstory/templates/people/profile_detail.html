@@ -200,7 +200,7 @@
             {% if request.GET.showNotifications == 'true'%}
                 // allows linking to profile page with modal up,
                 // prompts user to change profile notifications
-                $(window).load(function () {
+                $(window).on('load',function () {
                     $('#notifications').modal('show');
                 });
             {% endif %}
