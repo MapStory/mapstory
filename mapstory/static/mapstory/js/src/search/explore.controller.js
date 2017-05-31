@@ -9,7 +9,9 @@
     .module('mapstory.search')
     .controller('exploreController', exploreController);
 
-  function exploreController($injector, $scope, $location, $http, $q, Configs, page) {
+  function exploreController($injector, $scope, $location, $http, $q, Configs, page, queryService) {
+    var vm = this;
+
     $scope.query = $location.search();
     $scope.sitename = SITE_NAME; //used in content_sidebar
 
@@ -18,7 +20,8 @@
 
     $scope.autocomplete = {};
 
-    var vm = this;
+    $scope.pageDown = page.down(vm, $scope);
+    $scope.pageUp = page.up(vm, $scope);
 
     if (!Configs.hasOwnProperty("disableQuerySync")) {
       // Keep in sync the page location with the query object
@@ -29,14 +32,10 @@
     } 
 
     $scope.search = function() {
-      if($scope.query.limit == 0){
-        console.log("Reseting to default CLIENT_RESULTS_LIMIT, cannot query API with a 0 limit")
-        $scope.query.limit = CLIENT_RESULTS_LIMIT;
-      }
-      // verify that offset is a multiple of limit before querying API
-      if($scope.query.limit != 0 && $scope.query.offset % $scope.query.limit != 0) {
-        $scope.query.offset = page.roundOffset($scope);
-      }
+      // we expose offset and limit for manipulation in the url,
+      // validate them for error cases here
+      queryService.validateOffset($scope);
+      queryService.validateLimit($scope);
 
       return $http.get($scope.apiEndpoint, {params: $scope.query || {}})
         .then(
@@ -49,19 +48,13 @@
           function(error) {
             if( error.data.error_message === "Sorry, no results on that page." ){
               console.log("Setting offset to 0 and searching again.");
-              page.resetOffset($scope);
+              queryService.resetOffset($scope);
             } else {
               console.log(error);
             }
           }
         )
     };
-    
-    /* Pagination */
-
-    $scope.pageDown = page.down(vm, $scope);
-    $scope.pageUp = page.up(vm, $scope);
-
 
     $scope.clearVTC = function(){
       $scope.VTCisChecked = false;
@@ -74,24 +67,11 @@
       if ($scope.VTCisChecked == true) {
         $scope.VTCisChecked = false;
         $scope.itemFilter = { is_active: true };
-        
-        // console.log($scope.itemFilter);
       } else {
         $scope.VTCisChecked = true;
         $scope.itemFilter = {Volunteer_Technical_Community: true};
-        
-        // console.log($scope.itemFilter);
       }
     };
-
-    // // REINSTATE AFTER API HAS BEEN UPDATED FOR VTC FILTER
-    // /* handling checkboxy on/off filters and display */
-    // $scope.VTC = function(){
-    //   if($scope.query.Volunteer_Technical_Community == false){
-    //     delete($scope.query.Volunteer_Technical_Community);
-    //   }
-    //   $scope.search();
-    // };
 
     //Checkbox selection syncing with query
     $scope.isActivated = function (item, list, filter) {
@@ -100,90 +80,25 @@
       } 
     };
 
-    /*
-    * Add the selection behavior to the element, it adds/removes the 'active' class
-    * and pushes/removes the value of the element from the query object
-    */
-    $scope.multiple_choice_listener = function($event){
+    /// here lie query methods
+    // add, remove, checkbox( aka, toggle), and clear
+    
+    $scope.addQuery = queryService.addQuery.bind($scope);
+    $scope.removeQuery = queryService.removeQuery.bind($scope);
+
+    $scope.checkboxQuery = function($event){
       var element = $($event.target);
-      var query_entry = [];
-      var data_filter = element.attr('data-filter');
+      var filter = element.attr('data-filter');
       var value = element.attr('data-value');
 
-      // If the query object has the record then grab it
-      if ($scope.query.hasOwnProperty(data_filter)){
-
-        // When in the location are passed two filters of the same
-        // type then they are put in an array otherwise is a single string
-        if ($scope.query[data_filter] instanceof Array){
-          query_entry = $scope.query[data_filter];
-        }else{
-          query_entry.push($scope.query[data_filter]);
-        }
-      }
-
-      if (query_entry.indexOf(value) == -1){
-        query_entry.push(value);
-      } else {
-         query_entry.splice(query_entry.indexOf(value), 1);
-      }
-        
-      //save back the new query entry to the scope query
-      $scope.query[data_filter] = query_entry;
-
-      //if the entry is empty then delete the property from the query
-      if(query_entry.length == 0){
-        delete($scope.query[data_filter]);
-      }
-
-      $scope.search();
+      queryService.toggleQuery.apply($scope, [filter, value]);
     };
-
-    /* functionality for tagging and queries */     
-    $scope.add_query = function(filter, value) {
-      var query_entry = [];
-      if ($scope.query.hasOwnProperty(filter)) {
-        //if theres a list of items, grab them. otherwise, add the only value to empty list
-        if ($scope.query[filter] instanceof Array) {
-          query_entry = $scope.query[filter];
-        } else {
-          query_entry.push($scope.query[filter]);
-        }
-        // Only add it if this value doesn't already exist
-        // Apparently this doesn't exactly work...
-        if ($scope.query[filter].indexOf(value) == -1) {
-          query_entry.push(value);
-        }
-      } else {
-        query_entry = [value];
-      }
-      $scope.query[filter] = query_entry;
-      $scope.search();
-    };
-
-    $scope.remove_query = function (filter, value) {
-      var query_entry = [];
-      // First check if this even exists to remove
-      if ($scope.query.hasOwnProperty(filter)) {
-        // Grab the current query
-        if ($scope.query[filter] instanceof Array) {
-          query_entry = $scope.query[filter];
-        } else {
-          query_entry.push($scope.query[filter]);
-        }
-        // Remove this value
-        query_entry.splice(query_entry.indexOf(value), 1);
-        // Update and run the query
-        $scope.query[filter] = query_entry;
-        query_api($scope.query);
-      }
-    };
-
+    
     $scope.clear = function(filter){
       delete($scope.query[filter]);
       $scope.search();
     };
-
+    //////////////
     /* ORDERING */
     //set default order methods for content and storyteller
     $scope.orderMethodContent = '-popular_count';

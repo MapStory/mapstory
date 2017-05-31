@@ -44,8 +44,8 @@
                         <md-content class="md-padding" layout="column">
                           <md-chips ng-model="cit.cityChips" 
                               md-autocomplete-snap 
-                              md-on-add="add_query('city__icontains', $chip.city)"
-                              md-on-remove="remove_query('city__icontains', $chip.city)"
+                              md-on-add="addQuery('city__icontains', $chip.city)"
+                              md-on-remove="removeQuery('city__icontains', $chip.city)"
                               md-transform-chip="cit.cities.newChip($chip)">
                             <md-autocomplete
                                 ng-hide="cit.disabled"
@@ -80,8 +80,8 @@
                                           md-autocomplete-snap
                                           md-max-chips="1"
                                           md-require-match="true"
-                                          md-on-add="add_query('country', $chip.code)"
-                                          md-on-remove="remove_query('country', $chip.code)">
+                                          md-on-add="addQuery('country', $chip.code)"
+                                          md-on-remove="removeQuery('country', $chip.code)">
                                     <md-autocomplete
                                           ng-hide="reg.disabled"
                                           md-selected-item="selectedItem"
@@ -118,8 +118,8 @@
                         <md-content class="md-padding" layout="column">
                             <md-chips ng-model="int.chips" 
                                 md-autocomplete-snap 
-                                md-on-add="add_query('interest_list', $chip.slug)"
-                                md-on-remove="remove_query('interest_list', $chip.slug)"
+                                md-on-add="addQuery('interest_list', $chip.slug)"
+                                md-on-remove="removeQuery('interest_list', $chip.slug)"
                                 md-transform-chip="int.interests.newChip($chip)">
                               <md-autocomplete
                                   ng-hide="int.disabled"

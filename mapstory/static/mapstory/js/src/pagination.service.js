@@ -7,11 +7,9 @@
     .module('mapstory')
     .service('page', page);
   
-  function page() {
+  function page(queryService) {
     return {
       paginate: paginate,
-      resetOffset: resetOffset,
-      roundOffset: roundOffset,
 
       up: up,
       down: down,
@@ -37,7 +35,7 @@
         } else {
           // throw error and reset if offset is greater than total results
           console.log("Offset was higher than total count. Setting offset to 0 and searching again.");
-          resetOffset(scope);
+          queryService.resetOffset(scope);
         }
       }
     };
@@ -64,23 +62,6 @@
 
       view.resultStart = Number(offset) + 1;
       view.resultsShowing =  Number(offset) + Number(cards.length);
-    };
-
-    function resetOffset(scope){
-      // this function resets the offset to 0 and searches again
-      scope.query.offset = 0;
-      scope.search();
-      //TODO: test this to make sure it doesn't overflow the stack
-      // should there be a note in the UI that we reset their value? or just a console log for devs?
-    };
-
-    // roundOffset rounds offset down to nearest multiple of limit
-    // ex: limit: 30, offset: 122 -> sets offset to 120
-    function roundOffset(scope){
-      var round = function(value, roundTo) {
-        return Math.floor(value / roundTo) * roundTo;
-      }
-      return round(scope.query.offset, scope.query.limit); 
     };
 
     function changePage(view, scope){
