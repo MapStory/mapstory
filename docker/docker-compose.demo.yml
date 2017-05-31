@@ -22,6 +22,7 @@ services:
       - docker/env/demo/public_host.env
       - docker/env/demo/geoserver.env
       - docker/env/demo/mapstory.env
+    command: [--collect-static, --init-db, --reindex, --serve]
     secrets:
       - env_db_auth
       - env_email_auth
@@ -29,6 +30,9 @@ services:
       - env_rabbitmq_auth
       - env_slack_auth
       - env_social_auth
+    volumes:
+      - .:/srv/mapstory/
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
     ports:
       - "8000:8000"
 
@@ -44,6 +48,9 @@ services:
       - env_rabbitmq_auth
       - env_slack_auth
       - env_social_auth
+    volumes:
+      - .:/srv/mapstory/
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   geoserver:
     env_file:
@@ -58,9 +65,15 @@ services:
   nginx:
     env_file:
       - docker/env/demo/public_host.env
+    volumes:
+      - .:/srv/mapstory/ # mapstory_static has symlinks to this
+      - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
     secrets:
       - ssl_cert
       - ssl_key
+
+volumes:
+  site-packages:
 
 secrets:
   ssl_cert:
