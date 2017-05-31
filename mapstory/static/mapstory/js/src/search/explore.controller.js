@@ -32,8 +32,8 @@
     } 
 
     $scope.search = function() {
-      // we expose offset and limit for manipulation in the url,
-      // validate them for error cases here
+      // we expose offset and limit for manipulation in the browser url,
+      // validate them for error cases here (not needed when not exposed)
       queryService.validateOffset($scope);
       queryService.validateLimit($scope);
 
@@ -56,21 +56,24 @@
         )
     };
 
-    $scope.clearVTC = function(){
-      $scope.VTCisChecked = false;
-      $scope.filterVTC();
-      $scope.search();
-    };
 
-    $scope.filterVTC = function() {
-      // When VTC check box is clicked, also filter by VTC; when unchecked, reset it
-      if ($scope.VTCisChecked == true) {
-        $scope.VTCisChecked = false;
-        $scope.itemFilter = { is_active: true };
-      } else {
-        $scope.VTCisChecked = true;
-        $scope.itemFilter = {Volunteer_Technical_Community: true};
-      }
+
+    ////////////////////////////
+    /* Here lie Query Methods */
+    // add, remove, checkbox( aka, toggle), and clear
+    // activation of checkboxes on refresh
+    // vtc front end filtering
+    
+    vm.addQuery = queryService.addQuery.bind($scope);
+    vm.removeQuery = queryService.removeQuery.bind($scope);
+
+    vm.checkboxQuery = function($event){
+      var element = $($event.target);
+      var filter = element.attr('data-filter');
+      var value = element.attr('data-value');
+
+      // toggle this filter:value on/off on the query
+      queryService.toggleQuery.apply($scope, [filter, value]);
     };
 
     //Checkbox selection syncing with query
@@ -79,25 +82,32 @@
         return list[filter].indexOf(item) > -1;
       } 
     };
-
-    /// here lie query methods
-    // add, remove, checkbox( aka, toggle), and clear
     
-    $scope.addQuery = queryService.addQuery.bind($scope);
-    $scope.removeQuery = queryService.removeQuery.bind($scope);
-
-    $scope.checkboxQuery = function($event){
-      var element = $($event.target);
-      var filter = element.attr('data-filter');
-      var value = element.attr('data-value');
-
-      queryService.toggleQuery.apply($scope, [filter, value]);
-    };
-    
-    $scope.clear = function(filter){
+    vm.clear = function(filter){
       delete($scope.query[filter]);
       $scope.search();
     };
+
+    // Volunteer Technical Community checkbox is a front-end show/hide filter
+    // The following functions toggle the visibility of the _result_users card
+
+    vm.clearVTC = function(){
+      vm.VTCisChecked = false;
+      vm.filterVTC();
+      $scope.search();
+    };
+
+    vm.filterVTC = function() {
+      // When VTC check box is clicked, also filter by VTC; when unchecked, reset it
+      if (vm.VTCisChecked == true) {
+        vm.VTCisChecked = false;
+        $scope.itemFilter = { is_active: true };
+      } else {
+        vm.VTCisChecked = true;
+        $scope.itemFilter = {Volunteer_Technical_Community: true};
+      }
+    };
+
     //////////////
     /* ORDERING */
     //set default order methods for content and storyteller
@@ -119,9 +129,9 @@
           {name: 'Username A-Z', filter: 'username'}
         ]
     };
-
-    /* USER VS CONTENT EXPLORE SETTINGS
-    Persisting content and storyteller view & queries through page refresh */
+    /////////////////////
+    /* USER VS CONTENT */
+    // Persisting content and storyteller view & queries through page refresh 
 
     // Make the content one active, user inactive
     $scope.defaultOwners = function() {

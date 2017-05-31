@@ -4,7 +4,7 @@
 {% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
-<div ng-controller="exploreController as exp">
+<div ng-controller="exploreController as explore">
     <nav class="explore-tabs col-sm-offset-3">
         <ul>
           <li ng-click="defaultContent();" ng-class="{active: query.content}">Content</li>
@@ -16,13 +16,13 @@
             {% include 'search/_content_sidebar.html' %}
 
             {% comment %} Content results {% endcomment %}
-             <div ng-hide="exp.resultsShowing" class="col-sm-9">
+             <div ng-hide="explore.resultsShowing" class="col-sm-9">
                  No stories or layers matched your selections. Please adjust or clear your filters.
              </div>
              {% verbatim %}
-            <div ng-if="exp.resultsShowing" class="col-sm-9">
+            <div ng-if="explore.resultsShowing" class="col-sm-9">
                 <div class="showing-results">
-                    Showing {{exp.resultStart}}-{{exp.resultsShowing}} of {{exp.resultCount}} results
+                    Showing {{explore.resultStart}}-{{explore.resultsShowing}} of {{explore.resultCount}} results
                 </div>
                 <div class="sort-by">
                 
@@ -54,17 +54,16 @@
         <div ng-if="query.storyteller">
             {% include 'search/_users_sidebar.html' %}
 
-            {% comment %} StoryTeller results {% endcomment %}
-            <div ng-hide="exp.resultsShowing" class="col-sm-9">
+            {# StoryTeller results #}
+            <div ng-hide="explore.resultsShowing" class="col-sm-9">
                  No StoryTellers matched your selections. Please adjust or clear your filters.
              </div>
                 {% verbatim %}
-                  <div ng-if="exp.resultsShowing" class="col-sm-9">
+                  <div ng-if="explore.resultsShowing" class="col-sm-9">
                 <div class="showing-results">
-                    Showing {{exp.resultStart}}-{{exp.resultsShowing}} of {{exp.resultCount}} results
+                    Showing {{explore.resultStart}}-{{explore.resultsShowing}} of {{explore.resultCount}} results
                 </div>
                 <div class="sort-by">
-             
                     <md-input-container class="md-block" flex-gt-md>
                         <label>Sort by</label>
                         <md-select ng-model="orderMethodStoryteller">
@@ -80,12 +79,12 @@
                 </div>
 
             </div>
-            {% comment %} End StoryTeller results {% endcomment %}
         </div>
+        {# shared pagination between storyteller and content results #}
         {% verbatim %}
-        <div ng-if="exp.resultsShowing" class="pull-right">
+        <div ng-if="explore.resultsShowing" class="pull-right">
             <a href><i ng-click="pageDown()" class="fa fa-chevron-left"></i></a>
-                page {{exp.thisPage}} of {{exp.pages}}
+                page {{explore.thisPage}} of {{explore.pages}}
             <a href><i ng-click="pageUp()" class="fa fa-chevron-right"></i></a>
         </div>
         {% endverbatim %}
