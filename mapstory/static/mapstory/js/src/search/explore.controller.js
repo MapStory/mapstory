@@ -59,7 +59,7 @@
 
 
     ////////////////////////////
-    /* Here lie Query Methods */
+    /*  Query Methods */
     // add, remove, checkbox( aka, toggle), and clear
     // activation of checkboxes on refresh
     // vtc front end filtering
@@ -93,18 +93,16 @@
 
     vm.clearVTC = function(){
       vm.VTCisChecked = false;
-      vm.filterVTC();
+      $scope.itemFilter = { is_active: true };
       $scope.search();
     };
 
     vm.filterVTC = function() {
       // When VTC check box is clicked, also filter by VTC; when unchecked, reset it
-      if (vm.VTCisChecked == true) {
-        vm.VTCisChecked = false;
-        $scope.itemFilter = { is_active: true };
+      if (vm.VTCisChecked) {
+        $scope.itemFilter = {Volunteer_Technical_Community: true}; 
       } else {
-        vm.VTCisChecked = true;
-        $scope.itemFilter = {Volunteer_Technical_Community: true};
+        $scope.itemFilter = { is_active: true };  
       }
     };
 
