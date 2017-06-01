@@ -16,13 +16,13 @@
             {% include 'search/_content_sidebar.html' %}
 
             {% comment %} Content results {% endcomment %}
-             <div ng-hide="explore.resultsShowing" class="col-sm-9">
+             <div ng-hide="explore.totalCount" class="col-sm-9">
                  No stories or layers matched your selections. Please adjust or clear your filters.
              </div>
              {% verbatim %}
-            <div ng-if="explore.resultsShowing" class="col-sm-9">
+            <div ng-if="explore.totalCount" class="col-sm-9">
                 <div class="showing-results">
-                    Showing {{explore.resultStart}}-{{explore.resultsShowing}} of {{explore.resultCount}} results
+                    Showing {{explore.startIndex}}-{{explore.endIndex}} of {{explore.totalCount}} results
                 </div>
                 <div class="sort-by">
                 
@@ -55,13 +55,13 @@
             {% include 'search/_users_sidebar.html' %}
 
             {# StoryTeller results #}
-            <div ng-hide="explore.resultsShowing" class="col-sm-9">
+            <div ng-hide="explore.totalCount" class="col-sm-9">
                  No StoryTellers matched your selections. Please adjust or clear your filters.
              </div>
                 {% verbatim %}
-                  <div ng-if="explore.resultsShowing" class="col-sm-9">
+                  <div ng-if="explore.totalCount" class="col-sm-9">
                 <div class="showing-results">
-                    Showing {{explore.resultStart}}-{{explore.resultsShowing}} of {{explore.resultCount}} results
+                    Showing {{explore.startIndex}}-{{explore.endIndex}} of {{explore.totalCount}} results
                 </div>
                 <div class="sort-by">
                     <md-input-container class="md-block" flex-gt-md>
@@ -82,9 +82,9 @@
         </div>
         {# shared pagination between storyteller and content results #}
         {% verbatim %}
-        <div ng-if="explore.resultsShowing" class="pull-right">
+        <div ng-if="explore.totalCount" class="pull-right">
             <a href><i ng-click="pageDown()" class="fa fa-chevron-left"></i></a>
-                page {{explore.thisPage}} of {{explore.pages}}
+                page {{explore.currentPage}} of {{explore.numPages}}
             <a href><i ng-click="pageUp()" class="fa fa-chevron-right"></i></a>
         </div>
         {% endverbatim %}

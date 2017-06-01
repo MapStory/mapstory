@@ -3,13 +3,13 @@
 
 <div id="layers_list" class="tab-pane"
     ng-controller="layersController as layer">
-    <div class="no-content" ng-hide="layer.cards.length > 0">
+    <div class="no-content" ng-hide="layer.totalCount">
         <h2>{% trans "No Layers" %}.</h2>
     </div>
     {% verbatim %}
-     <div ng-show="layer.cards.length > 0">
+     <div ng-show="layer.totalCount">
         <div class="pull-right">
-            Showing {{layer.resultStart}}-{{layer.resultsShowing}} of {{layer.resultCount}} results
+            Showing {{layer.startIndex}}-{{layer.endIndex}} of {{layer.totalCount}} results
         </div>
         <div class="clearfix content-results">
             <ul>
@@ -21,7 +21,7 @@
         {% verbatim %}
         <div class="pull-right">
             <a href><i ng-click="layer.pageDown()" class="fa fa-chevron-left"></i></a>
-                page {{layer.thisPage}} of {{layer.pages}}
+                page {{layer.currentPage}} of {{layer.numPages}}
             <a href><i ng-click="layer.pageUp()" class="fa fa-chevron-right"></i></a>
         </div>
         {% endverbatim %}

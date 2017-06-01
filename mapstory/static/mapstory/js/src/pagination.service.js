@@ -30,7 +30,7 @@
       } else {
         // do the django paginator logic on the front end
         if(scope.query.offset === 0 || scope.query.offset < meta.total_count) {
-          view.resultCount = meta.total_count;
+          view.totalCount = meta.total_count;
           manualPaginate(view, scope);
         } else {
           // throw error and reset if offset is greater than total results
@@ -42,12 +42,12 @@
 
     // given an api response and a controller view, this sets pagination and 'showing' values
     function apiPaginate(response, view){
-      view.resultCount = response.data.meta.total_count;
-      view.thisPage = response.data.meta.current_page;
-      view.pages = response.data.meta.num_pages;
+      view.totalCount = response.data.meta.total_count;
+      view.currentPage = response.data.meta.current_page;
+      view.numPages = response.data.meta.num_pages;
 
-      view.resultStart = response.data.meta.start_index;
-      view.resultsShowing = response.data.meta.end_index;
+      view.startIndex = response.data.meta.start_index;
+      view.endIndex = response.data.meta.end_index;
     };
 
     // given an api response that doesn't use django paginator, this sets pagination values
@@ -57,16 +57,16 @@
       var offset = scope.query.offset;
       var cards = scope.cards || view.cards;
       
-      view.thisPage = Math.ceil(offset / limit) + 1;
-      view.pages = Math.ceil(view.resultCount / limit);
+      view.currentPage = Math.ceil(offset / limit) + 1;
+      view.numPages = Math.ceil(view.totalCount / limit);
 
-      view.resultStart = Number(offset) + 1;
-      view.resultsShowing =  Number(offset) + Number(cards.length);
+      view.startIndex = Number(offset) + 1;
+      view.endIndex =  Number(offset) + Number(cards.length);
     };
 
     function changePage(view, scope){
       var limit = scope.query.limit;
-      var page = view.thisPage - 1; //stepback to a 0 index
+      var page = view.currentPage - 1; //stepback to a 0 index
 
       var nextOffset = limit * page; 
       // next offset will be a multiple of the current limit
@@ -81,8 +81,8 @@
 
     function up(view, scope){
       return function(){
-        if(view.thisPage < view.pages){
-          view.thisPage += 1;
+        if(view.currentPage < view.numPages){
+          view.currentPage += 1;
           changePage(view, scope);
         }
       }
@@ -90,8 +90,8 @@
 
     function down(view, scope){
       return function(){
-        if(view.thisPage > 1){
-          view.thisPage -= 1;
+        if(view.currentPage > 1){
+          view.currentPage -= 1;
           changePage(view, scope);
         }
       }

@@ -3,13 +3,13 @@
 <div id="stories_list" class="tab-pane active" 
     ng-controller="storiesController as story">
     
-    <div class="no-content" ng-hide="story.cards.length > 0">
+    <div class="no-content" ng-hide="story.totalCount">
         <h2>No MapStories.</h2>
     </div>
     {% verbatim %}
-    <div ng-show="story.cards.length > 0">
+    <div ng-show="story.totalCount">
         <div class="pull-right">
-            Showing {{story.resultStart}}-{{story.resultsShowing}} of {{story.resultCount}} results
+            Showing {{story.startIndex}}-{{story.endIndex}} of {{story.totalCount}} results
         </div>
         <div class="clearfix content-results">  
             <ul>
@@ -22,7 +22,7 @@
         {% verbatim %}
         <div class="pull-right">
             <a href><i ng-click="story.pageDown()" class="fa fa-chevron-left"></i></a>
-                page {{story.thisPage}} of {{story.pages}}
+                page {{story.currentPage}} of {{story.numPages}}
             <a href><i ng-click="story.pageUp()" class="fa fa-chevron-right"></i></a>
         </div>
         {% endverbatim %}
