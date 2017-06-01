@@ -98,6 +98,9 @@
             if (feature) {
                 var overlays = self.storyMap.getMap().getOverlays().getArray();
                 var popup = null;
+                var titleDescrip = '<div style="text-align:center;"><h4>' +
+                                   feature.get('title') + '</h4></div><hr>' +
+                                   feature.get('content');
                 var geometry = feature.getGeometry();
                 var coord = geometry.getCoordinates();
                 for (var iOverlay = 0; iOverlay < overlays.length; iOverlay += 1) {
@@ -122,11 +125,11 @@
                 popup.setPosition(coord);
                 if (feature.get('media')) {
                   mediaService.getEmbedContent(feature.get('media'), embed_params).then(function(result) {
-                    var cont = result ? feature.get('content') + result : feature.get('content');
+                    var cont = result ? titleDescrip + result : titleDescrip;
                     popup.show(coord, cont);
                   });
                 } else {
-                  popup.show(coord, feature.get('content'));
+                  popup.show(coord, titleDescrip);
                 }
             }
         };
