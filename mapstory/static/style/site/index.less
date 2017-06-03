@@ -1,5 +1,4 @@
 /*--- Index ---*/
-
 .parallax {
   div {
     background-size: 101% auto;
@@ -108,3 +107,253 @@
 .slick-slide{
   height: auto;
 }
+
+// HOMEPAGE
+@import "../stylesheets/normalize.css";
+@import "../stylesheets/_less-neat.css";
+
+.homepage-wrapper {
+
+  // Vars
+  @font: 'Lato', sans-serif;
+  @debugBorder: 1px dotted gray;
+  @h1_font_size: 42px;
+  @h1_color: #424242;
+
+  @p_font_size: 22px;
+  @p_font_color: #606060;
+
+  @button_bg_color: #da4627;
+  @button_font_size: 18px;
+  @button_padding: 10px 24px;
+  @button_font: 'Lato', sans-serif;
+
+  // Functions
+  .radius(@radius) {
+    -webkit-border-radius: @radius; // Chrome, Safari
+    -moz-border-radius: @radius;	// Firefox
+    -o-border-radius: @radius;		// Opera
+    -ms-border-radius: @radius;		// IE
+    border-radius: @radius;
+  }
+
+  .mapstory_font(@size) {
+    font-family: @font;
+    font-size: @size;
+  }
+
+  .debug() {
+    border: @debugBorder;
+  }
+
+  .debug_sections() {
+    border: 1px dotted red;
+  }
+
+  .div() {
+    display: block;
+    box-sizing: border-box;
+    overflow: auto;
+  }
+
+  .button_base {
+    display: inline-block;
+    border-radius: 6px;
+    text-align: center;
+    font-size: @button_font_size;
+    padding: @button_padding;
+    width: 200px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+    font-family: @button_font;
+  }
+
+  .button_style_1 {
+    .button_base;
+    background-color: @button_bg_color;
+    color: #FFFFFF;
+    border: none;
+  }
+
+  .button_style_2 {
+    .button_base;
+    background-color: transparent;
+    color: @button_bg_color;
+    border: solid;
+    border-color: @button_bg_color;
+  }
+
+  .image-content {
+    float: left;
+    width: 40%;
+    .div();
+  }
+
+  .text-content {
+    float: left;
+    width: 60%;
+    .div();
+    padding-top: 100px;
+  }
+
+
+  // Globals
+  section {
+    // Some debugging
+    .debug_sections();
+    //border: none;
+    div {
+      //.debug();
+      .div();
+    }
+
+    h1{
+      text-align: center;
+      .mapstory_font(@h1_font_size);
+      color: @h1_color;
+    }
+
+    p {
+      .mapstory_font(@p_font_size);
+      color:@p_font_color;
+    }
+
+  }
+
+
+  // Section Overrides
+  .map-section {
+    text-align: center;
+    background-image: url("img/hero_img_fallback.png");
+    background-size: cover;
+    height: 400px;
+    overflow: auto;
+
+    .hero-container {
+      .span-columns(5);
+      padding-top: 3em;
+      padding-left: 3em;
+    }
+  }
+
+  .story_rounded_box {
+    -webkit-box-shadow: 0 2px 1px 0 rgba(0,0,0,0.15);
+    -moz-box-shadow: 0 2px 1px 0 rgba(0,0,0,0.15);
+    box-shadow: 0 2px 1px 0 rgba(0,0,0,0.15);
+    border: 1px solid #e8e8e8;
+    .radius(8px);
+  }
+
+
+  // Featured section
+  .featured-section {
+    background-color: #F9F9F9;
+    padding-bottom: 20px;
+    .featured-container {
+      .outer-container();
+    }
+
+    .card_row {
+      .span-columns(12);
+      padding:20px;
+
+      .card {
+        background-color: #ffffff;
+
+        .story_rounded_box;
+
+        float: left;
+        padding: 10px;
+        .span-columns(6);
+
+        .img-container {
+          float: left;
+          box-shadow: 0 2px 1px 0 rgba(0,0,0,0.15);
+          width: 40%;
+        }
+
+        .card-container {
+          padding-left: 10px;
+          p { margin:0 }
+
+          .card-category {
+            .mapstory_font(12px);
+            font-weight: 400;
+            color: #6d6d6d;
+            letter-spacing: 1px;
+          }
+
+          .card-title {
+            .mapstory_font(16px);
+            font-weight: 900;
+            color: #333333;
+          }
+          .card-author {
+            .mapstory_font(16px);
+            color: #0c9fc0;
+            font-weight: 700;
+          }
+          .card-meta {
+            .mapstory_font(12px);
+            color: #8e8e8e;
+          }
+        }
+      }
+    }
+  }
+
+
+  // How section
+  .how-section {
+    background-color: #E5E0D9;
+    text-align: center;
+
+    .box-container {
+      .outer-container();
+
+      .how-box {
+        float: left;
+        .span-columns(4);
+      }
+    }
+  }
+
+  // Contribute section
+  .contribute-section {
+    background-color: #F9F9F9;
+    text-align: center;
+  }
+
+
+  // Share section
+  .share-section {
+
+  }
+
+
+  // Bring to life section
+  .to-life-section {
+
+  }
+
+
+  // More section
+  .more-section {
+
+  }
+
+
+  // Sponsor section
+  .sponsor-section {
+    .sponsor_container {
+
+    }
+    .sponsor_text {
+
+    }
+  }
+
+}
+
+
