@@ -10,13 +10,13 @@
 {% block middle %}
 <div class="homepage-wrapper">
     <!--MAP-->
-    <section class="map-section">
+    <section class="map-section" style="background-image: url('{{ STATIC_URL }}/mapstory/img/hero_img_fallback.png');">
         <div class="hero-container">
-            <h1>The atlas of change that everyone can edit</h1>
-            <p>Working together, we're mapping the world as it evolves geographically,
-                at local, regional and global scales. Join us!</p>
+            <h1><b>The atlas of change that everyone can edit</b></h1>
+            <p><b>Working together, we're mapping the world as it evolves geographically,
+                at local, regional and global scales. Join us!</b></p>
             <div class="main_call_to_action_button">
-                <button class="button_style_1" style="vertical-align:middle"><span>SIGN UP </span></button>
+                <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
             </div>
         </div>
 
@@ -24,11 +24,11 @@
     <!--FEATURED-->
     <section class="featured-section">
         <div class="featured-container">
-            <h1>Featured MapStories from Across the Community</h1>
+            <h1><b>Featured MapStories from Across the Community</b></h1>
             <div class="card_row">
                 <div class="card">
                     <div class="img-container">
-                        <img src="img/story01.png" style="width:100%" align="left">
+                        <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">NATURE & ENVIRONMENT</p>
@@ -40,7 +40,7 @@
                 </div>
                 <div class="card">
                     <div class="img-container">
-                        <img src="img/story01.png" style="width:100%" align="left">
+                        <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">GEOPOLITICS</p>
@@ -54,7 +54,7 @@
             <div class="card_row">
                 <div class="card">
                     <div class="img-container">
-                        <img src="img/story01.png" style="width:100%" align="left">
+                        <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">GEOPOLITICS</p>
@@ -67,7 +67,7 @@
                 </div>
                 <div class="card">
                     <div class="img-container">
-                        <img src="img/story01.png" style="width:100%" align="left">
+                        <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">NATURE & ENVIRONMENT</p>
@@ -81,7 +81,7 @@
             <div class="card_row">
                 <div class="card">
                     <div class="img-container">
-                        <img src="img/story01.png" style="width:100%" align="left">
+                        <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">CRISIS</p>
@@ -93,7 +93,7 @@
                 </div>
                 <div class="card">
                     <div class="img-container">
-                        <img src="img/story01.png" style="width:100%" align="left">
+                        <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">NATURE & ENVIRONMENT</p>
@@ -105,18 +105,18 @@
                 </div>
             </div>
             <div class="call_to_action_button">
-                <button class="button_style_2" style="vertical-align:middle"><span>SEE MORE </span></button>
+                <button class="button button-style-2" style="vertical-align:middle"><span>SEE MORE </span></button>
             </div>
         </div>
     </section>
     <!--HOW-->
     <section class="how-section">
         <div>
-            <h1>How It Works</h1>
+            <h1><b>How It Works</b></h1>
             <div class="box-container">
                 <div class="how-box">
                     <!--<object data="img/icon_upload.svg" type="image/svg+xml" width="100" height="100">-->
-                    <img src="img/icon_upload.png" width="100" height="100" />
+                    <img src="{{ STATIC_URL }}mapstory/img/icon_upload.png" width="100" height="100" />
                     <!--</object>-->
                     <h4><b>Upload StoryLayers</b></h4>
                     <p>Upload datasets as StoryLayers or, if you don't have data to upload,
@@ -124,7 +124,7 @@
                 </div>
                 <div class="how-box">
                     <!--<object data="img/icon_edit.svg" type="image/svg+xml" width="100" height="100">-->
-                    <img src="img/icon_edit.png" width="100" height="100" />
+                    <img src="{{ STATIC_URL }}mapstory/img/icon_edit.png" width="100" height="100" />
                     <!--</object>-->
                     <h4><b>Edit StoryLayers</b></h4>
                     <p>Edit StoryLayers shared by the community to make them as
@@ -132,7 +132,7 @@
                 </div>
                 <div class="how-box">
                     <!--<object data="img/icon_compose.svg" type="image/svg+xml" width="100" height="100">-->
-                    <img src="img/icon_compose.png" width="100" height="100" />
+                    <img src="{{ STATIC_URL }}mapstory/img/icon_compose.png" width="100" height="100" />
                     <!--</object>-->
                     <h4><b>Compose MapStories</b></h4>
                     <p>Compose MapStories by combining StoryLayers with text, images and video and
@@ -140,87 +140,93 @@
                 </div>
             </div>
             <div class="call_to_action_button">
-                <button class="button_style_1" style="vertical-align:middle"><span>SIGN UP </span></button>
+                <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
             </div>
         </div>
     </section>
     <!--CONTRIBUTE-->
     <section class="contribute-section">
-        <div>
+        <div class="section-wrapper">
             <div class="image-content">
-                <img src="img/global_data_commons.png" class="img-circle" width="500" height="500">
+                <img src="{{ STATIC_URL }}mapstory/img/global_data_commons.png" class="img-circle">
             </div>
             <div class="text-content">
-                <h1>Contribute to the global data commons</h1>
+                <h1><b>Contribute to the global data commons</b></h1>
                 <p>Put your data in a place where it can live accessible to all, in perpetuity, without
                     being subject to commercial influence</p>
                 <div class="call_to_action_button">
-                    <button class="button_style_2" style="vertical-align:middle"><span>LEARN MORE </span></button>
+                    <button class="button button-style-2" style="vertical-align:middle"><span>LEARN MORE </span></button>
                 </div>
             </div>
         </div>
-
     </section>
     <!--SHARE-->
     <section class="share-section">
         <div>
             <div class="text-content">
-                <h1>Share your expertise through edits</h1>
+                <h1><b>Share your expertise through edits</b></h1>
                 <p>Curate the accuracy and quality of StoryTellers by adding ratings,
                     checking metadata, making comments and commiting version edits.</p>
                 <div class="call_to_action_button">
-                    <button class="button_style_2" style="vertical-align:middle"><span>LEARN MORE </span></button>
+                    <button class="button button-style-2" style="vertical-align:middle"><span>LEARN MORE </span></button>
                 </div>
             </div>
             <div class="image-content">
-                <img src="img/expertise_through_edits.png" width="400" height="400"/>
+                <img src="{{ STATIC_URL }}mapstory/img/expertise_through_edits.png" />
             </div>
         </div>
     </section>
+
     <!--LIFE-->
     <section class="to-life-section">
         <div>
-            <img src="img/map_small_fallback.png" />
-        </div>
-        <div>
-            <h1>Bring your story to life</h1>
-            <p>Combine StoryLayers with narrative elements like images, text and video
-                to compose MapStories that explain how and why change occurs. No coding required.</p>
-            <div class="call_to_action_button">
-                <button class="button_style_2" style="vertical-align:middle"><span>LEARN MORE </span></button>
+            <div class="image-content">
+                <img src="{{ STATIC_URL }}mapstory/img/map_small_fallback.png" />
+            </div>
+            <div class="text-content">
+                <h1><b>Bring your story to life</b></h1>
+                <p>Combine StoryLayers with narrative elements like images, text and video
+                    to compose MapStories that explain how and why change occurs. No coding required.</p>
+                <div class="call_to_action_button">
+                    <button class="button button-style-2" style="vertical-align:middle"><span>LEARN MORE </span></button>
+                </div>
             </div>
         </div>
     </section>
     <!--MORE-->
     <section class="more-section">
-        <p>The more we all know about the story of our planet, the more likey
-            we are to treat it, and each other well. Sign up, and become a mapstoryteller today.</p>
-        <div class="call_to_action_button">
-            <button class="button_style_1" style="vertical-align:middle"><span>SIGN UP </span></button>
+        <div>
+            <p><b>The more we all know about the story of our planet, the more likey
+                we are to treat it, and each other well. Sign up, and become a mapstoryteller today.</b></p>
+            <div class="call_to_action_button">
+                <button class="button button-style-2" style="vertical-align:middle"><span>SIGN UP </span></button>
+            </div>
         </div>
     </section>
     <!--SPONSORS-->
     <section class="sponsor-section">
-        <div class="sponsor_container">
-            <div>
-                <img src="img/sponsor_asu.png" width="120" height="80" />
-                <img src="img/sponsor_dcpl.png" width="80" height="80" />
-            </div>
+        <div>
+            <div class="sponsor_container image-content">
+                <div>
+                    <img src="{{ STATIC_URL }}mapstory/img/sponsor_asu.png" width="120" height="80" />
+                    <img src="{{ STATIC_URL }}mapstory/img/sponsor_dcpl.png" width="80" height="80" />
+                </div>
 
-            <div>
-                <img src="img/sponsor_erdc.jpg" width="80" height="80" />
-                <img src="img/sponsor_spatial.png" width="120" height="80" />
+                <div>
+                    <img src="{{ STATIC_URL }}mapstory/img/sponsor_erdc.jpg" width="80" height="80" />
+                    <img src="{{ STATIC_URL }}mapstory/img/sponsor_spatial.png" width="120" height="80" />
+                </div>
+                <div>
+                    <img src="{{ STATIC_URL }}mapstory/img/sponsor_sunlight.png" width="120" height="80" />
+                </div>
             </div>
-            <div>
-                <img src="img/sponsor_sunlight.png" width="120" height="80" />
-            </div>
-        </div>
-        <div class="sponsor_text">
-            <h1>Help us keep improving.</h1>
-            <p>We're a community, not a company. Help us keep improving by making a donation,
-                or sign your organization up as a Sponsor.</p>
-            <div class="call_to_action_button">
-                <button class="button_style_1" style="vertical-align:middle"><span>DONATE </span></button>
+            <div class="sponsor_text text-content">
+                <h1><b>Help us keep improving.</b></h1>
+                <p>We're a community, not a company. Help us keep improving by making a donation,
+                    or sign your organization up as a Sponsor.</p>
+                <div class="call_to_action_button">
+                    <button class="button button-style-1" style="vertical-align:middle"><span>DONATE </span></button>
+                </div>
             </div>
         </div>
     </section>
