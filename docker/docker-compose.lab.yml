@@ -33,6 +33,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=password
       - RABBITMQ_DEFAULT_VHOST=mapstory
     ports:
+      - "15671:15671"
       - "15672:15672"
 
   django:

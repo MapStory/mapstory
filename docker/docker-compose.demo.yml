@@ -15,6 +15,7 @@ services:
     secrets:
       - env_rabbitmq_auth
     ports:
+      - "15671:15671"
       - "15672:15672"
 
   django:
