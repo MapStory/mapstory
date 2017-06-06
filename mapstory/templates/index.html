@@ -11,6 +11,12 @@
 <div class="homepage-wrapper">
     <!--MAP-->
     <section class="map-section" style="background-image: url('{{ STATIC_URL }}/mapstory/img/hero_img_fallback.png');">
+        <div>
+        <video class="video" autoplay="autoplay" loop="loop" muted="" width="100%">
+            <source src='{{ STATIC_URL }}/mapstory/img/demo.mp4' type="video/mp4" />
+        </video>
+        <div class="hero-circle">
+        </div>
         <div class="hero-container">
             <h1><b>The atlas of change that everyone can edit</b></h1>
             <p><b>Working together, we're mapping the world as it evolves geographically,
@@ -19,9 +25,7 @@
                 <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
             </div>
         </div>
-        <video class="video" autoplay="autoplay" loop="loop" muted="" width="100%">
-            <source src='{{ STATIC_URL }}/mapstory/img/demo.mp4' type="video/mp4" />
-        </video>
+        </div>
     </section>
     <!--FEATURED-->
     <section class="featured-section">
