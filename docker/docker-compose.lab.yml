@@ -45,8 +45,7 @@ services:
       - docker/env/lab/mapstory.env
       - docker/env/lab/db_auth.env
     volumes:
-      - /Users/tb/Repos/mapstory:/srv/mapstory:rw
-      - /Users/tb/Repos/mapstory/cover:/srv/mapstory/cover:rw
+      - .:/srv/mapstory:rw
       - site-packages:/usr/local/lib/python2.7/site-packages-copy:rw
     ports:
       - "8000:8000"
@@ -60,9 +59,8 @@ services:
       - docker/env/lab/mapstory.env
       - docker/env/lab/db_auth.env
     volumes:
-      - /Users/tb/Repos/mapstory:/srv/mapstory:rw
-      - /Users/tb/Repos/mapstory/cover:/srv/mapstory/cover:rw
-      - site-packages:/usr/local/lib/python2.7/site-packages-copy:rw
+      - .:/srv/mapstory:ro
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy:ro
 
   geoserver:
     build:
@@ -84,7 +82,7 @@ services:
     env_file:
       - docker/env/lab/public_host.env
     volumes:
-      - /Users/tb/Repos/mapstory:/srv/mapstory:rw
+      - .:/srv/mapstory:ro
       - site-packages:/usr/local/lib/python2.7/site-packages:ro
     secrets:
       - ssl_cert
