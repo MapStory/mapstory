@@ -44,6 +44,10 @@ services:
       - docker/env/lab/geoserver.env
       - docker/env/lab/mapstory.env
       - docker/env/lab/db_auth.env
+    volumes:
+      - /Users/tb/Repos/mapstory:/srv/mapstory:rw
+      - /Users/tb/Repos/mapstory/cover:/srv/mapstory/cover:rw
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy:rw
     ports:
       - "8000:8000"
 
@@ -56,14 +60,15 @@ services:
       - docker/env/lab/mapstory.env
       - docker/env/lab/db_auth.env
     volumes:
-      - mapstory_media:/var/lib/mapstory/media/
-      - mapstory_static:/var/lib/mapstory/static/
+      - /Users/tb/Repos/mapstory:/srv/mapstory:rw
+      - /Users/tb/Repos/mapstory/cover:/srv/mapstory/cover:rw
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy:rw
 
   geoserver:
     build:
       context: ./docker/geoserver
-      dockerfile: Dockerfile_geogig-1.1rc
-    image: mapstory/geoserver:geogig-1.1rc
+      dockerfile: Dockerfile_2.9-geogig-1.1
+    image: mapstory/geoserver:2.9-geogig-1.1
     links:
       - postgres
     env_file:
@@ -78,12 +83,16 @@ services:
   nginx:
     env_file:
       - docker/env/lab/public_host.env
+    volumes:
+      - /Users/tb/Repos/mapstory:/srv/mapstory:rw
+      - site-packages:/usr/local/lib/python2.7/site-packages:ro
     secrets:
       - ssl_cert
       - ssl_key
 
 volumes:
   postgres:
+  site-packages:
 
 secrets:
   ssl_cert:
