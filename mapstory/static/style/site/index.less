@@ -211,14 +211,12 @@
   }
 
 
-
-
   // Globals
   section {
     // Some debugging
-    .debug_sections();
+    //.debug_sections();
     div {
-      .debug();
+      //.debug();
       .div();
     }
     h1{
@@ -234,13 +232,11 @@
       max-width: 100%;
       max-height: 100%;
     }
-
     .image-content {
       .span-columns(4);
       .div();
       float: left;
     }
-
     .text-content {
       .span-columns(8);
       .div();
@@ -251,11 +247,9 @@
 
   // Section Overrides
   .map-section {
-
     background-size: cover;
     height: 400px;
     overflow: auto;
-
     .hero-container {
       text-align: left;
       .span-columns(5);
@@ -330,8 +324,6 @@
       }
     }
   }
-
-
   // How section
   .how-section {
     background-color: #E5E0D9;
@@ -351,7 +343,6 @@
       }
     }
   }
-
   // Contribute section
   .contribute-section {
     background-color: @section_bg_color;
@@ -364,40 +355,33 @@
       }
     }
   }
-
-
   // Share section
   .share-section {
     background-color: @section_bg_color;
 
   }
-
-
   // Bring to life section
   .to-life-section {
     background-color: @section_bg_color;
 
   }
-
-
   // More section
   .more-section {
     .span-columns(12);
   }
-
-
   // Sponsor section
   .sponsor-section {
-    background-color: #BFB4A3;
+    .sponsor-wrapper {
+      background-color: #BFB4A3;
 
-    .sponsor_container {
+      .sponsor_container {
 
-    }
-    .sponsor_text {
+      }
+      .sponsor_text {
 
+      }
     }
   }
-
 }
 
 
