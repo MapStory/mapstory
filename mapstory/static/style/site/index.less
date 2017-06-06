@@ -211,6 +211,8 @@
   }
 
 
+
+
   // Globals
   section {
     // Some debugging
@@ -232,11 +234,13 @@
       max-width: 100%;
       max-height: 100%;
     }
+
     .image-content {
       .span-columns(4);
       .div();
       float: left;
     }
+
     .text-content {
       .span-columns(8);
       .div();
@@ -247,15 +251,30 @@
 
   // Section Overrides
   .map-section {
+
     background-size: cover;
     height: 400px;
     overflow: auto;
+
+    .video {
+      position: fixed;
+      top: 50%; left: 50%;
+      z-index: 1;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translate(-50%, -50%);
+    }
+
     .hero-container {
       text-align: left;
       .span-columns(5);
       padding-top: 3em;
       padding-left: 3em;
       color: #333333;
+      z-index: 2;
+      position: relative;
     }
   }
 
@@ -324,6 +343,8 @@
       }
     }
   }
+
+
   // How section
   .how-section {
     background-color: #E5E0D9;
@@ -343,6 +364,7 @@
       }
     }
   }
+
   // Contribute section
   .contribute-section {
     background-color: @section_bg_color;
@@ -355,33 +377,43 @@
       }
     }
   }
+
+
   // Share section
   .share-section {
     background-color: @section_bg_color;
 
   }
+
+
   // Bring to life section
   .to-life-section {
     background-color: @section_bg_color;
 
   }
+
+
   // More section
   .more-section {
     .span-columns(12);
   }
+
+
   // Sponsor section
   .sponsor-section {
-    .sponsor-wrapper {
-      background-color: #BFB4A3;
+    background-color: #BFB4A3;
 
-      .sponsor_container {
+    .sponsor_container {
+      text-align: center;
 
-      }
-      .sponsor_text {
+    }
+    .sponsor_text {
 
-      }
     }
   }
+
+
+
 }
 
 
