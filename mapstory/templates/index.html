@@ -12,19 +12,22 @@
     <!--MAP-->
     <section class="map-section" style="background-image: url('{{ STATIC_URL }}/mapstory/img/hero_img_fallback.png');">
         <div>
-        <video class="video" autoplay="autoplay" loop="loop" muted="" width="100%">
-            <source src='{{ STATIC_URL }}/mapstory/img/demo.mp4' type="video/mp4" />
-        </video>
-        <div class="hero-circle">
-        </div>
-        <div class="hero-container">
-            <h1><b>The atlas of change that everyone can edit</b></h1>
-            <p><b>Working together, we're mapping the world as it evolves geographically,
-                at local, regional and global scales. Join us!</b></p>
-            <div class="main_call_to_action_button">
-                <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+        <!--<video class="video" autoplay="autoplay" loop="loop" muted="" width="100%">-->
+            <!--<source src='{{ STATIC_URL }}/mapstory/img/demo.mp4' type="video/mp4" />-->
+        <!--</video>-->
+            <div class="hero-container">
+                <div class="hero-circle">
+                    <div class="hero-content">
+                        <h1><b>The atlas of change that everyone can edit</b></h1>
+                        <p><b>Working together, we're mapping the world as it evolves geographically,
+                            at local, regional and global scales. Join us!</b></p>
+                        <div class="main_call_to_action_button">
+                            <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+
         </div>
     </section>
     <!--FEATURED-->
@@ -33,32 +36,37 @@
             <h1><b>Featured MapStories from Across the Community</b></h1>
             <div class="card_row">
                 <div class="card">
-                    <div class="img-container">
-                        <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
-                    </div>
-                    <div class="card-container">
-                        <p class="card-category">NATURE & ENVIRONMENT</p>
-                        <p class="card-title"><b>Fracking Sites in West Virginia</b></p>
-                        <p class="card-author">Holly Winscott</p>
-                        <p class="card-meta">Created January 13, 2017</p>
-                        <p class="card-meta">2,382 views</p>
-                    </div>
+                    <a href="#">
+                        <div class="img-container">
+                            <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
+                        </div>
+                        <div class="card-container">
+                            <p class="card-category">NATURE & ENVIRONMENT</p>
+                            <p class="card-title"><b>Fracking Sites in West Virginia</b></p>
+                            <a href="#"><p class="card-author">Holly Winscott</p></a>
+                            <p class="card-meta">Created January 13, 2017</p>
+                            <p class="card-meta">2,382 views</p>
+                        </div>
+                    </a>
                 </div>
                 <div class="card">
+                    <a href="#">
                     <div class="img-container">
                         <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">GEOPOLITICS</p>
                         <p class="card-title"><b>United States Civil War</b></p>
-                        <p class="card-author">Jeff Meyer</p>
+                        <a href="#"><p class="card-author">Jeff Meyer</p></a>
                         <p class="card-meta">Created March 17, 2016</p>
                         <p class="card-meta">11,292 views</p>
                     </div>
+                    </a>
                 </div>
             </div>
             <div class="card_row">
                 <div class="card">
+                    <a href="#">
                     <div class="img-container">
                         <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                     </div>
@@ -66,38 +74,44 @@
                         <p class="card-category">GEOPOLITICS</p>
                         <p class="card-title"><b>Evolution of Congressional Districts in North Carolina
                             1789-2012</b></p>
-                        <p class="card-author">Jonathan Davis</p>
+                        <a href="#"><p class="card-author">Jonathan Davis</p></a>
                         <p class="card-meta">Created February 25, 2017</p>
                         <p class="card-meta">4 views</p>
                     </div>
+                    </a>
                 </div>
                 <div class="card">
+                    <a href="#">
                     <div class="img-container">
                         <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">NATURE & ENVIRONMENT</p>
                         <p class="card-title"><b><i>Karenis Brevis</i> in Florida</b></p>
-                        <p class="card-author">Sebastian Forsard</p>
+                        <a href="#"><p class="card-author">Sebastian Forsard</p></a>
                         <p class="card-meta">Created November 27, 2016</p>
                         <p class="card-meta">492 views</p>
                     </div>
+                    </a>
                 </div>
             </div>
             <div class="card_row">
                 <div class="card">
+                    <a href="#">
                     <div class="img-container">
                         <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">CRISIS</p>
                         <p class="card-title"><b>Village Destruction in the Darfur Region</b></p>
-                        <p class="card-author">Everett Lasher</p>
+                        <a href="#"><p class="card-author">Everett Lasher</p></a>
                         <p class="card-meta">Created January 13, 2017</p>
                         <p class="card-meta">2,382 views</p>
                     </div>
+                    </a>
                 </div>
                 <div class="card">
+                    <a href="#">
                     <div class="img-container">
                         <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                     </div>
@@ -108,6 +122,7 @@
                         <p class="card-meta">Created March 17, 2016</p>
                         <p class="card-meta">11,292 views</p>
                     </div>
+                    </a>
                 </div>
             </div>
             <div class="call_to_action_button">
