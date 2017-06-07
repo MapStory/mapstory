@@ -209,12 +209,6 @@
     border: 1px dotted red;
   }
 
-  .div() {
-    display: block;
-    box-sizing: border-box;
-    overflow: auto;
-  }
-
   .button {
     display: inline-block;
     border-radius: 6px;
@@ -270,17 +264,14 @@
     border-color: @button_bg_color;
   }
 
-
-
-
   // Globals
   section {
     // Some debugging
-    //.debug_sections();
+    .debug_sections();
     div {
-      //.debug();
-      .div();
-      overflow: hidden;
+      .debug();
+      display: block;
+      overflow: auto;
     }
     h1{
       text-align: center;
@@ -298,13 +289,11 @@
 
     .image-content {
       .span-columns(4);
-      .div();
       float: left;
     }
 
     .text-content {
       .span-columns(8);
-      .div();
       float: left;
       padding: 20px;
     }
@@ -313,8 +302,7 @@
 
   // Section Overrides
   .map-section {
-
-    background-size: cover;
+    //background-size: cover;
     height: 400px;
     overflow: hidden;
     width: 100%;
@@ -332,26 +320,19 @@
     }
 
     .hero-container {
+      height:100%;
       text-align: left;
-      .span-columns(5);
-      padding-top: 3em;
-      padding-left: 3em;
       color: #333333;
-      z-index: 2;
-      position: relative;
-      top: 0;
-      left: 0;
+      overflow: hidden;
     }
 
     .hero-circle {
       .radius(50%);
       background-color: #ffffff;
-      opacity: 0.75;
-      z-index: 2;
-      position: relative;
-      top: 0;
-      left: 0;
-      shape-outside: circle(50%);
+      width: 500px;
+      height: 500px;
+      line-height: 500px;
+      text-align: center;
     }
   }
 
@@ -378,12 +359,11 @@
 
       .card {
         background-color: #ffffff;
-
         .story_rounded_box;
-
         float: left;
         padding: 10px;
         .span-columns(6);
+        overflow: auto;
 
         .img-container {
           float: left;
@@ -495,12 +475,8 @@
 
     }
     .sponsor_text {
-
     }
   }
-
-
-
 }
 
 
