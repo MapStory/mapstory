@@ -45,12 +45,6 @@
                                 {% endif %}
 
                             {# the remaining 5 tabs are rendered with django logic and values #}     
-                                {% if user == profile %}
-                                <div id="messages_list" class="tab-pane">
-                                    {% include 'people/_inbox.html' %}
-                                </div>
-                                {% endif %}
-
                                 <div id="user_activities" class="tab-pane">
                                     {% include 'people/_activity_feed.html' %}
                                 </div>
