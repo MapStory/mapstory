@@ -96,13 +96,4 @@
 <script>
 // instantiate clipboard for link sharing   
     new Clipboard('.copyclip'); 
-// enable hard linking to tabs
-    var hash = document.location.hash;
-    var prefix = "-";
-    if (hash) {
-        $('.nav-tabs a[href="' + hash.replace(prefix, "") + '"]').tab('show');
-    }
-    $('.nav-tabs a').on('shown', function (e) {
-        window.location.hash = e.target.hash.replace("#", "#" + prefix);
-    });
 </script>
