@@ -60,7 +60,7 @@ services:
       - docker/env/lab/db_auth.env
     volumes:
       - .:/srv/mapstory:ro
-      - site-packages:/usr/local/lib/python2.7/site-packages-copy:ro
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy:rw
 
   geoserver:
     build:

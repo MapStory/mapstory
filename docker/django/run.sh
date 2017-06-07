@@ -60,12 +60,26 @@ for i do # loop over $@
     if [ "$i" = "--collect-static" ]; then
         echo 'Collecting static files'
         rm -rf $STATIC_ROOT/*
+        cd mapstory/static
+        npm install
+        bower install
+        grunt concat
+        grunt less:development
+        grunt copy:development
+        cd ../..
         python manage.py collectstatic --noinput --ignore node_modules
     fi
 
     if [ "$i" = "--collect-static-dev" ]; then
         echo 'Collecting static files for dev deployment'
         rm -rf $STATIC_ROOT/*
+        cd mapstory/static
+        npm install
+        bower install
+        grunt concat
+        grunt less:development
+        grunt copy:development
+        cd ../..
         python manage.py collectstatic --link --noinput --ignore node_modules
     fi
 
