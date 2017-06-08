@@ -12,22 +12,22 @@
     <!--MAP-->
     <section class="map-section" style="background-image: url('{{ STATIC_URL }}/mapstory/img/hero_img_fallback.png');">
         <div>
-        <!--<video class="video" autoplay="autoplay" loop="loop" muted="" width="100%">-->
-            <!--<source src='{{ STATIC_URL }}/mapstory/img/demo.mp4' type="video/mp4" />-->
-        <!--</video>-->
+            <!--<video class="video" autoplay="autoplay" loop="loop" muted="" width="100%">-->
+                <!--<source src='{{ STATIC_URL }}/mapstory/img/demo.mp4' type="video/mp4" />-->
+            <!--</video>-->
             <div class="hero-container">
                 <div class="hero-circle">
-                    <div class="hero-content">
-                        <h1><b>The atlas of change that everyone can edit</b></h1>
-                        <p><b>Working together, we're mapping the world as it evolves geographically,
-                            at local, regional and global scales. Join us!</b></p>
-                        <div class="main_call_to_action_button">
-                            <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
-                        </div>
+
+                </div>
+                <div class="hero-content">
+                    <h1><b>The atlas of change that everyone can edit</b></h1>
+                    <p><b>Working together, we're mapping the world as it evolves geographically,
+                        at local, regional and global scales. Join us!</b></p>
+                    <div class="main_call_to_action_button">
+                        <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
     <!--FEATURED-->
@@ -36,7 +36,7 @@
             <h1><b>Featured MapStories from Across the Community</b></h1>
             <div class="card_row">
                 <div class="card">
-                    <a href="#">
+                    <a href="{% url 'mapstory_view' storyid=21510 %}">
                         <div class="img-container">
                             <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                         </div>
@@ -52,7 +52,7 @@
                 <div class="card">
                     <a href="#">
                     <div class="img-container">
-                        <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
+                        <img src="{{ STATIC_URL }}mapstory/img/story02.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">GEOPOLITICS</p>
@@ -68,7 +68,7 @@
                 <div class="card">
                     <a href="#">
                     <div class="img-container">
-                        <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
+                        <img src="{{ STATIC_URL }}mapstory/img/story03.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">GEOPOLITICS</p>
@@ -83,7 +83,7 @@
                 <div class="card">
                     <a href="#">
                     <div class="img-container">
-                        <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
+                        <img src="{{ STATIC_URL }}mapstory/img/story04.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">NATURE & ENVIRONMENT</p>
@@ -99,7 +99,7 @@
                 <div class="card">
                     <a href="#">
                     <div class="img-container">
-                        <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
+                        <img src="{{ STATIC_URL }}mapstory/img/story05.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">CRISIS</p>
@@ -113,7 +113,7 @@
                 <div class="card">
                     <a href="#">
                     <div class="img-container">
-                        <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
+                        <img src="{{ STATIC_URL }}mapstory/img/story06.png" style="width:100%" align="left">
                     </div>
                     <div class="card-container">
                         <p class="card-category">NATURE & ENVIRONMENT</p>
@@ -126,7 +126,9 @@
                 </div>
             </div>
             <div class="call_to_action_button">
-                <button class="button button-style-2" style="vertical-align:middle"><span>SEE MORE </span></button>
+                <a href="{% url 'search' %}">
+                    <button class="button button-style-2" style="vertical-align:middle"><span>SEE MORE </span></button>
+                </a>
             </div>
         </div>
     </section>
@@ -217,8 +219,10 @@
     <!--MORE-->
     <section class="more-section">
         <div class="more-wrapper" style="background-image: url('{{ STATIC_URL }}/mapstory/img/bg_topography.png');">
-            <p><b>The more we all know about the story of our planet, the more likey
-                we are to treat it, and each other well. Sign up, and become a mapstoryteller today.</b></p>
+            <div>
+                <p><b>The more we all know about the story of our planet, the more likey
+                    we are to treat it, and each other well. Sign up, and become a mapstoryteller today.</b></p>
+            </div>
             <div class="call_to_action_button">
                 <button class="button button-style-2" style="vertical-align:middle"><span>SIGN UP </span></button>
             </div>
