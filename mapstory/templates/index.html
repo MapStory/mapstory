@@ -23,7 +23,9 @@
                 <p><b>Working together, we're mapping the world as it evolves geographically,
                     at local, regional and global scales. Join us!</b></p>
                 <div class="main_call_to_action_button hero-button">
-                    <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+                    <a href="#" data-toggle="modal" data-target="#loginModal">
+                        <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -176,7 +178,9 @@
             </div>
         </div>
         <div class="call_to_action_button how_button">
-            <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+            <a href="#" data-toggle="modal" data-target="#loginModal">
+                <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+            </a>
         </div>
     </div>
 </section>
@@ -236,56 +240,48 @@
                 we are to treat it, and each other well. Sign up, and become a mapstoryteller today.</p>
         </div>
         <div class="call_to_action_button">
-            <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+            <a href="#" data-toggle="modal" data-target="#loginModal">
+                <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+            </a>
         </div>
     </div>
 </section>
-<!--SPONSORS-->
-<section class="sponsor-section">
-    <div class="sponsor-wrapper">
-        <div class="sponsor-container">z
-
-        </div>
-        <div class="sponsor-text">
-
-        </div>
-    </div>
-</section>
-
-<section class="sponsor-section">
-    <div class="sponsor-wrapper">
-        <div class="sponsor_container image-content">
-            <div>
-                <div class="sponsor-img">
-                    <img src="{{ STATIC_URL }}mapstory/img/sponsor_asu.png"  />
-                </div>
-                <div class="sponsor-img">
-                    <img src="{{ STATIC_URL }}mapstory/img/sponsor_dcpl.png"  />
-                </div>
-            </div>
-
-            <div>
-                <div class="sponsor-img">
-                    <img src="{{ STATIC_URL }}mapstory/img/sponsor_erdc.jpg"  />
-                </div>
-                <div class="sponsor-img">
-                    <img src="{{ STATIC_URL }}mapstory/img/sponsor_spatial.png" />
-                </div>
-            </div>
-            <div>
-                <div class="sponsor-img">
-                    <img src="{{ STATIC_URL }}mapstory/img/sponsor_sunlight.png" />
-                </div>
-            </div>
-        </div>
-        <div class="sponsor_text text-content">
-            <h1><b>Help us keep improving.</b></h1>
-            <p>We're a community, not a company. Help us keep improving by making a donation,
-                or sign your organization up as a Sponsor.</p>
-            <div class="call_to_action_button">
-                <button class="button button-style-1" style="vertical-align:middle"><span>DONATE </span></button>
-            </div>
+<section>
+<div class="s-sponsor-wrapper">
+    <!--<div class="sponsor-container">-->
+        <!--<div>-->
+            <!--<div class="sponsor-img">-->
+                <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_asu.png"  />&ndash;&gt;-->
+            <!--</div>-->
+            <!--<div class="sponsor-img">-->
+                <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_dcpl.png"  />&ndash;&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div>-->
+            <!--<div class="sponsor-img">-->
+                <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_erdc.jpg"  />&ndash;&gt;-->
+            <!--</div>-->
+            <!--<div class="sponsor-img">-->
+                <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_spatial.png" />&ndash;&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div>-->
+            <!--<div class="sponsor-img">-->
+                <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_sunlight.png" />&ndash;&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="s-sponsor-content">
+        <h1><b>Help us keep improving.</b></h1>
+        <p>We're a community, not a company. Help us keep improving by making a donation,
+            or sign your organization up as a Sponsor.</p>
+        <div class="call_to_action_button">
+            <button class="button button-style-1" style="vertical-align:middle"><span>DONATE </span></button>
         </div>
     </div>
+</div>
 </section>
+
+
+
 {% endblock %}
