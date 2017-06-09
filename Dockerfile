@@ -81,6 +81,7 @@ WORKDIR $APP_PATH
 COPY requirements.txt ./
 #USER root
 RUN pip install --no-cache-dir -r requirements.txt
+COPY scripts/epsg_extra /usr/local/lib/python2.7/dist-packages/pyproj/data/
 
 # Cache these. Hopefully it will speed up the later steps.
 # USER mapstory
