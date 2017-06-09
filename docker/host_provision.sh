@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-DOCKER_ENGINE_VERSION=17.03.0~ce-0~debian-jessie
-DOCKER_COMPOSE_VERSION=1.11.2
+DOCKER_ENGINE_VERSION=17.05.0~ce-0~debian-jessie
+DOCKER_COMPOSE_VERSION=1.13.0
 
 # Setup repo
 sudo apt-get update
@@ -15,7 +15,7 @@ curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
 sudo add-apt-repository \
      "deb [arch=amd64] https://download.docker.com/linux/debian \
      $(lsb_release -cs) \
-     stable"
+     edge"
 sudo apt-get update
 
 # Install docker-engine
