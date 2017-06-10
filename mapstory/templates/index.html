@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block middle %}
+<div class="outer-container">
 <!--MAP-->
 <section class="map-section" >
     <div class="map-wrapper" style="background-image: url('{{ STATIC_URL }}/mapstory/img/hero_img_fallback.png');">
@@ -137,8 +138,8 @@
 </section>
 <!--HOW-->
 <section class="how-section">
-    <div>
-        <h1><b>How It Works</b></h1>
+    <div class="how-wrapper">
+        <h1>How It Works</h1>
         <div class="box-container">
             <div class="how-box">
                 <div class="how-icon">
@@ -246,42 +247,54 @@
         </div>
     </div>
 </section>
-<section>
-<div class="s-sponsor-wrapper">
-    <!--<div class="sponsor-container">-->
-        <!--<div>-->
-            <!--<div class="sponsor-img">-->
-                <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_asu.png"  />&ndash;&gt;-->
+
+<!--<section>-->
+    <!--<div class="s-sponsor-wrapper">-->
+        <!--<div class="sponsor-container">-->
+            <!--<div>-->
+                <!--<div class="sponsor-img">-->
+                    <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_asu.png"  />&ndash;&gt;-->
+                <!--</div>-->
+                <!--<div class="sponsor-img">-->
+                    <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_dcpl.png"  />&ndash;&gt;-->
+                <!--</div>-->
             <!--</div>-->
-            <!--<div class="sponsor-img">-->
-                <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_dcpl.png"  />&ndash;&gt;-->
+            <!--<div>-->
+                <!--<div class="sponsor-img">-->
+                    <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_erdc.jpg"  />&ndash;&gt;-->
+                <!--</div>-->
+                <!--<div class="sponsor-img">-->
+                    <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_spatial.png" />&ndash;&gt;-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<div class="sponsor-img">-->
+                    <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_sunlight.png" />&ndash;&gt;-->
+                <!--</div>-->
             <!--</div>-->
         <!--</div>-->
-        <!--<div>-->
-            <!--<div class="sponsor-img">-->
-                <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_erdc.jpg"  />&ndash;&gt;-->
-            <!--</div>-->
-            <!--<div class="sponsor-img">-->
-                <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_spatial.png" />&ndash;&gt;-->
-            <!--</div>-->
-        <!--</div>-->
-        <!--<div>-->
-            <!--<div class="sponsor-img">-->
-                <!--&lt;!&ndash;<img src="{{ STATIC_URL }}mapstory/img/sponsor_sunlight.png" />&ndash;&gt;-->
+        <!--<div class="s-sponsor-content">-->
+            <!--<p>Help us keep improving.</p>-->
+            <!--<p>We're a community, not a company. Help us keep improving by making a donation,-->
+                <!--or sign your organization up as a Sponsor.</p>-->
+            <!--<div class="call_to_action_button">-->
+                <!--<button class="button button-style-1" style="vertical-align:middle"><span>DONATE </span></button>-->
             <!--</div>-->
         <!--</div>-->
     <!--</div>-->
-    <div class="s-sponsor-content">
-        <h1><b>Help us keep improving.</b></h1>
-        <p>We're a community, not a company. Help us keep improving by making a donation,
-            or sign your organization up as a Sponsor.</p>
-        <div class="call_to_action_button">
-            <button class="button button-style-1" style="vertical-align:middle"><span>DONATE </span></button>
-        </div>
-    </div>
-</div>
-</section>
+<!--</section>-->
 
+
+<div>Queso</div>
+<section class="s-sponsor-section">
+    <p>Help us keep improving.</p>
+    <p>We're a community, not a company. Help us keep improving by making a donation,
+        or sign your organization up as a Sponsor.</p>
+    <div class="call_to_action_button">
+        <button class="button button-style-1" style="vertical-align:middle"><span>DONATE </span></button>
+    </div>
+</section>
+</div>
 
 
 {% endblock %}
