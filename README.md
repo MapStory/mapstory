@@ -8,7 +8,7 @@ Please visit [our wiki](https://github.com/MapStory/mapstory/wiki)
 
 Interested in seeing our progress?  We're keeping track of what is going on using our [Waffle kanban board](https://waffle.io/MapStory/mapstory).
 
-Want to help us test? Check out our [tester guide](https://docs.google.com/document/d/1ORU7sjUsamiDpf5sVp_HFRFwhun7C4zDycBHculqDt4/edit?usp=sharing)
+Want to help us test? Check out our [tester guide](https://github.com/MapStory/mapstory/wiki/Beta-Tester-Guide)
 
 Deployment
 ----------
