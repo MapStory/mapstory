@@ -380,7 +380,6 @@ width: 100%;
 
   // More section
   .more-wrapper {
-    height: initial;
     .span-columns(12);
     padding: 90px;
     height: auto;
@@ -399,18 +398,52 @@ width: 100%;
   }
 
   .s-sponsor-section {
+    background-color: #BFB4A3;
+    padding: 32px;
+
     .sponsors-container {
+      text-align: center;
       .span-columns(6);
       float: left;
 
+      .sponsor-row {
+
+        display: inline-flex;
+      }
       .sponsor-img {
-        height: 80px;
+        height: 110px;
+        float: left;
       }
     }
 
     .s-sponsor-content {
       .span-columns(6);
       float: left;
+      padding-top: 41px;
+      padding-left: 36px;
+
+      .sponsor-title {
+        padding-bottom: 26px;
+        p {
+          font-weight: 900;
+          font-size: 42px;
+          color: #424242;
+        }
+      }
+
+      .sponsor-text {
+        padding-bottom: 26px;
+        p {
+          color: #606060;
+          font-weight: 400;
+          font-size: 26px;
+          line-height: 1.3;
+        }
+      }
+    }
+
+    .donate-button {
+      text-align: left;
     }
 
   }
