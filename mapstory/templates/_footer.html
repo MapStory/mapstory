@@ -1,26 +1,50 @@
 {% load i18n %}
-<footer class="site-footer">
-    <div class="container">
-        {{ site.assets.footer_text |safe }}
-        <div class="version-number">
-            {% trans "version" %} {{ VERSION }}
+<footer class="site-footer clearfix">
+    <div class="footer-wrapper">
+        <div class="footer-column">
+            <h3>SUPPORT US</h3>
+            <p>MapStory is the atlas of change that anyone can edit. Our work is
+                sustained by the nonprofit MapStory foundation and dedicated mapstorytellers and
+                sponsors. Join us!</p>
+            <button class="button button-style-1" style="vertical-align:middle"><span>DONATE </span></button>
+        </div>
+        <div class="footer-column">
+            <h3>SUBSCRIBE TO OUR NEWSLETTER</h3>
+            <p>We'll send you the latest MapStory news once a month</p>
+            <form action="#">
+                <input type="text" name="Email" value="Your email address">
+                <button class="button button-style-1" style="vertical-align:middle"><span>SUBSCRIBE </span></button>
+            </form>
+
+        </div>
+        <div class="footer-column">
+            <h3>WAYS TO CONNECT</h3>
+            <p>We want to hear from you! Visit <a>the Wiki</a> to find and share more
+                resources with the community</p>
+            <p>Find us on Github or Twitter. Use the feedback tool below to report any issues
+                you encounter</p>
         </div>
     </div>
-    {% if THEME == 'default' %}
-    {# only show language trans in development environment until bugs fixed #}
-        <label class="hidden">{% trans "Language" %}</label>
-        {% if csrf_token != "NOTPROVIDED" %}
-            {% get_current_language as LANGUAGE %}
-            <form action="/i18n/setlang/" method="post">
-                {% csrf_token %}
-                <select name="language" onchange="javascript:form.submit()">
-                    {% for lang in LANGUAGES %}
-                        <option value="{{ lang.0 }}" {% ifequal LANGUAGE_CODE lang.0 %} selected="selected"{% endifequal %}>
-                            {{ lang.1 }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </form>
-        {% endif %}
-    {% endif %}
+    <!--  @TODO: FIX THIS -->
+    <!-- THE VERSION NUMBER BREAKS THE COLUMNS.-->
+    <!--<div class="version-number">-->
+        <!--{% trans "version" %} {{ VERSION }}-->
+    <!--</div>-->
+    <!--{% if THEME == 'default' %}-->
+    <!--{# only show language trans in development environment until bugs fixed #}-->
+        <!--<label class="hidden">{% trans "Language" %}</label>-->
+        <!--{% if csrf_token != "NOTPROVIDED" %}-->
+            <!--{% get_current_language as LANGUAGE %}-->
+            <!--<form action="/i18n/setlang/" method="post">-->
+                <!--{% csrf_token %}-->
+                <!--<select name="language" onchange="javascript:form.submit()">-->
+                    <!--{% for lang in LANGUAGES %}-->
+                        <!--<option value="{{ lang.0 }}" {% ifequal LANGUAGE_CODE lang.0 %} selected="selected"{% endifequal %}>-->
+                            <!--{{ lang.1 }}-->
+                        <!--</option>-->
+                    <!--{% endfor %}-->
+                <!--</select>-->
+            <!--</form>-->
+        <!--{% endif %}-->
+    <!--{% endif %}-->
 </footer>
