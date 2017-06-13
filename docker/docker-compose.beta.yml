@@ -20,9 +20,9 @@ services:
 
   django:
     env_file:
-      - docker/env/demo/public_host.env
-      - docker/env/demo/geoserver.env
-      - docker/env/demo/mapstory.env
+      - docker/env/beta/public_host.env
+      - docker/env/beta/geoserver.env
+      - docker/env/beta/mapstory.env
     command: [--collect-static, --init-db, --reindex, --serve]
     secrets:
       - env_db_auth
@@ -39,9 +39,9 @@ services:
 
   celery:
     env_file:
-      - docker/env/demo/public_host.env
-      - docker/env/demo/geoserver.env
-      - docker/env/demo/mapstory.env
+      - docker/env/beta/public_host.env
+      - docker/env/beta/geoserver.env
+      - docker/env/beta/mapstory.env
     secrets:
       - env_db_auth
       - env_email_auth
@@ -55,8 +55,8 @@ services:
 
   geoserver:
     env_file:
-      - docker/env/demo/public_host.env
-      - docker/env/demo/geoserver.env
+      - docker/env/beta/public_host.env
+      - docker/env/beta/geoserver.env
     secrets:
       - env_db_auth
       - env_geoserver_auth
@@ -65,7 +65,7 @@ services:
 
   nginx:
     env_file:
-      - docker/env/demo/public_host.env
+      - docker/env/beta/public_host.env
     volumes:
       - .:/srv/mapstory/ # mapstory_static has symlinks to this
       - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
@@ -75,6 +75,10 @@ services:
 
 volumes:
   site-packages:
+  geoserver:
+    driver: rexray/efs
+  mapstory_media:
+    driver: rexray/efs
 
 secrets:
   ssl_cert:
