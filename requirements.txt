@@ -1,7 +1,7 @@
 psycopg2==2.4.5
 numpy==1.8.2
 
-geonode==2.6
+geonode==2.6.1
 
 # Force Django 1.8.7: GeoNode's setup.py pulls in newer
 # despite GeoNode requirements.txt pinning 1.8.7
