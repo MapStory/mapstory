@@ -34,4 +34,7 @@ echo 'alias dco="docker-compose"' >> ~/.bashrc
 sudo su -l $USER -c "docker run hello-world"
 
 # Install REX-Ray
+sudo apt-get install -y --no-install-recommends \
+    nfs-client
 curl -sSL https://dl.bintray.com/emccode/rexray/install | sh -s -- stable 0.9.1
+docker plugin install --grant-all-permissions store/rexray/efs:0.8.2
