@@ -30,5 +30,8 @@ sudo curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose v
 alias dco="docker-compose"
 echo 'alias dco="docker-compose"' >> ~/.bashrc
 
-# Test
+# Test Docker
 sudo su -l $USER -c "docker run hello-world"
+
+# Install REX-Ray
+curl -sSL https://dl.bintray.com/emccode/rexray/install | sh -s -- stable 0.9.1
