@@ -16,18 +16,18 @@
 @section_bg_color: #F9F9F9;
 
 .transparent(@amount) {
-  filter: alpha(opacity=@amount); /* internet explorer */
-  -khtml-opacity: @amount;      /* khtml, old safari */
-  -moz-opacity: @amount;       /* mozilla, netscape */
-  opacity: @amount;           /* fx, safari, opera */
+  filter: alpha(opacity=@amount);
+  -khtml-opacity: @amount;
+  -moz-opacity: @amount;
+  opacity: @amount;
 }
 
 // Functions
 .radius(@radius) {
-  -webkit-border-radius: @radius; // Chrome, Safari
-  -moz-border-radius: @radius;	// Firefox
-  -o-border-radius: @radius;		// Opera
-  -ms-border-radius: @radius;		// IE
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -o-border-radius: @radius;
+  -ms-border-radius: @radius;
   border-radius: @radius;
 }
 
@@ -105,18 +105,15 @@ border: solid;
 border-color: @button_bg_color;
 }
 
-
+//--------------------
+// New Homepage CSS ->
 .outer-container {
-
 width: 100%;
-  // Globals
   section {
-    // Some debugging
     //.debug_sections();
     div {
       //.debug();
       display: block;
-      //overflow: auto;
     }
     h1 {
       text-align: center;
@@ -146,23 +143,16 @@ width: 100%;
 
   // Section Overrides
   .map-section {
-
-    //background-size: cover;
     .map-wrapper {
       overflow: hidden;
       height: 400px;
       .span-columns(12);
     }
-
     .video {
       position: absolute;
-      //top: 250px; left: 685px;
       z-index: 0;
-      //min-width: 100%;
-      //min-height: 100%;
       width: 100%;
       height: 400px;
-      //transform: translate(-50%, -50%);
       overflow: hidden;
     }
 
@@ -196,21 +186,13 @@ width: 100%;
         font-weight: 900;
         color: #333333;
         line-height: normal;
-
       }
       .hero-button {
         text-align: left;
         opacity: 1;
       }
-
     }
-
     .hero-container {
-      //position: absolute;
-      //z-index: 100;
-      //top: 0; left:0;
-      //color: #333333;
-      //overflow: show;
     }
   }
 
@@ -230,15 +212,12 @@ width: 100%;
     .featured-wrapper {
 
     }
-
     .featured-container {
       .outer-container();
     }
-
     .card_row {
       .span-columns(12);
       padding: 20px;
-
       .card {
         background-color: #ffffff;
         .story_rounded_box;
@@ -246,27 +225,23 @@ width: 100%;
         padding: 10px;
         .span-columns(6);
         overflow: auto;
-
         .img-container {
           float: left;
           box-shadow: 0 2px 1px 0 rgba(0, 0, 0, 0.15);
           width: 40%;
           margin-right: 12px;
         }
-
         .card-container {
           padding-left: 10px;
           p {
             margin: 0
           }
-
           .card-category {
             .mapstory_font(12px);
             font-weight: 400;
             color: #6d6d6d;
             letter-spacing: 1px;
           }
-
           .card-title {
             .mapstory_font(16px);
             font-weight: 900;
@@ -298,7 +273,6 @@ width: 100%;
       padding-left: 10px;
       padding-right: 10px;
       .outer-container();
-
       .how-box {
         float: left;
         .span-columns(4);
@@ -310,13 +284,11 @@ width: 100%;
           font-weight: 400;
           font-size: large;
         }
-
         .how-icon {
           height: 100px;
         }
       }
     }
-
   .how_button {
     margin: 8px;
   }
@@ -327,10 +299,8 @@ width: 100%;
     background-color: @section_bg_color;
     text-align: center;
     padding: 40px;
-    //.outer-container();
     height: auto;
     overflow: auto;
-
     .section-wrapper {
       .img-circle {
         -webkit-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
@@ -338,11 +308,9 @@ width: 100%;
         box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
       }
     }
-
     .image-content {
       padding: 20px;
     }
-
     .text-content {
       padding-top: 40px;
       text-align: left;
@@ -355,7 +323,6 @@ width: 100%;
     background-color: @section_bg_color;
     height: auto;
     overflow: auto;
-
     .image-content {
       -webkit-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
       -moz-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
@@ -369,13 +336,11 @@ width: 100%;
     background-color: @section_bg_color;
     height: auto;
     overflow: auto;
-
     .image-content {
       -webkit-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
       -moz-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
       box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
     }
-
   }
 
   // More section
@@ -384,30 +349,25 @@ width: 100%;
     padding: 90px;
     height: auto;
     overflow: auto;
-
     p {
       font-size: 42px;
       font-weight: 900;
       line-height: 140%;
       color: white;
     }
-
     .call_to_action_button {
       margin-top: 70px;
     }
   }
-
   .s-sponsor-section {
     background-color: #BFB4A3;
-    padding: 32px;
-
+    padding:1px;
     .sponsors-container {
       text-align: center;
       .span-columns(6);
       float: left;
-
+      padding: 65px;
       .sponsor-row {
-
         display: inline-flex;
       }
       .sponsor-img {
@@ -415,13 +375,11 @@ width: 100%;
         float: left;
       }
     }
-
     .s-sponsor-content {
       .span-columns(6);
       float: left;
-      padding-top: 41px;
+      padding-top: 100px;
       padding-left: 36px;
-
       .sponsor-title {
         padding-bottom: 26px;
         p {
@@ -430,7 +388,6 @@ width: 100%;
           color: #424242;
         }
       }
-
       .sponsor-text {
         padding-bottom: 26px;
         p {
@@ -441,71 +398,22 @@ width: 100%;
         }
       }
     }
-
     .donate-button {
       text-align: left;
     }
-
   }
 }
-
-
 .site-footer {
   width: 100%;
   max-width: 100%;
   margin-top: initial;
   padding: 37px;
-  //.outer-container();
   .footer-column {
+    color: #a7a7a7;
     .span-columns(4);
+    font-size: 22px;
+    h3 {
+      font-weight: 900;
+    }
   }
-}
-
-
-
-
-/* Smartphones (portrait and landscape) ----------- */
-@media only screen
-and (min-device-width : 320px) and (max-device-width : 480px) {
-  /* Styles */
-}
-
-/* Smartphones (landscape) ----------- */
-@media only screen and (min-width : 321px) {
-  /* Styles */
-}
-
-/* Smartphones (portrait) ----------- */
-@media only screen and (max-width : 320px) {
-  /* Styles */
-}
-
-/* iPads (portrait and landscape) ----------- */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) {
-  /* Styles */
-}
-
-/* iPads (landscape) ----------- */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-  /* Styles */
-}
-
-/* iPads (portrait) ----------- */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-  /* Styles */
-}
-
-/* Desktops and laptops ----------- */
-@media only screen and (min-width : 1224px) {
-  /* Styles */
-}
-
-/* Large screens ----------- */
-@media only screen and (min-width : 1824px) {
-  /* Styles */
-}
-
-/* iPhone 4 ----------- */
-@media only screen and (-webkit-min-device-pixel-ratio:1.5), only screen and (min-device-pixel-ratio:1.5) {
-  /* Styles */
 }

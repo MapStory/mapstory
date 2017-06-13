@@ -12,6 +12,7 @@
             <h3>SUBSCRIBE TO OUR NEWSLETTER</h3>
             <p>We'll send you the latest MapStory news once a month</p>
             <form action="#">
+                <!-- @TODO: Send email form -->
                 <input type="text" name="Email" value="Your email address">
                 <button class="button button-style-1" style="vertical-align:middle"><span>SUBSCRIBE </span></button>
             </form>
@@ -27,24 +28,4 @@
     </div>
     <!--  @TODO: FIX THIS -->
     <!-- THE VERSION NUMBER BREAKS THE COLUMNS.-->
-    <!--<div class="version-number">-->
-        <!--{% trans "version" %} {{ VERSION }}-->
-    <!--</div>-->
-    <!--{% if THEME == 'default' %}-->
-    <!--{# only show language trans in development environment until bugs fixed #}-->
-        <!--<label class="hidden">{% trans "Language" %}</label>-->
-        <!--{% if csrf_token != "NOTPROVIDED" %}-->
-            <!--{% get_current_language as LANGUAGE %}-->
-            <!--<form action="/i18n/setlang/" method="post">-->
-                <!--{% csrf_token %}-->
-                <!--<select name="language" onchange="javascript:form.submit()">-->
-                    <!--{% for lang in LANGUAGES %}-->
-                        <!--<option value="{{ lang.0 }}" {% ifequal LANGUAGE_CODE lang.0 %} selected="selected"{% endifequal %}>-->
-                            <!--{{ lang.1 }}-->
-                        <!--</option>-->
-                    <!--{% endfor %}-->
-                <!--</select>-->
-            <!--</form>-->
-        <!--{% endif %}-->
-    <!--{% endif %}-->
 </footer>
