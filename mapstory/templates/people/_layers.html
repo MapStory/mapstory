@@ -1,0 +1,29 @@
+{% load i18n %}
+{# this tab is predominantly controlled by client-side angular logic and values #}
+
+<div id="layers_list" class="tab-pane"
+    ng-controller="layersController as layer">
+    <div class="no-content" ng-hide="layer.totalCount">
+        <h2>{% trans "No Layers" %}.</h2>
+    </div>
+    {% verbatim %}
+     <div ng-show="layer.totalCount">
+        <div class="pull-right">
+            Showing {{layer.startIndex}}-{{layer.endIndex}} of {{layer.totalCount}} results
+        </div>
+        <div class="clearfix content-results">
+            <ul>
+                <li ng-repeat="item in layer.cards" resource-id="{{ item.id }}"
+                        class="col-lg-4 col-sm-6 resource-{{ item.id }}">
+                {% endverbatim %}
+                {% include 'search/_result_content.html' %}</ul>
+        </div>
+        {% verbatim %}
+        <div class="pull-right">
+            <a href><i ng-click="layer.pageDown()" class="fa fa-chevron-left"></i></a>
+                page {{layer.currentPage}} of {{layer.numPages}}
+            <a href><i ng-click="layer.pageUp()" class="fa fa-chevron-right"></i></a>
+        </div>
+        {% endverbatim %}
+    </div>
+</div>

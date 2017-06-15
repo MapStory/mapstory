@@ -13,7 +13,7 @@
                 <section>
                     <h3>StoryTeller</h3>
                     <div class="clear-filters">
-                        <a href="" ng-click="clear('q')">Clear</a>
+                        <a href="" ng-click="explore.clear('q')">Clear</a>
                     </div>
                     <div class="filter-content">
                         <div class="search-bar">
@@ -37,15 +37,15 @@
                 <section ng-controller="citiesController as cit">
                     <h3>City</h3>
                     <div class="clear-filters">
-                        <a href="" ng-click="clear('city__icontains')">Clear</a>
+                        <a href="" ng-click="explore.clear('city__icontains')">Clear</a>
                     </div>
                     <div class="filter-content">
                         {% verbatim %}
                         <md-content class="md-padding" layout="column">
                           <md-chips ng-model="cit.cityChips" 
                               md-autocomplete-snap 
-                              md-on-add="add_query('city__icontains', $chip.city)"
-                              md-on-remove="remove_query('city__icontains', $chip.city)"
+                              md-on-add="explore.addQuery('city__icontains', $chip.city)"
+                              md-on-remove="explore.removeQuery('city__icontains', $chip.city)"
                               md-transform-chip="cit.cities.newChip($chip)">
                             <md-autocomplete
                                 ng-hide="cit.disabled"
@@ -71,7 +71,7 @@
                 <section ng-controller="countriesController as reg">
                     <h3>Country</h3>
                     <div class="clear-filters">
-                        <a href="" ng-click="clear('country')">Clear</a>
+                        <a href="" ng-click="explore.clear('country')">Clear</a>
                     </div>
                     <div class="filter-content">
                         {% verbatim %}
@@ -80,8 +80,8 @@
                                           md-autocomplete-snap
                                           md-max-chips="1"
                                           md-require-match="true"
-                                          md-on-add="add_query('country', $chip.code)"
-                                          md-on-remove="remove_query('country', $chip.code)">
+                                          md-on-add="explore.addQuery('country', $chip.code)"
+                                          md-on-remove="explore.removeQuery('country', $chip.code)">
                                     <md-autocomplete
                                           ng-hide="reg.disabled"
                                           md-selected-item="selectedItem"
@@ -111,15 +111,15 @@
                 <section ng-controller="interestsController as int">
                     <h3>Interest</h3>
                     <div class="clear-filters">
-                        <a href="" ng-click="clear('interest_list')">Clear</a>
+                        <a href="" ng-click="explore.clear('interest_list')">Clear</a>
                     </div>
                     <div class="filter-content">
                         {% verbatim %}
                         <md-content class="md-padding" layout="column">
                             <md-chips ng-model="int.chips" 
                                 md-autocomplete-snap 
-                                md-on-add="add_query('interest_list', $chip.slug)"
-                                md-on-remove="remove_query('interest_list', $chip.slug)"
+                                md-on-add="explore.addQuery('interest_list', $chip.slug)"
+                                md-on-remove="explore.removeQuery('interest_list', $chip.slug)"
                                 md-transform-chip="int.interests.newChip($chip)">
                               <md-autocomplete
                                   ng-hide="int.disabled"
@@ -150,7 +150,7 @@
                             </a>
                             can answer questions and help if you send them a message.
                         </p>
-                        <input type="checkbox" ng-model="VTCisChecked" ng-click="filterVTC()""> VTC Members only
+                        <input type="checkbox" ng-model="explore.VTCisChecked" ng-click="explore.filterVTC()""> VTC Members only
                     <!--     <input type="checkbox" ng-model="query.Volunteer_Technical_Community" ng-click="VTC()"> VTC Members only -->
                     </div>
                 </section>

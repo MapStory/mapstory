@@ -7,7 +7,7 @@
             <div class="counter">
             <span ng-bind="counts.maps"></span>
             </div>
-            {% trans "Stories" %} 
+            {% trans "Stories" %}
         </a>
     </li>
     <li>
@@ -15,9 +15,9 @@
             <div class="counter">
             <span ng-bind="counts.layers"></span>
             </div>
-            {% trans "Layers" %} 
+            {% trans "Layers" %}
         </a>
-    </li> 
+    </li>
     {% if user == profile %}
         <li>
             <a href="#uploads_list" data-toggle="tab">
@@ -30,14 +30,14 @@
         <li>
             <a href="#messages_list" data-toggle="tab">
                 <div class="counter">{{ inbox_count }}</div>
-                Messages 
+                Messages
             </a>
         </li>
     {% endif %}
     <li>
         <a href="#user_activities" data-toggle="tab">
             <div class="counter">{{ action_list.count }}</div>
-            Activity Feed 
+            Activity Feed
         </a>
     </li>
     <li>
