@@ -12,7 +12,6 @@
     "jsonix": "highsource/jsonix#e285e82fb15fa3d62665a35eb728022936df1f4b",
     "ogc-schemas": "highsource/ogc-schemas#master",
     "w3c-schemas": "highsource/w3c-schemas#master",
-    "angular-slick": "https://github.com/MapStory/angular-slick.git#dynamic-data",
     "story-tools": "https://github.com/MapStory/story-tools.git#master",
     "fontawesome": "https://github.com/FortAwesome/Font-Awesome.git#~4.6.0",
     "lato-font": "1.1.0",
