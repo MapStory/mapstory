@@ -1,0 +1,29 @@
+@charset "UTF-8";
+
+// Sets layout direction and layout opposite direction to `@direction`
+// and `@opposite-direction` accordingly.
+
+.get-direction(@layout) when (@layout = LTR) {
+  @direction: right;
+  @opposite-direction: left;
+}
+
+.get-direction(@layout) when (@layout = RTL) {
+  @direction: left;
+  @opposite-direction: right;
+}
+
+// Sets neat grid column's width to `@column-width`.
+
+.flex-width(@columns, @container-columns, @column: @neat-column-width, @gutter: @neat-gutter-width) {
+  @tmp-width: @columns * @column + (@columns - 1) * @gutter;
+  @tmp-container-width: @container-columns * @column + (@container-columns - 1) * @gutter;
+  @column-width: percentage(@tmp-width / @tmp-container-width);
+}
+
+// Sets neat grid column's gutter (the white space between two columns) to `@column-gutter`.
+
+.flex-gutter(@container-columns: @neat-grid-columns, @column: @neat-column-width, @gutter: @neat-gutter-width) {
+  @tmp-container-width: @container-columns * @column + (@container-columns - 1) * @gutter;
+  @column-gutter: percentage(@gutter / @tmp-container-width);
+}

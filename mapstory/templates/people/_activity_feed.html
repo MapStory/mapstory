@@ -1,0 +1,17 @@
+{% load activity_tags social_tags i18n %}
+
+{% if action_list.count == 0 %}
+    <div class="no-content">
+        <h2>No activities.</h2>
+        <h4><a href="{% url "home" %}">Explore {{ SITE_NAME }} now.</a></h4>
+    </div>
+{% endif %}
+<div class="row">
+    <div class="col-md-12">
+        <ul class="no-style-list">
+            {% for action in action_list %}
+                {% activity_item action %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>

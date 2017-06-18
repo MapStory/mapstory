@@ -1,0 +1,24 @@
+{% load i18n %}
+
+{% if not inbox_count %}
+    <div class="no-content">
+        <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
+    </div>
+{% else %}
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#inbox" data-toggle="tab"><i class=""></i>{% trans "Unread" %}</a></li>
+        <li><a href="#all" data-toggle="tab"><i class=""></i> {% trans "All" %}</a></li>
+    </ul>
+    <div class="tab-content">
+        <article id="inbox" class="tab-pane active">
+            {% with threads_unread as threads %}
+                {% include "user_messages/_message_snippet.html" %}
+            {% endwith %}
+        </article>
+        <article id="all" class="tab-pane">
+            {% with threads_all as threads %}
+                {% include "user_messages/_message_snippet.html" %}
+            {% endwith %}
+        </article>
+    </div>
+{% endif %}

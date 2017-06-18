@@ -1,0 +1,75 @@
+@charset "UTF-8";
+
+// Removes the element's gutter margin, regardless of its position in the grid hierarchy or display property.
+// It can target a specific element, or every `nth-child` occurrence. Works only with `block` layouts.
+//
+// @query
+//   Supported arguments are `nth-child` selectors (targets a specific pseudo element) and `auto` (targets `last-child`).
+//
+//   When passed an `nth-child` argument of type `*n` with `block` display, the omega mixin automatically
+//   adds a clear to the `*n+1` th element.
+//
+//   Note that composite arguments such as `2n+1` do not support this feature.
+//
+// @direction
+//  Sets the layout direction. Can be `LTR` (left-to-right) or `RTL` (right-to-left).
+//
+// @example - LESS Usage
+//   .element {
+//     .omega();
+//   }
+//
+//   .nth-element {
+//     .omega(4n);
+//   }
+//
+//   .auto-element {
+//     .omega(auto);
+//   }
+//
+// @example - CSS Output
+//   .element {
+//     margin-right: 0;
+//   }
+//
+//   .nth-element:nth-child(4n) {
+//     margin-right: 0;
+//   }
+//
+//   .nth-element:nth-child(4n+1) {
+//     clear: left;
+//   }
+//
+//   .auto-element:last-child {
+//     margin-right: 0;
+//   }
+
+.omega(@query: '', @direction: @neat-default-direction) when (@query = '') {
+  .get-direction(@direction);
+
+  margin-@{direction}: 0;
+}
+
+.omega(@query, @direction: @neat-default-direction) when (@query = auto) {
+  .get-direction(@direction);
+
+  &:last-child {
+    margin-@{direction}: 0;
+  }
+}
+
+.omega(@query, @direction: @neat-default-direction) when not (@query = auto) {
+  .get-direction(@direction);
+
+  .clear() when (isnumber(@query) = true) and (get-unit(@query) = n) {
+    &:nth-child(@{query} + 1) {
+      clear: @opposite-direction;
+    }
+  }
+
+  &:nth-child(@{query}) {
+    margin-@{direction}: 0;
+  }
+
+  .clear();
+}

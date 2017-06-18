@@ -2,145 +2,281 @@
 {% load i18n %}
 {% load mapstory_tags %}{# mapstory/templatetags/mapstory_tags.py, only used here for images|byname filter parallax #}
 
-{% block extra_head %}
-    <link href="{{ STATIC_URL }}vendor/slick-carousel/slick/slick.css" rel="stylesheet" >
-    <link href="{{ STATIC_URL }}vendor/slick-carousel/slick/slick-theme.css" rel="stylesheet">
-{% endblock %}
-
 {% block middle %}
-<div>
-    <section class="parallax splash">
-        <div style="background-image: url({{ images|by_name:'Africa' }});"></div>
-    </section>
-    <section class="slice welcome">
-        <div class="container">
-            <h1> {{ site.assets.subtitle }} </h1>
-            <div class="row search">
-                <form class="col-sm-6 col-sm-offset-3" action="{% url 'search' %}">
-                    <div class="input-group homepage-search">
-                        <input class="form-control" type="text" placeholder="{% trans "Explore Stories and Layers" %}"
-                            {% if HAYSTACK_SEARCH %} name="q" 
-                            {% else %} name="keywords__slug__in"
-                            {% endif %}
-                        >
-                        <span class="input-group-btn">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                    </div>
-                </form>
-            </div>
-            <div class="row links">
-                {% with colsm3=REGISTRATION_OPEN %}
-                    {% if colsm3 and not user.is_authenticated %}
-                        <div class="col-sm-3">
-                            <a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Sign up now" %}</a>
-                        </div>
-                    {% endif %}
-                    <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}">
-                        {% if user.is_authenticated %}
-                            <a ng-controller="ImportController"
-                               ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', '{{ default_layer_config }}', null, null, null)"
-                               target="_self">
-                        {% else %}
-                            <a data-toggle="modal" data-target="#loginModal">
-                        {% endif %}
-                        {% trans "Import Layers" %}
-                        </a>
-                    </div>
-                    <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}">
-                        {% if user.is_authenticated %}
-                            <a href="{% url 'new-story' %}?tour">
-                        {% else %}
-                            <a data-toggle="modal" data-target="#loginModal">
-                        {% endif %}
-                        {% trans "Compose Story" %}
-                        </a>
-                    </div>
-                    <div class="col-sm-{% if colsm3 and not user.is_authenticated %}3{% else %}4{% endif %}">
-                        <a href="{% url 'getpage' 'started' %}">{% trans "Learn more" %}</a>
-                    </div>
-                {% endwith %}
-            </div>
+<div class="outer-container">
+<!--MAP-->
+<section class="map-section" >
+    <div class="map-wrapper" style="background-image: url('{{ STATIC_URL }}/mapstory/img/hero_img_fallback.png');">
+        <div class="video">
+            <video  autoplay="autoplay" loop="loop" muted="">
+                <source src='{{ STATIC_URL }}/mapstory/img/demo.mp4' type="video/mp4" />
+            </video>
         </div>
-    </section>
-    <div ng-controller="carouselController">
-        <section class="slice carousel category">
-            <div class="container">
-                <nav id="filter" class="col-sm-10 col-sm-offset-1 col-md-12 col-md-offset-0 text-center">
-                    <ul id="categories" class="nav nav-tabs">
-                        <li><a ng-click="reset();" class="btn btn-filter btn-sm sectionTab">{% trans "All Categories" %}</a></li>
-                        {% verbatim %}
-                            <li ng-repeat="category in categories">
-                                <a ng-click="filterCategory(category.identifier);" class="btn btn-filter btn-sm sectionTab">{{ category.gn_description }}</a>
-                            </li>
-                        {% endverbatim %}  
-                    </ul>
-                </nav>
-                <div class="row">
-                    <p ng-hide="display.length">{% trans "No Featured Items in this category" %}...</p>
+
+        <div class="hero-circle">
+            <div class="hero-content">
+                <h1>The atlas of change that everyone can edit</h1>
+                <p><b>Working together, we're mapping the world as it evolves geographically,
+                    at local, regional and global scales. Join us!</b></p>
+                <div class="main_call_to_action_button hero-button">
+                    <a href="#" data-toggle="modal" data-target="#loginModal">
+                        <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+                    </a>
                 </div>
             </div>
-        </section>
-        <section class="slice carousel results">
-            <div class="container">
-                <slick id="tablet-carousel" infinite="true" slides-to-show="4" autoplay="true" init-onload="true" data="display">
-                    <div class="col-md-3 col-sm-6 " ng-repeat="item in display">
-                        {% verbatim %}
-                        <a href="{{ item.detail_url }}">
-                            <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url }}" style="margin: auto;"/>
-                        </a>
-                        <h3>
-                            <a href="{{ item.detail_url }}">{{ item.title }}</a>
-                            <span ng-if="item.owner__first_name" class="owner"> by {{ item.owner__first_name }} {{item.owner__last_name}}</span>
-                        </h3>
-                        <h5 class="abstract">{{ item.abstract|limitTo:140  }}
-                            <a href="{{ item.detail_url }}"><i>...</i></a>
-                        </h5>
-                    </div>
-                </slick>
-                <slick id="mobile-carousel" infinite="true" slides-to-show="2" autoplay="true" init-onload="true" data="display">
-                    <div class="col-md-3 col-sm-6" ng-repeat="item in display">
-                            <a href="{{ item.detail_url }}">
-                                <img class="thumb img-responsive" ng-src="{{ item.thumbnail_url }}" style="margin: auto;"/>
-                            </a>
-                            <a href="{{ item.detail_url }}">{{ item.title }}</a>
-                            <span ng-if="item.owner__first_name" class="owner"> by {{ item.owner__first_name }} {{item.owner__last_name}}</span>
-                        {% endverbatim %}
-                    </div>
-                </slick>
-            </div>
-        </section>
+        </div>
     </div>
-
-    <section class="slice sponsors">
-        <div class="container">
-            <h1>{% trans "Our Sponsors" %}</h1>
-            <h3>Organizations like these drive innovation in the {{ SITE_NAME }} codebase, content and community.
-                {% if THEME == 'orange' %}
-                    <a href="{% url 'donate' %}">
-                        {% trans "Join them." %}</a>
-                {% endif %}
-            </h3>
-            <hr/>
-            <div class="row">
-                {% for sponsor in sponsors %}
-                    <div class="col-sm-2">
-                        <a href="{{ sponsor.link }}">
-                            <img src="{{ sponsor.url }}" alt="{{ sponsor.name }} - {{ sponsor.description }}">
-                        </a>
+</section>
+<!--FEATURED-->
+<section class="featured-section">
+    <div class="featured-wrapper">
+        <div class="featured-container">
+            <h1><b>Featured MapStories from Across the Community</b></h1>
+            <div class="card_row">
+                <div class="card">
+                    <a href="{% url 'mapstory_view' storyid=21510 %}">
+                        <div class="img-container">
+                            <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
+                        </div>
+                        <div class="card-container">
+                            <p class="card-category">NATURE & ENVIRONMENT</p>
+                            <p class="card-title"><b>Fracking Sites in West Virginia</b></p>
+                            <a href="https://mapstory.org/storyteller/hwinscot"><p class="card-author">Holly Winscott</p></a>
+                            <p class="card-meta">Created January 13, 2017</p>
+                            <p class="card-meta">2,382 views</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="card">
+                    <a href="https://mapstory.org/story/21977">
+                    <div class="img-container">
+                        <img src="{{ STATIC_URL }}mapstory/img/story02.png" style="width:100%" align="left">
                     </div>
-                    {% empty %}
-                    <p>{% trans "No Sponsors." %} {% trans "Add" %} <a href="{% url 'admin:mapstory_sponsor_add' %}">{% trans "some" %}</a></p>
-                {% endfor %}
+                    <div class="card-container">
+                        <p class="card-category">GEOPOLITICS</p>
+                        <p class="card-title"><b>United States Civil War</b></p>
+                        <a href="https://mapstory.org/storyteller/jeffmeyer"><p class="card-author">Jeff Meyer</p></a>
+                        <p class="card-meta">Created March 17, 2016</p>
+                        <p class="card-meta">11,292 views</p>
+                    </div>
+                    </a>
+                </div>
+            </div>
+            <div class="card_row">
+                <div class="card">
+                    <a href="https://mapstory.org/story/21133">
+                    <div class="img-container">
+                        <img src="{{ STATIC_URL }}mapstory/img/story03.png" style="width:100%" align="left">
+                    </div>
+                    <div class="card-container">
+                        <p class="card-category">GEOPOLITICS</p>
+                        <p class="card-title"><b>Evolution of Congressional Districts in North Carolina
+                            1789-2012</b></p>
+                        <a href="https://mapstory.org/storyteller/jdavis15/"><p class="card-author">Jonathan Davis</p></a>
+                        <p class="card-meta">Created February 25, 2017</p>
+                        <p class="card-meta">4 views</p>
+                    </div>
+                    </a>
+                </div>
+                <div class="card">
+                    <a href="https://mapstory.org/story/21037">
+                    <div class="img-container">
+                        <img src="{{ STATIC_URL }}mapstory/img/story04.png" style="width:100%" align="left">
+                    </div>
+                    <div class="card-container">
+                        <p class="card-category">NATURE & ENVIRONMENT</p>
+                        <p class="card-title"><b><i>Karenis Brevis</i> in Florida</b></p>
+                        <a href="https://mapstory.org/storyteller/kpole/"><p class="card-author">Sebastian Forsard</p></a>
+                        <p class="card-meta">Created November 27, 2016</p>
+                        <p class="card-meta">492 views</p>
+                    </div>
+                    </a>
+                </div>
+            </div>
+            <div class="card_row">
+                <div class="card">
+                    <a href="https://mapstory.org/story/20868">
+                    <div class="img-container">
+                        <img src="{{ STATIC_URL }}mapstory/img/story05.png" style="width:100%" align="left">
+                    </div>
+                    <div class="card-container">
+                        <p class="card-category">CRISIS</p>
+                        <p class="card-title"><b>Village Destruction in the Darfur Region</b></p>
+                        <a href="https://mapstory.org/storyteller/everett"><p class="card-author">Everett Lasher</p></a>
+                        <p class="card-meta">Created January 13, 2017</p>
+                        <p class="card-meta">2,382 views</p>
+                    </div>
+                    </a>
+                </div>
+                <div class="card">
+                    <a href="https://mapstory.org/story/20881">
+                    <div class="img-container">
+                        <img src="{{ STATIC_URL }}mapstory/img/story06.png" style="width:100%" align="left">
+                    </div>
+                    <div class="card-container">
+                        <p class="card-category">NATURE & ENVIRONMENT</p>
+                        <p class="card-title"><b>Earhquake and Volcano Fatalities: a sample</b></p>
+                        <a href="https://mapstory.org/storyteller/satmaraman/"><p class="card-author">Shobana Atmaraman</p></a>
+                        <p class="card-meta">Created March 17, 2016</p>
+                        <p class="card-meta">11,292 views</p>
+                    </div>
+                    </a>
+                </div>
+            </div>
+            <div class="call_to_action_button">
+                <a href="{% url 'search' %}">
+                    <button class="button button-style-2" style="vertical-align:middle"><span>SEE MORE </span></button>
+                </a>
             </div>
         </div>
-    </section>
-    {% if THEME == 'orange' %}
-        <section class="parallax last">
-            <div style="background-image: url({{ images|by_name:'Parallax1' }});"></div>
-        </section>
-    {% endif %}
+    </div>
+</section>
+<!--HOW-->
+<section class="how-section">
+    <div class="how-wrapper">
+        <h1><b>How It Works</b></h1>
+        <div class="box-container">
+            <div class="how-box">
+                <div class="how-icon">
+                    <img src="{{ STATIC_URL }}mapstory/img/icon_upload.png" />
+                </div>
+                <div class="how-content">
+                    <h4><b>Upload StoryLayers</b></h4>
+                    <p>Upload datasets as StoryLayers or, if you don't have data to upload,
+                    generate new StoryLayers from scratch.</p>
+                </div>
+            </div>
+            <div class="how-box">
+                <div class="how-icon">
+                    <img src="{{ STATIC_URL }}mapstory/img/icon_edit.png"/>
+                </div>
+                <div class="how-content">
+                    <h4><b>Edit StoryLayers</b></h4>
+                    <p>Edit StoryLayers shared by the community to make them as
+                        complete and accurate as possible</p>
+                </div>
+            </div>
+            <div class="how-box">
+                <div class="how-icon">
+                    <img src="{{ STATIC_URL }}mapstory/img/icon_compose.png" />
+                </div>
+                <div class="how-content">
+                    <h4><b>Compose MapStories</b></h4>
+                    <p>Compose MapStories by combining StoryLayers with text, images and video and
+                        then share them with a global audience</p>
+                </div>
+            </div>
+        </div>
+        <div class="call_to_action_button how_button">
+            <a href="#" data-toggle="modal" data-target="#loginModal">
+                <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+            </a>
+        </div>
+    </div>
+</section>
+<!--CONTRIBUTE-->
+<section class="contribute-section">
+    <div class="section-wrapper">
+        <div class="image-content">
+            <img src="{{ STATIC_URL }}mapstory/img/global_data_commons.png" class="img-circle">
+        </div>
+        <div class="text-content">
+            <h1><b>Contribute to the global data commons</b></h1>
+            <p>Put your data in a place where it can live accessible to all, in perpetuity, without
+                being subject to commercial influence</p>
+            <div class="call_to_action_button">
+                <a href="{% url 'search' %}">
+                    <button class="button button-style-2" style="vertical-align:middle"><span>LEARN MORE </span></button>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<!--SHARE-->
+<section class="share-section">
+    <div>
+        <div class="text-content">
+            <h1><b>Share your expertise through edits</b></h1>
+            <p>Curate the accuracy and quality of StoryTellers by adding ratings,
+                checking metadata, making comments and commiting version edits.</p>
+            <div class="call_to_action_button">
+                <a href="{% url 'search' %}">
+                    <button class="button button-style-2" style="vertical-align:middle"><span>LEARN MORE </span></button>
+                </a>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="{{ STATIC_URL }}mapstory/img/expertise_through_edits.png" />
+        </div>
+    </div>
+</section>
+<!--LIFE-->
+<section class="to-life-section">
+    <div>
+        <div class="image-content">
+            <img src="{{ STATIC_URL }}mapstory/img/map_small_fallback.png" />
+        </div>
+        <div class="text-content">
+            <h1><b>Bring your story to life</b></h1>
+            <p>Combine StoryLayers with narrative elements like images, text and video
+                to compose MapStories that explain how and why change occurs. No coding required.</p>
+            <div class="call_to_action_button">
+                <a href="{% url 'search' %}">
+                        <button class="button button-style-2" style="vertical-align:middle"><span>LEARN MORE </span></button>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<!--MORE-->
+<section class="more-section clearfix">
+    <div class="more-wrapper" style="background-image: url('{{ STATIC_URL }}/mapstory/img/bg_topography.png');">
+        <div>
+            <p>The more we all know about the story of our planet, the more likey
+                we are to treat it, and each other well. Sign up, and become a mapstoryteller today.</p>
+        </div>
+        <div class="call_to_action_button">
+            <a href="#" data-toggle="modal" data-target="#loginModal">
+                <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="s-sponsor-section clearfix">
+    <div class="sponsors-container">
+        <div class="sponsor-row">
+            <div class="sponsor-img">
+            </div>
+            <div class="sponsor-img">
+                <img src="{{ STATIC_URL }}mapstory/img/sponsor_dcpl.png"  />
+            </div>
+        </div>
+        <div class="sponsor-row">
+            <div class="sponsor-img">
+            </div>
+            <div class="sponsor-img">
+                <img src="{{ STATIC_URL }}mapstory/img/sponsor_spatial.png" />
+            </div>
+        </div>
+        <div class="sponsor-row">
+            <div class="sponsor-img">
+                <img src="{{ STATIC_URL }}mapstory/img/sponsor_sunlight.png" />
+            </div>
+        </div>
+    </div>
+    <div class="s-sponsor-content">
+        <div class="sponsor-title">
+            <p>Help us keep improving.</p>
+        </div>
+        <div class="sponsor-text">
+            <p>We're a community, not a company. Help us keep improving by making a donation,
+                or sign your organization up as a Sponsor.</p>
+        </div>
+        <div class="call_to_action_button donate-button">
+            <button class="button button-style-1" style="vertical-align:middle"><span>DONATE </span></button>
+        </div>
+    </div>
+</section>
 </div>
 {% endblock %}
