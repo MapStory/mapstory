@@ -10,8 +10,7 @@
     'osgeoImporter.uploader',
     'ui.bootstrap',
     //maspstory
-    'mapstory.search',
-    'slick'
+    'mapstory.search'
   ], function($locationProvider) {
     if (window.navigator.userAgent.indexOf("MSIE") == -1){
       $locationProvider.html5Mode({

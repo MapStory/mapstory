@@ -369,29 +369,30 @@ class CommonModelApi(ModelResource):
                     int(request.GET.get('limit', 1)) + 1)
             except InvalidPage:
                 raise Http404("Sorry, no results on that page.")
+            
+            current_page = page.number
+            start_index = page.start_index()
+            end_index = page.end_index()
+            num_pages = paginator.num_pages
 
-            if page.has_previous():
-                previous_page = page.previous_page_number()
-            else:
-                previous_page = 1
-            if page.has_next():
-                next_page = page.next_page_number()
-            else:
-                next_page = 1
             total_count = sqs.count()
             objects = page.object_list
         else:
-            next_page = 0
-            previous_page = 0
+            end_index = 0
+            num_pages = 0
+            current_page = 0
+            start_index = 0
             total_count = 0
             facets = {}
             objects = []
 
         object_list = {
-           "meta": {"limit": settings.CLIENT_RESULTS_LIMIT,
-                    "next": next_page,
+           "meta": {"end_index": end_index,
+                    "limit": settings.CLIENT_RESULTS_LIMIT,
+                    "num_pages": num_pages,
                     "offset": int(getattr(request.GET, 'offset', 0)),
-                    "previous": previous_page,
+                    "current_page": current_page,
+                    "start_index": start_index,
                     "total_count": total_count,
                     "facets": facets,
                     },

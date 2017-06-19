@@ -12,7 +12,6 @@ module.exports = function(config) {
       'vendor/angular-animate/angular-animate.min.js',
       'vendor/angular-aria/angular-aria.min.js',
       'vendor/angular-material/angular-material.js',
-      'vendor/angular-slick/dist/slick.min.js',
       'vendor/angular-mocks/angular-mocks.js',
 
       //
@@ -32,7 +31,6 @@ module.exports = function(config) {
       'mapstory/js/spec/django-context.js',
       // mock response from geonode APIs
       'mapstory/js/spec/mockRegionsAPI.js',
-      'mapstory/js/spec/mockKeywordsAPI.js',
       
       // our app code
       'mapstory/js/dist/mapstory.js',

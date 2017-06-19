@@ -17,7 +17,7 @@
       owner__username__in: PROFILE_USERNAME,
       limit: CLIENT_RESULTS_LIMIT,
       offset: 0
-    }
+    };
 
     //if not the owner, don't retrieve unpublished resources
     // needs better permissions management for superusers/admin
@@ -55,17 +55,19 @@
     getResourceCounts();
   };
 
-  function layersController($injector, $scope, $http) { 
+  function layersController($injector, $scope, $http, page) { 
     var vm = this;
-    var query = _.extend({type__in: 'layer'}, $scope.query);
 
     vm.search = function() {
+      // use profile query, but also only get layers
+      var query = _.extend({type__in: 'layer'}, $scope.query);
+
       return $http.get(SEARCH_URL, {params: query || {}})
       .then(
         /* success */
         function(response) {
-          var meta = response.data.meta;
           vm.cards = response.data.objects;
+          page.paginate(response, vm, $scope);
         },
         /* failure */
         function(error) {
@@ -73,22 +75,27 @@
         }
       )
     };
+
+    vm.pageDown = page.down(vm, $scope);
+    vm.pageUp = page.up(vm, $scope);
 
     vm.search()
   };
 
-  function storiesController($injector, $scope, $http) {  
+  function storiesController($injector, $scope, $http, page) {  
     var vm = this;
-    var query = _.extend({type__in: 'mapstory'}, $scope.query);
-
+    
     //Get data from apis and make them available to the page
     vm.search = function() {
+      // use profile query, but also only get mapstories
+      var query = _.extend({type__in: 'mapstory'}, $scope.query);
+
       return $http.get(SEARCH_URL, {params: query || {}})
       .then(
         /* success */
         function(response) {
-          var meta = response.data.meta;
           vm.cards = response.data.objects;
+          page.paginate(response, vm, $scope);
         },
         /* failure */
         function(error) {
@@ -96,6 +103,9 @@
         }
       )
     };
+
+    vm.pageDown = page.down(vm, $scope);
+    vm.pageUp = page.up(vm, $scope);
 
     vm.search()
   };

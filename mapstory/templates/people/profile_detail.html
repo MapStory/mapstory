@@ -30,122 +30,37 @@
                 <div class="col-sm-10">
                     <div class="tabbable-panel">
                         <div class="tabbable-line">
-                            {% include 'people/_profile_tabs.html' %}
+                            {# navigation tabs and content counts for each section #}
+                            {% include 'people/_nav_tabs.html' %}
+                            
                             <div class="tab-content">
-                                <div class="tab-pane active" id="stories_list" ng-controller="storiesController as story">
-                                    <div class="no-content" ng-hide="story.cards.length > 0">
-                                        <h2>No MapStories.</h2>
-                                    </div>
-                                    
-                                    <div ng-show="story.cards.length > 0">
-                                        <div class="clearfix content-results">  
-                                            <ul>
-                                            {% verbatim %}
-                                                <li ng-repeat="item in story.cards" resource-id="{{ item.id }}"
-                                                        class="col-lg-4 col-sm-6 resource-{{ item.id }}">
-                                            {% endverbatim %}
-                                            {% include 'search/_result_content.html' %}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane" id="layers_list" ng-controller="layersController as layer">
-                                    <div class="no-content" ng-hide="layer.cards.length > 0">
-                                        <h2>{% trans "No Layers" %}.</h2>
-                                    </div>
-                                    
-                                     <div ng-show="layer.cards.length > 0">
-                                        <div class="clearfix content-results">
-                                            <ul>
-                                            {% verbatim %}
-                                                <li ng-repeat="item in layer.cards" resource-id="{{ item.id }}"
-                                                        class="col-lg-4 col-sm-6 resource-{{ item.id }}">
-                                            {% endverbatim %}
-                                            {% include 'search/_result_content.html' %}</ul>
-                                        </div>
-                                    </div>
-                                </div>
+                            {# the following 3 tabs are rendered with client-side angular logic and values #}
+                                
+                                {% include 'people/_stories.html' %}
+                                
+                                {% include 'people/_layers.html' %}
+
                                 {% if user == profile %}
-                                    {% include 'people/_uploads_tab.html' %}
+                                    {% include 'people/_uploads.html' %}
                                 {% endif %}
-                                <div class="tab-pane" id="messages_list">
-                                    {% if not inbox_count %}
-                                        <div class="no-content">
-                                            <h2>Clean inbox, yay! <i class="fa fa-smile-o"></i></h2>
-                                        </div>
-                                    {% else %}
-                                        <ul class="nav nav-tabs">
-                                            <li class="active"><a href="#inbox" data-toggle="tab"><i class=""></i>{% trans "Unread" %}</a></li>
-                                            <li><a href="#all" data-toggle="tab"><i class=""></i> {% trans "All" %}</a></li>
-                                        </ul>
-                                        <div class="tab-content">
-                                            <article id="inbox" class="tab-pane active">
-                                                {% with threads_unread as threads %}
-                                                    {% include "user_messages/_message_snippet.html" %}
-                                                {% endwith %}
-                                            </article>
-                                            <article id="all" class="tab-pane">
-                                                {% with threads_all as threads %}
-                                                    {% include "user_messages/_message_snippet.html" %}
-                                                {% endwith %}
-                                            </article>
-                                        </div>
-                                    {% endif %}
+
+                            {# the remaining 5 tabs are rendered with django logic and values #}     
+                                {% if user == profile %}
+                                <div id="messages_list" class="tab-pane">
+                                    {% include 'people/_inbox.html' %}
                                 </div>
-                                <div class="tab-pane" id="user_activities">
-                                    {% if action_list.count == 0 %}
-                                        <div class="no-content">
-                                            <h2>No activities.</h2>
-                                            <h4><a href="{% url "home" %}">Explore {{ SITE_NAME }} now.</a></h4>
-                                        </div>
-                                    {% endif %}
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <ul class="no-style-list">
-                                                {% for action in action_list %}
-                                                    {% activity_item action %}
-                                                {% endfor %}
-                                            </ul>
-                                        </div>
-                                    </div>
+                                {% endif %}
+
+                                <div id="user_activities" class="tab-pane">
+                                    {% include 'people/_activity_feed.html' %}
                                 </div>
-                                <div class="tab-pane" id="journal_entries">
-                                    {% if not journal_entries %}
-                                        <div class="no-content">
-                                            <h2>No entries.</h2>
-                                            <h4><a href="{% url "journal-create" %}">{% trans "Write your first journal entry now." %}</a></h4>
-                                        </div>
-                                    {% else %}
-                                        {% for entry in journal_entries %}
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div class="row">
-                                                        <div class="col-lg-12  col-xs-12">
-                                                            {% if entry.publish %}
-                                                                <h3><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h3>
-                                                                <h6>{{ entry.date }}</h6>
-                                                                <div>
-                                                                    {{ entry.html|safe }}
-                                                                </div>
-                                                            {% elif entry.publish == False and request.user.get_username == profile.username %}
-                                                                <h3><a href="{% url 'journal-update' pk=entry.pk %}">{{ entry.title }} - Resume Draft</a></h3>
-                                                                <h6>{{ entry.date }}</h6>
-                                                                <div>
-                                                                    {{ entry.html|safe }}
-                                                                </div>
-                                                            {% endif %}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <hr/>
-                                        {% endfor %}
-                                    {% endif %}
+                                <div id="journal_entries" class="tab-pane">
+                                    {% include 'people/_journal.html' %}
                                 </div>
-                                <div class="tab-pane" id="favorite_list">
+                                <div id="favorite_list" class="tab-pane">
                                     {% include "favorite/_favorite_list.html" %}
                                 </div>
-                                <div class="tab-pane" id="icon_list">
+                                <div id="icon_list" class="tab-pane">
                                     {% include "icons/_profile_icon_list.html" %}
                                 </div>
                             </div>

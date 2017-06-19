@@ -16,7 +16,7 @@
             </i>
         </h3>
         <div class="clear-filters">
-            <a href="" ng-click="clear('q')">Clear</a>
+            <a href="" ng-click="explore.clear('q')">Clear</a>
         </div>
         <div class="filter-content">
             <div class="search-bar">
@@ -42,14 +42,14 @@
     {% verbatim %}
         <h3>Content Type</h3>
         <div class="clear-filters">
-            <a href="" ng-click="clear('type__in')">Clear</a>
+            <a href="" ng-click="explore.clear('type__in')">Clear</a>
         </div>
         <div class="filter-content">
             <div>
                 <input type="checkbox"
                        data-value="layer"
                        data-filter="type__in"
-                       ng-click="multiple_choice_listener($event)"
+                       ng-click="explore.checkboxQuery($event)"
                        ng-checked="isActivated('layer', query, 'type__in')">
                     StoryLayer
                 </input>
@@ -58,7 +58,7 @@
                 <input type="checkbox"
                        data-value="mapstory"
                        data-filter="type__in"
-                       ng-click="multiple_choice_listener($event)"
+                       ng-click="explore.checkboxQuery($event)"
                        ng-checked="isActivated('mapstory', query, 'type__in')">
                     {{sitename}}
                 </input>
@@ -71,11 +71,11 @@
     {% verbatim %}
         <h3>Category</h3>
         <div class="clear-filters">
-            <a href="" ng-click="clear('category__identifier__in')">Clear</a>
+            <a href="" ng-click="explore.clear('category__identifier__in')">Clear</a>
         </div>
         <div class="filter-content">
             <div ng-repeat="category in categories">
-                <input type="checkbox" data-value="{{ category.identifier }}" data-filter="category__identifier__in" ng-click="multiple_choice_listener($event)" ng-checked="isActivated(category.identifier, query, 'category__identifier__in')"> {{ category.gn_description }}
+                <input type="checkbox" data-value="{{ category.identifier }}" data-filter="category__identifier__in" ng-click="explore.checkboxQuery($event)" ng-checked="isActivated(category.identifier, query, 'category__identifier__in')"> {{ category.gn_description }}
                 </input>
             </div>
         </div>
@@ -86,15 +86,15 @@
     {% verbatim %}
         <h3>StoryTeller</h3>
         <div class="clear-filters">
-            <a href="" ng-click="clear('owner__username__in')">Clear</a>
+            <a href="" ng-click="explore.clear('owner__username__in')">Clear</a>
         </div>
         <div class="filter-content">
             <md-content class="md-padding" layout="column">
                 <md-chips ng-model="author.userChips"
                           md-autocomplete-snap
                           md-require-match="true"
-                          md-on-add="add_query('owner__username__in', $chip.username)"
-                          md-on-remove="remove_query('owner__username__in', $chip.username)">
+                          md-on-add="explore.addQuery('owner__username__in', $chip.username)"
+                          md-on-remove="explore.removeQuery('owner__username__in', $chip.username)">
                     <md-autocomplete md-selected-item="selectedItem"
                                      md-search-text="searchText"
                                      md-delay= "400"
@@ -122,14 +122,14 @@
     {% verbatim %}
         <h3>Tags</h3>
         <div class="clear-filters">
-            <a href="" ng-click="clear('keywords__slug__in')">Clear</a>
+            <a href="" ng-click="explore.clear('keywords__slug__in')">Clear</a>
         </div>
         <div class="filter-content">
             <md-content class="md-padding" layout="column">
                 <md-chips ng-model="tags.chips" 
                 md-autocomplete-snap 
-                md-on-add="add_query('keywords__slug__in', $chip.slug)"
-                md-on-remove="remove_query('keywords__slug__in', $chip.slug)"
+                md-on-add="explore.addQuery('keywords__slug__in', $chip.slug)"
+                md-on-remove="explore.removeQuery('keywords__slug__in', $chip.slug)"
                 md-transform-chip="tags.field.newChip($chip)">
                     <md-autocomplete
                         md-selected-item="selectedItem"

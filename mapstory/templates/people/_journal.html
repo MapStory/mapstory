@@ -1,0 +1,33 @@
+{% load i18n %}
+
+{% if not journal_entries %}
+    <div class="no-content">
+        <h2>No entries.</h2>
+        <h4><a href="{% url "journal-create" %}">{% trans "Write your first journal entry now." %}</a></h4>
+    </div>
+{% else %}
+    {% for entry in journal_entries %}
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-lg-12  col-xs-12">
+                        {% if entry.publish %}
+                            <h3><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h3>
+                            <h6>{{ entry.date }}</h6>
+                            <div>
+                                {{ entry.html|safe }}
+                            </div>
+                        {% elif entry.publish == False and request.user.get_username == profile.username %}
+                            <h3><a href="{% url 'journal-update' pk=entry.pk %}">{{ entry.title }} - Resume Draft</a></h3>
+                            <h6>{{ entry.date }}</h6>
+                            <div>
+                                {{ entry.html|safe }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+    {% endfor %}
+{% endif %}
