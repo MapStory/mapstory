@@ -5,7 +5,7 @@
 (function() {
 	'use strict';
 
-	angular.module('mapstory.search', ['ngMaterial'], function($locationProvider) {
+	angular.module('mapstory.search', ['ngMaterial', 'mapstory'], function($locationProvider) {
     if (window.navigator.userAgent.indexOf("MSIE") == -1){
       $locationProvider.html5Mode({
         enabled: true,

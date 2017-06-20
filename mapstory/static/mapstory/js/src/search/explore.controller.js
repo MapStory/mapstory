@@ -9,15 +9,19 @@
     .module('mapstory.search')
     .controller('exploreController', exploreController);
 
-  function exploreController($injector, $scope, $location, $http, $q, Configs) {
+  function exploreController($injector, $scope, $location, $http, $q, Configs, page, queryService) {
+    var vm = this;
+
     $scope.query = $location.search();
     $scope.sitename = SITE_NAME; //used in content_sidebar
 
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
 
-    $scope.lists = {};
     $scope.autocomplete = {};
+
+    $scope.pageDown = page.down(vm, $scope);
+    $scope.pageUp = page.up(vm, $scope);
 
     if (!Configs.hasOwnProperty("disableQuerySync")) {
       // Keep in sync the page location with the query object
@@ -28,60 +32,49 @@
     } 
 
     $scope.search = function() {
-      return query_api($scope.query).then(function(result) {
-        return result;
-      });
-    };
+      // we expose offset and limit for manipulation in the browser url,
+      // validate them for error cases here (not needed when not exposed)
+      queryService.validateOffset($scope);
+      queryService.validateLimit($scope);
 
-    //Get data from apis and make them available to the page
-    function query_api(data){
-
-      return $http.get($scope.apiEndpoint, {params: data || {}})
+      return $http.get($scope.apiEndpoint, {params: $scope.query || {}})
         .then(
           /* success */
           function(response) {
-            $scope.results = response.data.objects;
-            $scope.total_counts = response.data.meta.total_count;
-            $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
-            $scope.numresults = Number($scope.query.offset) + Number($scope.results.length);
-            $scope.resultStart = Number($scope.query.offset) + 1;
+            $scope.cards = response.data.objects;
+            page.paginate(response, vm, $scope);
           },
           /* failure */
           function(error) {
-            console.log("The request failed: ", error);
+            if( error.data.error_message === "Sorry, no results on that page." ){
+              console.log("Setting offset to 0 and searching again.");
+              queryService.resetOffset($scope);
+            } else {
+              console.log(error);
+            }
           }
         )
     };
 
-    $scope.clearVTC = function(){
-      $scope.VTCisChecked = false;
-      $scope.filterVTC();
-      $scope.search();
-    };
 
-    $scope.filterVTC = function() {
-      // When VTC check box is clicked, also filter by VTC; when unchecked, reset it
-      if ($scope.VTCisChecked == true) {
-        $scope.VTCisChecked = false;
-        $scope.itemFilter = { is_active: true };
-        
-        console.log($scope.itemFilter);
-      } else {
-        $scope.VTCisChecked = true;
-        $scope.itemFilter = {Volunteer_Technical_Community: true};
-        
-        console.log($scope.itemFilter);
-      }
-    };
 
-    // REINSTATE AFTER API HAS BEEN UPDATED FOR VTC FILTER
-    // /* handling checkboxy on/off filters and display */
-    // $scope.VTC = function(){
-    //   if($scope.query.Volunteer_Technical_Community == false){
-    //     delete($scope.query.Volunteer_Technical_Community);
-    //   }
-    //   $scope.search();
-    // };
+    ////////////////////////////
+    /*  Query Methods */
+    // add, remove, checkbox( aka, toggle), and clear
+    // activation of checkboxes on refresh
+    // vtc front end filtering
+    
+    vm.addQuery = queryService.addQuery.bind($scope);
+    vm.removeQuery = queryService.removeQuery.bind($scope);
+
+    vm.checkboxQuery = function($event){
+      var element = $($event.target);
+      var filter = element.attr('data-filter');
+      var value = element.attr('data-value');
+
+      // toggle this filter:value on/off on the query
+      queryService.toggleQuery.apply($scope, [filter, value]);
+    };
 
     //Checkbox selection syncing with query
     $scope.isActivated = function (item, list, filter) {
@@ -89,138 +82,54 @@
         return list[filter].indexOf(item) > -1;
       } 
     };
-
-    /*
-    * Add the selection behavior to the element, it adds/removes the 'active' class
-    * and pushes/removes the value of the element from the query object
-    */
-    $scope.multiple_choice_listener = function($event){
-      var element = $($event.target);
-      var query_entry = [];
-      var data_filter = element.attr('data-filter');
-      var value = element.attr('data-value');
-
-      // If the query object has the record then grab it
-      if ($scope.query.hasOwnProperty(data_filter)){
-
-        // When in the location are passed two filters of the same
-        // type then they are put in an array otherwise is a single string
-        if ($scope.query[data_filter] instanceof Array){
-          query_entry = $scope.query[data_filter];
-        }else{
-          query_entry.push($scope.query[data_filter]);
-        }
-      }
-
-      if (query_entry.indexOf(value) == -1){
-        query_entry.push(value);
-      } else {
-         query_entry.splice(query_entry.indexOf(value), 1);
-      }
-        
-      //save back the new query entry to the scope query
-      $scope.query[data_filter] = query_entry;
-
-      //if the entry is empty then delete the property from the query
-      if(query_entry.length == 0){
-        delete($scope.query[data_filter]);
-      }
-
-      $scope.search();
-    };
-
-    /* functionality for tagging and queries */     
-    $scope.add_query = function(filter, value) {
-      var query_entry = [];
-      if ($scope.query.hasOwnProperty(filter)) {
-        //if theres a list of items, grab them. otherwise, add the only value to empty list
-        if ($scope.query[filter] instanceof Array) {
-          query_entry = $scope.query[filter];
-        } else {
-          query_entry.push($scope.query[filter]);
-        }
-        // Only add it if this value doesn't already exist
-        // Apparently this doesn't exactly work...
-        if ($scope.query[filter].indexOf(value) == -1) {
-          query_entry.push(value);
-        }
-      } else {
-        query_entry = [value];
-      }
-      $scope.query[filter] = query_entry;
-      $scope.search();
-    };
-
-    $scope.remove_query = function (filter, value) {
-      var query_entry = [];
-      // First check if this even exists to remove
-      if ($scope.query.hasOwnProperty(filter)) {
-        // Grab the current query
-        if ($scope.query[filter] instanceof Array) {
-          query_entry = $scope.query[filter];
-        } else {
-          query_entry.push($scope.query[filter]);
-        }
-        // Remove this value
-        query_entry.splice(query_entry.indexOf(value), 1);
-        // Update and run the query
-        $scope.query[filter] = query_entry;
-        query_api($scope.query);
-      }
-    };
-
-    $scope.clear = function(filter){
+    
+    vm.clear = function(filter){
       delete($scope.query[filter]);
       $scope.search();
     };
 
+    // Volunteer Technical Community checkbox is a front-end show/hide filter
+    // The following functions toggle the visibility of the _result_users card
+
+    vm.clearVTC = function(){
+      vm.VTCisChecked = false;
+      $scope.itemFilter = { is_active: true };
+      $scope.search();
+    };
+
+    vm.filterVTC = function() {
+      // When VTC check box is clicked, also filter by VTC; when unchecked, reset it
+      if (vm.VTCisChecked) {
+        $scope.itemFilter = {Volunteer_Technical_Community: true}; 
+      } else {
+        $scope.itemFilter = { is_active: true };  
+      }
+    };
+
+    //////////////
     /* ORDERING */
+    //set default order methods for content and storyteller
     $scope.orderMethodContent = '-popular_count';
     $scope.orderMethodStoryteller = 'username';
 
+    //expose additional sorting to the dropdown "sort by"
     $scope.orderMethods = {
+      //for general content results
       content:
         [
           {name:'Popular', filter:'-popular_count'},
           {name:'Newest', filter:'-date'}
         ], 
+        //for the storyteller results
       storyteller:
         [
           {name: 'Username Z-A', filter: '-username'},
           {name: 'Username A-Z', filter: 'username'}
         ]
     };
-
-    /*
-    * Pagination 
-    */
-    $scope.page = Math.round(($scope.query.offset / $scope.query.limit) + 1);
-    $scope.numpages = Math.round(($scope.total_counts / $scope.query.limit) + 0.49);
-    $scope.resultStart = Number($scope.query.offset) + 1;
-
-    function updateOffset(){
-      $scope.query.offset =  $scope.query.limit * ($scope.page - 1);
-    }
-
-    $scope.pageDown = function(){
-      if($scope.page > 1){
-        $scope.page -= 1;
-        updateOffset();
-        $scope.search();
-      }   
-    };
-
-    $scope.pageUp = function(){
-      if($scope.page < $scope.numpages){
-        $scope.page += 1;
-        updateOffset();
-        $scope.search();
-      }
-    };
-
-    /* USER VS CONTENT EXPLORE SETTINGS
-
-    Persisting content and storyteller view & queries through page refresh */
+    /////////////////////
+    /* USER VS CONTENT */
+    // Persisting content and storyteller view & queries through page refresh 
 
     // Make the content one active, user inactive
     $scope.defaultOwners = function() {
@@ -232,9 +141,10 @@
       };
      $scope.search();
     };
+
     // Make the user one active, content inactive
     $scope.defaultContent = function() {
-      $scope.apiEndpoint = '/api/base/search/';
+      $scope.apiEndpoint = SEARCH_URL;
       $scope.query = { 
         content: true, 
         is_published: true, 
@@ -252,7 +162,7 @@
       $scope.query.content = true;
 
       //default to content explore
-      $scope.apiEndpoint = '/api/base/search/';
+      $scope.apiEndpoint = SEARCH_URL;
 
       //add is_published even if they've removed it,
       //but persist all other filters

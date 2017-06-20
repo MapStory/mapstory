@@ -1,5 +1,8 @@
 {% load i18n %}
-<div class="tab-pane" id="uploads_list" ng-controller="uploadsController as up">
+{# this tab is predominantly controlled by client-side angular logic and values #}
+<div id="uploads_list" class="tab-pane"  
+    ng-controller="uploadsController as up">
+
     <div class="no-content" ng-hide="up.uploads.length">
         <h2>No Uploads.</h2>
         <h4>
