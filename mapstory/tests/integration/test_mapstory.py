@@ -1,5 +1,6 @@
 from unittest import skip
 from account.models import EmailConfirmation
+from bs4 import BeautifulSoup
 
 from django.core.urlresolvers import reverse
 from django.core import mail
@@ -60,6 +61,18 @@ class MapStoryTests(MapStoryTestMixin):
         response = c.get(reverse('index_view'))
         self.assertEqual(response.status_code, 200)
         self.assertHasGoogleAnalytics(response)
+
+        # Assert that we have the different sections
+        # Use the soup:
+        soup = BeautifulSoup(response.content, 'html.parser')
+        self.assertIsNotNone(soup)
+        self.assertEquals(soup.title.string, u'MapStory')
+
+        # Our homepage should have 8 sections
+        self.assertEquals(len(soup.find_all('section')), 8)
+
+        # Should display the hero
+        self.assertIsNotNone(soup.find(id='hero'))
 
     @override_settings(GOOGLE_ANALYTICS='testing')
     def test_search_renders(self):
