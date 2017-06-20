@@ -11,14 +11,11 @@
             </a>
         </div>
         <div class="footer-column">
-            <h3>SUBSCRIBE TO OUR NEWSLETTER</h3>
-            <p>We'll send you the latest MapStory news once a month</p>
-            <form action="#">
-                <!-- @TODO: Send email form -->
-                <input type="text" name="Email" value="Your email address">
-                <button class="button button-style-1" style="vertical-align:middle"><span>SUBSCRIBE </span></button>
-            </form>
-
+            <h3>CREATE AN ACCOUNT</h3>
+            <p>MapStory is free to use for anyone age 13 and up. Sign up now!</p>
+            <a href="#" data-toggle="modal" data-target="#loginModal">
+                <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+            </a>
         </div>
         <div class="footer-column">
             <h3>WAYS TO CONNECT</h3>
@@ -26,8 +23,16 @@
                 resources with the community</p>
             <p>Find us on Github or Twitter. Use the feedback tool below to report any issues
                 you encounter</p>
+            <a href="https://twitter.com/MapStory">
+                <i class="fa fa-github fa-inverse fa-2x github-icon" aria-hidden="true"></i>
+            </a>
+            <a href="https://github.com/MapStory/mapstory">
+                <i class="fa fa-twitter-square fa-inverse fa-2x" style="color: #189CE6;" aria-hidden="true"></i>
+            </a>
+            <div class="footer-version">
+                {% trans "version" %} {{ VERSION }}
+            </div>
         </div>
+
     </div>
-    <!--  @TODO: FIX THIS -->
-    <!-- THE VERSION NUMBER BREAKS THE COLUMNS.-->
 </footer>
