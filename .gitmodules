@@ -1,0 +1,20 @@
+[submodule "deps/django-mailer"]
+	path = deps/django-mailer
+	url = https://github.com/pinax/django-mailer.git
+	branch = master
+[submodule "deps/icon-commons"]
+	path = deps/icon-commons
+	url = https://github.com/MapStory/icon-commons.git
+	branch = master
+[submodule "deps/django-osgeo-importer"]
+	path = deps/django-osgeo-importer
+	url = https://github.com/GeoNode/django-osgeo-importer.git
+	branch = v0.2.1
+[submodule "deps/django-maploom"]
+	path = deps/django-maploom
+	url = https://github.com/MapStory/django-maploom.git
+	branch = composer
+[submodule "deps/geonode"]
+	path = deps/geonode
+	url = https://github.com/GeoNode/geonode.git
+	branch = 2.6.x
