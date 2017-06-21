@@ -2,11 +2,6 @@
 {% load i18n %}
 {% load mapstory_tags %}{# mapstory/templatetags/mapstory_tags.py, only used here for images|byname filter parallax #}
 
-{% block extra_head %}
-    <link href="{{ STATIC_URL }}vendor/slick-carousel/slick/slick.css" rel="stylesheet" >
-    <link href="{{ STATIC_URL }}vendor/slick-carousel/slick/slick-theme.css" rel="stylesheet">
-{% endblock %}
-
 {% block middle %}
 <div class="outer-container">
 <!--MAP-->
@@ -129,7 +124,7 @@
                 </div>
             </div>
             <div class="call_to_action_button">
-                <a href="{% url 'search' %}">
+                <a href="/getstarted">
                     <button class="button button-style-2" style="vertical-align:middle"><span>SEE MORE </span></button>
                 </a>
             </div>
@@ -158,7 +153,7 @@
                 <div class="how-content">
                     <h4><b>Edit StoryLayers</b></h4>
                     <p>Edit StoryLayers shared by the community to make them as
-                        complete and accurate as possible</p>
+                        complete and accurate as possible.</p>
                 </div>
             </div>
             <div class="how-box">
@@ -168,7 +163,7 @@
                 <div class="how-content">
                     <h4><b>Compose MapStories</b></h4>
                     <p>Compose MapStories by combining StoryLayers with text, images and video and
-                        then share them with a global audience</p>
+                        then share them with a global audience.</p>
                 </div>
             </div>
         </div>
@@ -188,9 +183,9 @@
         <div class="text-content">
             <h1><b>Contribute to the global data commons</b></h1>
             <p>Put your data in a place where it can live accessible to all, in perpetuity, without
-                being subject to commercial influence</p>
+                being subject to commercial influence.</p>
             <div class="call_to_action_button">
-                <a href="{% url 'search' %}">
+                <a href="/getstarted">
                     <button class="button button-style-2" style="vertical-align:middle"><span>LEARN MORE </span></button>
                 </a>
             </div>
@@ -205,7 +200,7 @@
             <p>Curate the accuracy and quality of StoryTellers by adding ratings,
                 checking metadata, making comments and commiting version edits.</p>
             <div class="call_to_action_button">
-                <a href="{% url 'search' %}">
+                <a href="/getstarted">
                     <button class="button button-style-2" style="vertical-align:middle"><span>LEARN MORE </span></button>
                 </a>
             </div>
@@ -226,7 +221,7 @@
             <p>Combine StoryLayers with narrative elements like images, text and video
                 to compose MapStories that explain how and why change occurs. No coding required.</p>
             <div class="call_to_action_button">
-                <a href="{% url 'search' %}">
+                <a href="/getstarted">
                         <button class="button button-style-2" style="vertical-align:middle"><span>LEARN MORE </span></button>
                 </a>
             </div>
@@ -237,7 +232,7 @@
 <section class="more-section clearfix">
     <div class="more-wrapper" style="background-image: url('{{ STATIC_URL }}/mapstory/img/bg_topography.png');">
         <div>
-            <p>The more we all know about the story of our planet, the more likey
+            <p>The more we all know about the story of our planet, the more likely
                 we are to treat it, and each other well. Sign up, and become a mapstoryteller today.</p>
         </div>
         <div class="call_to_action_button">
@@ -279,7 +274,9 @@
                 or sign your organization up as a Sponsor.</p>
         </div>
         <div class="call_to_action_button donate-button">
-            <button class="button button-style-1" style="vertical-align:middle"><span>DONATE </span></button>
+            <a href="{% url 'donate' %}">
+                <button class="button button-style-1" style="vertical-align:middle"><span>DONATE </span></button>
+            </a>
         </div>
     </div>
 </section>
