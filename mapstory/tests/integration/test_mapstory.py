@@ -72,7 +72,7 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEquals(len(soup.find_all('section')), 8)
 
         # Should display the hero
-        self.assertIsNotNone(soup.find(id='hero'))
+        self.assertIsNotNone(soup.find_all('section', class_='map-section'))
 
     @override_settings(GOOGLE_ANALYTICS='testing')
     def test_search_renders(self):
