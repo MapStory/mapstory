@@ -59,6 +59,7 @@
                         <ul class="submenu">
                             <li><a href="{% url 'profile_detail' slug=user.username %}">{{ user.username }}</a></li>
                             <li class="divider"></li>
+                             <li><a href="{% url "messages_inbox" %}">{% trans "Messages" %}</a></li>
                             <li><a href="{% url 'edit_profile' user.username %}">{% trans "Edit Profile" %}</a></li>
                             <li><a href="{% url 'account_password' %}">{% trans "Change Password" %}</a></li>
                             <li><a href="{% url 'profile_detail' slug=user.username %}?showNotifications=true">{% trans "Notification Settings" %}</a></li>

@@ -64,8 +64,14 @@
         return this.container.id;
     };
 
-    ol.Overlay.Popup.prototype.show = function(coord, html) {
+    ol.Overlay.Popup.prototype.show = function(coord, encodedHtml) {
         this.setPosition(coord);
+        var html;
+        try{
+            html = decodeURIComponent(escape(encodedHtml));
+        } catch(e) {
+            html = encodedHtml;
+        }
         if (html instanceof HTMLElement) {
             this.content.innerHTML = "";
             this.content.appendChild(html);
