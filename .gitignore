@@ -17,6 +17,7 @@ static_root
 uploaded
 .vagrant
 .vaultpass
+.vscode
 .DS_Store
 ._.DS_Store
 ._development.db-journal
