@@ -1170,10 +1170,6 @@ def layer_detail_id(request, layerid):
     return layer_detail(request, layer.typename)
 
 
-def messages_redirect(request):
-    return HttpResponseRedirect("/storyteller/{}/#messages_list".format(request.user))
-
-
 def layer_acls_mapstory(request):
     response = layer_acls(request)
     result = json.loads(response.content)
