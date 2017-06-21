@@ -35,16 +35,16 @@ services:
       internal:
     expose:
       - "5432"
-    ports:
-      - "5432:5432"
+#    ports:
+#      - "5432:5432"
 
   pgadmin:
     links:
       - postgres
     env_file:
       - docker/env/dev/db_auth.env
-    ports:
-      - "5050:5050"
+#    ports:
+#      - "5050:5050"
 
   elasticsearch:
     ports:
@@ -56,8 +56,8 @@ services:
       - RABBITMQ_DEFAULT_PASS=password
       - RABBITMQ_DEFAULT_VHOST=mapstory
     ports:
-      - "15671:15671"
-      - "15672:15672"
+#      - "15671:15671"
+#      - "15672:15672"
 
   django:
     links:
@@ -73,7 +73,7 @@ services:
       - ./cover:/srv/mapstory/cover
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
     ports:
-      - "8000:8000"
+#      - "8000:8000"
 
   celery:
     links:
@@ -98,7 +98,7 @@ services:
       - docker/env/dev/geoserver.env
       - docker/env/dev/db_auth.env
     ports:
-      - "8080:8080"
+#      - "8080:8080"
 
   nginx:
     env_file:
