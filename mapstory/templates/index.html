@@ -16,13 +16,16 @@
         <div class="hero-circle">
             <div class="hero-content">
                 <h1>The atlas of change that everyone can edit</h1>
+                {# {{ site.assets.subtitle }} #}
                 <p><b>Working together, we're mapping the world as it evolves geographically,
                     at local, regional and global scales. Join us!</b></p>
-                <div class="main_call_to_action_button hero-button">
-                    <a href="#" data-toggle="modal" data-target="#loginModal">
-                        <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
-                    </a>
-                </div>
+                {% if not user.is_authenticated %}
+                    <div class="main_call_to_action_button hero-button">
+                        <a href="#" data-toggle="modal" data-target="#loginModal">
+                            <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

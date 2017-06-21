@@ -3,16 +3,14 @@
     <div class="footer-wrapper">
         <div class="footer-column">
             <h3>SUPPORT US</h3>
-            <p>MapStory is the atlas of change that anyone can edit. Our work is
-                sustained by the nonprofit MapStory foundation and dedicated mapstorytellers and
-                sponsors. Join us!</p>
+            <p> {{ site.assets.footer_text | safe }} </p>
             <a href="{% url 'donate' %}">
                 <button class="button button-style-1" style="vertical-align:middle"><span>DONATE </span></button>
             </a>
         </div>
         <div class="footer-column">
             <h3>CREATE AN ACCOUNT</h3>
-            <p>MapStory is free to use for anyone age 13 and up. Sign up now!</p>
+            <p>{{ SITE_NAME }} is free to use for anyone age 13 and up. Sign up now!</p>
             <a href="#" data-toggle="modal" data-target="#loginModal">
                 <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
             </a>
