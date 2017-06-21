@@ -3,7 +3,181 @@
 {% load mapstory_tags %}{# mapstory/templatetags/mapstory_tags.py, only used here for images|byname filter parallax #}
 
 {% block middle %}
-<div class="outer-container">
+<div>
+    <!-- Tagline + Subtitle -->
+        <div layout="column">
+            <h1>The atlas of change that everyone can edit</h1>
+                {# {{ site.assets.subtitle }} #}
+            <p>Working together, we're mapping the world as it evolves geographically, at local, regional and global scales. Join us!</p>
+            
+            {# if not user.is_authenticated #}
+                
+                <a href="#" data-toggle="modal" data-target="#loginModal">
+                    <button class="button button-style-1">
+                        <span>SIGN UP</span>
+                    </button>
+                </a>
+
+            {# endif #}
+        </div>
+
+    <!-- Featured Content -->
+        <div layout="column">
+            <h2>Featured MapStories from Across the Community</h2>
+
+            <div layout="row" layout-sm="column" layout-xs="column">
+                  <div>
+                    I'm above on mobile, and to the left on larger devices.
+                  </div>
+                  <div>
+                    I'm below on mobile, and to the right on larger devices.
+                  </div>
+            </div>
+
+
+            <a href="/getstarted">
+                <button class="button button-style-2">
+                    <span>SEE MORE </span>
+                </button>
+            </a>
+        </div>
+
+    <!-- How it Works -->
+        <div layout="column">
+            <h2> How It Works </h2>
+
+            <div layout="row" layout-xs="column">
+                
+                <div layout="column" layout-xs="row">
+                    <div style="height: 100px">
+                        <img src="{{ STATIC_URL }}mapstory/img/icon_upload.png" style="max-width: 100%; max-height: 100%" />
+                    </div>
+                    <div >
+                        <h3>Upload StoryLayers</h3>
+                        Upload datasets as StoryLayers or, if you don't have data to upload, generate new StoryLayers from scratch.
+                    </div>
+                </div>
+
+                <div layout="column" layout-xs="row">
+                    <div style="height: 100px" >
+                        <img src="{{ STATIC_URL }}mapstory/img/icon_edit.png" style="max-width: 100%; max-height: 100%" />
+                    </div>
+                    <div>
+                        <h3>Edit StoryLayers</h3>
+                        Edit StoryLayers shared by the community to make them as complete and accurate as possible.
+                    </div>
+                </div>
+
+                <div layout="column" layout-xs="row">
+                    <div style="height: 100px">
+                        <img src="{{ STATIC_URL }}mapstory/img/icon_compose.png" style="max-width: 100%; max-height: 100%" />
+                    </div>
+                    <div>
+                        <h3>Compose MapStories</h3>
+                        Compose MapStories by combining StoryLayers with text, images and video and then share them with a global audience.
+                    </div>
+                </div>
+
+            </div>
+
+      
+            <a href="#" data-toggle="modal" data-target="#loginModal">
+                <button class="button button-style-1">
+                    <span>SIGN UP </span>
+                </button>
+            </a>
+        </div>
+
+    <!-- Contribute -->
+
+            <div layout="row" layout-xs="column">
+                <div flex-gt-sm="40" flex="30"> 
+                    <img src="{{ STATIC_URL }}mapstory/img/global_data_commons.png" class="img-circle home-shadow" style="width: 90%">
+                </div>
+                <div layout="column">
+                    <h2>Contribute to the global data commons</h2>
+
+                    Put your data in a place where it can live accessible to all, in perpetuity, without being subject to commercial influence.
+                
+                    <a href="/getstarted">
+                        <button class="button button-style-2">
+                            <span>LEARN MORE </span>
+                        </button>
+                    </a>
+                </div>
+            </div>
+
+    <!-- Expertise -->
+
+            <div layout="row" layout-xs="column">  
+                <div layout="column">
+
+                    <h2>Share your expertise through edits</h2>
+
+                    Curate the accuracy and quality of StoryTellers by adding ratings, checking metadata, making comments and commiting version edits.
+
+                    <a href="/getstarted">
+                        <button class="button button-style-2">
+                            <span>LEARN MORE </span>
+                        </button>
+                    </a>
+                </div>
+
+                <div flex-gt-sm="40" flex="30"> 
+                    <img src="{{ STATIC_URL }}mapstory/img/expertise_through_edits.png" class="home-shadow" style="width: 90%"/>
+                </div>
+            </div>
+
+    <!-- Bring to Life -->
+        <div layout="row" layout-xs="column">
+            <div flex-gt-sm="40" flex="30"> 
+                <img src="{{ STATIC_URL }}mapstory/img/map_small_fallback.png" class="home-shadow" style="width: 90%">
+            </div>
+            <div layout="column">
+                <h2>Bring your story to life</h2>
+
+                Combine StoryLayers with narrative elements like images, text and video to compose MapStories that explain how and why change occurs. No coding required.
+            
+                <a href="/getstarted">
+                    <button class="button button-style-2">
+                        <span>LEARN MORE </span>
+                    </button>
+                </a>
+            </div>
+        </div>
+
+        <div layout="column">   
+            <h2> The more we all know about the story of our planet, the more likely we are to treat it, and each other well. Sign up, and become a mapstoryteller today. </h2>
+            
+            <a href="#" data-toggle="modal" data-target="#loginModal">
+                <button class="button button-style-1">
+                    <span>SIGN UP </span>
+                </button>
+            </a>
+        </div>
+
+    <!-- Sponsors -->
+        <div layout="row" layout-xs="column">      
+            <div flex-gt-sm="50" layout="column">
+                thing
+            </div>
+
+            <div layout="column">
+                <h3>Help us keep improving.</h3>
+                We're a community, not a company. Help us keep improving by making a donation, or sign your organization up as a Sponsor.
+
+                <a href="{% url 'donate' %}">
+                    <button class="button button-style-1">
+                        <span>DONATE </span>
+                    </button>
+                </a>
+            </div>
+        </div>
+
+</div>
+
+<div class="outer-container" style="margin-top:100px">
+
 <!--MAP-->
 <section class="map-section" >
     <div class="map-wrapper" style="background-image: url('{{ STATIC_URL }}/mapstory/img/hero_img_fallback.png');">
