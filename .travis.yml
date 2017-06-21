@@ -15,7 +15,7 @@ python:
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION=1.11.2
+    - DOCKER_COMPOSE_VERSION=1.14.0
     - secure: "IMm6jAeLGJ1Vo3L81JIEh2/Z2jIARYFBviQ5cxTTH88ndN2Oj03rPDjvkP44YZwZT7Gd768Ve1PuEgq5oVmqd+oZF7hUEh08LalUV9aOkIRFEc8SjuUJVFhFzUGovqDr+Kg+Y7OqDODhZjvORqnNpOkWNUUnR26MsRY/x9vNO50="
     - secure: "FJobmS7HNb2L95ZN0s81r/MpmM5kizgyoG6bUpgIaYhQMweJgLPinHOWB+54VAr7jkdDjN5b+4hHa1pcWNSWGLDgxMZxj9pPej7Aiq0wvFMlbzai3W+/FcNENHjd3sBTLNpWiBrpQNyUXP2/+2QWPMqCbUfiS90AkA5Du198pjE="
 
@@ -29,7 +29,7 @@ addons:
 before_install:
   # Install Docker Engine
   - sudo apt-get update
-  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-engine
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   - docker --version
   # Install Docker Compose
   - sudo rm /usr/local/bin/docker-compose
