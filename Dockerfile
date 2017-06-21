@@ -144,6 +144,7 @@ RUN set -ex \
 
 COPY scripts ./scripts
 COPY docker/django/run.sh /opt/
+COPY docker/django/local_settings.py /opt/
 
 USER mapstory
 VOLUME $STATIC_ROOT
