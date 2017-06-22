@@ -55,7 +55,7 @@ services:
       - RABBITMQ_DEFAULT_USER=mapstory
       - RABBITMQ_DEFAULT_PASS=password
       - RABBITMQ_DEFAULT_VHOST=mapstory
-    ports:
+#    ports:
 #      - "15671:15671"
 #      - "15672:15672"
 
@@ -72,7 +72,7 @@ services:
       - .:/srv/mapstory/
       - ./cover:/srv/mapstory/cover
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
-    ports:
+#    ports:
 #      - "8000:8000"
 
   celery:
@@ -97,7 +97,7 @@ services:
       - docker/env/dev/public_host.env
       - docker/env/dev/geoserver.env
       - docker/env/dev/db_auth.env
-    ports:
+#    ports:
 #      - "8080:8080"
 
   nginx:
