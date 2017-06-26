@@ -19,13 +19,13 @@
                 {# {{ site.assets.subtitle }} #}
                 <p><b>Working together, we're mapping the world as it evolves geographically,
                     at local, regional and global scales. Join us!</b></p>
-                {% if not user.is_authenticated %}
                     <div class="main_call_to_action_button hero-button">
+                    {% if not user.is_authenticated %}
                         <a href="#" data-toggle="modal" data-target="#loginModal">
                             <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
                         </a>
+                    {% endif %}
                     </div>
-                {% endif %}
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
             <h1><b>Featured MapStories from Across the Community</b></h1>
             <div class="card_row">
                 <div class="card">
-                    <a href="{% url 'mapstory_view' storyid=21510 %}">
+                    <a href="https://mapstory.org/story/21510">
                         <div class="img-container">
                             <img src="{{ STATIC_URL }}mapstory/img/story01.png" style="width:100%" align="left">
                         </div>
@@ -127,7 +127,7 @@
                 </div>
             </div>
             <div class="call_to_action_button">
-                <a href="/getstarted">
+                <a href="{%  url 'search' %}">
                     <button class="button button-style-2" style="vertical-align:middle"><span>SEE MORE </span></button>
                 </a>
             </div>
@@ -171,9 +171,11 @@
             </div>
         </div>
         <div class="call_to_action_button how_button">
+            {% if not user.is_authenticated %}
             <a href="#" data-toggle="modal" data-target="#loginModal">
                 <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
             </a>
+            {% endif %}
         </div>
     </div>
 </section>
@@ -200,8 +202,8 @@
     <div>
         <div class="text-content">
             <h1><b>Share your expertise through edits</b></h1>
-            <p>Curate the accuracy and quality of StoryTellers by adding ratings,
-                checking metadata, making comments and commiting version edits.</p>
+            <p>Curate the accuracy and quality of StoryLayers by adding ratings,
+                checking metadata, making comments and committing version edits.</p>
             <div class="call_to_action_button">
                 <a href="/getstarted">
                     <button class="button button-style-2" style="vertical-align:middle"><span>LEARN MORE </span></button>
@@ -239,9 +241,11 @@
                 we are to treat it, and each other well. Sign up, and become a mapstoryteller today.</p>
         </div>
         <div class="call_to_action_button">
+            {% if not user.is_authenticated %}
             <a href="#" data-toggle="modal" data-target="#loginModal">
                 <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
             </a>
+            {% endif %}
         </div>
     </div>
 </section>
