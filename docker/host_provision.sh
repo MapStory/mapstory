@@ -24,8 +24,10 @@ sudo systemctl enable docker
 sudo usermod -aG docker $USER
 
 # Install docker-compose
+sudo rm -f /usr/local/bin/docker-compose
 sudo curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
+sudo rm -f /etc/bash_completion.d/docker-compose
 sudo curl -L https://raw.githubusercontent.com/docker/compose/$(docker-compose version --short)/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
 alias dco="docker-compose"
 echo 'alias dco="docker-compose"' >> ~/.bashrc
@@ -34,7 +36,10 @@ echo 'alias dco="docker-compose"' >> ~/.bashrc
 sudo su -l $USER -c "docker run hello-world"
 
 # Install REX-Ray
-sudo apt-get install -y --no-install-recommends \
-    nfs-client
-curl -sSL https://dl.bintray.com/emccode/rexray/install | sh -s -- stable 0.9.1
-docker plugin install --grant-all-permissions store/rexray/efs:0.8.2
+if [ ! "$USER" == "vagrant" ]; then
+    # Skip if being used in a dev environment
+    sudo apt-get install -y --no-install-recommends \
+        nfs-client
+    curl -sSL https://dl.bintray.com/emccode/rexray/install | sh -s -- stable 0.9.1
+    sudo docker plugin install --grant-all-permissions store/rexray/efs:0.8.2
+fi
