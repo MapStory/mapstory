@@ -8,22 +8,33 @@ from resizeimage import resizeimage
 from io import BytesIO
 from django.core.files.base import ContentFile
 
+
 class ThumbnailImage(SingletonModel):
     thumbnail_image = models.ImageField(
         upload_to=os.path.join(settings.MEDIA_ROOT, 'thumbs'),
     )
 
     def save(self, *args, **kwargs):
+        thumbnail_width = 250
+        thumbnail_height = 150
+
         pil_image_obj = Image.open(self.thumbnail_image)
-        new_image = resizeimage.resize_cover(
-            pil_image_obj,
-            [250, 150],
-            validate=False
-        )
-
         new_image_io = BytesIO()
-        new_image.save(new_image_io, format='PNG')
 
+        if self.thumbnail_image.name.endswith('.gif'):
+            # Save all frames as GIF
+            gif_image = pil_image_obj
+            gif_image.save(new_image_io, format='GIF', save_all=True)
+        else:
+            # Save as PNG
+            new_image = resizeimage.resize_cover(
+                pil_image_obj,
+                [thumbnail_width, thumbnail_height],
+                validate=False
+            )
+            new_image.save(new_image_io, format='PNG')
+
+        # Continue to overwrite the saved thumbnail
         temp_name = self.thumbnail_image.name
         self.thumbnail_image.delete(save=False)
 
