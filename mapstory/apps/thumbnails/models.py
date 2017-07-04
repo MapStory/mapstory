@@ -7,6 +7,7 @@ from solo.models import SingletonModel
 from resizeimage import resizeimage
 from io import BytesIO
 from django.core.files.base import ContentFile
+from .gif_helper import resize_gif
 
 
 class ThumbnailImage(SingletonModel):
@@ -15,16 +16,20 @@ class ThumbnailImage(SingletonModel):
     )
 
     def save(self, *args, **kwargs):
+        new_image_io = BytesIO()
         thumbnail_width = 250
         thumbnail_height = 150
 
+        # Open the uplaoded image
         pil_image_obj = Image.open(self.thumbnail_image)
-        new_image_io = BytesIO()
 
+        # Supports Animated thumbnails
         if self.thumbnail_image.name.endswith('.gif'):
-            # Save all frames as GIF
-            gif_image = pil_image_obj
-            gif_image.save(new_image_io, format='GIF', save_all=True)
+            resize_gif(
+                self.thumbnail_image,
+                save_as=new_image_io,
+                resize_to=(thumbnail_width, thumbnail_height)
+            )
         else:
             # Save as PNG
             new_image = resizeimage.resize_cover(
@@ -38,6 +43,7 @@ class ThumbnailImage(SingletonModel):
         temp_name = self.thumbnail_image.name
         self.thumbnail_image.delete(save=False)
 
+        # Save the new image_io
         self.thumbnail_image.save(
             temp_name,
             content=ContentFile(new_image_io.getvalue()),
@@ -51,3 +57,4 @@ class ThumbnailImageForm(forms.Form):
     thumbnail_image = forms.FileField(
         label='Select a file',
     )
+
