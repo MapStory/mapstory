@@ -51,8 +51,37 @@ class TestThumbnailImage(TestCase):
         final_thumbnail_count = ThumbnailImage.objects.all().count()
         self.assertEqual(final_thumbnail_count, initial_thumbnail_count + 1)
 
+    def test_save_and_retrieve_png(self):
+        initial_thumbnail_count = ThumbnailImage.objects.all().count()
+        # Load a test gif
+        image = Image.open(os.path.join('mapstory/apps/thumbnails/map-marker-icon.png'))
 
+        # Convert the image to text
+        image_as_string = StringIO.StringIO()
+        image.save(image_as_string, 'png')
+        image_as_string.seek(0)
 
+        # Create a test upload
+        test_png = SimpleUploadedFile(
+            "test.png",
+            image_as_string.read(),
+            content_type="image/png"
+        )
+        self.assertIsNotNone(image)
+
+        # Create a thumbnail model object
+        test_thumbnail = ThumbnailImage()
+        test_thumbnail.thumbnail_image.save(
+            'test.png',
+            content=test_png,
+            save=True
+        )
+        self.assertIsInstance(test_thumbnail, ThumbnailImage)
+
+        # Should update the Thumbnail object count
+        test_thumbnail.save()
+        final_thumbnail_count = ThumbnailImage.objects.all().count()
+        self.assertEqual(final_thumbnail_count, initial_thumbnail_count + 1)
 
 
 class TestThumbnailImageForm(TestCase):
