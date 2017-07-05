@@ -18,3 +18,7 @@
 	path = deps/geonode
 	url = https://github.com/GeoNode/geonode.git
 	branch = 2.6.x
+[submodule "docker/geoserver-2.11/geoserver-geonode-ext"]
+	path = docker/geoserver-2.11/geoserver-geonode-ext
+	url = git@github.com:MapStory/geoserver-geonode-ext.git
+	branch = geoserver-2.11

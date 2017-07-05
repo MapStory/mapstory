@@ -2,6 +2,7 @@ development.db
 downloaded
 geoserver
 local_settings.py
+**/m2
 mapstory/static/maploom
 mapstory/static/mapstory/js/dist/
 mapstory/static/style/fonts
