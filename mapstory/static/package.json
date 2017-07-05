@@ -4,6 +4,7 @@
   "description": "Builds static (JS, CSS, IMG) assets for MapStory 2.0",
   "main": "gruntfile.js",
   "dependencies": {
+    "lodash": "4.17.4",
     "bower": "~1.3.3",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.13",

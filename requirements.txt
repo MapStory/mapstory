@@ -1,16 +1,15 @@
 psycopg2==2.4.5
 numpy==1.8.2
 
-geonode==2.6.1
-
 # Force Django 1.8.7: GeoNode's setup.py pulls in newer
 # despite GeoNode requirements.txt pinning 1.8.7
 Django==1.8.7
 
--e git://github.com/pinax/django-mailer.git#egg=django-mailer
--e git://github.com/MapStory/icon-commons.git#egg=icon-commons
-
-django-osgeo-importer==0.2.1
+-e ./deps/geonode
+-e ./deps/django-maploom
+-e ./deps/django-osgeo-importer
+-e ./deps/django-mailer
+-e ./deps/icon-commons
 
 docutils
 textile
@@ -18,7 +17,6 @@ textile
 # dev dependencies
 dj.paste
 PasteDeploy
-https://github.com/MapStory/django-maploom/archive/composer.zip
 django-haystack==2.4.0
 elasticsearch==1.6.0
 django-slack==4.1.0

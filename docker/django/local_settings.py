@@ -21,13 +21,16 @@ SITEURL = "%s://%s" % (os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
 
 DEBUG = str_to_bool(os.environ.get('DEBUG', 'False'))
 if not DEBUG:
-    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '')
+    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split('|')
 if os.environ['PUBLIC_HOST'].replace('.', '').isdigit():
     # IP Address
     SESSION_COOKIE_DOMAIN = os.environ['PUBLIC_HOST']
-else:
+elif '.' in os.environ['PUBLIC_HOST']:
     # Domain name, hopefully
     SESSION_COOKIE_DOMAIN = ".%s" % (os.environ['PUBLIC_HOST'],)
+else:
+    # hostname with no TLD?
+    SESSION_COOKIE_DOMAIN = "%s" % (os.environ['PUBLIC_HOST'],)
 
 HAYSTACK_SEARCH = True
 # Avoid permissions prefiltering
@@ -160,3 +163,5 @@ CELERY_IGNORE_RESULT = False
 OSGEO_DATASTORE = 'datastore'
 
 USER_SNAP = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

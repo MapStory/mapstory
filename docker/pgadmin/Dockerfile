@@ -1,4 +1,4 @@
-FROM fenglc/pgadmin4
+FROM fenglc/pgadmin4:1.4
 MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
 
 ENV PACKAGES "postgresql-client"
