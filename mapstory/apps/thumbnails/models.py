@@ -25,11 +25,8 @@ class ThumbnailImage(SingletonModel):
 
         # Supports Animated thumbnails
         if self.thumbnail_image.name.endswith('.gif'):
-            resize_gif(
-                self.thumbnail_image,
-                save_as=new_image_io,
-                resize_to=(thumbnail_width, thumbnail_height)
-            )
+            gif_image = pil_image_obj
+            gif_image.save(new_image_io, format='GIF', save_all=True)
         else:
             # Save as PNG
             new_image = resizeimage.resize_cover(
@@ -57,4 +54,3 @@ class ThumbnailImageForm(forms.Form):
     thumbnail_image = forms.FileField(
         label='Select a file',
     )
-
