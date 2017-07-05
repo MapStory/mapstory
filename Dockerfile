@@ -3,7 +3,7 @@ MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
 
 ENV MEDIA_ROOT /var/lib/mapstory/media
 ENV STATIC_ROOT /var/lib/mapstory/static
-ENV APP_PATH /srv
+ENV APP_PATH /srv/mapstory
 ENV TMP /tmp
 ENV DJANGO_PORT 8000
 
@@ -43,90 +43,114 @@ RUN set -ex \
     && apt-get install -y --no-install-recommends \
         nodejs \
     && npm install -g bower grunt \
+    && rm -rf ~/.npm \
+    && rm -rf /tmp/npm-* \
     && rm -rf /var/lib/apt/lists/*
 
 #RUN mkdir -p $MEDIA_ROOT && chown www-data $MEDIA_ROOT
 #RUN mkdir -p $STATIC_ROOT && chown www-data $STATIC_ROOT
 
-### Copy Django app and install python dependencies
-RUN adduser --disabled-password --gecos '' mapstory
-RUN chown mapstory $APP_PATH
-RUN mkdir -p $MEDIA_ROOT && chown mapstory $MEDIA_ROOT
-RUN mkdir -p $STATIC_ROOT && chown mapstory $STATIC_ROOT
-USER mapstory
+# Setup user and paths
+RUN set -ex \
+    && adduser --disabled-password --gecos '' mapstory \
+    && mkdir -p $APP_PATH/deps && chown -R mapstory $APP_PATH \
+    && mkdir -p $MEDIA_ROOT && chown mapstory $MEDIA_ROOT \
+    && mkdir -p $STATIC_ROOT && chown mapstory $STATIC_ROOT
+
+# Clone submodules temporarily. They're needed for the install.
+# These will be overwrriten when we load the code volume.
+# We don't use COPY because it will force rebuilds on any changes.
+#USER mapstory
+WORKDIR $APP_PATH/deps
+RUN set -ex \
+    && git clone -b 2.6.x --depth 1 https://github.com/GeoNode/geonode.git \
+    && sed -i 's/Paver==1.2.1/Paver==1.2.4/' ./geonode/setup.py \
+    && pip install -e ./geonode \
+    && git clone -b composer --depth 1 https://github.com/MapStory/django-maploom.git \
+    && pip install -e ./django-maploom \
+    && git clone -b master --depth 1 https://github.com/pinax/django-mailer.git \
+    && pip install -e ./django-mailer \
+    && git clone -b master --depth 1 https://github.com/MapStory/icon-commons.git \
+    && pip install -e ./icon-commons \
+    && git clone -b master --depth 1 https://github.com/GeoNode/django-osgeo-importer.git \
+    && pip install -e ./django-osgeo-importer \
+    && chown -R mapstory:mapstory .
+
+# Install dependencies from requirements.txt
 WORKDIR $APP_PATH
-
-# Fetch GeoNode
-RUN set -ex \
-    && wget https://github.com/MapStory/geonode/archive/master.zip \
-    && unzip master.zip \
-    && mv geonode-master geonode \
-    && rm master.zip
-RUN sed -i 's/Paver==1.2.1/Paver==1.2.4/' $APP_PATH/geonode/setup.py
-
-WORKDIR $APP_PATH/mapstory
 COPY requirements.txt ./
-USER root
-
-# Fetch MapLoom
-RUN set -ex \
-    && wget https://github.com/MapStory/django-maploom/archive/composer.zip \
-    && unzip composer.zip \
-    && cp -r django-maploom-composer/maploom /usr/local/lib/python2.7/maploom \
-    && rm composer.zip
+#USER root
 RUN pip install --no-cache-dir -r requirements.txt
+COPY scripts/epsg_extra /usr/local/lib/python2.7/dist-packages/pyproj/data/
 
-# cache these
+# Cache these. Hopefully it will speed up the later steps.
+# USER mapstory
+# WORKDIR $APP_PATH/deps/geonode/geonode/static
+# RUN set -ex \
+#     && npm install \
+#     && rm -rf ~/.npm \
+#     && rm -rf /tmp/npm-* \
+#     && bower install \
+#     && rm -rf ~/.cache/bower
+COPY mapstory/static $APP_PATH/mapstory/static
+WORKDIR $APP_PATH/mapstory/static
+RUN chown -R mapstory:mapstory .
 USER mapstory
-WORKDIR $APP_PATH/geonode/geonode/static
 RUN set -ex \
     && npm install \
-    && bower install
-COPY mapstory/static $APP_PATH/mapstory/mapstory/static
-RUN set -ex \
-    && npm install \
-    && bower install
+    && rm -rf ~/.npm \
+    && rm -rf /tmp/npm-* \
+    && bower install \
+    && rm -rf ~/.cache/bower
 USER root
-WORKDIR $APP_PATH/mapstory
+WORKDIR $APP_PATH
 
 #COPY . .
 COPY mapstory ./mapstory
-COPY docker/django/local_settings.py ./mapstory/settings/
-COPY scripts ./scripts
+#COPY docker/django/local_settings.py ./mapstory/settings/
 COPY ./*.py ./
-RUN pip install --no-deps --no-cache-dir -r requirements.txt
-RUN chown -R mapstory:mapstory $APP_PATH/mapstory
+RUN chown -R mapstory:mapstory $APP_PATH
 
 USER mapstory
-WORKDIR $APP_PATH/geonode/geonode/static
-RUN set -ex \
-    && npm install \
-    && bower install \
-    && grunt copy
+# WORKDIR $APP_PATH/deps/geonode/geonode/static
+# RUN set -ex \
+#     && npm install \
+#     && rm -rf ~/.npm \
+#     && rm -rf /tmp/npm-* \
+#     && bower install \
+#     && rm -rf ~/.cache/bower \
+#     && grunt copy
 
-WORKDIR $APP_PATH/mapstory/mapstory/static
+WORKDIR $APP_PATH/mapstory/static
 RUN set -ex \
     && npm install \
     && bower install \
     && grunt concat \
-    && grunt less \
-    && grunt copy
+    && grunt less:development \
+    && grunt copy:development \
+    && rm -rf ~/.npm \
+    && rm -rf /tmp/npm-* \
+    && rm -rf ~/.cache/bower \
+    && rm -rf /tmp/phantomjs
 
 USER root
 RUN set -ex \
     && chown -R mapstory:mapstory $STATIC_ROOT \
     && chown -R mapstory:mapstory $MEDIA_ROOT \
-    && mkdir -p $APP_PATH/mapstory/cover \
-    && chown -R mapstory:mapstory $APP_PATH/mapstory/cover
+    && mkdir -p $APP_PATH/cover \
+    && chown -R mapstory:mapstory $APP_PATH/cover \
+    && mkdir -p /usr/local/lib/python2.7/site-packages-copy \
+    && chown -R mapstory:mapstory /usr/local/lib/python2.7/site-packages-copy
 
-
+COPY scripts ./scripts
 COPY docker/django/run.sh /opt/
+COPY docker/django/local_settings.py /opt/
 
 USER mapstory
 VOLUME $STATIC_ROOT
 VOLUME $MEDIA_ROOT
-VOLUME $APP_PATH/mapstory/cover
-WORKDIR $APP_PATH/mapstory/
+VOLUME $APP_PATH/cover
+WORKDIR $APP_PATH
 EXPOSE $DJANGO_PORT
 ENTRYPOINT ["/opt/run.sh"]
-CMD ["--init-db", "--collect-static", "--reindex", "--serve"]
+CMD ["--collect-static", "--init-db", "--reindex", "--serve"]
