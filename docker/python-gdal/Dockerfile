@@ -2,7 +2,7 @@ FROM python:2.7
 MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
 
 ENV TMP /tmp
-ENV GDAL_VERSION 2.2.0
+ENV GDAL_VERSION 2.2.1
 
 WORKDIR $TMP
 
