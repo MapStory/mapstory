@@ -69,7 +69,7 @@ services:
     build: .
     image: mapstory/django
     user: root
-    entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory && chown -R mapstory:mapstory /srv/mapstory/cover"
+    entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory"
     volumes:
       - mapstory_media:/var/lib/mapstory/media/
       - mapstory_static:/var/lib/mapstory/static/

@@ -90,6 +90,11 @@ services:
       - ./cover:/srv/mapstory/cover
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
+  django_volumes:
+    entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory && chown -R mapstory:mapstory /srv/mapstory/cover"
+    volumes:
+      - ./cover:/srv/mapstory/cover
+
   geoserver:
     links:
       - postgres
