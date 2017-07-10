@@ -25,16 +25,16 @@ services:
       - "15671"
       - "15672"
 
-  python-gdal:
-    build: docker/python-gdal
-    image: mapstory/python-gdal
-    command: /bin/true
+#  python-gdal:
+#    build: docker/python-gdal
+#    image: mapstory/python-gdal
+#    command: /bin/true
 
   django:
     build: .
     image: mapstory/django
     depends_on:
-      - python-gdal
+#      - python-gdal
       - django_volumes
     links:
       - elasticsearch
@@ -51,7 +51,7 @@ services:
     build: .
     image: mapstory/django
     depends_on:
-      - python-gdal
+#      - python-gdal
       - django_volumes
     links:
       - elasticsearch
