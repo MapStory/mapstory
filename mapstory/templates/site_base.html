@@ -4,6 +4,8 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% block twitter-cards %}
+    {% endblock twitter-cards %}
         <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
     {% block head %}
         <link rel="stylesheet" href="{{ STATIC_URL }}vendor/bootstrap/dist/css/bootstrap.min.css"/>
@@ -14,7 +16,6 @@
         {% endif %}
         {% if GOOGLE_ANALYTICS %}{% include "mapstory/_google_analytics.html" %}{% endif %}
         {% block extra_head %}{% endblock %}
-
         <link rel="stylesheet" href="{{ STATIC_URL }}style/themes/{{ THEME }}/site-theme.css"/>
     {% endblock head %}
     </head>

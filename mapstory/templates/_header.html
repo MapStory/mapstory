@@ -3,7 +3,7 @@
     <div class="navigation-wrapper container">
         {% if site.assets.logo %}
             <div class="logo-wrapper">
-                <a href="{% url "home" %}">
+                <a href="{% url 'home' %}">
                     <h1 class="site-title" style="background:url('{{ MEDIA_URL }}{{ site.assets.logo.name }}') no-repeat; background-size:100%;">
                         {{ SITE_NAME }}
                     </h1>
