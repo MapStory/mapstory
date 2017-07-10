@@ -35,6 +35,7 @@ services:
     image: mapstory/django
     depends_on:
       - python-gdal
+      - django_volumes
     links:
       - elasticsearch
       - rabbitmq
@@ -51,6 +52,7 @@ services:
     image: mapstory/django
     depends_on:
       - python-gdal
+      - django_volumes
     links:
       - elasticsearch
       - rabbitmq
@@ -62,6 +64,15 @@ services:
       internal:
     expose:
       - "8000"
+
+  django_volumes:
+    build: .
+    image: mapstory/django
+    user: root
+    entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory && chown -R mapstory:mapstory /srv/mapstory/cover"
+    volumes:
+      - mapstory_media:/var/lib/mapstory/media/
+      - mapstory_static:/var/lib/mapstory/static/
 
   geoserver:
     build: ./docker/geoserver

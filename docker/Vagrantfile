@@ -1,0 +1,29 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Edit your /etc/hosts or C:\Windows\System32\Drivers\etc\hosts and add "192.168.123.45 docker"
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "debian/contrib-jessie64" # contrib includes VBox additions
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  config.vm.network "private_network", ip: "192.168.123.45"
+
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.synced_folder "..", "/srv/mapstory"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "1024"
+  end
+
+  config.vm.provision "shell", privileged: false, path: "host_provision.sh"
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+    [ -e ~/mapstory ] || ln -s /srv/mapstory ~/mapstory
+    cd /srv/mapstory
+    # sudo shouldn't be necessary but something is broken
+    sudo docker-compose pull
+    #sudo docker-compose build --pull
+    sudo docker-compose up -d
+  SHELL
+end
