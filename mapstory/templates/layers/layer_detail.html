@@ -6,6 +6,14 @@
 {% load url from future %}
 {% load guardian_tags %}
 
+{% block twitter-cards %}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="{{ resource.title }}" />
+    <meta name="twitter:description" content="Mapstory Layer by {{ resource.owner.username }}" />
+    <meta name="twitter:image" content="{{ thumbnail }}" />
+    <meta name="twitter:site" content="@mapstory" />
+{% endblock %}
+
 {% block title %}{{ resource.title|default:resource.typename }} — {{ block.super }}{% endblock %}
 {% block extra_head %}
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css"/>

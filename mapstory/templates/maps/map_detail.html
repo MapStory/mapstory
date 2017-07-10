@@ -5,6 +5,14 @@
 {% load url from future %}
 {% load guardian_tags %}
 
+{% block twitter-cards %}
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="{{ resource.title }}" />
+    <meta name="twitter:description" content="Mapstory by {{ resource.owner.username }}" />
+    <meta name="twitter:image" content="{{ thumbnail }}" />
+    <meta name="twitter:site" content="@mapstory" />
+{% endblock %}
+
 {% block title %}{{ resource.title }} — {{ block.super }}{% endblock %}
 {% block body_class %}maps{% endblock %}
 {% block body_outer %}
