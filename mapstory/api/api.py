@@ -54,6 +54,10 @@ class MapstoryOwnersResource(TypeFilteredResource):
 
         orm_filters = super(MapstoryOwnersResource, self).build_filters(filters)
 
+        if 'interest_list' in filters:
+            query = filters['interest_list']
+            qset = (Q(keywords__slug__iexact=query))
+            orm_filters['interest_list'] = qset
         if 'q' in filters:
             orm_filters['q'] = filters['q']
 
@@ -63,12 +67,19 @@ class MapstoryOwnersResource(TypeFilteredResource):
 
         q = applicable_filters.pop('q', None)
 
+        if 'interest_list' in applicable_filters:
+            interest_list = applicable_filters.pop('interest_list')
+        else:
+            interest_list = None
+
         semi_filtered = super(
             MapstoryOwnersResource,
             self).apply_filters(
             request,
             applicable_filters)
 
+        if interest_list is not None:
+            semi_filtered = semi_filtered.filter(interest_list)
         if q:
             names = [
                 w for w in re.split(
@@ -77,9 +88,9 @@ class MapstoryOwnersResource(TypeFilteredResource):
                     flags=re.UNICODE) if w]
             for i, search_name in enumerate(names):
                 semi_filtered = semi_filtered.filter(
-                    Q(username__icontains=search_name) | 
-                    Q(first_name__icontains=search_name) | 
-                    Q(last_name__icontains=search_name) 
+                    Q(username__icontains=search_name) |
+                    Q(first_name__icontains=search_name) |
+                    Q(last_name__icontains=search_name)
                 )
 
         return semi_filtered

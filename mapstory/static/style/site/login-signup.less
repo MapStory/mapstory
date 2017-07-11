@@ -1,0 +1,49 @@
+/* Login & Signup Modal */
+
+.label-font-sm { 
+  font-size: 15px;
+  font-weight: 100;
+}
+
+#loginModal {
+  .modal-dialog {
+    width: 1000px;
+    margin: 50px auto;
+  }
+  .modal-body {
+    padding: 20px 30px;
+  }
+}
+
+.login-auth-btn {
+  background-color: @primary-shadow;
+  color: @white;
+  &:hover{
+    background-color: @primary;
+    color: @white;
+  }
+}
+
+.facebook-btn {
+  background-color: @facebook;
+  color: @white;
+}
+
+.google-btn {
+  background-color: @google;
+  color: @white;
+}
+
+// Login & Signup Modal overwrite for bootstrap blue focus boxshadow
+.form-control {
+  background-color: @gray97;
+  border: none;
+
+  &:focus {
+    border: none;
+    background-color: @gray90;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+  }
+}

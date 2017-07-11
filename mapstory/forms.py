@@ -76,17 +76,12 @@ class DeactivateProfileForm(forms.ModelForm):
 # A form for the mapstory-specific fields we want the user to be able to edit
 class EditMapstoryProfileForm(forms.ModelForm):
     Volunteer_Technical_Community = forms.BooleanField(help_text=_("Join the Volunteer Technical Community (What's this? <a href='http://wiki.mapstory.org/Volunteer_Technical_Community'>Learn more here</a>)"), required=False)
-    keywords = taggit.forms.TagField(
-        required=False,
-        label='Interests',
-        help_text=_("A list of personal interests (separate each interest with a comma)"))
 
     class Meta:
         model = MapstoryProfile
         fields = ['education', 'expertise', 'social_twitter',
                   'social_facebook', 'social_linkedin', 'social_github',
                   'Volunteer_Technical_Community']
-
 
 # Form with fields from the GeoNode Profile model to be edited
 class EditGeonodeProfileForm(forms.ModelForm):
@@ -95,3 +90,12 @@ class EditGeonodeProfileForm(forms.ModelForm):
         model = Profile
         fields = ['first_name', 'last_name', 'keywords', 'city', 'country',
                   'profile']
+
+        labels = {
+            "keywords": _("Interests"),
+        }
+
+        help_texts = {
+            "keywords": _
+            ("A list of personal interests (separate each interest with a comma)"),
+        }
