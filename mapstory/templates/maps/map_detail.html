@@ -8,7 +8,11 @@
 {% block twitter-cards %}
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="{{ resource.title }}" />
-    <meta name="twitter:description" content="Mapstory by {{ resource.owner.username }}" />
+    {% if resource.owner.first_name != '' %}
+        <meta name="twitter:description" content="By {{ resource.owner.first_name }} {{ resource.owner.last_name }}. {{ resource.abstract }}" />
+    {% else %}
+        <meta name="twitter:description" content="By {{ resource.owner.username }}. {{ resource.abstract }}" />
+    {% endif %}
     <meta name="twitter:image" content="{{ thumbnail }}" />
     <meta name="twitter:site" content="@mapstory" />
 {% endblock %}

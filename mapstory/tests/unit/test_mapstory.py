@@ -127,6 +127,34 @@ class MapViewsTest(MapStoryTestMixin):
         test_mapstory = MapStory.objects.get(id=test_mapstory.id)
         self.assertTrue(test_mapstory.is_published)
 
+    def test_mapstory_twitter_cards(self):
+        test_mapstory = create_mapstory(testUser, 'Testing Map 04')
+        self.assertIsNotNone(test_mapstory)
+        self.assertIsNotNone(test_mapstory.id)
+
+        # Should get a 200 response from the URL
+        response = self.client.get(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}))
+        self.assertEquals(response.status_code, 200)
+
+        # Should use the correct template
+        self.assertTemplateUsed(response, 'maps/map_detail.html')
+        self.assertContains(response, test_mapstory.title)
+
+        # Should have the meta tags included
+        soup = BeautifulSoup(response.content, "html.parser")
+        card_type = soup.findAll(attrs={"name": "twitter:card"})
+        title = soup.findAll(attrs={"name": "twitter:title"})
+        description = soup.findAll(attrs={"name": "twitter:description"})
+        image = soup.findAll(attrs={"name": "twitter:image"})
+        site = soup.findAll(attrs={"name": "twitter:site"})
+
+        # Assert we have the correct values
+        self.assertEqual(card_type[0]['content'].encode('utf-8'), "summary")
+        self.assertEqual(title[0]['content'].encode('utf-8'), test_mapstory.title)
+        self.assertTrue(test_mapstory.abstract in description[0]['content'].encode('utf-8'))
+        self.assertIsNotNone(image[0]['content'].encode('utf-8'))
+        self.assertEqual(site[0]['content'].encode('utf-8'), "@mapstory")
+
 
 class TestMapstoryIntegrations(TestCase):
     def test_create_new_mapStory(self):
@@ -408,5 +436,3 @@ class ExtraMapstoryTests(MapStoryTestMixin):
         mapstory.title = "Test story"
         mapstory.owner = user
         mapstory.save()
-
-
