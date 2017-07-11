@@ -3,33 +3,36 @@
 {% load mapstory_tags %}{# mapstory/templatetags/mapstory_tags.py, only used here for images|byname filter parallax #}
 
 {% block middle %}
-<div class="outer-container">
-<!--MAP-->
-<section class="map-section" >
-    <div class="map-wrapper" style="background-image: url('{{ STATIC_URL }}/mapstory/img/hero_img_fallback.png');">
-        <div class="video">
+    <!-- Tagline + Subtitle -->
+    <section class="splash">
+        <div class="backdrop" style="background-image: url('{{ STATIC_URL }}mapstory/img/hero_img_fallback.png');">
             <video  autoplay="autoplay" loop="loop" muted="">
                 <source src='{{ STATIC_URL }}/mapstory/img/demo.mp4' type="video/mp4" />
             </video>
         </div>
-
-        <div class="hero-circle">
-            <div class="hero-content">
-                <h1>The atlas of change that everyone can edit</h1>
-                {# {{ site.assets.subtitle }} #}
-                <p><b>Working together, we're mapping the world as it evolves geographically,
-                    at local, regional and global scales. Join us!</b></p>
-                    <div class="main_call_to_action_button hero-button">
+    
+        <div class="overlay circle">
+            <div class="content">
+                <div layout="column" layout-align="space-around start">
+                    <h1>The atlas of change that everyone can edit</h1>
+                        {# {{ site.assets.subtitle }} #}
+                    <p> <b>Working together, we're mapping the world as it evolves geographically, at local, regional and global scales. Join us!</b></p>
+                    
                     {% if not user.is_authenticated %}
+                        
                         <a href="#" data-toggle="modal" data-target="#loginModal">
-                            <button class="button button-style-1" style="vertical-align:middle"><span>SIGN UP </span></button>
+                            <button class="button button-style-1">
+                                <span>SIGN UP</span>
+                            </button>
                         </a>
+
                     {% endif %}
-                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+<div class="outer-container">
 <!--FEATURED-->
 <section class="featured-section">
     <div class="featured-wrapper">
@@ -291,35 +294,6 @@
 
 <!-- NEWER HOME PAGE WITH ANGULAR MATERIAL GRID -->
 <div>
-    <!-- Tagline + Subtitle -->
-    <section class="splash">
-        <div class="backdrop" style="background-image: url('{{ STATIC_URL }}mapstory/img/hero_img_fallback.png');">
-            <video  autoplay="autoplay" loop="loop" muted="">
-                <source src='{{ STATIC_URL }}/mapstory/img/demo.mp4' type="video/mp4" />
-            </video>
-        </div>
-    
-        <div class="overlay circle">
-            <div class="content">
-                <div layout="column" layout-align="space-around start">
-                    <h1>The atlas of change that everyone can edit</h1>
-                        {# {{ site.assets.subtitle }} #}
-                    <p> Working together, we're mapping the world as it evolves geographically, at local, regional and global scales. Join us!</p>
-                    
-                    {# if not user.is_authenticated #}
-                        
-                        <a href="#" data-toggle="modal" data-target="#loginModal">
-                            <button class="button button-style-1">
-                                <span>SIGN UP</span>
-                            </button>
-                        </a>
-
-                    {# endif #}
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Featured Content -->
     <div layout="column" layout-align="start center" style="background-color: #F9F9F9">
         <h2>Featured MapStories from Across the Community</h2>
