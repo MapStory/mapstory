@@ -205,148 +205,6 @@ border-color: @button_bg_color;
       }
     }
   }
-
-  // How section
-  .how-section {
-    background-color: #E5E0D9;
-    text-align: center;
-    padding: 20px;
-    height: auto;
-    overflow: auto;
-    .box-container {
-      padding: 37px;
-      padding-left: 10px;
-      padding-right: 10px;
-      .outer-container();
-      .how-box {
-        float: left;
-        .span-columns(4);
-        h4 {
-          font-weight: 900;
-          font-size: x-large;
-        }
-        p {
-          font-weight: 400;
-          font-size: large;
-        }
-        .how-icon {
-          height: 100px;
-        }
-      }
-    }
-  .how_button {
-    margin: 8px;
-  }
-}
-
-  // Contribute section
-  .contribute-section {
-    background-color: @section_bg_color;
-    text-align: center;
-    padding: 40px;
-    height: auto;
-    overflow: auto;
-    .section-wrapper {
-      .img-circle {
-        -webkit-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
-        -moz-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
-        box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
-      }
-    }
-    .image-content {
-      padding: 20px;
-    }
-    .text-content {
-      padding-top: 40px;
-      text-align: left;
-    }
-  }
-
-  // Share section
-  .share-section {
-    padding: 40px;
-    background-color: @section_bg_color;
-    height: auto;
-    overflow: auto;
-    .image-content {
-      -webkit-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
-      -moz-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
-      box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
-    }
-  }
-
-  // Bring to life section
-  .to-life-section {
-    padding: 40px;
-    background-color: @section_bg_color;
-    height: auto;
-    overflow: auto;
-    .image-content {
-      -webkit-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
-      -moz-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
-      box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
-    }
-  }
-
-  // More section
-  .more-wrapper {
-    .span-columns(12);
-    padding: 90px;
-    height: auto;
-    overflow: auto;
-    p {
-      font-size: 42px;
-      font-weight: 900;
-      line-height: 140%;
-      color: white;
-    }
-    .call_to_action_button {
-      margin-top: 70px;
-    }
-  }
-  .s-sponsor-section {
-    background-color: #BFB4A3;
-    padding:1px;
-    .sponsors-container {
-      text-align: center;
-      .span-columns(6);
-      float: left;
-      padding: 65px;
-      .sponsor-row {
-        display: inline-flex;
-      }
-      .sponsor-img {
-        height: 110px;
-        float: left;
-      }
-    }
-    .s-sponsor-content {
-      .span-columns(6);
-      float: left;
-      padding-top: 100px;
-      padding-left: 36px;
-      .sponsor-title {
-        padding-bottom: 26px;
-        p {
-          font-weight: 900;
-          font-size: 42px;
-          color: #424242;
-        }
-      }
-      .sponsor-text {
-        padding-bottom: 26px;
-        p {
-          color: #606060;
-          font-weight: 400;
-          font-size: 26px;
-          line-height: 1.3;
-        }
-      }
-    }
-    .donate-button {
-      text-align: left;
-    }
-  }
 }
 
 //--------------------
@@ -426,6 +284,91 @@ border-color: @button_bg_color;
   }
 }
 
+// these fonts are copy-pasta exactly the same as before
+// refine SOON for site-wide consistency
+
+h2.homepage {
+    text-align: center;
+    .mapstory_font(@h1_font_size);
+    color: @h1_color;
+  }
+
+.how-icon {
+  height: 100px;
+  margin: 0 60px 0 15px;
+  img {
+    max-height: 100%
+  }
+  //last child {
+  //  margin-right: 30px;
+  //}
+  @media @desktops {
+    margin: 0 30px 0 15px;
+  }
+}
+
+.how-homepage {
+  background-color: #E5E0D9;
+  padding: 25px 0;
+
+  p, h3, div {
+    text-align: left;
+  }
+
+  aside {
+    padding: 10px;
+
+    @media @tablets {
+      max-width: 500px;
+    }
+  }
+
+  article {
+    padding-top: 20px; 
+
+    @media @desktops {
+      max-width: 320px;
+
+      p, h3, div {
+        text-align: center;
+      }
+    }
+  }
+}
+
+h3.homepage {
+  font-weight: 900;
+  font-size: x-large;
+}
+
+p.homepage {
+  .mapstory_font(@p_font_size);
+  color: @p_font_color;
+
+  font-weight: 400;
+  font-size: large;
+}
+
+p.more {
+  font-size: 22px;
+  font-family: @base-font-family;
+  font-weight: 900;
+  line-height: 140%;
+  color: white;
+
+  padding: 40px 70px;
+
+  // this is a ratio and I should make it a variable
+  // for maintainability
+  @media @desktops {
+    font-size: 42px;
+  }
+
+  @media @tablets {
+    font-size: 32px;
+  }
+}
+
 video {
   width: 100%;
   min-height: @splash;
@@ -433,7 +376,18 @@ video {
   overflow: hidden;
 } //video gets too short at window width of 715
 
+.sponsor-logos {
+  text-align: center;
 
+  div {
+    height: 110px;
+  }
+
+  img {
+    max-height: 100%;
+    max-width: 100%;
+  }
+}
 .home-shadow {
   -webkit-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
   -moz-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
