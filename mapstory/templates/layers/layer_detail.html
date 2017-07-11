@@ -7,9 +7,14 @@
 {% load guardian_tags %}
 
 {% block twitter-cards %}
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="{{ resource.title }}" />
-    <meta name="twitter:description" content="Mapstory Layer by {{ resource.owner.username }}" />
+    <meta name="twitter:creator" content="{{ resource.owner.username }}">
+    {% if resource.owner.first_name != '' %}
+        <meta name="twitter:description" content="By {{ resource.owner.first_name }} {{ resource.owner.last_name }}. {{ resource.abstract }}" />
+    {% else %}
+        <meta name="twitter:description" content="By {{ resource.owner.username }}. {{ resource.abstract }}" />
+    {% endif %}
     <meta name="twitter:image" content="{{ thumbnail }}" />
     <meta name="twitter:site" content="@mapstory" />
 {% endblock %}
