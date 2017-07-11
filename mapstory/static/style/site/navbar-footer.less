@@ -443,24 +443,43 @@ header.navigation {
     }
 }
 
-// Footer
+/* SITE FOOTER */
 footer.site-footer {
-    color: @gray-300;
-    background: @gray-950;
-    font-family: @base-font-family;
-    font-weight: 400;
-    font-size: 0.9em;
-    .version-number {
-        color: @gray-600;
-        font-size: 0.8em;
-        float: right;
-    }
+  //change all my footer text colors here: -> //
+  @default-color: @gray-600;
+  @link-color: #2286A7;
+  //
 
-    a:link {
-       color : #2286A7;
-    }
+  background: @gray-950;
+  color: @default-color;
+  font-family: @base-font-family;
 
-    a:visited {
-        color : #2286A7;
-    }
+  section {
+    padding: 37px;
+  }
+
+  .github-icon {
+    padding-right: 0.5em;
+    color: @default-color;
+  }
+
+  .twitter-icon {
+    color: @twitter;
+  }
+
+  .version-number {
+    color: @default-color;
+    font-size: 0.8em;
+    //leave room for scrollbar in chrome
+    padding-right: 15px;
+  }
+
+  a:link, a:visited {
+    color: @link-color;
+  }
+
+  // this might make the footer too big, 
+  // but it should keep it from being 
+  // too small for now
+  height: 100%;
 }
