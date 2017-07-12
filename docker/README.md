@@ -1,0 +1,43 @@
+
+MapStory Docker Deployment
+================
+
+
+Local developer build
+----------
+
+Run all commands from the repository root.
+The dev deployment uses the `master` tagged docker images.
+
+
+```
+git submodule update --init --recursive
+docker-compose pull
+docker-compose up -d
+```
+
+Some modifications will require rebuilding the containers. We're working on minimizing this.
+```
+docker-compose pull
+docker-compose build --pull
+```
+
+To list the containers:
+```
+docker-compose ps
+```
+
+To view the logs of a container:
+```
+docker-compose logs <container>
+docker-compose logs -f <container> #follow the log file
+```
+
+To do refresh your deployment (this will wipe existing data):
+```
+docker-compose kill
+docker-compose rm -f
+docker volume ls -q | grep mapstory_ | xargs docker volume rm
+docker-compose up django_volumes
+docker-compose up -d
+```
