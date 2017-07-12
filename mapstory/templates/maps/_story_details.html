@@ -63,6 +63,11 @@
                         <!-- insert story rating here -->
                     </div>
                     <div id="shareLinks" ng-show="sharing">
+                        <div class="embed">
+                            {% block share_icons %}
+                                {% include "share_icons.html" %}
+                            {% endblock share_icons %}
+                        </div>
                         <div class="embed">Share 
                             <input id="shareStory" value ="https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}">
                             <button class="copyclip btn" data-clipboard-target="#shareStory">

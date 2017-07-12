@@ -175,6 +175,10 @@
                                     {% endif %}
                                 </div>
                                 <div class="tab-pane" id="ShareLayer">
+                                    <h3>Social</h3>
+                                    {% block share_icons %}
+                                        {% include "share_icons.html" %}
+                                    {% endblock share_icons %}
                                     <h3>Map Services</h3>
                                     <div class="embed">WMS
                                         <i class="fa fa-question-circle ng-scope">
