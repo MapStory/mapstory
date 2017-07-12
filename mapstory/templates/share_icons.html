@@ -1,27 +1,31 @@
 {% load i18n %}
 <!-- Social Button HTML -->
 <!-- Twitter -->
-<a href="http://twitter.com/share?url=https%3A%2F%2F{{ request.get_host | urlencode }}%2Flayers%2Fgeonode%3A{{ resource.name | urlencode }}&text={{ resource.title | urlencode }}%20by%20{{ resource.owner | urlencode }}&via=MapStory" target="_blank" class="share-btn twitter">
+<a href="http://twitter.com/share?url={{ share_url | urlencode }}&text={{ share_title | urlencode }}&via=MapStory"
+   target="_blank" class="share-btn twitter">
     <i class="fa fa-twitter"></i>
 </a>
 <!-- Google Plus -->
-<a href="https://plus.google.com/share?url=https%3A%2F%2F{{ request.get_host | urlencode }}%2Flayers%2Fgeonode%3A{{ resource.name | urlencode }}" target="_blank" class="share-btn google-plus">
+<a href="https://plus.google.com/share?url={{ share_url | urlencode }}" target="_blank" class="share-btn google-plus">
     <i class="fa fa-google-plus"></i>
 </a>
 <!-- Facebook -->
-<a href="http://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2F{{ request.get_host | urlencode }}%2Flayers%2Fgeonode%3A{{ resource.name | urlencode }}" target="_blank" class="share-btn facebook">
+<a href="http://www.facebook.com/sharer/sharer.php?u={{ share_url | urlencode }}" target="_blank"
+   class="share-btn facebook">
     <i class="fa fa-facebook"></i>
 </a>
 <!-- StumbleUpon (url, title) -->
-<a href="http://www.stumbleupon.com/submit?url=https%3A%2F%2F{{ request.get_host | urlencode }}%2Flayers%2Fgeonode%3A{{ resource.name | urlencode }}&title={{ resource.title | urlencode }}%20by%20{{ resource.owner | urlencode }}" target="_blank" class="share-btn stumbleupon">
+<a href="http://www.stumbleupon.com/submit?url={{ share_url | urlencode }}&title={{ share_title | urlencode }}"
+   target="_blank" class="share-btn stumbleupon">
     <i class="fa fa-stumbleupon"></i>
 </a>
 <!-- Reddit (url, title) -->
-<a href="http://reddit.com/submit?url=https%3A%2F%2F{{ request.get_host | urlencode }}%2Flayers%2Fgeonode%3A{{ resource.name | urlencode }}&title={{ resource.title | urlencode }}%20by%20{{ resource.owner | urlencode }}" target="_blank" class="share-btn reddit">
+<a href="http://reddit.com/submit?url={{ share_url | urlencode }}&title={{ share_title | urlencode }}"
+   target="_blank" class="share-btn reddit">
     <i class="fa fa-reddit"></i>
 </a>
 <!-- LinkedIn -->
-<a href="http://www.linkedin.com/shareArticle?url=https%3A%2F%2F{{ request.get_host | urlencode }}%2Flayers%2Fgeonode%3A{{ resource.name | urlencode }}&title={{ resource.title | urlencode }}%20by%20{{ resource.owner | urlencode }}&summary={{ 'Mapstory Summary here' | urlencode }}&source=https%3A%2F%2F{{ request.get_host | urlencode }}" target="_blank" class="share-btn linkedin">
+<a href="http://www.linkedin.com/shareArticle?url={{ share_url | urlencode }}&title={{ share_title | urlencode }}&summary={{ share_description | urlencode }}&source=https%3A%2F%2F{{ request.get_host | urlencode }}" target="_blank" class="share-btn linkedin">
     <i class="fa fa-linkedin"></i>
 </a>
 <!-- Email -->
