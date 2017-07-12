@@ -9,6 +9,12 @@ Local developer build
 Run all commands from the repository root.
 The dev deployment uses the `master` tagged docker images.
 
+Add the following to your `/etc/hosts` file
+```
+127.0.0.1       docker
+::1             docker
+```
+
 
 ```
 git submodule update --init --recursive
