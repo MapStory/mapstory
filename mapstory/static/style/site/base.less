@@ -99,6 +99,11 @@ a:hover, a:focus, a:active {
   margin: 0;
 }
 
+h3.bold-caps {
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 /* --- BASE - Slices, Sections, Spacing --- */
 
 .slice {
@@ -188,7 +193,7 @@ button#text_search_btn, .homepage-search button, .quicksearchcontainer button{
   border: 1px solid @gray80;
 }
 
-/* --- BASE - Misc --- */
+// mapstory/templates/provider/authorize.html
 .oauth-body {
   width: 800px;
   margin: 15px auto;
@@ -198,84 +203,7 @@ button#text_search_btn, .homepage-search button, .quicksearchcontainer button{
   }
 }
 
+// geonode/templates/_permissions.html
 .controls, .controls > select, .controls > textarea, .controls > input, .controls > div {
   width: 320px;
 }
-
-.layer-actions, .map-actions, .documents-actions {
-  margin-top: 20px;
-  i {
-    padding-right: 3px;
-  }
-}
-
-nav.filter {
-  .active {
-    color: @secondary;
-  }
-  .closed {
-    display: none;
-  }
-  li a {
-    border-bottom: 1px solid @gray90;
-    cursor: pointer;
-    padding: 5px 10px;
-  }
-}
-
-.comment {
-  padding-bottom: 11px;
-}
-
-.comment-description {
-  margin-bottom: 0;
-}
-
-.comment-author {
-  font-size: 11px;
-  font-weight: bold;
-  color: @gray55;
-}
-
-.comment-list-wrapper {
-  list-style-type: none;
-  text-align: left;
-}
-
-/*--- BASE - Login modal ---*/
-
-.label-font-sm { //_login_register.html
-  font-size: 15px;
-  font-weight: 100;
-}
-
-#loginModal {
-  .modal-dialog {
-    width: 1000px;
-    margin: 50px auto;
-  }
-  .modal-body {
-    padding: 20px 30px;
-  }
-}
-
-.login-auth-btn {
-  background-color: @primary-shadow;
-  color: @white;
-  &:hover{
-    background-color: @primary;
-    color: @white;
-  }
-}
-
-.facebook-btn {
-  background-color: @facebook;
-  color: @white;
-}
-
-.google-btn {
-  background-color: @google;
-  color: @white;
-}
-
-
