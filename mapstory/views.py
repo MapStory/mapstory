@@ -923,6 +923,11 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     thumbnail = layer.get_thumbnail_url
 
+    # This will get URL encoded later and is used for the social media share URL
+    share_url = "https://%s/layers/geonode:%s" % (request.get_host(), layer.name)
+    share_title = "%s by %s." % (layer.title, layer.owner)
+    share_description = layer.abstract
+
     context_dict = {
         "resource": layer,
         "permissions_json": _perms_info_json(layer),
@@ -936,7 +941,10 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "distributionurl_form": distributionurl_form,
         "content_moderators": content_moderators,
         "thumbnail": thumbnail,
-        "thumb_form": thumb_form
+        "thumb_form": thumb_form,
+        "share_url": share_url,
+        "share_title": share_title,
+        "share_description": share_description,
     }
 
     context_dict["viewer"] = json.dumps(
@@ -1074,6 +1082,11 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     map_thumbnail = map_obj.get_thumbnail_url
     update_es_index(MapStory, MapStory.objects.get(id=map_obj.id))
 
+    # This will get URL encoded later and is used for the social media share URL
+    share_url = "https://%s/story/%s" % (request.get_host(), map_obj.id)
+    share_title = "%s by %s." % (map_obj.title, map_obj.owner)
+    share_description = map_obj.abstract
+
     context_dict = {
         'config': config,
         'resource': map_obj,
@@ -1084,7 +1097,10 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
         'keywords_form': keywords_form,
         'published_form': published_form,
         'thumbnail': map_thumbnail,
-        'thumb_form': map_thumb_form
+        'thumb_form': map_thumb_form,
+        'share_url': share_url,
+        'share_title': share_title,
+        'share_description': share_description
     }
 
     if settings.SOCIAL_ORIGINS:
