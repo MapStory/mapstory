@@ -22,3 +22,7 @@
 	path = docker/geoserver-2.11/geoserver-geonode-ext
     url = https://github.com/MapStory/geoserver-geonode-ext.git
 	branch = geoserver-2.11
+[submodule "deps/story-tools"]
+	path = deps/story-tools
+	url = https://github.com/MapStory/story-tools.git
+	branch = master
