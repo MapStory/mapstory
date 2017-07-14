@@ -74,6 +74,7 @@ RUN set -ex \
     && pip install -e ./icon-commons \
     && git clone -b master --depth 1 https://github.com/GeoNode/django-osgeo-importer.git \
     && pip install -e ./django-osgeo-importer \
+    && git clone -b master --depth 1 https://github.com/MapStory/story-tools.git \
     && chown -R mapstory:mapstory .
 
 # Install dependencies from requirements.txt
