@@ -155,6 +155,32 @@ class MapViewsTest(MapStoryTestMixin):
         self.assertIsNotNone(image[0]['content'].encode('utf-8'))
         self.assertEqual(site[0]['content'].encode('utf-8'), "@mapstory")
 
+    def test_mapstory_details_share_buttons(self):
+        test_mapstory = create_mapstory(testUser, 'Testing Map 05')
+        self.assertIsNotNone(test_mapstory)
+        self.assertIsNotNone(test_mapstory.id)
+
+        # Should get a 200 response from the URL
+        response = self.client.get(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}))
+        self.assertEquals(response.status_code, 200)
+
+        # Should have the meta tags included
+        soup = BeautifulSoup(response.content, "html.parser")
+        twitter_icon = soup.findAll("a", {"class": "share-btn twitter"})
+        google_icon = soup.findAll("a", {"class": "share-btn google-plus"})
+        facebook_icon = soup.findAll("a", {"class": "share-btn facebook"})
+        stumble_icon = soup.findAll("a", {"class": "share-btn stumbleupon"})
+        reddit_icon = soup.findAll("a", {"class": "share-btn reddit"})
+        linkedin_icon = soup.findAll("a", {"class": "share-btn linkedin"})
+        email_icon = soup.findAll("a", {"class": "share-btn email"})
+        self.assertIsNotNone(twitter_icon[0])
+        self.assertIsNotNone(google_icon[0])
+        self.assertIsNotNone(facebook_icon[0])
+        self.assertIsNotNone(stumble_icon[0])
+        self.assertIsNotNone(reddit_icon[0])
+        self.assertIsNotNone(linkedin_icon[0])
+        self.assertIsNotNone(email_icon[0])
+
 
 class TestMapstoryIntegrations(TestCase):
     def test_create_new_mapStory(self):
