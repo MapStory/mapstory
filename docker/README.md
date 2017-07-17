@@ -39,11 +39,17 @@ docker-compose logs <container>
 docker-compose logs -f <container> #follow the log file
 ```
 
+To gain a shell in a container:
+```
+docker-compose exec <container> /bin/sh
+```
+
 To do refresh your deployment (this will wipe existing data):
 ```
 docker-compose kill
 docker-compose rm -f
 docker volume ls -q | grep mapstory_ | xargs docker volume rm
+docker network prune -f
 docker-compose up django_volumes
 docker-compose up -d
 ```
