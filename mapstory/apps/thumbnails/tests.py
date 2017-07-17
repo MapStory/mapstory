@@ -19,7 +19,7 @@ class TestThumbnailImage(TestCase):
     def test_unicode(self):
         self.assertIsNotNone(unicode(self.thumbnailImage))
 
-    def test_save_and_retrieve(self):
+    def test_upload_gif_thumbnail(self):
         initial_thumbnail_count = ThumbnailImage.objects.all().count()
         # Load a test gif
         image = Image.open(os.path.join('mapstory/apps/thumbnails/test.gif'))
@@ -51,7 +51,7 @@ class TestThumbnailImage(TestCase):
         final_thumbnail_count = ThumbnailImage.objects.all().count()
         self.assertEqual(final_thumbnail_count, initial_thumbnail_count + 1)
 
-    def test_save_and_retrieve_png(self):
+    def test_upload_png_thumbail(self):
         initial_thumbnail_count = ThumbnailImage.objects.all().count()
         # Load a test gif
         image = Image.open(os.path.join('mapstory/apps/thumbnails/map-marker-icon.png'))
