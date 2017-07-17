@@ -7,7 +7,6 @@ from solo.models import SingletonModel
 from resizeimage import resizeimage
 from io import BytesIO
 from django.core.files.base import ContentFile
-from .gif_helper import resize_gif
 
 
 class ThumbnailImage(SingletonModel):
