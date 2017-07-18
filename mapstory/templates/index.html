@@ -33,12 +33,16 @@
     </section>
 
     <!-- Featured Content -->
-    <section class="featured-cards">
+    <section class="featured-cards" ng-controller="featuredController as featured">
         <div layout="column" layout-align="start center" style="background-color: #F9F9F9">
             <h2 class="homepage"> <b> Featured MapStories from Across the Community </b></h2>
-
-           
-
+            <div layout="row" layout-sm="column" layout-xs="column">
+                <ul layout="row" layout-wrap>
+                    <li ng-repeat="item in featured.cards" style="width:470px">            
+                        {% include 'cards/_featured.html' %}
+                    </li>    
+                </ul>
+            </div>
             <a href="/getstarted">
                 <button class="button button-style-2">
                     <span>SEE MORE </span>
