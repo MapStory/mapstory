@@ -1,10 +1,3 @@
-#wrap {
-  padding-top: 20px;
-  background: @white;
-  padding-bottom: 40px;
-  width: 100%;
-}
-
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide:not(.ng-hide-animate) {
   display: none !important;
 }
@@ -21,41 +14,41 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-h1, h2, h3, h4, h5, h6, legend {
+p, h1, h2, h3, h4, h5, h6, legend {
   font-style: normal;
   text-transform: none;
+  font-weight: 200;
 }
 
+// reseting heading font sizes to closer to browser default
+// bootstrap makes them bigger and we're overwriting their rules
 h1 {
-  font-size: 40px;
+  font-size: 2.500em;
   font-weight: 300;
 }
 
 h2 {
-  font-size: 30px;
-  font-weight: 200;
+  font-size: 1.875em
 }
 
 h3, legend {
-  font-size: 20px;
-  font-weight: 200;
+  font-size: 1.250em;
 }
 
 h4 {
-  font-size: 16px;
-  font-weight: 200;
+  font-size: 1.000em;
 }
 
 h5 {
-  font-size: 14px;
-  font-weight: 200;
+  font-size:  0.875em;
 }
 
 h6 {
-  font-size: 10px;
-  font-weight: 200;
+  font-size:  0.625em;
 }
 
+//mapstory/templates/provider/authorize.html
+//mapstory/partials/uploadWizard.html:
 select {
   background: @white;
   color: @black;
@@ -83,14 +76,13 @@ strong {
 
 a {
   color: inherit;
+  &:hover, &:focus, &:active {
+    color: @gray60;
+    text-decoration: none;
+  }
 }
 
-a:hover, a:focus, a:active {
-  color: @gray60;
-  text-decoration: none;
-}
-
-.page-title {
+h2.page-title {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -99,13 +91,37 @@ a:hover, a:focus, a:active {
   margin: 0;
 }
 
+h2.side-title {
+  font-size: 1.15em;
+  font-weight: 600;
+}
+
 h3.bold-caps {
-  font-weight: 900;
+  font-size: 0.9em;
+  font-weight: 600;
+  float: left;
   text-transform: uppercase;
 }
 
-/* --- BASE - Slices, Sections, Spacing --- */
+h4.tiny-caps, .tiny-caps {
+  font-weight: 300;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  color: @gray-700;
+}
 
+.social-icons {
+  text-align: center;
+  i {
+    padding-right: 0.2em;
+    color: @gray-700;
+  }
+} 
+
+/* --- BASE - Slices, Sections, Spacing --- */
+//layers/_details.html
+//maps/_story_details.html
+//getpage.html
 .slice {
   padding: 33px 20px;
   width: 100%;
@@ -114,41 +130,24 @@ h3.bold-caps {
   text-align: center;
 }
 
-.banner {
-  text-align: center;
-  padding: 50px 0 10px 0;
-}
-
-.border-right {
-  border-right: 1px solid darkgray;
-}
-
 hr { //overwritten often w inline styles
   padding: 0;
   margin: 10px 0;
 }
 
+//geonode/people/templates/people/forgot_username_form.html
+//geonode/templates/account/password_reset.html
 .grid-spacer {
   margin-top: 30px;
 }
 
-article.tab-pane {
-  padding: 20px 0;
-}
-
+//activity list, group members, group activity
 .no-style-list {
   list-style-type: none;
-  margin-top: 20px;
-}
-
-.dl-horizontal dt {
-  text-overflow: clip;
-  white-space: normal;
-  overflow: hidden;
+ // margin-top: 20px;
 }
 
 /* --- BASE - Form Components --- */
-
 form {
   label {
     margin-right: 2.5em;
@@ -159,41 +158,7 @@ form {
   }
 }
 
-.form-control {
-  color: @gray30;
-  background-color: @gray90;
-  border: none;
-
-  &:focus {
-    border: none;
-    background-color: @gray90;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-  }
-}
-
-.btn-sm, .btn-group-sm > .btn {
-  padding: 10px 13px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
-}
-
-
-button#text_search_btn, .homepage-search button, .quicksearchcontainer button{
-  background: @primary;
-  color: white;
-  &:hover{
-    background: @primary-shadow;
-  }
-}
-
-.quicksearchcontainer button{
-  border: 1px solid @gray80;
-}
-
-// mapstory/templates/provider/authorize.html
+///mapstory/templates/provider/authorize.html
 .oauth-body {
   width: 800px;
   margin: 15px auto;
@@ -203,7 +168,7 @@ button#text_search_btn, .homepage-search button, .quicksearchcontainer button{
   }
 }
 
-// geonode/templates/_permissions.html
+//geonode/templates/_permissions.html
 .controls, .controls > select, .controls > textarea, .controls > input, .controls > div {
   width: 320px;
 }
