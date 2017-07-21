@@ -18,6 +18,7 @@ p, h1, h2, h3, h4, h5, h6, legend {
   font-style: normal;
   text-transform: none;
   font-weight: 200;
+  font-family: @base-font-family;
 }
 
 // reseting heading font sizes to closer to browser default
@@ -106,7 +107,7 @@ h3.bold-caps {
 h4.tiny-caps, .tiny-caps {
   font-weight: 300;
   text-transform: uppercase;
-  font-size: 0.8em;
+  font-size: 0.7em;
   color: @gray-700;
 }
 
@@ -144,7 +145,8 @@ hr { //overwritten often w inline styles
 //activity list, group members, group activity
 .no-style-list {
   list-style-type: none;
- // margin-top: 20px;
+  padding-left: 0px;
+ // margin-top: 20px; //activity list
 }
 
 /* --- BASE - Form Components --- */

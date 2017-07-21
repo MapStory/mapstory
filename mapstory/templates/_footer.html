@@ -4,18 +4,18 @@
         <section layout="column" flex-gt-sm="33">
             <h3 class="bold-caps">Support Us</h3>
             <p> {{ site.assets.footer_text | safe }} </p>
-            <a href="{% url 'donate' %}">
-                <button class="button button-style-1" style="vertical-align:middle">
-                    <span>DONATE </span>
+            <a href="{% url 'donate' %}" class="homepage">
+                <button class="button button-solid" style="vertical-align:middle">
+                    <span>Donate</span>
                 </button>
             </a>
         </section>
         <section layout="column" flex-gt-sm="33">
             <h3 class="bold-caps">Create an Account</h3>
             <p>{{ SITE_NAME }} is free to use for anyone age 13 and up. Sign up now!</p>
-            <a href="#" data-toggle="modal" data-target="#loginModal">
-                <button class="button button-style-1" style="vertical-align:middle">
-                    <span>SIGN UP </span>
+            <a href="#" data-toggle="modal" data-target="#loginModal" class="homepage">
+                <button class="button button-solid" style="vertical-align:middle">
+                    <span>Sign Up</span>
                 </button>
             </a>
         </section>

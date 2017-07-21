@@ -1,195 +1,160 @@
 /*--- Index ---*/
-// HOMEPAGE
-@font: 'Lato', sans-serif;
-@debugBorder: 1px dotted gray;
-@h1_font_size: 42px;
-@h1_color: #424242;
 
-@p_font_size: 22px;
-@p_font_color: #606060;
+// Color Variables for Homepage //
 
-@button_bg_color: #da4627;
-@button_font_size: 18px;
-@button_padding: 14px 12px;
-@button_font: 'Lato', sans-serif;
-
-@section_bg_color: #F9F9F9;
-
-.transparent(@amount) {
-  filter: alpha(opacity=@amount);
-  -khtml-opacity: @amount;
-  -moz-opacity: @amount;
-  opacity: @amount;
+.home-shadow {
+  -webkit-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
 }
 
-// Functions
-.radius(@radius) {
-  -webkit-border-radius: @radius;
-  -moz-border-radius: @radius;
-  -o-border-radius: @radius;
-  -ms-border-radius: @radius;
-  border-radius: @radius;
+// spacing between sections (except splash)
+.homepage section {
+  padding: 50px 0;
 }
 
-.centered_container() {
-  min-height: 6.5em;
-  display: table-cell;
-  vertical-align: middle;
+section.splash {
+  padding: 0;
 }
 
-.mapstory_font(@size) {
-  font-family: @font;
-  font-size: @size;
+// section backgrounds!
+section.featured-cards, 
+section.contribute-commons, 
+section.share-expertise, 
+section.to-life, {
+  background-color: #F9F9F9; //offwhite
 }
 
-.debug() {
-  border: @debugBorder;
+section.how-homepage {
+  background-color: #E5E0D9; //lightbrown
 }
 
-.debug_sections() {
-  border: 1px dotted red;
+section.sponsors {
+  background-color: #BFB4A3; //darkerbrown
 }
 
-.button {
+
+/*---homepage hover buttons---*/
+//also used in footer!
+
+@button-accent: #da4627; //redorange
+
+.homepage .button {
   display: inline-block;
-  border-radius: 6px;
-  text-align: center;
-  font-size: @button_font_size;
-  padding: @button_padding;
+
   width: 200px;
+  border-radius: 6px;
+  margin: 5px;
+  padding: 14px 12px;
+  
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 18px;
+  
   transition: all 0.5s;
   cursor: pointer;
-  margin: 5px;
-  font-family: @button_font;
 }
 
-.button span {
+.homepage .button span {
   cursor: pointer;
   display: inline-block;
   position: relative;
   transition: 0.5s;
-}
 
-.button span:after {
-  content: '\00bb';
-  position: absolute;
-  opacity: 0;
-  top: 0;
-  right: -20px;
-  transition: 0.5s;
-}
-
-.button:hover span {
-padding-right: 25px;
-}
-
-.button:hover span:after {
-opacity: 1;
-right: 0;
-}
-
-.call_to_action_button {
-text-align: center;
-}
-
-.button-style-1 {
-background-color: @button_bg_color;
-color: #FFFFFF;
-border: none;
-}
-
-.button-style-2 {
-background-color: transparent;
-color: @button_bg_color;
-border: solid;
-border-color: @button_bg_color;
-}
-
-//--------------------
-// Em's maintainability fixes
-
-@splash: 390px; 
-
-.splash {
-  overflow: hidden;
-  height: @splash;
-  width: 100%;
-
-  .backdrop {
-    height: inherit;
-  }
-
-  .overlay {
-    //ORDERING & TRANSPARENCY PROPERTIES
-    @top-offset: @splash * -1.3;
-    @left-offset: @splash * -0.2;
-
-    z-index: 0;
-
-    position: relative;
-    top: @top-offset;
-    left: @left-offset;
-
-    background-color: rgba(255, 255, 255, 0.75);
-
-    //SHAPE PROPERTIES
-    &.circle {
-      @diameter: @splash * 1.75;
-
-      .radius(50%);
-
-      width: @diameter;
-      height: @diameter;
-    }
-
-    // Example rectangle mixin if needed in the future!
-    // ------------------
-    // &.rectangle {
-    //   top: -@splash;
-    //   left: 0;
-    //   width: @splash;
-    //   height: @splash;
-    // }
-   
-  }
-
-  .content {
-    position: relative;
-    padding-top: @splash / 2.5;
-    padding-left: @splash / 3;
-    padding-right: @splash / 8;
-    z-index: 99;
-
-    // these fonts are copy-pasta exactly the same as before
-    // refine SOON for site-wide consistency
-    h1 {
-      font-weight: 900;
-      color: #333333;
-      text-align: left;
-      
-      .mapstory_font(@h1_font_size);
-      color: @h1_color;
-    }
-
-    p {
-      .mapstory_font(@p_font_size);
-      color: @p_font_color;
-      height: auto;
-      font-weight: 700;
-      color: #333333;
-      line-height: normal;
-    }
+  &:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
   }
 }
 
+.homepage .button:hover span {
+  padding-right: 25px;
+
+  &:after{
+    opacity: 1;
+    right: 0;
+  }
+}
+
+.button-solid {
+  background-color: @button-accent;
+  color: @gray-0;
+
+  border: none;
+}
+
+.button-inverse {
+  background-color: transparent;
+  color: @button-accent;
+
+  border: solid;
+  border-color: @button-accent;
+}
+
+
+/*--- homepage typography ---*/
 // these fonts are copy-pasta exactly the same as before
 // refine SOON for site-wide consistency
 
+.splash-content {
+  h1 {
+    font-size: 42px;
+    font-weight: 900;
+    text-align: left;
+  }
+
+  p {
+    font-size: 22px;
+    font-weight: 700;
+    
+    height: auto;
+    line-height: normal;
+  }
+}
+
+
 h2.homepage {
     text-align: center;
-    .mapstory_font(@h1_font_size);
-    color: @h1_color;
+    font-size: 42px;
+    font-weight: 700;
+    color: @gray-900;
   }
+
+h3.homepage {
+  font-weight: 900;
+  font-size: x-large;
+}
+
+p.homepage {
+  font-size: 22px;
+  color:  @gray-800;
+  font-weight: 400;
+  font-size: large;
+}
+
+p.more {
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 140%;
+  color: white;
+
+  padding: 40px 70px;
+
+  // this is a ratio and I should make it a variable
+  // for maintainability
+  @media @desktops {
+    font-size: 42px;
+  }
+
+  @media @tablets {
+    font-size: 32px;
+  }
+}
+
 
 .how-icon {
   height: 100px;
@@ -206,7 +171,6 @@ h2.homepage {
 }
 
 .how-homepage {
-  background-color: #E5E0D9;
   padding: 25px 0;
 
   p, h3, div {
@@ -234,46 +198,6 @@ h2.homepage {
   }
 }
 
-h3.homepage {
-  font-weight: 900;
-  font-size: x-large;
-}
-
-p.homepage {
-  .mapstory_font(@p_font_size);
-  color: @p_font_color;
-
-  font-weight: 400;
-  font-size: large;
-}
-
-p.more {
-  font-size: 22px;
-  font-family: @base-font-family;
-  font-weight: 900;
-  line-height: 140%;
-  color: white;
-
-  padding: 40px 70px;
-
-  // this is a ratio and I should make it a variable
-  // for maintainability
-  @media @desktops {
-    font-size: 42px;
-  }
-
-  @media @tablets {
-    font-size: 32px;
-  }
-}
-
-video {
-  width: 100%;
-  min-height: @splash;
-  z-index: -3;
-  overflow: hidden;
-} //video gets too short at window width of 715
-
 .sponsor-logos {
   text-align: center;
 
@@ -285,9 +209,4 @@ video {
     max-height: 100%;
     max-width: 100%;
   }
-}
-.home-shadow {
-  -webkit-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
-  -moz-box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
-  box-shadow: 2px 2px 28px 6px rgba(0, 0, 0, 0.25);
 }
