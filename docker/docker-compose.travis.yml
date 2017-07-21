@@ -81,6 +81,12 @@ services:
     environment:
       CELERY_NUM_WORKERS: 1
 
+  django_volumes:
+    image: mapstory/django:master
+    entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory && chown -R mapstory:mapstory /srv/mapstory/cover"
+    volumes:
+      - ./cover:/srv/mapstory/cover
+
   geoserver:
     image: mapstory/geoserver-2.11:master
     links:
