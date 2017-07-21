@@ -109,9 +109,8 @@ RUN set -ex \
 USER root
 WORKDIR $APP_PATH
 
-#COPY . .
+# Copy in the code
 COPY mapstory ./mapstory
-#COPY docker/django/local_settings.py ./mapstory/settings/
 COPY ./*.py ./
 RUN chown -R mapstory:mapstory $APP_PATH
 
@@ -148,7 +147,6 @@ RUN set -ex \
 
 COPY scripts ./scripts
 COPY docker/django/run.sh /opt/
-COPY docker/django/local_settings.py /opt/
 
 USER mapstory
 VOLUME $STATIC_ROOT
