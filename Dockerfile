@@ -1,4 +1,4 @@
-FROM mapstory/python-gdal
+FROM mapstory/python-gdal:2.7.x-2.2.x
 MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
 
 ENV MEDIA_ROOT /var/lib/mapstory/media
