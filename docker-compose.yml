@@ -75,8 +75,8 @@ services:
       - mapstory_static:/var/lib/mapstory/static/
 
   geoserver:
-    build: ./docker/geoserver
-    image: mapstory/geoserver
+    build: ./docker/geoserver-2.11
+    image: mapstory/geoserver-2.11
     volumes:
       - geoserver:/var/lib/geoserver
     networks:
