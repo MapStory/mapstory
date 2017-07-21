@@ -9,14 +9,14 @@ omit =
 	*/management/*
 	*/tests/*
 	*/tests.py
-	cf/
-	cover/
-	deps/
-	docker/
+	cf/*
+	cover/*
+	deps/*
+	docker/*
 	mapstory/apps/health_check_geoserver/*
 	mapstory/s3_storages.py
 	mapstory/settings.py
 	mapstory/settings/*
 	mapstory/wsgi.py
 	mapstory/version.py
-	scripts/
+	scripts/*

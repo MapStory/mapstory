@@ -3,7 +3,7 @@ services:
 
   pgadmin:
     build: ./docker/pgadmin
-    image: mapstory/pgadmin
+    image: quay.io/mapstory/pgadmin
     networks:
       internal:
     expose:
@@ -18,23 +18,17 @@ services:
 
   rabbitmq:
     build: ./docker/rabbitmq
-    image: mapstory/rabbitmq
+    image: quay.io/mapstory/rabbitmq
     networks:
       internal:
     expose:
       - "15671"
       - "15672"
 
-#  python-gdal:
-#    build: docker/python-gdal
-#    image: mapstory/python-gdal
-#    command: /bin/true
-
   django:
     build: .
-    image: mapstory/django
+    image: quay.io/mapstory/django
     depends_on:
-#      - python-gdal
       - django_volumes
     links:
       - elasticsearch
@@ -49,9 +43,8 @@ services:
 
   celery:
     build: .
-    image: mapstory/django
+    image: quay.io/mapstory/django
     depends_on:
-#      - python-gdal
       - django_volumes
     links:
       - elasticsearch
@@ -67,7 +60,7 @@ services:
 
   django_volumes:
     build: .
-    image: mapstory/django
+    image: quay.io/mapstory/django
     user: root
     entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory"
     volumes:
@@ -75,8 +68,8 @@ services:
       - mapstory_static:/var/lib/mapstory/static/
 
   geoserver:
-    build: ./docker/geoserver
-    image: mapstory/geoserver
+    build: ./docker/geoserver-2.11
+    image: quay.io/mapstory/geoserver-2.11
     volumes:
       - geoserver:/var/lib/geoserver
     networks:
@@ -86,7 +79,7 @@ services:
 
   nginx:
     build: ./docker/nginx
-    image: mapstory/nginx
+    image: quay.io/mapstory/nginx
     links:
       - django
       - geoserver
