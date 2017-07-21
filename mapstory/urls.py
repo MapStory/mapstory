@@ -25,7 +25,6 @@ from mapstory.apps.favorite.urls import api as favorites_api
 from mapstory.notifications import notify_download, set_profile_notification
 from mapstory.views import download_append_csv, download_append_shp
 from mapstory.views import GetPageView
-from mapstory.views import health_check
 from mapstory.views import IndexView
 from mapstory.views import LeaderListView
 from mapstory.views import MapStoryConfirmEmailView
@@ -60,28 +59,38 @@ layer_detail_patterns = patterns('',
     )
 
 urlpatterns = patterns('',
-    url(r'^ht/', health_check, name="health_check"),
+    # Home
+    url(r'^$', IndexView.as_view(), name="index_view"),
+
     # Adding Threaded Comments app
     url(r'^articles/comments/', include('django_comments.urls')),
-    url(r'^blog/comments/', include('fluent_comments.urls')),
 
-    url(r'^$', IndexView.as_view(), name="index_view"),
+    # Account
     url(r"^account/signup/$", MapStorySignupView.as_view(), name="account_signup"),
-    url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))), #temp fix for social auth redirect
-    url(r'^accounts/verify/$', 'mapstory.views.account_verify',  name='account_verify'),
     url(r"^account/confirm_email/(?P<key>\w+)/$", MapStoryConfirmEmailView.as_view(), name="account_confirm_email"),
 
+    # Accounts
+    url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))), #temp fix for social auth redirect
+    url(r'^accounts/verify/$', 'mapstory.views.account_verify',  name='account_verify'),
+
+    # Blog Comments
+    url(r'^blog/comments/', include('fluent_comments.urls')),
+
+    # Maps
     url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
     url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
     url(r'^maps/new_map', new_map, name='new_map'),
+    url(r'^maps/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
 
+    # Health Check status
+    url(r'^status/', include('health_check.urls'), name='health_check'),
+
+    # Story
     url(r'^story$', 'mapstory.views.new_story_json', name='new_story_json'),
     url(r'^story/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
-
     url(r'^story/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
     url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
     url(r'^story/chapter/new$', 'mapstory.views.new_map_json', name='new_map_json'),
-    url(r'^maps/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
 
     # MapLoom
     url(r'^story/new$', new_map, {'template': 'composer/maploom.html'},
@@ -129,20 +138,18 @@ urlpatterns += annotations_urls
 
 urlpatterns += maploom_urls
 
-urlpatterns += patterns("",
-                        url(r'', include(mapstory_api.urls)))
+urlpatterns += patterns("", url(r'', include(mapstory_api.urls)))
 
-urlpatterns += patterns("",
-                        url(r'', include(importer_api.urls)))
+urlpatterns += patterns("", url(r'', include(importer_api.urls)))
 
-urlpatterns += patterns("",
-                        url(r'', include(favorites_api.urls)))
+urlpatterns += patterns("", url(r'', include(favorites_api.urls)))
 
 urlpatterns += importer_urlpatterns
 
 # this is last to catch reverse lookup from geonode views
-urlpatterns += patterns("",url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
-                            url(r'^story/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'))
+urlpatterns += patterns("",
+                        url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
+                        url(r'^story/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'))
 
 
 if settings.DEBUG:
