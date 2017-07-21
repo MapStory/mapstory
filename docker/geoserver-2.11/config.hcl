@@ -29,6 +29,12 @@ template {
 }
 
 template {
+  source = "templates/global.xml.ctmpl"
+  destination = "{{ env "GEOSERVER_DATA_DIR" }}/global.xml"
+  perms = 0644
+}
+
+template {
   source = "templates/security_config.xml.ctmpl"
   destination = "{{ env "GEOSERVER_DATA_DIR" }}/security/config.xml"
   perms = 0644

@@ -9,9 +9,12 @@ MEDIA_ROOT = os.environ['MEDIA_ROOT']
 STATIC_ROOT = os.environ['STATIC_ROOT']
 DATABASE_PASSWORD = os.environ['DATABASE_PASSWORD']
 DATABASE_HOST = os.environ['DATABASE_HOST']
+SITEURL = "%s://%s/" % (os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
+GEOSERVER_PUBLIC_LOCATION = "%s://%s/geoserver/" % (os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
+GEOSERVER_LOCATION = "%s://%s:%d/geoserver/" % (os.environ['PRIVATE_PROTOCOL'], os.environ['GEOSERVER_HOST_INTERNAL'], int(os.environ['GEOSERVER_PORT_INTERNAL']))
+OGC_SERVER['default']['PUBLIC_LOCATION'] = GEOSERVER_PUBLIC_LOCATION
+OGC_SERVER['default']['LOCATION'] = GEOSERVER_LOCATION
 OGC_SERVER['default']['PASSWORD'] = os.environ['GEOSERVER_PASSWORD']
-OGC_SERVER['default']['PUBLIC_LOCATION'] = "%s://%s/geoserver/" % (os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
-OGC_SERVER['default']['LOCATION'] = "%s://%s:%d/geoserver/" % (os.environ['PRIVATE_PROTOCOL'], os.environ['GEOSERVER_HOST_INTERNAL'], int(os.environ['GEOSERVER_PORT_INTERNAL']))
 OGC_SERVER['default']['PG_GEOGIG'] = True
 LOCAL_CONTENT = False
 THEME = os.environ.get('THEME', 'default')
@@ -165,3 +168,4 @@ OSGEO_DATASTORE = 'datastore'
 USER_SNAP = True
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+

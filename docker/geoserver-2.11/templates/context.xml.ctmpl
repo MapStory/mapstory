@@ -37,15 +37,14 @@
         driverClassName="org.postgresql.Driver"
         url="jdbc:postgresql://{{ env "DATABASE_HOST" }}:{{ env "DATABASE_PORT" }}/mapstory_data"
         username="{{ env "DATABASE_USER" }}" password="{{ env "DATABASE_PASSWORD" }}"
-        maxActive="50"
+        maxTotal="50"
         initialSize="0"
         minIdle="0"
         maxIdle="10"
-        maxWait="10000"
+        maxWaitMillis="10000"
         timeBetweenEvictionRunsMillis="30000"
         minEvictableIdleTimeMillis="60000"
         testWhileIdle="true"
         validationQuery="SELECT 1"
-        maxAge="600000"
         rollbackOnReturn="true" />
 </Context>
