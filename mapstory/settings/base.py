@@ -88,10 +88,6 @@ INSTALLED_APPS += (
     'solo',
     'resizeimage',
     'coverage',
-    'health_check',
-    'health_check.contrib.celery',
-    'health_check.db',
-    'health_check.storage',
     'notification',
     'mapstory.apps.health_check_geoserver',
     'mapstory.apps.thumbnails',
@@ -100,6 +96,12 @@ INSTALLED_APPS += (
     'mapstory.apps.favorite',
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
+    'health_check',
+    'health_check.db',
+    'health_check.cache',
+    'health_check.storage',
+    'health_check.contrib.celery',
+    'health_check.contrib.s3boto_storage',
 )
 # DO NOT REMOVE (read commment above)
 INSTALLED_APPS += (
