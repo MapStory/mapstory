@@ -11,17 +11,6 @@ wait_for_pg()
     echo 'Postgres is up'
 }
 
-# Copy local settings if they don't exist
-if [ ! -e "mapstory/settings/local_settings.py" ]; then
-    cp /opt/local_settings.py mapstory/settings/local_settings.py
-fi
-
-# Reset permissions on the shared volumes
-# The nginx container seems to break these regularly
-#chown -R mapstory:mapstory $STATIC_ROOT
-#chown -R mapstory:mapstory $MEDIA_ROOT
-#chown -R mapstory:mapstory $APP_PATH/cover
-
 echo 'Testing permissions...'
 touch $MEDIA_ROOT/.ignore_$HOSTNAME
 touch $STATIC_ROOT/.ignore_$HOSTNAME

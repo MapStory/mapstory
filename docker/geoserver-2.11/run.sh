@@ -14,12 +14,15 @@ done
 # Domains get prepended with a '.' to apply to subdomains.
 if [ ! -z "${PUBLIC_HOST##*[!0-9\.]*}" ]; then
     # IP address
-    SESSION_COOKIE_DOMAIN=$PUBLIC_HOST
-else
+    export SESSION_COOKIE_DOMAIN=$PUBLIC_HOST
+elif [ -z "${PUBLIC_HOST##[a-zA-z]*\.[a-zA-z]*}" ]; then
     # Domain name
-    SESSION_COOKIE_DOMAIN=.$PUBLIC_HOST
+    export SESSION_COOKIE_DOMAIN=.$PUBLIC_HOST
+else
+    # Top level domain name
+    export SESSION_COOKIE_DOMAIN=$PUBLIC_HOST
 fi
-GEOSERVER_PROXY_URL=${PUBLIC_PROTOCOL}://${PUBLIC_HOST}/geoserver/
+export GEOSERVER_PROXY_URL=${PUBLIC_PROTOCOL}://${PUBLIC_HOST}/geoserver/
 
 # If the data directory doesn't exist, copy the one embedded in the WAR.
 [ ! -e $GEOSERVER_DATA_DIR/global.xml ] && cp -r $WEBAPPS_DIR/geoserver/data/* /var/lib/geoserver/data/
