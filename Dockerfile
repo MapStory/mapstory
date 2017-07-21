@@ -1,4 +1,4 @@
-FROM mapstory/python-gdal
+FROM quay.io/mapstory/python-gdal:2.7.x-2.2.x
 MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
 
 ENV MEDIA_ROOT /var/lib/mapstory/media
@@ -83,6 +83,9 @@ COPY requirements.txt ./
 #USER root
 RUN pip install --no-cache-dir -r requirements.txt
 COPY scripts/epsg_extra /usr/local/lib/python2.7/dist-packages/pyproj/data/
+# The httplib2 python library uses its own CA certificates.
+# Add the system and self-signed CAs.
+RUN cat /etc/ssl/certs/ca-certificates.crt >> /usr/local/lib/python2.7/site-packages/httplib2/cacerts.txt
 
 # Cache these. Hopefully it will speed up the later steps.
 # USER mapstory
@@ -106,9 +109,8 @@ RUN set -ex \
 USER root
 WORKDIR $APP_PATH
 
-#COPY . .
+# Copy in the code
 COPY mapstory ./mapstory
-#COPY docker/django/local_settings.py ./mapstory/settings/
 COPY ./*.py ./
 RUN chown -R mapstory:mapstory $APP_PATH
 
@@ -145,7 +147,6 @@ RUN set -ex \
 
 COPY scripts ./scripts
 COPY docker/django/run.sh /opt/
-COPY docker/django/local_settings.py /opt/
 
 USER mapstory
 VOLUME $STATIC_ROOT

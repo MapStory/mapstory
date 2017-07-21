@@ -14,7 +14,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.protractor
-    image: mapstory/protractor:master
+    image: quay.io/mapstory/protractor:master
     links:
       - selenium
       - nginx
@@ -39,7 +39,7 @@ services:
 #      - "5432:5432"
 
   pgadmin:
-    image: mapstory/pgadmin:master
+    image: quay.io/mapstory/pgadmin:master
     links:
       - postgres
     env_file:
@@ -52,7 +52,7 @@ services:
       - "9200:9200"
 
   rabbitmq:
-    image: mapstory/rabbitmq:master
+    image: quay.io/mapstory/rabbitmq:master
     environment:
       - RABBITMQ_DEFAULT_USER=mapstory
       - RABBITMQ_DEFAULT_PASS=password
@@ -62,7 +62,7 @@ services:
 #      - "15672:15672"
 
   django:
-    image: mapstory/django:master
+    image: quay.io/mapstory/django:master
     links:
       - postgres
     env_file:
@@ -79,7 +79,7 @@ services:
 #      - "8000:8000"
 
   celery:
-    image: mapstory/django:master
+    image: quay.io/mapstory/django:master
     links:
       - postgres
     environment:
@@ -95,13 +95,13 @@ services:
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   django_volumes:
-    image: mapstory/django:master
+    image: quay.io/mapstory/django:master
     entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory && chown -R mapstory:mapstory /srv/mapstory/cover"
     volumes:
       - ./cover:/srv/mapstory/cover
 
   geoserver:
-    image: mapstory/geoserver:master
+    image: quay.io/mapstory/geoserver-2.11:master
     links:
       - postgres
     env_file:
@@ -112,7 +112,7 @@ services:
 #      - "8080:8080"
 
   nginx:
-    image: mapstory/nginx:master
+    image: quay.io/mapstory/nginx:master
     env_file:
       - docker/env/dev/public_host.env
     volumes:
