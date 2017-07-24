@@ -1,5 +1,0 @@
----
-
-- name: restart geoserver
-  service: name=tomcat7 state=restarted
-  become: yes

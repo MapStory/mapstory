@@ -82,7 +82,7 @@ WORKDIR $APP_PATH
 COPY requirements.txt ./
 #USER root
 RUN pip install --no-cache-dir -r requirements.txt
-COPY scripts/epsg_extra /usr/local/lib/python2.7/dist-packages/pyproj/data/
+COPY epsg_extra /usr/local/lib/python2.7/dist-packages/pyproj/data/
 # The httplib2 python library uses its own CA certificates.
 # Add the system and self-signed CAs.
 RUN cat /etc/ssl/certs/ca-certificates.crt >> /usr/local/lib/python2.7/site-packages/httplib2/cacerts.txt
