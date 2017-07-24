@@ -20,7 +20,7 @@ git
 docker
 docker-compose
 ```
-### Installation
+### Setup a Development Environment
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.  Start by forking the mapstory repository to your own Github account, and then cloning that repository to your local development environment.
 
