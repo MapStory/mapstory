@@ -15,6 +15,8 @@ from osgeo_importer.api import UploadedLayerResource
 class UploadedLayerResource(UploadedLayerResource):
 
     def clean_configuration_options(self, request, obj, configuration_options):
+        print "WE HIT THE CLEAN"
+        print configuration_options
 
         if configuration_options.get('geoserver_store'):
             store = configuration_options.get('geoserver_store')
@@ -83,12 +85,13 @@ class GeoServerLayerCreator(Import):
             layer['geoserver_store'] = {'type': 'geogig'}
             store = layer.get('geoserver_store')
             if store.get('type', str).lower() == 'geogig':
+                name = feature_type['name'].lower()
                 store.setdefault('branch', 'master')
                 store.setdefault('create', 'true')
-                store.setdefault('name', feature_type['name'])
-                name = store.get('name').lower()
+                store.setdefault('name', name)
                 store['geogig_repository'] = ("geoserver://%s" % name)
                 store_name = name
+            print configuration_options
 
             feature_type['title'] = feature_type['name']
             feature_type['name'] = launder(slugify(unicode(feature_type['name'])))
