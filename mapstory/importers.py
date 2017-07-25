@@ -9,6 +9,25 @@ from geonode.geoserver.helpers import ogc_server_settings
 from geonode.upload.utils import create_geoserver_db_featurestore
 from osgeo_importer.importers import Import
 from osgeo_importer.utils import UploadError, launder
+from osgeo_importer.api import UploadedLayerResource
+
+
+class UploadedLayerResource(UploadedLayerResource):
+
+    def clean_configuration_options(self, request, obj, configuration_options):
+
+        if configuration_options.get('geoserver_store'):
+            store = configuration_options.get('geoserver_store')
+            if store.get('type', str).lower() == 'geogig':
+                store.setdefault('branch', 'master')
+                store.setdefault('create', 'true')
+                store.setdefault('name', configuration_options.get('name'))
+                store['geogig_repository'] = ("geoserver://%s" % store.get('name'))
+
+        if not configuration_options.get('layer_owner'):
+            configuration_options['layer_owner'] = obj.upload.user.username
+
+        return configuration_options
 
 
 class GeoServerLayerCreator(Import):
@@ -61,6 +80,15 @@ class GeoServerLayerCreator(Import):
             email = owner.email
             layer['layer_type'] = 'vector'
             layer['fields'] = None
+            layer['geoserver_store'] = {'type': 'geogig'}
+            store = layer.get('geoserver_store')
+            if store.get('type', str).lower() == 'geogig':
+                store.setdefault('branch', 'master')
+                store.setdefault('create', 'true')
+                store.setdefault('name', feature_type['name'])
+                name = store.get('name').lower()
+                store['geogig_repository'] = ("geoserver://%s" % name)
+                store_name = name
 
             feature_type['title'] = feature_type['name']
             feature_type['name'] = launder(slugify(unicode(feature_type['name'])))

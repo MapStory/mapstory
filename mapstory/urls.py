@@ -22,6 +22,7 @@ from mapstory.api.api import MapstoryOwnersResource
 from mapstory.api.resourcebase_api import ResourceBaseResource
 from mapstory.api.urls import api as mapstory_api
 from mapstory.apps.favorite.urls import api as favorites_api
+from mapstory.importers import UploadedLayerResource
 from mapstory.notifications import notify_download, set_profile_notification
 from mapstory.views import download_append_csv, download_append_shp
 from mapstory.views import GetPageView
@@ -42,6 +43,8 @@ geonode_api.register(ResourceBaseResource())
 geonode_api.register(MapstoryOwnersResource())
 
 importer_api = Api(api_name='importer-api')
+# Overwrite Importer URL Routes
+importer_api.register(UploadedLayerResource())
 
 # -- Deprecated url routes for Geoserver authentication -- remove after GeoNode 2.1
 # -- Use /gs/acls, gs/resolve_user/, gs/download instead

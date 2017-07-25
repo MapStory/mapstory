@@ -27,6 +27,8 @@ services:
 
   django:
     build: .
+    environment:
+    - PYTHONUNBUFFERED=0
     image: quay.io/mapstory/django
     depends_on:
       - django_volumes
