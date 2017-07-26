@@ -6,6 +6,7 @@ ENV STATIC_ROOT /var/lib/mapstory/static
 ENV APP_PATH /srv/mapstory
 ENV TMP /tmp
 ENV DJANGO_PORT 8000
+ENV PYTHONUNBUFFERED 0
 
 WORKDIR $TMP
 
