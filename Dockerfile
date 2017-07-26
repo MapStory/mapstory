@@ -6,6 +6,7 @@ ENV STATIC_ROOT /var/lib/mapstory/static
 ENV APP_PATH /srv/mapstory
 ENV TMP /tmp
 ENV DJANGO_PORT 8000
+ENV PYTHONUNBUFFERED 0
 
 WORKDIR $TMP
 
@@ -82,7 +83,7 @@ WORKDIR $APP_PATH
 COPY requirements.txt ./
 #USER root
 RUN pip install --no-cache-dir -r requirements.txt
-COPY scripts/epsg_extra /usr/local/lib/python2.7/dist-packages/pyproj/data/
+COPY epsg_extra /usr/local/lib/python2.7/dist-packages/pyproj/data/
 # The httplib2 python library uses its own CA certificates.
 # Add the system and self-signed CAs.
 RUN cat /etc/ssl/certs/ca-certificates.crt >> /usr/local/lib/python2.7/site-packages/httplib2/cacerts.txt
@@ -145,7 +146,6 @@ RUN set -ex \
     && mkdir -p /usr/local/lib/python2.7/site-packages-copy \
     && chown -R mapstory:mapstory /usr/local/lib/python2.7/site-packages-copy
 
-COPY scripts ./scripts
 COPY docker/django/run.sh /opt/
 
 USER mapstory
