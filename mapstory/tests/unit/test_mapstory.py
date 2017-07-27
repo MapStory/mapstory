@@ -219,7 +219,7 @@ class MapStoryTests(MapStoryTestMixin):
     @override_settings(GOOGLE_ANALYTICS='testing')
     def test_home_renders(self):
         """
-        Ensure the home page returns a 200.
+        Ensure the home page returns a 200 and contains the expected sections.
         """
         c = Client()
         response = c.get(reverse('index_view'))
@@ -232,23 +232,23 @@ class MapStoryTests(MapStoryTestMixin):
         self.assertEquals(soup.title.string, u'MapStory')
         # Our homepage should have 8 sections
         # Map section
-        self.assertIsNotNone(soup.find('section', class_='map-section'))
+        self.assertEqual(len(soup.find_all('section', class_='splash')), 1)
         # Featured MapStories
-        self.assertIsNotNone(soup.find_all('section', class_='featured-section'))
+        self.assertEqual(len(soup.find_all('section', class_='featured-cards')), 1)
         # How section
-        self.assertIsNotNone(soup.find_all('section', class_='how-section'))
+        self.assertEqual(len(soup.find_all('section', class_='how-homepage')), 1)
         # Contribute section
-        self.assertIsNotNone(soup.find_all('section', class_='contribute-section'))
+        self.assertEqual(len(soup.find_all('section', class_='contribute-commons')), 1)
         # Share
-        self.assertIsNotNone(soup.find_all('section', class_='share-section'))
+        self.assertEqual(len(soup.find_all('section', class_='share-expertise')), 1)
         # To Life
-        self.assertIsNotNone(soup.find_all('section', class_='to-life-section'))
+        self.assertEqual(len(soup.find_all('section', class_='to-life')), 1)
         # More
-        self.assertIsNotNone(soup.find_all('section', class_='more-section'))
+        self.assertEqual(len(soup.find_all('section', class_='more-you-know')), 1)
         # Sponsors
-        self.assertIsNotNone(soup.find_all('section', class_='s-sponsor-section'))
+        self.assertEqual(len(soup.find_all('section', class_='sponsors')), 1)
         # Should have a footer
-        self.assertIsNotNone(soup.find('footer'))
+        self.assertEqual(len(soup.find_all('footer')), 1)
 
     @override_settings(GOOGLE_ANALYTICS='testing')
     def test_search_renders(self):
