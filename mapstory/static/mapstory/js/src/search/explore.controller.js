@@ -13,8 +13,6 @@
     var vm = this;
 
     $scope.query = $location.search();
-    $scope.sitename = SITE_NAME; //used in content_sidebar
-
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
 
