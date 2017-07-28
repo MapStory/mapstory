@@ -89,7 +89,6 @@ services:
       - ./cover:/srv/mapstory/cover
 
   geoserver:
-    image: quay.io/mapstory/geoserver-2.11:master
     links:
       - postgres
     env_file:
