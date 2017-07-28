@@ -66,6 +66,12 @@ script:
 #  - protractor mapstory/tests/e2e/conf.js
   - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
 
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+      docker login -u="$QUAY_USERNAME" -p="$QUAY_PASSWORD" quay.io
+      $DCO push
+    fi
+
 after_script:
   - $DCO kill
   - $DCO rm -f
