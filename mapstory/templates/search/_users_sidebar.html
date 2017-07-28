@@ -4,14 +4,14 @@
         
             <aside class="col-sm-3 explore-filters">
                 <section>
-                    <h2>Filter Results</h2>
+                    <h2 class="side-title">Filter Results</h2>
                     <div class="clear-filters">
                         <a href="" ng-click="defaultOwners()">Clear all</a>
                     </div>
                 </section>
 
                 <section>
-                    <h3>StoryTeller</h3>
+                    <h3 class="bold-caps">StoryTeller</h3>
                     <div class="clear-filters">
                         <a href="" ng-click="explore.clear('q')">Clear</a>
                     </div>
@@ -35,7 +35,7 @@
                     </div>
                 </section>
                 <section ng-controller="citiesController as cit">
-                    <h3>City</h3>
+                    <h3 class="bold-caps">City</h3>
                     <div class="clear-filters">
                         <a href="" ng-click="explore.clear('city__icontains')">Clear</a>
                     </div>
@@ -69,7 +69,7 @@
                 </section>
 
                 <section ng-controller="countriesController as reg">
-                    <h3>Country</h3>
+                    <h3 class="bold-caps">Country</h3>
                     <div class="clear-filters">
                         <a href="" ng-click="explore.clear('country')">Clear</a>
                     </div>
@@ -109,7 +109,7 @@
                     </div>
                 </section>
                 <section ng-controller="interestsController as int">
-                    <h3>Interest</h3>
+                    <h3 class="bold-caps">Interest</h3>
                     <div class="clear-filters">
                         <a href="" ng-click="explore.clear('interest_list')">Clear</a>
                     </div>
@@ -142,7 +142,7 @@
                     </div>
                 </section>
                 <section>
-                    <h3>VTC Members</h3>
+                    <h3 class="bold-caps">VTC Members</h3>
                     <div class="filter-content">
                         <p>
                             <a href="{% url 'getpage' 'started' %}#Join%20the%20Volunteer%20Technical%20Community">

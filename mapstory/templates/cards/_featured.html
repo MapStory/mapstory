@@ -1,0 +1,30 @@
+{% load i18n %}
+{% verbatim %}         
+<md-card style="width:470px; height: 150px">
+    <div layout="row" layout-align="start center">
+        <div style="width:48%; padding: 10px">
+            <a href="{{ item.detail_url }}">
+                <img ng-src="{{ item.thumbnail_url | decodeURIComponent }}" class="card-shadow" /> 
+            </a>
+        </div> 
+    
+        <div>
+            <div layout="column" layout-align="center stretch" style="padding: 0 10px">
+                <p class="tiny-caps" style="margin: 0">
+                    {{item.category__gn_description ? item.category__gn_description : 'Uncategorized'}}
+                </p>
+                <h4 style="font-size: 0.8em; font-weight: 600; margin: 0"> {{ item.title }} </h4>
+                <p style="font-size: 0.8em; font-weight: 300; margin: 0">
+                    <a href="/storyteller/{{ item.owner__username }}" style="color: #757575">
+                        {{ item.owner__first_name ?
+                           item.owner__first_name + ' ' + item.owner__last_name
+                         : item.owner__username }}
+                    </a>
+                </p>
+                <p class="tiny" style="margin: 0; color: #757575"> Created {{ item.date|date }}</p>
+                <p class="tiny" style="margin: 0; color: #757575" >{{ item.popular_count }} views </p>
+            </div>
+        </div>
+    </div>
+</md-card>
+{% endverbatim %}

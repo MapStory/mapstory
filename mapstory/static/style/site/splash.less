@@ -1,0 +1,87 @@
+/*----Splash----*/
+
+.radius(@radius) {
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+  -o-border-radius: @radius;
+  -ms-border-radius: @radius;
+  border-radius: @radius;
+}
+
+.splash {
+  // height here will affect content, backdrop, and overlay
+  // proportionally
+  @splash: 400px; 
+
+  overflow: hidden;
+  height: @splash;
+  width: 100%;
+
+  &-content {
+    position: relative;
+
+    padding-top: @splash / 2.5;
+    padding-left: @splash / 3;
+    padding-right: @splash / 8;
+
+    z-index: 99;
+  }
+
+  video {
+    width: 100%;
+    min-height: @splash;
+    z-index: -3;
+    overflow: hidden;
+    //note: video gets too short at window width of 715
+  } 
+
+  &-backdrop {
+    height: inherit;
+  }
+
+  &-overlay {
+
+    // Ordering, placement, and transparency
+    @top-offset: @splash * -1.3;
+    @left-offset: @splash * -0.2;
+
+    z-index: 0;
+
+    position: relative;
+    top: @top-offset;
+    left: @left-offset;
+
+    background-color: rgba(255, 255, 255, 0.75);
+
+    //Overlay shape properties
+    &.circle {
+      @diameter: @splash * 1.75;
+
+      .radius(50%);
+
+      width: 550px;
+      height: @diameter;
+      
+
+      @media @desktops {
+        width: @diameter;
+        height: @diameter;
+      }
+
+      @media @tablets {
+        width: @diameter;
+        height: @diameter;
+      }
+    }
+
+    // Example rectangle mixin if needed in the future!
+    // ------------------
+    // &.rectangle {
+    //   top: -@splash;
+    //   left: 0;
+    //   width: @splash;
+    //   height: @splash;
+    // }
+   
+  }
+}
