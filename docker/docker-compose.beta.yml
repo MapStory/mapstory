@@ -1,7 +1,8 @@
-# demo.mapstory.org configuration
+# beta.mapstory.org configuration
 version: '3.1'
 services:
   pgadmin:
+    image: quay.io/mapstory/pgadmin:beta
     ports:
       - "5050:5050"
     secrets:
@@ -12,6 +13,7 @@ services:
       - "9200:9200"
 
   rabbitmq:
+    image: quay.io/mapstory/rabbitmq:beta
     secrets:
       - env_rabbitmq_auth
     ports:
@@ -19,6 +21,7 @@ services:
       - "15672:15672"
 
   django:
+    image: quay.io/mapstory/django:beta
     env_file:
       - docker/env/beta/public_host.env
       - docker/env/beta/geoserver.env
@@ -38,6 +41,7 @@ services:
       - "8000:8000"
 
   celery:
+    image: quay.io/mapstory/django:beta
     env_file:
       - docker/env/beta/public_host.env
       - docker/env/beta/geoserver.env
@@ -53,6 +57,9 @@ services:
       - .:/srv/mapstory/
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
+  django_volumes:
+    image: quay.io/mapstory/django:beta
+
   geoserver:
     env_file:
       - docker/env/beta/public_host.env
@@ -64,6 +71,7 @@ services:
       - "8080:8080"
 
   nginx:
+    image: quay.io/mapstory/nginx:beta
     env_file:
       - docker/env/beta/public_host.env
     volumes:
@@ -76,9 +84,9 @@ services:
 volumes:
   site-packages:
   geoserver:
-    driver: rexray/efs
+    driver: rexray
   mapstory_media:
-    driver: rexray/efs
+    driver: rexray
 
 secrets:
   ssl_cert:
