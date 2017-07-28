@@ -126,4 +126,8 @@ for i do # loop over $@
         echo 'Running dev server'
         python manage.py runserver 0.0.0.0:$DJANGO_PORT
     fi
+
+    if [ "$i" = "--shell" ]; then
+        bash
+    fi
 done
