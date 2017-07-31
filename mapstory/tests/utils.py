@@ -1,22 +1,19 @@
 """
 Test Utilities and helpers
 """
-import string
 import random
+import string
 from datetime import datetime
 from datetime import timedelta
-from itertools import cycle
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
 from django.db.models import signals
-
+from django.template.defaultfilters import slugify
 from geonode.base.models import TopicCategory
-from geonode.geoserver.signals import geoserver_pre_save_maplayer
 from geonode.geoserver.signals import geoserver_post_save_map, geoserver_pre_save, geoserver_post_save
+from geonode.geoserver.signals import geoserver_pre_save_maplayer
 from geonode.maps.models import MapLayer, Layer
-
-
 from mapstory.mapstories.models import Map
 from mapstory.mapstories.models import MapStory
 
@@ -92,7 +89,7 @@ def create_mapstory(owner, title):
     :param title: The story title
     :return: MapStory
     """
-    return MapStory.objects.create(owner=owner, title=title)
+    return MapStory.objects.create(owner=owner, title=title, slug=slugify(title))
 
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
@@ -303,6 +300,6 @@ def create_layer(title, abstract, owner):
         date=start,
         storeType='dataStore',
         category=category,
-          )
+    )
     layer.save()
     return layer
