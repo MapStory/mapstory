@@ -25,14 +25,14 @@
                 <a href="/story/{{ resource.id }}/draft">
                     <button class="btn btn-danger resume-edit">
                         <i class="fa fa-pencil"></i>
-                        {% if resource.is_published %} Change Published {{SITE_NAME}} 
+                        {% if resource.is_published %} Change Published MapStory 
                         {% else %} Resume Draft 
                         {% endif %}
                     </button>
                 </a>
                 <a href="/story/{{ resource.id }}/embed">
                     <button class="btn btn-detail mobile-play">
-                        <i class="fa fa-play"></i> Play {{SITE_NAME}}  
+                        <i class="fa fa-play"></i> Play MapStory  
                     </button>
                 </a>
                 {% endif %}
@@ -95,7 +95,7 @@
                             {% if resource.abstract != '' %}
                                 {{ resource.abstract }}
                             {% else %}
-                                <div class="no-chapter-summary"> Unfortunately, no summary has been provided for this {{SITE_NAME}}.</div>
+                                <div class="no-chapter-summary"> Unfortunately, no summary has been provided for this MapStory.</div>
                             {% endif %}
                         </div>
                         {% if resource.chapters.count = 1 %}
@@ -245,7 +245,7 @@
                     {% if resource.owner == user %}
                     <div style= "padding-top: 40px">
                         <button class="btn btn-danger">
-                            <a href="{% url "map_remove" resource.id %}">{% trans "Delete this " %}{{SITE_NAME}}</a>
+                            <a href="{% url "map_remove" resource.id %}">{% trans "Delete this " %}MapStory</a>
                         </button>
                     </div>
                     {% endif %}
