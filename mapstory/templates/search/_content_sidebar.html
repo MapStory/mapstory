@@ -3,14 +3,14 @@
 
 <aside class="col-sm-3 explore-filters">
     <section>
-        <h2>Filter Results</h2>
+        <h2 class="side-title">Filter Results</h2>
         <div class="clear-filters">
             <a href="" ng-click="defaultContent()">Clear all</a>
         </div>
     </section>
 
     <section>
-        <h3>Search         
+        <h3 class="bold-caps">Search         
             <i class="fa fa-info-circle">
                 <md-tooltip md-direction="right">use keywords 'AND' or 'OR' to narrow or expand your search</md-tooltip>
             </i>
@@ -40,7 +40,7 @@
     </section>
     <section>
     {% verbatim %}
-        <h3>Content Type</h3>
+        <h3 class="bold-caps">Content Type</h3>
         <div class="clear-filters">
             <a href="" ng-click="explore.clear('type__in')">Clear</a>
         </div>
@@ -60,7 +60,7 @@
                        data-filter="type__in"
                        ng-click="explore.checkboxQuery($event)"
                        ng-checked="isActivated('mapstory', query, 'type__in')">
-                    {{sitename}}
+                    MapStory
                 </input>
             </div>
         </div>
@@ -69,7 +69,7 @@
 
     <section>
     {% verbatim %}
-        <h3>Category</h3>
+        <h3 class="bold-caps">Category</h3>
         <div class="clear-filters">
             <a href="" ng-click="explore.clear('category__identifier__in')">Clear</a>
         </div>
@@ -84,7 +84,7 @@
 
     <section ng-controller="storytellerController as author">
     {% verbatim %}
-        <h3>StoryTeller</h3>
+        <h3 class="bold-caps">StoryTeller</h3>
         <div class="clear-filters">
             <a href="" ng-click="explore.clear('owner__username__in')">Clear</a>
         </div>
@@ -120,7 +120,7 @@
 
     <section ng-controller="tagsController as tags">
     {% verbatim %}
-        <h3>Tags</h3>
+        <h3 class="bold-caps">Tags</h3>
         <div class="clear-filters">
             <a href="" ng-click="explore.clear('keywords__slug__in')">Clear</a>
         </div>

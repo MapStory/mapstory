@@ -1,5 +1,0 @@
----
-
-- include: dbservers.yml
-- include: geoservers.yml
-- include: webservers.yml

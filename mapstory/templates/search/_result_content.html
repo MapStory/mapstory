@@ -4,10 +4,12 @@
     <div class="content-card">
         <div class="thumbnail-and-content-type">
             <div class="content-result-type">
-                <span ng-if="item.type === 'mapstory'"><i class="fa fa-map-o"></i>
-                    {% endverbatim %}{{SITE_NAME}}{% verbatim %}
-                </span>
-                <span ng-if="item.type === 'layer'"><i class="fa fa-clone"></i> StoryLayer</span>
+                <h4 class="tiny-caps">
+                    <span ng-if="item.type === 'mapstory'"><i class="fa fa-map-o"></i>
+                        MapStory
+                    </span>
+                    <span ng-if="item.type === 'layer'"><i class="fa fa-clone"></i> StoryLayer</span>
+                </h4>
             </div>
             <a href="{{ item.detail_url }}">
                 <img ng-src="{{ item.thumbnail_url | decodeURIComponent }}" />
@@ -31,9 +33,9 @@
             <h3 class="content-title">{{ item.title.toLowerCase() | limitTo:19 }}</h3>
         </a>
 
-        <div class="content-category">
+        <h4 class="tiny-caps">
             {{ item.category ? item.category : 'Uncategorized' }}
-        </div>
+        </h4>
 
         <div class="content-abstract">
             {{ item.abstract | limitTo:75 }}{{ item.abstract.length > 75 ? '...' : '' }}
