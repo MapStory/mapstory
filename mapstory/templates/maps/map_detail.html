@@ -29,7 +29,7 @@
   {% autoescape off %}
       $('<iframe>', {
      {% if resource.chapters %}
-     src: '{%  url 'mapstory_view' resource.id %}',
+     src: '{%  url 'mapstory_view' resource.id resource.slug %}',
      {% else %}
      src: '{%  url 'map-viewer' resource.id %}',
      {% endif %}

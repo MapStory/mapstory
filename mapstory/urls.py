@@ -33,7 +33,7 @@ from mapstory.views import MapStorySignupView
 from mapstory.views import layer_detail, layer_detail_id, layer_create
 from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from mapstory.views import layer_remove, map_remove
-from mapstory.views import map_detail
+from mapstory.views import map_detail, map_detail_redirect
 from mapstory.views import new_map
 from mapstory.views import ProfileDetail, profile_delete, profile_edit, proxy
 from mapstory.views import SearchView
@@ -90,9 +90,10 @@ urlpatterns = patterns('',
 
     # Story
     url(r'^story$', 'mapstory.views.new_story_json', name='new_story_json'),
-    url(r'^story/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
-    url(r'^story/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
-    url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
+    url(r'^story/(?P<id>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
+    url(r'^story/(?P<id>\d+)/(?P<slug>[-\w]+)/?$', map_detail, name='mapstory_detail'),
+    url(r'^story/(?P<id>\d+)/$', map_detail_redirect, name='mapstory_detail_redirect'),
+    url(r'^story/(?P<id>\d+)/(?P<slug>[-\w]+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
     url(r'^story/chapter/new$', 'mapstory.views.new_map_json', name='new_map_json'),
 
     # MapLoom

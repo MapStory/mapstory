@@ -1,22 +1,21 @@
 from unittest import skip
+
 from account.models import EmailConfirmation
 from bs4 import BeautifulSoup
-
-from django.core.urlresolvers import reverse
-from django.core import mail
 from django.contrib.auth import get_user_model, authenticate
+from django.core import mail
+from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
 from django.test.utils import override_settings
-
 from mapstory.mapstories.models import Map
 from mapstory.mapstories.models import MapStory
 
 from ..AdminClient import AdminClient
-from ...version import get_version
-from ... import __version__ as version
 from ..MapStoryTestMixin import MapStoryTestMixin
 from ..utils import get_test_user, create_mapstory
+from ... import __version__ as version
 from ...forms import KeywordsForm, PublishStatusForm
+from ...version import get_version
 
 # Gets the custom user model
 User = get_user_model()
@@ -27,6 +26,7 @@ class TestMapstory(TestCase):
     """
     Mapstory Model Tests
     """
+
     def setUp(self):
         self.mapstory = MapStory()
         self.assertIsInstance(self.mapstory, MapStory, "Should be instance of MapStory")
@@ -84,30 +84,42 @@ class MapViewsTest(MapStoryTestMixin):
         found = MapStory.objects.get(id=test_mapstory.id)
         self.assertEquals(found.title, test_mapstory.title)
         # Should get a 200 response from the URL
-        response = self.client.get(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}))
+        response = self.client.get(reverse('mapstory_detail', kwargs={"id": test_mapstory.id,
+                                                                      "slug": test_mapstory.slug}))
         self.assertEquals(response.status_code, 200)
 
         # Should use the correct template
         self.assertTemplateUsed(response, 'maps/map_detail.html')
         self.assertContains(response, test_mapstory.title)
 
+    def test_mapstory_detail_redirect_view(self):
+        # Should be able to redirect to the correct story without the slug.
+        test_mapstory = create_mapstory(testUser, 'Testing Map 01')
+        expected_url = '/story/' + str(test_mapstory.id) + '/' + test_mapstory.slug
+        response = self.client.get(reverse('mapstory_detail_redirect', kwargs={"id": test_mapstory.id}))
+        self.assertRedirects(response, expected_url, status_code=301, target_status_code=200)
+
     def test_post_mapstory_detail_keyword_post(self):
         # Should create add a keyword
         test_mapstory = create_mapstory(testUser, 'Testing Map 02')
-        response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}), {'add_keyword': 'test_keyword'})
+        response = self.client.post(reverse('mapstory_detail', kwargs={"id": test_mapstory.id,
+                                                                       "slug": test_mapstory.slug}),
+                                    {'add_keyword': 'test_keyword'})
         self.assertEquals(response.status_code, 200)
 
         # Should remove the keyword
-        response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}),
-                                    {'remove_keyword': 'test_keyword'})
+        response = self.client.post(
+            reverse('mapstory_detail', kwargs={"id": test_mapstory.id, "slug": test_mapstory.slug}),
+            {'remove_keyword': 'test_keyword'})
 
         self.assertEquals(response.status_code, 200)
 
         # Should handle Keywords form post
-        form_data = {'keywords': ['testKeyword01','testKeyword02','testKeyword03']}
+        form_data = {'keywords': ['testKeyword01', 'testKeyword02', 'testKeyword03']}
         form = KeywordsForm(data=form_data)
         self.assertTrue(form.is_valid())
-        response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}), form_data)
+        response = self.client.post(reverse('mapstory_detail', kwargs={"id": test_mapstory.id,
+                                                                       "slug": test_mapstory.slug}), form_data)
         self.assertEquals(response.status_code, 200)
 
     def test_mapstory_detail_publish_status_form(self):
@@ -120,7 +132,8 @@ class MapViewsTest(MapStoryTestMixin):
         form = PublishStatusForm(data=form_data)
         self.assertTrue(form.is_valid())
         response = self.client.post(reverse('mapstory_detail',
-                                            kwargs={"mapid": test_mapstory.id}), form_data)
+                                            kwargs={"id": test_mapstory.id,
+                                                    "slug": test_mapstory.slug}), form_data)
         self.assertEquals(response.status_code, 200)
 
         # Should be published
@@ -133,7 +146,8 @@ class MapViewsTest(MapStoryTestMixin):
         self.assertIsNotNone(test_mapstory.id)
 
         # Should get a 200 response from the URL
-        response = self.client.get(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}))
+        response = self.client.get(reverse('mapstory_detail', kwargs={"id": test_mapstory.id,
+                                                                      "slug": test_mapstory.slug}))
         self.assertEquals(response.status_code, 200)
 
         # Should use the correct template
@@ -161,7 +175,8 @@ class MapViewsTest(MapStoryTestMixin):
         self.assertIsNotNone(test_mapstory.id)
 
         # Should get a 200 response from the URL
-        response = self.client.get(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}))
+        response = self.client.get(reverse('mapstory_detail', kwargs={"id": test_mapstory.id,
+                                                                      "slug": test_mapstory.slug}))
         self.assertEquals(response.status_code, 200)
 
         # Should have the meta tags included
@@ -202,6 +217,7 @@ class MapStoryTests(MapStoryTestMixin):
     """
     Basic checks to make sure pages load, etc.
     """
+
     def setUp(self):
         self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
         self.non_admin_username, self.non_admin_password = self.create_user('non_admin', 'non_admin')
@@ -406,7 +422,8 @@ class MapStoryTests(MapStoryTestMixin):
         c = Client()
         response = c.get(reverse('account_signup'))
         self.assertEqual(response.status_code, 200)
-        data = dict(username='test', name_long='test', first_name='test12345', last_name='user', email='test@example.com', password='test',
+        data = dict(username='test', name_long='test', first_name='test12345', last_name='user',
+                    email='test@example.com', password='test',
                     password_confirm='test')
 
         response = c.post(reverse('account_signup'), data=data, follow=True)

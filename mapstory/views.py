@@ -22,7 +22,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import F
-from django.http import HttpResponse, HttpResponseServerError, Http404
+from django.http import HttpResponse, HttpResponseServerError, Http404, HttpResponsePermanentRedirect
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.http.request import validate_host
 from django.shortcuts import render_to_response, render, redirect, get_object_or_404
@@ -406,13 +406,13 @@ def map_view(request, mapid, snapshot=None, template='maps/map_view.html'):
     }))
 
 
-def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer.html'):
+def mapstory_view(request, id, slug, snapshot=None, template='viewer/story_viewer.html'):
     """
     The view that returns the map viewer opened to
     the mapstory with the given ID.
     """
 
-    story_obj = _resolve_map(request, storyid, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
+    story_obj = _resolve_map(request, id, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
 
     if snapshot is None:
         config = story_obj.viewer_json(request.user)
@@ -430,11 +430,7 @@ def _resolve_story(request, id, permission='base.change_resourcebase',
     '''
     Resolve the Map by the provided typename and check the optional permission.
     '''
-    if id.isdigit():
-        key = 'pk'
-    else:
-        key = 'urlsuffix'
-    return resolve_object(request, MapStory, {key: id}, permission=permission,
+    return resolve_object(request, MapStory, {'pk': id}, permission=permission,
                           permission_msg=msg, **kwargs)
 
 
@@ -979,18 +975,18 @@ def _resolve_map(request, id, permission='base.change_resourcebase',
     if id.isdigit():
         key = 'pk'
     else:
-        key = 'urlsuffix'
+        key = 'slug'
     map_obj = resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
     return map_obj
 
 
-def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
+def map_detail(request, id, slug, snapshot=None, template='maps/map_detail.html'):
     '''
     The view that show details of each map
     '''
 
-    map_obj = _resolve_map(request, mapid, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
+    map_obj = _resolve_map(request, id, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
 
     # Update count for popularity ranking,
     # but do not includes admins or resource owners
@@ -1038,7 +1034,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
 
     map_thumbnail_dir = os.path.join(settings.MEDIA_ROOT, 'thumbs')
     map_default_thumbnail_array = map_obj.get_thumbnail_url().split('/')
-    map_default_thumbnail_name = 'map' + str(mapid) + '.jpg'
+    map_default_thumbnail_name = 'map' + str(slug) + '.jpg'
     map_default_thumbnail = os.path.join(map_thumbnail_dir,
                                          map_default_thumbnail_name)
 
@@ -1089,6 +1085,12 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     if settings.SOCIAL_ORIGINS:
         context_dict["social_links"] = build_social_links(request, map_obj)
     return render_to_response(template, RequestContext(request, context_dict))
+
+
+def map_detail_redirect(request, id):
+    story = get_object_or_404(MapStory, pk=id)
+    slug = story.slug
+    return redirect('mapstory_detail', id=id, slug=slug, permanent=True)
 
 
 @login_required
