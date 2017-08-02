@@ -21,8 +21,11 @@ Memory: - Geonode recommends 6GB of memory. At least 2GB seems necessary to buil
 
 OS: These instructions assume a UNIX environment you can access via HTTP, or a Windows Pro desktop environment with Hyper-V and Docker-CE https://store.docker.com/editions/community/docker-ce-desktop-windows are required.
 
-Instructions for using Vagrant and virtualbox to use a UNIX VM on other host environments are in testing and preparation. Other environments should provide specific instructions in README-<env>.md 
+Note Docker-CE has some issues with disk permissions and may require some intervention - see [https://stackoverflow.com/questions/43880764/in-docker-for-windows-permissions-denied-for-mkdir-chown]
 
+A draft setup using Vagrant and virtualbox to use a UNIX VM on other host environments is provided, but not yet fully debugged. Using DockerTools may also be viable for Windows HOME but this is also not currently building correctly and is not a priority to debug, however contributions are welcome.  Other environments should provide specific instructions in README-<env>.md 
+
+Software:
 Make sure these components are installed:
 
 ```

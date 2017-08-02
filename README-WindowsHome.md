@@ -1,0 +1,2 @@
+Windows pre version 10 and Windows 10 Home edition are not currently supported.
+It may be possible to make these environments work with either Vagrant and running docker in the hosted vm, or using DockerTools, however neither of these work "out-of-the-box". 
