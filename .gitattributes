@@ -1,5 +1,7 @@
 # Set the default behavior, in case people don't have core.autocrlf set.
-core.autocrlf=false
+core.autocrlf=input
+
+* text=auto eol=lf
 
 # This is necessary because the unix enviroment needs to run certain files and DOS lf breaks this.
   
