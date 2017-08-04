@@ -115,6 +115,12 @@ class MapStorySignupView(SignupView):
         self.create_profile(form)
         super(MapStorySignupView, self).after_signup(form)
 
+    def form_valid(self, form):
+        # ensure all new accounts are lowercase
+        form.cleaned_data["username"] = form.cleaned_data["username"].lower()
+        super(MapStorySignupView, self).form_valid(form)
+        return redirect(self.get_success_url())
+
     def create_profile(self, form):
         profile = self.created_user
         profile.first_name = form.cleaned_data["first_name"]
