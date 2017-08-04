@@ -44,7 +44,7 @@
                         <div class="row">
                             <div class="col-sm-10">
                                 <a href="{% url 'profile_detail' slug=resource.owner.username %}">
-                                    <img class="img-circle" src="{% avatar_url resource.owner 45 %}" />
+                                    <img class="img-circle avi-45-backup" src="{% avatar_url resource.owner 45 %}" />
                                 </a>
                                  <a ng-href="{% url 'profile_detail' slug=resource.owner.username %}" target="_blank" style="font-size: larger;">
                                     {% if resource.owner.first_name != '' %}
