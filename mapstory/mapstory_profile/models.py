@@ -71,11 +71,11 @@ class MapstoryProfile(models.Model):
         return [kw.slug for kw in self.keywords.all()]
 
 def profile_post_save(instance, sender, **kwargs):
-    MapstoryProfile.objects.filter(id=instance.id).update(
+    MapstoryProfile.objects.filter(user_id=instance.id).update(
         avatar_100=avatar_url(instance, 100))
 
 def avatar_post_save(instance, sender, **kw):
-    MapstoryProfile.objects.filter(id=instance.user.id).update(
+    MapstoryProfile.objects.filter(user_id=instance.user.id).update(
         avatar_100=avatar_url(instance.user, 100))
 
 def create_mapstory_profile(sender, instance, created, **kwargs):
