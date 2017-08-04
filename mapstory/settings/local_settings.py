@@ -60,6 +60,11 @@ MAPSTORY_APPS = (
 
 )
 
+# Avatar
+AUTO_GENERATE_AVATAR_SIZES = (35, 45, 75, 100)
+AVATAR_GRAVATAR_BACKUP = False
+AVATAR_DEFAULT_URL = "%s/static/mapstory/img/default_avatar_lg.png" % (SITEURL)
+
 # Social Authentication Settings
 
 ENABLE_SOCIAL_LOGIN = str_to_bool(os.environ['ENABLE_SOCIAL_LOGIN'])
