@@ -20,7 +20,7 @@
         {{ upload_avatar_form.as_p }}
         <p>{% csrf_token %}<input id="avatar-file" type="submit" class="btn btn-primary" style="visibility: hidden" value="{% trans "Upload New Image" %}" /></p>
     </form>
-    <a class="btn btn-primary btn-danger" href="{% url 'avatar_delete' %}" id="delete_avatar" style="visibility: hidden">{% trans "Delete Your Avatar" %}</a>
+<!--     <a class="btn btn-primary btn-danger" href="{% url 'avatar_delete' %}" id="delete_avatar" style="visibility: hidden">{% trans "Delete Your Avatar" %}</a> -->
 {% endblock %}
 
 {% block extra_script %}
