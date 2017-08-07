@@ -23,7 +23,11 @@ class MapStory(geonode.base.models.ResourceBase):
         self.title = conf['title']
         self.abstract = conf['abstract']
         self.is_published = conf['is_published']
-        self.slug = slugify(conf['title'])
+        # Ensure that the slug is unique.
+        if not MapStory.objects.filter(slug=slugify(conf['title'])).exists():
+            self.slug = slugify(conf['title'])
+        else:
+            self.slug = slugify(conf['title']) + '-' + str(self.id)
 
         if conf['category'] is not None:
             self.category = geonode.base.models.TopicCategory(conf['category'])
@@ -90,7 +94,7 @@ class MapStory(geonode.base.models.ResourceBase):
         blank=True,
         null=True,
         help_text=distribution_description_help_text)
-    slug = db.models.SlugField(max_length=160, null=True)
+    slug = db.models.SlugField(max_length=160, null=True, unique=True)
 
 
     class Meta(geonode.base.models.ResourceBase.Meta):

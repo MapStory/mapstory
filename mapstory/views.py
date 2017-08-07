@@ -433,7 +433,7 @@ def _resolve_story(request, id, permission='base.change_resourcebase',
     if id.isdigit():
         key = 'pk'
     else:
-        key = 'urlsuffix'
+        key = 'slug'
     return resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
 
