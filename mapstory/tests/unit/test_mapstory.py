@@ -84,7 +84,7 @@ class MapViewsTest(MapStoryTestMixin):
         found = MapStory.objects.get(id=test_mapstory.id)
         self.assertEquals(found.title, test_mapstory.title)
         # Should get a 200 response from the URL
-        response = self.client.get(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}))
+        response = self.client.get(reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}))
         self.assertEquals(response.status_code, 200)
 
         # Should use the correct template
@@ -94,11 +94,11 @@ class MapViewsTest(MapStoryTestMixin):
     def test_post_mapstory_detail_keyword_post(self):
         # Should create add a keyword
         test_mapstory = create_mapstory(testUser, 'Testing Map 02')
-        response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}), {'add_keyword': 'test_keyword'})
+        response = self.client.post(reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}), {'add_keyword': 'test_keyword'})
         self.assertEquals(response.status_code, 200)
 
         # Should remove the keyword
-        response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}),
+        response = self.client.post(reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}),
                                     {'remove_keyword': 'test_keyword'})
 
         self.assertEquals(response.status_code, 200)
@@ -107,7 +107,7 @@ class MapViewsTest(MapStoryTestMixin):
         form_data = {'keywords': ['testKeyword01','testKeyword02','testKeyword03']}
         form = KeywordsForm(data=form_data)
         self.assertTrue(form.is_valid())
-        response = self.client.post(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}), form_data)
+        response = self.client.post(reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}), form_data)
         self.assertEquals(response.status_code, 200)
 
     def test_mapstory_detail_publish_status_form(self):
@@ -120,7 +120,7 @@ class MapViewsTest(MapStoryTestMixin):
         form = PublishStatusForm(data=form_data)
         self.assertTrue(form.is_valid())
         response = self.client.post(reverse('mapstory_detail',
-                                            kwargs={"mapid": test_mapstory.id}), form_data)
+                                            kwargs={"slug": test_mapstory.slug}), form_data)
         self.assertEquals(response.status_code, 200)
 
         # Should be published
@@ -133,7 +133,7 @@ class MapViewsTest(MapStoryTestMixin):
         self.assertIsNotNone(test_mapstory.id)
 
         # Should get a 200 response from the URL
-        response = self.client.get(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}))
+        response = self.client.get(reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}))
         self.assertEquals(response.status_code, 200)
 
         # Should use the correct template
@@ -161,7 +161,7 @@ class MapViewsTest(MapStoryTestMixin):
         self.assertIsNotNone(test_mapstory.id)
 
         # Should get a 200 response from the URL
-        response = self.client.get(reverse('mapstory_detail', kwargs={"mapid": test_mapstory.id}))
+        response = self.client.get(reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}))
         self.assertEquals(response.status_code, 200)
 
         # Should have the meta tags included
