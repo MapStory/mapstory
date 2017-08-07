@@ -4,14 +4,12 @@ import uuid
 
 from django import core, db
 from django.db.models import signals
+from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 # Redefining Map Model and adding additional fields
 
 
 class MapStory(geonode.base.models.ResourceBase):
-
-    def get_absolute_url(self):
-        return core.urlresolvers.reverse('mapstory.views.map_detail', None, [str(self.id)])
 
     @property
     def chapters(self):
@@ -25,6 +23,8 @@ class MapStory(geonode.base.models.ResourceBase):
         self.title = conf['title']
         self.abstract = conf['abstract']
         self.is_published = conf['is_published']
+        self.slug = slugify(conf['title'])
+
         if conf['category'] is not None:
             self.category = geonode.base.models.TopicCategory(conf['category'])
 
@@ -39,6 +39,9 @@ class MapStory(geonode.base.models.ResourceBase):
 
         #self.keywords.add(*conf['map'].get('keywords', []))
         self.save()
+
+    def get_absolute_url(self):
+        return '/story/' + str(self.slug)
 
     def viewer_json(self, user):
 
@@ -87,6 +90,7 @@ class MapStory(geonode.base.models.ResourceBase):
         blank=True,
         null=True,
         help_text=distribution_description_help_text)
+    slug = db.models.SlugField(max_length=160, null=True)
 
 
     class Meta(geonode.base.models.ResourceBase.Meta):
