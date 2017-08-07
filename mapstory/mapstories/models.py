@@ -24,10 +24,14 @@ class MapStory(geonode.base.models.ResourceBase):
         self.abstract = conf['abstract']
         self.is_published = conf['is_published']
         # Ensure that the slug is unique.
-        if not MapStory.objects.filter(slug=slugify(conf['title'])).exists():
+        try:
+            instance = MapStory.objects.get(slug=slugify(conf['title']))
+            if instance.id == self.id:
+                self.slug = slugify(conf['title'])
+            else:
+                self.slug = slugify(conf['title']) + '-' + str(self.id)
+        except MapStory.DoesNotExist:
             self.slug = slugify(conf['title'])
-        else:
-            self.slug = slugify(conf['title']) + '-' + str(self.id)
 
         if conf['category'] is not None:
             self.category = geonode.base.models.TopicCategory(conf['category'])
