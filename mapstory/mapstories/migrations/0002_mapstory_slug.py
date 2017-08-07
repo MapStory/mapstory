@@ -14,7 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='mapstory',
             name='slug',
-            field=models.SlugField(max_length=160, null=True),
-            preserve_default=False,
+            field=models.SlugField(max_length=160, unique=True, null=True),
         ),
     ]
