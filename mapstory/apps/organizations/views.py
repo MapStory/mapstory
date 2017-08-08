@@ -7,8 +7,6 @@ from django.http import HttpResponse
 #TODO: Organizations Home
 #TODO: Organizations Details
 def organization_detail(request):
-    return HttpResponse(
-        "Hi",
-        status=200,
-        content_type="text/html"
-    )
+    return render(request, 'organizations/organization_detail.html', {
+        'foo': 'bar',
+    })

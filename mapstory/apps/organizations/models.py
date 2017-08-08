@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core.exceptions import SuspiciousOperation
 
 
 class Organization(models.Model):
@@ -20,8 +21,10 @@ class Organization(models.Model):
 
     """
     title = models.CharField(max_length=255)
-    admin_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='organization_admin_type')
-    members = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='org_mapstory_members')
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name_plural = 'Organizations'
 
     def __unicode__(self):
         return u'%s' % self.title
@@ -33,64 +36,49 @@ class Organization(models.Model):
 
         :return: A URL for this Organization.
         """
-        return reverse('organizations:detail', args=[self.pk])
+        return reverse('organization_detail', kwargs={'orgid': str(self.pk)})
 
-    def get_members(self):
-        """Get all members.
+    def add_member(self, user, is_admin=False):
+        # Only add members if they are not already one
+        has_membership = OrganizationMembership.objects.filter(user=user, organization=self).exists()
 
-        Returns a list of all members belonging to this organization.
+        if has_membership:
+            raise SuspiciousOperation("Is already a member")
 
-        :return: []: A List of Users
-        """
-        # TODO:(Zunware) Implement a query to get all memebrs that belong to the organization
-        pass
+        return OrganizationMembership.objects.create(user=user, organization=self, is_admin=is_admin)
 
-    def get_admin(self):
-        """Get admin user.
+    def get_admin_memberships(self):
+        return OrganizationMembership.objects.filter(organization=self, is_admin=True)
 
-        Returns this organization's admin user.
+    def remove_member(self, user):
+        membership = OrganizationMembership.objects.get(user=user, organization=self)
+        membership.delete()
 
-        :return: User: The admin user.
-        """
-        # TODO:(Zunware) Implement get_admin()
-        pass
+    def promote_member_to_admin(self, user):
+        membership = OrganizationMembership.objects.get(user=user, organization=self)
+        membership.is_admin = True
+        membership.save()
+        return membership
 
-    def set_admin(self, user):
-        """Set Admin.
+    def get_memberships(self):
+        return OrganizationMembership.objects.filter(organization=self)
 
-        Sets the admin for this group.
-        """
+    def get_urls(self):
+        return OrganizationURL.objects.filter(org=self)
 
-    def get_layers(self):
-        """Get all Layers.
-
-        Returns all Layers for this Organization.
-
-        :return: []: A list of Layers.
-        """
-        # TODO: (Zunware) Implement a query to get all layers
-        pass
-
-    def get_mapstories(self):
-        """Get MapStories.
-
-        Returns all MapStories for this Organization
-
-        :return: A list of MapStories.
-        """
-        # TODO: (Zunware) Implement a query to get mapstories
-        pass
-
-    def get_journal_posts(self):
-        """Get Journal posts.
-
-        Returns all Jorunal Posts for this Organization.
-
-        :return: A list of Journal Posts.
-        """
-        # TODO: (Zunware) Implement a query to get all posts
-        pass
+    def add_url(self, url):
+        return OrganizationURL.objects.create(url=url, org=self)
 
 
-    class Meta:
-        verbose_name_plural = 'Organizations'
+
+class OrganizationURL(models.Model):
+    url = models.CharField(max_length=255)
+    org = models.ForeignKey(Organization)
+
+
+class OrganizationMembership(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    organization = models.ForeignKey(Organization)
+    member_since = models.DateTimeField(auto_now=True)
+    is_admin = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)

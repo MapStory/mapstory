@@ -1,14 +1,112 @@
 from django.test import TestCase, Client
-from django.core.files.uploadedfile import SimpleUploadedFile
-from PIL import Image
-from .models import Organization
+from django.core.urlresolvers import reverse
+from django.contrib.auth import get_user_model, authenticate
+
+from mapstory.tests.utils import get_test_user, create_mapstory
+from .models import Organization, OrganizationURL
+
+User = get_user_model()
+testUser = get_test_user()
 
 
 class TestOrganizations(TestCase):
-    """Organizations' Tests.
-    """
-    def test_create_and_add_members(self):
-        self.assertTrue(False)
+    """Organizations' Tests."""
 
     def test_organization_url_resolves(self):
+        c = Client()
+        response = c.get(reverse('organizations'))
+
+        self.assertEqual(200, response.status_code)
+
+    def test_uses_template(self):
+        c = Client()
+        response = c.get(reverse('organizations'))
+        self.assertTemplateUsed(response, template_name='organizations/organization_detail.html')
+
+    def test_organization_model(self):
+        init_count = len(Organization.objects.all())
+        o = Organization()
+        o.title = "Test Organization"
+        o.admin_user = testUser
+        o.save()
+
+        o.add_member(testUser)
+        o.save()
+
+        self.assertEqual(init_count + 1, len(Organization.objects.all()))
+
+        url = o.get_absolute_url()
+        self.assertIsNotNone(url)
+        self.assertIn(str(o.pk), str(url))
+        self.assertEqual(o.admin_user, testUser)
+        self.assertEqual(1, o.get_memberships().count())
+
+    def test_add_member(self):
+        o = Organization()
+        o.title = "Test Organization 2"
+        o.admin_user = testUser
+        o.save()
+
+        initial_count = o.get_memberships().count()
+        o.add_member(testUser)
+        o.save()
+        self.assertEqual(initial_count + 1 , o.get_memberships().count())
+
+        other_user = User.objects.create_user(
+            username='modeltester2',
+            email='modelteste2r@models.com',
+            password='glassonion2321223'
+        )
+
+        o.add_member(other_user)
+        o.save()
+        self.assertEqual(initial_count + 2, o.get_memberships().count())
+
+
+    def test_remove_member(self):
+        o = Organization()
+        o.title = "Test Organization 2"
+        o.admin_user = testUser
+        o.save()
+
+        initial_count = o.get_memberships().count()
+        o.add_member(testUser)
+        o.save()
+        self.assertEqual(initial_count + 1, o.get_memberships().count())
+
+        o.remove_member(testUser)
+        o.save()
+        self.assertEqual(initial_count, o.get_memberships().count())
+
+
+    def test_set_admin(self):
+        o = Organization()
+        o.title = "Test Organization 2"
+        o.add_member(testUser, is_admin=True)
+        o.save()
+
+        admin_memberships = o.get_admin_memberships()
+        self.assertEqual(1, admin_memberships.count())
+        self.assertEqual(admin_memberships.first().user, testUser)
+
+
+    def test_add_mapstory(self):
         pass
+        # TODO: Finish this
+
+    def test_remove_mapstory(self):
+        self.fail("****************")
+        # TODO: Finish this
+
+    def test_add_layer(self):
+        self.fail("****************")
+        # TODO: Finish this
+
+    def test_add_url(self):
+        o = Organization()
+        o.title = "Test"
+        o.save()
+        initial_count = o.get_urls().count()
+        o.add_url('https://josellausas.com')
+        self.assertEqual(initial_count + 1, o.get_urls().count())
+
