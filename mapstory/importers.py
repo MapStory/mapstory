@@ -83,7 +83,7 @@ class GeoServerLayerCreator(Import):
             layer['geoserver_store'] = {'type': 'geogig'}
             store = layer.get('geoserver_store')
             if store.get('type', str).lower() == 'geogig':
-                name = feature_type['name'].lower()
+                name = slugify(feature_type['name'])
                 store.setdefault('branch', 'master')
                 store.setdefault('create', 'true')
                 store.setdefault('name', name)
