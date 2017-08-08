@@ -17,11 +17,29 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=255)),
-                ('admin_user', models.ForeignKey(related_name='organization_admin_type', to=settings.AUTH_USER_MODEL)),
-                ('members', models.ManyToManyField(related_name='org_mapstory_members', to=settings.AUTH_USER_MODEL)),
+                ('is_active', models.BooleanField(default=True)),
             ],
             options={
                 'verbose_name_plural': 'Organizations',
             },
+        ),
+        migrations.CreateModel(
+            name='OrganizationMembership',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('member_since', models.DateTimeField(auto_now=True)),
+                ('is_admin', models.BooleanField(default=False)),
+                ('is_active', models.BooleanField(default=True)),
+                ('organization', models.ForeignKey(to='organizations.Organization')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='OrganizationURL',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('url', models.CharField(max_length=255)),
+                ('org', models.ForeignKey(to='organizations.Organization')),
+            ],
         ),
     ]
