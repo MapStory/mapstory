@@ -10,11 +10,16 @@
 </div>
 <div class="row">
 {% get_comment_count for layer as num_comments %}
-  <div class="col-md-8" ng-controller="geogigController">
+
+  <div class="col-md-8">
     <p class="lead">
           Are you sure you want to delete this StoryLayer, <a href="{{ layer.get_absolute_url }}">{{ layer.title }}</a>?
     </p>
-    <p> This layer has {% verbatim %}{{ stats.totalCommits | number}}{% endverbatim %} community contributions and {{ num_comments }} comments that will also be removed. </p>
+    {% if GEOGIG_ENABLED and layer.link_set.geogig %}
+      <div ng-controller="geogigController">
+        <p> This layer has {% verbatim %}{{ stats.totalCommits | number}}{% endverbatim %} community contributions and {{ num_comments }} comments that will also be removed. </p>
+      </div>
+    {% endif %} 
   <div>
 </div>
     <form action="{% url 'layer_remove' layer.service_typename %}" method="POST">
