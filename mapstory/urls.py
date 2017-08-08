@@ -100,7 +100,7 @@ urlpatterns = patterns('',
         name='new-story'),
     url(r'^maps/edit$', new_map, {'template': 'composer/maploom.html'}, name='map-edit'),
     url(r'^maps/(?P<mapid>\d+)/view$', 'mapstory.views.map_view', {'template': 'composer/maploom.html'}, name='map-view'),
-    url(r'^story/(?P<storyid>[^/]+)/draft$',
+    url(r'^story/(?P<slug>[-\w]+)/draft$',
     'mapstory.views.draft_view', {'template': 'composer/maploom.html'}, name='maploom-map-view'),
     url(r'^frame/(?P<storyid>[^/]+)/draft','mapstory.views.draft_view',name='draft_view'),
 
