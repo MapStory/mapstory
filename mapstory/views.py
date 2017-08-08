@@ -1111,7 +1111,7 @@ def layer_remove(request, layername, template='layers/layer_remove.html'):
         }))
     if (request.method == 'POST'):
         try:
-            delete_layer.delay(object_id=layer.id)
+            delete_layer(object_id=layer.id)
         except Exception as e:
             message = '{0}: {1}.'.format(_('Unable to delete layer'), layer.typename)
 
@@ -1121,7 +1121,7 @@ def layer_remove(request, layername, template='layers/layer_remove.html'):
 
             messages.error(request, message)
             return render_to_response(template, RequestContext(request, {"layer": layer}))
-        return HttpResponseRedirect(reverse("index_view"))
+        return HttpResponseRedirect(reverse("profile_detail", kwargs={'slug': layer.owner}))
     else:
         return HttpResponse("Not allowed", status=403)
 
@@ -1137,7 +1137,7 @@ def map_remove(request, mapid, template='maps/map_remove.html'):
         }))
 
     elif request.method == 'POST':
-        delete_mapstory.delay(object_id=map_obj.id)
+        delete_mapstory(object_id=map_obj.id)
         return HttpResponseRedirect(reverse("profile_detail", kwargs={'slug': map_obj.owner}))
 
 
