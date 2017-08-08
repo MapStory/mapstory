@@ -496,9 +496,9 @@ def new_story_json(request):
         )
 
 
-def draft_view(request, storyid, template='composer/maploom.html'):
+def draft_view(request, slug, template='composer/maploom.html'):
 
-    story_obj = _resolve_story(request, storyid, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
+    story_obj = _resolve_story(request, slug, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
 
     config = story_obj.viewer_json(request.user)
 
