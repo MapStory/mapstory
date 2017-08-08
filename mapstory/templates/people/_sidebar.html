@@ -3,22 +3,22 @@
 {% if profile.profile %}
     <div class="sidebar-header"><h3>About</h3></div>
     <div class="sidebar-content">{{ profile.profile }}</div>{% endif %}
-{% if profile.org.city or profile.org.country %}
+{% if profile.city or profile.country %}
     <div class="sidebar-header"><h3>Location</h3></div>
-    {% if profile.org.city %}
-        <div class="sidebar-content">{{ profile.org.city }}</div>
+    {% if profile.city %}
+        <div class="sidebar-content">{{ profile.city }}</div>
     {% endif %}
-    {% if profile.org.country %}
-        <div class="sidebar-content">{{ profile.org.country }}</div>
+    {% if profile.country %}
+        <div class="sidebar-content">{{ profile.country }}</div>
     {% endif %}
 {% endif %}
-{% if profile.education %}
+{% if profile.mapstoryprofile.education %}
     <div class="sidebar-header"><h3>Education</h3></div>
-    <div class="sidebar-content">{{ profile.education }}</div>
+    <div class="sidebar-content">{{ profile.mapstoryprofile.education }}</div>
 {% endif %}
-{% if profile.expertise %}
+{% if profile.mapstoryprofile.expertise %}
     <div class="sidebar-header"><h3>Expertise</h3></div>
-    <div class="sidebar-content">{{ profile.expertise }}</div>
+    <div class="sidebar-content">{{ profile.mapstoryprofile.expertise }}</div>
 {% endif %}
 {% if user.Volunteer_Technical_Community %}
     <div class="sidebar-content"><p>Volunteer Technical Community Member</p></div>
@@ -31,25 +31,25 @@
     {% endif %}
 {% comment %}
 TODO: change help text in /geonode/geonode/people/models.py to encourage correct format of handle for each link or init a controller that checks what is given and creates these links accordingly {% endcomment %}
-{% if profile.org.social_twitter %}
+{% if profile.mapstoryprofile.social_twitter %}
     <div class="sidebar-content">
-        <a href="https://twitter.com/{{ profile.org.social_twitter }}"><i class="fa fa-twitter"></i> {{ profile.org.social_twitter }}
+        <a href="https://twitter.com/{{ profile.mapstoryprofile.social_twitter }}"><i class="fa fa-twitter"></i> {{ profile.mapstoryprofile.social_twitter }}
         </a>
     </div>
 {% endif %}
-{% if profile.org.social_facebook %}
+{% if profile.mapstoryprofile.social_facebook %}
     <div class="sidebar-content">
-        <a href="https://www.facebook.com/{{ profile.org.social_facebook }}"><i class="fa fa-facebook"></i> {{ profile.org.social_facebook }}</a>
+        <a href="https://www.facebook.com/{{ profile.mapstoryprofile.social_facebook }}"><i class="fa fa-facebook"></i> {{ profile.mapstoryprofile.social_facebook }}</a>
     </div>
 {% endif %}
-{% if profile.social_linkedin %}
+{% if profile.mapstoryprofile.social_linkedin %}
     <div class="sidebar-content">
-        <a href="https://www.linkedin.com/in/{{ profile.social_linkedin }}"><i class="fa fa-linkedin"></i> {{ profile.social_linkedin }}</a>
+        <a href="https://www.linkedin.com/in/{{ profile.mapstoryprofile.social_linkedin }}"><i class="fa fa-linkedin"></i> {{ profile.mapstoryprofile.social_linkedin }}</a>
     </div>
 {% endif %}
-{% if profile.social_github %}
+{% if profile.mapstoryprofile.social_github %}
     <div class="sidebar-content">
-        <a href="https://github.com/{{ profile.social_github }}"><i class="fa fa-github"></i> {{ profile.social_github }}</a>
+        <a href="https://github.com/{{ profile.mapstoryprofile.social_github }}"><i class="fa fa-github"></i> {{ profile.mapstoryprofile.social_github }}</a>
     </div>
 {% endif %}
 
