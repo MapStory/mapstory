@@ -23,6 +23,18 @@ class TestOrganizations(TestCase):
         response = c.get(reverse('organizations'))
         self.assertTemplateUsed(response, template_name='organizations/organization_detail.html')
 
+    def test_organization_list_view(self):
+        # TODO: Implement this
+        pass
+
+    def test_organization_detail_view(self):
+        # TODO: Implement this
+        pass
+
+    def test_organization_membership_detail_view(self):
+        # TODO: Implement this
+        pass
+
     def test_organization_model(self):
         init_count = len(Organization.objects.all())
         o = Organization()
@@ -102,6 +114,10 @@ class TestOrganizations(TestCase):
         self.fail("****************")
         # TODO: Finish this
 
+    def test_remove_layer(self):
+        # TODO: Implement this
+        pass
+
     def test_add_url(self):
         o = Organization()
         o.title = "Test"
@@ -110,3 +126,6 @@ class TestOrganizations(TestCase):
         o.add_url('https://josellausas.com')
         self.assertEqual(initial_count + 1, o.get_urls().count())
 
+    def test_remove_url(self):
+        # TODO: Implement this
+        pass

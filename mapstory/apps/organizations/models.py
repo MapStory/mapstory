@@ -3,17 +3,15 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
 
+from geonode.layers.models import Layer
+from mapstory.mapstories.models import MapStory
+
 
 class Organization(models.Model):
     """Represents an Organization.
-
-    An Organization has multiple members and one admin.
-    When a member creates an resource (MapStories or StoryLayers) it
-    can then be attributed to the Organization.
-
     An Organization has:
         - Many Members
-        - One Admin
+        - Many Admins
         - Many StoryLayers
         - Many MapStories
         - Many Icons
@@ -21,6 +19,8 @@ class Organization(models.Model):
 
     """
     title = models.CharField(max_length=255)
+    slogan = models.CharField(max_length=255, default='')
+    about = models.TextField(default='')
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
@@ -71,11 +71,23 @@ class Organization(models.Model):
     def add_url(self, url):
         return OrganizationURL.objects.create(url=url, org=self)
 
+    def add_layer(self, layer, membership):
+        # TODO: Check if membership valid before adding the layer
+        return OrganizationLayer.objects.create(organization=self, layer=layer, membership=membership)
+
+    def add_mapstory(self, mapstory, membership):
+        # TODO: Check if membership valid before adding mapstory
+        return OrganizationMapStory(mapstory=mapstory, organization=self, membership=membership)
+
+
 
 
 class OrganizationURL(models.Model):
     url = models.CharField(max_length=255)
     org = models.ForeignKey(Organization)
+
+    def __unicode__(self):
+        return u'%s' % self.url
 
 
 
@@ -87,3 +99,43 @@ class OrganizationMembership(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return u'%s' % self.user
+
+    class Meta:
+        verbose_name_plural = 'Memberships'
+
+
+
+class OrganizationLayer(models.Model):
+    membership = models.ForeignKey(OrganizationMembership)
+    organization = models.ForeignKey(Organization)
+    layer = models.ForeignKey(Layer)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return u'%s' % self.layer
+
+
+
+class OrganizationSocialMedia(models.Model):
+    organization = models.ForeignKey(Organization)
+    icon = models.CharField(max_length=255)
+    url = models.URLField()
+
+    def __unicode__(self):
+        return u'%s' % self.url
+
+
+
+class OrganizationMapStory(models.Model):
+    mapstory = models.ForeignKey(MapStory)
+    organization = models.ForeignKey(Organization)
+    membership = models.ForeignKey(OrganizationMembership)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return u'%s' % self.mapstory

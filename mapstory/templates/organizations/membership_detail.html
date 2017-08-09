@@ -1,10 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load url from future %}
+{% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
+{% block body_class %}search{% endblock %}
+{% block body_outer %}
+    <p><strong>Member: </strong>{{ membership.user }}</p>
+    <p><strong>Organization: </strong>{{ membership.organization }}</p>
+    <p><strong>Member since: </strong>{{ membership.created_at }}</p>
+{% endblock %}

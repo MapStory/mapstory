@@ -8,13 +8,29 @@
     <h2>Members:</h2>
     <ul>
     {% for membership in members %}
-        <li>{{ membership.user }}</li>
+        <li>
+            <a href="{% url 'organizations:member_detail' org_pk=org.pk membership_pk=membership.pk %}">
+                {{ membership.user }}
+            </a>
+        </li>
     {% endfor %}
     </ul>
     <h2>URLs</h2>
     <ul>
     {% for url in urls %}
         <li>{{ url.url }}</li>
+    {% endfor %}
+    </ul>
+    <h2>Layers</h2>
+    <ul>
+    {% for layer in layers %}
+        <li>{{ layer.layer }}</li>
+    {% endfor %}
+    </ul>
+    <h2>MapStories</h2>
+    <ul>
+    {% for mapstory in mapstories %}
+        <li>{{ mapstory.mapstory }}</li>
     {% endfor %}
     </ul>
 {% endblock %}
