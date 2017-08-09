@@ -1,17 +1,29 @@
 from django.contrib import admin
 
-from models import Organization, OrganizationMembership
+from .models import Organization, OrganizationMembership, OrganizationURL
 
 
 
 class MembershipInlineAdmin(admin.StackedInline):
+    """Shows Memberships Inline
+    """
     model = OrganizationMembership
 
 
 
+class OrganizationURLInline(admin.StackedInline):
+    """Shows URLs Inline
+    """
+    model = OrganizationURL
+
+
+
 class OrganizationAdmin(admin.ModelAdmin):
-    """Organizations' Admin"""
-    inlines = [MembershipInlineAdmin,]
+    """Admin the Organizations
+
+    Shows memberships and URls inline.
+    """
+    inlines = [MembershipInlineAdmin, OrganizationURLInline]
 
 
 

@@ -22,6 +22,8 @@ class Organization(models.Model):
     """
     title = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name_plural = 'Organizations'
@@ -36,7 +38,7 @@ class Organization(models.Model):
 
         :return: A URL for this Organization.
         """
-        return reverse('organization_detail', kwargs={'orgid': str(self.pk)})
+        return reverse('organization:detail', kwargs={'pk': str(self.pk)})
 
     def add_member(self, user, is_admin=False):
         # Only add members if they are not already one
@@ -76,9 +78,12 @@ class OrganizationURL(models.Model):
     org = models.ForeignKey(Organization)
 
 
+
 class OrganizationMembership(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     organization = models.ForeignKey(Organization)
     member_since = models.DateTimeField(auto_now=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)

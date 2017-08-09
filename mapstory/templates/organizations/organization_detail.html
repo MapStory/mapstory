@@ -4,5 +4,17 @@
 {% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
-    <h1>HELLO!!!</h1>
+    <h1>{{ org.title }}</h1>
+    <h2>Members:</h2>
+    <ul>
+    {% for membership in members %}
+        <li>{{ membership.user }}</li>
+    {% endfor %}
+    </ul>
+    <h2>URLs</h2>
+    <ul>
+    {% for url in urls %}
+        <li>{{ url.url }}</li>
+    {% endfor %}
+    </ul>
 {% endblock %}

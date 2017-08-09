@@ -18,6 +18,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=255)),
                 ('is_active', models.BooleanField(default=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('last_updated', models.DateTimeField(auto_now=True)),
             ],
             options={
                 'verbose_name_plural': 'Organizations',
@@ -30,6 +32,8 @@ class Migration(migrations.Migration):
                 ('member_since', models.DateTimeField(auto_now=True)),
                 ('is_admin', models.BooleanField(default=False)),
                 ('is_active', models.BooleanField(default=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('last_updated', models.DateTimeField(auto_now=True)),
                 ('organization', models.ForeignKey(to='organizations.Organization')),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],

@@ -1,0 +1,10 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load url from future %}
+{% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
+{% block body_class %}search{% endblock %}
+{% block body_outer %}
+    {% for org in organizations %}
+        <a href="{% url 'organizations:detail' pk=org.pk %}"><p>{{ org.title }}</p></a>
+    {% endfor %}
+{% endblock %}

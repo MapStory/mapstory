@@ -135,11 +135,7 @@ urlpatterns = patterns('',
     url(r'^layers/download-append-shp$', download_append_shp, name='download_append_shp'),
     url(r'^layers/acls', layer_acls_mapstory, name='layer_acls_mapstory'),
     url(r'^layers/resolve_user', resolve_user_mapstory, name='resolve_user_mapstory'),
-
-    # Organizations
-    url(r'^organizations/', organization_detail, name='organizations'),
-    url(r'^organizations/(?P<orgid>\d+)/$', organization_detail, name='organization_detail'),
-
+    url(r'^organizations/', include('mapstory.apps.organizations.urls', namespace='organizations')),
 ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 
 urlpatterns += annotations_urls
