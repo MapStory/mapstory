@@ -1072,7 +1072,7 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
     update_es_index(MapStory, MapStory.objects.get(id=map_obj.id))
 
     # This will get URL encoded later and is used for the social media share URL
-    share_url = "https://%s/story/%s" % (request.get_host(), map_obj.id)
+    share_url = "https://%s/story/%s" % (request.get_host(), map_obj.slug)
     share_title = "%s by %s." % (map_obj.title, map_obj.owner)
     share_description = map_obj.abstract
 
