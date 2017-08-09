@@ -412,13 +412,13 @@ def map_view(request, mapid, snapshot=None, template='maps/map_view.html'):
     }))
 
 
-def mapstory_view(request, storyid, snapshot=None, template='viewer/story_viewer.html'):
+def mapstory_view(request, slug, snapshot=None, template='viewer/story_viewer.html'):
     """
     The view that returns the map viewer opened to
     the mapstory with the given ID.
     """
 
-    story_obj = _resolve_map(request, storyid, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
+    story_obj = _resolve_map(request, slug, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
 
     if snapshot is None:
         config = story_obj.viewer_json(request.user)
@@ -439,7 +439,7 @@ def _resolve_story(request, id, permission='base.change_resourcebase',
     if id.isdigit():
         key = 'pk'
     else:
-        key = 'urlsuffix'
+        key = 'slug'
     return resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
 
@@ -502,9 +502,9 @@ def new_story_json(request):
         )
 
 
-def draft_view(request, storyid, template='composer/maploom.html'):
+def draft_view(request, slug, template='composer/maploom.html'):
 
-    story_obj = _resolve_story(request, storyid, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
+    story_obj = _resolve_story(request, slug, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
 
     config = story_obj.viewer_json(request.user)
 
@@ -913,7 +913,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     thumbnail = layer.get_thumbnail_url
 
     # This will get URL encoded later and is used for the social media share URL
-    share_url = "https://%s/layers/geonode:%s" % (request.get_host(), layer.name)
+    share_url = "https://%s/layers/%s" % (request.get_host(), layer.name)
     share_title = "%s by %s." % (layer.title, layer.owner)
     share_description = layer.abstract
 
@@ -985,18 +985,18 @@ def _resolve_map(request, id, permission='base.change_resourcebase',
     if id.isdigit():
         key = 'pk'
     else:
-        key = 'urlsuffix'
+        key = 'slug'
     map_obj = resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
     return map_obj
 
 
-def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
+def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
     '''
     The view that show details of each map
     '''
 
-    map_obj = _resolve_map(request, mapid, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
+    map_obj = _resolve_map(request, slug, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
 
     # Update count for popularity ranking,
     # but do not includes admins or resource owners
@@ -1044,7 +1044,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
 
     map_thumbnail_dir = os.path.join(settings.MEDIA_ROOT, 'thumbs')
     map_default_thumbnail_array = map_obj.get_thumbnail_url().split('/')
-    map_default_thumbnail_name = 'map' + str(mapid) + '.jpg'
+    map_default_thumbnail_name = 'map' + str(slug) + '.jpg'
     map_default_thumbnail = os.path.join(map_thumbnail_dir,
                                          map_default_thumbnail_name)
 
@@ -1072,7 +1072,7 @@ def map_detail(request, mapid, snapshot=None, template='maps/map_detail.html'):
     update_es_index(MapStory, MapStory.objects.get(id=map_obj.id))
 
     # This will get URL encoded later and is used for the social media share URL
-    share_url = "https://%s/story/%s" % (request.get_host(), map_obj.id)
+    share_url = "https://%s/story/%s" % (request.get_host(), map_obj.slug)
     share_title = "%s by %s." % (map_obj.title, map_obj.owner)
     share_description = map_obj.abstract
 
