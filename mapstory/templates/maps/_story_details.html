@@ -71,14 +71,14 @@
                         </div>
                         <h3>Map Services</h3>
                         <div class="embed">Share 
-                            <input id="shareStory" value ="https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}">
+                            <input id="shareStory" value ="https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.slug %}">
                             <button class="copyclip btn" data-clipboard-target="#shareStory">
                                 <i class="fa fa-clipboard" aria-hidden="true"></i>
                             </button>  
                         </div>
                         {% if resource.chapters %}
                         <div class="embed"> Embed
-                            <input id="embedStory" value="<iframe style='border: none;' height='400' width='600' src='https://{{ request.get_host }}/story/{{ resource.id }}/embed'></iframe>">
+                            <input id="embedStory" value="<iframe style='border: none;' height='400' width='600' src='https://{{ request.get_host }}/story/{{ resource.slug }}/embed'></iframe>">
                             <button  class="copyclip btn" data-clipboard-target="#embedStory">
                                 <i class="fa fa-clipboard" aria-hidden="true"></i>
                             </button>
