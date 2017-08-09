@@ -28,6 +28,7 @@ class Organization(models.Model):
     class Meta:
         verbose_name_plural = 'Organizations'
 
+
     def __unicode__(self):
         return u'%s' % self.title
 
@@ -41,6 +42,14 @@ class Organization(models.Model):
         return reverse('organization:detail', kwargs={'pk': str(self.pk)})
 
     def add_member(self, user, is_admin=False):
+        """Adds a member to the Organization.
+
+        Errors out if you try to add a member that already belongs.
+
+        :param user: The user to be added.
+        :param is_admin: Give admin powers to the user.
+        :return: A OrganizationMembership object.
+        """
         # Only add members if they are not already one
         has_membership = OrganizationMembership.objects.filter(user=user, organization=self).exists()
 
@@ -50,13 +59,30 @@ class Organization(models.Model):
         return OrganizationMembership.objects.create(user=user, organization=self, is_admin=is_admin)
 
     def get_admin_memberships(self):
+        """Get all memberships for this Organization.
+
+        Returns a List of OrganizationMembership for this organization.
+
+        :return: A list of OrganizationMemberships
+        """
         return OrganizationMembership.objects.filter(organization=self, is_admin=True)
 
     def remove_member(self, user):
+        """Removes a member's membership.
+
+        Deletes a Membership for the given user.
+
+        :param user: The user to be removed from the Organization
+        """
         membership = OrganizationMembership.objects.get(user=user, organization=self)
         membership.delete()
 
     def promote_member_to_admin(self, user):
+        """Gives the user admin rights.
+
+        :param user: The user to be priviledged with admin.
+        :return: The OrganizationMembership that was changed.
+        """
         membership = OrganizationMembership.objects.get(user=user, organization=self)
         membership.is_admin = True
         membership.save()
@@ -78,7 +104,6 @@ class Organization(models.Model):
     def add_mapstory(self, mapstory, membership):
         # TODO: Check if membership valid before adding mapstory
         return OrganizationMapStory(mapstory=mapstory, organization=self, membership=membership)
-
 
 
 

@@ -19,22 +19,27 @@ class OrganizationURLInline(admin.StackedInline):
 
 
 class OrganizationLayersInline(admin.StackedInline):
+    """Shows Layers Inline"""
     model = OrganizationLayer
 
 
 
 class OrganizationMapstoryInline(admin.StackedInline):
+    """Shows Mapstories Inline"""
     model = OrganizationMapStory
 
 
+
 class OrganizationSocialMediaInline(admin.StackedInline):
+    """Shows Social media inline"""
     model = OrganizationSocialMedia
 
 
 
 class OrganizationAdmin(admin.ModelAdmin):
-    """Admin the Organizations
+    """Admin the Organizations.
 
+    The main Organization's Admin interface.
     Shows memberships and URls inline.
     """
     inlines = [
@@ -44,7 +49,6 @@ class OrganizationAdmin(admin.ModelAdmin):
         OrganizationMapstoryInline,
         OrganizationSocialMediaInline,
     ]
-
 
 
 admin.site.register(Organization, OrganizationAdmin)
