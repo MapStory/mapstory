@@ -21,7 +21,6 @@ def organization_detail(request, pk):
 
     return render(request, 'organizations/organization_detail.html', context)
 
-
 def organization_list(request):
     context = {
         'organizations': Organization.objects.all(),

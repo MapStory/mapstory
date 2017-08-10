@@ -14,14 +14,14 @@ class TestOrganizations(TestCase):
 
     def test_organization_url_resolves(self):
         c = Client()
-        response = c.get(reverse('organizations'))
+        response = c.get(reverse('organizations:list'))
 
         self.assertEqual(200, response.status_code)
 
     def test_uses_template(self):
         c = Client()
-        response = c.get(reverse('organizations'))
-        self.assertTemplateUsed(response, template_name='organizations/organization_detail.html')
+        response = c.get(reverse('organizations:list'))
+        self.assertTemplateUsed(response, template_name='organizations/organization_list.html')
 
     def test_organization_list_view(self):
         # TODO: Implement this
@@ -94,9 +94,9 @@ class TestOrganizations(TestCase):
     def test_set_admin(self):
         o = Organization()
         o.title = "Test Organization 2"
-        o.add_member(testUser, is_admin=True)
         o.save()
-
+        # Needs to be saved before you can add members or admins
+        o.add_member(testUser, is_admin=True)
         admin_memberships = o.get_admin_memberships()
         self.assertEqual(1, admin_memberships.count())
         self.assertEqual(admin_memberships.first().user, testUser)

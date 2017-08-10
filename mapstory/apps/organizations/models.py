@@ -5,6 +5,8 @@ from django.core.exceptions import SuspiciousOperation
 
 from geonode.layers.models import Layer
 from mapstory.mapstories.models import MapStory
+from unidecode import unidecode
+from django.template.defaultfilters import slugify
 
 
 class Organization(models.Model):
@@ -28,7 +30,6 @@ class Organization(models.Model):
     class Meta:
         verbose_name_plural = 'Organizations'
 
-
     def __unicode__(self):
         return u'%s' % self.title
 
@@ -39,7 +40,7 @@ class Organization(models.Model):
 
         :return: A URL for this Organization.
         """
-        return reverse('organization:detail', kwargs={'pk': str(self.pk)})
+        return reverse('organizations:detail', kwargs={'pk': self.pk})
 
     def add_member(self, user, is_admin=False):
         """Adds a member to the Organization.
@@ -51,9 +52,9 @@ class Organization(models.Model):
         :return: A OrganizationMembership object.
         """
         # Only add members if they are not already one
-        has_membership = OrganizationMembership.objects.filter(user=user, organization=self).exists()
+        membership_count = OrganizationMembership.objects.filter(user=user, organization=self).count()
 
-        if has_membership:
+        if membership_count > 0:
             raise SuspiciousOperation("Is already a member")
 
         return OrganizationMembership.objects.create(user=user, organization=self, is_admin=is_admin)
