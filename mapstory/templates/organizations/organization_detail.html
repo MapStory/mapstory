@@ -5,6 +5,8 @@
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
     <h1>{{ org.title }}</h1>
+    <h2>{{ org.slogan }}</h2>
+    <p>{{ org.about }}</p>
     <h2>Members:</h2>
     <ul>
     {% for membership in members %}
@@ -24,13 +26,17 @@
     <h2>Layers</h2>
     <ul>
     {% for layer in layers %}
-        <li>{{ layer.layer }}</li>
+        <li>
+            <a href="{{ layer.url }}">{{ layer.layer }}</a>
+        </li>
     {% endfor %}
     </ul>
     <h2>MapStories</h2>
     <ul>
     {% for mapstory in mapstories %}
-        <li>{{ mapstory.mapstory }}</li>
+        <li>
+            <a href="{{ mapstory.url }}">{{ mapstory.mapstory }}</a>
+        </li>
     {% endfor %}
     </ul>
 {% endblock %}

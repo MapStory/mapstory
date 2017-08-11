@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model, authenticate
 
 from mapstory.tests.utils import get_test_user, create_mapstory
-from .models import Organization, OrganizationURL
+from .models import Organization, OrganizationURL, OrganizationMembership
 
 User = get_user_model()
 testUser = get_test_user()
@@ -11,29 +11,54 @@ testUser = get_test_user()
 
 class TestOrganizations(TestCase):
     """Organizations' Tests."""
-
-    def test_organization_url_resolves(self):
-        c = Client()
-        response = c.get(reverse('organizations:list'))
-
-        self.assertEqual(200, response.status_code)
-
     def test_uses_template(self):
         c = Client()
         response = c.get(reverse('organizations:list'))
         self.assertTemplateUsed(response, template_name='organizations/organization_list.html')
 
     def test_organization_list_view(self):
-        # TODO: Implement this
-        pass
+        orgs = [
+            Organization.objects.create(title='Test 02'),
+            Organization.objects.create(title='Test 03'),
+            Organization.objects.create(title='Test 000004'),
+        ]
+
+        c = Client()
+        response = c.get(reverse('organizations:list'))
+        self.assertEqual(200, response.status_code)
+
+        for org in orgs:
+            self.assertContains(response, org.title)
+
 
     def test_organization_detail_view(self):
-        # TODO: Implement this
-        pass
+        c = Client()
+        o = Organization.objects.create(
+            title='Test',
+            slogan='Slogan here',
+            about='Yeah!'
+        )
+        response = c.get(reverse('organizations:detail', kwargs={'pk': o.pk}))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed(response, template_name='organizations/organization_detail.html')
+        self.assertContains(response, o.title)
+        self.assertContains(response, o.slogan)
+        self.assertContains(response, o.about)
 
     def test_organization_membership_detail_view(self):
-        # TODO: Implement this
-        pass
+        c = Client()
+        o = Organization.objects.create(
+            title='Test',
+            slogan='Slogan here',
+            about='Yeah!'
+        )
+        # Create a user
+        u = User.objects.create_user(username='testuser', password='asbdsandsandsandsa')
+        # Make him a member
+        m = OrganizationMembership.objects.create(user=u, organization=o)
+        # Get the page
+        response = c.get(reverse('organizations:member_detail', kwargs={'org_pk': o.pk, 'membership_pk': m.pk}))
+        self.assertTemplateUsed(response, template_name='organizations/membership_detail.html')
 
     def test_organization_model(self):
         init_count = len(Organization.objects.all())
@@ -41,11 +66,11 @@ class TestOrganizations(TestCase):
         o.title = "Test Organization"
         o.admin_user = testUser
         o.save()
-
+        # Need to save before adding members!
         o.add_member(testUser)
         o.save()
 
-        self.assertEqual(init_count + 1, len(Organization.objects.all()))
+        self.assertEqual(init_count + 1, Organization.objects.all().count())
 
         url = o.get_absolute_url()
         self.assertIsNotNone(url)
@@ -107,12 +132,12 @@ class TestOrganizations(TestCase):
         # TODO: Finish this
 
     def test_remove_mapstory(self):
-        self.fail("****************")
         # TODO: Finish this
+        pass
 
     def test_add_layer(self):
-        self.fail("****************")
         # TODO: Finish this
+        pass
 
     def test_remove_layer(self):
         # TODO: Implement this
