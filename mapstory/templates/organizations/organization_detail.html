@@ -7,36 +7,50 @@
     <h1>{{ org.title }}</h1>
     <h2>{{ org.slogan }}</h2>
     <p>{{ org.about }}</p>
-    <h2>Members:</h2>
-    <ul>
-    {% for membership in members %}
-        <li>
-            <a href="{% url 'organizations:member_detail' org_pk=org.pk membership_pk=membership.pk %}">
-                {{ membership.user }}
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
-    <h2>URLs</h2>
-    <ul>
-    {% for url in urls %}
-        <li>{{ url.url }}</li>
-    {% endfor %}
-    </ul>
-    <h2>Layers</h2>
-    <ul>
-    {% for layer in layers %}
-        <li>
-            <a href="{{ layer.url }}">{{ layer.layer }}</a>
-        </li>
-    {% endfor %}
-    </ul>
-    <h2>MapStories</h2>
-    <ul>
-    {% for mapstory in mapstories %}
-        <li>
-            <a href="{{ mapstory.url }}">{{ mapstory.mapstory }}</a>
-        </li>
-    {% endfor %}
-    </ul>
+    {% if org.is_active %}
+        <section>
+            <h2>Members:</h2>
+            <ul>
+            {% for membership in members %}
+                <li>
+                    <a href="{% url 'organizations:member_detail' org_pk=org.pk membership_pk=membership.pk %}">
+                        {{ membership.user }}
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </section>
+        <section>
+            <h2>URLs</h2>
+            <ul>
+            {% for url in urls %}
+                <li>{{ url.url }}</li>
+            {% endfor %}
+            </ul>
+        </section>
+        <section>
+            <h2>Layers</h2>
+            <ul>
+            {% for layer in layers %}
+                <li>
+                    <a href="{{ layer.url }}">{{ layer.layer }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </section>
+        <section>
+            <h2>MapStories</h2>
+            <ul>
+            {% for mapstory in mapstories %}
+                <li>
+                    <a href="{{ mapstory.url }}">{{ mapstory.mapstory }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </section>
+    {% else %}
+        <h2>This organization is not active. Come back soon!</h2>
+    {% endif %}
+
+
 {% endblock %}

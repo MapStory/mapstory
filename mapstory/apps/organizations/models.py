@@ -90,25 +90,47 @@ class Organization(models.Model):
         return membership
 
     def get_memberships(self):
+        """Returns a list of all Memberships.
+
+        :return: A list of memberships.
+        """
         return OrganizationMembership.objects.filter(organization=self)
 
     def get_urls(self):
+        """A list of Organization OrganizationURL's
+
+        :return: A list of OrganizationURL's
+        """
         return OrganizationURL.objects.filter(org=self)
 
     def add_url(self, url):
+        """Adds a new URL to the Organization
+        """
         return OrganizationURL.objects.create(url=url, org=self)
 
     def add_layer(self, layer, membership):
-        # TODO: Check if membership valid before adding the layer
+        """Adds a Layer to the Organization.
+
+        :param layer: The Layer to be added.
+        :param membership: Membership used for the transaction.
+        :return: The OrganizationLayer object created.
+        """
+        # TODO: Check if membership is allowed to add layer
         return OrganizationLayer.objects.create(organization=self, layer=layer, membership=membership)
 
     def add_mapstory(self, mapstory, membership):
-        # TODO: Check if membership valid before adding mapstory
+        """Adds a Mapstory to the Organization.
+        :param mapstory: The mapstory to add.
+        :param membership: The membership used for the transaction.
+        :return: The OrganzationMapStory object created.
+        """
+        # TODO: Check if membership is allowed to add layer
         return OrganizationMapStory(mapstory=mapstory, organization=self, membership=membership)
 
 
 
 class OrganizationURL(models.Model):
+    """A Link that is displayed in the Organization's page."""
     url = models.CharField(max_length=255)
     org = models.ForeignKey(Organization)
 
@@ -118,6 +140,12 @@ class OrganizationURL(models.Model):
 
 
 class OrganizationMembership(models.Model):
+    """Represents a user's membership to an Organization.
+    Links together a User and an Organization. The memberhisp can be deactivated
+    and is the token used to identify all actions permormed by the user within
+    the Organizaion (Add layers, Post journals, etc).
+    A member can also act as an admin to an Organization, which is indicated by his Membership `is_admin` field.
+    """
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     organization = models.ForeignKey(Organization)
     member_since = models.DateTimeField(auto_now=True)
@@ -135,6 +163,7 @@ class OrganizationMembership(models.Model):
 
 
 class OrganizationLayer(models.Model):
+    """Represents a Layer that is sponsored by an Organization"""
     membership = models.ForeignKey(OrganizationMembership)
     organization = models.ForeignKey(Organization)
     layer = models.ForeignKey(Layer)
@@ -147,6 +176,7 @@ class OrganizationLayer(models.Model):
 
 
 class OrganizationSocialMedia(models.Model):
+    """Represents a Social media Link shown on the Organization's detail Page"""
     organization = models.ForeignKey(Organization)
     icon = models.CharField(max_length=255)
     url = models.URLField()
@@ -157,6 +187,7 @@ class OrganizationSocialMedia(models.Model):
 
 
 class OrganizationMapStory(models.Model):
+    """Represents a Mapstory that is sponsored by an Organization"""
     mapstory = models.ForeignKey(MapStory)
     organization = models.ForeignKey(Organization)
     membership = models.ForeignKey(OrganizationMembership)

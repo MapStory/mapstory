@@ -9,6 +9,7 @@ User = get_user_model()
 testUser = get_test_user()
 
 
+
 class TestOrganizations(TestCase):
     """Organizations' Tests."""
     def test_uses_template(self):
@@ -128,8 +129,17 @@ class TestOrganizations(TestCase):
 
 
     def test_add_mapstory(self):
-        pass
+        organization = None
+        mapstory = ""
+        #response = self.client.get(
+        #    reverse('organizations:add_mapstory'),
+        #    kargs = {
+        #        'org_pk' = organization.pk,
+        #        'mapstory_pk' = mapstory.pk,
+        #    }
+        #)
         # TODO: Finish this
+        pass
 
     def test_remove_mapstory(self):
         # TODO: Finish this
@@ -154,3 +164,13 @@ class TestOrganizations(TestCase):
     def test_remove_url(self):
         # TODO: Implement this
         pass
+
+    def test_add_member_view(self):
+        pass
+
+    def test_add_mapstory_view(self):
+        pass
+
+    def test_add_layer_view(self):
+        pass
+

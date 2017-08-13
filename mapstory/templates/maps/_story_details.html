@@ -87,7 +87,22 @@
                     </div>
                 </div>
 
-                <div class="col-sm-11">            
+                <div class="col-sm-11">
+                    {% if request.user.is_authenticated %}
+                    {% if organizations.count > 0 %}
+                    <div class="story-layers">
+                        <div><h3> Organizations </h3></div>
+                        <hr>
+                        <div class="col-sm-9 tab-content">
+                        <div class='row'>
+                            {% for org in organizations %}
+                                <a href="#">{{ org.organization }}</a>
+                            {% endfor %}
+                        </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endif %}
                     <div class="Summary">
                         <div><h3>Summary</h3></div>
                         <hr>
