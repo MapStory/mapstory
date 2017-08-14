@@ -170,6 +170,9 @@ CELERY_IGNORE_RESULT = False
 
 OSGEO_DATASTORE = 'datastore'
 
+# Soft time limit for the import_object celery task of django_osgeo_importer, should be changed later after testing.
+IMPORT_TASK_SOFT_TIME_LIMIT = 1800
+
 USER_SNAP = True
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
