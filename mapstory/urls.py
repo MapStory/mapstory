@@ -92,8 +92,8 @@ urlpatterns = patterns('',
     # Story
     url(r'^story$', 'mapstory.views.new_story_json', name='new_story_json'),
     url(r'^story/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
-    url(r'^story/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
-    url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
+    url(r'^story/(?P<slug>[-\w]+)/$', map_detail, name='mapstory_detail'),
+    url(r'^story/(?P<slug>[-\w]+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
     url(r'^story/chapter/new$', 'mapstory.views.new_map_json', name='new_map_json'),
 
     # MapLoom
@@ -101,14 +101,14 @@ urlpatterns = patterns('',
         name='new-story'),
     url(r'^maps/edit$', new_map, {'template': 'composer/maploom.html'}, name='map-edit'),
     url(r'^maps/(?P<mapid>\d+)/view$', 'mapstory.views.map_view', {'template': 'composer/maploom.html'}, name='map-view'),
-    url(r'^story/(?P<storyid>[^/]+)/draft$',
+    url(r'^story/(?P<slug>[-\w]+)/draft$',
     'mapstory.views.draft_view', {'template': 'composer/maploom.html'}, name='maploom-map-view'),
     url(r'^frame/(?P<storyid>[^/]+)/draft','mapstory.views.draft_view',name='draft_view'),
 
     # StoryTools
     url(r'^maps/(?P<mapid>\d+)/viewer$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
     url(r'^maps/(?P<mapid>\d+)/embed$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
-    url(r'^story/(?P<storyid>\d+)/embed$', 'mapstory.views.mapstory_view', {'template': 'viewer/story_viewer.html'}, name='mapstory-viewer'),
+    url(r'^story/(?P<slug>[-\w]+)/embed$', 'mapstory.views.mapstory_view', {'template': 'viewer/story_viewer.html'}, name='mapstory-viewer'),
 
     url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
