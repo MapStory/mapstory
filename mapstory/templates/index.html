@@ -34,14 +34,14 @@
     <section class="featured-cards" ng-controller="featuredController as featured">
         <div layout="column" layout-align="start center">
             <h2 class="homepage">Featured MapStories from Across the Community</h2>
-            <div layout="row" layout-sm="column" layout-xs="column" style="max-width: 1750px;"">
+            <div layout="row" layout-sm="column" layout-xs="column" style="max-width: 1750px;">
                 <ul layout="row" class="no-style-list" layout-wrap layout-align="center center">
                     <li ng-repeat="item in featured.cards">
                         {% include 'cards/_featured.html' %}
                     </li>
                 </ul>
             </div>
-            <a href="/getstarted">
+            <a href="{% url 'search' %}">
                 <button class="button button-inverse">
                     <span>See More</span>
                 </button>
