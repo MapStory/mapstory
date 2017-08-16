@@ -13,7 +13,7 @@
                 <p class="tiny-caps" style="margin: 0">
                     {{item.category__gn_description ? item.category__gn_description : 'Uncategorized'}}
                 </p>
-                <h4 style="font-size: 0.8em; font-weight: 600; margin: 0"> {{ item.title }} </h4>
+                <a href="{{ item.detail_url }}"><h4 style="font-size: 0.8em; font-weight: 600; margin: 0"> {{ item.title }} </h4></a>
                 <p style="font-size: 0.8em; font-weight: 300; margin: 0">
                     <a href="/storyteller/{{ item.owner__username }}" style="color: #757575">
                         {{ item.owner__first_name ?
