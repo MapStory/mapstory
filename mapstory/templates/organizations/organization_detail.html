@@ -1,56 +1,91 @@
 {% extends "site_base.html" %}
 {% load i18n %}
 {% load url from future %}
-{% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
+{% block title %}{% trans "Organization" %}{% endblock %}
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
-    <h1>{{ org.title }}</h1>
-    <h2>{{ org.slogan }}</h2>
-    <p>{{ org.about }}</p>
-    {% if org.is_active %}
-        <section>
-            <h2>Members:</h2>
-            <ul>
-            {% for membership in members %}
-                <li>
-                    <a href="{% url 'organizations:member_detail' org_pk=org.pk membership_pk=membership.pk %}">
-                        {{ membership.user }}
-                    </a>
-                </li>
-            {% endfor %}
-            </ul>
-        </section>
-        <section>
-            <h2>URLs</h2>
-            <ul>
-            {% for url in urls %}
-                <li>{{ url.url }}</li>
-            {% endfor %}
-            </ul>
-        </section>
-        <section>
-            <h2>Layers</h2>
-            <ul>
-            {% for layer in layers %}
-                <li>
-                    <a href="{{ layer.url }}">{{ layer.layer }}</a>
-                </li>
-            {% endfor %}
-            </ul>
-        </section>
-        <section>
-            <h2>MapStories</h2>
-            <ul>
-            {% for mapstory in mapstories %}
-                <li>
-                    <a href="{{ mapstory.url }}">{{ mapstory.mapstory }}</a>
-                </li>
-            {% endfor %}
-            </ul>
-        </section>
-    {% else %}
-        <h2>This organization is not active. Come back soon!</h2>
-    {% endif %}
+    <div class="org_container">
+        <div class="organization_hero">
+            <div class="organization_icon">
+                <p>icon goes here</p>
+            </div>
+            <div class="organization_header">
+                <h1>{{ org.title }}</h1>
+                <h2>{{ org.slogan }}</h2>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="organization_content">
+            <div class="org_left_column">
+                <div class="organization_navigation">
+                    <ul>
+                        <li><a href="#">{{ org.title }} Home</a></li>
+                        <li><a href="#">MapStories</a></li>
+                        <li><a href="#">StoryLayers</a></li>
+                        <li><a href="#">Journal</a></li>
+                        <li><a href="#">Activity Feed</a></li>
+                    </ul>
+                </div>
 
+                <div class="organization_about">
+                    <h3>About {{ org.title }}</h3>
+                    <p>{{ org.about }}</p>
+                </div>
 
+                <div class="organization_urls">
+                    <h3>URLs</h3>
+                    <ul>
+                    {% for url in urls %}
+                        <li>{{ url.url }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="organization_social"></div>
+
+                <div class="organization_members">
+                    <h3>Members:</h3>
+                    <ul>
+                        {% for membership in members %}
+                        <li>
+                            <a href="{% url 'organizations:member_detail' org_pk=org.pk membership_pk=membership.pk %}">
+                                {{ membership.user }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="org_right_column">
+            {% block organization_content %}
+                <section id="org-featured">
+                    <h2>Featured</h2>
+                </section>
+                <section>
+                    <h2>Layers</h2>
+                    <ul>
+                    {% for layer in layers %}
+                        <li><a href="{{ layer.url }}">{{ layer.layer }}</a></li>
+                    {% endfor %}
+                    </ul>
+                </section>
+                <section>
+                    <h2>MapStories</h2>
+                    <ul>
+                    {% for mapstory in mapstories %}
+                        <li><a href="{{ mapstory.url }}">{{ mapstory.mapstory }}</a></li>
+                    {% endfor %}
+                    </ul>
+                </section>
+                <section>
+                    <h2>Journal</h2>
+                </section>
+                <section>
+                    <h2>Activity Feed</h2>
+                </section>
+            {% endblock %}
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
 {% endblock %}
