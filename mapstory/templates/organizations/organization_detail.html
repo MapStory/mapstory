@@ -59,15 +59,14 @@
             <div class="org_right_column">
             {% block organization_content %}
                 <section id="org-featured">
-                    <h2>Featured</h2>
+                    <h2>Featured StoryLayers &amp; MapStories</h2>
+                    {#TODO: Add Featured Cards here#}
                 </section>
                 <section>
                     <h2>Layers</h2>
-                    <ul>
                     {% for layer in layers %}
-                        <li><a href="{{ layer.url }}">{{ layer.layer }}</a></li>
+                    <p><a href="{{ layer.url }}">{{ layer.layer }}</a></p>
                     {% endfor %}
-                    </ul>
                 </section>
                 <section>
                     <h2>MapStories</h2>
