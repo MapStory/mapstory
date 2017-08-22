@@ -169,6 +169,7 @@ class OrganizationLayer(models.Model):
     layer = models.ForeignKey(Layer)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    is_featured = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'%s' % self.layer
@@ -193,6 +194,7 @@ class OrganizationMapStory(models.Model):
     membership = models.ForeignKey(OrganizationMembership)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    is_featured = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'%s' % self.mapstory

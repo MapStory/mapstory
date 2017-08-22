@@ -60,7 +60,12 @@
             {% block organization_content %}
                 <section id="org-featured">
                     <h2>Featured StoryLayers &amp; MapStories</h2>
-                    {#TODO: Add Featured Cards here#}
+                    {% for layer in featured_layers %}
+                        <p><a href="{{ layer.url }}">{{ layer.layer }}</a></p>
+                    {% endfor %}
+                    {% for mapstory in featured_stories %}
+                        <li><a href="{{ mapstory.url }}">{{ mapstory.mapstory }}</a></li>
+                    {% endfor %}
                 </section>
                 <section>
                     <h2>Layers</h2>

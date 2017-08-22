@@ -19,6 +19,8 @@ def organization_detail(request, pk):
 
     layers = []
     mapstories = []
+    featured_stories = []
+    featured_layers = []
 
     for l in org_layers:
         share_url = "https://%s/layers/%s" % (request.get_host(), l.layer.name)
@@ -26,6 +28,11 @@ def organization_detail(request, pk):
             'layer': l.layer,
             'url': share_url
         })
+        if l.is_featured:
+            featured_layers.append({
+                'layer': l.layer,
+                'url': share_url
+            })
 
     for m in org_mapstories:
         share_url = "https://%s/story/%s" % (request.get_host(), m.mapstory.id)
@@ -33,13 +40,20 @@ def organization_detail(request, pk):
             'mapstory': m.mapstory,
             'url': share_url
         })
+        if m.is_featured:
+            featured_stories.append({
+                'mapstory': m.mapstory,
+                'url': share_url
+            })
 
     context = {
         'org': org,
         'members': members,
         'urls': org_urls,
         'layers': layers,
-        'mapstories': mapstories
+        'mapstories': mapstories,
+        'featured_stories': featured_stories,
+        'featured_layers': featured_layers
     }
 
     return render(request, 'organizations/organization_detail.html', context)
