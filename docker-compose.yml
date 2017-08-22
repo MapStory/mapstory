@@ -68,7 +68,7 @@ services:
       - mapstory_static:/var/lib/mapstory/static/
 
   geoserver:
-    image: quay.io/mapstory/geoserver:2.11.1-1.1.1
+    image: quay.io/mapstory/geoserver:2.11.2-1.1.1
     volumes:
       - geoserver:/var/lib/geoserver
     networks:
