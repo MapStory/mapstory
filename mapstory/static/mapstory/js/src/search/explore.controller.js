@@ -147,11 +147,13 @@
         content: true, 
         is_published: true, 
         limit: CLIENT_RESULTS_LIMIT, 
-        offset: 0 
+        offset: 0,
+        order_by: '-popular_count'
       };
       $scope.search();
     };
     
+    //// Default settings upon landing (without clicking topbar/switch) ///
     if ($scope.query.storyteller){
       //storyteller explore
       $scope.apiEndpoint = '/api/owners/';
@@ -165,6 +167,8 @@
       //add is_published even if they've removed it,
       //but persist all other filters
       $scope.query.is_published = true;
+      // default order method for content
+      $scope.query.order_by='-popular_count';
     }
 
     $scope.search();
