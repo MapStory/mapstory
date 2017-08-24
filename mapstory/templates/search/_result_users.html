@@ -1,6 +1,6 @@
 {% verbatim %}
 <div>
-    <li ng-repeat="item in cards | orderBy: orderMethodStoryteller | filter:itemFilter" resource-id="{{ item.id }}" class="col-lg-6">
+    <li ng-repeat="item in cards | filter:itemFilter" resource-id="{{ item.id }}" class="col-lg-6">
         <div class="storyteller-card">
             <div class="avatar-and-social-links">
                 <a href="/storyteller/{{ item.username }}">
