@@ -135,7 +135,8 @@
       $scope.query = { 
         storyteller: true, 
         limit: CLIENT_RESULTS_LIMIT, 
-        offset: 0 
+        offset: 0,
+        order_by: 'username'
       };
      $scope.search();
     };
