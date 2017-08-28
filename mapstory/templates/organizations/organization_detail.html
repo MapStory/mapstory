@@ -36,7 +36,7 @@
                     <h3>URLs</h3>
                     <ul>
                     {% for url in urls %}
-                        <li>{{ url.url }}</li>
+                        <li><a href="{{ url.url }}">{{ url.url }}</a></li>
                     {% endfor %}
                     </ul>
                 </div>
@@ -44,28 +44,28 @@
                 <div class="organization_social"></div>
 
                 <div class="organization_members">
-                    <h3>Members:</h3>
-                    <ul>
-                        {% for membership in members %}
-                        <li>
-                            <a href="{% url 'organizations:member_detail' org_pk=org.pk membership_pk=membership.pk %}">
-                                {{ membership.user }}
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                    <h3>ORGANIZATION MEMBERS</h3>
+                    {% for membership in members %}
+                        <a href="{% url 'organizations:member_detail' org_pk=org.pk membership_pk=membership.pk %}">
+                        {% include "cards/organization_member_card.html" with membership=membership %}
+                        </a>
+                    {% endfor %}
                 </div>
+{#                <div style="clear: both;"></div>#}
             </div>
             <div class="org_right_column">
             {% block organization_content %}
                 <section id="org-featured">
-                    <h2>Featured StoryLayers &amp; MapStories</h2>
-                    {% for layer in featured_layers %}
-                        <p><a href="{{ layer.url }}">{{ layer.layer }}</a></p>
-                    {% endfor %}
-                    {% for mapstory in featured_stories %}
-                        <li><a href="{{ mapstory.url }}">{{ mapstory.mapstory }}</a></li>
-                    {% endfor %}
+                    <div>
+                        <h2>Featured StoryLayers &amp; MapStories</h2>
+                        {% for layer in featured_layers %}
+                            {% include "cards/layer_card.html" with layer=layer %}
+                        {% endfor %}
+                        {% for mapstory in featured_stories %}
+                            {% include "cards/mapstory_card.html" with mapstory=mapstory %}
+                        {% endfor %}
+                    </div>
+{#                    <div style="clear: both;"></div>#}
                 </section>
                 <section>
                     <h2>Layers</h2>
