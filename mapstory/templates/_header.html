@@ -47,6 +47,7 @@
                 </li>
                 <li class="nav-link"><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></li>
                 <li class="nav-link"><a href="{% url 'journal' %}">{% trans "Journal" %}</a></li>
+                <li class="nav-link"><a href="{% url 'organizations:list' %}">{% trans "Organizations" %}</a></li>
 
                 {% if user.is_authenticated %}
                     <li id="js-navigation-more" class="nav-link more user-menu">

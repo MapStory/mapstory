@@ -11,7 +11,7 @@
             </div>
             <div class="organization_header">
                 <h1>{{ org.title }}</h1>
-                <h2>{{ org.slogan }}</h2>
+                <h4 class="org-slogan">{{ org.slogan }}</h4>
             </div>
             <div style="clear: both;"></div>
         </div>
@@ -65,28 +65,25 @@
                             {% include "cards/mapstory_card.html" with mapstory=mapstory %}
                         {% endfor %}
                     </div>
-{#                    <div style="clear: both;"></div>#}
                 </section>
                 <section>
                     <h2>Layers</h2>
                     {% for layer in layers %}
-                    <p><a href="{{ layer.url }}">{{ layer.layer }}</a></p>
+                        {% include "cards/layer_card.html" with layer=layer %}
                     {% endfor %}
                 </section>
                 <section>
                     <h2>MapStories</h2>
-                    <ul>
                     {% for mapstory in mapstories %}
-                        <li><a href="{{ mapstory.url }}">{{ mapstory.mapstory }}</a></li>
+                        {% include "cards/mapstory_card.html" with mapstory=mapstory %}
                     {% endfor %}
-                    </ul>
                 </section>
-                <section>
-                    <h2>Journal</h2>
-                </section>
-                <section>
-                    <h2>Activity Feed</h2>
-                </section>
+{#                <section>#}
+{#                    <h2>Journal</h2>#}
+{#                </section>#}
+{#                <section>#}
+{#                    <h2>Activity Feed</h2>#}
+{#                </section>#}
             {% endblock %}
             </div>
             <div style="clear: both;"></div>
