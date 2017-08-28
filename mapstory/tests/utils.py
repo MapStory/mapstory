@@ -10,6 +10,7 @@ from uuid import uuid4
 
 from django.contrib.auth import get_user_model
 from django.db.models import signals
+from django.utils.text import slugify
 
 from geonode.base.models import TopicCategory
 from geonode.geoserver.signals import geoserver_pre_save_maplayer
@@ -92,7 +93,7 @@ def create_mapstory(owner, title):
     :param title: The story title
     :return: MapStory
     """
-    return MapStory.objects.create(owner=owner, title=title)
+    return MapStory.objects.create(owner=owner, title=title, slug=slugify(title))
 
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):

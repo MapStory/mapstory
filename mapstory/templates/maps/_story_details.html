@@ -25,14 +25,14 @@
                 <a href="/story/{{ resource.id }}/draft">
                     <button class="btn btn-danger resume-edit">
                         <i class="fa fa-pencil"></i>
-                        {% if resource.is_published %} Change Published {{SITE_NAME}} 
+                        {% if resource.is_published %} Change Published MapStory 
                         {% else %} Resume Draft 
                         {% endif %}
                     </button>
                 </a>
                 <a href="/story/{{ resource.id }}/embed">
                     <button class="btn btn-detail mobile-play">
-                        <i class="fa fa-play"></i> Play {{SITE_NAME}}  
+                        <i class="fa fa-play"></i> Play MapStory  
                     </button>
                 </a>
                 {% endif %}
@@ -44,7 +44,7 @@
                         <div class="row">
                             <div class="col-sm-10">
                                 <a href="{% url 'profile_detail' slug=resource.owner.username %}">
-                                    <img class="img-circle" src="{% avatar_url resource.owner 45 %}" />
+                                    <img class="img-circle avi-45-backup" src="{% avatar_url resource.owner 45 %}" />
                                 </a>
                                  <a ng-href="{% url 'profile_detail' slug=resource.owner.username %}" target="_blank" style="font-size: larger;">
                                     {% if resource.owner.first_name != '' %}
@@ -71,14 +71,14 @@
                         </div>
                         <h3>Map Services</h3>
                         <div class="embed">Share 
-                            <input id="shareStory" value ="https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.id %}">
+                            <input id="shareStory" value ="https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.slug %}">
                             <button class="copyclip btn" data-clipboard-target="#shareStory">
                                 <i class="fa fa-clipboard" aria-hidden="true"></i>
                             </button>  
                         </div>
                         {% if resource.chapters %}
                         <div class="embed"> Embed
-                            <input id="embedStory" value="<iframe style='border: none;' height='400' width='600' src='https://{{ request.get_host }}/story/{{ resource.id }}/embed'></iframe>">
+                            <input id="embedStory" value="<iframe style='border: none;' height='400' width='600' src='https://{{ request.get_host }}/story/{{ resource.slug }}/embed'></iframe>">
                             <button  class="copyclip btn" data-clipboard-target="#embedStory">
                                 <i class="fa fa-clipboard" aria-hidden="true"></i>
                             </button>
@@ -95,7 +95,7 @@
                             {% if resource.abstract != '' %}
                                 {{ resource.abstract }}
                             {% else %}
-                                <div class="no-chapter-summary"> Unfortunately, no summary has been provided for this {{SITE_NAME}}.</div>
+                                <div class="no-chapter-summary"> Unfortunately, no summary has been provided for this MapStory.</div>
                             {% endif %}
                         </div>
                         {% if resource.chapters.count = 1 %}
@@ -245,7 +245,7 @@
                     {% if resource.owner == user %}
                     <div style= "padding-top: 40px">
                         <button class="btn btn-danger">
-                            <a href="{% url "map_remove" resource.id %}">{% trans "Delete this " %}{{SITE_NAME}}</a>
+                            <a href="{% url "map_remove" resource.id %}">{% trans "Delete this " %}MapStory</a>
                         </button>
                     </div>
                     {% endif %}

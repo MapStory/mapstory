@@ -21,7 +21,7 @@ class UploadedLayerResource(UploadedLayerResource):
             if store.get('type', str).lower() == 'geogig':
                 store.setdefault('branch', 'master')
                 store.setdefault('create', 'true')
-                store.setdefault('name', configuration_options.get('name'))
+                store.setdefault('name', slugify(configuration_options.get('name')))
                 store['geogig_repository'] = ("geoserver://%s" % store.get('name'))
 
         if not configuration_options.get('layer_owner'):
@@ -83,7 +83,7 @@ class GeoServerLayerCreator(Import):
             layer['geoserver_store'] = {'type': 'geogig'}
             store = layer.get('geoserver_store')
             if store.get('type', str).lower() == 'geogig':
-                name = feature_type['name'].lower()
+                name = slugify(feature_type['name'])
                 store.setdefault('branch', 'master')
                 store.setdefault('create', 'true')
                 store.setdefault('name', name)
