@@ -13,8 +13,8 @@
       geogigCommand: function(url) {
         var deferred = new $q.defer();
         if (url) {
-          var request = url + '&callback=JSON_CALLBACK';
-          $http.jsonp(request).then(
+          var request = url;
+          $http.jsonp(request, {jsonCallbackParam: 'cb'}).then(
             function(response, status){
               deferred.resolve(response.data);
           }, function(error){
