@@ -71,7 +71,7 @@
               for (var i = 0; i < $scope.commits.length; i++) {
                 var commit = $scope.commits[i];
                 if (commit.author) {
-                  commit.commitTimeSince = moment().calendar(commit.author.timestamp);
+                  commit.commitTimeSince = moment(commit.author.timestamp).calendar();
                 }
               }
             }
