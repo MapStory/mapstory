@@ -4,10 +4,10 @@
 {% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
-    <h1>Organizations</h1>
+    <h2 class="subtitle">Organizations</h2>
     <ul>
     {% for org in organizations %}
-        <li><a href="{% url 'organizations:detail' pk=org.pk %}"><p>{{ org.title }}</p></a></li>
+        {% include 'cards/organization_card.html' with organization=org %}
     {% endfor %}
     </ul>
 {% endblock %}
