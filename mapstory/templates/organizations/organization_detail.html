@@ -5,6 +5,15 @@
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
     <div class="org_container">
+    {% if membership %}
+        <div class="member_buttons"></div>
+        {% if membership.is_admin %}
+        <div class="admin_buttons">
+            <a class="button" href="{% url 'organizations:manage' pk=org.pk %}">Manage</a>
+        </div>
+        {% endif %}
+    {% endif %}
+
         <div class="organization_hero">
             <div class="organization_icon">
                 <p>icon goes here</p>
@@ -58,11 +67,15 @@
                 <section id="org-featured">
                     <div>
                         <h2>Featured StoryLayers &amp; MapStories</h2>
-                        {% for layer in featured_layers %}
+                        {% for layer in layers %}
+                            {% if layer.is_featured %}
                             {% include "cards/layer_card.html" with layer=layer %}
+                            {% endif %}
                         {% endfor %}
-                        {% for mapstory in featured_stories %}
+                        {% for mapstory in mapstories %}
+                            {% if layer.is_featured %}
                             {% include "cards/mapstory_card.html" with mapstory=mapstory %}
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </section>

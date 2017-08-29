@@ -1,10 +1,29 @@
 <div>
-<md-card style="width:470px; height: 150px">
+<md-card style="width:470px; height: auto">
 <div layout="row" layout-align="start center">
     <div style=" padding: 10px">
         <a href="{{ layer.url }}">
             <img src="{{ layer.layer.thumbnail_url }}" class="card-shadow" />
         </a>
+        {% if membership %}
+            {% if layer.layer.owner == membership.user %}
+                <div>
+                    <a href="#">request remove</a>
+                </div>
+            {% endif %}
+
+            {% if membership.is_admin %}
+                {% if layer.is_featured %}
+                <div>
+                    <a href="#">remove from featured</a>
+                </div>
+                {% endif %}
+                <div>
+                    <a href="#">remove from layers</a>
+                </div>
+            {% endif %}
+        {% endif %}
+
     </div>
 
     <div>
@@ -22,6 +41,7 @@
             <p class="tiny" style="margin: 0; color: #757575" >{{ layer.layer.popular_count }} views </p>
         </div>
     </div>
+    <div style="clear: both"></div>
 </div>
 </md-card>
 </div>
