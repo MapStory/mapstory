@@ -46,22 +46,26 @@
         </div>
         <div class="filter-content">
             <div>
+              <label>
                 <input type="checkbox"
-                       data-value="layer"
-                       data-filter="type__in"
-                       ng-click="explore.checkboxQuery($event)"
-                       ng-checked="isActivated('layer', query, 'type__in')">
-                    StoryLayer
+                  data-value="layer"
+                  data-filter="type__in"
+                  ng-click="explore.checkboxQuery($event)"
+                  ng-checked="isActivated('layer', query, 'type__in')">
                 </input>
+                StoryLayer
+              </label>
             </div>
             <div>
+              <label>
                 <input type="checkbox"
-                       data-value="mapstory"
-                       data-filter="type__in"
-                       ng-click="explore.checkboxQuery($event)"
-                       ng-checked="isActivated('mapstory', query, 'type__in')">
-                    MapStory
+                  data-value="mapstory"
+                  data-filter="type__in"
+                  ng-click="explore.checkboxQuery($event)"
+                  ng-checked="isActivated('mapstory', query, 'type__in')">
                 </input>
+                MapStory
+              </label>
             </div>
         </div>
     {% endverbatim %}
@@ -75,8 +79,15 @@
         </div>
         <div class="filter-content">
             <div ng-repeat="category in categories">
-                <input type="checkbox" data-value="{{ category.identifier }}" data-filter="category__identifier__in" ng-click="explore.checkboxQuery($event)" ng-checked="isActivated(category.identifier, query, 'category__identifier__in')"> {{ category.gn_description }}
+              <label>  
+                <input type="checkbox" 
+                  data-value="{{ category.identifier }}" 
+                  data-filter="category__identifier__in" 
+                  ng-click="explore.checkboxQuery($event)" 
+                  ng-checked="isActivated(category.identifier, query, 'category__identifier__in')"> 
                 </input>
+                {{ category.gn_description }}
+              </label>
             </div>
         </div>
     {% endverbatim %}
