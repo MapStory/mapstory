@@ -54,7 +54,7 @@ python-resize-image==1.1.10
 coverage
 
 # Security Updates
-pycsw==2.0.2
+pycsw==2.0.3
 
 #command line picker
 pick
@@ -68,3 +68,6 @@ selenium
 
 # Activity Streams
 django-activity-stream==0.6.1
+
+# Pin to a specific version of Shapely as future versions break the build.
+shapely==1.5.17
