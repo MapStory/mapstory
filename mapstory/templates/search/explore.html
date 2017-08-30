@@ -29,7 +29,7 @@
                     <md-input-container class="md-block" flex-gt-md>
                         <label>Sort by</label>
                         <md-select ng-model="query.order_by">
-                          <md-option ng-repeat="state in orderMethods.content" value="{{state.filter}}">
+                          <md-option ng-repeat="state in orderingOptions.resource" value="{{state.sort}}">
                             {{state.name}}
                           </md-option>
                         </md-select>
@@ -67,7 +67,7 @@
                     <md-input-container class="md-block" flex-gt-md>
                         <label>Sort by</label>
                         <md-select ng-model="query.order_by">
-                          <md-option ng-repeat="state in orderMethods.storyteller" value="{{state.filter}}">
+                          <md-option ng-repeat="state in orderingOptions.owner" value="{{state.sort}}">
                             {{state.name}}
                           </md-option>
                         </md-select>
