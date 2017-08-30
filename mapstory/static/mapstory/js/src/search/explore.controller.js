@@ -106,10 +106,6 @@
 
     //////////////
     /* ORDERING */
-    //set default order methods for content and storyteller
-    $scope.orderMethodContent = '-popular_count';
-    $scope.orderMethodStoryteller = 'username';
-
     //expose additional sorting to the dropdown "sort by"
     $scope.orderMethods = {
       //for general content results
@@ -125,6 +121,12 @@
           {name: 'Username A-Z', filter: 'username'}
         ]
     };
+
+    //set up a watch to re-pull results from API when ordering is changed
+    $scope.$watch('query["order_by"]', function (newValue, oldValue, scope) {
+      $scope.search();
+    });
+
     /////////////////////
     /* USER VS CONTENT */
     // Persisting content and storyteller view & queries through page refresh 
