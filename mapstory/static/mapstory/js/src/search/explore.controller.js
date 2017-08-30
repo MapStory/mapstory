@@ -53,9 +53,7 @@
           }
         )
     };
-
-
-
+    
     ////////////////////////////
     /*  Query Methods */
     // add, remove, checkbox( aka, toggle), and clear
@@ -89,22 +87,31 @@
     //////////////
     /* ORDERING */
     //expose additional sorting to the dropdown "sort by"
-    $scope.orderMethods = {
-      //for general content results
-      content:
+    $scope.orderingOptions = {
+      //select order_by options from the Resource API
+      resource:
         [
-          {name:'Popular', filter:'-popular_count'},
-          {name:'Newest', filter:'-date'}
+          { name:'Popular', 
+            sort:'-popular_count'
+          },
+          { name:'Newest',
+            sort:'-date'
+          }
         ], 
-        //for the storyteller results
-      storyteller:
+      //seclect order_by options from the Owners API
+      owner:
         [
-          {name: 'Username Z-A', filter: '-username'},
-          {name: 'Username A-Z', filter: 'username'}
+          { name: 'Username Z-A',
+            sort: '-username'
+          },
+          { name: 'Username A-Z',
+            sort: 'username'
+          }
         ]
     };
 
-    //set up a watch to re-pull results from API when ordering is changed
+    //set up a quick watch to re-pull results from API when ordering is changed
+    // todo: sync this up in other watches if we can for performance 
     $scope.$watch('query["order_by"]', function (newValue, oldValue, scope) {
       $scope.search();
     });
