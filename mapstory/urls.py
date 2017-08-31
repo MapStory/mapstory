@@ -149,9 +149,10 @@ urlpatterns += patterns("", url(r'', include(favorites_api.urls)))
 
 urlpatterns += importer_urlpatterns
 
-# this is last to catch reverse lookup from geonode views
+# this is last to catch reverse lookup from geonode views with the same name
 urlpatterns += patterns("",
                         url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
+                        url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="profile_edit"),
                         url(r'^story/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'))
 
 
