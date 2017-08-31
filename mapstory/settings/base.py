@@ -23,6 +23,7 @@ import logging
 import os
 import sys
 
+import geonode
 from geonode.settings import *
 import pyproj
 
@@ -120,7 +121,8 @@ COMMENTS_APP = 'fluent_comments'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(LOCAL_ROOT, 'templates')],
+        'DIRS': [os.path.join(LOCAL_ROOT, 'templates'),
+                 os.path.join(os.path.dirname(geonode.__file__), 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
