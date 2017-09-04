@@ -6,18 +6,18 @@
             </a>
             {% if membership %}
             {% if mapstory.mapstory.owner == membership.user %}
-                <div>
+                <div class="org_button">
                     <a href="#">request remove</a>
                 </div>
             {% endif %}
-
             {% if membership.is_admin %}
                 {% if mapstory.is_featured %}
-                <div>
+
+                <div class="org_button">
                     <a href="#">remove from featured</a>
                 </div>
                 {% endif %}
-                <div>
+                <div class="org_button">
                     <a href="#">remove from mapstories</a>
                 </div>
             {% endif %}

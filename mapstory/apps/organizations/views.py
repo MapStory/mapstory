@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationLayer, OrganizationMapStory
+from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationLayer, OrganizationMapStory, OrganizationSocialMedia
 
 
 def organization_detail(request, pk):
@@ -16,11 +16,15 @@ def organization_detail(request, pk):
     :param pk: The Organization's id.
     :return: A render view.
     """
+    if request.method == 'POST':
+        return redirect(reverse('organizations:list'))
+
     org = get_object_or_404(Organization, pk=pk)
     members = OrganizationMembership.objects.filter(organization=org)
     org_urls = OrganizationURL.objects.filter(org=org)
     org_layers = OrganizationLayer.objects.filter(organization=org)
     org_mapstories = OrganizationMapStory.objects.filter(organization=org)
+    org_social_media = OrganizationSocialMedia.objects.filter(organization=org)
 
     layers = []
     mapstories = []
@@ -48,14 +52,14 @@ def organization_detail(request, pk):
             'is_featured': m.is_featured,
         })
 
-
     context = {
         'org': org,
         'members': members,
         'urls': org_urls,
         'layers': layers,
         'mapstories': mapstories,
-        'membership': membership
+        'membership': membership,
+        'social_icons': org_social_media,
     }
 
     return render(request, 'organizations/organization_detail.html', context)

@@ -7,29 +7,19 @@
         </a>
         {% if membership %}
             {% if layer.layer.owner == membership.user %}
-                <div class="org_button">
-                    <form action = "" method="POST">
-                        {% csrf_token %}
-                        <input type="submit" name="request_remove" value="request remove" />
-                    </form>
-                    <a href="#"></a>
+                <div>
+                    <a href="#">request remove</a>
                 </div>
             {% endif %}
 
             {% if membership.is_admin %}
                 {% if layer.is_featured %}
-                <div class="org_button">
-                    <form action = "" method="POST">
-                        {% csrf_token %}
-                        <input type="submit" name="remove_featured" value="remove from featured" />
-                    </form>
+                <div>
+                    <a href="#">remove from featured</a>
                 </div>
                 {% endif %}
-                <div class="org_button">
-                    <form action = "" method="POST">
-                        {% csrf_token %}
-                        <input type="submit" name="remove_layer" value="remove from layers" />
-                    </form>
+                <div>
+                    <a href="#">remove from layers</a>
                 </div>
             {% endif %}
         {% endif %}

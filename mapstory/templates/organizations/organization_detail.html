@@ -36,7 +36,11 @@
 
                 <div class="organization_social">
                 {% for social_icon in social_icons %}
-                    <p>social_icon</p>
+                    <div class="social_icon">
+                    <a href="{{ social_icon.url }}">
+                        <i class="fa {{ social_icon.icon }}">{{ social_icon.name }}</i>
+                    </a>
+                    </div>
                 {% endfor %}
                 </div>
 

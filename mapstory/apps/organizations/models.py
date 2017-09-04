@@ -179,6 +179,7 @@ class OrganizationLayer(models.Model):
 class OrganizationSocialMedia(models.Model):
     """Represents a Social media Link shown on the Organization's detail Page"""
     organization = models.ForeignKey(Organization)
+    name = models.CharField(max_length=255, default="blank")
     icon = models.CharField(max_length=255)
     url = models.URLField()
 
