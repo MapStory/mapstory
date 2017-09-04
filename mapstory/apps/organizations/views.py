@@ -86,6 +86,7 @@ def membership_detail(request, org_pk, membership_pk):
     }
     return render(request, 'organizations/membership_detail.html', context)
 
+
 def add_layer(request, pk, layer_pk):
     if request.POST:
         # TODO: Handle form POST
@@ -93,12 +94,14 @@ def add_layer(request, pk, layer_pk):
         pass
     return render(request, 'organizations/confirm_add.html', {})
 
+
 def add_mapstory(request, pk, mapstory_pk):
     if request.POST:
         # TODO: Handle form POST
         # TODO: Check user's permissions
         pass
     return render(request, 'organizations/confirm_add.html', {})
+
 
 @login_required
 def add_membership(request, pk, user_pk):
@@ -135,4 +138,4 @@ def manager(request, pk):
         # User is NOT AUTHORIZED!
         return HttpResponseForbidden()
 
-    return render(request, 'organizations/manager.html', {'organization':organization})
+    return render(request, 'organizations/manager.html', {'org':organization})

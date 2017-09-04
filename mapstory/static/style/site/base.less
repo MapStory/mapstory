@@ -193,12 +193,12 @@ form {
     width: 7em;
     height: 7em;
     float: left;
-    margin-top: 2em;
     margin-right: 2em;
     margin-bottom: 2em;
-    border-style: solid;
-    border-color: #333333;
-    border-width: 1px;
+    .organization_icon_image {
+      width: 100%;
+      height: 100%;
+    }
   }
 
   .organization_header {
@@ -214,5 +214,28 @@ form {
     width: 70%;
     margin-left: 4em;
     align-content: center;
+  }
+
+  .organization_about_title {
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 1em;
+  }
+
+  .organization_about_content {
+    p {
+      font-weight: normal;
+      font-size: 0.9em;
+    }
+  }
+
+  .organization_link {
+    font-weight: lighter;
+    font-size: 0.8em;
+    letter-spacing: 1px;
+  }
+
+  .organization_navigation_manage {
+    margin-top: 1.5em;
   }
 }

@@ -165,12 +165,18 @@ class TestOrganizations(TestCase):
         # TODO: Implement this
         pass
 
-    def test_add_member_view(self):
-        pass
+    def test_organization_page_content(self):
+        o = Organization()
+        o.title = "Test Organization"
+        o.save()
 
-    def test_add_mapstory_view(self):
-        pass
+        o.add_url('https://mapstory.org')
+        # Add some members:
+        o.add_member(User.objects.create_user(username="usernametest", password="apassword"), is_admin=True)
 
-    def test_add_layer_view(self):
-        pass
+        response = self.client.get(o.get_absolute_url())
+
+        self.assertContains(response, 'usernametest')
+
+
 

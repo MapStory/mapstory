@@ -5,55 +5,43 @@
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
     <div class="org_container">
-    {% if membership %}
-        <div class="member_buttons"></div>
-        {% if membership.is_admin %}
-        <div class="admin_buttons">
-            <a class="button" href="{% url 'organizations:manage' pk=org.pk %}">Manage</a>
-        </div>
-        {% endif %}
-    {% endif %}
-
-        <div class="organization_hero">
-            <div class="organization_icon">
-                <p>icon goes here</p>
-            </div>
-            <div class="organization_header">
-                <h1>{{ org.title }}</h1>
-                <h4 class="org-slogan">{{ org.slogan }}</h4>
-            </div>
-            <div style="clear: both;"></div>
-        </div>
+        {% include 'organizations/_organization_header.html' %}
         <div class="organization_content">
             <div class="org_left_column">
                 <div class="organization_navigation">
+                    {#TODO:Implement Navigation here#}
                     <ul>
                         <li><a href="#">{{ org.title }} Home</a></li>
-                        <li><a href="#">MapStories</a></li>
-                        <li><a href="#">StoryLayers</a></li>
-                        <li><a href="#">Journal</a></li>
-                        <li><a href="#">Activity Feed</a></li>
+                        <li><a href="#org-mapstories-section">MapStories</a></li>
+                        <li><a href="#org-layers-section">StoryLayers</a></li>
+                        <li><a href="#org-journal-section">Journal</a></li>
+                        <li><a href="#org-activity-feed-section">Activity Feed</a></li>
                     </ul>
                 </div>
 
                 <div class="organization_about">
-                    <h3>About {{ org.title }}</h3>
-                    <p>{{ org.about }}</p>
+                    <h3 class="organization_about_title">About {{ org.title }}</h3>
+                    <div class="organization_about_content">
+                        <p>{{ org.about }}</p>
+                    </div>
                 </div>
 
                 <div class="organization_urls">
-                    <h3>URLs</h3>
-                    <ul>
-                    {% for url in urls %}
-                        <li><a href="{{ url.url }}">{{ url.url }}</a></li>
-                    {% endfor %}
-                    </ul>
+                {% for url in urls %}
+                    <div class="organization_link">
+                        <a href="{{ url.url }}">{{ url.url }}</a>
+                    </div>
+                {% endfor %}
                 </div>
 
-                <div class="organization_social"></div>
+                <div class="organization_social">
+                {% for social_icon in social_icons %}
+                    <p>social_icon</p>
+                {% endfor %}
+                </div>
 
                 <div class="organization_members">
-                    <h3>ORGANIZATION MEMBERS</h3>
+                    <h3 class="organization_about_title">ORGANIZATION MEMBERS</h3>
                     {% for membership in members %}
                         <a href="{% url 'organizations:member_detail' org_pk=org.pk membership_pk=membership.pk %}">
                         {% include "cards/organization_member_card.html" with membership=membership %}
@@ -79,24 +67,24 @@
                         {% endfor %}
                     </div>
                 </section>
-                <section>
+                <section id="org-layers-section">
                     <h2>Layers</h2>
                     {% for layer in layers %}
                         {% include "cards/layer_card.html" with layer=layer %}
                     {% endfor %}
                 </section>
-                <section>
+                <section id="org-mapstories-section">
                     <h2>MapStories</h2>
                     {% for mapstory in mapstories %}
                         {% include "cards/mapstory_card.html" with mapstory=mapstory %}
                     {% endfor %}
                 </section>
-{#                <section>#}
-{#                    <h2>Journal</h2>#}
-{#                </section>#}
-{#                <section>#}
-{#                    <h2>Activity Feed</h2>#}
-{#                </section>#}
+                <section id="org-journal-section">
+                    <h2>Journal</h2>
+                </section>
+                <section id="org-activity-feed-section">
+                    <h2>Activity Feed</h2>
+                </section>
             {% endblock %}
             </div>
             <div style="clear: both;"></div>
