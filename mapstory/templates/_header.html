@@ -60,13 +60,24 @@
                         <ul class="submenu">
                             <li><a href="{% url 'profile_detail' slug=user.username %}">{{ user.username }}</a></li>
                             <li class="divider"></li>
-                             <li><a href="{% url "messages_inbox" %}">{% trans "Messages" %}</a></li>
+                            <li><a href="{% url "messages_inbox" %}">{% trans "Messages" %}</a></li>
                             <li><a href="{% url 'edit_profile' user.username %}">{% trans "Edit Profile" %}</a></li>
                             <li><a href="{% url 'account_password' %}">{% trans "Change Password" %}</a></li>
                             <li><a href="{% url 'profile_detail' slug=user.username %}?showNotifications=true">{% trans "Notification Settings" %}</a></li>
                             <li class="divider"></li>
                             <li><a href="{% url 'getpage' 'started' %}">{% trans "Help" %}</a></li>
                             <li class="divider"></li>
+        {#TODO: Fix Organizations Manager Menu#}
+{#                        {% if is_organizer %}#}
+{#                            {% for membership in manager_memberships %}#}
+                            <li>
+                                <a href="{% url 'organizations:manage' pk="1" %}">
+                                    Manage Organization
+                                </a>
+                            </li>
+{#                            {% endfor %}#}
+                            <li class="divider"></li>
+{#                        {% endif %}#}
                         {% if user.is_staff %}
                             <li><a href="{% url 'admin:index' %}">{% trans "Admin Panel" %}</a></li>
                         {% endif %}

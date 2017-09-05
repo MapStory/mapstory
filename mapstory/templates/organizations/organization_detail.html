@@ -9,7 +9,6 @@
         <div class="organization_content">
             <div class="org_left_column">
                 <div class="organization_navigation">
-                    {#TODO:Implement Navigation here#}
                     <ul>
                         <li><a href="#">{{ org.title }} Home</a></li>
                         <li><a href="#org-mapstories-section">MapStories</a></li>
@@ -52,8 +51,9 @@
                         </a>
                     {% endfor %}
                 </div>
-{#                <div style="clear: both;"></div>#}
+
             </div>
+
             <div class="org_right_column">
             {% block organization_content %}
                 <section id="org-featured">
@@ -71,18 +71,21 @@
                         {% endfor %}
                     </div>
                 </section>
+
                 <section id="org-layers-section">
                     <h2>Layers</h2>
                     {% for layer in layers %}
                         {% include "cards/layer_card.html" with layer=layer %}
                     {% endfor %}
                 </section>
+
                 <section id="org-mapstories-section">
                     <h2>MapStories</h2>
                     {% for mapstory in mapstories %}
                         {% include "cards/mapstory_card.html" with mapstory=mapstory %}
                     {% endfor %}
                 </section>
+{#TODO: ADD NEW SECTIONS HERE#}
 {#                <section id="org-journal-section">#}
 {#                    <h2>Journal</h2>#}
 {#                </section>#}
