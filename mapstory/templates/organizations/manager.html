@@ -9,7 +9,7 @@
         <div class="organization_content">
             <div class="org_left_column">
                 <div class="return-to-page-button">
-                    <a href="#"><h3>Return to Org Page</h3></a>
+                    <a href="{% url 'organizations:detail' pk=org.pk  %}"><h3>Return to Org Page</h3></a>
                 </div>
                 <div class="organization_navigation_manage">
                     <ul>
@@ -23,43 +23,38 @@
             </div>
             <div class="org_right_column">
                 <h2>Edit Org Page Information</h2>
-
-                <section id="basic-info">
-                    <div>
-                        <h3>BASIC INFORMATION</h3>
+                <form action="." method="post">
+                    {% csrf_token %}
+                    <section id="basic-info">
+                        <div>
+                            <h3>BASIC INFORMATION</h3>
+                            <hr/>
+                            {{ basic_form.as_p }}
+                        </div>
+                    </section>
+                    <section id="social-media-links">
+                        <h3>LINKS & SOCIAL MEDIA</h3>
                         <hr/>
-                        <p>Org Name</p>
-                        <p>Org Slogan</p>
-                        <p>City</p>
-                        <p>Country</p>
-                        <p>Display Photo</p>
-                        <p>About</p>
-                    </div>
-                </section>
-                <section id="social-media-links">
-                    <h3>LINKS & SOCIAL MEDIA</h3>
-                    <hr/>
-                    <p>URLs</p>
-                    <p>Facebook</p>
-                    <p>Twitter</p>
-                    <p>LinkedIn</p>
-                    <p>Github</p>
-                    <p>Instragram</p>
-                </section>
-                <section id="organizers-members">
-                    <h3>ORGANIZERS & MEMBERS</h3>
-                    <hr/>
-                    <p>Organizers</p>
-                    <p>Members</p>
-                </section>
-                <section id="payment-information">
-                    <h3>PAYMENT INFORMATION</h3>
-                    <hr/>
-                    <p>Plan</p>
-                    <p>Last billed</p>
-                    <p>Payment method</p>
-                    <p>Upgrade</p>
-                </section>
+                        {{ links_form.as_p }}
+                    </section>
+                    <section id="organizers-members">
+                        <h3>ORGANIZERS & MEMBERS</h3>
+                        <hr/>
+                        <p>Organizers</p>
+                        <p>Members</p>
+                    </section>
+                    <section id="payment-information">
+                        <h3>PAYMENT INFORMATION</h3>
+                        <hr/>
+                        <p>Plan</p>
+                        <p>Last billed</p>
+                        <p>Payment method</p>
+                        <p>Upgrade</p>
+                    </section>
+
+                        <input style="width: 300px; height: 90px" class="button" type="submit" value="Submit" />
+
+                </form>
             </div>
             <div style="clear: both;"></div>
         </div>

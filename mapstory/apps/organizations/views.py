@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationLayer, OrganizationMapStory, OrganizationSocialMedia
-
+from . import forms
 
 def organization_detail(request, pk):
     """Organization Detail View.
@@ -172,8 +172,49 @@ def manager(request, pk):
     organization = get_object_or_404(Organization, pk=pk)
     membership = get_object_or_404(OrganizationMembership, organization=organization, user=request.user)
 
+    info = {
+        'name': organization.title,
+        'slogan': organization.slogan,
+        'about': organization.about,
+    }
+
+    urls = OrganizationURL.objects.filter(org=organization)
+    facebook = OrganizationSocialMedia.objects.filter(icon="fa-facebook", organization=organization)
+    twitter = OrganizationSocialMedia.objects.filter(icon="fa-twitter", organization=organization)
+    linkedin = OrganizationSocialMedia.objects.filter(icon="fa-linkedin", organization=organization)
+    github = OrganizationSocialMedia.objects.filter(icon="fa-github", organization=organization)
+    instragram = OrganizationSocialMedia.objects.filter(icon="fa-instragram", organization=organization)
+    links = {
+        'url0': urls.first() or "",
+        'url1': urls[1] or "",
+        'url2': urls[2] or "",
+        'facebook': facebook.first().url if facebook.first() else "",
+        'twitter': twitter.first().url if twitter.first() else "",
+        'linkedin': linkedin.first().url if linkedin.first() else "",
+        'github': github.first().url if github.first() else "",
+        'instagram': instragram.first().url if instragram.first() else "",
+    }
+
     if not membership.is_admin:
         # User is NOT AUTHORIZED!
         return HttpResponseForbidden()
 
-    return render(request, 'organizations/manager.html', {'org':organization})
+    if request.method == 'POST':
+        basic_info_form = forms.BasicInformation(request.POST)
+        if basic_info_form.is_valid():
+            #TODO: Handle the Form
+            pass
+
+        links_form = forms.BasicInformation(request.POST)
+        if links_form.is_valid():
+            #TODO: Handle the Form
+            pass
+    else:
+        basic_info_form = forms.BasicInformation(initial=info)
+        links_form = forms.LinksAndSocialMedia(initial=links)
+
+    return render(request, 'organizations/manager.html', {
+        'org':organization,
+        'basic_form':basic_info_form,
+        'links_form':links_form
+    })
