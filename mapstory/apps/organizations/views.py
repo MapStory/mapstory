@@ -39,11 +39,20 @@ def organization_detail(request, pk):
             # TODO: Send a Django Message to confirm
 
         elif request.POST.get("remove_mapstory"):
-            pass
+            mapstory_pk = request.POST.get("mapstory_pk")
+            found_mapstory = get_object_or_404(OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
+            found_mapstory.delete()
+
         elif request.POST.get("remove_featured_mapstory"):
-            pass
+            mapstory_pk = request.POST.get("mapstory_pk")
+            found_mapstory = get_object_or_404(OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
+            found_mapstory.is_featured = False
+            found_mapstory.save()
+
         elif request.POST.get("request_remove_mapstory"):
-            pass
+            mapstory_pk = request.POST.get("mapstory_pk")
+            found_mapstory = get_object_or_404(OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
+            #TODO: Ask the admin to remove this
 
     members = OrganizationMembership.objects.filter(organization=org)
     org_urls = OrganizationURL.objects.filter(org=org)
