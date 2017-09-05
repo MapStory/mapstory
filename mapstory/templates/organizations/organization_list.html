@@ -5,9 +5,7 @@
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
     <h2 class="subtitle">Organizations</h2>
-    <ul>
     {% for org in organizations %}
         {% include 'cards/organization_card.html' with organization=org %}
     {% endfor %}
-    </ul>
 {% endblock %}
