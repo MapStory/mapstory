@@ -6,11 +6,13 @@
             <img src="{{ layer.layer.thumbnail_url }}" class="card-shadow" />
         </a>
         {% if membership %}
+            <div class="manage-container">
             {% if layer.layer.owner == membership.user %}
                 <div class="org_button">
-                    <form action = "" method="POST">
+                    <form action="." method="post">
                         {% csrf_token %}
-                        <input type="submit" name="request_remove" value="request remove" />
+                        <input type="hidden" value="{{ layer.layer.pk }}" name="layer_pk">
+                        <input class="button" type="submit" name="request_remove_layer" value="request remove" />
                     </form>
                     <a href="#"></a>
                 </div>
@@ -19,19 +21,22 @@
             {% if membership.is_admin %}
                 {% if layer.is_featured %}
                 <div class="org_button">
-                    <form action = "" method="POST">
+                    <form action="." method="post">
                         {% csrf_token %}
-                        <input type="submit" name="remove_featured" value="remove from featured" />
+                        <input type="hidden" value="{{ layer.layer.pk }}" name="layer_pk">
+                        <input class="button" type="submit" name="remove_featured_layer" value="remove from featured" />
                     </form>
                 </div>
                 {% endif %}
                 <div class="org_button">
-                    <form action = "" method="POST">
+                    <form action="." method="post">
                         {% csrf_token %}
-                        <input type="submit" name="remove_layer" value="remove from layers" />
+                        <input type="hidden" value="{{ layer.layer.pk }}" name="layer_pk">
+                        <input class="button" type="submit" name="remove_layer" value="remove from layers" />
                     </form>
                 </div>
             {% endif %}
+            </div>
         {% endif %}
 
     </div>

@@ -16,10 +16,35 @@ def organization_detail(request, pk):
     :param pk: The Organization's id.
     :return: A render view.
     """
-    if request.method == 'POST':
-        return redirect(reverse('organizations:list'))
-
     org = get_object_or_404(Organization, pk=pk)
+
+    if request.method == "POST":
+        if request.POST.get("request_remove_layer"):
+            layer_pk = request.POST.get("layer_pk")
+            found_layer = get_object_or_404(OrganizationLayer, organization=org, layer__pk=layer_pk)
+            # TODO: Request admin to remove this layer
+
+        elif request.POST.get("remove_layer"):
+            layer_pk = request.POST.get("layer_pk")
+            found_layer = get_object_or_404(OrganizationLayer, organization=org, layer__pk=layer_pk)
+            found_layer.delete()
+            #TODO: Send a Django Message to confirm
+
+
+        elif request.POST.get("remove_featured_layer"):
+            layer_pk = request.POST.get("layer_pk")
+            found_layer = get_object_or_404(OrganizationLayer, organization=org, layer__pk=layer_pk)
+            found_layer.is_featured = False
+            found_layer.save()
+            # TODO: Send a Django Message to confirm
+
+        elif request.POST.get("remove_mapstory"):
+            pass
+        elif request.POST.get("remove_featured_mapstory"):
+            pass
+        elif request.POST.get("request_remove_mapstory"):
+            pass
+
     members = OrganizationMembership.objects.filter(organization=org)
     org_urls = OrganizationURL.objects.filter(org=org)
     org_layers = OrganizationLayer.objects.filter(organization=org)
