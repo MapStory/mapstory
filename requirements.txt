@@ -68,6 +68,3 @@ selenium
 
 # Activity Streams
 django-activity-stream==0.6.1
-
-# Pin to a specific version of Shapely as future versions break the build.
-shapely==1.5.17
