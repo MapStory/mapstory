@@ -4,10 +4,12 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 
-User = get_user_model()
+from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationLayer, OrganizationMapStory, \
+    OrganizationSocialMedia
 
-from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationLayer, OrganizationMapStory, OrganizationSocialMedia
 from . import forms
+
+User = get_user_model()
 
 def organization_detail(request, pk):
     """Organization Detail View.
@@ -18,7 +20,9 @@ def organization_detail(request, pk):
     """
     org = get_object_or_404(Organization, pk=pk)
 
+    # Determine the type of HTTP request
     if request.method == "POST":
+        # Handle form data
         if request.POST.get("request_remove_layer"):
             layer_pk = request.POST.get("layer_pk")
             found_layer = get_object_or_404(OrganizationLayer, organization=org, layer__pk=layer_pk)
@@ -53,6 +57,7 @@ def organization_detail(request, pk):
             mapstory_pk = request.POST.get("mapstory_pk")
             found_mapstory = get_object_or_404(OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
             #TODO: Ask the admin to remove this
+
 
     members = OrganizationMembership.objects.filter(organization=org)
     org_urls = OrganizationURL.objects.filter(org=org)
@@ -126,7 +131,7 @@ def membership_detail(request, org_pk, membership_pk):
 
 
 def add_layer(request, pk, layer_pk):
-    if request.POST:
+    if request.method.POST:
         # TODO: Handle form POST
         # TODO: Check user's permissions
         pass
@@ -134,7 +139,7 @@ def add_layer(request, pk, layer_pk):
 
 
 def add_mapstory(request, pk, mapstory_pk):
-    if request.POST:
+    if request.method.POST:
         # TODO: Handle form POST
         # TODO: Check user's permissions
         pass
@@ -168,37 +173,22 @@ def add_membership(request, pk, user_pk):
 
 @login_required
 def manager(request, pk):
+    """
+    Organization Manager Page.
+    Page for managing all settings for the Organization.
+
+    :param request: HTTP Request.
+    :param pk: The Organizations id
+    :return: An HTTPResponse
+    """
     # Check that we are admins
     organization = get_object_or_404(Organization, pk=pk)
     membership = get_object_or_404(OrganizationMembership, organization=organization, user=request.user)
-
-    info = {
-        'name': organization.title,
-        'slogan': organization.slogan,
-        'about': organization.about,
-    }
-
-    urls = OrganizationURL.objects.filter(org=organization)
-    facebook = OrganizationSocialMedia.objects.filter(icon="fa-facebook", organization=organization)
-    twitter = OrganizationSocialMedia.objects.filter(icon="fa-twitter", organization=organization)
-    linkedin = OrganizationSocialMedia.objects.filter(icon="fa-linkedin", organization=organization)
-    github = OrganizationSocialMedia.objects.filter(icon="fa-github", organization=organization)
-    instragram = OrganizationSocialMedia.objects.filter(icon="fa-instragram", organization=organization)
-    links = {
-        'url0': urls.first() or "",
-        'url1': urls[1] or "",
-        'url2': urls[2] or "",
-        'facebook': facebook.first().url if facebook.first() else "",
-        'twitter': twitter.first().url if twitter.first() else "",
-        'linkedin': linkedin.first().url if linkedin.first() else "",
-        'github': github.first().url if github.first() else "",
-        'instagram': instragram.first().url if instragram.first() else "",
-    }
-
     if not membership.is_admin:
         # User is NOT AUTHORIZED!
         return HttpResponseForbidden()
 
+    # Determine the type of HTTP request
     if request.method == 'POST':
         basic_info_form = forms.BasicInformation(request.POST)
         if basic_info_form.is_valid():
@@ -210,6 +200,30 @@ def manager(request, pk):
             #TODO: Handle the Form
             pass
     else:
+        # Load Form's initial data
+        urls = OrganizationURL.objects.filter(org=organization)
+        facebook = OrganizationSocialMedia.objects.filter(icon="fa-facebook", organization=organization)
+        twitter = OrganizationSocialMedia.objects.filter(icon="fa-twitter", organization=organization)
+        linkedin = OrganizationSocialMedia.objects.filter(icon="fa-linkedin", organization=organization)
+        github = OrganizationSocialMedia.objects.filter(icon="fa-github", organization=organization)
+        instragram = OrganizationSocialMedia.objects.filter(icon="fa-instragram", organization=organization)
+        info = {
+            'name': organization.title,
+            'slogan': organization.slogan,
+            'about': organization.about,
+        }
+        links = {
+            'url0': urls.first() or "",
+            'url1': urls[1] or "",
+            'url2': urls[2] or "",
+            'facebook': facebook.first().url if facebook.first() else "",
+            'twitter': twitter.first().url if twitter.first() else "",
+            'linkedin': linkedin.first().url if linkedin.first() else "",
+            'github': github.first().url if github.first() else "",
+            'instagram': instragram.first().url if instragram.first() else "",
+        }
+
+
         basic_info_form = forms.BasicInformation(initial=info)
         links_form = forms.LinksAndSocialMedia(initial=links)
 
