@@ -26,6 +26,10 @@ class Organization(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    city = models.CharField(default='', max_length=255)
+    country = models.CharField(default='', max_length=255)
+    image = models.FileField(null=True)
+
 
     class Meta:
         verbose_name_plural = 'Organizations'

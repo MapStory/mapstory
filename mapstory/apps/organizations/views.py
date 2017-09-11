@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseForbidden
 from django.core.urlresolvers import reverse
-from django.contrib.auth import get_user_model
+from   django.contrib.auth import get_user_model
 
 from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationLayer, OrganizationMapStory, \
     OrganizationSocialMedia
@@ -103,6 +103,7 @@ def organization_detail(request, pk):
 
     return render(request, 'organizations/organization_detail.html', context)
 
+
 def organization_list(request):
     """Organization List View.
     Shows a list of Organizations.
@@ -191,14 +192,10 @@ def manager(request, pk):
     # Determine the type of HTTP request
     if request.method == 'POST':
         basic_info_form = forms.BasicInformation(request.POST)
-        if basic_info_form.is_valid():
-            #TODO: Handle the Form
-            pass
-
-        links_form = forms.BasicInformation(request.POST)
-        if links_form.is_valid():
-            #TODO: Handle the Form
-            pass
+        links_form = forms.LinksAndSocialMedia(request.POST)
+        if basic_info_form.is_valid() and links_form.is_valid():
+            #TODO: Use this solution: https://stackoverflow.com/questions/1355150/django-when-saving-how-can-you-check-if-a-field-has-changed/1793323#1793323
+            redirect('organizations:list')
     else:
         # Load Form's initial data
         urls = OrganizationURL.objects.filter(org=organization)

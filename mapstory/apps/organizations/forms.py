@@ -10,12 +10,12 @@ class BasicInformation(forms.Form):
         - Display Photo
         - About
     """
-    name = forms.CharField()
-    slogan = forms.CharField()
-    city = forms.CharField()
-    country = forms.CharField()
-    image = forms.FileField()
-    about = forms.CharField(widget=forms.Textarea)
+    name = forms.CharField(required=True)
+    slogan = forms.CharField(required=True)
+    city = forms.CharField(required=False)
+    country = forms.CharField(required=False)
+    image = forms.FileField(required=False)
+    about = forms.CharField(widget=forms.Textarea, required=True)
 
 class LinksAndSocialMedia(forms.Form):
     """
@@ -28,11 +28,11 @@ class LinksAndSocialMedia(forms.Form):
         - Github
         - Instragram
     """
-    url0 = forms.URLField()
-    url1 = forms.URLField()
-    url2 = forms.URLField()
-    facebook = forms.URLField()
-    twitter = forms.URLField()
-    linkedin = forms.URLField()
-    github = forms.URLField()
-    instragram = forms.URLField()
+    url0 = forms.URLField(required=False)
+    url1 = forms.URLField(required=False)
+    url2 = forms.URLField(required=False)
+    facebook = forms.URLField(required=False)
+    twitter = forms.URLField(required=False)
+    linkedin = forms.URLField(required=False)
+    github = forms.URLField(required=False)
+    instragram = forms.URLField(required=False)

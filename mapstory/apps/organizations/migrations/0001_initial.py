@@ -24,6 +24,9 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('last_updated', models.DateTimeField(auto_now=True)),
+                ('city', models.CharField(default=b'', max_length=255)),
+                ('country', models.CharField(default=b'', max_length=255)),
+                ('image', models.FileField(null=True, upload_to=b'')),
             ],
             options={
                 'verbose_name_plural': 'Organizations',
@@ -35,6 +38,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('last_updated', models.DateTimeField(auto_now=True)),
+                ('is_featured', models.BooleanField(default=False)),
                 ('layer', models.ForeignKey(to='layers.Layer')),
             ],
         ),
@@ -44,6 +48,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('last_updated', models.DateTimeField(auto_now=True)),
+                ('is_featured', models.BooleanField(default=False)),
                 ('mapstory', models.ForeignKey(to='mapstories.MapStory')),
             ],
         ),
@@ -67,6 +72,7 @@ class Migration(migrations.Migration):
             name='OrganizationSocialMedia',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(default=b'blank', max_length=255)),
                 ('icon', models.CharField(max_length=255)),
                 ('url', models.URLField()),
                 ('organization', models.ForeignKey(to='organizations.Organization')),
