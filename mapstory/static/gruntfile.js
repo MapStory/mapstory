@@ -46,9 +46,13 @@ module.exports = function(grunt) {
             'mapstory/js/src/search/**/*.js',
             // exclude test files
             '!mapstory/js/**/*.spec.js'
-           ]
-          }
-        },
+          ],
+          // simply copy geogig from src to dist for now
+          'mapstory/js/dist/mapstory.geogig.js':[
+            'mapstory/js/src/mapstory.geogig.js'
+          ]
+        }
+      },
       vendor:{
         files: {
            'mapstory/js/dist/vendor-assets-min.js':[

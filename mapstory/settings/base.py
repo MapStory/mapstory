@@ -23,6 +23,7 @@ import logging
 import os
 import sys
 
+import geonode
 from geonode.settings import *
 import pyproj
 
@@ -121,7 +122,8 @@ COMMENTS_APP = 'fluent_comments'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(LOCAL_ROOT, 'templates')],
+        'DIRS': [os.path.join(LOCAL_ROOT, 'templates'),
+                 os.path.join(os.path.dirname(geonode.__file__), 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -482,7 +484,8 @@ DEFAULT_IMPORTER_CONFIG = {
     'editable': True,
     'convert_to_date': [],
     'always_geogig': True,
-    'index': 0
+    'index': 0,
+    'permissions': {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}, 'groups':{'registered':['change_layer_style']}}
 }
 
 # Append only needs to import to temporarily store changes, so we turn off editable and the geogig history.
