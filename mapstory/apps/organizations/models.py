@@ -28,7 +28,7 @@ class Organization(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     city = models.CharField(default='', max_length=255)
     country = models.CharField(default='', max_length=255)
-    image = models.FileField(null=True)
+    image = models.FileField(null=True, blank=True)
 
 
     class Meta:
@@ -166,6 +166,7 @@ class OrganizationMembership(models.Model):
 
 
 
+
 class OrganizationLayer(models.Model):
     """Represents a Layer that is sponsored by an Organization"""
     membership = models.ForeignKey(OrganizationMembership)
@@ -183,7 +184,7 @@ class OrganizationLayer(models.Model):
 class OrganizationSocialMedia(models.Model):
     """Represents a Social media Link shown on the Organization's detail Page"""
     organization = models.ForeignKey(Organization)
-    name = models.CharField(max_length=255, default="blank")
+    name = models.CharField(max_length=255)
     icon = models.CharField(max_length=255)
     url = models.URLField()
 

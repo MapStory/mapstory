@@ -171,6 +171,18 @@ def add_membership(request, pk, user_pk):
 
     return redirect(request, reverse('organizations:manager', kwargs={'pk':pk}))
 
+def _edit_organization_with_forms(organization, basic, links):
+    # TODO: Use this solution: https://stackoverflow.com/questions/1355150/django-when-saving-how-can-you-check-if-a-field-has-changed/1793323#1793323
+    organization.title = basic.cleaned_data['name']
+    organization.about = basic.cleaned_data['about']
+    organization.city = basic.cleaned_data['city']
+    organization.slogan = basic.cleaned_data['slogan']
+    organization.country = basic.cleaned_data['country']
+    organization.image = basic.cleaned_data['image']
+    organization.save()
+
+    # TODO: Handle Links
+
 
 @login_required
 def manager(request, pk):
@@ -194,8 +206,8 @@ def manager(request, pk):
         basic_info_form = forms.BasicInformation(request.POST)
         links_form = forms.LinksAndSocialMedia(request.POST)
         if basic_info_form.is_valid() and links_form.is_valid():
-            #TODO: Use this solution: https://stackoverflow.com/questions/1355150/django-when-saving-how-can-you-check-if-a-field-has-changed/1793323#1793323
-            redirect('organizations:list')
+            _edit_organization_with_forms(organization, basic_info_form, links_form)
+
     else:
         # Load Form's initial data
         urls = OrganizationURL.objects.filter(org=organization)
@@ -208,6 +220,9 @@ def manager(request, pk):
             'name': organization.title,
             'slogan': organization.slogan,
             'about': organization.about,
+            'country': organization.country,
+            'city': organization.city,
+            'image': organization.image,
         }
         links = {
             'url0': urls.first() or "",
