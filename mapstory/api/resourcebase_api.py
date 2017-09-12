@@ -130,7 +130,6 @@ class CommonModelApi(ModelResource):
         return queryset.filter(intersects)
 
     def build_haystack_filters(self, parameters):
-        from haystack.inputs import Raw
         from haystack.query import SearchQuerySet, SQ  # noqa
 
         sqs = None
@@ -211,32 +210,39 @@ class CommonModelApi(ModelResource):
                     SQ(content__exact=phrase)
                 )
             else:
+                print 'WE FOUND IT'
                 words = [
                     w for w in re.split(
                         '\W',
                         query,
                         flags=re.UNICODE) if w]
+                print words
                 for i, search_word in enumerate(words):
                     if i == 0:
+                        print 'we did it'
+                        print query
+                        print search_word
                         sqs = (SearchQuerySet() if sqs is None else sqs) \
                             .filter(
-                            SQ(title=Raw(search_word)) |
-                            SQ(description=Raw(search_word)) |
-                            SQ(content=Raw(search_word))
+                            SQ(title__contains=search_word) |
+                            SQ(description__contains=search_word) |
+                            SQ(content__contains=search_word)
                         )
+                        print sqs
+                        print sqs.count()
                     elif search_word in ["AND", "OR"]:
                         pass
                     elif words[i - 1] == "OR":  # previous word OR this word
                         sqs = sqs.filter_or(
-                            SQ(title=Raw(search_word)) |
-                            SQ(description=Raw(search_word)) |
-                            SQ(content=Raw(search_word))
+                            SQ(title__contains=search_word) |
+                            SQ(description__contains=search_word) |
+                            SQ(content__contains=search_word)
                         )
                     else:  # previous word AND this word
                         sqs = sqs.filter(
-                            SQ(title=Raw(search_word)) |
-                            SQ(description=Raw(search_word)) |
-                            SQ(content=Raw(search_word))
+                            SQ(title__contains=search_word) |
+                            SQ(description__contains=search_word) |
+                            SQ(content__contains=search_word)
                         )
 
         # filter by category
