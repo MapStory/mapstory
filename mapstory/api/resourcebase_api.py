@@ -210,26 +210,19 @@ class CommonModelApi(ModelResource):
                     SQ(content__exact=phrase)
                 )
             else:
-                print 'WE FOUND IT'
                 words = [
                     w for w in re.split(
                         '\W',
                         query,
                         flags=re.UNICODE) if w]
-                print words
                 for i, search_word in enumerate(words):
                     if i == 0:
-                        print 'we did it'
-                        print query
-                        print search_word
                         sqs = (SearchQuerySet() if sqs is None else sqs) \
                             .filter(
                             SQ(title__contains=search_word) |
                             SQ(description__contains=search_word) |
                             SQ(content__contains=search_word)
                         )
-                        print sqs
-                        print sqs.count()
                     elif search_word in ["AND", "OR"]:
                         pass
                     elif words[i - 1] == "OR":  # previous word OR this word
