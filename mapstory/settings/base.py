@@ -483,7 +483,8 @@ DEFAULT_IMPORTER_CONFIG = {
     'editable': True,
     'convert_to_date': [],
     'always_geogig': True,
-    'index': 0
+    'index': 0,
+    'permissions': {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}, 'groups':{'registered':['change_layer_style']}}
 }
 
 # Append only needs to import to temporarily store changes, so we turn off editable and the geogig history.
