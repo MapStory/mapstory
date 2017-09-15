@@ -39,6 +39,11 @@ docker-compose logs <container>
 docker-compose logs -f <container> #follow the log file
 ```
 
+To view your interactive debug statements:
+```
+docker attach mapstory_django_1
+```
+
 To gain a shell in a container:
 ```
 docker-compose exec <container> /bin/sh
