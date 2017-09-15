@@ -132,6 +132,13 @@ def membership_detail(request, org_pk, membership_pk):
 
 
 def add_layer(request, pk, layer_pk):
+    """
+    Adds a layer to an Organization.
+    :param request: HTTP request.
+    :param pk: The Organization id.
+    :param layer_pk: The Layer id.
+    :return: An HTTPResponse
+    """
 
     membership = OrganizationMembership.objects.get(user_id=request.user.pk, organization_id=pk)
 
@@ -158,11 +165,35 @@ def add_layer(request, pk, layer_pk):
 
 
 def add_mapstory(request, pk, mapstory_pk):
-    if request.method.POST:
-        # TODO: Handle form POST
-        # TODO: Check user's permissions
-        pass
-    return render(request, 'organizations/confirm_add.html', {})
+    """
+    Adds a Mapstory to an Organization.
+    :param request: HTTPRequest
+    :param pk: Organizaion id
+    :param mapstory_pk: Mapstory id
+    :return: HTTPResponse
+    """
+    membership = OrganizationMembership.objects.get(user_id=request.user.pk, organization_id=pk)
+
+    # TODO: Return a proper response
+    if (not membership.is_admin) or (not membership.is_active):
+        return HttpResponse("You are not allowed to do this.")
+
+    if request.method == 'POST':
+        # Check if not already added
+        found = OrganizationMapStory.objects.filter(organization_id=pk, mapstory_id=mapstory_pk)
+
+        if found.count() > 0:
+            # TODO: Return a proper error
+            return HttpResponse("This Mapstory has already been added to this Organization.")
+        else:
+            obj = OrganizationMapStory()
+            obj.organization_id = pk
+            obj.mapstory_id = mapstory_pk
+            obj.membership = membership
+            obj.save()
+            # TODO: Show a confirmation message
+
+    return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
 
 
 @login_required
@@ -217,7 +248,7 @@ def manager(request, pk):
     membership = get_object_or_404(OrganizationMembership, organization=organization, user=request.user)
     if not membership.is_admin:
         # User is NOT AUTHORIZED!
-        return HttpResponseForbidden()
+        return HttpResponse("You are not authorized!")
 
     # Determine the type of HTTP request
     if request.method == 'POST':

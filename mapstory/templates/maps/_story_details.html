@@ -88,21 +88,27 @@
                 </div>
 
                 <div class="col-sm-11">
-                    {% if request.user.is_authenticated %}
+                {% if request.user.is_authenticated %}
                     {% if organizations.count > 0 %}
-                    <div class="story-layers">
-                        <div><h3> Organizations </h3></div>
+                    <div>
+                        <h3> Add to Organization </h3>
                         <hr>
                         <div class="col-sm-9 tab-content">
                         <div class='row'>
                             {% for org in organizations %}
-                                <a href="#">{{ org.organization }}</a>
+                            <div>
+                                <form action="{% url "organizations:add_mapstory" pk=org.organization.pk mapstory_pk=resource.pk %}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <input type="submit" class="button" value="{{ org.organization }}">
+                                </form>
+                            </div>
                             {% endfor %}
                         </div>
                         </div>
                     </div>
                     {% endif %}
-                    {% endif %}
+                {% endif %}
                     <div class="Summary">
                         <div><h3>Summary</h3></div>
                         <hr>

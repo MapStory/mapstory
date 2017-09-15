@@ -1089,16 +1089,12 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
     org_stories = OrganizationMapStory.objects.filter(mapstory=map_obj)
 
     org_admin_memberships = []
-    for org_story in org_stories:
-        found_membership = OrganizationMembership.objects.filter(
-            user=request.user,
-            organization=org_story.organization,
-            is_admin=True
-        )
+    memberships = OrganizationMembership.objects.filter(user_id = request.user.pk)
 
-        if found_membership.count() > 0:
-            for m in found_membership:
-                org_admin_memberships.append(m)
+    for membership in memberships.all():
+        if membership.is_admin:
+            org_admin_memberships.append(membership)
+
 
     context_dict = {
         'config': config,
