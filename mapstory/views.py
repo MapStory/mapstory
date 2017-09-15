@@ -918,23 +918,12 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     share_title = "%s by %s." % (layer.title, layer.owner)
     share_description = layer.abstract
 
-    # Organizations this Layer belongs to.
-    organization_layers = OrganizationLayer.objects.filter(layer=layer)
-
+    admin_memberships = []
     # Check if user is admin in one of those organizations
-    org_admin_memberships = []
-    for org_layer in organization_layers:
-        found_membership = OrganizationMembership.objects.filter(
-            user=request.user,
-            organization=org_layer.organization,
-            is_admin=True
-        )
-
-        if found_membership.count() > 0:
-            for m in found_membership:
-                org_admin_memberships.append(m)
-
-
+    users_org_memberships = OrganizationMembership.objects.filter(user_id=request.user.pk)
+    for membership in users_org_memberships.all():
+        if membership.is_admin:
+            admin_memberships.append(membership)
 
     context_dict = {
         "resource": layer,
@@ -953,7 +942,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "share_url": share_url,
         "share_title": share_title,
         "share_description": share_description,
-        "organizations":org_admin_memberships,
+        "organizations":admin_memberships,
     }
 
     context_dict["viewer"] = json.dumps(

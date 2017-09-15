@@ -59,12 +59,12 @@
         <div class="side-column-header">Use this Layer</div>
         <a href="{% url "new-story" %}?layer={{ resource.service_typename }}" target="_blank">
             <button class="btn btn-block btn-detailpage">{% trans "Compose Story" %}</button>
-        </a> 
+        </a>
         {% if resource.storeType != "remoteStore" and "download_resourcebase" in perms %}
             <a href="#" data-toggle="modal" data-target="#download-layer">
                 <button class="btn btn-block btn-detailpage">{% trans "Download Layer" %}
                 </button>
-            </a>   
+            </a>
             {% include "layers/_download_modal.html" %}
         {% endif %}
         {% if "delete_resourcebase" in perms %}
@@ -73,6 +73,18 @@
                     <i class="fa fa-trash"></i> {% trans "Delete Layer" %}
                 </button>
             </a>
+        {% endif %}
+        {#TODO: Check if user has permissions for this#}
+        {% if request.user.is_authenticated %}
+            {% if organizations.count > 0 %}
+                <div class="side-column-header">Use on Org Page</div>
+                {% for org in organizations %}
+                    <form action="{% url 'organizations:add_layer' pk=org.organization.pk layer_pk=resource.pk %}" method="post">
+                        {% csrf_token %}
+                        <input class="btn btn-block btn-detailpage" type="submit" name="add_to_layers" value="{{ org.organization }}" />
+                    </form>
+                {% endfor %}
+            {% endif %}
         {% endif %}
 
     {% else %}

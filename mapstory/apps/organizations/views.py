@@ -132,11 +132,30 @@ def membership_detail(request, org_pk, membership_pk):
 
 
 def add_layer(request, pk, layer_pk):
+    return redirect(reverse("organizations:list"))
+    # TODO: Check user's permissions
+    org = Organization.objects.first()
+    membership = OrganizationMembership.objects.get(user_id=org, organization_id=pk)
+
+    if not membership.is_active:
+        return HttpResponseForbidden()
+
     if request.method.POST:
-        # TODO: Handle form POST
-        # TODO: Check user's permissions
-        pass
-    return render(request, 'organizations/confirm_add.html', {})
+        # Check if not already added
+        found = OrganizationLayer.objects.filter(organization=org, layer_id=layer_pk)
+
+        if found.count() > 0:
+            # TODO: Return a proper error
+            return redirect("organizations:list")
+        else:
+            obj = OrganizationLayer()
+            obj.organization = org
+            obj.layer_id = layer_pk
+            obj.membership = membership
+            obj.save()
+            # TODO: Show a confirmation message
+
+    return redirect(reverse("organizations:list"))
 
 
 def add_mapstory(request, pk, mapstory_pk):

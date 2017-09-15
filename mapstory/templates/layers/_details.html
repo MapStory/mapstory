@@ -33,17 +33,6 @@
                                         {{ resource.owner.username }}
                                     {% endif %}
                                 </a> on {{ resource.date|date }}
-                                {% if request.user.is_authenticated %}
-                                    {% if organizations.count > 0 %}
-                                        <br />
-                                        <h3>Add to Organization:</h3>
-                                        <br />
-                                        {% for org in organizations %}
-                                            <a>{{ org.organization }}</a>
-                                            <br />
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endif %}
                             </span>
                         </div>
                     </div>
