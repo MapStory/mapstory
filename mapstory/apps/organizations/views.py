@@ -6,7 +6,7 @@ from   django.contrib.auth import get_user_model
 
 from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationLayer, OrganizationMapStory, \
     OrganizationSocialMedia
-
+A
 from . import forms
 
 User = get_user_model()
@@ -103,7 +103,6 @@ def organization_detail(request, pk):
 
     return render(request, 'organizations/organization_detail.html', context)
 
-
 def organization_list(request):
     """Organization List View.
     Shows a list of Organizations.
@@ -114,7 +113,6 @@ def organization_list(request):
         'organizations': Organization.objects.filter(is_active=True),
     }
     return render(request, 'organizations/organization_list.html', context)
-
 
 def membership_detail(request, org_pk, membership_pk):
     """Membership Detail View.
@@ -163,7 +161,6 @@ def add_layer(request, pk, layer_pk):
 
     return redirect(reverse("organizations:detail", kwargs={'pk':pk}))
 
-
 def add_mapstory(request, pk, mapstory_pk):
     """
     Adds a Mapstory to an Organization.
@@ -195,9 +192,15 @@ def add_mapstory(request, pk, mapstory_pk):
 
     return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
 
-
 @login_required
 def add_membership(request, pk, user_pk):
+    """
+    Creates a new membership.
+    :param request: HttpRequest.
+    :param pk: The organization's id.
+    :param user_pk: The user's id.
+    :return: HTTPResponse
+    """
     # Check that we are admins
     organization = get_object_or_404(Organization, pk=pk)
     membership = get_object_or_404(OrganizationMembership, organization=organization, user=request.user)
@@ -221,6 +224,13 @@ def add_membership(request, pk, user_pk):
     return redirect(request, reverse('organizations:manager', kwargs={'pk':pk}))
 
 def _edit_organization_with_forms(organization, basic, links):
+    """
+    Helper function for for setting an organization's data from forms.
+    :param organization: The organization
+    :param basic: The Basic information form
+    :param links: The Links form
+    :return:
+    """
     # TODO: Use this solution: https://stackoverflow.com/questions/1355150/django-when-saving-how-can-you-check-if-a-field-has-changed/1793323#1793323
     organization.title = basic.cleaned_data['name']
     organization.about = basic.cleaned_data['about']
@@ -231,7 +241,6 @@ def _edit_organization_with_forms(organization, basic, links):
     organization.save()
 
     # TODO: Handle Links
-
 
 @login_required
 def manager(request, pk):
@@ -258,6 +267,7 @@ def manager(request, pk):
             _edit_organization_with_forms(organization, basic_info_form, links_form)
 
     else:
+        # GET:
         # Load Form's initial data
         urls = OrganizationURL.objects.filter(org=organization)
         facebook = OrganizationSocialMedia.objects.filter(icon="fa-facebook", organization=organization)
@@ -284,7 +294,7 @@ def manager(request, pk):
             'instagram': instragram.first().url if instragram.first() else "",
         }
 
-
+        # Set the forms initial data
         basic_info_form = forms.BasicInformation(initial=info)
         links_form = forms.LinksAndSocialMedia(initial=links)
 
