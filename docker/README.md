@@ -39,7 +39,7 @@ docker-compose logs <container>
 docker-compose logs -f <container> #follow the log file
 ```
 
-To view your interactive debug statements:
+To view your interactive debug statements: (use ctrl+p ctrl+q to exit)
 ```
 docker attach mapstory_django_1
 ```
