@@ -132,30 +132,29 @@ def membership_detail(request, org_pk, membership_pk):
 
 
 def add_layer(request, pk, layer_pk):
-    return redirect(reverse("organizations:list"))
-    # TODO: Check user's permissions
-    org = Organization.objects.first()
-    membership = OrganizationMembership.objects.get(user_id=org, organization_id=pk)
 
-    if not membership.is_active:
+    membership = OrganizationMembership.objects.get(user_id=request.user.pk, organization_id=pk)
+
+    # TODO: Return a proper response
+    if (not membership.is_admin) or (not membership.is_active):
         return HttpResponseForbidden()
 
-    if request.method.POST:
+    if request.method == 'POST':
         # Check if not already added
-        found = OrganizationLayer.objects.filter(organization=org, layer_id=layer_pk)
+        found = OrganizationLayer.objects.filter(organization_id=pk, layer_id=layer_pk)
 
         if found.count() > 0:
             # TODO: Return a proper error
-            return redirect("organizations:list")
+            return HttpResponseForbidden()
         else:
             obj = OrganizationLayer()
-            obj.organization = org
+            obj.organization_id = pk
             obj.layer_id = layer_pk
             obj.membership = membership
             obj.save()
             # TODO: Show a confirmation message
 
-    return redirect(reverse("organizations:list"))
+    return redirect(reverse("organizations:detail", kwargs={'pk':pk}))
 
 
 def add_mapstory(request, pk, mapstory_pk):
