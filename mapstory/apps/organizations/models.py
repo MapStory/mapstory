@@ -30,7 +30,6 @@ class Organization(models.Model):
     country = models.CharField(default='', max_length=255)
     image = models.FileField(null=True, blank=True)
 
-
     class Meta:
         verbose_name_plural = 'Organizations'
 
@@ -132,7 +131,6 @@ class Organization(models.Model):
         return OrganizationMapStory(mapstory=mapstory, organization=self, membership=membership)
 
 
-
 class OrganizationURL(models.Model):
     """A Link that is displayed in the Organization's page."""
     url = models.CharField(max_length=255)
@@ -140,7 +138,6 @@ class OrganizationURL(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.url
-
 
 
 class OrganizationMembership(models.Model):
@@ -165,8 +162,6 @@ class OrganizationMembership(models.Model):
         verbose_name_plural = 'Memberships'
 
 
-
-
 class OrganizationLayer(models.Model):
     """Represents a Layer that is sponsored by an Organization"""
     membership = models.ForeignKey(OrganizationMembership)
@@ -180,7 +175,6 @@ class OrganizationLayer(models.Model):
         return u'%s' % self.layer
 
 
-
 class OrganizationSocialMedia(models.Model):
     """Represents a Social media Link shown on the Organization's detail Page"""
     organization = models.ForeignKey(Organization)
@@ -190,7 +184,6 @@ class OrganizationSocialMedia(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.url
-
 
 
 class OrganizationMapStory(models.Model):

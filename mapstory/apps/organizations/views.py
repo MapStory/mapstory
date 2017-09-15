@@ -137,7 +137,7 @@ def add_layer(request, pk, layer_pk):
 
     # TODO: Return a proper response
     if (not membership.is_admin) or (not membership.is_active):
-        return HttpResponseForbidden()
+        return HttpResponse("You are not allowed to do this.")
 
     if request.method == 'POST':
         # Check if not already added
@@ -145,7 +145,7 @@ def add_layer(request, pk, layer_pk):
 
         if found.count() > 0:
             # TODO: Return a proper error
-            return HttpResponseForbidden()
+            return HttpResponse("This layer has already been added to this Organization.")
         else:
             obj = OrganizationLayer()
             obj.organization_id = pk
