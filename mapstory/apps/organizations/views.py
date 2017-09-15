@@ -6,7 +6,7 @@ from   django.contrib.auth import get_user_model
 
 from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationLayer, OrganizationMapStory, \
     OrganizationSocialMedia
-A
+
 from . import forms
 
 User = get_user_model()
