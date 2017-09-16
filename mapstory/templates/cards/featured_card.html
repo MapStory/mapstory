@@ -6,20 +6,10 @@
             <img src="{{ layer.layer.thumbnail_url }}" class="card-shadow" />
         </a>
         {% if membership %}
-            {% if layer.layer.owner == membership.user %}
-                <div>
-                    <a href="#">request remove</a>
-                </div>
-            {% endif %}
-
             {% if membership.is_admin %}
-                {% if layer.is_featured %}
+                {#TODO: Implement this#}
                 <div>
-                    <a href="#">remove from featured</a>
-                </div>
-                {% endif %}
-                <div>
-                    <a href="#">remove from layers</a>
+                    <a href="#">remove from Featured</a>
                 </div>
             {% endif %}
         {% endif %}

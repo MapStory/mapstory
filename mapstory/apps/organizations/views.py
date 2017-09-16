@@ -23,17 +23,17 @@ def organization_detail(request, pk):
     # Determine the type of HTTP request
     if request.method == "POST":
         # Handle form data
-        if request.POST.get("request_remove_layer"):
+        if request.POST.get("add_featured_layer"):
             layer_pk = request.POST.get("layer_pk")
             found_layer = get_object_or_404(OrganizationLayer, organization=org, layer__pk=layer_pk)
-            # TODO: Request admin to remove this layer
+            found_layer.is_featured = True
+            found_layer.save()
 
         elif request.POST.get("remove_layer"):
             layer_pk = request.POST.get("layer_pk")
             found_layer = get_object_or_404(OrganizationLayer, organization=org, layer__pk=layer_pk)
             found_layer.delete()
             #TODO: Send a Django Message to confirm
-
 
         elif request.POST.get("remove_featured_layer"):
             layer_pk = request.POST.get("layer_pk")
@@ -52,12 +52,6 @@ def organization_detail(request, pk):
             found_mapstory = get_object_or_404(OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
             found_mapstory.is_featured = False
             found_mapstory.save()
-
-        elif request.POST.get("request_remove_mapstory"):
-            mapstory_pk = request.POST.get("mapstory_pk")
-            found_mapstory = get_object_or_404(OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
-            #TODO: Ask the admin to remove this
-
 
     members = OrganizationMembership.objects.filter(organization=org)
     org_urls = OrganizationURL.objects.filter(org=org)
