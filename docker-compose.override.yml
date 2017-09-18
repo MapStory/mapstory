@@ -77,6 +77,8 @@ services:
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
 #    ports:
 #      - "8000:8000"
+    stdin_open: true
+    tty: true
 
   celery:
     image: quay.io/mapstory/django:master

@@ -20,6 +20,7 @@ PasteDeploy
 django-haystack==2.4.0
 elasticsearch==1.6.0
 django-slack==4.1.0
+ipdb==0.10.3
 
 # Celery Requirements
 celery==3.1.23
