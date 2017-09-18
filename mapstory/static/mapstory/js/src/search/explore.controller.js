@@ -86,24 +86,6 @@
       $scope.search();
     };
 
-    // Volunteer Technical Community checkbox is a front-end show/hide filter
-    // The following functions toggle the visibility of the _result_users card
-
-    vm.clearVTC = function(){
-      vm.VTCisChecked = false;
-      $scope.itemFilter = { is_active: true };
-      $scope.search();
-    };
-
-    vm.filterVTC = function() {
-      // When VTC check box is clicked, also filter by VTC; when unchecked, reset it
-      if (vm.VTCisChecked) {
-        $scope.itemFilter = {Volunteer_Technical_Community: true}; 
-      } else {
-        $scope.itemFilter = { is_active: true };  
-      }
-    };
-
     //////////////
     /* ORDERING */
     //set default order methods for content and storyteller
