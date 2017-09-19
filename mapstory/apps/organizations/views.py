@@ -76,7 +76,6 @@ def organization_detail(request, pk):
             'is_featured': l.is_featured
         })
 
-
     for m in org_mapstories:
         share_url = "https://%s/story/%s" % (request.get_host(), m.mapstory.id)
         mapstories.append({

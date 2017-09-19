@@ -6,17 +6,6 @@
             </a>
             {% if membership %}
                 <div class="manage-container">
-                {% if mapstory.mapstory.owner == membership.user %}
-                    <div class="org_button">
-                        <form action="." method="post">
-                            {% csrf_token %}
-                            <input type="hidden" value="{{ mapstory.mapstory.pk }}" name="mapstory_pk">
-                            <input class="button" type="submit" name="request_remove_mapstory" value="request remove" />
-                        </form>
-                        <a href="#"></a>
-                    </div>
-                {% endif %}
-
                 {% if membership.is_admin %}
                     {% if layer.is_featured %}
                     <div class="org_button">
