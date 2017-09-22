@@ -4,28 +4,36 @@
             <a href="{{ mapstory.url}}">
                 <img src="{{ mapstory.mapstory.thumbnail_url }}" class="card-shadow" />
             </a>
-            {% if membership %}
-                <div class="manage-container">
-                {% if membership.is_admin %}
-                    {% if layer.is_featured %}
-                    <div class="org_button">
-                        <form action="." method="post">
-                            {% csrf_token %}
-                            <input type="hidden" value="{{ mapstory.mapstory.pk }}" name="mapstory_pk">
-                            <input class="button" type="submit" name="remove_featured_mapstory" value="remove from featured" />
-                        </form>
-                    </div>
-                    {% endif %}
-                    <div class="org_button">
-                        <form action="." method="post">
-                            {% csrf_token %}
-                            <input type="hidden" value="{{ mapstory.mapstory.pk }}" name="mapstory_pk">
-                            <input class="button" type="submit" name="remove_mapstory" value="remove from mapstories" />
-                        </form>
-                    </div>
+        {% if membership %}
+            <div class="manage-container">
+            {% if membership.is_admin %}
+                {% if mapstory.is_featured %}
+                <div class="org_button">
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ mapstory.mapstory.pk }}" name="mapstory_pk">
+                        <input class="card-button" type="submit" name="remove_featured_mapstory" value="Remove from Featured" />
+                    </form>
+                </div>
+                {% else %}
+                <div class="org_button">
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ mapstory.mapstory.pk }}" name="mapstory_pk">
+                        <input class="card-button" type="submit" name="add_featured_mapstory" value="Add to Featured" />
+                    </form>
+                </div>
                 {% endif %}
+                <div class="org_button">
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ mapstory.mapstory.pk }}" name="mapstory_pk">
+                        <input class="card-button" type="submit" name="remove_mapstory" value="Remove from Organization" />
+                    </form>
                 </div>
             {% endif %}
+            </div>
+        {% endif %}
         </div>
 
         <div>

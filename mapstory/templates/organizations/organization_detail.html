@@ -13,8 +13,6 @@
                         <li><a href="#">{{ org.title }} Home</a></li>
                         <li><a href="#org-mapstories-section">MapStories</a></li>
                         <li><a href="#org-layers-section">StoryLayers</a></li>
-                        <li><a href="#org-journal-section">Journal</a></li>
-                        <li><a href="#org-activity-feed-section">Activity Feed</a></li>
                     </ul>
                 </div>
 
@@ -84,12 +82,6 @@
                     {% for mapstory in mapstories %}
                         {% include "cards/mapstory_card.html" with mapstory=mapstory %}
                     {% endfor %}
-                </section>
-                <section id="org-journal-section">
-                    <h2>Journal</h2>
-                </section>
-                <section id="org-activity-feed-section">
-                    <h2>Activity Feed</h2>
                 </section>
             {% endblock %}
             </div>

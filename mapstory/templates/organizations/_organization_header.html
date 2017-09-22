@@ -8,6 +8,11 @@
     <div class="organization_header">
         <h1>{{ org.title }}</h1>
         <h4 class="org-slogan">{{ org.slogan }}</h4>
+        <div>
+        {% if not membership %}
+            <a><div class="button org-join-button">Join this Organization</div></a>
+        {% endif %}
+        </div>
     </div>
     <div style="clear: both;"></div>
 </div>

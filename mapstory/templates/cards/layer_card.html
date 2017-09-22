@@ -13,7 +13,7 @@
                     <form action="." method="post">
                         {% csrf_token %}
                         <input type="hidden" value="{{ layer.layer.pk }}" name="layer_pk">
-                        <input class="button" type="submit" name="remove_featured_layer" value="Remove from Featured" />
+                        <input class="card-button" type="submit" name="remove_featured_layer" value="Remove from Featured" />
                     </form>
                 </div>
                 {% else %}
@@ -21,7 +21,7 @@
                     <form action="." method="post">
                         {% csrf_token %}
                         <input type="hidden" value="{{ layer.layer.pk }}" name="layer_pk">
-                        <input class="button" type="submit" name="add_featured_layer" value="Add to Featured" />
+                        <input class="card-button" type="submit" name="add_featured_layer" value="Add to Featured" />
                     </form>
                 </div>
                 {% endif %}
@@ -29,7 +29,7 @@
                     <form action="." method="post">
                         {% csrf_token %}
                         <input type="hidden" value="{{ layer.layer.pk }}" name="layer_pk">
-                        <input class="button" type="submit" name="remove_layer" value="remove from layers" />
+                        <input class="card-button" type="submit" name="remove_layer" value="Remove from Organization" />
                     </form>
                 </div>
             {% endif %}
