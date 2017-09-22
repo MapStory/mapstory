@@ -54,6 +54,7 @@
 
             <div class="org_right_column">
             {% block organization_content %}
+                <!-- FEATURED -->
                 <section id="org-featured">
                     <div>
                         <h2>Featured StoryLayers &amp; MapStories</h2>
@@ -69,23 +70,24 @@
                         {% endfor %}
                     </div>
                 </section>
-
-                <section id="org-layers-section">
-                    <h2>Layers</h2>
-                    {% for layer in layers %}
-                        {% include "cards/layer_card.html" with layer=layer %}
-                    {% endfor %}
-                </section>
-
+                <!-- MAPSTORIES -->
                 <section id="org-mapstories-section">
                     <h2>MapStories</h2>
                     {% for mapstory in mapstories %}
                         {% include "cards/mapstory_card.html" with mapstory=mapstory %}
                     {% endfor %}
                 </section>
+                <!-- LAYERS -->
+                <section id="org-layers-section">
+                    <h2>Layers</h2>
+                    {% for layer in layers %}
+                        {% include "cards/layer_card.html" with layer=layer %}
+                    {% endfor %}
+                </section>
             {% endblock %}
             </div>
-            <div style="clear: both;"></div>
+            <div style="clear: both;">
+            </div>
         </div>
     </div>
 {% endblock %}

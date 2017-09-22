@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model, authenticate
 
 from mapstory.tests.utils import get_test_user, create_mapstory
-from .models import Organization, OrganizationURL, OrganizationMembership
+from .models import Organization, OrganizationURL, OrganizationMembership, JoinRequest
 
 User = get_user_model()
 testUser = get_test_user()
@@ -131,13 +131,6 @@ class TestOrganizations(TestCase):
     def test_add_mapstory(self):
         organization = None
         mapstory = ""
-        #response = self.client.get(
-        #    reverse('organizations:add_mapstory'),
-        #    kargs = {
-        #        'org_pk' = organization.pk,
-        #        'mapstory_pk' = mapstory.pk,
-        #    }
-        #)
         # TODO: Finish this
         pass
 
@@ -169,14 +162,59 @@ class TestOrganizations(TestCase):
         o = Organization()
         o.title = "Test Organization"
         o.save()
-
         o.add_url('https://mapstory.org')
         # Add some members:
-        o.add_member(User.objects.create_user(username="usernametest", password="apassword"), is_admin=True)
-
+        o.add_member(
+            User.objects.create_user(
+                username="usernametest",
+                password="apassword"
+            ),
+            is_admin=True
+        )
         response = self.client.get(o.get_absolute_url())
-
         self.assertContains(response, 'usernametest')
 
+    def test_anonymous_requst_to_join_redirects_to_sign_up(self):
+        # TODO: Should redirect to the signup page when no user is signed up
+        pass
+
+    def test_request_to_join(self):
+        organization = Organization.objects.create(title="Test")
+        # GET request should redirect us to the organization's page
+        join_url = reverse(
+            'organizations:request_membership',
+            kwargs={'pk': organization.pk}
+        )
+
+        get_response = self.client.get(join_url, follow=True)
+        self.assertEqual(get_response.status_code, 200)
+        self.assertTemplateUsed("organization_detail")
 
 
+        initial_request_count = JoinRequest.objects.all().count()
+        user = User.objects.create_user(
+            username='modeltester',
+            email='modeltester@models.com',
+            password='wiuwiuwiuwiu'
+        )
+        user.save()
+        # Login
+        self.assertTrue(self.client.login(username='modeltester', password='wiuwiuwiuwiu'))
+
+        response = self.client.post(
+            reverse(
+                'organizations:request_membership',
+                kwargs={'pk': organization.pk}
+            ),{'pk': organization.pk}, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        final_request_count = JoinRequest.objects.all().count()
+        self.assertEqual(final_request_count, initial_request_count + 1)
+
+    def test_accept_request_to_join(self):
+        # TODO: Accepting a request by an admin should generate a new Membership.
+        pass
+
+    def test_only_manager_can_accept_requests(self):
+        # TODO: Verify that only manager has permissions to do this.
+        pass

@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'(?P<pk>\d+)/add/layer/(?P<layer_pk>\d+)/$', views.add_layer, name='add_layer'),
     url(r'(?P<pk>\d+)/add/mapstory/(?P<mapstory_pk>\d+)/$', views.add_mapstory, name='add_mapstory'),
     url(r'(?P<pk>\d+)/add/member/(?P<user_pk>\d+)/$', views.add_membership, name='add_member'),
+    url(r'(?P<pk>\d+)/join/$', views.request_membership, name='request_membership'),
     url(r'(?P<pk>\d+)/manager/$', views.manager, name='manage'),
     url(r'(?P<pk>\d+)/$', views.organization_detail, name='detail'),
 ]

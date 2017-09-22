@@ -197,3 +197,35 @@ class OrganizationMapStory(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.mapstory
+
+class JoinRequest(models.Model):
+    """
+    Represents a request from a user to join the Organization. Must be approved by an admin.
+    """
+    organization = models.ForeignKey(Organization)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+    is_open = models.BooleanField(default=True)
+    approved_by = models.ForeignKey(OrganizationMembership, blank=True, null=True)
+
+    def approve(self, admin_membership):
+        """
+        Approve a request for membership.
+        :param admin_membership: The admin's membership that approves the request.
+        :return: A new membership if success, None if fails.
+        """
+        if not membership.is_admin:
+            # TODO: Log suspicious activity
+            return None
+
+        new_membership = OrganizationMembership()
+        new_membership.organization = self.organization
+        new_membership.user = self.user
+        new_membership.save()
+
+        self.approved_by = admin_membership
+        self.is_open = False
+        self.save()
+
+        return new_membership
