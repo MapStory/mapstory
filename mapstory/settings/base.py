@@ -559,3 +559,5 @@ ACTSTREAM_SETTINGS = {
     'USE_JSONFIELD': True,
     'GFK_FETCH_DEPTH': 1,
 }
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

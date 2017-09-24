@@ -211,6 +211,39 @@ class TestOrganizations(TestCase):
         final_request_count = JoinRequest.objects.all().count()
         self.assertEqual(final_request_count, initial_request_count + 1)
 
+    def test_duplicate_join_request(self):
+        organization = Organization.objects.create(title="Test")
+        # Should not create another
+        initial_request_count = JoinRequest.objects.all().count()
+        user = User.objects.create_user(
+            username='modeltester',
+            email='modeltester@models.com',
+            password='wiuwiuwiuwiu'
+        )
+        user.save()
+        # Login
+        self.assertTrue(self.client.login(username='modeltester', password='wiuwiuwiuwiu'))
+
+        response = self.client.post(
+            reverse(
+                'organizations:request_membership',
+                kwargs={'pk': organization.pk}
+            ), {'pk': organization.pk}, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        final_request_count = JoinRequest.objects.all().count()
+        self.assertEqual(final_request_count, initial_request_count + 1)
+
+        response = self.client.post(
+            reverse(
+                'organizations:request_membership',
+                kwargs={'pk': organization.pk}
+            ), {'pk': organization.pk}, follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+        final_request_count = JoinRequest.objects.all().count()
+        self.assertEqual(final_request_count, initial_request_count + 1)
+
     def test_accept_request_to_join(self):
         # TODO: Accepting a request by an admin should generate a new Membership.
         pass

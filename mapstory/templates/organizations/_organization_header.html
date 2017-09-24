@@ -8,11 +8,21 @@
     <div class="organization_header">
         <h1>{{ org.title }}</h1>
         <h4 class="org-slogan">{{ org.slogan }}</h4>
-        <div>
+        <div class="button-container">
         {% if not membership %}
-            <a><div class="button org-join-button">Join this Organization</div></a>
+            <form action="{% url "organizations:request_membership" pk=org.pk %}" method="post">
+                {% csrf_token %}
+                <input class="button org-join-button" type="submit" value="Join this Organization" />
+            </form>
         {% endif %}
         </div>
     </div>
     <div style="clear: both;"></div>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 </div>

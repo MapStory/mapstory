@@ -2,7 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseForbidden
 from django.core.urlresolvers import reverse
-from   django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model
+from django.contrib import messages
 
 from . import models
 from . import forms
@@ -26,30 +27,33 @@ def organization_detail(request, pk):
             found_layer = get_object_or_404(models.OrganizationLayer, organization=org, layer__pk=layer_pk)
             found_layer.is_featured = True
             found_layer.save()
+            messages.success(request, "Added Layer to Featured")
 
         elif request.POST.get("remove_layer"):
             layer_pk = request.POST.get("layer_pk")
             found_layer = get_object_or_404(models.OrganizationLayer, organization=org, layer__pk=layer_pk)
             found_layer.delete()
-            #TODO: Send a Django Message to confirm
+            messages.success(request, "Removed Layer from Organization")
 
         elif request.POST.get("remove_featured_layer"):
             layer_pk = request.POST.get("layer_pk")
             found_layer = get_object_or_404(models.OrganizationLayer, organization=org, layer__pk=layer_pk)
             found_layer.is_featured = False
             found_layer.save()
-            # TODO: Send a Django Message to confirm
+            messages.success(request, "Removed Layer from Featured")
 
         elif request.POST.get("remove_mapstory"):
             mapstory_pk = request.POST.get("mapstory_pk")
             found_mapstory = get_object_or_404(models.OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
             found_mapstory.delete()
+            messages.success(request, "Removed MapStory from Organization")
 
         elif request.POST.get("remove_featured_mapstory"):
             mapstory_pk = request.POST.get("mapstory_pk")
             found_mapstory = get_object_or_404(models.OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
             found_mapstory.is_featured = False
             found_mapstory.save()
+            messages.success(request, "Removed MapStory from Featured")
 
     members = models.OrganizationMembership.objects.filter(organization=org)
     org_urls = models.OrganizationURL.objects.filter(org=org)
@@ -266,6 +270,7 @@ def manager(request, pk):
         linkedin = models.OrganizationSocialMedia.objects.filter(icon="fa-linkedin", organization=organization)
         github = models.OrganizationSocialMedia.objects.filter(icon="fa-github", organization=organization)
         instragram = models.OrganizationSocialMedia.objects.filter(icon="fa-instragram", organization=organization)
+        join_requests = models.JoinRequest.objects.filter(organization=organization, is_open=True)
         info = {
             'name': organization.title,
             'slogan': organization.slogan,
@@ -292,13 +297,20 @@ def manager(request, pk):
     return render(request, 'organizations/manager.html', {
         'org':organization,
         'basic_form':basic_info_form,
-        'links_form':links_form
+        'links_form':links_form,
+        'join_requests': join_requests
     })
 
 def request_membership(request, pk):
     if not request.user.is_authenticated():
-        # TODO: Display the login page.
+        messages.warning(request, 'Please Log In or Sign Up before joining an Organization.')
         return redirect(reverse("index_view"))
+
+    # Make sure the Request doesnt exist yet.
+    found = models.JoinRequest.objects.filter(organization_id = pk, user=request.user.pk)
+    if found.count() > 0:
+        messages.warning(request, 'A request to join has already been made.')
+        return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
 
     if request.method == 'POST':
         # Generate a new JoinRequest
@@ -307,5 +319,6 @@ def request_membership(request, pk):
         request_to_join.is_open = True
         request_to_join.organization_id = pk
         request_to_join.save()
+        messages.success(request, 'A request to join has been made')
 
     return redirect(reverse("organizations:detail", kwargs={'pk':pk}))

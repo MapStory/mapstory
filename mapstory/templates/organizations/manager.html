@@ -55,6 +55,20 @@
                     </section>
                     <input style="width: 300px; height: 90px" class="button" type="submit" value="Submit" />
                 </form>
+                <section id="join-requests">
+                        <div class="requests-section">
+                            <h3>JOIN REQUESTS</h3>
+                            {% for request in join_requests %}
+                                <div class="join-request-card">
+                                    <p>
+                                    {{ request.user }} requested to join on {{ request.created_at }}
+                                    </p>
+                                    <button class="button">Accept</button>
+                                    <button class="button">Decline</button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </section>
             </div>
             <div style="clear: both;"></div>
         </div>

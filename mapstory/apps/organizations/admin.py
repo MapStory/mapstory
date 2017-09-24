@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationMapStory, OrganizationLayer, OrganizationSocialMedia
+from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationMapStory, OrganizationLayer, OrganizationSocialMedia, JoinRequest
 
 
 
@@ -53,3 +53,4 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 admin.site.register(Organization, OrganizationAdmin)
 admin.site.register(OrganizationMembership)
+admin.site.register(JoinRequest)
