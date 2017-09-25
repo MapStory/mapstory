@@ -229,7 +229,7 @@ def add_membership(request, pk, user_pk):
             )
         )
 
-    return redirect(request, reverse('organizations:manager', kwargs={'pk':pk}))
+    return redirect(reverse('organizations:manage', kwargs={'pk':pk}))
 
 def _edit_organization_with_forms(organization, basic, links):
     """
@@ -335,3 +335,28 @@ def request_membership(request, pk):
         messages.success(request, 'A request to join has been made')
 
     return redirect(reverse("organizations:detail", kwargs={'pk':pk}))
+
+def approve_membership(request, pk):
+    if not request.user.is_authenticated():
+        messages.warning(request, "You are not logged in.")
+        return redirect(reverse("index_view"))
+
+    if request.method == 'POST':
+        # Make sure that we have permission
+        admin_membership = get_object_or_404(models.OrganizationMembership, organization_id = pk, user_id = request.user.pk)
+        if not admin_membership.is_admin:
+            messages.warning(request, "You do not have permissions to do this.")
+            return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
+        else:
+            request_pk = request.POST.get("request_pk")
+            join_request = get_object_or_404(models.JoinRequest, pk=request_pk)
+            approval = request.POST.get("approval")
+
+            if approval == 'accept':
+                new_membership = join_request.approve(admin_membership)
+                messages.success(request, "New member added to Organization.")
+            elif approval == 'decline':
+                join_request.decline(admin_membership)
+                messages.success(request,"Request to join declined.")
+
+    return redirect(reverse('organizations:manage', kwargs={'pk': pk}))

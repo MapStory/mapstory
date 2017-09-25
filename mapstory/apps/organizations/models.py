@@ -215,7 +215,7 @@ class JoinRequest(models.Model):
         :param admin_membership: The admin's membership that approves the request.
         :return: A new membership if success, None if fails.
         """
-        if not membership.is_admin:
+        if not admin_membership.is_admin:
             # TODO: Log suspicious activity
             return None
 
@@ -229,3 +229,10 @@ class JoinRequest(models.Model):
         self.save()
 
         return new_membership
+
+    def decline(self, admin_membership):
+        if not admin_membership.is_admin:
+            return None
+
+        self.is_open = False
+        self.save()

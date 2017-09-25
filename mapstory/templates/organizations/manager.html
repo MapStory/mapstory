@@ -63,8 +63,18 @@
                                     <p>
                                     {{ request.user }} requested to join on {{ request.created_at }}
                                     </p>
-                                    <button class="button">Accept</button>
-                                    <button class="button">Decline</button>
+                                    <form action="{% url "organizations:approve_membership" pk=org.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="{{ request.pk }}" name="request_pk">
+                                        <input type="hidden" value="accept" name="approval">
+                                        <input class="button org-join-button" type="submit" value="Accept" />
+                                    </form>
+                                    <form action="{% url "organizations:request_membership" pk=org.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="{{ request.pk }}" name="request_pk">
+                                        <input type="hidden" value="decline" name="approval">
+                                        <input class="button org-join-button" type="submit" value="Decline" />
+                                    </form>
                                 </div>
                             {% endfor %}
                         </div>
