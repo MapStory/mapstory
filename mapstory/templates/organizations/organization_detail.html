@@ -64,7 +64,7 @@
                             {% endif %}
                         {% endfor %}
                         {% for mapstory in mapstories %}
-                            {% if layer.is_featured %}
+                            {% if mapstory.is_featured %}
                             {% include "cards/mapstory_card.html" with mapstory=mapstory %}
                             {% endif %}
                         {% endfor %}

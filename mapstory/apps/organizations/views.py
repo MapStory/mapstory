@@ -55,6 +55,13 @@ def organization_detail(request, pk):
             found_mapstory.save()
             messages.success(request, "Removed MapStory from Featured")
 
+        elif request.POST.get("add_featured_mapstory"):
+            mapstory_pk = request.POST.get("mapstory_pk")
+            found_mapstory = get_object_or_404(models.OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
+            found_mapstory.is_featured = True
+            found_mapstory.save()
+            messages.success(request, "Added MapStory to Featured")
+
     members = models.OrganizationMembership.objects.filter(organization=org)
     org_urls = models.OrganizationURL.objects.filter(org=org)
     org_layers = models.OrganizationLayer.objects.filter(organization=org)
@@ -132,27 +139,27 @@ def add_layer(request, pk, layer_pk):
     :param layer_pk: The Layer id.
     :return: An HTTPResponse
     """
+    membership = get_object_or_404(models.OrganizationMembership, user_id=request.user.pk, organization_id=pk)
 
-    membership = models.OrganizationMembership.objects.get(user_id=request.user.pk, organization_id=pk)
-
-    # TODO: Return a proper response
     if (not membership.is_admin) or (not membership.is_active):
-        return HttpResponse("You are not allowed to do this.")
+        messages.error(request, "You are not allowed to do this.")
+        return redirect(reverse("organizations:detail", kwargs={'pk':pk}))
 
     if request.method == 'POST':
         # Check if not already added
         found = models.OrganizationLayer.objects.filter(organization_id=pk, layer_id=layer_pk)
 
         if found.count() > 0:
-            # TODO: Return a proper error
-            return HttpResponse("This layer has already been added to this Organization.")
+            # Duplicate Layer
+            messages.warning(request, "This layer has already been added to this Organization.")
         else:
+            # Add the Layer
             obj = models.OrganizationLayer()
             obj.organization_id = pk
             obj.layer_id = layer_pk
             obj.membership = membership
             obj.save()
-            # TODO: Show a confirmation message
+            messages.success(request, "Added Layer to Organization")
 
     return redirect(reverse("organizations:detail", kwargs={'pk':pk}))
 
@@ -164,26 +171,32 @@ def add_mapstory(request, pk, mapstory_pk):
     :param mapstory_pk: Mapstory id
     :return: HTTPResponse
     """
-    membership = models.OrganizationMembership.objects.get(user_id=request.user.pk, organization_id=pk)
+    membership = get_object_or_404(
+        models.OrganizationMembership,
+        user_id=request.user.pk,
+        organization_id=pk
+    )
 
-    # TODO: Return a proper response
+    # Make sure we have permissions to do this
     if (not membership.is_admin) or (not membership.is_active):
-        return HttpResponse("You are not allowed to do this.")
+        messages.error(request, "You are not allowed to do this.")
+        return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
 
     if request.method == 'POST':
         # Check if not already added
         found = models.OrganizationMapStory.objects.filter(organization_id=pk, mapstory_id=mapstory_pk)
 
         if found.count() > 0:
-            # TODO: Return a proper error
-            return HttpResponse("This Mapstory has already been added to this Organization.")
+            # Give a warning to the user
+            messages.warning(request, "This Mapstory has already been added to this Organization.")
         else:
+            # Add it to the Organization
             obj = models.OrganizationMapStory()
             obj.organization_id = pk
             obj.mapstory_id = mapstory_pk
             obj.membership = membership
             obj.save()
-            # TODO: Show a confirmation message
+            messages.success(request, "Added MapStory to Organization")
 
     return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
 

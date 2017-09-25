@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model, authenticate
 
 from mapstory.tests.utils import get_test_user, create_mapstory
-from .models import Organization, OrganizationURL, OrganizationMembership, JoinRequest
+from .models import Organization, OrganizationURL, OrganizationMembership, JoinRequest, OrganizationMapStory
 
 User = get_user_model()
 testUser = get_test_user()
@@ -128,11 +128,49 @@ class TestOrganizations(TestCase):
         self.assertEqual(admin_memberships.first().user, testUser)
 
 
-    def test_add_mapstory(self):
-        organization = None
-        mapstory = ""
-        # TODO: Finish this
-        pass
+    def test_add_mapstory_without_membership(self):
+        user = User.objects.create_user(
+            username="usernametest",
+            password="apassword"
+        )
+        o = Organization()
+        o.title = "Testing"
+        o.save()
+        mapstory = create_mapstory(user, "Testing Mapstory")
+        response = self.client.post(
+            reverse("organizations:add_mapstory", kwargs={
+                'pk': o.pk,
+                'mapstory_pk': mapstory.pk
+            }),
+            {},
+            follow=True
+        )
+        self.assertEqual(404, response.status_code)
+
+    def test_add_mapstory_with_membership(self):
+        user = User.objects.create_user(
+            username="member00",
+            password="member00",
+        )
+        self.client.login(username="member00", password="member00")
+        o = Organization.objects.create(title="Queso Testing")
+        self.assertNotEqual(o.add_member(user), None)
+        mapstory = create_mapstory(user, "Testing Mapstory")
+        self.assertNotEqual(mapstory, None)
+        initial_count = OrganizationMapStory.objects.filter(organization=o).count()
+        response = self.client.post(
+            reverse("organizations:add_mapstory", kwargs={
+                'pk': o.pk,
+                'mapstory_pk': mapstory.pk
+            }),
+            {},
+            follow=True
+        )
+        self.assertEqual(200, response.status_code)
+        # Should have added 1 mapstory to the organization
+        final_count = OrganizationMapStory.objects.filter(organization=o).count()
+        self.assertEqual(initial_count + 1, final_count)
+
 
     def test_remove_mapstory(self):
         # TODO: Finish this
