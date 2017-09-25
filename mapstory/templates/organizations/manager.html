@@ -5,7 +5,20 @@
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
     <div class="org_container">
-        {% include 'organizations/_organization_header.html' %}
+        <div class="organization_hero">
+            <div class="organization_icon">
+                {#TODO: Implement Image here #}
+                <div class="organization_icon_image">
+                    <img src="http://via.placeholder.com/115x115">
+                </div>
+            </div>
+            <div class="organization_header">
+                <h1>{{ org.title }}</h1>
+                <h4 class="org-slogan">{{ org.slogan }}</h4>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+
         <div class="organization_content">
             <div class="org_left_column">
                 <div class="return-to-page-button">
@@ -22,6 +35,35 @@
                 </div>
             </div>
             <div class="org_right_column">
+                <section id="join-requests">
+                    <h2>Manage Memberships</h2>
+                    <div class="requests-section">
+                        <h3>JOIN REQUESTS</h3>
+                        {% for request in join_requests %}
+                            <div class="join-request-card">
+                                <p><strong>{{ request.user }}</strong><span> on {{ request.created_at }}</span></p>
+                                <div>
+                                    <form action="{% url "organizations:approve_membership" pk=org.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="{{ request.pk }}" name="request_pk">
+                                        <input type="hidden" value="accept" name="approval">
+                                        <input class="button org-join-button" type="submit" value="Accept" />
+                                    </form>
+                                </div>
+                                <div>
+                                    <form action="{% url "organizations:request_membership" pk=org.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="{{ request.pk }}" name="request_pk">
+                                        <input type="hidden" value="decline" name="approval">
+                                        <input class="button org-join-button" type="submit" value="Decline" />
+                                    </form>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div style="clear: both;"></div>
+                </section>
                 <h2>Edit Org Page Information</h2>
                 <form action="." method="post">
                     {% csrf_token %}
@@ -55,30 +97,7 @@
                     </section>
                     <input style="width: 300px; height: 90px" class="button" type="submit" value="Submit" />
                 </form>
-                <section id="join-requests">
-                        <div class="requests-section">
-                            <h3>JOIN REQUESTS</h3>
-                            {% for request in join_requests %}
-                                <div class="join-request-card">
-                                    <p>
-                                    {{ request.user }} requested to join on {{ request.created_at }}
-                                    </p>
-                                    <form action="{% url "organizations:approve_membership" pk=org.pk %}" method="post">
-                                        {% csrf_token %}
-                                        <input type="hidden" value="{{ request.pk }}" name="request_pk">
-                                        <input type="hidden" value="accept" name="approval">
-                                        <input class="button org-join-button" type="submit" value="Accept" />
-                                    </form>
-                                    <form action="{% url "organizations:request_membership" pk=org.pk %}" method="post">
-                                        {% csrf_token %}
-                                        <input type="hidden" value="{{ request.pk }}" name="request_pk">
-                                        <input type="hidden" value="decline" name="approval">
-                                        <input class="button org-join-button" type="submit" value="Decline" />
-                                    </form>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </section>
+
             </div>
             <div style="clear: both;"></div>
         </div>
