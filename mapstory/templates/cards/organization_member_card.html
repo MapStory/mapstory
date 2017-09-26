@@ -4,7 +4,7 @@
     </div>
     <div class="org_member_label" style="padding-left: 4em;">
         <strong>{{ membership.user }}</strong>
-        <p><span>Executive Director</span></p>
+        <p><span>{% if membership.is_admin %}Organizer{% else %}Member{% endif %}</span></p>
     </div>
     <div style="clear: both"></div>
 </div>
