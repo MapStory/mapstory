@@ -1,3 +1,4 @@
+[![Waffle.io - Issues in progress](https://badge.waffle.io/MapStory/mapstory.png?label=in%20progress&title=In%20Progress)](https://waffle.io/MapStory/mapstory?utm_source=badge)
 mapstory
 ================
 
