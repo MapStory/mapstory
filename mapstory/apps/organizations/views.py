@@ -237,6 +237,46 @@ def add_membership(request, pk, user_pk):
     return redirect(reverse('organizations:manage', kwargs={'pk':pk}))
 
 
+def _save_social_media_with_name(organization, social_media_name, new_url_value, social_objects):
+    updated_obj = None
+    if new_url_value:
+        for social in social_objects:
+            # Update if it exists
+            if social_media_name in social.url:
+                social.url = new_url_value
+                social.save()
+                updated_obj = social
+
+        if not updated_obj:
+            # Create one if it doesnt exist
+            updated_obj = models.OrganizationSocialMedia.objects.create(
+                organization=organization,
+                url=new_url_value,
+                name=social_media_name,
+                icon="fa-%s" % (social_media_name,)
+            )
+    return updated_obj
+
+
+def _save_social_icons(organization, links):
+    social_objects = models.OrganizationSocialMedia.objects.filter(organization=organization)
+    social_media_names = [
+        "facebook",
+        "twitter",
+        "linkedin",
+        "github",
+        "instragram"
+    ]
+
+    for name in social_media_names:
+        updated = _save_social_media_with_name(
+            organization,
+            name,
+            links.cleaned_data[name],
+            social_objects
+        )
+
+
 def _edit_organization_with_forms(organization, basic, links):
     """
     Helper function for for setting an organization's data from forms.
@@ -253,6 +293,11 @@ def _edit_organization_with_forms(organization, basic, links):
     organization.country = basic.cleaned_data['country']
     organization.image = basic.cleaned_data['image']
     organization.save()
+
+    # Update or create
+    # TODO: Save social URLS here
+    _save_social_icons(organization, links)
+
 
     # TODO: Handle Links
 
@@ -284,6 +329,7 @@ def manager(request, pk):
     instragram = models.OrganizationSocialMedia.objects.filter(icon="fa-instragram", organization=organization)
     join_requests = models.JoinRequest.objects.filter(organization=organization, is_open=True)
     memberships = models.OrganizationMembership.objects.filter(organization=organization)
+
     info = {
         'name': organization.title,
         'slogan': organization.slogan,
@@ -292,6 +338,7 @@ def manager(request, pk):
         'city': organization.city,
         'image': organization.image,
     }
+
     links = {
         'url0': urls.first() or "",
         'url1': urls[1] or "",
@@ -324,6 +371,13 @@ def manager(request, pk):
 
 
 def request_membership(request, pk):
+    """
+    Creates a JoinRequest for the organization, provides the user
+    with a message and redirects to the Organization's detail page.
+    :param request: HTTPRequest
+    :param pk: The organization's id
+    :return: HTTPResponse
+    """
     if not request.user.is_authenticated():
         messages.warning(request, 'Please Log In or Sign Up before joining an Organization.')
         return redirect(reverse("index_view"))
@@ -347,16 +401,28 @@ def request_membership(request, pk):
 
 
 def approve_membership(request, pk):
+    """
+    Approves a request for membership
+    :param request: HTTP Request
+    :param pk: The JoinRequest pk
+    :return: A new membership if success.
+    """
     if not request.user.is_authenticated():
         messages.warning(request, "You are not logged in.")
         return redirect(reverse("index_view"))
 
     if request.method == 'POST':
         # Make sure that we have permission
-        admin_membership = get_object_or_404(models.OrganizationMembership, organization_id = pk, user_id = request.user.pk)
+        admin_membership = get_object_or_404(
+            models.OrganizationMembership,
+            organization_id=pk,
+            user_id=request.user.pk
+        )
+
         if not admin_membership.is_admin:
             messages.warning(request, "You do not have permissions to do this.")
             return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
+
         else:
             request_pk = request.POST.get("request_pk")
             join_request = get_object_or_404(models.JoinRequest, pk=request_pk)
@@ -365,8 +431,9 @@ def approve_membership(request, pk):
             if approval == 'accept':
                 new_membership = join_request.approve(admin_membership)
                 messages.success(request, "New member added to Organization.")
+
             elif approval == 'decline':
                 join_request.decline(admin_membership)
-                messages.success(request,"Request to join declined.")
+                messages.success(request, "Request to join declined.")
 
     return redirect(reverse('organizations:manage', kwargs={'pk': pk}))
