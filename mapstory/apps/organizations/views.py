@@ -10,6 +10,7 @@ from . import forms
 
 User = get_user_model()
 
+
 def organization_detail(request, pk):
     """Organization Detail View.
     Shows detailed information about an Organization.
@@ -105,6 +106,7 @@ def organization_detail(request, pk):
 
     return render(request, 'organizations/organization_detail.html', context)
 
+
 def organization_list(request):
     """Organization List View.
     Shows a list of Organizations.
@@ -115,6 +117,7 @@ def organization_list(request):
         'organizations': models.Organization.objects.filter(is_active=True),
     }
     return render(request, 'organizations/organization_list.html', context)
+
 
 def membership_detail(request, org_pk, membership_pk):
     """Membership Detail View.
@@ -163,6 +166,7 @@ def add_layer(request, pk, layer_pk):
 
     return redirect(reverse("organizations:detail", kwargs={'pk':pk}))
 
+
 def add_mapstory(request, pk, mapstory_pk):
     """
     Adds a Mapstory to an Organization.
@@ -200,6 +204,7 @@ def add_mapstory(request, pk, mapstory_pk):
 
     return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
 
+
 @login_required
 def add_membership(request, pk, user_pk):
     """
@@ -231,6 +236,7 @@ def add_membership(request, pk, user_pk):
 
     return redirect(reverse('organizations:manage', kwargs={'pk':pk}))
 
+
 def _edit_organization_with_forms(organization, basic, links):
     """
     Helper function for for setting an organization's data from forms.
@@ -249,6 +255,7 @@ def _edit_organization_with_forms(organization, basic, links):
     organization.save()
 
     # TODO: Handle Links
+
 
 @login_required
 def manager(request, pk):
@@ -315,6 +322,7 @@ def manager(request, pk):
         'memberships': memberships,
     })
 
+
 def request_membership(request, pk):
     if not request.user.is_authenticated():
         messages.warning(request, 'Please Log In or Sign Up before joining an Organization.')
@@ -336,6 +344,7 @@ def request_membership(request, pk):
         messages.success(request, 'A request to join has been made')
 
     return redirect(reverse("organizations:detail", kwargs={'pk':pk}))
+
 
 def approve_membership(request, pk):
     if not request.user.is_authenticated():

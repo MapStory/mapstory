@@ -1,5 +1,6 @@
 from django import forms
 
+
 class BasicInformation(forms.Form):
     """
     Collects basic information for an Organization
@@ -16,6 +17,7 @@ class BasicInformation(forms.Form):
     country = forms.CharField(required=False)
     image = forms.FileField(required=False)
     about = forms.CharField(widget=forms.Textarea, required=True)
+
 
 class LinksAndSocialMedia(forms.Form):
     """

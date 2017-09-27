@@ -9,7 +9,6 @@ User = get_user_model()
 testUser = get_test_user()
 
 
-
 class TestOrganizations(TestCase):
     """Organizations' Tests."""
     def test_uses_template(self):
@@ -30,7 +29,6 @@ class TestOrganizations(TestCase):
 
         for org in orgs:
             self.assertContains(response, org.title)
-
 
     def test_organization_detail_view(self):
         c = Client()
@@ -100,7 +98,6 @@ class TestOrganizations(TestCase):
         o.save()
         self.assertEqual(initial_count + 2, o.get_memberships().count())
 
-
     def test_remove_member(self):
         o = Organization()
         o.title = "Test Organization 2"
@@ -116,7 +113,6 @@ class TestOrganizations(TestCase):
         o.save()
         self.assertEqual(initial_count, o.get_memberships().count())
 
-
     def test_set_admin(self):
         o = Organization()
         o.title = "Test Organization 2"
@@ -126,7 +122,6 @@ class TestOrganizations(TestCase):
         admin_memberships = o.get_admin_memberships()
         self.assertEqual(1, admin_memberships.count())
         self.assertEqual(admin_memberships.first().user, testUser)
-
 
     def test_add_mapstory_without_membership(self):
         user = User.objects.create_user(
@@ -170,7 +165,6 @@ class TestOrganizations(TestCase):
         # Should have added 1 mapstory to the organization
         final_count = OrganizationMapStory.objects.filter(organization=o).count()
         self.assertEqual(initial_count + 1, final_count)
-
 
     def test_remove_mapstory(self):
         # TODO: Finish this
@@ -227,7 +221,6 @@ class TestOrganizations(TestCase):
         get_response = self.client.get(join_url, follow=True)
         self.assertEqual(get_response.status_code, 200)
         self.assertTemplateUsed("organization_detail")
-
 
         initial_request_count = JoinRequest.objects.all().count()
         user = User.objects.create_user(

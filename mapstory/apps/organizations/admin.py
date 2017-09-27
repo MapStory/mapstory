@@ -3,12 +3,10 @@ from django.contrib import admin
 from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationMapStory, OrganizationLayer, OrganizationSocialMedia, JoinRequest
 
 
-
 class MembershipInlineAdmin(admin.StackedInline):
     """Shows Memberships Inline
     """
     model = OrganizationMembership
-
 
 
 class OrganizationURLInline(admin.StackedInline):
@@ -17,11 +15,9 @@ class OrganizationURLInline(admin.StackedInline):
     model = OrganizationURL
 
 
-
 class OrganizationLayersInline(admin.StackedInline):
     """Shows Layers Inline"""
     model = OrganizationLayer
-
 
 
 class OrganizationMapstoryInline(admin.StackedInline):
@@ -29,11 +25,9 @@ class OrganizationMapstoryInline(admin.StackedInline):
     model = OrganizationMapStory
 
 
-
 class OrganizationSocialMediaInline(admin.StackedInline):
     """Shows Social media inline"""
     model = OrganizationSocialMedia
-
 
 
 class OrganizationAdmin(admin.ModelAdmin):

@@ -53,9 +53,7 @@
           }
         )
     };
-
-
-
+    
     ////////////////////////////
     /*  Query Methods */
     // add, remove, checkbox( aka, toggle), and clear
@@ -86,45 +84,38 @@
       $scope.search();
     };
 
-    // Volunteer Technical Community checkbox is a front-end show/hide filter
-    // The following functions toggle the visibility of the _result_users card
-
-    vm.clearVTC = function(){
-      vm.VTCisChecked = false;
-      $scope.itemFilter = { is_active: true };
-      $scope.search();
-    };
-
-    vm.filterVTC = function() {
-      // When VTC check box is clicked, also filter by VTC; when unchecked, reset it
-      if (vm.VTCisChecked) {
-        $scope.itemFilter = {Volunteer_Technical_Community: true}; 
-      } else {
-        $scope.itemFilter = { is_active: true };  
-      }
-    };
-
     //////////////
     /* ORDERING */
-    //set default order methods for content and storyteller
-    $scope.orderMethodContent = '-popular_count';
-    $scope.orderMethodStoryteller = 'username';
-
     //expose additional sorting to the dropdown "sort by"
-    $scope.orderMethods = {
-      //for general content results
-      content:
+    $scope.orderingOptions = {
+      //select order_by options from the Resource API
+      resource:
         [
-          {name:'Popular', filter:'-popular_count'},
-          {name:'Newest', filter:'-date'}
+          { name:'Popular', 
+            sort:'-popular_count'
+          },
+          { name:'Newest',
+            sort:'-date'
+          }
         ], 
-        //for the storyteller results
-      storyteller:
+      //seclect order_by options from the Owners API
+      owner:
         [
-          {name: 'Username Z-A', filter: '-username'},
-          {name: 'Username A-Z', filter: 'username'}
+          { name: 'Username Z-A',
+            sort: '-username'
+          },
+          { name: 'Username A-Z',
+            sort: 'username'
+          }
         ]
     };
+
+    //set up a quick watch to re-pull results from API when ordering is changed
+    // todo: sync this up in other watches if we can for performance 
+    $scope.$watch('query["order_by"]', function (newValue, oldValue, scope) {
+      $scope.search();
+    });
+
     /////////////////////
     /* USER VS CONTENT */
     // Persisting content and storyteller view & queries through page refresh 
@@ -135,7 +126,8 @@
       $scope.query = { 
         storyteller: true, 
         limit: CLIENT_RESULTS_LIMIT, 
-        offset: 0 
+        offset: 0,
+        order_by: 'username'
       };
      $scope.search();
     };
@@ -147,11 +139,13 @@
         content: true, 
         is_published: true, 
         limit: CLIENT_RESULTS_LIMIT, 
-        offset: 0 
+        offset: 0,
+        order_by: '-popular_count'
       };
       $scope.search();
     };
     
+    //// Default settings upon landing (without clicking topbar/switch) ///
     if ($scope.query.storyteller){
       //storyteller explore
       $scope.apiEndpoint = '/api/owners/';
@@ -165,6 +159,8 @@
       //add is_published even if they've removed it,
       //but persist all other filters
       $scope.query.is_published = true;
+      // default order method for content
+      $scope.query.order_by='-popular_count';
     }
 
     $scope.search();

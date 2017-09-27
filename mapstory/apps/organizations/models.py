@@ -5,8 +5,6 @@ from django.core.exceptions import SuspiciousOperation
 
 from geonode.layers.models import Layer
 from mapstory.mapstories.models import MapStory
-from unidecode import unidecode
-from django.template.defaultfilters import slugify
 
 
 class Organization(models.Model):
@@ -197,6 +195,7 @@ class OrganizationMapStory(models.Model):
 
     def __unicode__(self):
         return u'%s' % self.mapstory
+
 
 class JoinRequest(models.Model):
     """
