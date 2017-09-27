@@ -14,6 +14,12 @@
                 {% csrf_token %}
                 <input class="button org-join-button" type="submit" value="Join this Organization" />
             </form>
+        {% else %}
+            {% if membership.is_admin %}
+                <a href="{% url "organizations:manage" pk=org.pk %}" >
+                    <button class="button org-join-button">Manage</button>
+                </a>
+            {% endif %}
         {% endif %}
         </div>
     </div>

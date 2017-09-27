@@ -67,17 +67,7 @@
                             <li class="divider"></li>
                             <li><a href="{% url 'getpage' 'started' %}">{% trans "Help" %}</a></li>
                             <li class="divider"></li>
-        {#TODO: Fix Organizations Manager Menu#}
-{#                        {% if is_organizer %}#}
-{#                            {% for membership in manager_memberships %}#}
-                            <li>
-                                <a href="{% url 'organizations:manage' pk="1" %}">
-                                    Manage Organization
-                                </a>
-                            </li>
-{#                            {% endfor %}#}
-                            <li class="divider"></li>
-{#                        {% endif %}#}
+                        {#TODO: Add Organizations menu here#}
                         {% if user.is_staff %}
                             <li><a href="{% url 'admin:index' %}">{% trans "Admin Panel" %}</a></li>
                         {% endif %}

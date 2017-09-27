@@ -35,10 +35,12 @@
                 </div>
             </div>
             <div class="org_right_column">
+                <h2>Manage Memberships</h2>
                 <section id="join-requests">
-                    <h2>Manage Memberships</h2>
+                    <!-- MEMBERSHIP REQUESTS -->
                     <div class="requests-section">
-                        <h3>JOIN REQUESTS</h3>
+                    {% if join_requests %}
+                        <h3>MEMBERSHIP REQUESTS</h3>
                         {% for request in join_requests %}
                             <div class="join-request-card">
                                 <p><strong>{{ request.user }}</strong><span> on {{ request.created_at }}</span></p>
@@ -61,6 +63,20 @@
                                 <div style="clear: both;"></div>
                             </div>
                         {% endfor %}
+                    {% endif %}
+                    </div>
+
+                    <!-- MEMBERS -->
+                    <div class="members-section">
+                    {% if memberships %}
+                        <h3>MEMBERS</h3>
+                        <ul>
+                        <!--TODO: Use the cards here-->
+                        {% for member in memberships %}
+                            <li>{{ member.user }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
                     </div>
                     <div style="clear: both;"></div>
                 </section>
@@ -81,12 +97,6 @@
                             {{ links_form.as_p }}
                         </div>
                     </section>
-                    <section id="organizers-members">
-                        <h3>ORGANIZERS & MEMBERS</h3>
-                        <hr/>
-                        <p>Organizers</p>
-                        <p>Members</p>
-                    </section>
                     <section id="payment-information">
                         <h3>PAYMENT INFORMATION</h3>
                         <hr/>
@@ -95,9 +105,8 @@
                         <p>Payment method</p>
                         <p>Upgrade</p>
                     </section>
-                    <input style="width: 300px; height: 90px" class="button" type="submit" value="Submit" />
+                    <input style="width: 300px;" class="button" type="submit" value="Submit" />
                 </form>
-
             </div>
             <div style="clear: both;"></div>
         </div>

@@ -156,7 +156,7 @@ class OrganizationMembership(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u'%s' % self.user
+        return u'%s - %s' % (self.organization, self.user)
 
     class Meta:
         verbose_name_plural = 'Memberships'

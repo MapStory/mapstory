@@ -267,6 +267,35 @@ def manager(request, pk):
         # User is NOT AUTHORIZED!
         return HttpResponse("You are not authorized!")
 
+    # GET:
+    # Load Form's initial data
+    urls = models.OrganizationURL.objects.filter(org=organization)
+    facebook = models.OrganizationSocialMedia.objects.filter(icon="fa-facebook", organization=organization)
+    twitter = models.OrganizationSocialMedia.objects.filter(icon="fa-twitter", organization=organization)
+    linkedin = models.OrganizationSocialMedia.objects.filter(icon="fa-linkedin", organization=organization)
+    github = models.OrganizationSocialMedia.objects.filter(icon="fa-github", organization=organization)
+    instragram = models.OrganizationSocialMedia.objects.filter(icon="fa-instragram", organization=organization)
+    join_requests = models.JoinRequest.objects.filter(organization=organization, is_open=True)
+    memberships = models.OrganizationMembership.objects.filter(organization=organization)
+    info = {
+        'name': organization.title,
+        'slogan': organization.slogan,
+        'about': organization.about,
+        'country': organization.country,
+        'city': organization.city,
+        'image': organization.image,
+    }
+    links = {
+        'url0': urls.first() or "",
+        'url1': urls[1] or "",
+        'url2': urls[2] or "",
+        'facebook': facebook.first().url if facebook.first() else "",
+        'twitter': twitter.first().url if twitter.first() else "",
+        'linkedin': linkedin.first().url if linkedin.first() else "",
+        'github': github.first().url if github.first() else "",
+        'instagram': instragram.first().url if instragram.first() else "",
+    }
+
     # Determine the type of HTTP request
     if request.method == 'POST':
         basic_info_form = forms.BasicInformation(request.POST)
@@ -274,44 +303,16 @@ def manager(request, pk):
         if basic_info_form.is_valid() and links_form.is_valid():
             _edit_organization_with_forms(organization, basic_info_form, links_form)
 
-    else:
-        # GET:
-        # Load Form's initial data
-        urls = models.OrganizationURL.objects.filter(org=organization)
-        facebook = models.OrganizationSocialMedia.objects.filter(icon="fa-facebook", organization=organization)
-        twitter = models.OrganizationSocialMedia.objects.filter(icon="fa-twitter", organization=organization)
-        linkedin = models.OrganizationSocialMedia.objects.filter(icon="fa-linkedin", organization=organization)
-        github = models.OrganizationSocialMedia.objects.filter(icon="fa-github", organization=organization)
-        instragram = models.OrganizationSocialMedia.objects.filter(icon="fa-instragram", organization=organization)
-        join_requests = models.JoinRequest.objects.filter(organization=organization, is_open=True)
-        info = {
-            'name': organization.title,
-            'slogan': organization.slogan,
-            'about': organization.about,
-            'country': organization.country,
-            'city': organization.city,
-            'image': organization.image,
-        }
-        links = {
-            'url0': urls.first() or "",
-            'url1': urls[1] or "",
-            'url2': urls[2] or "",
-            'facebook': facebook.first().url if facebook.first() else "",
-            'twitter': twitter.first().url if twitter.first() else "",
-            'linkedin': linkedin.first().url if linkedin.first() else "",
-            'github': github.first().url if github.first() else "",
-            'instagram': instragram.first().url if instragram.first() else "",
-        }
-
-        # Set the forms initial data
-        basic_info_form = forms.BasicInformation(initial=info)
-        links_form = forms.LinksAndSocialMedia(initial=links)
+    # Set the forms initial data
+    basic_info_form = forms.BasicInformation(initial=info)
+    links_form = forms.LinksAndSocialMedia(initial=links)
 
     return render(request, 'organizations/manager.html', {
         'org':organization,
         'basic_form':basic_info_form,
         'links_form':links_form,
-        'join_requests': join_requests
+        'join_requests': join_requests,
+        'memberships': memberships,
     })
 
 def request_membership(request, pk):
