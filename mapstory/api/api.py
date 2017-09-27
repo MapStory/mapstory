@@ -5,7 +5,7 @@ from django.db.models import Q
 
 from geonode.api.api import TypeFilteredResource, CountJSONSerializer
 from tastypie import http, fields
-from tastypie.constants import ALL
+from tastypie.constants import ALL, ALL_WITH_RELATIONS
 
 from mapstory.mapstory_profile.models import MapstoryProfile
 
@@ -33,6 +33,9 @@ class MapstoryProfileResource(TypeFilteredResource):
     class Meta:
         queryset = MapstoryProfile.objects.all()
 
+        filtering = {
+            'Volunteer_Technical_Community': ALL
+        }
 
 class MapstoryOwnersResource(TypeFilteredResource):
     """Mapstory's version of GeoNode's /api/owners Resource """
@@ -108,5 +111,6 @@ class MapstoryOwnersResource(TypeFilteredResource):
             'username': ALL,
             'city': ALL,
             'country': ALL,
+            'mapstoryprofile': ALL_WITH_RELATIONS
         }
         serializer = OwnerProfileSerializer()

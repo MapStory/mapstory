@@ -145,16 +145,21 @@
                     <h3 class="bold-caps">VTC Members</h3>
                     <div class="filter-content">
                         <p>
-                            <a href="{% url 'getpage' 'started' %}#Join%20the%20Volunteer%20Technical%20Community">
+                            <a href="http://wiki.mapstory.org/Volunteer_Technical_Community">
                                 Volunteer Technical Community (VTC) members
                             </a>
                             can answer questions and help if you send them a message.
                         </p>
-                        <label>
-                          <input type="checkbox" ng-model="explore.VTCisChecked" ng-click="explore.filterVTC()"> 
-                          VTC Members only
-                        </label>
-                    <!--     <input type="checkbox" ng-model="query.Volunteer_Technical_Community" ng-click="VTC()"> VTC Members only -->
+                  
+                      <label>
+                        <input type="checkbox"
+                          data-value="true"
+                          data-filter="mapstoryprofile__Volunteer_Technical_Community"
+                          ng-click="explore.checkboxQuery($event)"
+                          ng-checked="isActivated('true', query, 'mapstoryprofile__Volunteer_Technical_Community')">
+                        </input>
+                        VTC Members only
+                      </label>
                     </div>
                 </section>
             </aside>
