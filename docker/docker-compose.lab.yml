@@ -4,6 +4,7 @@ services:
   postgres:
     image: mdillon/postgis:9.6
     env_file:
+      - docker/env/dev/db_auth.env
       - docker/env/dev/postgres.env
     volumes:
       - postgres:/var/lib/postgresql/data
@@ -13,15 +14,13 @@ services:
       - "5432"
     ports:
       - "5432:5432"
-    secrets:
-      - env_db_auth
 
   pgadmin:
     image: quay.io/mapstory/pgadmin:lab
+    env_file:
+      - docker/env/dev/db_auth.env
     ports:
       - "5050:5050"
-    secrets:
-      - env_db_auth
 
   elasticsearch:
     ports:
@@ -38,12 +37,12 @@ services:
   django:
     image: quay.io/mapstory/django:lab
     env_file:
+      - docker/env/dev/db_auth.env
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
       - docker/env/lab/mapstory.env
     command: [--collect-static, --init-db, --reindex, --serve]
     secrets:
-      - env_db_auth
       - env_email_auth
       - env_geoserver_auth
       - env_rabbitmq_auth
@@ -58,11 +57,11 @@ services:
   celery:
     image: quay.io/mapstory/django:lab
     env_file:
+      - docker/env/dev/db_auth.env
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
       - docker/env/lab/mapstory.env
     secrets:
-      - env_db_auth
       - env_email_auth
       - env_geoserver_auth
       - env_rabbitmq_auth
@@ -77,10 +76,10 @@ services:
 
   geoserver:
     env_file:
+      - docker/env/dev/db_auth.env
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
     secrets:
-      - env_db_auth
       - env_geoserver_auth
     ports:
       - "8080:8080"
@@ -107,8 +106,6 @@ secrets:
     file: ../secrets/ssl_cert
   ssl_key:
     file: ../secrets/ssl_key
-  env_db_auth:
-    file: ../secrets/env/db_auth
   env_email_auth:
     file: ../secrets/env/email_auth
   env_geoserver_auth:
