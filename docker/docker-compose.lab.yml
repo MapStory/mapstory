@@ -100,6 +100,7 @@ volumes:
   site-packages:
   geoserver:
   mapstory_media:
+  postgres:
 
 secrets:
   ssl_cert:
