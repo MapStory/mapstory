@@ -1,11 +1,10 @@
-# demo.mapstory.org configuration
+# lab.mapstory.org configuration
 version: '3.1'
 services:
   postgres:
-    image: mdillon/postgis:9.5
+    image: mdillon/postgis:9.6
     env_file:
-      - docker/env/lab/db_auth.env
-      - docker/env/lab/postgres.env
+      - docker/env/dev/postgres.env
     volumes:
       - postgres:/var/lib/postgresql/data
     networks:
@@ -14,88 +13,108 @@ services:
       - "5432"
     ports:
       - "5432:5432"
+    secrets:
+      - env_db_auth
 
   pgadmin:
-    links:
-      - postgres
-    env_file:
-      - docker/env/lab/db_auth.env
+    image: quay.io/mapstory/pgadmin:lab
     ports:
       - "5050:5050"
+    secrets:
+      - env_db_auth
 
   elasticsearch:
     ports:
       - "9200:9200"
 
   rabbitmq:
-    environment:
-      - RABBITMQ_DEFAULT_USER=mapstory
-      - RABBITMQ_DEFAULT_PASS=password
-      - RABBITMQ_DEFAULT_VHOST=mapstory
+    image: quay.io/mapstory/rabbitmq:lab
+    secrets:
+      - env_rabbitmq_auth
     ports:
       - "15671:15671"
       - "15672:15672"
 
   django:
-    links:
-      - postgres
+    image: quay.io/mapstory/django:lab
     env_file:
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
       - docker/env/lab/mapstory.env
-      - docker/env/lab/db_auth.env
+    command: [--collect-static, --init-db, --reindex, --serve]
+    secrets:
+      - env_db_auth
+      - env_email_auth
+      - env_geoserver_auth
+      - env_rabbitmq_auth
+      - env_slack_auth
+      - env_social_auth
     volumes:
-      - .:/srv/mapstory:rw
-      - site-packages:/usr/local/lib/python2.7/site-packages-copy:rw
+      - .:/srv/mapstory/
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
     ports:
       - "8000:8000"
 
   celery:
-    links:
-      - postgres
+    image: quay.io/mapstory/django:lab
     env_file:
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
       - docker/env/lab/mapstory.env
-      - docker/env/lab/db_auth.env
+    secrets:
+      - env_db_auth
+      - env_email_auth
+      - env_geoserver_auth
+      - env_rabbitmq_auth
+      - env_slack_auth
+      - env_social_auth
     volumes:
-      - .:/srv/mapstory:ro
-      - site-packages:/usr/local/lib/python2.7/site-packages-copy:rw
+      - .:/srv/mapstory/
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
+
+  django_volumes:
+    image: quay.io/mapstory/django:lab
 
   geoserver:
-    build:
-      context: ./docker/geoserver
-      dockerfile: Dockerfile_2.9-geogig-1.1
-    image: mapstory/geoserver:2.9-geogig-1.1
-    links:
-      - postgres
     env_file:
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
-      - docker/env/lab/db_auth.env
-    volumes:
-      - geoserver:/var/lib/geoserver
+    secrets:
+      - env_db_auth
+      - env_geoserver_auth
     ports:
       - "8080:8080"
 
   nginx:
+    image: quay.io/mapstory/nginx:lab
     env_file:
       - docker/env/lab/public_host.env
     volumes:
-      - .:/srv/mapstory:ro
-      - site-packages:/usr/local/lib/python2.7/site-packages:ro
+      - .:/srv/mapstory/ # mapstory_static has symlinks to this
+      - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
     secrets:
       - ssl_cert
       - ssl_key
 
 volumes:
-  postgres:
   site-packages:
+  geoserver:
+  mapstory_media:
 
 secrets:
   ssl_cert:
-    file: ssl_cert
-#    external: true
+    file: ../secrets/ssl_cert
   ssl_key:
-    file: ssl_key
-#    external: true
+    file: ../secrets/ssl_key
+  env_db_auth:
+    file: ../secrets/env/db_auth
+  env_email_auth:
+    file: ../secrets/env/email_auth
+  env_geoserver_auth:
+    file: ../secrets/env/geoserver_auth
+  env_rabbitmq_auth:
+    file: ../secrets/env/rabbitmq_auth
+  env_slack_auth:
+    file: ../secrets/env/slack_auth
+  env_social_auth:
+    file: ../secrets/env/social_auth
