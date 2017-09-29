@@ -69,3 +69,5 @@ selenium
 
 # Activity Streams
 django-activity-stream==0.6.1
+
+pandas==0.20.3
