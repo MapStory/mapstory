@@ -4,8 +4,8 @@ services:
   postgres:
     image: mdillon/postgis:9.6
     env_file:
-      - docker/env/dev/db_auth.env
-      - docker/env/dev/postgres.env
+      - docker/env/lab/db_auth.env
+      - docker/env/lab/postgres.env
     volumes:
       - postgres:/var/lib/postgresql/data
     networks:
@@ -18,7 +18,7 @@ services:
   pgadmin:
     image: quay.io/mapstory/pgadmin:lab
     env_file:
-      - docker/env/dev/db_auth.env
+      - docker/env/lab/db_auth.env
     ports:
       - "5050:5050"
 
@@ -37,7 +37,7 @@ services:
   django:
     image: quay.io/mapstory/django:lab
     env_file:
-      - docker/env/dev/db_auth.env
+      - docker/env/lab/db_auth.env
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
       - docker/env/lab/mapstory.env
@@ -57,7 +57,7 @@ services:
   celery:
     image: quay.io/mapstory/django:lab
     env_file:
-      - docker/env/dev/db_auth.env
+      - docker/env/lab/db_auth.env
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
       - docker/env/lab/mapstory.env
@@ -76,7 +76,7 @@ services:
 
   geoserver:
     env_file:
-      - docker/env/dev/db_auth.env
+      - docker/env/lab/db_auth.env
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
     secrets:
