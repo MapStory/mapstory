@@ -51,7 +51,7 @@ Additional information about using the docker build is available at our [Docker 
 
 * [Python 2.7](https://www.python.org/) - The primary backend development language.
 * [Django 1.8.7](https://www.djangoproject.com/) - The back end web development framework.
-* [AngularJS 1.3](https://angularjs.org/) - The front end web development framework.
+* [AngularJS 1.6](https://angularjs.org/) - The front end web development framework.
 
 ## Contributing
 
