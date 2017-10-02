@@ -134,7 +134,20 @@ flag_admin.register_group_to_flag_types(
 class CustomSiteAdmin(admin.ModelAdmin):
     model = CustomSite
 
-admin.site.register(MapStory)
+
+class MapStoryAdmin(admin.ModelAdmin):
+    list_display_links = ('id',)
+    list_display = (
+        'id',
+        'title',
+        'owner',
+        'date',
+        'category')
+    list_editable = ('title', 'owner', 'category')
+    list_filter = ('featured', )
+
+
+admin.site.register(MapStory, MapStoryAdmin)
 admin.site.register(GetPage, GetPageAdmin)
 admin.site.register(GetPageContent, GetPageContentAdmin)
 admin.site.register(Sponsor, SponsorAdmin)
