@@ -117,11 +117,11 @@
                         {% verbatim %}
                         <md-content class="md-padding" layout="column">
                             <md-chips ng-model="int.chips" 
-                                md-autocomplete-snap 
                                 md-on-add="explore.addQuery('interest_list', $chip.slug)"
                                 md-on-remove="explore.removeQuery('interest_list', $chip.slug)"
-                                md-transform-chip="int.interests.newChip($chip)">
-                              <md-autocomplete
+                                md-transform-chip="int.interests.newChip($chip)"
+                                placeholder="Filter by an interest...">
+<!-- /* SEE: interestController.async() notes */ <md-autocomplete
                                   ng-hide="int.disabled"
                                   md-selected-item="selectedItem"
                                   md-search-text="searchText"
@@ -129,7 +129,7 @@
                                   md-item-text="item.code"
                                   placeholder="Filter by an interest...">
                                 <span md-highlight-text="searchText">{{item.slug}}</span>
-                              </md-autocomplete>
+                              </md-autocomplete> -->
                               <md-chip-template>
                                 {{$chip.slug}}
                               </md-chip-template>
