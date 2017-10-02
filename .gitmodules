@@ -9,7 +9,7 @@
 [submodule "deps/django-osgeo-importer"]
 	path = deps/django-osgeo-importer
 	url = https://github.com/GeoNode/django-osgeo-importer.git
-	branch = master
+	branch = angular-1.6
 [submodule "deps/django-maploom"]
 	path = deps/django-maploom
 	url = https://github.com/MapStory/django-maploom.git
