@@ -7,6 +7,16 @@ from geonode.layers.models import Layer
 from mapstory.mapstories.models import MapStory
 
 
+class OrganizationSocialMedia(models.Model):
+    """Represents a Social media Link shown on the Organization's detail Page"""
+    name = models.CharField(max_length=255)
+    icon = models.CharField(max_length=255)
+    url = models.URLField()
+
+    def __unicode__(self):
+        return u'%s' % self.url
+
+
 class Organization(models.Model):
     """Represents an Organization.
     An Organization has:
@@ -27,6 +37,11 @@ class Organization(models.Model):
     city = models.CharField(default='', max_length=255)
     country = models.CharField(default='', max_length=255)
     image = models.FileField(null=True, blank=True)
+    facebook = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='facebook')
+    twitter = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='twitter')
+    instagram = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='instagram')
+    github = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='github')
+    linkedin = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='linkedin')
 
     class Meta:
         verbose_name_plural = 'Organizations'
@@ -173,19 +188,10 @@ class OrganizationLayer(models.Model):
         return u'%s' % self.layer
 
 
-class OrganizationSocialMedia(models.Model):
-    """Represents a Social media Link shown on the Organization's detail Page"""
-    organization = models.ForeignKey(Organization)
-    name = models.CharField(max_length=255)
-    icon = models.CharField(max_length=255)
-    url = models.URLField()
-
-    def __unicode__(self):
-        return u'%s' % self.url
-
-
 class OrganizationMapStory(models.Model):
-    """Represents a Mapstory that is sponsored by an Organization"""
+    """
+    Represents a Mapstory that is sponsored by an Organization
+    """
     mapstory = models.ForeignKey(MapStory)
     organization = models.ForeignKey(Organization)
     membership = models.ForeignKey(OrganizationMembership)

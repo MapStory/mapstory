@@ -67,7 +67,6 @@ def organization_detail(request, pk):
     org_urls = models.OrganizationURL.objects.filter(org=org)
     org_layers = models.OrganizationLayer.objects.filter(organization=org)
     org_mapstories = models.OrganizationMapStory.objects.filter(organization=org)
-    org_social_media = models.OrganizationSocialMedia.objects.filter(organization=org)
 
     layers = []
     mapstories = []
@@ -101,7 +100,6 @@ def organization_detail(request, pk):
         'layers': layers,
         'mapstories': mapstories,
         'membership': membership,
-        'social_icons': org_social_media,
         'org_image': org.image
     }
 
@@ -260,22 +258,24 @@ def _save_social_media_with_name(organization, social_media_name, new_url_value,
 
 
 def _save_social_icons(organization, links):
-    social_objects = models.OrganizationSocialMedia.objects.filter(organization=organization)
-    social_media_names = [
-        "facebook",
-        "twitter",
-        "linkedin",
-        "github",
-        "instragram"
-    ]
+    # TODO: Re-implement this
+    # social_objects = models.OrganizationSocialMedia.objects.filter(organization=organization)
+    # social_media_names = [
+    #     "facebook",
+    #     "twitter",
+    #     "linkedin",
+    #     "github",
+    #     "instragram"
+    # ]
 
-    for name in social_media_names:
-        updated = _save_social_media_with_name(
-            organization,
-            name,
-            links.cleaned_data[name],
-            social_objects
-        )
+    # for name in social_media_names:
+    #     updated = _save_social_media_with_name(
+    #         organization,
+    #         name,
+    #         links.cleaned_data[name],
+    #         social_objects
+    #     )
+    pass
 
 
 def _edit_organization_with_forms(organization, basic, links):
@@ -286,7 +286,8 @@ def _edit_organization_with_forms(organization, basic, links):
     :param links: The Links form
     :return:
     """
-    # TODO: Use this solution: https://stackoverflow.com/questions/1355150/django-when-saving-how-can-you-check-if-a-field-has-changed/1793323#1793323
+    # TODO: Use this solution:
+    # https://stackoverflow.com/questions/1355150/django-when-saving-how-can-you-check-if-a-field-has-changed/1793323#1793323
     organization.title = basic.cleaned_data['name']
     organization.about = basic.cleaned_data['about']
     organization.city = basic.cleaned_data['city']
@@ -321,12 +322,13 @@ def manager(request, pk):
 
     # GET:
     # Load Form's initial data
+    # TODO: FIX THIS FOR SOCIAL MEDIA
     urls = models.OrganizationURL.objects.filter(org=organization)
-    facebook = models.OrganizationSocialMedia.objects.filter(icon="fa-facebook", organization=organization)
-    twitter = models.OrganizationSocialMedia.objects.filter(icon="fa-twitter", organization=organization)
-    linkedin = models.OrganizationSocialMedia.objects.filter(icon="fa-linkedin", organization=organization)
-    github = models.OrganizationSocialMedia.objects.filter(icon="fa-github", organization=organization)
-    instragram = models.OrganizationSocialMedia.objects.filter(icon="fa-instragram", organization=organization)
+    facebook = organization.facebook
+    twitter = organization.twitter
+    linkedin = organization.linkedin
+    github = organization.github
+    instragram = organization.instagram
     join_requests = models.JoinRequest.objects.filter(organization=organization, is_open=True)
     memberships = models.OrganizationMembership.objects.filter(organization=organization)
     org_image = organization.image
@@ -343,11 +345,11 @@ def manager(request, pk):
         'url0': urls.first() or "",
         'url1': urls[1] or "",
         'url2': urls[2] or "",
-        'facebook': facebook.first().url if facebook.first() else "",
-        'twitter': twitter.first().url if twitter.first() else "",
-        'linkedin': linkedin.first().url if linkedin.first() else "",
-        'github': github.first().url if github.first() else "",
-        'instagram': instragram.first().url if instragram.first() else "",
+        'facebook': facebook.url if facebook else "",
+        'twitter': twitter.url if twitter else "",
+        'linkedin': linkedin.url if linkedin else "",
+        'github': github.url if github else "",
+        'instagram': instragram.url if instragram else "",
     }
 
     # Determine the type of HTTP request

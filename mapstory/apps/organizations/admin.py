@@ -41,7 +41,6 @@ class OrganizationAdmin(admin.ModelAdmin):
         OrganizationURLInline,
         OrganizationLayersInline,
         OrganizationMapstoryInline,
-        OrganizationSocialMediaInline,
     ]
 
 

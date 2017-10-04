@@ -15,6 +15,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='JoinRequest',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('last_updated', models.DateTimeField(auto_now=True)),
+                ('is_open', models.BooleanField(default=True)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Organization',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -26,7 +35,7 @@ class Migration(migrations.Migration):
                 ('last_updated', models.DateTimeField(auto_now=True)),
                 ('city', models.CharField(default=b'', max_length=255)),
                 ('country', models.CharField(default=b'', max_length=255)),
-                ('image', models.FileField(null=True, upload_to=b'')),
+                ('image', models.FileField(null=True, upload_to=b'', blank=True)),
             ],
             options={
                 'verbose_name_plural': 'Organizations',
@@ -72,10 +81,9 @@ class Migration(migrations.Migration):
             name='OrganizationSocialMedia',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(default=b'blank', max_length=255)),
+                ('name', models.CharField(max_length=255)),
                 ('icon', models.CharField(max_length=255)),
                 ('url', models.URLField()),
-                ('organization', models.ForeignKey(to='organizations.Organization')),
             ],
         ),
         migrations.CreateModel(
@@ -105,5 +113,45 @@ class Migration(migrations.Migration):
             model_name='organizationlayer',
             name='organization',
             field=models.ForeignKey(to='organizations.Organization'),
+        ),
+        migrations.AddField(
+            model_name='organization',
+            name='facebook',
+            field=models.ForeignKey(related_name='facebook', blank=True, to='organizations.OrganizationSocialMedia', null=True),
+        ),
+        migrations.AddField(
+            model_name='organization',
+            name='github',
+            field=models.ForeignKey(related_name='github', blank=True, to='organizations.OrganizationSocialMedia', null=True),
+        ),
+        migrations.AddField(
+            model_name='organization',
+            name='instagram',
+            field=models.ForeignKey(related_name='instagram', blank=True, to='organizations.OrganizationSocialMedia', null=True),
+        ),
+        migrations.AddField(
+            model_name='organization',
+            name='linkedin',
+            field=models.ForeignKey(related_name='linkedin', blank=True, to='organizations.OrganizationSocialMedia', null=True),
+        ),
+        migrations.AddField(
+            model_name='organization',
+            name='twitter',
+            field=models.ForeignKey(related_name='twitter', blank=True, to='organizations.OrganizationSocialMedia', null=True),
+        ),
+        migrations.AddField(
+            model_name='joinrequest',
+            name='approved_by',
+            field=models.ForeignKey(blank=True, to='organizations.OrganizationMembership', null=True),
+        ),
+        migrations.AddField(
+            model_name='joinrequest',
+            name='organization',
+            field=models.ForeignKey(to='organizations.Organization'),
+        ),
+        migrations.AddField(
+            model_name='joinrequest',
+            name='user',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
         ),
     ]
