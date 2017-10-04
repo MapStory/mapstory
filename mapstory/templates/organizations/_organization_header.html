@@ -1,8 +1,11 @@
 <div class="organization_hero">
     <div class="organization_icon">
-        {#TODO: Implement Image here #}
         <div class="organization_icon_image">
-            <img src="http://via.placeholder.com/115x115">
+            {% if org_image %}
+                <img src="{{ org_image }}">
+            {% else %}
+                <img src="http://via.placeholder.com/115x115">
+            {% endif %}
         </div>
     </div>
     <div class="organization_header">

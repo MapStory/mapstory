@@ -102,6 +102,7 @@ def organization_detail(request, pk):
         'mapstories': mapstories,
         'membership': membership,
         'social_icons': org_social_media,
+        'org_image': org.image
     }
 
     return render(request, 'organizations/organization_detail.html', context)
@@ -242,7 +243,7 @@ def _save_social_media_with_name(organization, social_media_name, new_url_value,
     if new_url_value:
         for social in social_objects:
             # Update if it exists
-            if social_media_name in social.url:
+            if social_media_name == social.name:
                 social.url = new_url_value
                 social.save()
                 updated_obj = social
@@ -298,7 +299,6 @@ def _edit_organization_with_forms(organization, basic, links):
     # TODO: Save social URLS here
     _save_social_icons(organization, links)
 
-
     # TODO: Handle Links
 
 
@@ -329,7 +329,7 @@ def manager(request, pk):
     instragram = models.OrganizationSocialMedia.objects.filter(icon="fa-instragram", organization=organization)
     join_requests = models.JoinRequest.objects.filter(organization=organization, is_open=True)
     memberships = models.OrganizationMembership.objects.filter(organization=organization)
-
+    org_image = organization.image
     info = {
         'name': organization.title,
         'slogan': organization.slogan,
@@ -352,21 +352,31 @@ def manager(request, pk):
 
     # Determine the type of HTTP request
     if request.method == 'POST':
+        # Get POST data
         basic_info_form = forms.BasicInformation(request.POST)
         links_form = forms.LinksAndSocialMedia(request.POST)
+
+        # Check for valid forms
         if basic_info_form.is_valid() and links_form.is_valid():
+            # All forms are valid
             _edit_organization_with_forms(organization, basic_info_form, links_form)
+            messages.success(request, "Saved changes to Organization.")
+            return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
+        else:
+            # Information was not good
+            messages.warning(request, "Info was not valid")
 
     # Set the forms initial data
     basic_info_form = forms.BasicInformation(initial=info)
     links_form = forms.LinksAndSocialMedia(initial=links)
 
     return render(request, 'organizations/manager.html', {
-        'org':organization,
-        'basic_form':basic_info_form,
-        'links_form':links_form,
+        'org': organization,
+        'basic_form': basic_info_form,
+        'links_form': links_form,
         'join_requests': join_requests,
         'memberships': memberships,
+        'org_image': org_image,
     })
 
 
@@ -379,11 +389,12 @@ def request_membership(request, pk):
     :return: HTTPResponse
     """
     if not request.user.is_authenticated():
+        # TODO: Show the login popup.
         messages.warning(request, 'Please Log In or Sign Up before joining an Organization.')
         return redirect(reverse("index_view"))
 
     # Make sure the Request doesnt exist yet.
-    found = models.JoinRequest.objects.filter(organization_id = pk, user=request.user.pk)
+    found = models.JoinRequest.objects.filter(organization_id=pk, user=request.user.pk)
     if found.count() > 0:
         messages.warning(request, 'A request to join has already been made.')
         return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
@@ -397,7 +408,7 @@ def request_membership(request, pk):
         request_to_join.save()
         messages.success(request, 'A request to join has been made')
 
-    return redirect(reverse("organizations:detail", kwargs={'pk':pk}))
+    return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
 
 
 def approve_membership(request, pk):

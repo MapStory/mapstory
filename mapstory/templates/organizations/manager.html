@@ -9,7 +9,11 @@
             <div class="organization_icon">
                 {#TODO: Implement Image here #}
                 <div class="organization_icon_image">
+                    {% if org_image %}
+                        <img src="{{ org_image }}">
+                    {% else %}
                     <img src="http://via.placeholder.com/115x115">
+                    {% endif %}
                 </div>
             </div>
             <div class="organization_header">
@@ -21,9 +25,10 @@
 
         <div class="organization_content">
             <div class="org_left_column">
-                <div class="return-to-page-button">
-                    <a href="{% url 'organizations:detail' pk=org.pk  %}"><h3>Return to Org Page</h3></a>
+                <div class="button org-join-button">
+                    <a href="{% url 'organizations:detail' pk=org.pk  %}">Return to Org Page</a>
                 </div>
+                <div style="clear: both;"></div>
                 <div class="organization_navigation_manage">
                     <ul>
                         <li><a href="#basic-info">Basic Info</a></li>
@@ -70,12 +75,11 @@
                     <div class="members-section">
                     {% if memberships %}
                         <h3>MEMBERS</h3>
-                        <ul>
-                        <!--TODO: Use the cards here-->
                         {% for member in memberships %}
-                            <li>{{ member.user }}</li>
+                            <a href="/storyteller/{{ member.user.username }}">
+                                {% include "cards/organization_member_card.html" with membership=member %}
+                            </a>
                         {% endfor %}
-                        </ul>
                     {% endif %}
                     </div>
                     <div style="clear: both;"></div>
@@ -105,7 +109,7 @@
                         <p>Payment method</p>
                         <p>Upgrade</p>
                     </section>
-                    <input style="width: 300px;" class="button" type="submit" value="Submit" />
+                    <input style="width: 300px;" class="button org-join-button" type="submit" value="Submit" />
                 </form>
             </div>
             <div style="clear: both;"></div>
