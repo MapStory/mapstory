@@ -18,7 +18,9 @@
 #
 #########################################################################
 
+#
 # Django settings for the GeoNode project.
+#
 import logging
 import os
 import sys
@@ -32,6 +34,7 @@ import pyproj
 #
 
 SITENAME = 'MapStory'
+SITEURL = "%s://%s" % (os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
 
 # Defines the directory that contains the settings file as the LOCAL_ROOT
 # It is used for relative settings elsewhere.
@@ -43,8 +46,8 @@ STATICFILES_DIRS = [
                        os.path.join(LOCAL_ROOT, "static"),
                    ] + STATICFILES_DIRS
 
-STATIC_ROOT = os.path.join(LOCAL_ROOT, "static_root")
-MEDIA_ROOT = os.path.join(LOCAL_ROOT, "uploaded")
+MEDIA_ROOT = os.environ['MEDIA_ROOT']
+STATIC_ROOT = os.environ['STATIC_ROOT']
 
 
 # Location of url mappings
@@ -55,14 +58,9 @@ LOCALE_PATHS = (
                    os.path.join(LOCAL_ROOT, 'locale'),
                ) + LOCALE_PATHS
 
-# Defines settings for development
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(LOCAL_ROOT, 'development.db'),
-    },
-}
-
+#
+# Application Settings
+#
 # This removes actstream in order to add it at the end of installed apps.
 # This is recommended by the actstream docs:
 # http://django-activity-stream.readthedocs.io/en/latest/installation.html#basic-app-configuration
@@ -112,13 +110,18 @@ INSTALLED_APPS += (
 )
 # Thanks !
 
-# Adding Threaded Comments app
-FLUENT_COMMENTS_EXCLUDE_FIELDS = ('name', 'email', 'url', 'title')
-COMMENTS_APP = 'fluent_comments'
+MAPSTORY_APPS = (
 
+    'mapstory.apps.boxes',
+    'mapstory.apps.flag', # - temporarily using this instead of the flag app for django because they need to use AUTH_USER_MODEL
 
-# Note that Django automatically includes the "templates" dir in all the
-# INSTALLED_APPS, se there is no need to add maps/templates or admin/templates
+)
+
+INSTALLED_APPS += MAPSTORY_APPS
+
+#
+# Template Settings
+#
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -145,18 +148,71 @@ TEMPLATES = [
     },
 ]
 
+#
+# Database Settings
+#
+DATABASE_HOST = os.environ['DATABASE_HOST']
+DATABASE_PASSWORD = os.environ['DATABASE_PASSWORD']
+DATABASE_PORT = '5432'
+
+if DATABASE_PASSWORD:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'mapstory',
+            'USER': 'mapstory',
+            'PASSWORD': DATABASE_PASSWORD,
+            'HOST': DATABASE_HOST,
+            'PORT': '5432',
+        },
+        'datastore': {
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
+            'NAME': 'mapstory_data',
+            'USER': 'mapstory',
+            'PASSWORD': DATABASE_PASSWORD,
+            'HOST': DATABASE_HOST,
+            'PORT': '5432',
+        },
+        'geogig': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'mapstory_geogig',
+            'USER': 'mapstory',
+            'PASSWORD': DATABASE_PASSWORD,
+            'HOST': DATABASE_HOST,
+            'PORT': '5432',
+        }
+    }
+
+    UPLOADER = {
+        'BACKEND': 'geonode.importer',
+        'OPTIONS': {
+            'TIME_ENABLED': True,
+            'GEOGIG_ENABLED': True,
+        }
+    }
+
+    USE_BIG_DATE = True
+
+    GEOGIG_DATASTORE_NAME = 'geogig'
+
+#
+# Geoserver Settings
+#
+GEOSERVER_LOCATION = "%s://%s:%d/geoserver/" % (os.environ['PRIVATE_PROTOCOL'], os.environ['GEOSERVER_HOST_INTERNAL'], int(os.environ['GEOSERVER_PORT_INTERNAL']))
+GEOSERVER_PUBLIC_LOCATION = "%s://%s/geoserver/" % (os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
+
 OGC_SERVER = {
     'default': {
         'BACKEND': 'geonode.geoserver',
-        'LOCATION': 'http://localhost:8080/geoserver/',
+        'LOCATION': GEOSERVER_LOCATION,
         'LOGIN_ENDPOINT': 'j_spring_oauth2_geonode_login',
         'LOGOUT_ENDPOINT': 'j_spring_oauth2_geonode_logout',
         # PUBLIC_LOCATION needs to be kept like this because in dev mode
         # the proxy won't work and the integration tests will fail
         # the entire block has to be overridden in the local_settings
-        'PUBLIC_LOCATION': 'http://localhost:8000/geoserver/',
+        'PUBLIC_LOCATION': GEOSERVER_PUBLIC_LOCATION,
         'USER': 'admin',
-        'PASSWORD': 'geoserver',
+        'PASSWORD': os.environ['GEOSERVER_PASSWORD'],
         'MAPFISH_PRINT_ENABLED': True,
         'PRINT_NG_ENABLED': True,
         'GEONODE_SECURITY_ENABLED': True,
@@ -167,31 +223,62 @@ OGC_SERVER = {
         'LOG_FILE': '%s/geoserver/data/logs/geoserver.log'
         % os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir)),
         # Set to name of database in DATABASES dictionary to enable
-        'DATASTORE': '',  # 'datastore',
+        'DATASTORE': 'geogig',
         'TIMEOUT': 10,  # number of seconds to allow for HTTP requests,
         'GEOGIG_DATASTORE_DIR': '/var/lib/geoserver/data/geogig',
         'PG_GEOGIG': True
     }
 }
 
-DEBUG_STATIC = True
 
-REGISTRATION_OPEN = True
+def str_to_bool(v):
+    return v.lower() in ("yes", "true", "t", "1")
 
-LOCAL_CONTENT = False
 
-DATABASE_PASSWORD = None
-DATABASE_HOST = 'localhost'
-DATABASE_PORT = '5432'
-
-AUTOCOMPLETE_QUICK_SEARCH = False
-
-ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = True
+#
+# Email Settings
+#
+ACCOUNT_ACTIVATION_DAYS = int(os.environ.get('ACCOUNT_ACTIVATION_DAYS', '0'))
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
+ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = str_to_bool(os.environ['ACCOUNT_EMAIL_CONFIRMATION_REQUIRED'])
+ACCOUNT_LOGIN_REDIRECT_URL = '/'
+ACCOUNT_OPEN_SIGNUP = True
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', '')
+EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '25'))
+EMAIL_USE_TLS = str_to_bool(os.environ.get('EMAIL_USE_TLS', 'false'))
+THEME_ACCOUNT_CONTACT_EMAIL = os.environ.get('EMAIL_HOST_USER', '')
 
+#
+# AWS S3 Settings
+#
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID','')
+AWS_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME' ,'')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME','')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY','')
+AWS_S3_BUCKET_DOMAIN = '%s.s3.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,)
 USE_AWS_S3_STATIC = False
 USE_AWS_S3_MEDIA = False
 
+if USE_AWS_S3_STATIC:
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'mapstory.s3_storages.StaticStorage'
+    STATIC_URL = "https://%s/%s/" % (AWS_S3_BUCKET_DOMAIN, STATICFILES_LOCATION)
+    REMOTE_CONTENT_URL = STATIC_URL + 'assets'
+
+if USE_AWS_S3_MEDIA:
+    MEDIAFILES_LOCATION = 'media'
+    MEDIA_URL = "https://%s/%s/" % (AWS_S3_BUCKET_DOMAIN, MEDIAFILES_LOCATION)
+    DEFAULT_FILE_STORAGE = 'mapstory.s3_storages.MediaStorage'
+
+#
+# Django OSGEO Importer Settings
+#
 IMPORT_HANDLERS = (
     'mapstory.import_handlers.TruncatedNameHandler',
     'osgeo_importer.handlers.BigDateFieldConverterHandler',
@@ -205,14 +292,32 @@ IMPORT_HANDLERS = (
 )
 
 OSGEO_IMPORTER_GEONODE_ENABLED = True
+OSGEO_DATASTORE = 'datastore'
+# Soft time limit for the import_object celery task of django_osgeo_importer, should be changed later after testing.
+IMPORT_TASK_SOFT_TIME_LIMIT = 1800
+PROJECTION_DIRECTORY = os.path.join(os.path.dirname(pyproj.__file__), 'data/')
 
-if os.path.exists('mapstory/settings/local_settings.py'):
-    exec open('mapstory/settings/local_settings.py') in globals()
+DEFAULT_IMPORTER_CONFIG = {
+    'configureTime': True,
+    'editable': True,
+    'convert_to_date': [],
+    'always_geogig': True,
+    'index': 0,
+    'permissions': {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}, 'groups':{'registered':['change_layer_style']}}
+}
 
-# Download formats available in layer detail download modal
-DOWNLOAD_FORMATS_VECTOR = [
-    'Zipped Shapefile', 'GML 2.0', 'GML 3.1.1', 'CSV', 'GeoJSON', 'KML',
-]
+# Append only needs to import to temporarily store changes, so we turn off editable and the geogig history.
+DEFAULT_APPEND_CONFIG = {
+    'configureTime': True,
+    'editable': False,
+    'convert_to_date': [],
+    'always_geogig': False,
+    'index': 0
+}
+
+# the layer_create view allows users to create layer by providing a workspace and a featureType
+# this settings whitelists the datastores in which layers creation are allowed
+ALLOWED_DATASTORE_LAYER_CREATE = ('*',)
 
 # @todo remove this hack once maploom can deal with other config
 # have to put this after local_settings or any adjustments to OGC_SERVER will
@@ -331,21 +436,6 @@ MAP_BASELAYERS = [
         'title': 'World Dark',
         'group': 'background'
     },
-    ## remove esri basemap until supported by storytools
-    ##    {
-    ##        "source": {"ptype": "gxp_arcrestsource",
-    ##                   "url": "https://services.arcgisonline.com/arcgis/rest/services/NGS_Topo_US_2D/MapServer/",
-    ##                   "alwaysAnonymous": True,
-    ##                   'proj': 'EPSG:4326'},
-    ##        "type": "OpenLayers.Layer",
-    ##        "args": ["Worldmap", "https://services.arcgisonline.com/arcgis/rest/services/NGS_Topo_US_2D/MapServer/",
-    ##                 {"layers": 'basic'}],
-    ##        "visibility": False,
-    ##        "fixed": True,
-    ##        "group": "background",
-    ##        "name": "NGS_Topo_US_2D",
-    ##        "title": "Esri NGS"
-    ##    },
     {
         'source': {
             'ptype': 'gxp_mapboxsource',
@@ -357,54 +447,170 @@ MAP_BASELAYERS = [
     }
 ]
 
-if DATABASE_PASSWORD:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'mapstory',
-            'USER': 'mapstory',
-            'PASSWORD': DATABASE_PASSWORD,
-            'HOST': DATABASE_HOST,
-            'PORT': '5432',
-        },
-        'datastore': {
-            'ENGINE': 'django.contrib.gis.db.backends.postgis',
-            'NAME': 'mapstory_data',
-            'USER': 'mapstory',
-            'PASSWORD': DATABASE_PASSWORD,
-            'HOST': DATABASE_HOST,
-            'PORT': '5432',
-        },
-        'geogig': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'mapstory_geogig',
-            'USER': 'mapstory',
-            'PASSWORD': DATABASE_PASSWORD,
-            'HOST': DATABASE_HOST,
-            'PORT': '5432',
-        }
-    }
+#
+# Avatar Settings
+#
+AVATAR_DEFAULT_URL = "%s/static/mapstory/img/default_avatar_lg.png" % SITEURL
+AVATAR_GRAVATAR_BACKUP = False
+AVATAR_GRAVATAR_SSL = True
+AUTO_GENERATE_AVATAR_SIZES = (35, 45, 75, 100)
 
-    OGC_SERVER['default']['DATASTORE'] = 'geogig'
+#
+# Celery Settings
+#
+BROKER_URL = "amqp://mapstory:%s@%s/%s" % (os.environ['RABBITMQ_APPLICATION_PASSWORD'], os.environ['RABBITMQ_HOST'], os.environ['RABBITMQ_APPLICATION_VHOST'])
+CELERY_ALWAYS_EAGER = str_to_bool(os.environ.get('CELERY_ALWAYS_EAGER', 'False'))  # False makes tasks run asynchronously
+CELERY_DEFAULT_QUEUE = "default"
+CELERY_DEFAULT_EXCHANGE = "default"
+CELERY_DEFAULT_EXCHANGE_TYPE = "direct"
+CELERY_DEFAULT_ROUTING_KEY = "default"
+CELERY_CREATE_MISSING_QUEUES = True
+CELERY_EAGER_PROPAGATES_EXCEPTIONS = str_to_bool(os.environ.get('CELERY_EAGER_PROPAGATES_EXCEPTIONS', 'False'))
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERY_IGNORE_RESULT = False
 
-    UPLOADER = {
-        'BACKEND': 'geonode.importer',
-        'OPTIONS': {
-            'TIME_ENABLED': True,
-            'GEOGIG_ENABLED': True,
-        }
-    }
+#
+# Haystack Settings
+#
+HAYSTACK_SEARCH = True
+# Update facet counts from Haystack
+HAYSTACK_FACET_COUNTS = False
+HAYSTACK_URL = "%s://%s:%d" % (os.environ['PRIVATE_PROTOCOL'], os.environ['ELASTIC_HOST'], int(os.environ['ELASTIC_PORT']))
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'mapstory.search.elasticsearch_backend.MapStoryElasticsearchSearchEngine',
+        'URL': HAYSTACK_URL,
+        'INDEX_NAME': 'geonode',
+        'EXCLUDED_INDEXES': ['geonode.layers.search_indexes.LayerIndex'],
+    },
+}
+SKIP_PERMS_FILTER = True
+HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
 
-    USE_BIG_DATE = True
+#
+# Social Authentication Settings
+#
+ENABLE_SOCIAL_LOGIN = str_to_bool(os.environ['ENABLE_SOCIAL_LOGIN'])
+if ENABLE_SOCIAL_LOGIN:
+    SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
 
-    GEOGIG_DATASTORE_NAME = 'geogig'
+    INSTALLED_APPS += (
+        'social.apps.django_app.default',
+        'provider',
+        'provider.oauth2',
+    )
 
-SCHEMA_DOWNLOAD_EXCLUDE = [
-    'FID',
-    'ogc_fid',
-    'date_xd',
-    'date_parsed',
+    AUTHENTICATION_BACKENDS = (
+        'social.backends.google.GoogleOAuth2',
+        'social.backends.facebook.FacebookOAuth2',
+    )
+
+DEFAULT_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'social.pipeline.mail.mail_validation',
+    'social.pipeline.social_auth.associate_by_email',
+    'social.pipeline.user.create_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details'
+)
+
+SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('FACEBOOK_APP_ID','')
+SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_APP_SECRET','')
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id,name,email',
+}
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_OATH2_CLIENT_ID','')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OATH2_CLIENT_SECRET','')
+
+#
+# Activity Stream Settings
+#
+SITE_ID = 1
+ACTSTREAM_SETTINGS = {
+    'FETCH_RELATIONS': True,
+    'USE_PREFETCH': False,
+    'USE_JSONFIELD': True,
+    'GFK_FETCH_DEPTH': 1,
+}
+#
+# Threaded Comment Settings
+#
+FLUENT_COMMENTS_EXCLUDE_FIELDS = ('name', 'email', 'url', 'title')
+COMMENTS_APP = 'fluent_comments'
+
+#
+# Automated Testing Settings
+#
+class DisableMigrations(object):
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return "notmigrations"
+
+
+# Disable migrations only on tests
+TESTS_IN_PROGRESS = False
+if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
+    logging.disable(logging.CRITICAL)
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    )
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+    TESTS_IN_PROGRESS = True
+    MIGRATION_MODULES = DisableMigrations()
+
+# Setup django-nose as our test runner and have it provide us with HTML coverage reports generated in the cover folder.
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Nose Test arguments. Will not find and run tests unless --exe is specified.
+# Nose-runner has issues with coverage reporting and model loading.
+# https://github.com/django-nose/django-nose/issues/180
+# Coverage options are now specified in `.coveragerc`
+NOSE_ARGS = [
+    # '--with-coverage',
+    # '--cover-package=mapstory',
+    # '--cover-inclusive',
+    # '--cover-erase',
+    # '--cover-html',
+    '--exe',
+    # This:
+    '--ignore-files=(^\.|^_|pavement\.py$|fabfile\.py$|local_settings\.py$|cf\.py$|search_indexes\.py$)',
+    # Is not the same as this:
+    # '--exclude=(^\.|^_|pavement\.py$|fabfile\.py$|_settings\.py$|cf\.py$|search_indexes\.py$)',
+    '--all-modules',
+    '--traverse-namespace',
+    # '--detailed-errors',
+    # '--with-id',
+    # '--pdb',
+    # '--verbosity=3',
+    # '--stop',
 ]
+
+#
+# Debug Settings
+#
+DEBUG_STATIC = True
+DEBUG = str_to_bool(os.environ.get('DEBUG', 'False'))
+if not DEBUG:
+    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split('|')
+if os.environ['PUBLIC_HOST'].replace('.', '').isdigit():
+    # IP Address
+    SESSION_COOKIE_DOMAIN = os.environ['PUBLIC_HOST']
+elif '.' in os.environ['PUBLIC_HOST']:
+    # Domain name, hopefully
+    SESSION_COOKIE_DOMAIN = ".%s" % (os.environ['PUBLIC_HOST'],)
+else:
+    # hostname with no TLD?
+    SESSION_COOKIE_DOMAIN = "%s" % (os.environ['PUBLIC_HOST'],)
 
 LOGGING = {
     'version': 1,
@@ -460,104 +666,39 @@ LOGGING = {
     },
 }
 
-if USE_AWS_S3_STATIC:
-    STATICFILES_LOCATION = 'static'
-    STATICFILES_STORAGE = 'mapstory.s3_storages.StaticStorage'
-    STATIC_URL = "https://%s/%s/" % (AWS_S3_BUCKET_DOMAIN, STATICFILES_LOCATION)
+#
+# Slack Settings
+#
+SLACK_BACKEND = os.environ.get('SLACK_BACKEND', 'django_slack.backends.RequestsBackend')
+SLACK_TOKEN = os.environ.get('SLACK_TOKEN', '')
+SLACK_CHANNEL = os.environ.get('SLACK_CHANNEL', '')
+SLACK_ICON_EMOJI = os.environ.get('SLACK_ICON_EMOJI', '')
+SLACK_USERNAME = os.environ.get('SLACK_USERNAME', '')
 
-if USE_AWS_S3_MEDIA:
-    MEDIAFILES_LOCATION = 'media'
-    MEDIA_URL = "https://%s/%s/" % (AWS_S3_BUCKET_DOMAIN, MEDIAFILES_LOCATION)
-    DEFAULT_FILE_STORAGE = 'mapstory.s3_storages.MediaStorage'
-
-REMOTE_CONTENT_URL = STATIC_URL + 'assets'
-
-# the layer_create view allows users to create layer by providing a workspace and a featureType
-# this settings whitelists the datastores in which layers creation are allowed
-ALLOWED_DATASTORE_LAYER_CREATE = ('*',)
-
-# Gravatar Settings
-AVATAR_GRAVATAR_SSL = True
-
-DEFAULT_IMPORTER_CONFIG = {
-    'configureTime': True,
-    'editable': True,
-    'convert_to_date': [],
-    'always_geogig': True,
-    'index': 0,
-    'permissions': {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}, 'groups':{'registered':['change_layer_style']}}
-}
-
-# Append only needs to import to temporarily store changes, so we turn off editable and the geogig history.
-DEFAULT_APPEND_CONFIG = {
-    'configureTime': True,
-    'editable': False,
-    'convert_to_date': [],
-    'always_geogig': False,
-    'index': 0
-}
-
-
-# Automated Testing Settings
-class DisableMigrations(object):
-    def __contains__(self, item):
-        return True
-
-    def __getitem__(self, item):
-        return "notmigrations"
-
-
-# Disable migrations only on tests
-TESTS_IN_PROGRESS = False
-if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
-    logging.disable(logging.CRITICAL)
-    PASSWORD_HASHERS = (
-        'django.contrib.auth.hashers.MD5PasswordHasher',
-    )
-    DEBUG = False
-    TEMPLATE_DEBUG = False
-    TESTS_IN_PROGRESS = True
-    MIGRATION_MODULES = DisableMigrations()
-
-# Setup django-nose as our test runner and have it provide us with HTML coverage reports generated in the cover folder.
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-# Nose Test arguments. Will not find and run tests unless --exe is specified.
-# Nose-runner has issues with coverage reporting and model loading.
-# https://github.com/django-nose/django-nose/issues/180
-# Coverage options are now specified in `.coveragerc`
-NOSE_ARGS = [
-    # '--with-coverage',
-    # '--cover-package=mapstory',
-    # '--cover-inclusive',
-    # '--cover-erase',
-    # '--cover-html',
-    '--exe',
-    # This:
-    '--ignore-files=(^\.|^_|pavement\.py$|fabfile\.py$|local_settings\.py$|cf\.py$|search_indexes\.py$)',
-    # Is not the same as this:
-    # '--exclude=(^\.|^_|pavement\.py$|fabfile\.py$|_settings\.py$|cf\.py$|search_indexes\.py$)',
-    '--all-modules',
-    '--traverse-namespace',
-    # '--detailed-errors',
-    # '--with-id',
-    # '--pdb',
-    # '--verbosity=3',
-    # '--stop',
-]
+#
+# Misc Settings
+#
+REGISTRATION_OPEN = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+AUTOCOMPLETE_QUICK_SEARCH = False
+THEME = os.environ.get('THEME', 'default')
+USER_SNAP = True
+GOOGLE_ANALYTICS = os.environ.get('GOOGLE_ANALYTICS', '')
+LOCAL_CONTENT = False
 
 # Override number of results per page listed in the GeoNode search pages
 CLIENT_RESULTS_LIMIT = 30
 
-PROJECTION_DIRECTORY = os.path.join(os.path.dirname(pyproj.__file__), 'data/')
-
-# Activity Stream Settings
-SITE_ID = 1
-ACTSTREAM_SETTINGS = {
-    'FETCH_RELATIONS': True,
-    'USE_PREFETCH': False,
-    'USE_JSONFIELD': True,
-    'GFK_FETCH_DEPTH': 1,
-}
+# Download formats available in layer detail download modal
+DOWNLOAD_FORMATS_VECTOR = [
+    'Zipped Shapefile', 'GML 2.0', 'GML 3.1.1', 'CSV', 'GeoJSON', 'KML',
+]
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+SCHEMA_DOWNLOAD_EXCLUDE = [
+    'FID',
+    'ogc_fid',
+    'date_xd',
+    'date_parsed',
+]

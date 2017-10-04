@@ -73,7 +73,7 @@ RUN set -ex \
     && pip install -e ./django-mailer \
     && git clone -b master --depth 1 https://github.com/MapStory/icon-commons.git \
     && pip install -e ./icon-commons \
-    && git clone -b master --depth 1 https://github.com/GeoNode/django-osgeo-importer.git \
+    && git clone -b angular-1.6 --depth 1 https://github.com/GeoNode/django-osgeo-importer.git \
     && pip install -e ./django-osgeo-importer \
     && git clone -b master --depth 1 https://github.com/MapStory/story-tools.git \
     && chown -R mapstory:mapstory .
@@ -110,6 +110,8 @@ RUN set -ex \
 USER root
 WORKDIR $APP_PATH
 
+# Copy in dependencies
+COPY deps ./deps
 # Copy in the code
 COPY mapstory ./mapstory
 COPY ./*.py ./

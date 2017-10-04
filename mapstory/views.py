@@ -6,6 +6,7 @@ import json
 import math
 import ogr
 import os
+import pandas
 import shutil
 import StringIO
 import tempfile
@@ -558,7 +559,6 @@ def layer_create(request, template='upload/layer_create.html'):
         # as they will break the functionality of adding and editing features.
         for attribute in configuration_options['featureType']['attributes']['attribute']:
             attribute['name'] = launder(attribute['name'])
-            print attribute['name']
 
         creator = GeoServerLayerCreator()
         try:
@@ -691,23 +691,21 @@ def layer_append_minimal(source, target, request_cookies):
 def download_append_csv(request):
 
     # Retrieve the CSV and save it in a variable
-    csv_url = request.session['csv_link']
+    csv_url = request.session['csv_link'].lower()
     csv_name = '{}.csv'.format(request.session['csv_name'])
-    original_csv_download = requests.get(csv_url)
-    original_csv = csv.DictReader(original_csv_download)
-    original_csv.fieldnames = [field_name.lower() for field_name in original_csv.fieldnames]
+    original_csv = pandas.read_csv(csv_url)
+    fieldnames = [fieldname.lower() for fieldname in original_csv.columns.values.tolist()]
 
     # Remove the FID and OGC_FID fields
-    if 'fid' in original_csv.fieldnames:
-        original_csv.fieldnames.remove('fid')
-    if 'ogc_fid' in original_csv.fieldnames:
-        original_csv.fieldnames.remove('ogc_fid')
-
+    if 'fid' in fieldnames:
+        fieldnames.remove('fid')
+    if 'ogc_fid' in fieldnames:
+        fieldnames.remove('ogc_fid')
     # Create the new CSV
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename={}'.format(csv_name)
     writer = csv.writer(response)
-    writer.writerow(original_csv.fieldnames)
+    writer.writerow(fieldnames)
 
     # Return the CSV as an HTTP Response for the user to download
     return response
@@ -729,15 +727,14 @@ def temporary_directory(*args, **kwargs):
 def download_append_shp(request):
     """
     This function grabs a zipped shapefile from a WFS request, and removes
-    the fields that are unnecessary for appending data to that
+    the fields that are unnecessary for appending data to that layer.
     """
 
     # Create a temporary directory that is removed after the user downloads the zipfile.
     with temporary_directory() as tempdir:
 
-        shp_url = request.session['shp_link']
+        shp_url = request.session['shp_link'].lower()
         shp_name = '{}.zip'.format(request.session['shp_name'])
-        print tempdir
 
         # Download the zip file to a temporary directory.
         shapefile_request = requests.get(shp_url)
@@ -780,7 +777,6 @@ def download_append_shp(request):
         new_zipfile = zipfile.ZipFile(in_memory_contents, "w", compression=zipfile.ZIP_DEFLATED)
         for dirname, subdirs, files in os.walk(tempdir):
             for filename in files:
-                print os.path.join(dirname, filename)
                 new_zipfile.write(os.path.join(dirname, filename), os.path.basename(filename))
         new_zipfile.close()
 
@@ -962,21 +958,15 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                 name__in=settings.DOWNLOAD_FORMATS_RASTER)
         context_dict["links"] = links
 
-    layer_property_names = []
-    for attrib in layer.attributes:
-        if attrib.attribute not in settings.SCHEMA_DOWNLOAD_EXCLUDE and not (attrib.attribute.endswith('_xd') or attrib.attribute.endswith('_parsed')):
-            layer_property_names.append(attrib.attribute)
-    layer_attrib_string = ','.join(layer_property_names)
-
     shapefile_link = layer.link_set.download().filter(mime='SHAPE-ZIP').first()
     if shapefile_link is not None:
-        shapefile_link = shapefile_link.url + '&featureID=fakeID' + '&propertyName=' + layer_attrib_string
+        shapefile_link = shapefile_link.url + '&featureID=fakeID' + '&maxFeatures=1'
         request.session['shp_name'] = layer.typename
         request.session['shp_link'] = shapefile_link
 
     csv_link = layer.link_set.download().filter(mime='csv').first()
     if csv_link is not None:
-        csv_link = csv_link.url + '&featureID=fakeID'  + '&propertyName=' + layer_attrib_string
+        csv_link = csv_link.url + '&featureID=fakeID' + '&maxFeatures=1'
         request.session['csv_name'] = layer.typename
         request.session['csv_link'] = csv_link
 
