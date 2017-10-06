@@ -342,9 +342,9 @@ def manager(request, pk):
     }
 
     links = {
-        'url0': urls.first() or "",
-        'url1': urls[1] or "",
-        'url2': urls[2] or "",
+        'url0': "",
+        'url1': "",
+        'url2': "",
         'facebook': facebook.url if facebook else "",
         'twitter': twitter.url if twitter else "",
         'linkedin': linkedin.url if linkedin else "",
