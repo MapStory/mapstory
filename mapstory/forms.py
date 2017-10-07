@@ -16,6 +16,14 @@ class SignupForm(account.forms.SignupForm):
     last_name = forms.CharField(label='Last Name', max_length=100)
 
 
+# A form for just keywords
+class KeywordsForm(forms.ModelForm):
+
+    class Meta:
+        model = ResourceBase
+        fields = ['keywords']
+
+
 # A form for a Mapstory-specific distribution_url field
 class DistributionUrlForm(forms.ModelForm):
 
@@ -71,7 +79,7 @@ class EditMapstoryProfileForm(forms.ModelForm):
 
     class Meta:
         model = MapstoryProfile
-        fields = ['education', 'expertise', 'social_twitter',
+        fields = ['interests', 'education', 'expertise', 'social_twitter',
                   'social_facebook', 'social_linkedin', 'social_github',
                   'Volunteer_Technical_Community']
 
