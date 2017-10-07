@@ -16,14 +16,6 @@ class SignupForm(account.forms.SignupForm):
     last_name = forms.CharField(label='Last Name', max_length=100)
 
 
-# A form for just keywords
-class KeywordsForm(forms.ModelForm):
-
-    class Meta:
-        model = ResourceBase
-        fields = ['keywords']
-
-
 # A form for a Mapstory-specific distribution_url field
 class DistributionUrlForm(forms.ModelForm):
 
@@ -83,19 +75,11 @@ class EditMapstoryProfileForm(forms.ModelForm):
                   'social_facebook', 'social_linkedin', 'social_github',
                   'Volunteer_Technical_Community']
 
+
 # Form with fields from the GeoNode Profile model to be edited
 class EditGeonodeProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['first_name', 'last_name', 'keywords', 'city', 'country',
+        fields = ['first_name', 'last_name', 'city', 'country',
                   'profile']
-
-        labels = {
-            "keywords": _("Interests"),
-        }
-
-        help_texts = {
-            "keywords": _
-            ("A list of personal interests (separate each interest with a comma)"),
-        }
