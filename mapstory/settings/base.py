@@ -699,3 +699,8 @@ SCHEMA_DOWNLOAD_EXCLUDE = [
     'date_xd',
     'date_parsed',
 ]
+
+#
+# Feature toggles
+#
+FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))

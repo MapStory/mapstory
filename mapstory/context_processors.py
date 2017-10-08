@@ -14,6 +14,7 @@ def context(req):
     return dict(
         AUTOCOMPLETE_QUICK_SEARCH=getattr(settings, 'AUTOCOMPLETE_QUICK_SEARCH', False),
         ENABLE_SOCIAL_LOGIN=getattr(settings, 'ENABLE_SOCIAL_LOGIN', False),
+        FEATURE_MULTIPLE_STORY_CHAPTERS=getattr(settings, 'FEATURE_MULTIPLE_STORY_CHAPTERS', False),
         GOOGLE_ANALYTICS=getattr(settings, 'GOOGLE_ANALYTICS', None),
         THEME=getattr(settings, 'THEME', 'default'),
         USER_SNAP=getattr(settings, 'USER_SNAP', False),
