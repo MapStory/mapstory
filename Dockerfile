@@ -67,6 +67,7 @@ RUN set -ex \
     && git clone -b 2.6.x --depth 1 https://github.com/GeoNode/geonode.git \
     && sed -i 's/Paver==1.2.1/Paver==1.2.4/' ./geonode/setup.py \
     && pip install -e ./geonode \
+    && git clone -b feature/composer-wip --depth 1 https://github.com/MapStory/maploom.git \
     && git clone -b composer --depth 1 https://github.com/MapStory/django-maploom.git \
     && pip install -e ./django-maploom \
     && git clone -b master --depth 1 https://github.com/pinax/django-mailer.git \
