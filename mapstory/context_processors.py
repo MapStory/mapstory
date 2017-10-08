@@ -12,14 +12,14 @@ def context(req):
     default_config = getattr(settings, 'DEFAULT_IMPORTER_CONFIG')
     append_config = getattr(settings, 'DEFAULT_APPEND_CONFIG')
     return dict(
-        VERSION=get_version(),
         AUTOCOMPLETE_QUICK_SEARCH=getattr(settings, 'AUTOCOMPLETE_QUICK_SEARCH', False),
-        favorite_info=get_favorite_info(req),
-        GOOGLE_ANALYTICS=getattr(settings, 'GOOGLE_ANALYTICS', None),
         ENABLE_SOCIAL_LOGIN=getattr(settings, 'ENABLE_SOCIAL_LOGIN', False),
-        USER_SNAP=getattr(settings, 'USER_SNAP', False),
-        site=Site.objects.get_current(),
+        GOOGLE_ANALYTICS=getattr(settings, 'GOOGLE_ANALYTICS', None),
         THEME=getattr(settings, 'THEME', 'default'),
+        USER_SNAP=getattr(settings, 'USER_SNAP', False),
+        VERSION=get_version(),
+        default_append_config=json.dumps(append_config),
         default_layer_config=json.dumps(default_config),
-        default_append_config=json.dumps(append_config)
+        favorite_info=get_favorite_info(req),
+        site=Site.objects.get_current()
     )
