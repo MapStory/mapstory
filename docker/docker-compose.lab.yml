@@ -46,11 +46,14 @@ services:
   django-maploom-build:
     build: ./deps/django-maploom
     image: quay.io/mapstory/django-maploom-build
+    environment:
+      GIT_DIR: /git
     depends_on:
       - maploom-build
     volumes:
       - ./deps/django-maploom:/django-maploom
       - ./deps/maploom:/maploom
+      - .git:/git
 
   django:
     image: quay.io/mapstory/django:lab
