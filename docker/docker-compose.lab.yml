@@ -34,6 +34,24 @@ services:
       - "15671:15671"
       - "15672:15672"
 
+  maploom-build:
+    build: ./deps/maploom
+    image: quay.io/mapstory/maploom-build
+    environment:
+      GIT_DIR: /git
+    volumes:
+      - ./deps/maploom:/usr/src/app
+      - .git:/git
+
+  django-maploom-build:
+    build: ./deps/django-maploom
+    image: quay.io/mapstory/django-maploom-build
+    depends_on:
+      - maploom-build
+    volumes:
+      - ./deps/django-maploom:/django-maploom
+      - ./deps/maploom:/maploom
+
   django:
     image: quay.io/mapstory/django:lab
     env_file:
