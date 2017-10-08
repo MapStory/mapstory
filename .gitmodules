@@ -20,7 +20,7 @@
 	branch = 2.6.x
 [submodule "deps/maploom"]
 	path = deps/maploom
-	url = git@github.com:MapStory/MapLoom.git
+	url = https://github.com/MapStory/MapLoom.git
 	branch = feature/composer-wip
 [submodule "deps/story-tools"]
 	path = deps/story-tools
