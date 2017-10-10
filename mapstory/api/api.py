@@ -4,8 +4,10 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from geonode.api.api import TypeFilteredResource, CountJSONSerializer
-from tastypie import http, fields
+from taggit.models import Tag
+from tastypie import fields
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
+from tastypie.resources import ModelResource
 
 from mapstory.mapstory_profile.models import MapstoryProfile
 
@@ -27,14 +29,20 @@ class OwnerProfileSerializer(CountJSONSerializer):
             owner.pop("mapstoryprofile")
         return super(OwnerProfileSerializer, self).to_json(data, options)
 
+class InterestsResource(ModelResource):
+    class Meta:
+        queryset = Tag.objects.all()
 
 class MapstoryProfileResource(TypeFilteredResource):
+
+    interests = fields.ToManyField(InterestsResource, 'interests', full=True)
 
     class Meta:
         queryset = MapstoryProfile.objects.all()
 
         filtering = {
-            'Volunteer_Technical_Community': ALL
+            'Volunteer_Technical_Community': ALL,
+            'interests': ALL
         }
 
 class MapstoryOwnersResource(TypeFilteredResource):
@@ -57,10 +65,6 @@ class MapstoryOwnersResource(TypeFilteredResource):
 
         orm_filters = super(MapstoryOwnersResource, self).build_filters(filters)
 
-        if 'interest_list' in filters:
-            query = filters['interest_list']
-            qset = (Q(keywords__slug__iexact=query))
-            orm_filters['interest_list'] = qset
         if 'q' in filters:
             orm_filters['q'] = filters['q']
 
@@ -70,19 +74,12 @@ class MapstoryOwnersResource(TypeFilteredResource):
 
         q = applicable_filters.pop('q', None)
 
-        if 'interest_list' in applicable_filters:
-            interest_list = applicable_filters.pop('interest_list')
-        else:
-            interest_list = None
-
         semi_filtered = super(
             MapstoryOwnersResource,
             self).apply_filters(
             request,
             applicable_filters)
 
-        if interest_list is not None:
-            semi_filtered = semi_filtered.filter(interest_list)
         if q:
             names = [
                 w for w in re.split(
@@ -111,6 +108,6 @@ class MapstoryOwnersResource(TypeFilteredResource):
             'username': ALL,
             'city': ALL,
             'country': ALL,
-            'mapstoryprofile': ALL_WITH_RELATIONS
+            'mapstoryprofile': ALL_WITH_RELATIONS,
         }
         serializer = OwnerProfileSerializer()
