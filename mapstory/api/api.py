@@ -29,9 +29,15 @@ class OwnerProfileSerializer(CountJSONSerializer):
             owner.pop("mapstoryprofile")
         return super(OwnerProfileSerializer, self).to_json(data, options)
 
+
 class InterestsResource(ModelResource):
     class Meta:
         queryset = Tag.objects.all()
+
+        filtering = {
+            'slug': ALL
+        }
+
 
 class MapstoryProfileResource(TypeFilteredResource):
 
@@ -44,6 +50,7 @@ class MapstoryProfileResource(TypeFilteredResource):
             'Volunteer_Technical_Community': ALL,
             'interests': ALL
         }
+
 
 class MapstoryOwnersResource(TypeFilteredResource):
     """Mapstory's version of GeoNode's /api/owners Resource """
@@ -65,6 +72,10 @@ class MapstoryOwnersResource(TypeFilteredResource):
 
         orm_filters = super(MapstoryOwnersResource, self).build_filters(filters)
 
+        if 'interests' in filters:
+            query = filters['interests']
+            qset = (Q(mapstoryprofile__interests__slug__iexact=query))
+            orm_filters['interests'] = qset
         if 'q' in filters:
             orm_filters['q'] = filters['q']
 
@@ -74,11 +85,19 @@ class MapstoryOwnersResource(TypeFilteredResource):
 
         q = applicable_filters.pop('q', None)
 
+        if 'interests' in applicable_filters:
+            interests = applicable_filters.pop('interests')
+        else:
+            interests = None
+
         semi_filtered = super(
             MapstoryOwnersResource,
             self).apply_filters(
             request,
             applicable_filters)
+
+        if interests is not None:
+            semi_filtered = semi_filtered.filter(interests)
 
         if q:
             names = [
@@ -109,5 +128,6 @@ class MapstoryOwnersResource(TypeFilteredResource):
             'city': ALL,
             'country': ALL,
             'mapstoryprofile': ALL_WITH_RELATIONS,
+            'interests': ALL
         }
         serializer = OwnerProfileSerializer()
