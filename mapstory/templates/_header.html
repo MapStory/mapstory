@@ -47,6 +47,7 @@
                 </li>
                 <li class="nav-link"><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></li>
                 <li class="nav-link"><a href="{% url 'journal' %}">{% trans "Journal" %}</a></li>
+                <li class="nav-link"><a href="{% url 'organizations:list' %}">{% trans "Organizations" %}</a></li>
 
                 {% if user.is_authenticated %}
                     <li id="js-navigation-more" class="nav-link more user-menu">
@@ -59,13 +60,14 @@
                         <ul class="submenu">
                             <li><a href="{% url 'profile_detail' slug=user.username %}">{{ user.username }}</a></li>
                             <li class="divider"></li>
-                             <li><a href="{% url "messages_inbox" %}">{% trans "Messages" %}</a></li>
+                            <li><a href="{% url "messages_inbox" %}">{% trans "Messages" %}</a></li>
                             <li><a href="{% url 'edit_profile' user.username %}">{% trans "Edit Profile" %}</a></li>
                             <li><a href="{% url 'account_password' %}">{% trans "Change Password" %}</a></li>
                             <li><a href="{% url 'profile_detail' slug=user.username %}?showNotifications=true">{% trans "Notification Settings" %}</a></li>
                             <li class="divider"></li>
                             <li><a href="{% url 'getpage' 'started' %}">{% trans "Help" %}</a></li>
                             <li class="divider"></li>
+                        {#TODO: Add Organizations menu here#}
                         {% if user.is_staff %}
                             <li><a href="{% url 'admin:index' %}">{% trans "Admin Panel" %}</a></li>
                         {% endif %}

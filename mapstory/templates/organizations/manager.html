@@ -1,0 +1,118 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load url from future %}
+{% block title %}{% trans "Organization" %}{% endblock %}
+{% block body_class %}search{% endblock %}
+{% block body_outer %}
+    <div class="org_container">
+        <div class="organization_hero">
+            <div class="organization_icon">
+                {#TODO: Implement Image here #}
+                <div class="organization_icon_image">
+                    {% if org_image %}
+                        <img src="{{ org_image }}">
+                    {% else %}
+                    <img src="http://via.placeholder.com/115x115">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="organization_header">
+                <h1>{{ org.title }}</h1>
+                <h4 class="org-slogan">{{ org.slogan }}</h4>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+
+        <div class="organization_content">
+            <div class="org_left_column">
+                <div class="button org-join-button">
+                    <a href="{% url 'organizations:detail' pk=org.pk  %}">Return to Org Page</a>
+                </div>
+                <div style="clear: both;"></div>
+                <div class="organization_navigation_manage">
+                    <ul>
+                        <li><a href="#basic-info">Basic Info</a></li>
+                        <li><a href="#social-media-links">Links and Social Media</a></li>
+                        <li><a href="#organizers-members">Organizers and Members</a></li>
+                        <li><a href="#">Privacy & Permissions</a></li>
+                        <li><a href="#payment-information">Payment Info</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="org_right_column" id="organizers-members">
+                <h2>Manage Memberships</h2>
+                <section id="join-requests">
+                    <!-- MEMBERSHIP REQUESTS -->
+                    <div class="requests-section">
+                    {% if join_requests %}
+                        <h3>MEMBERSHIP REQUESTS</h3>
+                        {% for request in join_requests %}
+                            <div class="join-request-card">
+                                <p><strong>{{ request.user }}</strong><span> on {{ request.created_at }}</span></p>
+                                <div>
+                                    <form action="{% url "organizations:approve_membership" pk=org.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="{{ request.pk }}" name="request_pk">
+                                        <input type="hidden" value="accept" name="approval">
+                                        <input class="button org-join-button" type="submit" value="Accept" />
+                                    </form>
+                                </div>
+                                <div>
+                                    <form action="{% url "organizations:request_membership" pk=org.pk %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" value="{{ request.pk }}" name="request_pk">
+                                        <input type="hidden" value="decline" name="approval">
+                                        <input class="button org-join-button" type="submit" value="Decline" />
+                                    </form>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    </div>
+
+                    <!-- MEMBERS -->
+                    <div class="members-section">
+                    {% if memberships %}
+                        <h3>MEMBERS</h3>
+                        {% for member in memberships %}
+                            <a href="/storyteller/{{ member.user.username }}">
+                                {% include "cards/organization_member_card.html" with membership=member %}
+                            </a>
+                        {% endfor %}
+                    {% endif %}
+                    </div>
+                    <div style="clear: both;"></div>
+                </section>
+                <h2>Edit Org Page Information</h2>
+                <form action="." method="post">
+                    {% csrf_token %}
+                    <section id="basic-info">
+                        <div>
+                            <h3>BASIC INFORMATION</h3>
+                            <hr/>
+                            {{ basic_form.as_p }}
+                        </div>
+                    </section>
+                    <section id="social-media-links">
+                        <div>
+                            <h3>LINKS & SOCIAL MEDIA</h3>
+                            <hr/>
+                            {{ links_form.as_p }}
+                        </div>
+                    </section>
+                    <section id="payment-information">
+                        <h3>PAYMENT INFORMATION</h3>
+                        <hr/>
+                        <p>Plan</p>
+                        <p>Last billed</p>
+                        <p>Payment method</p>
+                        <p>Upgrade</p>
+                    </section>
+                    <input style="width: 300px;" class="button org-join-button" type="submit" value="Submit" />
+                </form>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+{% endblock %}

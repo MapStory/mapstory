@@ -93,6 +93,7 @@ INSTALLED_APPS += (
     'mapstory.annotations',
     'mapstory.apps.journal',
     'mapstory.apps.favorite',
+    'mapstory.apps.organizations',
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
     'health_check',
@@ -692,6 +693,8 @@ CLIENT_RESULTS_LIMIT = 30
 DOWNLOAD_FORMATS_VECTOR = [
     'Zipped Shapefile', 'GML 2.0', 'GML 3.1.1', 'CSV', 'GeoJSON', 'KML',
 ]
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 SCHEMA_DOWNLOAD_EXCLUDE = [
     'FID',
