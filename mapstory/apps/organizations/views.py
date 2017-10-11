@@ -233,7 +233,7 @@ def add_membership(request, pk, user_pk):
             )
         )
 
-    return redirect(reverse('organizations:manage', kwargs={'pk':pk}))
+    return redirect(reverse('organizations:manage', kwargs={'pk': pk}))
 
 
 def _save_social_media_with_name(organization, social_media_name, new_url_value, social_objects):
@@ -371,6 +371,7 @@ def manager(request, pk):
     membership = get_object_or_404(models.OrganizationMembership, organization=organization, user=request.user)
     if not membership.is_admin:
         # User is NOT AUTHORIZED!
+        # TODO: Send the user somewhere else
         return HttpResponse("You are not authorized!")
 
     # GET:
@@ -381,7 +382,7 @@ def manager(request, pk):
     twitter = organization.twitter
     linkedin = organization.linkedin
     github = organization.github
-    instragram = organization.instagram
+    instagram = organization.instagram
     join_requests = models.JoinRequest.objects.filter(organization=organization, is_open=True)
     memberships = models.OrganizationMembership.objects.filter(organization=organization)
     org_image = organization.image
@@ -402,7 +403,7 @@ def manager(request, pk):
         'twitter': twitter.url if twitter else "",
         'linkedin': linkedin.url if linkedin else "",
         'github': github.url if github else "",
-        'instagram': instragram.url if instragram else "",
+        'instagram': instagram.url if instagram else "",
     }
 
     # Determine the type of HTTP request
