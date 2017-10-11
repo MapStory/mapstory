@@ -18,6 +18,10 @@
 	path = deps/geonode
 	url = https://github.com/GeoNode/geonode.git
 	branch = 2.6.x
+[submodule "deps/maploom"]
+	path = deps/maploom
+	url = https://github.com/MapStory/MapLoom.git
+	branch = feature/composer-wip
 [submodule "deps/story-tools"]
 	path = deps/story-tools
 	url = https://github.com/MapStory/story-tools.git

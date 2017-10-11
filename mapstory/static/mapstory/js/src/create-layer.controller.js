@@ -57,7 +57,8 @@
          srs: 'EPSG:4326',
          store: {name: 'mapstory_geogig'},
          namespace: {'name': 'geonode'},
-         configureTime: true
+         configureTime: true,
+         editable: true
         }
       };
 
