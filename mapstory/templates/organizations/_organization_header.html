@@ -13,13 +13,13 @@
         <h4 class="org-slogan">{{ org.slogan }}</h4>
         <div class="button-container">
         {% if not membership %}
-            <form action="{% url "organizations:request_membership" pk=org.pk %}" method="post">
+            <form action="{% url 'organizations:request_membership' pk=org.pk %}" method="post">
                 {% csrf_token %}
                 <input class="button org-join-button" type="submit" value="Join this Organization" />
             </form>
         {% else %}
             {% if membership.is_admin %}
-                <a href="{% url "organizations:manage" pk=org.pk %}" >
+                <a href="{% url 'organizations:manage' pk=org.pk %}" >
                     <button class="button org-join-button">Manage</button>
                 </a>
             {% endif %}

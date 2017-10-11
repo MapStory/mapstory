@@ -257,25 +257,74 @@ def _save_social_media_with_name(organization, social_media_name, new_url_value,
     return updated_obj
 
 
-def _save_social_icons(organization, links):
-    # TODO: Re-implement this
-    # social_objects = models.OrganizationSocialMedia.objects.filter(organization=organization)
-    # social_media_names = [
-    #     "facebook",
-    #     "twitter",
-    #     "linkedin",
-    #     "github",
-    #     "instragram"
-    # ]
+def _save_social_icons(organization, facebook, twitter, instagram, linkedin, github):
+    """
+    Saves the social media urls for an Organization.
+    :param organization: The Organization
+    :param facebook: URL for facebook
+    :param twitter: URL for twitter
+    :param instagram: URL for instagram
+    :param linkedin: URL for linkedin
+    :param github: URL for github
+    :return:
+    """
+    if facebook:
+        if not organization.facebook:
+            organization.facebook = models.OrganizationSocialMedia.objects.create(
+                name="facebook",
+                icon="fa-facebook",
+                url=facebook
+            )
+        else:
+            organization.facebook.url = facebook
+            organization.facebook.save()
 
-    # for name in social_media_names:
-    #     updated = _save_social_media_with_name(
-    #         organization,
-    #         name,
-    #         links.cleaned_data[name],
-    #         social_objects
-    #     )
-    pass
+    if twitter:
+        if not organization.twitter:
+            organization.twitter = models.OrganizationSocialMedia.objects.create(
+                name="twitter",
+                icon="fa-twitter",
+                url=twitter
+            )
+        else:
+            organization.twitter.url = twitter
+            organization.twitter.save()
+
+    if instagram:
+        if not organization.instagram:
+            organization.instagram = models.OrganizationSocialMedia.objects.create(
+                name="instagram",
+                icon="fa-instagram",
+                url=instagram
+            )
+        else:
+            organization.instagram.url = instagram
+            organization.instagram.save()
+
+    if linkedin:
+        if not organization.linkedin:
+            organization.linkedin = models.OrganizationSocialMedia.objects.create(
+                name="linkedin",
+                icon="fa-linkedin",
+                url=linkedin
+            )
+        else:
+            organization.linkedin.url = linkedin
+            organization.linkedin.save()
+
+    if github:
+        if not organization.github:
+            organization.github = models.OrganizationSocialMedia.objects.create(
+                name="github",
+                icon="fa-github",
+                url=github
+            )
+        else:
+            organization.github.url = github
+            organization.github.save()
+
+    # Save the changes
+    organization.save()
 
 
 def _edit_organization_with_forms(organization, basic, links):
@@ -296,11 +345,15 @@ def _edit_organization_with_forms(organization, basic, links):
     organization.image = basic.cleaned_data['image']
     organization.save()
 
-    # Update or create
-    # TODO: Save social URLS here
-    _save_social_icons(organization, links)
-
-    # TODO: Handle Links
+    # Save the social medias:
+    _save_social_icons(
+        organization,
+        facebook=links.cleaned_data['facebook'],
+        instagram=links.cleaned_data['instagram'],
+        twitter=links.cleaned_data['twitter'],
+        linkedin=links.cleaned_data['linkedin'],
+        github=links.cleaned_data['github'],
+    )
 
 
 @login_required

@@ -37,4 +37,4 @@ class LinksAndSocialMedia(forms.Form):
     twitter = forms.URLField(required=False)
     linkedin = forms.URLField(required=False)
     github = forms.URLField(required=False)
-    instragram = forms.URLField(required=False)
+    instagram = forms.URLField(required=False)
