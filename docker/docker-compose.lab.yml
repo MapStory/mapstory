@@ -55,6 +55,15 @@ services:
       - ./deps/maploom:/maploom
       - .git:/git
 
+  story-tools-build:
+    build: ./deps/story-tools
+    image: quay.io/mapstory/story-tools-build
+    environment:
+      GIT_DIR: /git
+    volumes:
+      - ./deps/story-tools:/usr/src/app
+      - .git:/git
+
   django:
     image: quay.io/mapstory/django:lab
     env_file:
