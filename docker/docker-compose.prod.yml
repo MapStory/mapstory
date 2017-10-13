@@ -2,6 +2,7 @@
 version: '3.1'
 services:
   pgadmin:
+    image: quay.io/mapstory/pgadmin:prod
     ports:
       - "5050:5050"
     secrets:
@@ -10,10 +11,12 @@ services:
   elasticsearch:
 
   rabbitmq:
+    image: quay.io/mapstory/rabbitmq:prod
     secrets:
       - env_rabbitmq_auth
 
   django:
+    image: quay.io/mapstory/django:prod
     env_file:
       - docker/env/prod/public_host.env
       - docker/env/prod/geoserver.env
@@ -25,8 +28,12 @@ services:
       - env_rabbitmq_auth
       - env_slack_auth
       - env_social_auth
+    volumes:
+      - .:/srv/mapstory/
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   celery:
+    image: quay.io/mapstory/django:prod
     env_file:
       - docker/env/prod/public_host.env
       - docker/env/prod/geoserver.env
@@ -38,6 +45,9 @@ services:
       - env_rabbitmq_auth
       - env_slack_auth
       - env_social_auth
+    volumes:
+      - .:/srv/mapstory/
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   geoserver:
     env_file:
@@ -48,11 +58,22 @@ services:
       - env_geoserver_auth
 
   nginx:
+    image: quay.io/mapstory/nginx:prod
     env_file:
       - docker/env/prod/public_host.env
+    volumes:
+      - .:/srv/mapstory/ # mapstory_static has symlinks to this
+      - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
     secrets:
       - ssl_cert
       - ssl_key
+
+volumes:
+  site-packages:
+  geoserver:
+    driver: rexray
+  mapstory_media:
+    driver: rexray
 
 secrets:
   ssl_cert:
