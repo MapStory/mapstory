@@ -143,9 +143,11 @@ def add_layer(request, pk, layer_pk):
     """
     membership = get_object_or_404(models.OrganizationMembership, user_id=request.user.pk, organization_id=pk)
 
-    if (not membership.is_admin) or (not membership.is_active):
+    if membership.is_admin or membership.is_active:
+        pass
+    else:
         messages.error(request, "You are not allowed to do this.")
-        return redirect(reverse("organizations:detail", kwargs={'pk':pk}))
+        return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
 
     if request.method == 'POST':
         # Check if not already added

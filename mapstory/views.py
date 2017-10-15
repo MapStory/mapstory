@@ -914,11 +914,13 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     share_title = "%s by %s." % (layer.title, layer.owner)
     share_description = layer.abstract
 
+    # Get membership buttons ready:
     admin_memberships = []
     # Check if user is admin in one of those organizations
     users_org_memberships = OrganizationMembership.objects.filter(user_id=request.user.pk)
     for membership in users_org_memberships.all():
-        if membership.is_admin:
+        # We have permission if we own the layer, or if we are an organization's admin.
+        if (layer.owner == request.user) or membership.is_admin:
             admin_memberships.append(membership)
 
     context_dict = {

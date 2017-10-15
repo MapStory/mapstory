@@ -78,7 +78,7 @@
             {% if organizations.count > 0 %}
                 <div class="side-column-header">Use on Org Page</div>
                 {% for org in organizations %}
-                    <form action="{% url "organizations:add_layer" pk=org.organization.pk layer_pk=resource.pk%}" method="post">
+                    <form action='{% url "organizations:add_layer" pk=org.organization.pk layer_pk=resource.pk%}' method="post">
                         {% csrf_token %}
                         <input class="btn btn-block btn-detailpage" type="submit" name="add_to_layers" value="{{ org.organization }}" />
                     </form>
