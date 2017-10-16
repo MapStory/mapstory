@@ -570,17 +570,13 @@ if 'test' in sys.argv[1:] or 'jenkins' in sys.argv[1:]:
 
 # Setup django-nose as our test runner and have it provide us with HTML coverage reports generated in the cover folder.
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
+# TESTS NEED TO BE RUN WITH ./test.sh for coverage to work!!!
+# https://stackoverflow.com/questions/24668174/how-to-test-coverage-properly-with-django-nose
 # Nose Test arguments. Will not find and run tests unless --exe is specified.
 # Nose-runner has issues with coverage reporting and model loading.
 # https://github.com/django-nose/django-nose/issues/180
 # Coverage options are now specified in `.coveragerc`
 NOSE_ARGS = [
-    # '--with-coverage',
-    # '--cover-package=mapstory',
-    # '--cover-inclusive',
-    # '--cover-erase',
-    # '--cover-html',
     '--exe',
     # This:
     '--ignore-files=(^\.|^_|pavement\.py$|fabfile\.py$|local_settings\.py$|cf\.py$|search_indexes\.py$)',
@@ -588,6 +584,7 @@ NOSE_ARGS = [
     # '--exclude=(^\.|^_|pavement\.py$|fabfile\.py$|_settings\.py$|cf\.py$|search_indexes\.py$)',
     '--all-modules',
     '--traverse-namespace',
+    # FOR DEBUGGING:
     # '--detailed-errors',
     # '--with-id',
     # '--pdb',

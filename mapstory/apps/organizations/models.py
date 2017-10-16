@@ -141,7 +141,7 @@ class Organization(models.Model):
         :return: The OrganzationMapStory object created.
         """
         # TODO: Check if membership is allowed to add layer
-        return OrganizationMapStory(mapstory=mapstory, organization=self, membership=membership)
+        return OrganizationMapStory.objects.create(mapstory=mapstory, organization=self, membership=membership)
 
 
 class OrganizationURL(models.Model):
@@ -220,7 +220,7 @@ class JoinRequest(models.Model):
         :param admin_membership: The admin's membership that approves the request.
         :return: A new membership if success, None if fails.
         """
-        if not admin_membership.is_admin:
+        if admin_membership.is_admin is False:
             # TODO: Log suspicious activity
             return None
 
