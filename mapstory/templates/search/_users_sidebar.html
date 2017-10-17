@@ -117,10 +117,10 @@
                         {% verbatim %}
                         <md-content class="md-padding" layout="column">
                             <md-chips ng-model="int.chips" 
+                                md-autocomplete-snap
                                 md-on-add="explore.addQuery('interests', $chip.slug)"
                                 md-on-remove="explore.removeQuery('interests', $chip.slug)"
-                                md-transform-chip="int.interests.newChip($chip)"
-                                placeholder="Filter by an interest...">
+                                md-transform-chip="int.interests.newChip($chip)">
                                 <md-autocomplete
                                   ng-hide="int.disabled"
                                   md-selected-item="selectedItem"
