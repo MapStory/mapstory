@@ -74,3 +74,4 @@ selenium
 django-activity-stream==0.6.1
 
 pandas==0.20.3
+geonode-user-accounts==1.0.13
