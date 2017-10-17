@@ -13,17 +13,10 @@
 */
   function interestsController ($injector, $scope, chipFieldFactory, dataService){
     var vm = this;
-    vm.interests = new chipFieldFactory('interest_list', 'slug');
-    /*  since geonode 2.6. the KEYWORDS_ENDPOINT returns results from the h_keyword list,
-        but not non-hierarchical keywords. 
-        Currently our profiles save keywords as "tags", not h_keywords
-
-        a way to query all profile keywords to return slugs needs to be built
-        commenting out this functionality until then
-    */
-    // vm.async = function(searchText) {
-    //   return dataService.getKeywords({slug__icontains: searchText})
-    // }; 
+    vm.interests = new chipFieldFactory('interests', 'slug');
+    vm.async = function(searchText) {
+       return dataService.getInterests({slug__icontains: searchText})
+    };
 
     function interestChipSync(){
       var currentQuery = vm.interests.tidy($scope.query);

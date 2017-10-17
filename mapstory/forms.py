@@ -79,23 +79,15 @@ class EditMapstoryProfileForm(forms.ModelForm):
 
     class Meta:
         model = MapstoryProfile
-        fields = ['education', 'expertise', 'social_twitter',
+        fields = ['interests', 'education', 'expertise', 'social_twitter',
                   'social_facebook', 'social_linkedin', 'social_github',
                   'Volunteer_Technical_Community']
+
 
 # Form with fields from the GeoNode Profile model to be edited
 class EditGeonodeProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ['first_name', 'last_name', 'keywords', 'city', 'country',
+        fields = ['first_name', 'last_name', 'city', 'country',
                   'profile']
-
-        labels = {
-            "keywords": _("Interests"),
-        }
-
-        help_texts = {
-            "keywords": _
-            ("A list of personal interests (separate each interest with a comma)"),
-        }
