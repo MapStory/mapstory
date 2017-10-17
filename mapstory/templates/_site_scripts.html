@@ -2,6 +2,7 @@
 <script type="text/javascript">
     CATEGORIES_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='categories' %}';
     KEYWORDS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='keywords' %}';
+    INTERESTS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='interests' %}';
     REGIONS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='regions' %}';
     HAYSTACK_SEARCH = "{{ HAYSTACK_SEARCH }}".toLowerCase() === "true";
     HAYSTACK_FACET_COUNTS = "{{ HAYSTACK_FACET_COUNTS }}".toLowerCase() === "true";
