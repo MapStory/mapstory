@@ -127,7 +127,6 @@ class MapstoryOwnersResource(TypeFilteredResource):
             'username': ALL,
             'city': ALL,
             'country': ALL,
-            'mapstoryprofile': ALL_WITH_RELATIONS,
-            'interests': ALL
+            'mapstoryprofile': ALL_WITH_RELATIONS
         }
         serializer = OwnerProfileSerializer()
