@@ -15,7 +15,7 @@ class BasicInformation(forms.Form):
     slogan = forms.CharField(required=True)
     city = forms.CharField(required=False)
     country = forms.CharField(required=False)
-    image = forms.FileField(required=False)
+    image = forms.ImageField(required=False)
     about = forms.CharField(widget=forms.Textarea, required=True)
 
 

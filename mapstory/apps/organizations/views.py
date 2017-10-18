@@ -344,6 +344,10 @@ def _edit_organization_with_forms(organization, basic, links):
     organization.city = basic.cleaned_data['city']
     organization.slogan = basic.cleaned_data['slogan']
     organization.country = basic.cleaned_data['country']
+
+    import ipdb
+    ipdb.set_trace(context=10)
+
     organization.image = basic.cleaned_data['image']
     organization.save()
 
@@ -361,7 +365,7 @@ def _edit_organization_with_forms(organization, basic, links):
 @login_required
 def manager(request, pk):
     """
-    Organization Manager Page.
+    Organization Manager View.
     Page for managing all settings for the Organization.
 
     :param request: HTTP Request.
@@ -411,14 +415,16 @@ def manager(request, pk):
     # Determine the type of HTTP request
     if request.method == 'POST':
         # Get POST data
-        basic_info_form = forms.BasicInformation(request.POST)
+        basic_info_form = forms.BasicInformation(request.POST, request.FILES)
         links_form = forms.LinksAndSocialMedia(request.POST)
 
         # Check for valid forms
         if basic_info_form.is_valid() and links_form.is_valid():
             # All forms are valid
             _edit_organization_with_forms(organization, basic_info_form, links_form)
+
             messages.success(request, "Saved changes to Organization.")
+
             return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
         else:
             # Information was not good
