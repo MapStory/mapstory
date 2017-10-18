@@ -1,10 +1,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import signals
-from account.models import EmailAddress
 from geonode.people.models import Profile as Geonode_Profile
 from avatar.templatetags.avatar_tags import avatar_url
 from avatar.models import Avatar
+from taggit.managers import TaggableManager
 
 
 class MapstoryProfile(models.Model):
@@ -12,6 +12,9 @@ class MapstoryProfile(models.Model):
 
     class Meta:
         app_label = "mapstory_profile"
+
+    interests = TaggableManager(_('interests'), blank=True, help_text=_(
+        'A list of personal interests (separate each interest with a comma)'))
 
     Volunteer_Technical_Community = models.BooleanField(
         _('Volunteer Technical Community'),

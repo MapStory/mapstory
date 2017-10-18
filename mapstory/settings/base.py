@@ -602,15 +602,7 @@ DEBUG_STATIC = True
 DEBUG = str_to_bool(os.environ.get('DEBUG', 'False'))
 if not DEBUG:
     ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split('|')
-if os.environ['PUBLIC_HOST'].replace('.', '').isdigit():
-    # IP Address
-    SESSION_COOKIE_DOMAIN = os.environ['PUBLIC_HOST']
-elif '.' in os.environ['PUBLIC_HOST']:
-    # Domain name, hopefully
-    SESSION_COOKIE_DOMAIN = ".%s" % (os.environ['PUBLIC_HOST'],)
-else:
-    # hostname with no TLD?
-    SESSION_COOKIE_DOMAIN = "%s" % (os.environ['PUBLIC_HOST'],)
+SESSION_COOKIE_DOMAIN = os.environ['PUBLIC_HOST']
 
 LOGGING = {
     'version': 1,
@@ -702,3 +694,9 @@ SCHEMA_DOWNLOAD_EXCLUDE = [
     'date_xd',
     'date_parsed',
 ]
+
+#
+# Feature toggles
+#
+FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
+
