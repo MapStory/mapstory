@@ -27,6 +27,8 @@ addons:
 
 
 before_install:
+  # Temporary fix for the Basho repo being down
+  - sudo rm -vf /etc/apt/sources.list.d/*riak*
   # Install Docker Engine
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
