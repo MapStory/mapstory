@@ -111,25 +111,25 @@
                 <section ng-controller="interestsController as int">
                     <h3 class="bold-caps">Interest</h3>
                     <div class="clear-filters">
-                        <a href="" ng-click="explore.clear('interest_list')">Clear</a>
+                        <a href="" ng-click="explore.clear('interests')">Clear</a>
                     </div>
                     <div class="filter-content">
                         {% verbatim %}
                         <md-content class="md-padding" layout="column">
                             <md-chips ng-model="int.chips" 
-                                md-on-add="explore.addQuery('interest_list', $chip.slug)"
-                                md-on-remove="explore.removeQuery('interest_list', $chip.slug)"
-                                md-transform-chip="int.interests.newChip($chip)"
-                                placeholder="Filter by an interest...">
-<!-- /* SEE: interestController.async() notes */ <md-autocomplete
+                                md-autocomplete-snap
+                                md-on-add="explore.addQuery('interests', $chip.slug)"
+                                md-on-remove="explore.removeQuery('interests', $chip.slug)"
+                                md-transform-chip="int.interests.newChip($chip)">
+                                <md-autocomplete
                                   ng-hide="int.disabled"
                                   md-selected-item="selectedItem"
                                   md-search-text="searchText"
                                   md-items="item in int.async(searchText)"
                                   md-item-text="item.code"
                                   placeholder="Filter by an interest...">
-                                <span md-highlight-text="searchText">{{item.slug}}</span>
-                              </md-autocomplete> -->
+                                    <span md-highlight-text="searchText">{{item.slug}}</span>
+                                </md-autocomplete>
                               <md-chip-template>
                                 {{$chip.slug}}
                               </md-chip-template>

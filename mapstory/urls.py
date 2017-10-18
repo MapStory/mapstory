@@ -19,7 +19,7 @@ from maploom.geonode.urls import urlpatterns as maploom_urls
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
 from tastypie.api import Api
 
-from mapstory.api.api import MapstoryOwnersResource
+from mapstory.api.api import MapstoryOwnersResource, InterestsResource
 from mapstory.api.resourcebase_api import ResourceBaseResource
 from mapstory.api.urls import api as mapstory_api
 from mapstory.apps.favorite.urls import api as favorites_api
@@ -42,6 +42,7 @@ from mapstory.views import SearchView
 
 geonode_api.register(ResourceBaseResource())
 geonode_api.register(MapstoryOwnersResource())
+geonode_api.register(InterestsResource())
 
 importer_api = Api(api_name='importer-api')
 # Overwrite Importer URL Routes
