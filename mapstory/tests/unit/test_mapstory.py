@@ -206,15 +206,15 @@ class MapStoryTests(MapStoryTestMixin):
         self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
         self.non_admin_username, self.non_admin_password = self.create_user('non_admin', 'non_admin')
 
-    @override_settings(GOOGLE_ANALYTICS='testing')
+    @override_settings(GOOGLE_ANALYTICS=True)
     def test_google_analytics(self):
         """
-        Tests the Google Analytics context processor and template.
+        Tests to make sure our Google Analytics code is in the source.
         """
         c = Client()
         response = c.get(reverse('index_view'))
         self.assertEqual(response.status_code, 200)
-        self.assertTrue("_gaq.push(['_setAccount', 'testing']);" in response.content)
+        self.assertTrue("UA-70972031-1" in response.content)
 
     @override_settings(GOOGLE_ANALYTICS='testing')
     def test_home_renders(self):
