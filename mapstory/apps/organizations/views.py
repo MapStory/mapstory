@@ -344,10 +344,6 @@ def _edit_organization_with_forms(organization, basic, links):
     organization.city = basic.cleaned_data['city']
     organization.slogan = basic.cleaned_data['slogan']
     organization.country = basic.cleaned_data['country']
-
-    import ipdb
-    ipdb.set_trace(context=10)
-
     organization.image = basic.cleaned_data['image']
     organization.save()
 
