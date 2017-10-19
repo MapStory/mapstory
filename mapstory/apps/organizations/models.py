@@ -36,7 +36,7 @@ class Organization(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     city = models.CharField(default='', max_length=255)
     country = models.CharField(default='', max_length=255)
-    image = models.FileField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True, upload_to='organizations_profile')
     facebook = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='facebook')
     twitter = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='twitter')
     instagram = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='instagram')
