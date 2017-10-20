@@ -16,15 +16,19 @@ class ThumbnailImage(SingletonModel):
 
     def save(self, *args, **kwargs):
         new_image_io = BytesIO()
-        thumbnail_width = 250
+        thumbnail_width = 200
         thumbnail_height = 150
 
-        # Open the uplaoded image
+        # Open the uploaded image
         pil_image_obj = Image.open(self.thumbnail_image)
 
         # Supports Animated thumbnails
         if self.thumbnail_image.name.endswith('.gif'):
-            gif_image = pil_image_obj
+            gif_image = resizeimage.resize_cover(
+                pil_image_obj,
+                [thumbnail_width, thumbnail_height],
+                validate=False
+            )
             gif_image.save(new_image_io, format='GIF', save_all=True)
         else:
             # Save as PNG
