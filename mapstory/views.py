@@ -426,6 +426,8 @@ def mapstory_view(request, slug, snapshot=None, template='viewer/story_viewer.ht
     else:
         config = snapshot_config(snapshot, story_obj, request.user)
 
+    config['about']['detail_url'] = slug
+
     return render_to_response(template, RequestContext(request, {
         'config': json.dumps(config)
     }))
@@ -508,6 +510,8 @@ def draft_view(request, slug, template='composer/maploom.html'):
     story_obj = _resolve_story(request, slug, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
 
     config = story_obj.viewer_json(request.user)
+
+
 
     return render_to_response(template, RequestContext(request, {
         'config': json.dumps(config),
