@@ -64,7 +64,6 @@ def organization_detail(request, pk):
             messages.success(request, "Added MapStory to Featured")
 
     members = models.OrganizationMembership.objects.filter(organization=org)
-    org_urls = models.OrganizationURL.objects.filter(org=org)
     org_layers = models.OrganizationLayer.objects.filter(organization=org)
     org_mapstories = models.OrganizationMapStory.objects.filter(organization=org)
 
@@ -104,6 +103,17 @@ def organization_detail(request, pk):
         social_icons.append(models.OrganizationSocialMedia.objects.get(pk=org.linkedin.pk))
     if org.github:
         social_icons.append(models.OrganizationSocialMedia.objects.get(pk=org.github.pk))
+
+    org_urls = []
+
+    if org.url0:
+        org_urls.append(models.OrganizationURL.objects.get(pk=org.url0.pk))
+
+    if org.url1:
+        org_urls.append(models.OrganizationURL.objects.get(pk=org.url1.pk))
+
+    if org.url2:
+        org_urls.append(models.OrganizationURL.objects.get(pk=org.url2.pk))
 
     context = {
         'org': org,
@@ -361,6 +371,32 @@ def _edit_organization_with_forms(organization, basic, links):
     organization.slogan = basic.cleaned_data['slogan']
     organization.country = basic.cleaned_data['country']
     organization.image = basic.cleaned_data['image']
+
+    if links.cleaned_data['url0']:
+        if organization.url0:
+            organization.url0.url = links.cleaned_data['url0']
+            organization.url0.save()
+        else:
+            organization.url0 = models.OrganizationURL.objects.create(
+                url=links.cleaned_data['url0']
+            )
+
+    if links.cleaned_data['url1']:
+        if organization.url1:
+            organization.url1.url = links.cleaned_data['url1']
+        else:
+            organization.url1 = models.OrganizationURL.objects.create(
+                url=links.cleaned_data['url1']
+            )
+
+    if links.cleaned_data['url2']:
+        if organization.url2:
+            organization.url2.url = links.cleaned_data['url2']
+        else:
+            organization.url2 = models.OrganizationURL.objects.create(
+                url=links.cleaned_data['url2']
+            )
+
     organization.save()
 
     # Save the social medias:
@@ -395,7 +431,6 @@ def manager(request, pk):
     # GET:
     # Load Form's initial data
     # TODO: FIX THIS FOR SOCIAL MEDIA
-    urls = models.OrganizationURL.objects.filter(org=organization)
     facebook = organization.facebook
     twitter = organization.twitter
     linkedin = organization.linkedin
@@ -414,9 +449,9 @@ def manager(request, pk):
     }
 
     links = {
-        'url0': "",
-        'url1': "",
-        'url2': "",
+        'url0': organization.url0,
+        'url1': organization.url1,
+        'url2': organization.url2,
         'facebook': facebook.url if facebook else "",
         'twitter': twitter.url if twitter else "",
         'linkedin': linkedin.url if linkedin else "",

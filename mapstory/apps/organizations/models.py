@@ -17,6 +17,14 @@ class OrganizationSocialMedia(models.Model):
         return u'%s' % self.url
 
 
+class OrganizationURL(models.Model):
+    """A Link that is displayed in the Organization's page."""
+    url = models.URLField(max_length=255)
+
+    def __unicode__(self):
+        return u'%s' % self.url
+
+
 class Organization(models.Model):
     """Represents an Organization.
     An Organization has:
@@ -42,6 +50,9 @@ class Organization(models.Model):
     instagram = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='instagram')
     github = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='github')
     linkedin = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='linkedin')
+    url0 = models.ForeignKey(OrganizationURL, blank=True, null=True, related_name="url0")
+    url1 = models.ForeignKey(OrganizationURL, blank=True, null=True, related_name="url1")
+    url2 = models.ForeignKey(OrganizationURL, blank=True, null=True, related_name="url2")
 
     class Meta:
         verbose_name_plural = 'Organizations'
@@ -142,15 +153,6 @@ class Organization(models.Model):
         """
         # TODO: Check if membership is allowed to add layer
         return OrganizationMapStory.objects.create(mapstory=mapstory, organization=self, membership=membership)
-
-
-class OrganizationURL(models.Model):
-    """A Link that is displayed in the Organization's page."""
-    url = models.CharField(max_length=255)
-    org = models.ForeignKey(Organization)
-
-    def __unicode__(self):
-        return u'%s' % self.url
 
 
 class OrganizationMembership(models.Model):

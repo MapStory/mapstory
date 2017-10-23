@@ -7,26 +7,29 @@
     <div class="org_container">
         {% include 'organizations/_organization_header.html' %}
         <div class="organization_content">
+            <!-- Side Column -->
             <div class="org_left_column">
-                <div class="organization_navigation">
+                <!-- Navigation -->
+                <div class="organization_navigation" style="padding-top: 29px;">
                     <ul>
                         <li><a href="#">{{ org.title }} Home</a></li>
                         <li><a href="#org-mapstories-section">MapStories</a></li>
                         <li><a href="#org-layers-section">StoryLayers</a></li>
                     </ul>
                 </div>
-
-                <div class="organization_about">
-                    <h3 class="organization_country">{{ org.city }},{{ org.country }}</h3>
+                <!-- Country -->
+                <div class="organization_about" style="margin-top: 0px;">
+                    <p class="organization_country">{{ org.city }},{{ org.country }}</p>
                 </div>
-
+                <!-- About -->
                 <div class="organization_about">
-                    <h3 class="organization_about_title">About {{ org.title }}</h3>
+                    <p class="organization_about_title">About {{ org.title }}</p>
                     <div class="organization_about_content">
                         <p>{{ org.about }}</p>
                     </div>
                 </div>
-
+                <!-- Organization Links -->
+                {% if urls %}
                 <div class="organization_urls">
                 {% for url in urls %}
                     <div class="organization_link">
@@ -34,7 +37,8 @@
                     </div>
                 {% endfor %}
                 </div>
-
+                {% endif %}
+                <!-- Social Media Links -->
                 {% if social_icons %}
                 <div class="organization_social">
                     {% for social_icon in social_icons %}
@@ -46,7 +50,7 @@
                     {% endfor %}
                 </div>
                 {% endif %}
-
+                <!-- Organization Members -->
                 <div class="organization_members">
                     <h3 class="organization_about_title">ORGANIZATION MEMBERS</h3>
                     {% for membership in members %}
@@ -55,9 +59,8 @@
                         </a>
                     {% endfor %}
                 </div>
-
             </div>
-
+            <!-- Main Column -->
             <div class="org_right_column">
             {% block organization_content %}
                 <!-- FEATURED -->

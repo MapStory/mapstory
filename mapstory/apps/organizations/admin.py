@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationMapStory, OrganizationLayer, OrganizationSocialMedia, JoinRequest
+from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationMapStory, OrganizationLayer, \
+    OrganizationSocialMedia, JoinRequest
 
 
 class MembershipInlineAdmin(admin.StackedInline):
@@ -38,7 +39,6 @@ class OrganizationAdmin(admin.ModelAdmin):
     """
     inlines = [
         MembershipInlineAdmin,
-        OrganizationURLInline,
         OrganizationLayersInline,
         OrganizationMapstoryInline,
     ]
