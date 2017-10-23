@@ -21,7 +21,7 @@ def organization_detail(request, pk):
     org = get_object_or_404(models.Organization, pk=pk)
 
     # Determine the type of HTTP request
-    if request.method == "POST":
+    if request.POST:
         # Handle form data
         if request.POST.get("add_featured_layer"):
             layer_pk = request.POST.get("layer_pk")
@@ -133,6 +133,7 @@ def membership_detail(request, org_pk, membership_pk):
     return render(request, 'organizations/membership_detail.html', context)
 
 
+@login_required
 def add_layer(request, pk, layer_pk):
     """
     Adds a layer to an Organization.
@@ -149,7 +150,7 @@ def add_layer(request, pk, layer_pk):
         messages.error(request, "You are not allowed to do this.")
         return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
 
-    if request.method == 'POST':
+    if request.POST:
         # Check if not already added
         found = models.OrganizationLayer.objects.filter(organization_id=pk, layer_id=layer_pk)
 
@@ -165,7 +166,7 @@ def add_layer(request, pk, layer_pk):
             obj.save()
             messages.success(request, "Added Layer to Organization")
 
-    return redirect(reverse("organizations:detail", kwargs={'pk':pk}))
+    return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
 
 
 def add_mapstory(request, pk, mapstory_pk):
@@ -183,11 +184,13 @@ def add_mapstory(request, pk, mapstory_pk):
     )
 
     # Make sure we have permissions to do this
-    if (not membership.is_admin) or (not membership.is_active):
+    if membership.is_admin or membership.is_active:
+        pass
+    else:
         messages.error(request, "You are not allowed to do this.")
         return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
 
-    if request.method == 'POST':
+    if request.POST:
         # Check if not already added
         found = models.OrganizationMapStory.objects.filter(organization_id=pk, mapstory_id=mapstory_pk)
 
@@ -409,7 +412,7 @@ def manager(request, pk):
     }
 
     # Determine the type of HTTP request
-    if request.method == 'POST':
+    if request.POST:
         # Get POST data
         basic_info_form = forms.BasicInformation(request.POST, request.FILES)
         links_form = forms.LinksAndSocialMedia(request.POST)
@@ -459,7 +462,7 @@ def request_membership(request, pk):
         messages.warning(request, 'A request to join has already been made.')
         return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
 
-    if request.method == 'POST':
+    if request.POST:
         # Generate a new JoinRequest
         request_to_join = models.JoinRequest()
         request_to_join.user_id = request.user.pk
@@ -482,7 +485,7 @@ def approve_membership(request, pk):
         messages.warning(request, "You are not logged in.")
         return redirect(reverse("index_view"))
 
-    if request.method == 'POST':
+    if request.POST:
         # Make sure that we have permission
         admin_membership = get_object_or_404(
             models.OrganizationMembership,

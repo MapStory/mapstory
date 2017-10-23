@@ -1,16 +1,24 @@
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import get_user_model, authenticate, get_user
 
 from geonode.layers.models import Layer
 
 from mapstory.tests.AdminClient import AdminClient
-from mapstory.tests.utils import get_test_user, create_mapstory
-from mapstory.tests.utils import create_layer
+from mapstory.tests.utils import get_test_user, create_mapstory, create_layer, create_user
 from . import models
 
 User = get_user_model()
 testUser = get_test_user()
+
+
+def get_test_organization():
+    """Creates and returns a test Organization model"""
+    return models.Organization.objects.create(
+        title='Test',
+        slogan='Slogan here',
+        about='Yeah!'
+    )
 
 
 class TestOrganizations(TestCase):
@@ -38,11 +46,7 @@ class TestOrganizations(TestCase):
 
     def test_organization_detail_view(self):
         c = Client()
-        o = models.Organization.objects.create(
-            title='Test',
-            slogan='Slogan here',
-            about='Yeah!'
-        )
+        o = get_test_organization()
         response = c.get(reverse('organizations:detail', kwargs={'pk': o.pk}))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, template_name='organizations/organization_detail.html')
@@ -52,11 +56,7 @@ class TestOrganizations(TestCase):
 
     def test_organization_membership_detail_view(self):
         c = Client()
-        o = models.Organization.objects.create(
-            title='Test',
-            slogan='Slogan here',
-            about='Yeah!'
-        )
+        o = get_test_organization()
         # Create a user
         u = User.objects.create_user(username='testuser', password='asbdsandsandsandsa')
         # Make him a member
@@ -149,7 +149,7 @@ class TestOrganizations(TestCase):
         self.assertEqual(404, response.status_code)
 
     def test_promote_member_to_admin(self):
-        o = models.Organization.objects.create(title="Test", slogan="Testing")
+        o = get_test_organization()
         u = get_test_user()
         o.add_member(u)
         o.promote_member_to_admin(u)
@@ -157,33 +157,32 @@ class TestOrganizations(TestCase):
         self.assertTrue(m.is_admin)
 
     def test_add_mapstory_with_membership(self):
-        user = User.objects.create_user(username='testuser', password='asbdsandsandsandsa')
-        c = AdminClient()
-        c.login_as_non_admin(username='testuser', password='asbdsandsandsandsa')
-        o = models.Organization.objects.create(title="Queso Testing")
-        self.assertNotEqual(o.add_member(user), None)
+        user = get_test_user()
+        self.assertTrue(self.client.login(username=user.username, password="glassonion232123"))
+        o = get_test_organization()
+        self.assertIsNotNone(o.add_member(user))
         mapstory = create_mapstory(user, "Testing Mapstory")
-        self.assertNotEqual(mapstory, None)
+        self.assertIsNotNone(mapstory)
+
         initial_count = models.OrganizationMapStory.objects.filter(organization=o).count()
-        response = c.post(
+        response = self.client.post(
             reverse("organizations:add_mapstory", kwargs={
                 'pk': o.pk,
                 'mapstory_pk': mapstory.pk
             }),
-            {},
+            {'data': 'data'},
             follow=True
         )
         self.assertEqual(200, response.status_code)
         # Should have added 1 mapstory to the organization
         final_count = models.OrganizationMapStory.objects.filter(organization=o).count()
-        # TODO: Fix this test
-        # self.assertEqual(initial_count + 1, final_count)        self.assertEqual(initial_count + 1, final_count)
+        self.assertEqual(initial_count + 1, final_count)
 
     def test_add_mapstory_helper(self):
         test_mapstory = create_mapstory(testUser, 'Testing Map 01')
 
         initial_count = models.OrganizationMapStory.objects.all().count()
-        o = models.Organization.objects.create(title="Test", slogan="We test")
+        o = get_test_organization()
         membership = models.OrganizationMembership.objects.create(user=get_test_user(), organization=o, is_admin=True)
 
         self.assertIsNotNone(o.add_mapstory(test_mapstory, membership))
@@ -193,16 +192,14 @@ class TestOrganizations(TestCase):
         layer = create_layer('Test Layer', 'Abstract', get_test_user())
         self.assertIsNotNone(layer)
 
-        o = models.Organization.objects.create(title="Test", slogan="Queso")
+        o = get_test_organization()
         m = models.OrganizationMembership.objects.create(user=get_test_user(), organization=o, is_admin=True)
         count = models.OrganizationLayer.objects.all().count()
         o.add_layer(layer, m)
         self.assertEqual(count + 1, models.OrganizationLayer.objects.all().count())
 
     def test_add_url(self):
-        o = models.Organization()
-        o.title = "Test"
-        o.save()
+        o = get_test_organization()
         initial_count = o.get_urls().count()
         o.add_url('https://josellausas.com')
         self.assertEqual(initial_count + 1, o.get_urls().count())
@@ -212,9 +209,7 @@ class TestOrganizations(TestCase):
         pass
 
     def test_organization_page_content(self):
-        o = models.Organization()
-        o.title = "Test Organization"
-        o.save()
+        o = get_test_organization()
         o.add_url('https://mapstory.org')
         # Add some members:
         o.add_member(
@@ -232,7 +227,7 @@ class TestOrganizations(TestCase):
         pass
 
     def test_request_to_join(self):
-        organization = models.Organization.objects.create(title="Test")
+        organization = get_test_organization()
         # GET request should redirect us to the organization's page
         join_url = reverse(
             'organizations:request_membership',
@@ -244,14 +239,9 @@ class TestOrganizations(TestCase):
         self.assertTemplateUsed("organization_detail")
 
         initial_request_count = models.JoinRequest.objects.all().count()
-        user = User.objects.create_user(
-            username='modeltester',
-            email='modeltester@models.com',
-            password='wiuwiuwiuwiu'
-        )
-        user.save()
+        user = get_test_user()
         # Login
-        self.assertTrue(self.client.login(username='modeltester', password='wiuwiuwiuwiu'))
+        self.assertTrue(self.client.login(username='modeltester', password='glassonion232123'))
 
         response = self.client.post(
             reverse(
@@ -264,17 +254,12 @@ class TestOrganizations(TestCase):
         self.assertEqual(final_request_count, initial_request_count + 1)
 
     def test_duplicate_join_request(self):
-        organization = models.Organization.objects.create(title="Test")
+        organization = get_test_organization()
         # Should not create another
         initial_request_count = models.JoinRequest.objects.all().count()
-        user = User.objects.create_user(
-            username='modeltester',
-            email='modeltester@models.com',
-            password='wiuwiuwiuwiu'
-        )
-        user.save()
+        user = get_test_user()
         # Login
-        self.assertTrue(self.client.login(username='modeltester', password='wiuwiuwiuwiu'))
+        self.assertTrue(self.client.login(username='modeltester', password='glassonion232123'))
 
         response = self.client.post(
             reverse(
@@ -297,7 +282,7 @@ class TestOrganizations(TestCase):
         self.assertEqual(final_request_count, initial_request_count + 1)
 
     def test_accept_request_to_join_and_decline(self):
-        o = models.Organization.objects.create(title="Test", slogan="Queso")
+        o = get_test_organization()
         u = get_test_user()
         j = models.JoinRequest.objects.create(organization=o, user=u)
         admin = User.objects.create_user(
@@ -323,7 +308,7 @@ class TestOrganizations(TestCase):
 
     def test_manager_post_social_media_changes(self):
         # Create an organization without social media.
-        org = models.Organization.objects.create(title="A title", slogan="a slogan", about="hey hey hey")
+        org = get_test_organization()
 
         # Check the details page for links.
         response = self.client.get(org.get_absolute_url())
@@ -378,17 +363,12 @@ class TestOrganizations(TestCase):
     def test_access_with_admin_to_manager(self):
         c = AdminClient()
         c.login_as_admin()
-        org = models.Organization.objects.create(title="A title 2", slogan="a slogan", about="hey hey hey")
+        org = get_test_organization()
         r = c.get(reverse("organizations:manage", kwargs={'pk': org.pk}), follow=True)
         self.assertEqual(200, r.status_code)
 
     def test_request_approve_by_admin(self):
-        o = models.Organization.objects.create(
-            title='Test',
-            slogan='Slogan here',
-            about='Yeah!'
-        )
-
+        o = get_test_organization()
         request = models.JoinRequest.objects.create(user=get_test_user(), organization=o)
         self.assertIsNotNone(request)
         admin_membership = models.OrganizationMembership.objects.create(
@@ -402,11 +382,7 @@ class TestOrganizations(TestCase):
         self.assertEqual(membership_count + 1, models.OrganizationMembership.objects.all().count())
 
     def test_request_decline_by_admin(self):
-        o = models.Organization.objects.create(
-            title='Test',
-            slogan='Slogan here',
-            about='Yeah!'
-        )
+        o = get_test_organization()
         request = models.JoinRequest.objects.create(user=get_test_user(), organization=o)
         self.assertIsNotNone(request)
         admin_membership = models.OrganizationMembership.objects.create(
@@ -418,7 +394,7 @@ class TestOrganizations(TestCase):
         self.assertEqual(request.is_open, False)
 
     def test_organization_detail_view_post_add_featured_layer(self):
-        o = models.Organization.objects.create(title="Test", slogan="Queso")
+        o = get_test_organization()
         u = get_test_user()
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
@@ -431,7 +407,7 @@ class TestOrganizations(TestCase):
         self.assertEqual(200, r.status_code)
 
     def test_organization_detail_view_post(self):
-        o = models.Organization.objects.create(title="Test", slogan="Queso")
+        o = get_test_organization()
         u = get_test_user()
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
@@ -445,7 +421,7 @@ class TestOrganizations(TestCase):
         self.assertEqual(200, r.status_code)
 
     def test_organization_detail_view_post_remove_layer(self):
-        o = models.Organization.objects.create(title="Test", slogan="Queso")
+        o = get_test_organization()
         u = get_test_user()
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
@@ -458,7 +434,7 @@ class TestOrganizations(TestCase):
         self.assertEqual(200, r.status_code)
 
     def test_organization_detail_view_post_remove_featured_layer(self):
-        o = models.Organization.objects.create(title="Test", slogan="Queso")
+        o = get_test_organization()
         u = get_test_user()
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
@@ -471,7 +447,7 @@ class TestOrganizations(TestCase):
         self.assertEqual(200, r.status_code)
 
     def test_organization_detail_view_post_remove_mapstory(self):
-        o = models.Organization.objects.create(title="Test", slogan="Queso")
+        o = get_test_organization()
         u = get_test_user()
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
@@ -484,7 +460,7 @@ class TestOrganizations(TestCase):
         self.assertEqual(404, r.status_code)
 
     def test_organization_detail_view_post_remove_featured_mapstory(self):
-        o = models.Organization.objects.create(title="Test", slogan="Queso")
+        o = get_test_organization()
         u = get_test_user()
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
@@ -497,7 +473,7 @@ class TestOrganizations(TestCase):
         self.assertEqual(404, r.status_code)
 
     def test_organization_detail_view_post_add_featured_mapstory(self):
-        o = models.Organization.objects.create(title="Test", slogan="Queso")
+        o = get_test_organization()
         u = get_test_user()
         map_created = create_mapstory(u, "Title")
         layer = create_layer('Test Layer', 'Abstract', u)
@@ -509,3 +485,33 @@ class TestOrganizations(TestCase):
             "mapstory_pk": map_created.pk,
         })
         self.assertEqual(404, r.status_code)
+
+    def test_api_add_layer(self):
+        org = get_test_organization()
+        usr = get_test_user()
+        layer = create_layer('Test Layer', 'Abstract', usr)
+        admin_membership = models.OrganizationMembership.objects.create(
+            organization=org,
+            user=usr,
+        )
+        initial_layer_count = models.OrganizationLayer.objects.count()
+
+        # Attempt to login the client
+
+        self.assertTrue(self.client.login(username=usr.username, password="glassonion232123"))
+
+        response = self.client.post(
+            reverse(
+                'organizations:add_layer',
+                kwargs={
+                    'layer_pk': layer.pk,
+                    'pk': org.pk
+                }
+            ),
+            {'data': 'data'}
+        )
+        self.assertRedirects(
+            response,
+            expected_url=reverse("organizations:detail", kwargs={'pk': org.pk}))
+        # Should update the Organization's layer count
+        self.assertEqual(initial_layer_count + 1, models.OrganizationLayer.objects.count())
