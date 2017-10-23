@@ -130,10 +130,6 @@ class Organization(models.Model):
         """
         return OrganizationURL.objects.filter(org=self)
 
-    def add_url(self, url):
-        """Adds a new URL to the Organization
-        """
-        return OrganizationURL.objects.create(url=url, org=self)
 
     def add_layer(self, layer, membership):
         """Adds a Layer to the Organization.

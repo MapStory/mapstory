@@ -198,19 +198,8 @@ class TestOrganizations(TestCase):
         o.add_layer(layer, m)
         self.assertEqual(count + 1, models.OrganizationLayer.objects.all().count())
 
-    def test_add_url(self):
-        o = get_test_organization()
-        initial_count = o.get_urls().count()
-        o.add_url('https://josellausas.com')
-        self.assertEqual(initial_count + 1, o.get_urls().count())
-
-    def test_remove_url(self):
-        # TODO: Implement this
-        pass
-
     def test_organization_page_content(self):
         o = get_test_organization()
-        o.add_url('https://mapstory.org')
         # Add some members:
         o.add_member(
             User.objects.create_user(
