@@ -100,7 +100,7 @@ def organization_detail(request, pk):
         'layers': layers,
         'mapstories': mapstories,
         'membership': membership,
-        'org_image': org.image.url
+        'org_image': org.image
     }
 
     return render(request, 'organizations/organization_detail.html', context)
@@ -387,14 +387,14 @@ def manager(request, pk):
     instagram = organization.instagram
     join_requests = models.JoinRequest.objects.filter(organization=organization, is_open=True)
     memberships = models.OrganizationMembership.objects.filter(organization=organization)
-    org_image = organization.image.url
+    org_image = organization.image
     info = {
         'name': organization.title,
         'slogan': organization.slogan,
         'about': organization.about,
         'country': organization.country,
         'city': organization.city,
-        'image': organization.image.url,
+        'image': organization.image,
     }
 
     links = {
