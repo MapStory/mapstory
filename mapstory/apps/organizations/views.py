@@ -93,6 +93,18 @@ def organization_detail(request, pk):
             'is_featured': m.is_featured,
         })
 
+    social_icons = []
+    if org.facebook:
+        social_icons.append(models.OrganizationSocialMedia.objects.get(pk=org.facebook.pk))
+    if org.twitter:
+        social_icons.append(models.OrganizationSocialMedia.objects.get(pk=org.twitter.pk))
+    if org.instagram:
+        social_icons.append(models.OrganizationSocialMedia.objects.get(pk=org.instagram.pk))
+    if org.linkedin:
+        social_icons.append(models.OrganizationSocialMedia.objects.get(pk=org.linkedin.pk))
+    if org.github:
+        social_icons.append(models.OrganizationSocialMedia.objects.get(pk=org.github.pk))
+
     context = {
         'org': org,
         'members': members,
@@ -100,7 +112,8 @@ def organization_detail(request, pk):
         'layers': layers,
         'mapstories': mapstories,
         'membership': membership,
-        'org_image': org.image
+        'org_image': org.image,
+        'social_icons': social_icons,
     }
 
     return render(request, 'organizations/organization_detail.html', context)

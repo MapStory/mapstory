@@ -35,15 +35,17 @@
                 {% endfor %}
                 </div>
 
+                {% if social_icons %}
                 <div class="organization_social">
-                {% for social_icon in social_icons %}
+                    {% for social_icon in social_icons %}
                     <div class="social_icon">
                     <a href="{{ social_icon.url }}">
                         <i class="fa {{ social_icon.icon }}">{{ social_icon.name }}</i>
                     </a>
                     </div>
-                {% endfor %}
+                    {% endfor %}
                 </div>
+                {% endif %}
 
                 <div class="organization_members">
                     <h3 class="organization_about_title">ORGANIZATION MEMBERS</h3>
