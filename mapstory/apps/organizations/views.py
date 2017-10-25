@@ -252,37 +252,16 @@ def add_membership(request, pk, user_pk):
     if request.POST:
         # User is Authorized to add users to this organization
         user_to_add = get_object_or_404(User, pk=user_pk)
-        membership = models.OrganizationMembership.objects.get_or_create(organization=organization, user=user_to_add)
+        membership, created = models.OrganizationMembership.objects.get_or_create(organization=organization, user=user_to_add)
 
         return redirect(
             reverse('organizations:member_detail', kwargs={
                 'org_pk': organization.pk,
-                'membership_pk':membership.pk}
+                'membership_pk': membership.pk}
             )
         )
 
     return redirect(reverse('organizations:manage', kwargs={'pk': pk}))
-
-
-def _save_social_media_with_name(organization, social_media_name, new_url_value, social_objects):
-    updated_obj = None
-    if new_url_value:
-        for social in social_objects:
-            # Update if it exists
-            if social_media_name == social.name:
-                social.url = new_url_value
-                social.save()
-                updated_obj = social
-
-        if not updated_obj:
-            # Create one if it doesnt exist
-            updated_obj = models.OrganizationSocialMedia.objects.create(
-                organization=organization,
-                url=new_url_value,
-                name=social_media_name,
-                icon="fa-%s" % (social_media_name,)
-            )
-    return updated_obj
 
 
 def _save_social_icons(organization, facebook, twitter, instagram, linkedin, github):
@@ -542,18 +521,21 @@ def approve_membership(request, pk):
         )
 
         if not admin_membership.is_admin:
+            # No permission
             messages.warning(request, "You do not have permissions to do this.")
             return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
-
         else:
+            # We have permission, continue
             request_pk = request.POST.get("request_pk")
             join_request = get_object_or_404(models.JoinRequest, pk=request_pk)
             approval = request.POST.get("approval")
 
+            # Approve Request to join
             if approval == 'accept':
                 new_membership = join_request.approve(admin_membership)
                 messages.success(request, "New member added to Organization.")
 
+            # Decline Request to join
             elif approval == 'decline':
                 join_request.decline(admin_membership)
                 messages.success(request, "Request to join declined.")

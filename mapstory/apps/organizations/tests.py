@@ -92,7 +92,7 @@ class TestOrganizations(TestCase):
         initial_count = o.get_memberships().count()
         o.add_member(testUser)
         o.save()
-        self.assertEqual(initial_count + 1 , o.get_memberships().count())
+        self.assertEqual(initial_count + 1, o.get_memberships().count())
 
         other_user = User.objects.create_user(
             username='modeltester2',
@@ -211,10 +211,6 @@ class TestOrganizations(TestCase):
         response = self.client.get(o.get_absolute_url())
         self.assertContains(response, 'usernametest')
 
-    def test_anonymous_requst_to_join_redirects_to_sign_up(self):
-        # TODO: Should redirect to the signup page when no user is signed up
-        pass
-
     def test_request_to_join(self):
         organization = get_test_organization()
         # GET request should redirect us to the organization's page
@@ -236,7 +232,7 @@ class TestOrganizations(TestCase):
             reverse(
                 'organizations:request_membership',
                 kwargs={'pk': organization.pk}
-            ),{'pk': organization.pk}, follow=True
+            ), {'pk': organization.pk}, follow=True
         )
         self.assertEqual(response.status_code, 200)
         final_request_count = models.JoinRequest.objects.all().count()
@@ -292,8 +288,65 @@ class TestOrganizations(TestCase):
         j2.decline(admin_membership)
 
     def test_only_manager_can_accept_requests(self):
-        # TODO: Verify that only manager has permissions to do this.
-        pass
+        o = get_test_organization()
+        u = get_test_user()
+        o.add_member(u, is_admin=True)
+
+        # Create another user to be added as member
+        u2, created = User.objects.get_or_create(
+            username='testing', email='testing@testing.com'
+        )
+        u2.set_password('testing_password123')
+        u2.save()
+
+        membership_request = models.JoinRequest.objects.create(
+            user=u2,
+            organization=o,
+        )
+        self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
+        self.client.post(
+            reverse(
+                "organizations:approve_membership",
+                kwargs={
+                    'pk': o.pk
+                }
+            ),
+            data={
+                'approval': 'accept',
+                'request_pk': membership_request.pk
+            }
+        )
+
+    def test_only_manager_can_decline_requests(self):
+        o = get_test_organization()
+        u = get_test_user()
+        o.add_member(u, is_admin=True)
+
+        # Create another user to be added as member
+        u2, created = User.objects.get_or_create(
+            username='testing22', email='testing22@testing.com'
+        )
+        u2.set_password('testing_password123')
+        u2.save()
+
+        membership_request = models.JoinRequest.objects.create(
+            user=u2,
+            organization=o,
+        )
+
+        self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
+        self.client.post(
+            reverse(
+                "organizations:approve_membership",
+                kwargs={
+                    'pk': o.pk
+                }
+            ),
+            data={
+                'approval': 'decline',
+                'request_pk': membership_request.pk
+            }
+        )
 
     def test_manager_post_social_media_changes(self):
         # Create an organization without social media.
@@ -388,7 +441,7 @@ class TestOrganizations(TestCase):
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
         o.add_layer(layer, membership)
-        r = self.client.post(reverse("organizations:detail", kwargs={"pk":o.pk}), data={
+        r = self.client.post(reverse("organizations:detail", kwargs={"pk": o.pk}), data={
             "add_featured_layer": "quesito",
             "layer_pk": layer.pk,
             "mapstory_pk": layer.pk,
@@ -479,14 +532,13 @@ class TestOrganizations(TestCase):
         org = get_test_organization()
         usr = get_test_user()
         layer = create_layer('Test Layer', 'Abstract', usr)
-        admin_membership = models.OrganizationMembership.objects.create(
+        models.OrganizationMembership.objects.create(
             organization=org,
             user=usr,
         )
         initial_layer_count = models.OrganizationLayer.objects.count()
 
         # Attempt to login the client
-
         self.assertTrue(self.client.login(username=usr.username, password="glassonion232123"))
 
         response = self.client.post(
@@ -504,3 +556,96 @@ class TestOrganizations(TestCase):
             expected_url=reverse("organizations:detail", kwargs={'pk': org.pk}))
         # Should update the Organization's layer count
         self.assertEqual(initial_layer_count + 1, models.OrganizationLayer.objects.count())
+
+    def test_add_membership_view(self):
+        o = get_test_organization()
+        u = get_test_user()
+        o.add_member(u, is_admin=True)
+
+        # Create another user to be added as member
+        u2, created = User.objects.get_or_create(
+            username='testing', email='testing@testing.com'
+        )
+        u2.set_password('testing_password123')
+        u2.save()
+        self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
+
+        initial_count = models.OrganizationMembership.objects.all().count()
+        response = self.client.post(
+            reverse(
+                'organizations:add_member',
+                kwargs={
+                    'pk': o.pk,
+                    'user_pk': u2.pk
+                },
+            ),
+            data={
+                'post': 'post'
+            },
+            follow=True
+        )
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed("organizations/manager.html")
+        # Should update the membership count
+        self.assertEqual(models.OrganizationMembership.objects.all().count(), 1 + initial_count)
+
+    def test_unauthorized_manager_access(self):
+        o = get_test_organization()
+        u = get_test_user()
+        o.add_member(u, is_admin=False)
+        self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
+        response = self.client.get(reverse("organizations:manage", kwargs={'pk': o.pk}))
+        self.assertTemplateNotUsed(response, "organizations/manager.html")
+        self.assertContains(response, "not authorized")
+
+    def test_manager_get_access(self):
+        o = get_test_organization()
+        u = get_test_user()
+        o.add_member(u, is_admin=True)
+        self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
+        response = self.client.get(reverse("organizations:manage", kwargs={'pk': o.pk}))
+        self.assertTemplateUsed(response, "organizations/manager.html")
+
+    def test_manager_post(self):
+        o = get_test_organization()
+        u = get_test_user()
+        o.add_member(u, is_admin=True)
+        self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
+        response = self.client.post(
+            reverse("organizations:manage", kwargs={'pk': o.pk}),
+            follow=True,
+            data={
+                'post': 'post_testing'
+            }
+        )
+        self.assertTrue(200 == response.status_code)
+        self.assertTemplateUsed(response, "organizations/manager.html")
+
+    def test_manager_post_form(self):
+        o = get_test_organization()
+        u = get_test_user()
+        o.add_member(u, is_admin=True)
+        self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
+        response = self.client.post(
+            reverse("organizations:manage", kwargs={'pk': o.pk}),
+            follow=True,
+            data={
+                'name': 'test',
+                'slogan': 'test',
+                'city': 'test',
+                'country': 'test',
+                'image': None,
+                'about': 'test',
+                'url0': 'https://josellausas.com',
+                'url1': 'https://josellausas.com',
+                'url2': 'https://josellausas.com',
+                'facebook': 'https://josellausas.com',
+                'twitter': 'https://josellausas.com',
+                'linkedin': 'https://josellausas.com',
+                'github': 'https://josellausas.com',
+                'instagram': 'https://josellausas.com'
+            }
+        )
+        # Should redirect to detail page
+        self.assertTrue(200 == response.status_code)
+        self.assertTemplateUsed(response, "organizations/organization_detail.html")
