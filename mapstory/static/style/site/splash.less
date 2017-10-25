@@ -11,7 +11,7 @@
 .splash {
   // height here will affect content, backdrop, and overlay
   // proportionally
-  @splash: 400px; 
+  @splash: 450px; 
 
   overflow: hidden;
   height: @splash;
@@ -20,10 +20,14 @@
   &-content {
     position: relative;
 
-    padding-top: @splash / 2.5;
+    padding-top: @splash / 3;
+    padding-right: @splash / 7;
     padding-left: @splash / 3;
-    padding-right: @splash / 8;
 
+    @media only screen and (min-width: 550px) {
+      padding-top: @splash / 2.5;
+      padding-right: @splash / 8;
+    }
     z-index: 99;
   }
 
@@ -32,15 +36,21 @@
     min-height: @splash;
     z-index: -3;
     overflow: hidden;
-    //note: video gets too short at window width of 715
+    //note: video gets too short at window width of ~800
+    // this is not performant to load but not display
+    @media only screen and (max-width: 800px) {
+      display: none;
+    }
   } 
 
   &-backdrop {
     height: inherit;
+    background-size: cover;                 
+    background-repeat: no-repeat;
+    background-position:center center;  
   }
 
   &-overlay {
-
     // Ordering, placement, and transparency
     @top-offset: @splash * -1.3;
     @left-offset: @splash * -0.2;
@@ -59,9 +69,8 @@
 
       .radius(50%);
 
-      width: 550px;
+      width: 500px;
       height: @diameter;
-      
 
       @media @desktops {
         width: @diameter;
