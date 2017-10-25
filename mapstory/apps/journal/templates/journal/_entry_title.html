@@ -1,0 +1,19 @@
+{% load i18n %}
+{% load avatar_tags %}
+
+<div class="col-sm-10 col-sm-offset-2 col-xs-12">
+    <h5 class="blog-title">{{ entry.date }}</h5>
+    <h1 class="blog-title">
+        <a href="{{ entry.get_absolute_url }}">
+            {{ entry.title }}
+        </a>
+        {% ifequal entry.author request.user %}
+            <a href="{% url 'journal-update' pk=entry.pk %}">
+                <button class="btn btn-primary" aria-hidden="true" id="published_submit_btn" type="submit">{% trans "Edit" %}</button>
+            </a>
+        {% endifequal %}
+    </h1>
+    <h5 class="blog-title">
+        <a href="{% url "profile_detail" slug=entry.author.username %}">{% avatar entry.author 30 %} {{ entry.author.first_name }} {{ entry.author.last_name }}</a>
+    </h5>
+</div>
