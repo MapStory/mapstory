@@ -55,6 +55,7 @@
         this.owner = "";
         this.storyChapter = 1;
         this.chapterCount = 1;
+
         var self = this;
         StoryPinLayerManager.map = self.storyMap;
         StoryBoxLayerManager.map = self.storyMap;
@@ -74,10 +75,10 @@
                 $log.info("Story config has no chapters so just loading the defaults.");
                 self.loadMap(config);
             }
-
             self.title = config.about.title;
             self.username = config.about.username;
             self.owner = config.about.owner;
+            self.detail_url = config.about.detail_url;
         };
 
         this.displayPinInfo = function(pixel, pin) {

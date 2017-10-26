@@ -6,36 +6,27 @@
 {% load avatar_tags %}
 
 {% block middle %}
-<section class="parallax">
-    <div data-stellar-background-ratio="0.5" style="background-size: 100%; background-position: 0% 20%;">
-        <div class="maskParent">
-            <div class="paralaxMask"></div>
-            <div class="paralaxText container" style="text-align:left;padding-bottom:0">
-                <div class="row">
-                    <div class="col-sm-9">
-                        <div style="padding:60px 0px 0px 10px; color:white;">
-                            <h1>{{ SITE_NAME }} Community Journal</h1>
-                            <h4>Share your ideas, projects and questions with the rest of the {{ SITE_NAME }} community.</h3>
-                        </div>
-                    </div>
-                    <div class="col-sm-3">
-                        <div class="row"  style="padding:80px 0px 10px 10px;">
-                            <div class="col-sm-8 col-sm-offset-4">
-                                <a class="btn btn-sm btn-block" style="font-size:1em;background-color:transparent;color:white;border:1px solid white;" title="" href="{% url 'journal-create' %}" target="blank">
-                                    write an entry
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<section>
+    <div class="blog-banner" style="background-image: url('{{ STATIC_URL }}/mapstory/img/bg_topography.png');">
+        <div class="row">
+            <div class="col-sm-9" style="color: white;">
+                <h1>{{ SITE_NAME }} Community Journal</h1>
+                <h3>Share your ideas, projects and questions with the rest of the {{ SITE_NAME }} community.</h3>
             </div>
+        </div>
+        <div class="row">
+            <a href="{% url 'journal-create' %}"?\>
+                <button class="button white-button-inverse pull-right" title="" target="blank">
+                    <span>write an entry</span>
+                </button>
+            </a>
         </div>
     </div>
 </section>
-<div class="container" id="journal-menu">
+<div class="container">
     {% if user.is_authenticated %}
         {% if drafts %}
-            <span class="dropdown" id="draft-button">
+            <span class="dropdown draft-button">
                 <a id="dLabel" role="button" data-toggle="dropdown" class="dropdown-toggle">
 		 		complete a draft entry <span class="caret"></span>
             </a>
@@ -58,37 +49,18 @@
     {% endif %}
     {% for entry in entries %}
         <div class="row blog-panel">
-            <div class="col-sm-12">
-                <div class="row">
-                    <div class="col-lg-10 col-lg-offset-2  col-xs-12">
-                        <h5 class="blog-title">{{ entry.date }}</h5>
-                        <h1 class="blog-title"><a href="{{ entry.get_absolute_url }}">{{ entry.title }}</a></h2>
-                            <h5 class="blog-title"><a href="{% url "profile_detail" slug=entry.author.username %}">{% avatar entry.author 30 %} {{ entry.author.first_name }} {{ entry.author.last_name }}</a></h5>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-2 col-xs-6 qlink-right">
-                    </div>
-                    <div class="col-lg-8 col-xs-6 blog-content bl">
-                        {{ entry.html|safe }}
-                    </div>
-                    <div class="col-lg-2 col-xs-6">
-                        {% ifequal entry.author request.user %}
-                            <a href="{% url 'journal-update' pk=entry.pk %}">
-                                <button class="btn btn-primary" aria-hidden="true" id="published_submit_btn" type="submit">{% trans "Edit" %}</button>
-                            </a>
-                        {% endifequal %}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-2 col-xs-6 qlink-right">
-                    </div>
-                    <div class="col-lg-8 col-xs-6 blog-content bl">
-                        {% get_comment_count for entry as num_comments %}
-                        {{ num_comments }} comments
-                        {% if user.is_authenticated %}
-                            <a href="{{ entry.get_absolute_url }}" class="btn btn-primary btn-xs" role="button">Reply</a>
-                        {% endif %}
+            <div class="row">
+                {% include "journal/_entry_title.html" %}
+            </div>
+            <div class="row">
+                <div class="blog-content col-sm-8 col-sm-offset-4">
+                    {{ entry.html|safe }}
+                    <div class="pull-right">
+                    {% get_comment_count for entry as num_comments %}
+                        <a href="{{ entry.get_absolute_url }}">{{ num_comments }} comments</a>
+                    {% if user.is_authenticated %}
+                        <a href="{{ entry.get_absolute_url }}" class="btn btn-primary btn-xs" role="button">Reply</a>
+                    {% endif %}
                     </div>
                 </div>
             </div>

@@ -85,7 +85,6 @@ INSTALLED_APPS += (
     'django_comments',
     'osgeo_importer',
     'solo',
-    'resizeimage',
     'coverage',
     'notification',
     'mapstory.apps.health_check_geoserver',

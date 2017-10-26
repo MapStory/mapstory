@@ -33,68 +33,69 @@ section.sponsors {
   background-color: #BFB4A3; //darkerbrown
 }
 
-
 /*---homepage hover buttons---*/
 //also used in footer!
 
 @button-accent: #da4627; //redorange
 
-.homepage .button {
-  display: inline-block;
-
-  width: 200px;
-  border-radius: 6px;
-  margin: 5px;
-  padding: 14px 12px;
-  
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 18px;
-  
-  transition: all 0.5s;
-  cursor: pointer;
-}
-
-.homepage .button span {
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  transition: 0.5s;
-
-  &:after {
-    content: '\00bb';
-    position: absolute;
-    opacity: 0;
-    top: 0;
-    right: -20px;
-    transition: 0.5s;
-  }
-}
-
-.homepage .button:hover span {
-  padding-right: 25px;
-
-  &:after{
-    opacity: 1;
-    right: 0;
+.homepage, .blog-banner {
+  .button {
+    display: inline-block;
+    width: 200px;
+    border-radius: 6px;
+    margin: 5px;
+    padding: 14px 12px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 18px;
+    transition: all 0.5s;
+    cursor: pointer;
+    span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+      white-space:nowrap;
+      &:after {
+        content: '\00bb';
+        position: absolute;
+        opacity: 0;
+        top: 0;
+        right: -20px;
+        transition: 0.5s;
+      }
+    }
+    &:hover span {
+      padding-right: 25px;
+      white-space:nowrap;
+      &:after {
+        opacity: 1;
+        right: 0;
+      }
+    }
   }
 }
 
 .button-solid {
   background-color: @button-accent;
   color: @gray-0;
-
   border: none;
 }
 
-.button-inverse {
+.button-inverse(@color) {
   background-color: transparent;
-  color: @button-accent;
-
+  color: @color;
   border: solid;
-  border-color: @button-accent;
+  border-color: @color;
 }
 
+.white-button-inverse{
+  .button-inverse(@white)
+}
+
+.accent-button-inverse{
+  .button-inverse(@button-accent)
+}
 
 /*--- homepage typography ---*/
 // these fonts are copy-pasta exactly the same as before
@@ -115,7 +116,6 @@ section.sponsors {
     line-height: normal;
   }
 }
-
 
 h2.homepage {
     text-align: center;
@@ -141,7 +141,6 @@ p.more {
   font-weight: 900;
   line-height: 140%;
   color: white;
-
   padding: 40px 70px;
 
   // this is a ratio and I should make it a variable
@@ -154,7 +153,6 @@ p.more {
     font-size: 32px;
   }
 }
-
 
 .how-icon {
   height: 100px;
