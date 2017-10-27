@@ -53,7 +53,7 @@ before_install:
   - $DCO pull
 
 install:
-  - $DCO build django celery
+  - $DCO build django celery protractor
   - $DCO up -d postgres elasticsearch rabbitmq
   - $DCO up pgadmin
   - $DCO run django "--init-db --collect-static --reindex"
@@ -64,8 +64,7 @@ script:
   - $DCO kill django
   - $DCO ps
   - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
-#  - $DCO run protractor protractor conf.js
-  - protractor
+  - $DCO run protractor protractor conf.js
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
