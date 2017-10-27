@@ -21,6 +21,9 @@ if(process.env.DOCKER){
 	selenium_url = 'http://localhost:4444/wd/hub';
 }
 
+//Override and use saucelabs webdriver
+// selenium_url = 'http://ondemand.saucelabs.com:80';
+
 let timeout = 30000;
 let multi_cabapilities = [{
 	'browserName' : 'chrome',
