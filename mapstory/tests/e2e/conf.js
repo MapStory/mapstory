@@ -21,11 +21,6 @@ if(process.env.DOCKER){
 	selenium_url = 'http://localhost:4444/wd/hub';
 }
 
-// Override for TRAVIS
-if (process.env.TRAVIS){
-	selenium_url = 'http://localhost:4444/wd/hub';
-}
-
 //Override and use saucelabs webdriver
 // selenium_url = 'http://ondemand.saucelabs.com:80';
 
