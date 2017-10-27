@@ -25,7 +25,7 @@ addons:
   hosts:
     - docker
   # For sauceLabs (DO NOT REMOVE)
-  sauce_connect: true
+  sauce_connect:
     tunnel_domains: docker
 
 
