@@ -69,7 +69,7 @@ script:
   - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
   - $DCO up -d django
   # Wait for django container to come up
-  - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; echo "Waiting for webserver..."; dco logs --tail=20 django; curl -kl docker; do sleep 5; done
+  - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; echo "Waiting for webserver..."; $DCO logs --tail=20 django; curl -kL docker; do sleep 5; done
   - protractor mapstory/tests/e2e/conf.js
 
 after_success:
