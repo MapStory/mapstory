@@ -130,7 +130,6 @@ class Organization(models.Model):
         """
         return OrganizationURL.objects.filter(org=self)
 
-
     def add_layer(self, layer, membership):
         """Adds a Layer to the Organization.
 
