@@ -16,3 +16,5 @@ RUN set -ex \
         pix-diff
 
 COPY mapstory/tests/e2e/ ./
+
+CMD ["protractor", "/opt/mapstory/tests/e2e/conf.js"]

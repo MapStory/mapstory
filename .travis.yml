@@ -58,13 +58,15 @@ install:
   - $DCO up pgadmin
   - $DCO run django "--init-db --collect-static --reindex"
   - npm install -g protractor
+  - npm istall pix-diff
 
 script:
   - $DCO up -d nginx
+  - protractor "mapstory/tests/e2e/conf.js"
   - $DCO kill django
   - $DCO ps
   - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
-  - $DCO run protractor protractor conf.js
+
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
