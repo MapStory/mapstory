@@ -12,5 +12,5 @@ if(process.env.DOCKER) {
 } else if(process.env.TRAVIS) {
 	define('baseURL', 'http://localhost');
 } else {
-	define('baseURL', 'http://docker');
+	define('baseURL', 'http://localhost');
 }
