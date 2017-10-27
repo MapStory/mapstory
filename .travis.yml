@@ -60,11 +60,10 @@ install:
   - npm install -g protractor
 
 script:
-  - $DCO up -d nginx
+  - $DCO up -d nginx selenium
+  - $DCO up protractor
   - $DCO kill django
-  - $DCO ps
   - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
-  - $DCO run protractor protractor conf.js
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
