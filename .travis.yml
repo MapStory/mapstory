@@ -22,8 +22,11 @@ env:
 
 addons:
   hostname: docker
+  hosts:
+    - docker
   # For sauceLabs (DO NOT REMOVE)
   sauce_connect: true
+    tunnel_domains: docker
 
 
 before_install:
