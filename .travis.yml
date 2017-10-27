@@ -40,8 +40,10 @@ before_install:
   - docker-compose --version
   - DCO="docker-compose -f docker-compose.yml -f docker/docker-compose.travis.yml"
 
-  # Install other tools
+  # Install test tools
   - pip install coveralls
+  - npm install -g protractor
+  - npm install pix-diff
 
   # Ensure a clean environment
   - $DCO kill
@@ -53,16 +55,14 @@ before_install:
   - $DCO pull
 
 install:
-  - $DCO build django celery protractor
+  - $DCO build django celery
   - $DCO up -d postgres elasticsearch rabbitmq
   - $DCO up pgadmin
   - $DCO run django "--init-db --collect-static --reindex"
-  - npm install -g protractor
-  - npm istall pix-diff
 
 script:
   - $DCO up -d nginx
-  - protractor "mapstory/tests/e2e/conf.js"
+  - protractor mapstory/tests/e2e/conf.js
   - $DCO kill django
   - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
 
