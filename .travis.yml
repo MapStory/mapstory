@@ -28,6 +28,11 @@ addons:
     tunnel_domains: docker
 
 before_install:
+  - pwd
+  - ls /home/travis/build/MapStory/mapstory/mapstory/tests/sampledata/
+  - ls mapstory/tests/sampledata
+  - ls mapstory/tests
+  - exit 1
   # Temporary fix for the Basho repo being down
   - sudo rm -vf /etc/apt/sources.list.d/*riak*
   # Install Docker Engine
