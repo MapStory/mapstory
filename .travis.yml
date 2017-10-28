@@ -71,7 +71,7 @@ script:
   # Wait for django container to come up
   - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
   - pushd mapstory/tests/e2e/
-  - protractor mapstory/tests/e2e/conf.js
+  - protractor ./conf.js
   - popd
 
 after_success:
