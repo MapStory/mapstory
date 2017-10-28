@@ -19,7 +19,6 @@ env:
     - secure: "IMm6jAeLGJ1Vo3L81JIEh2/Z2jIARYFBviQ5cxTTH88ndN2Oj03rPDjvkP44YZwZT7Gd768Ve1PuEgq5oVmqd+oZF7hUEh08LalUV9aOkIRFEc8SjuUJVFhFzUGovqDr+Kg+Y7OqDODhZjvORqnNpOkWNUUnR26MsRY/x9vNO50="
     - secure: "FJobmS7HNb2L95ZN0s81r/MpmM5kizgyoG6bUpgIaYhQMweJgLPinHOWB+54VAr7jkdDjN5b+4hHa1pcWNSWGLDgxMZxj9pPej7Aiq0wvFMlbzai3W+/FcNENHjd3sBTLNpWiBrpQNyUXP2/+2QWPMqCbUfiS90AkA5Du198pjE="
 
-
 addons:
   hostname: docker
   hosts:
@@ -27,7 +26,6 @@ addons:
   # For sauceLabs (DO NOT REMOVE)
   sauce_connect:
     tunnel_domains: docker
-
 
 before_install:
   # Temporary fix for the Basho repo being down
@@ -67,11 +65,14 @@ script:
   - $DCO up django_volumes
   - $DCO up -d nginx
   - $DCO up django_volumes
+  - $DCO kill django
+  - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --init-db --test
+  - $DCO up -d django
   # Wait for django container to come up
-  - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver..."; echo "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)"; sleep 5); done
+  - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
+  - pushd mapstory/tests/e2e/
   - protractor mapstory/tests/e2e/conf.js
-#  - $DCO kill django
-#  - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
+  - popd
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
