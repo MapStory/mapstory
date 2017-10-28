@@ -1,10 +1,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import signals
-from account.models import EmailAddress
 from geonode.people.models import Profile as Geonode_Profile
 from avatar.templatetags.avatar_tags import avatar_url
 from avatar.models import Avatar
+from taggit.managers import TaggableManager
 
 
 class MapstoryProfile(models.Model):
@@ -12,6 +12,9 @@ class MapstoryProfile(models.Model):
 
     class Meta:
         app_label = "mapstory_profile"
+
+    interests = TaggableManager(_('interests'), blank=True, help_text=_(
+        'A list of personal interests (separate each interest with a comma)'))
 
     Volunteer_Technical_Community = models.BooleanField(
         _('Volunteer Technical Community'),
@@ -71,11 +74,11 @@ class MapstoryProfile(models.Model):
         return [kw.slug for kw in self.keywords.all()]
 
 def profile_post_save(instance, sender, **kwargs):
-    MapstoryProfile.objects.filter(id=instance.id).update(
+    MapstoryProfile.objects.filter(user_id=instance.id).update(
         avatar_100=avatar_url(instance, 100))
 
 def avatar_post_save(instance, sender, **kw):
-    MapstoryProfile.objects.filter(id=instance.user.id).update(
+    MapstoryProfile.objects.filter(user_id=instance.user.id).update(
         avatar_100=avatar_url(instance.user, 100))
 
 def create_mapstory_profile(sender, instance, created, **kwargs):

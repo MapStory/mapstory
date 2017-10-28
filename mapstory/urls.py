@@ -5,6 +5,7 @@ from django.conf.urls import include
 from django.conf.urls.static import static
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
+from django.views.generic import TemplateView
 
 from annotations.urls import urlpatterns as annotations_urls
 # to replace /api/base & /api/owners GeoNode routes with our own:
@@ -18,7 +19,7 @@ from maploom.geonode.urls import urlpatterns as maploom_urls
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
 from tastypie.api import Api
 
-from mapstory.api.api import MapstoryOwnersResource
+from mapstory.api.api import MapstoryOwnersResource, InterestsResource
 from mapstory.api.resourcebase_api import ResourceBaseResource
 from mapstory.api.urls import api as mapstory_api
 from mapstory.apps.favorite.urls import api as favorites_api
@@ -41,6 +42,7 @@ from mapstory.views import SearchView
 
 geonode_api.register(ResourceBaseResource())
 geonode_api.register(MapstoryOwnersResource())
+geonode_api.register(InterestsResource())
 
 importer_api = Api(api_name='importer-api')
 # Overwrite Importer URL Routes
@@ -91,8 +93,8 @@ urlpatterns = patterns('',
     # Story
     url(r'^story$', 'mapstory.views.new_story_json', name='new_story_json'),
     url(r'^story/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
-    url(r'^story/(?P<mapid>\d+)/?$', map_detail, name='mapstory_detail'),
-    url(r'^story/(?P<storyid>\d+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
+    url(r'^story/(?P<slug>[-\w]+)/$', map_detail, name='mapstory_detail'),
+    url(r'^story/(?P<slug>[-\w]+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
     url(r'^story/chapter/new$', 'mapstory.views.new_map_json', name='new_map_json'),
 
     # MapLoom
@@ -100,14 +102,14 @@ urlpatterns = patterns('',
         name='new-story'),
     url(r'^maps/edit$', new_map, {'template': 'composer/maploom.html'}, name='map-edit'),
     url(r'^maps/(?P<mapid>\d+)/view$', 'mapstory.views.map_view', {'template': 'composer/maploom.html'}, name='map-view'),
-    url(r'^story/(?P<storyid>[^/]+)/draft$',
+    url(r'^story/(?P<slug>[-\w]+)/draft$',
     'mapstory.views.draft_view', {'template': 'composer/maploom.html'}, name='maploom-map-view'),
     url(r'^frame/(?P<storyid>[^/]+)/draft','mapstory.views.draft_view',name='draft_view'),
 
     # StoryTools
     url(r'^maps/(?P<mapid>\d+)/viewer$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
     url(r'^maps/(?P<mapid>\d+)/embed$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
-    url(r'^story/(?P<storyid>\d+)/embed$', 'mapstory.views.mapstory_view', {'template': 'viewer/story_viewer.html'}, name='mapstory-viewer'),
+    url(r'^story/(?P<slug>[-\w]+)/embed$', 'mapstory.views.mapstory_view', {'template': 'viewer/story_viewer.html'}, name='mapstory-viewer'),
 
     url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
     url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
@@ -135,6 +137,8 @@ urlpatterns = patterns('',
     url(r'^layers/acls', layer_acls_mapstory, name='layer_acls_mapstory'),
     url(r'^layers/resolve_user', resolve_user_mapstory, name='resolve_user_mapstory'),
 
+    url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain"), name='robots'),
+
 ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 
 urlpatterns += annotations_urls
@@ -149,9 +153,10 @@ urlpatterns += patterns("", url(r'', include(favorites_api.urls)))
 
 urlpatterns += importer_urlpatterns
 
-# this is last to catch reverse lookup from geonode views
+# this is last to catch reverse lookup from geonode views with the same name
 urlpatterns += patterns("",
                         url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
+                        url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="profile_edit"),
                         url(r'^story/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'))
 
 

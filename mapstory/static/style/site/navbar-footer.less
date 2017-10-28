@@ -30,7 +30,6 @@ h1.site-title {
         display: inline;
         width: 25px;
         border-radius: 50%;
-        border: 1px solid @gray-800;
         margin: 2px 8px 8px 8px;
     }
 }
@@ -470,16 +469,10 @@ footer.site-footer {
   .version-number {
     color: @default-color;
     font-size: 0.8em;
-    //leave room for scrollbar in chrome
-    padding-right: 15px;
+    padding-left: 15px;
   }
 
   a:link, a:visited {
     color: @link-color;
   }
-
-  // this might make the footer too big, 
-  // but it should keep it from being 
-  // too small for now
-  height: 100%;
 }

@@ -37,9 +37,9 @@
   }
 }
 
-.tab-content.details > .tab-pane > div{
-  max-height:500px; 
-  overflow-y:scroll; 
+.tab-content.details > .tab-pane > div {
+  max-height:500px;
+  overflow-y:scroll;
   overflow-x:hidden;
 }
 
@@ -66,16 +66,21 @@
 }
 
 .pointer {
-    cursor: pointer;
+  cursor: pointer;
+}
+
+ //back up sizing for default avi
+.avi-45-backup {
+  width: 45px;
 }
 
 .overview, .summary, .chapters, .story-layers {
-    text-align: left;
-    padding-bottom: 30px;
-    .nav-pills>li.active>a{
-      background-color: @gray90;
-      color: black;
-    }
+  text-align: left;
+  padding-bottom: 30px;
+  .nav-pills>li.active>a{
+    background-color: @gray90;
+    color: black;
+  }
 }
 
 .overview .views {
@@ -85,7 +90,7 @@
 }
 
 .summary, .chapters, .story-layers{
-   @media @tablets, @desktops{
+  @media @tablets, @desktops{
     border: 1px gainsboro solid;
     border-radius: 5px;
     margin: 30px 0px;
@@ -99,7 +104,7 @@
 }
 
 .embed {
-    margin: 8px;
+  margin: 8px;
 }
 
 .embed > input, .embed > textarea {
@@ -128,7 +133,7 @@
     span:before{
       content:"@{width}";
     }
-    
+
     span:after{
       content:"@{height}";
     }
@@ -161,28 +166,28 @@
 }
 
 .resume-edit {
-    position:absolute;
-    top:20px;
-    right:10%;
-    opacity: .6;
-    display:none;
-    @media @tablets, @desktops{
+  position:absolute;
+  top:20px;
+  right:10%;
+  opacity: .6;
+  display:none;
+  @media @tablets, @desktops{
     display:block;
   }
 }
 .mobile-play {
-    position:absolute;
-    top:20px;
-    right:10%;
-    display:block;
-    @media @tablets, @desktops{
+  position:absolute;
+  top:20px;
+  right:10%;
+  display:block;
+  @media @tablets, @desktops{
     display:none;
   }
 }
 
 .mobile-thumb{
-   display:block;
-    @media @tablets, @desktops{
+  display:block;
+  @media @tablets, @desktops{
     display:none;
   }
 }
@@ -212,13 +217,15 @@ img.thumb.img-responsive.details {
 }
 
 input[type=file]#id_thumbnail_image {
-    display: block;
-    width: 200px;
-    font-size: 10px;
+  display: block;
+  width: 200px;
+  font-size: 10px;
 }
 
 #change-thumbnail-image {
   border: 1px solid #cccccc;
+  width: 200px;
+  height: 150px;
 }
 
 #dashboard{
@@ -234,10 +241,10 @@ input[type=file]#id_thumbnail_image {
  background: white;
 }
 
-.no-chapter-summary { 
-    color: grey;
-    padding-top: 10px;
-  }
+.no-chapter-summary {
+  color: grey;
+  padding-top: 10px;
+}
 
 .layer-delete {
   margin-top: 40px;
@@ -250,10 +257,11 @@ input[type=file]#id_thumbnail_image {
 
 #id_comment{
   width: 90%;
+  border: .3px solid gainsboro;
 }
 
 input[name=post] {
-    margin-left: 95%;
+  margin-left: 95%;
 }
 
 .modal-body.download{
@@ -268,36 +276,36 @@ input[name=post] {
 
 //Geogig Layer Detail Commit History
 .table-center {
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
 }
 
 .stat-title {
-    color: #999;
-    font-size: 14px;
-    font-variant: small-caps;
+  color: #999;
+  font-size: 14px;
+  font-variant: small-caps;
 }
 
 .stat-value {
-    font-size: 21px;
+  font-size: 21px;
 }
 
 .commit {
-    padding: 5px 20px;
-    border-bottom: solid 1px #efefef;
-    text-align: left;
+  padding: 5px 20px;
+  border-bottom: solid 1px #efefef;
+  text-align: left;
 }
 
 .commit-id {
-    color: #999;
+  color: #999;
 }
 
 .commit-message {
-    margin-bottom: 4px;
+  margin-bottom: 4px;
 }
 
-.commit-byline{
+.commit-byline {
   font-size: 12px;
   color: #999;
 }
@@ -316,7 +324,7 @@ input[name=post] {
 .avatar {
   padding: 3px;
   img {
-   border-radius: 3px;
+    border-radius: 3px;
   }
 }
 

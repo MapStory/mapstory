@@ -34,6 +34,9 @@ for secret in /run/secrets/env_*; do
     set +a
 done
 
+
+export ALLOWED_HOSTS="$PUBLIC_HOST|$ALLOWED_HOSTS"
+
 for i do # loop over $@
 
     if [ "$i" = "--init-db" ]; then

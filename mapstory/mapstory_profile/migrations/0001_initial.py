@@ -3,12 +3,14 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 from django.conf import settings
+import taggit.managers
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('taggit', '0002_auto_20150616_2121'),
     ]
 
     operations = [
@@ -26,6 +28,7 @@ class Migration(migrations.Migration):
                 ('digest', models.BooleanField(default=False, help_text='Subscribe to MapStory monthly email digest', verbose_name='Monthly email digest')),
                 ('avatar_100', models.CharField(max_length=512, null=True, blank=True)),
                 ('user_profile', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+                ('interests', taggit.managers.TaggableManager(to='taggit.Tag', through='taggit.TaggedItem', blank=True, help_text='A list of personal interests (separate each interest with a comma)', verbose_name='interests')),
             ],
         ),
     ]

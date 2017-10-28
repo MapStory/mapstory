@@ -31,7 +31,7 @@
         </div>
         <div class="content">
             {% verbatim %}
-            <a target="_blank" href="/story/{{ mapManager.storyMap.get('id') - 1 }}/view" class="viewer-story-title" ng-bind="mapManager.title"></a>
+            <a target="_blank" href="/story/{{ mapManager.detail_url }}/view" class="viewer-story-title" ng-bind="mapManager.title"></a>
             <a target="_blank" href="/storyteller/{{ mapManager.username }}" class="viewer-author">MapStory by {{ mapManager.owner }}</a>
             <div class="viewer-chapter-number">Chapter {{ mapManager.storyChapter}}</div>
             <div class="viewer-chapter-title" ng-bind="mapManager.storyMap.getStoryTitle()"></div>
@@ -77,7 +77,6 @@
 {% endblock middle %}
 {% block extra_script %}
 <script src="{{ STATIC_URL }}vendor/jquery/dist/jquery.min.js"></script>
-<script src="{{ STATIC_URL }}vendor/angular/angular.min.js"></script>
 <script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-vendor-all.js"></script>
 <script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-core-all.js"></script>
 <script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-mapstory.js"></script>

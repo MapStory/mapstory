@@ -1,7 +1,8 @@
+
 mapstory
 ================
 
-[![Coverage Status](https://coveralls.io/repos/github/MapStory/mapstory/badge.svg?branch=master)](https://coveralls.io/github/MapStory/mapstory?branch=master) [![Build Status](https://travis-ci.org/MapStory/mapstory.svg?branch=master)](https://travis-ci.org/MapStory/mapstory)
+[![Coverage Status](https://coveralls.io/repos/github/MapStory/mapstory/badge.svg?branch=master)](https://coveralls.io/github/MapStory/mapstory?branch=master) [![Build Status](https://travis-ci.org/MapStory/mapstory.svg?branch=master)](https://travis-ci.org/MapStory/mapstory) [![Waffle.io - Issues in progress](https://badge.waffle.io/MapStory/mapstory.png?label=in%20progress&title=In%20Progress)](https://waffle.io/MapStory/mapstory?utm_source=badge)
 
 MapStory.org is the free atlas of change that everyone can edit. We are a community, not a company, working to organize humanity’s shared knowledge about how the world evolves geographically over time, and to make this knowledge easily accessible as an open educational resource.
 
@@ -79,7 +80,7 @@ Additional information about using the docker build is available at our [Docker 
 
 * [Python 2.7](https://www.python.org/) - The primary backend development language.
 * [Django 1.8.7](https://www.djangoproject.com/) - The back end web development framework.
-* [AngularJS 1.3](https://angularjs.org/) - The front end web development framework.
+* [AngularJS 1.6](https://angularjs.org/) - The front end web development framework.
 
 ## Contributing
 

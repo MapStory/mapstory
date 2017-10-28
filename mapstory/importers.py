@@ -1,3 +1,4 @@
+import time
 import json
 import requests
 
@@ -83,7 +84,7 @@ class GeoServerLayerCreator(Import):
             layer['geoserver_store'] = {'type': 'geogig'}
             store = layer.get('geoserver_store')
             if store.get('type', str).lower() == 'geogig':
-                name = feature_type['name'].lower()
+                name = slugify(feature_type['name'])
                 store.setdefault('branch', 'master')
                 store.setdefault('create', 'true')
                 store.setdefault('name', name)
@@ -105,12 +106,18 @@ class GeoServerLayerCreator(Import):
             if store_name not in getattr(settings, 'ALLOWED_DATASTORE_LAYER_CREATE', []) and '*' not in getattr(settings, 'ALLOWED_DATASTORE_LAYER_CREATE', []):
                 return HttpResponseForbidden(content='Datastore specified in featureType is not in the ALLOWED_DATASTORE_LAYER_CREATE whitelist.')
 
-            post_request = requests.post(
-                '{}/workspaces/{}/datastores/{}/featuretypes.json'.format(ogc_server_settings.rest, feature_type['namespace']['name'], store_name),
-                data='{{"featureType":{}}}'.format(json.dumps(feature_type)),
-                auth=ogc_server_settings.credentials,
-                headers={'content-type': 'application/json'}
-            )
+            for x in range(0, 50):
+                post_request = requests.post(
+                    '{}/workspaces/{}/datastores/{}/featuretypes.json'.format(ogc_server_settings.rest, feature_type['namespace']['name'], store_name),
+                    data='{{"featureType":{}}}'.format(json.dumps(feature_type)),
+                    auth=ogc_server_settings.credentials,
+                    headers={'content-type': 'application/json'}
+                )
+                if post_request.ok:
+                    break
+                if 'already exists in' in post_request.content:
+                    break
+                time.sleep(3)
 
             if post_request.ok:
                 self.completed_layers.append([feature_type['name'], layer])

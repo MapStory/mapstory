@@ -1,11 +1,11 @@
 {% verbatim %}
 <div>
-    <li ng-repeat="item in cards | orderBy: orderMethodStoryteller | filter:itemFilter" resource-id="{{ item.id }}" class="col-lg-6">
+    <li ng-repeat="item in cards" resource-id="{{ item.id }}" class="col-lg-6">
         <div class="storyteller-card">
             <div class="avatar-and-social-links">
                 <a href="/storyteller/{{ item.username }}">
                     <img class="thumb img-responsive img-circle"
-                         src="https://www.gravatar.com/avatar/b3770ff767657838215cefd0d00e7769/?s=100"
+                         src="/static/mapstory/img/default_avatar_lg.png"
                          ng-src="{{ item.avatar_100 }}"/>
                 </a>
                 <div class="social-icons">

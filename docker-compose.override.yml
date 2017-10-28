@@ -25,7 +25,7 @@ services:
       internal:
 
   postgres:
-    image: mdillon/postgis:9.5
+    image: mdillon/postgis:9.6
     env_file:
       - docker/env/dev/db_auth.env
       - docker/env/dev/postgres.env
@@ -61,6 +61,36 @@ services:
 #      - "15671:15671"
 #      - "15672:15672"
 
+  maploom-build:
+    build: ./deps/maploom
+    image: quay.io/mapstory/maploom-build
+    environment:
+      GIT_DIR: /git
+    volumes:
+      - ./deps/maploom:/usr/src/app
+      - .git:/git
+
+  django-maploom-build:
+    build: ./deps/django-maploom
+    image: quay.io/mapstory/django-maploom-build
+    environment:
+      GIT_DIR: /git
+    depends_on:
+      - maploom-build
+    volumes:
+      - ./deps/django-maploom:/django-maploom
+      - ./deps/maploom:/maploom
+      - .git:/git
+
+  story-tools-build:
+    build: ./deps/story-tools
+    image: quay.io/mapstory/story-tools-build
+    environment:
+      GIT_DIR: /git
+    volumes:
+      - ./deps/story-tools:/usr/src/app
+      - .git:/git
+
   django:
     image: quay.io/mapstory/django:master
     links:
@@ -77,6 +107,8 @@ services:
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
 #    ports:
 #      - "8000:8000"
+    stdin_open: true
+    tty: true
 
   celery:
     image: quay.io/mapstory/django:master

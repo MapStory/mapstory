@@ -13,10 +13,10 @@
 */
   function interestsController ($injector, $scope, chipFieldFactory, dataService){
     var vm = this;
-    vm.interests = new chipFieldFactory('interest_list', 'slug');
+    vm.interests = new chipFieldFactory('interests', 'slug');
     vm.async = function(searchText) {
-      return dataService.getKeywords({slug__icontains: searchText})
-    }; 
+       return dataService.getInterests({slug__icontains: searchText})
+    };
 
     function interestChipSync(){
       var currentQuery = vm.interests.tidy($scope.query);

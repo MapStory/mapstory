@@ -1,3 +1,6 @@
+# Temporary. 1.0.8 has breaking changes.
+gsconfig==1.0.6
+
 psycopg2==2.4.5
 numpy==1.8.2
 
@@ -17,9 +20,10 @@ textile
 # dev dependencies
 dj.paste
 PasteDeploy
-django-haystack==2.4.0
+django-haystack==2.6.1
 elasticsearch==1.6.0
 django-slack==4.1.0
+ipdb==0.10.3
 
 # Celery Requirements
 celery==3.1.23
@@ -48,13 +52,12 @@ django-fluent-comments==1.0.5
 
 #custom thumb dependencies
 django-solo==1.1.2
-python-resize-image==1.1.10
 
 # Testing dependencies
 coverage
 
 # Security Updates
-pycsw==2.0.2
+pycsw==2.0.3
 
 #command line picker
 pick
@@ -68,3 +71,6 @@ selenium
 
 # Activity Streams
 django-activity-stream==0.6.1
+
+pandas==0.20.3
+geonode-user-accounts==1.0.13
