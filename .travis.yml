@@ -68,7 +68,7 @@ script:
   - $DCO up -d nginx
   - $DCO up django_volumes
   # Wait for django container to come up
-  - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; echo "Waiting for webserver..."; echo "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)"; do sleep 5; done
+  - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver..."; echo "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)"; sleep 5); done
   - protractor mapstory/tests/e2e/conf.js
 #  - $DCO kill django
 #  - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
