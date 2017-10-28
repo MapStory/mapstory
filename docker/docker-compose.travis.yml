@@ -42,7 +42,7 @@ services:
       - docker/env/dev/geoserver.env
       - docker/env/dev/mapstory.env
       - docker/env/dev/db_auth.env
-    command: --init-db --test
+#    command: --init-db --test
     volumes:
       - ./.coveragerc:/srv/mapstory/.coveragerc
       - ./.git:/srv/mapstory/.git
