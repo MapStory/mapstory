@@ -11,7 +11,7 @@ let path = require('path');
 // Upload paths need to be absolute or error.
 const testLayerFileRelative = '../../sampledata/lewisandclarktrail.csv';
 //const testLayerFile = path.resolve(__dirname, testLayerFileRelative);
-const testLayerFile = "/srv/mapstory/mapstory/tests/sampledata";
+const testLayerFile = "/srv/mapstory/mapstory/tests/sampledata/lewisandclarktrail.csv";
 let wait_times = require('../tools/wait_times');
 let auth = require('./auth.po');
 let constants = require("../tools/constants");
