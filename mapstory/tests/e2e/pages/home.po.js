@@ -11,7 +11,7 @@ let path = require('path');
 // Upload paths need to be absolute or error.
 const testLayerFileRelative = '../../sampledata/lewisandclarktrail.csv';
 const testLayerFile = path.resolve(__dirname, testLayerFileRelative);
-var remote = require('protractor/node_modules/selenium-webdriver/remote');
+let remote = require('protractor/node_modules/selenium-webdriver/remote');
 browser.setFileDetector(new remote.FileDetector());
 let wait_times = require('../tools/wait_times');
 let auth = require('./auth.po');
@@ -189,6 +189,7 @@ let home_page = function() {
 		});
 
 		// Now you can upload.
+		browser.setFileDetector(new remote.FileDetector());
 		element(by.css('#my-file-selector')).sendKeys(testLayerFile);
 
 		let status = element(by.css('[ng-show="layer.state"]'));
