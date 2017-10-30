@@ -98,12 +98,15 @@ class Organization(models.Model):
     def remove_member(self, user):
         """Removes a member's membership.
 
-        Deletes a Membership for the given user.
+        Removes a membership by making it inactive.
 
         :param user: The user to be removed from the Organization
         """
-        membership = OrganizationMembership.objects.get(user=user, organization=self)
-        membership.delete()
+        memberships = OrganizationMembership.objects.filter(user=user, organization=self)
+        if memberships.count() > 0:
+            for membership in memberships:
+                membership.is_active = False
+                membership.save()
 
     def promote_member_to_admin(self, user):
         """Gives the user admin rights.
