@@ -124,7 +124,7 @@ class Organization(models.Model):
 
         :return: A list of memberships.
         """
-        return OrganizationMembership.objects.filter(organization=self)
+        return OrganizationMembership.objects.filter(organization=self, is_active=True)
 
     def get_urls(self):
         """A list of Organization OrganizationURL's
