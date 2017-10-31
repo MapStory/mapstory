@@ -50,7 +50,9 @@ for i do # loop over $@
         python manage.py syncdb --noinput
         echo '    migrate'
         python manage.py migrate --noinput
-
+        echo '    load initial data'
+        python manage.py loaddata --app mapstory initial_data
+        echo '    create admin user'
         python manage.py create_admin_user --name=admin --password=admin
     fi
 
