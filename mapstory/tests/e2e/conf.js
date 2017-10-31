@@ -126,6 +126,7 @@ if(process.env.TRAVIS) {
 			showColors: true,
 			defaultTimeoutInterval: timeout
 		},
+		getPageTimeout: timeout,
 		allScriptsTimeout: timeout,
 		resultJsonOutputFile:'./result.json',
 		sauceUser: process.env.SAUCE_USERNAME,
