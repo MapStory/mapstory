@@ -102,8 +102,10 @@ describe('User auth', function() {
 				element(by.css('.login-auth-btn.btn.btn-md.btn-block')).click();
 
 				// Expect error messages
-				expect(element(by.css('#div_id_username.form-group.has-error')).isDisplayed()).toBeTruthy();
-				expect(element(by.css('#div_id_password.form-group.has-error')).isDisplayed()).toBeTruthy();
+				let username_error = element(by.css('#error_id_username_1'));
+				expect(username_error.waitReady()).toBeTruthy();
+				expect(username_error.isDisplayed()).toBeTruthy();
+				expect(element(by.css('#error_id_password_1')).isDisplayed()).toBeTruthy();
 
 			});
 		});

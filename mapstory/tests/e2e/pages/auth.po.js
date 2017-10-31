@@ -28,7 +28,7 @@ let AuthWizard = function() {
 	this.usernameInput = this.loginForm.element(by.css('input.form-control[name="username"]'));
 	this.passwordInput = this.loginForm.element(by.css('input.form-control[name="password"]'));
 	this.loginButton = this.loginForm.element(by.partialButtonText('Sign in'));
-	this.signUpButton = element(by.buttonText('Join MapStory'));
+	this.signUpButton = element(by.css('#join-mapstory-button'));
 
 	// Getters
 	this.getUsername = function() { return defaultTestUser; };
