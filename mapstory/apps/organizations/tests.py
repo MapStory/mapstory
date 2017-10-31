@@ -120,14 +120,15 @@ class TestOrganizations(TestCase):
         self.assertEqual(initial_count, o.get_memberships().count())
 
     def test_set_admin(self):
-        o = models.Organization()
-        o.title = "Test Organization 2"
-        o.save()
+        o = get_test_organization()
+        user = get_test_user()
+        # Should have no admins
+        self.assertEqual(0, o.get_admin_memberships().count())
         # Needs to be saved before you can add members or admins
-        o.add_member(testUser, is_admin=True)
+        o.add_member(user, is_admin=True)
         admin_memberships = o.get_admin_memberships()
+        # Should have 1 admin
         self.assertEqual(1, admin_memberships.count())
-        self.assertEqual(admin_memberships.first().user, testUser)
 
     def test_add_mapstory_without_membership(self):
         user = User.objects.create_user(
