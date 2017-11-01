@@ -47,9 +47,6 @@ before_install:
   - npm link protractor selenium-webdriver
   - npm install pix-diff
 
-  - ls node_modules
-  - ls node_modules/selenium-webdriver
-
   # Ensure a clean environment
   - $DCO kill
   - $DCO rm -f
