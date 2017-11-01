@@ -56,7 +56,7 @@ let settings = {
 		'specs/auth.spec.js',
 		'specs/composer.spec.js',
 		'specs/explore.spec.js',
-		// 'specs/home.spec.js',
+		'specs/home.spec.js',
 		// 'specs/icon_upload.spec.js',
 		// 'specs/image.spec.js',
 		// 'specs/journal.spec.js',
