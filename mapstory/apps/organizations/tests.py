@@ -162,7 +162,7 @@ class TestOrganizations(TestCase):
         user = get_test_user()
         self.assertTrue(self.client.login(username=user.username, password="glassonion232123"))
         o = get_test_organization()
-        self.assertIsNotNone(o.add_member(user))
+        self.assertIsNotNone(o.add_member(user, is_admin=True))
         mapstory = create_mapstory(user, "Testing Mapstory")
         self.assertIsNotNone(mapstory)
 
@@ -326,7 +326,7 @@ class TestOrganizations(TestCase):
 
         # Create another user to be added as member
         u2, created = User.objects.get_or_create(
-            username='testing22', email='testing22@testing.com'
+            username='testing222', email='testing222@testing.com'
         )
         u2.set_password('testing_password123')
         u2.save()
@@ -335,6 +335,7 @@ class TestOrganizations(TestCase):
             user=u2,
             organization=o,
         )
+        self.assertIsNotNone(membership_request)
 
         self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
         self.client.post(
@@ -536,6 +537,7 @@ class TestOrganizations(TestCase):
         models.OrganizationMembership.objects.create(
             organization=org,
             user=usr,
+            is_admin=True,
         )
         initial_layer_count = models.OrganizationLayer.objects.count()
 
@@ -557,38 +559,6 @@ class TestOrganizations(TestCase):
             expected_url=reverse("organizations:detail", kwargs={'slug': org.slug}))
         # Should update the Organization's layer count
         self.assertEqual(initial_layer_count + 1, models.OrganizationLayer.objects.count())
-
-    def test_add_membership_view(self):
-        o = get_test_organization()
-        u = get_test_user()
-        o.add_member(u, is_admin=True)
-
-        # Create another user to be added as member
-        u2, created = User.objects.get_or_create(
-            username='testing', email='testing@testing.com'
-        )
-        u2.set_password('testing_password123')
-        u2.save()
-        self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
-
-        initial_count = models.OrganizationMembership.objects.all().count()
-        response = self.client.post(
-            reverse(
-                'organizations:add_member',
-                kwargs={
-                    'slug': o.slug,
-                    'user_pk': u2.pk
-                },
-            ),
-            data={
-                'post': 'post'
-            },
-            follow=True
-        )
-        self.assertEqual(200, response.status_code)
-        self.assertTemplateUsed("organizations/manager.html")
-        # Should update the membership count
-        self.assertEqual(models.OrganizationMembership.objects.all().count(), 1 + initial_count)
 
     def test_unauthorized_manager_access(self):
         o = get_test_organization()
@@ -650,3 +620,19 @@ class TestOrganizations(TestCase):
         # Should redirect to detail page
         self.assertTrue(200 == response.status_code)
         self.assertTemplateUsed(response, "organizations/organization_detail.html")
+
+    def test_duplicate_slugs(self):
+        # Make organizations with the same title
+        o1 = models.Organization.objects.create(title="Slugy", slogan="Testing slugs", about="This is about a slug")
+        o2 = models.Organization.objects.create(title="Slugy", slogan="This is not same", about="This is about a slug")
+
+        # Both should have slugs
+        self.assertIsNotNone(o1.slug)
+        self.assertIsNotNone(o2.slug)
+
+        # Should not have the same slugs
+        self.assertNotEqual(o1.slug, o2.slug)
+
+        # Organization details should be resolved using the slug
+        response = self.client.get(reverse('organizations:detail', kwargs={'slug': o2.slug}))
+        self.assertContains(response, o2.slogan)

@@ -235,41 +235,6 @@ def add_mapstory(request, slug, mapstory_pk):
     return redirect(reverse("organizations:detail", kwargs={'slug': slug}))
 
 
-@login_required
-def add_membership(request, slug, user_pk):
-    """
-    Creates a new membership.
-    :param request: HttpRequest.
-    :param slug: The organization's slug.
-    :param user_pk: The user's id.
-    :return: HTTPResponse
-    """
-    # Check that we are admin
-    organization = get_object_or_404(models.Organization, slug=slug)
-    membership = get_object_or_404(models.OrganizationMembership, organization=organization, user=request.user)
-
-    if not membership.is_admin:
-        # User is NOT AUTHORIZED!
-        return HttpResponseForbidden()
-
-    if request.POST:
-        # User is Authorized to add users to this organization
-        user_to_add = get_object_or_404(User, pk=user_pk)
-        membership, created = models.OrganizationMembership.objects.get_or_create(
-            organization=organization,
-            user=user_to_add
-        )
-
-        return redirect(
-            reverse('organizations:member_detail', kwargs={
-                'org_pk': organization.pk,
-                'membership_pk': membership.pk}
-            )
-        )
-
-    return redirect(reverse('organizations:manage', kwargs={'slug': slug}))
-
-
 def _save_social_icons(organization, facebook, twitter, instagram, linkedin, github):
     """
     Saves the social media urls for an Organization.

@@ -70,7 +70,7 @@ class Organization(models.Model):
         :param kwargs: argDict
         :return:
         """
-        if not self.id:
+        if not self.slug:
             # Ensure uniqueness:
             slug = slugify(self.title)
             if not Organization.objects.filter(slug=slug).exists():
