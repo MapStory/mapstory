@@ -14,11 +14,12 @@ testUser = get_test_user()
 
 def get_test_organization():
     """Creates and returns a test Organization model"""
-    return models.Organization.objects.create(
-        title='Test',
-        slogan='Slogan here',
-        about='Yeah!'
-    )
+    org = models.Organization()
+    org.title = 'Test'
+    org.slogan = 'Slogan here'
+    org.about = "Yeah!"
+    org.save()
+    return org
 
 
 class TestOrganizations(TestCase):
@@ -47,7 +48,7 @@ class TestOrganizations(TestCase):
     def test_organization_detail_view(self):
         c = Client()
         o = get_test_organization()
-        response = c.get(reverse('organizations:detail', kwargs={'pk': o.pk}))
+        response = c.get(reverse('organizations:detail', kwargs={'slug': o.slug}))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, template_name='organizations/organization_detail.html')
         self.assertContains(response, o.title)
@@ -62,7 +63,7 @@ class TestOrganizations(TestCase):
         # Make him a member
         m = models.OrganizationMembership.objects.create(user=u, organization=o)
         # Get the page
-        response = c.get(reverse('organizations:member_detail', kwargs={'org_pk': o.pk, 'membership_pk': m.pk}))
+        response = c.get(reverse('organizations:member_detail', kwargs={'slug': o.slug, 'membership_pk': m.pk}))
         self.assertTemplateUsed(response, template_name='organizations/membership_detail.html')
 
     def test_organization_model(self):
@@ -79,7 +80,7 @@ class TestOrganizations(TestCase):
 
         url = o.get_absolute_url()
         self.assertIsNotNone(url)
-        self.assertIn(str(o.pk), str(url))
+        self.assertIn(str(o.slug), str(url))
         self.assertEqual(o.admin_user, testUser)
         self.assertEqual(1, o.get_memberships().count())
 
@@ -141,7 +142,7 @@ class TestOrganizations(TestCase):
         mapstory = create_mapstory(user, "Testing Mapstory")
         response = self.client.post(
             reverse("organizations:add_mapstory", kwargs={
-                'pk': o.pk,
+                'slug': o.slug,
                 'mapstory_pk': mapstory.pk
             }),
             {},
@@ -168,7 +169,7 @@ class TestOrganizations(TestCase):
         initial_count = models.OrganizationMapStory.objects.filter(organization=o).count()
         response = self.client.post(
             reverse("organizations:add_mapstory", kwargs={
-                'pk': o.pk,
+                'slug': o.slug,
                 'mapstory_pk': mapstory.pk
             }),
             {'data': 'data'},
@@ -217,7 +218,7 @@ class TestOrganizations(TestCase):
         # GET request should redirect us to the organization's page
         join_url = reverse(
             'organizations:request_membership',
-            kwargs={'pk': organization.pk}
+            kwargs={'slug': organization.slug}
         )
 
         get_response = self.client.get(join_url, follow=True)
@@ -232,7 +233,7 @@ class TestOrganizations(TestCase):
         response = self.client.post(
             reverse(
                 'organizations:request_membership',
-                kwargs={'pk': organization.pk}
+                kwargs={'slug': organization.slug}
             ), {'pk': organization.pk}, follow=True
         )
         self.assertEqual(response.status_code, 200)
@@ -250,7 +251,7 @@ class TestOrganizations(TestCase):
         response = self.client.post(
             reverse(
                 'organizations:request_membership',
-                kwargs={'pk': organization.pk}
+                kwargs={'slug': organization.slug}
             ), {'pk': organization.pk}, follow=True
         )
         self.assertEqual(response.status_code, 200)
@@ -260,7 +261,7 @@ class TestOrganizations(TestCase):
         response = self.client.post(
             reverse(
                 'organizations:request_membership',
-                kwargs={'pk': organization.pk}
+                kwargs={'slug': organization.slug}
             ), {'pk': organization.pk}, follow=True
         )
         self.assertEqual(response.status_code, 200)
@@ -309,7 +310,7 @@ class TestOrganizations(TestCase):
             reverse(
                 "organizations:approve_membership",
                 kwargs={
-                    'pk': o.pk
+                    'slug': o.slug
                 }
             ),
             data={
@@ -340,7 +341,7 @@ class TestOrganizations(TestCase):
             reverse(
                 "organizations:approve_membership",
                 kwargs={
-                    'pk': o.pk
+                    'slug': o.slug
                 }
             ),
             data={
@@ -358,7 +359,7 @@ class TestOrganizations(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertContains(response, org.title)
 
-        management_url = reverse("organizations:manage", kwargs={'pk': org.pk})
+        management_url = reverse("organizations:manage", kwargs={'slug': org.slug})
 
         # Try to manage anonymously and get denied
         response = self.client.get(management_url, follow=True)
@@ -390,7 +391,7 @@ class TestOrganizations(TestCase):
         self.assertNotContains(response, "MANAGE")
 
         # Try to manage as someone who is not and admin and get denied
-        response = c.get(reverse("organizations:manage", kwargs={'pk': org.pk}), follow=True)
+        response = c.get(reverse("organizations:manage", kwargs={'slug': org.slug}), follow=True)
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed("organiazation_detail.html")
 
@@ -407,7 +408,7 @@ class TestOrganizations(TestCase):
         c = AdminClient()
         c.login_as_admin()
         org = get_test_organization()
-        r = c.get(reverse("organizations:manage", kwargs={'pk': org.pk}), follow=True)
+        r = c.get(reverse("organizations:manage", kwargs={'slug': org.slug}), follow=True)
         self.assertEqual(200, r.status_code)
 
     def test_request_approve_by_admin(self):
@@ -442,7 +443,7 @@ class TestOrganizations(TestCase):
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
         o.add_layer(layer, membership)
-        r = self.client.post(reverse("organizations:detail", kwargs={"pk": o.pk}), data={
+        r = self.client.post(reverse("organizations:detail", kwargs={"slug": o.slug}), data={
             "add_featured_layer": "quesito",
             "layer_pk": layer.pk,
             "mapstory_pk": layer.pk,
@@ -455,9 +456,8 @@ class TestOrganizations(TestCase):
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
         o.add_layer(layer, membership)
-        r = self.client.post(reverse("organizations:detail", kwargs={"pk": o.pk}), data={
+        r = self.client.post(reverse("organizations:detail", kwargs={"slug": o.slug}), data={
             "add_featured_layer": "quesito",
-
             "layer_pk": layer.pk,
             "mapstory_pk": layer.pk,
         })
@@ -469,7 +469,7 @@ class TestOrganizations(TestCase):
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
         o.add_layer(layer, membership)
-        r = self.client.post(reverse("organizations:detail", kwargs={"pk": o.pk}), data={
+        r = self.client.post(reverse("organizations:detail", kwargs={"slug": o.slug}), data={
             "remove_layer": "q",
             "layer_pk": layer.pk,
             "mapstory_pk": layer.pk,
@@ -482,7 +482,7 @@ class TestOrganizations(TestCase):
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
         o.add_layer(layer, membership)
-        r = self.client.post(reverse("organizations:detail", kwargs={"pk": o.pk}), data={
+        r = self.client.post(reverse("organizations:detail", kwargs={"slug": o.slug}), data={
             "remove_featured_layer": "q",
             "layer_pk": layer.pk,
             "mapstory_pk": layer.pk,
@@ -495,7 +495,7 @@ class TestOrganizations(TestCase):
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
         o.add_layer(layer, membership)
-        r = self.client.post(reverse("organizations:detail", kwargs={"pk": o.pk}), data={
+        r = self.client.post(reverse("organizations:detail", kwargs={"slug": o.slug}), data={
             "remove_mapstory": "q",
             "layer_pk": layer.pk,
             "mapstory_pk": layer.pk,
@@ -508,7 +508,7 @@ class TestOrganizations(TestCase):
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
         o.add_layer(layer, membership)
-        r = self.client.post(reverse("organizations:detail", kwargs={"pk": o.pk}), data={
+        r = self.client.post(reverse("organizations:detail", kwargs={"slug": o.slug}), data={
             "remove_featured_mapstory": "q",
             "layer_pk": layer.pk,
             "mapstory_pk": layer.pk,
@@ -522,7 +522,7 @@ class TestOrganizations(TestCase):
         layer = create_layer('Test Layer', 'Abstract', u)
         membership = models.OrganizationMembership.objects.create(organization=o, user=u)
         o.add_layer(layer, membership)
-        r = self.client.post(reverse("organizations:detail", kwargs={"pk": o.pk}), data={
+        r = self.client.post(reverse("organizations:detail", kwargs={"slug": o.slug}), data={
             "add_featured_mapstory": "q",
             "layer_pk": layer.pk,
             "mapstory_pk": map_created.pk,
@@ -547,14 +547,14 @@ class TestOrganizations(TestCase):
                 'organizations:add_layer',
                 kwargs={
                     'layer_pk': layer.pk,
-                    'pk': org.pk
+                    'slug': org.slug
                 }
             ),
             {'data': 'data'}
         )
         self.assertRedirects(
             response,
-            expected_url=reverse("organizations:detail", kwargs={'pk': org.pk}))
+            expected_url=reverse("organizations:detail", kwargs={'slug': org.slug}))
         # Should update the Organization's layer count
         self.assertEqual(initial_layer_count + 1, models.OrganizationLayer.objects.count())
 
@@ -576,7 +576,7 @@ class TestOrganizations(TestCase):
             reverse(
                 'organizations:add_member',
                 kwargs={
-                    'pk': o.pk,
+                    'slug': o.slug,
                     'user_pk': u2.pk
                 },
             ),
@@ -595,7 +595,7 @@ class TestOrganizations(TestCase):
         u = get_test_user()
         o.add_member(u, is_admin=False)
         self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
-        response = self.client.get(reverse("organizations:manage", kwargs={'pk': o.pk}))
+        response = self.client.get(reverse("organizations:manage", kwargs={'slug': o.slug}))
         self.assertTemplateNotUsed(response, "organizations/manager.html")
         self.assertContains(response, "not authorized")
 
@@ -604,7 +604,7 @@ class TestOrganizations(TestCase):
         u = get_test_user()
         o.add_member(u, is_admin=True)
         self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
-        response = self.client.get(reverse("organizations:manage", kwargs={'pk': o.pk}))
+        response = self.client.get(reverse("organizations:manage", kwargs={'slug': o.slug}))
         self.assertTemplateUsed(response, "organizations/manager.html")
 
     def test_manager_post(self):
@@ -613,7 +613,7 @@ class TestOrganizations(TestCase):
         o.add_member(u, is_admin=True)
         self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
         response = self.client.post(
-            reverse("organizations:manage", kwargs={'pk': o.pk}),
+            reverse("organizations:manage", kwargs={'slug': o.slug}),
             follow=True,
             data={
                 'post': 'post_testing'
@@ -628,7 +628,7 @@ class TestOrganizations(TestCase):
         o.add_member(u, is_admin=True)
         self.assertTrue(self.client.login(username=u.username, password='glassonion232123'))
         response = self.client.post(
-            reverse("organizations:manage", kwargs={'pk': o.pk}),
+            reverse("organizations:manage", kwargs={'slug': o.slug}),
             follow=True,
             data={
                 'name': 'test',

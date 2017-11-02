@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
+from django.utils.text import slugify
 
 from geonode.layers.models import Layer
 from mapstory.mapstories.models import MapStory
@@ -53,12 +54,35 @@ class Organization(models.Model):
     url0 = models.ForeignKey(OrganizationURL, blank=True, null=True, related_name="url0")
     url1 = models.ForeignKey(OrganizationURL, blank=True, null=True, related_name="url1")
     url2 = models.ForeignKey(OrganizationURL, blank=True, null=True, related_name="url2")
+    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True, db_index=True)
 
     class Meta:
         verbose_name_plural = 'Organizations'
 
     def __unicode__(self):
         return u'%s' % self.title
+
+    def save(self, *args, **kwargs):
+        """
+        Overrides save.
+        Creates a slug if the object is new.
+        :param args: argList
+        :param kwargs: argDict
+        :return:
+        """
+        if not self.id:
+            # Ensure uniqueness:
+            slug = slugify(self.title)
+            if not Organization.objects.filter(slug=slug).exists():
+                self.slug = slug
+            else:
+                count = 1
+                while Organization.objects.filter(slug=slug).exists():
+                    count += 1
+                    slug = "%s%s" % (slug, str(count))
+                self.slug = slug
+
+        super(Organization, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         """Get absolute URL.
@@ -67,7 +91,7 @@ class Organization(models.Model):
 
         :return: A URL for this Organization.
         """
-        return reverse('organizations:detail', kwargs={'pk': self.pk})
+        return reverse('organizations:detail', kwargs={'slug': self.slug})
 
     def add_member(self, user, is_admin=False):
         """Adds a member to the Organization.

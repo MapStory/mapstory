@@ -11,14 +11,14 @@ from . import forms
 User = get_user_model()
 
 
-def organization_detail(request, pk):
+def organization_detail(request, slug):
     """Organization Detail View.
     Shows detailed information about an Organization.
     :param request: The http request.
-    :param pk: The Organization's id.
+    :param slug: The Organization's slug.
     :return: A render view.
     """
-    org = get_object_or_404(models.Organization, pk=pk)
+    org = get_object_or_404(models.Organization, slug=slug)
 
     # Determine the type of HTTP request
     if request.POST:
@@ -141,11 +141,11 @@ def organization_list(request):
     return render(request, 'organizations/organization_list.html', context)
 
 
-def membership_detail(request, org_pk, membership_pk):
+def membership_detail(request, slug, membership_pk):
     """Membership Detail View.
     Shows a membership's details.
     :param request: The HTTP request.
-    :param org_pk: The Organization's id.
+    :param slug: The Organization's slug.
     :param membership_pk: The OrganizationMembership's id.
     :return: A render view.
     """
@@ -157,25 +157,27 @@ def membership_detail(request, org_pk, membership_pk):
 
 
 @login_required
-def add_layer(request, pk, layer_pk):
+def add_layer(request, slug, layer_pk):
     """
     Adds a layer to an Organization.
     :param request: HTTP request.
-    :param pk: The Organization id.
+    :param slug: The Organization slug.
     :param layer_pk: The Layer id.
     :return: An HTTPResponse
     """
-    membership = get_object_or_404(models.OrganizationMembership, user_id=request.user.pk, organization_id=pk)
+    org = get_object_or_404(models.Organization, slug=slug)
+    membership = get_object_or_404(models.OrganizationMembership, user_id=request.user.pk, organization=org)
 
     if membership.is_admin or membership.is_active:
         pass
     else:
         messages.error(request, "You are not allowed to do this.")
-        return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
+        return redirect(reverse("organizations:detail", kwargs={'slug': slug}))
 
     if request.POST:
         # Check if not already added
-        found = models.OrganizationLayer.objects.filter(organization_id=pk, layer_id=layer_pk)
+        org = get_object_or_404(models.Organization, slug=slug)
+        found = models.OrganizationLayer.objects.filter(organization=org, layer_id=layer_pk)
 
         if found.count() > 0:
             # Duplicate Layer
@@ -183,27 +185,28 @@ def add_layer(request, pk, layer_pk):
         else:
             # Add the Layer
             obj = models.OrganizationLayer()
-            obj.organization_id = pk
+            obj.organization = org
             obj.layer_id = layer_pk
             obj.membership = membership
             obj.save()
             messages.success(request, "Added Layer to Organization")
 
-    return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
+    return redirect(reverse("organizations:detail", kwargs={'slug': slug}))
 
 
-def add_mapstory(request, pk, mapstory_pk):
+def add_mapstory(request, slug, mapstory_pk):
     """
     Adds a Mapstory to an Organization.
     :param request: HTTPRequest
-    :param pk: Organizaion id
+    :param slug: The Organization's slug.
     :param mapstory_pk: Mapstory id
     :return: HTTPResponse
     """
+    org = get_object_or_404(models.Organization, slug=slug)
     membership = get_object_or_404(
         models.OrganizationMembership,
-        user_id=request.user.pk,
-        organization_id=pk
+        user=request.user,
+        organization=org,
     )
 
     # Make sure we have permissions to do this
@@ -211,11 +214,11 @@ def add_mapstory(request, pk, mapstory_pk):
         pass
     else:
         messages.error(request, "You are not allowed to do this.")
-        return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
+        return redirect(reverse("organizations:detail", kwargs={'slug': slug}))
 
     if request.POST:
         # Check if not already added
-        found = models.OrganizationMapStory.objects.filter(organization_id=pk, mapstory_id=mapstory_pk)
+        found = models.OrganizationMapStory.objects.filter(organization=org, mapstory__pk=mapstory_pk)
 
         if found.count() > 0:
             # Give a warning to the user
@@ -223,26 +226,26 @@ def add_mapstory(request, pk, mapstory_pk):
         else:
             # Add it to the Organization
             obj = models.OrganizationMapStory()
-            obj.organization_id = pk
+            obj.organization = org
             obj.mapstory_id = mapstory_pk
             obj.membership = membership
             obj.save()
             messages.success(request, "Added MapStory to Organization")
 
-    return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
+    return redirect(reverse("organizations:detail", kwargs={'slug': slug}))
 
 
 @login_required
-def add_membership(request, pk, user_pk):
+def add_membership(request, slug, user_pk):
     """
     Creates a new membership.
     :param request: HttpRequest.
-    :param pk: The organization's id.
+    :param slug: The organization's slug.
     :param user_pk: The user's id.
     :return: HTTPResponse
     """
-    # Check that we are admins
-    organization = get_object_or_404(models.Organization, pk=pk)
+    # Check that we are admin
+    organization = get_object_or_404(models.Organization, slug=slug)
     membership = get_object_or_404(models.OrganizationMembership, organization=organization, user=request.user)
 
     if not membership.is_admin:
@@ -252,7 +255,10 @@ def add_membership(request, pk, user_pk):
     if request.POST:
         # User is Authorized to add users to this organization
         user_to_add = get_object_or_404(User, pk=user_pk)
-        membership, created = models.OrganizationMembership.objects.get_or_create(organization=organization, user=user_to_add)
+        membership, created = models.OrganizationMembership.objects.get_or_create(
+            organization=organization,
+            user=user_to_add
+        )
 
         return redirect(
             reverse('organizations:member_detail', kwargs={
@@ -261,7 +267,7 @@ def add_membership(request, pk, user_pk):
             )
         )
 
-    return redirect(reverse('organizations:manage', kwargs={'pk': pk}))
+    return redirect(reverse('organizations:manage', kwargs={'slug': slug}))
 
 
 def _save_social_icons(organization, facebook, twitter, instagram, linkedin, github):
@@ -390,17 +396,17 @@ def _edit_organization_with_forms(organization, basic, links):
 
 
 @login_required
-def manager(request, pk):
+def manager(request, slug):
     """
     Organization Manager View.
     Page for managing all settings for the Organization.
 
     :param request: HTTP Request.
-    :param pk: The Organizations id
+    :param slug: The Organization's slug.
     :return: An HTTPResponse
     """
     # Check that we are admins
-    organization = get_object_or_404(models.Organization, pk=pk)
+    organization = get_object_or_404(models.Organization, slug=slug)
     membership = get_object_or_404(models.OrganizationMembership, organization=organization, user=request.user)
     if not membership.is_admin:
         # User is NOT AUTHORIZED!
@@ -451,7 +457,7 @@ def manager(request, pk):
 
             messages.success(request, "Saved changes to Organization.")
 
-            return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
+            return redirect(reverse("organizations:detail", kwargs={'slug': slug}))
         else:
             # Information was not good
             messages.warning(request, "Info was not valid")
@@ -470,12 +476,12 @@ def manager(request, pk):
     })
 
 
-def request_membership(request, pk):
+def request_membership(request, slug):
     """
     Creates a JoinRequest for the organization, provides the user
     with a message and redirects to the Organization's detail page.
     :param request: HTTPRequest
-    :param pk: The organization's id
+    :param slug: The organization's slug
     :return: HTTPResponse
     """
     if not request.user.is_authenticated():
@@ -484,28 +490,29 @@ def request_membership(request, pk):
         return redirect(reverse("index_view"))
 
     # Make sure the Request doesnt exist yet.
-    found = models.JoinRequest.objects.filter(organization_id=pk, user=request.user.pk)
+    org = get_object_or_404(models.Organization, slug=slug)
+    found = models.JoinRequest.objects.filter(organization=org, user=request.user.pk)
     if found.count() > 0:
         messages.warning(request, 'A request to join has already been made.')
-        return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
+        return redirect(reverse("organizations:detail", kwargs={'slug': slug}))
 
     if request.POST:
         # Generate a new JoinRequest
         request_to_join = models.JoinRequest()
         request_to_join.user_id = request.user.pk
         request_to_join.is_open = True
-        request_to_join.organization_id = pk
+        request_to_join.organization = get_object_or_404(models.Organization, slug=slug)
         request_to_join.save()
         messages.success(request, 'A request to join has been made')
 
-    return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
+    return redirect(reverse("organizations:detail", kwargs={'slug': slug}))
 
 
-def approve_membership(request, pk):
+def approve_membership(request, slug):
     """
     Approves a request for membership
     :param request: HTTP Request
-    :param pk: The JoinRequest pk
+    :param slug: The Organization's slug.
     :return: A new membership if success.
     """
     if not request.user.is_authenticated():
@@ -516,14 +523,14 @@ def approve_membership(request, pk):
         # Make sure that we have permission
         admin_membership = get_object_or_404(
             models.OrganizationMembership,
-            organization_id=pk,
+            organization=get_object_or_404(models.Organization, slug=slug),
             user_id=request.user.pk
         )
 
         if not admin_membership.is_admin:
             # No permission
             messages.warning(request, "You do not have permissions to do this.")
-            return redirect(reverse("organizations:detail", kwargs={'pk': pk}))
+            return redirect(reverse("organizations:detail", kwargs={'slug': slug}))
         else:
             # We have permission, continue
             request_pk = request.POST.get("request_pk")
@@ -540,4 +547,4 @@ def approve_membership(request, pk):
                 join_request.decline(admin_membership)
                 messages.success(request, "Request to join declined.")
 
-    return redirect(reverse('organizations:manage', kwargs={'pk': pk}))
+    return redirect(reverse('organizations:manage', kwargs={'slug': slug}))

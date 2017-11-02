@@ -25,7 +25,7 @@
         <div class="organization_content">
             <div class="org_left_column">
                 <div class="button org-join-button">
-                    <a href="{% url 'organizations:detail' pk=org.pk  %}">Return to Org Page</a>
+                    <a href="{% url 'organizations:detail' slug=org.slug %}">Return to Org Page</a>
                 </div>
                 <div style="clear: both;"></div>
                 <div class="organization_navigation_manage">
@@ -49,7 +49,7 @@
                             <div class="join-request-card">
                                 <p><strong>{{ request.user }}</strong><span> on {{ request.created_at }}</span></p>
                                 <div>
-                                    <form action="{% url "organizations:approve_membership" pk=org.pk %}" method="post">
+                                    <form action="{% url "organizations:approve_membership" slug=org.slug %}" method="post">
                                         {% csrf_token %}
                                         <input type="hidden" value="{{ request.pk }}" name="request_pk">
                                         <input type="hidden" value="accept" name="approval">
@@ -57,7 +57,7 @@
                                     </form>
                                 </div>
                                 <div>
-                                    <form action="{% url "organizations:request_membership" pk=org.pk %}" method="post">
+                                    <form action="{% url "organizations:request_membership" slug=org.slug %}" method="post">
                                         {% csrf_token %}
                                         <input type="hidden" value="{{ request.pk }}" name="request_pk">
                                         <input type="hidden" value="decline" name="approval">
