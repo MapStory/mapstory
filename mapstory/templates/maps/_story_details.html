@@ -97,7 +97,7 @@
                         <div class='row'>
                             {% for org in organizations %}
                             <div>
-                                <form action="{% url "organizations:add_mapstory" pk=org.organization.pk mapstory_pk=resource.pk %}"
+                                <form action="{% url "organizations:add_mapstory" slug=org.organization.slug mapstory_pk=resource.pk %}"
                                     method="post">
                                     {% csrf_token %}
                                     <input type="submit" class="button org-join-button" value="{{ org.organization }}">
