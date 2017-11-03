@@ -2,7 +2,6 @@ from django.conf.urls import url
 
 from . import views
 urlpatterns = [
-    url(r'(?P<slug>[-\w]+)/(?P<membership_pk>\d+)/$', views.membership_detail, name='member_detail'),
     url(r'^$', views.organization_list, name='list'),
     url(r'(?P<slug>[-\w]+)/add/layer/(?P<layer_pk>\d+)/$', views.add_layer, name='add_layer'),
     url(r'(?P<slug>[-\w]+)/add/mapstory/(?P<mapstory_pk>\d+)/$', views.add_mapstory, name='add_mapstory'),

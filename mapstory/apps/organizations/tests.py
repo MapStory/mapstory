@@ -55,17 +55,6 @@ class TestOrganizations(TestCase):
         self.assertContains(response, o.slogan)
         self.assertContains(response, o.about)
 
-    def test_organization_membership_detail_view(self):
-        c = Client()
-        o = get_test_organization()
-        # Create a user
-        u = User.objects.create_user(username='testuser', password='asbdsandsandsandsa')
-        # Make him a member
-        m = models.OrganizationMembership.objects.create(user=u, organization=o)
-        # Get the page
-        response = c.get(reverse('organizations:member_detail', kwargs={'slug': o.slug, 'membership_pk': m.pk}))
-        self.assertTemplateUsed(response, template_name='organizations/membership_detail.html')
-
     def test_organization_model(self):
         init_count = len(models.Organization.objects.all())
         o = models.Organization()

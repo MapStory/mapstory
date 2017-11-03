@@ -54,7 +54,7 @@ class Organization(models.Model):
     url0 = models.ForeignKey(OrganizationURL, blank=True, null=True, related_name="url0")
     url1 = models.ForeignKey(OrganizationURL, blank=True, null=True, related_name="url1")
     url2 = models.ForeignKey(OrganizationURL, blank=True, null=True, related_name="url2")
-    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'Organizations'

@@ -141,21 +141,6 @@ def organization_list(request):
     return render(request, 'organizations/organization_list.html', context)
 
 
-def membership_detail(request, slug, membership_pk):
-    """Membership Detail View.
-    Shows a membership's details.
-    :param request: The HTTP request.
-    :param slug: The Organization's slug.
-    :param membership_pk: The OrganizationMembership's id.
-    :return: A render view.
-    """
-    org = get_object_or_404(models.OrganizationMembership, pk=membership_pk)
-    context = {
-        'membership': org,
-    }
-    return render(request, 'organizations/membership_detail.html', context)
-
-
 @login_required
 def add_layer(request, slug, layer_pk):
     """
@@ -205,7 +190,7 @@ def add_mapstory(request, slug, mapstory_pk):
     org = get_object_or_404(models.Organization, slug=slug)
     membership = get_object_or_404(
         models.OrganizationMembership,
-        user=request.user,
+        user__pk=request.user.pk,
         organization=org,
     )
 
