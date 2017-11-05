@@ -23,7 +23,7 @@ describe('Journal Page', function(){
 		expect(journal_page.new_entry_button.waitReady()).toBeTruthy();
 	});
 
-	it('can write a new entry', () => {
+	xit('can write a new entry', () => {
 		// Create a new entry
 		let entry_title = 'Testing journal post ' + make_id(4);
 		let content_id = make_id(12);

@@ -218,7 +218,8 @@ let home_page = function() {
 	 * Completes Upload Layer - Step 4
 	 */
 	this.uploadLayer_Step4 = function() {
-		let step = element(by.xpath('/html/body/div[6]/div/div/div[2]/div/div/div/section[8]'));
+		let steps = element(by.css('[class="steps"]'))
+		let step = steps.element(by.xpath('section[8]'));
 		let startTimeDropdown = step.element(by.id('start_date'));
 		expect(startTimeDropdown.waitReady()).toBeTruthy();
 		// startTimeDropdown.click();
@@ -377,7 +378,8 @@ let home_page = function() {
 		this.createLayer_Step2();
 		this.createLayer_Step3();
 		this.createLayer_Step4();
-		this.createLayer_Step5();
+		// Temporarily disabled
+		//this.createLayer_Step5();
 		this.createLayer_Step6();
 	};
 };
