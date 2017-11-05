@@ -8,7 +8,7 @@ function define(name, value) {
 }
 
 if(process.env.DOCKER) {
-	define('baseURL', 'https://nginx');
+	define('baseURL', 'https://docker');
 } else {
 	define('baseURL', 'http://docker');
 }

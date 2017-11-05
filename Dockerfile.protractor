@@ -1,5 +1,5 @@
 FROM node:8.8
-MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
+LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 
 ENV DOCKER true
 WORKDIR /opt/mapstory
