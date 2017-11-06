@@ -58,3 +58,9 @@ docker network prune -f
 docker-compose up django_volumes
 docker-compose up -d
 ```
+
+If you are running into a Permission Denied error:
+```
+docker-compose up django_volumes
+docker-compose up -d
+```
