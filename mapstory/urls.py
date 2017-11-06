@@ -38,7 +38,6 @@ from mapstory.views import map_detail
 from mapstory.views import new_map
 from mapstory.views import ProfileDetail, profile_delete, profile_edit, proxy
 from mapstory.views import SearchView
-from mapstory.apps.organizations.views import organization_detail
 
 
 geonode_api.register(ResourceBaseResource())
@@ -138,6 +137,7 @@ urlpatterns = patterns('',
     url(r'^layers/acls', layer_acls_mapstory, name='layer_acls_mapstory'),
     url(r'^layers/resolve_user', resolve_user_mapstory, name='resolve_user_mapstory'),
     url(r'^organizations/', include('mapstory.apps.organizations.urls', namespace='organizations')),
+    url(r'^initiatives/', include('mapstory.apps.initiatives.urls', namespace='initiatives')),
     url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain"), name='robots'),
 ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 

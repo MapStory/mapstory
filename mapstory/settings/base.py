@@ -93,6 +93,7 @@ INSTALLED_APPS += (
     'mapstory.apps.journal',
     'mapstory.apps.favorite',
     'mapstory.apps.organizations',
+    'mapstory.apps.initiatives',
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
     'health_check',
@@ -125,7 +126,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [os.path.join(LOCAL_ROOT, 'templates'),
-                 os.path.join(os.path.dirname(geonode.__file__), 'templates')],
+                 os.path.join(os.path.dirname(geonode.__file__), 'templates'),
+                 os.path.join(LOCAL_ROOT, 'apps/initiatives')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
