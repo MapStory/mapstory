@@ -1,0 +1,13 @@
+<div class="organization_card">
+    <a href="{% url 'initiatives:detail' slug=initiative.slug %}">
+        <div class="organization_icon" style="float: left; margin-right: 1em;">
+            <img class="img-circle avi-45-backup" src="https://docker/static/mapstory/img/default_avatar_lg.png">
+        </div>
+        <div class="org_label">
+            <strong>{{ initiative }}</strong>
+            <p><span>{{ initiative.slogan }}</span></p>
+        </div>
+        <div style="clear: both"></div>
+    </a>
+    <div style="clear: both"></div>
+</div>

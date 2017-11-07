@@ -4,7 +4,10 @@ from . import models
 
 
 def initiatives_list(request):
-    return render(request, 'initiatives/list.html', context={})
+    initiatives = models.Initiative.objects.all()
+    return render(request, 'initiatives/list.html', context={
+        'initiatives': initiatives
+    })
 
 
 def initiative_detail(request, slug):

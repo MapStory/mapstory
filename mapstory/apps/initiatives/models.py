@@ -99,7 +99,7 @@ class JoinRequest(models.Model):
             return None
 
         new_membership = InitiativeMembership()
-        new_membership.organization = self.initiative
+        new_membership.initiative = self.initiative
         new_membership.user = self.user
         new_membership.save()
 
