@@ -1,0 +1,30 @@
+<div class="organization_hero">
+    <div class="organization_icon">
+        <div class="organization_icon_image">
+            {% if ini_image %}
+                <img width="115" height="115" src="{{ ini_image.url }}">
+            {% else %}
+                <img src="http://via.placeholder.com/115x115">
+            {% endif %}
+        </div>
+    </div>
+    <div class="organization_header">
+        <h1>{{ ini.name }}</h1>
+        <h4 class="org-slogan">{{ ini.slogan }}</h4>
+        <div class="button-container">
+        {% if not membership %}
+            <form action="{% url 'initiatives:request_membership' slug=ini.slug %}" method="post">
+                {% csrf_token %}
+                <input class="button org-join-button" type="submit" value="Join this Initiative" />
+            </form>
+        {% else %}
+            {% if membership.is_admin %}
+                <a href="{% url 'initiatives:manage' slug=ini.slug %}" >
+                    <button class="button org-join-button">Manage</button>
+                </a>
+            {% endif %}
+        {% endif %}
+        </div>
+    </div>
+    <div style="clear: both;"></div>
+</div>

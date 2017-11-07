@@ -4,6 +4,9 @@ from django.core.exceptions import SuspiciousOperation
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
 
+from geonode.layers.models import Layer
+from mapstory.mapstories.models import MapStory
+
 
 class Initiative(models.Model):
     """
@@ -115,3 +118,31 @@ class JoinRequest(models.Model):
 
         self.is_open = False
         self.save()
+
+
+class InitiativeLayer(models.Model):
+    """Represents a Layer that is sponsored by an Initiative"""
+    membership = models.ForeignKey(InitiativeMembership)
+    initiative = models.ForeignKey(Initiative)
+    layer = models.ForeignKey(Layer)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+    is_featured = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return u'%s' % self.layer
+
+
+class InitiativeMapStory(models.Model):
+    """
+    Represents a Mapstory that is sponsored by an Organization
+    """
+    mapstory = models.ForeignKey(MapStory)
+    initiative = models.ForeignKey(Initiative)
+    membership = models.ForeignKey(InitiativeMembership)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
+    is_featured = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return u'%s' % self.mapstory
