@@ -57,7 +57,7 @@ install:
   - $DCO up -d postgres elasticsearch rabbitmq
   - $DCO up pgadmin
   - $DCO run django "--init-db --collect-static --reindex"
-  - npm install -g protractor
+  - npm install -g protractor pix-diff
 
 script:
   - $DCO up -d nginx

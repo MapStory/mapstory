@@ -40,6 +40,8 @@ services:
       internal:
     expose:
       - "8000"
+    stdin_open: true
+    tty: true
 
   celery:
     build: .
