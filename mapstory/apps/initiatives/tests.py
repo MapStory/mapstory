@@ -97,6 +97,9 @@ class TestInitiativesAPI(TestCase):
     """
     Initiative API tests.
     """
+    def login(self):
+        return self.client.login(username='modeltester', password='glassonion232123')
+
     def test_initiatives_url(self):
         response = self.client.get('/initiatives', follow=True)
         self.assertEqual(200, response.status_code)
@@ -110,22 +113,10 @@ class TestInitiativesAPI(TestCase):
         self.assertContains(response, ini.about)
 
     def test_initiative_list_page(self):
-        ini01 = get_initiative()
-        ini02 = models.Initiative.objects.create(
-            name="Test2",
-            slogan="Test2",
-            about="test2",
-        )
-        ini03 = models.Initiative.objects.create(
-            name="Test3",
-            slogan="Test3",
-            about="test3",
-        )
-        ini04 = models.Initiative.objects.create(
-            name="Test4",
-            slogan="Test4",
-            about="test4",
-        )
+        get_initiative()
+        models.Initiative.objects.create(name="Test2", slogan="Test2", about="test2")
+        models.Initiative.objects.create(name="Test3", slogan="Test3", about="test3")
+        models.Initiative.objects.create(name="Test4", slogan="Test4", about="test4")
         all_inis = models.Initiative.objects.all()
 
         response = self.client.get(reverse('initiatives:list'), follow=True)
@@ -134,5 +125,31 @@ class TestInitiativesAPI(TestCase):
             self.assertContains(response, ini.name)
 
     def test_request_join(self):
-        pass
+        ini = get_initiative()
+        usr = get_test_user()
+        self.assertTrue(
+            self.client.login(username=usr.username, password='glassonion232123')
+        )
+        count = models.JoinRequest.objects.count()
+        response = self.client.post(
+            reverse('initiatives:request_membership', kwargs={
+                'slug': ini.slug,
+            }),
+            follow=True,
+            data={'hi': 'hello'}
+        )
+        self.assertTrue(200 == response.status_code)
+        self.assertTrue((count + 1) == models.JoinRequest.objects.count())
+
+    def test_manager_page(self):
+        admin_usr = get_test_user()
+        ini = get_initiative()
+        admin_membership = ini.add_member(admin_usr, is_admin=True)
+        self.assertTrue(admin_membership.is_admin)
+        self.assertTrue(self.login())
+        response = self.client.get(reverse('initiatives:manager', kwargs={
+            'slug': ini.slug
+        }), follow=True)
+        self.assertContains(response, ini.name)
+
 

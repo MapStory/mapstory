@@ -1,9 +1,13 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import SuspiciousOperation
 from django.core.urlresolvers import reverse
 from django.contrib import messages
+from django.http import HttpResponse, HttpResponseForbidden
+
 
 from . import models
+from . import forms
 
 
 def initiatives_list(request):
@@ -18,14 +22,14 @@ def initiative_detail(request, slug):
     members = models.InitiativeMembership.objects.filter(initiative=ini, is_active=True)
     layers = models.InitiativeLayer.objects.filter(initiative=ini)
     mapstories = models.InitiativeMapStory.objects.filter(initiative=ini)
-    membership = models.InitiativeMembership.objects.filter(user__pk=request.user.pk)
+    membership = models.InitiativeMembership.objects.filter(initiative=ini, user__pk=request.user.pk)
 
-    if membership.count() > 0:
-        membership = membership.first()
     if membership.count() > 1:
         raise SuspiciousOperation('More than one membership found for this user in initiatives')
-    else:
-        membership = None
+    if membership.count() > 0:
+        membership = membership.first()
+
+
 
     return render(request, 'initiatives/detail.html', context={
         'ini': ini,
@@ -37,6 +41,7 @@ def initiative_detail(request, slug):
     })
 
 
+@login_required
 def request_membership(request, slug):
     """
     Creates a JoinRequest for the initiative, provides the user
@@ -67,3 +72,75 @@ def request_membership(request, slug):
         messages.success(request, 'A request to join has been made')
 
     return redirect(reverse("initiatives:detail", kwargs={'slug': slug}))
+
+def _edit_initiative_with_forms(initiative, basic):
+    """
+    Helper function for for setting an initiatives's data from forms.
+    :param initiative: The initiative
+    :param basic: The Basic information form
+    :return:
+    """
+    initiative.name = basic.cleaned_data['name']
+    initiative.about = basic.cleaned_data['about']
+    initiative.city = basic.cleaned_data['city']
+    initiative.slogan = basic.cleaned_data['slogan']
+    initiative.country = basic.cleaned_data['country']
+    initiative.image = basic.cleaned_data['image']
+    initiative.save()
+
+@login_required
+def manager(request, slug):
+    """
+    Initiative Manager View.
+    Page for managing all settings for the Initiative.
+
+    :param request: HTTP Request.
+    :param slug: The Initiative's slug.
+    :return: An HTTPResponse
+    """
+    # Check that we are admins
+    initiative = get_object_or_404(models.Initiative, slug=slug)
+    membership = get_object_or_404(models.InitiativeMembership, initiative=initiative, user=request.user)
+    if not membership.is_admin:
+        # User is NOT AUTHORIZED!
+        # TODO: Send the user somewhere else
+        return HttpResponse("You are not authorized!")
+
+    join_requests = models.JoinRequest.objects.filter(initiative=initiative, is_open=True)
+    memberships = models.InitiativeMembership.objects.filter(initiative=initiative)
+    info = {
+        'name': initiative.name,
+        'slogan': initiative.slogan,
+        'about': initiative.about,
+        'country': initiative.country,
+        'city': initiative.city,
+        'image': initiative.image,
+    }
+
+    # Determine the type of HTTP request
+    if request.POST:
+        # Get POST data
+        basic_info_form = forms.BasicInformation(request.POST, request.FILES)
+
+        # Check for valid forms
+        if basic_info_form.is_valid():
+            # All forms are valid
+            _edit_initiative_with_forms(initiative, basic_info_form)
+
+            messages.success(request, "Saved changes to Initiative.")
+
+            return redirect(reverse("initiatives:detail", kwargs={'slug': slug}))
+        else:
+            # Information was not good
+            messages.warning(request, "Info was not valid")
+
+    # Set the forms initial data
+    basic_info_form = forms.BasicInformation(initial=info)
+
+    return render(request, 'initiatives/manager.html', {
+        'ini': initiative,
+        'basic_form': basic_info_form,
+        'join_requests': join_requests,
+        'memberships': memberships,
+        'ini_image': initiative.image,
+    })

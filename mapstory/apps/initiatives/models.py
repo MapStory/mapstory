@@ -51,11 +51,28 @@ class Initiative(models.Model):
     def get_absolute_url(self):
         """Get absolute URL.
 
-        URL for this organization.
+        URL for this Initiative.
 
-        :return: A URL for this Organization.
+        :return: A URL for this Initiative.
         """
         return reverse('initiatives:detail', kwargs={'slug': self.slug})
+
+    def add_member(self, user, is_admin=False):
+        """Adds a member to the initiative.
+
+        Errors out if you try to add a member that already belongs.
+
+        :param user: The user to be added.
+        :param is_admin: Give admin powers to the user.
+        :return: A InitiativeMembership object.
+        """
+        # Only add members if they are not already one
+        membership_count = InitiativeMembership.objects.filter(user=user, initiative=self).count()
+
+        if membership_count > 0:
+            raise SuspiciousOperation("Is already a member")
+
+        return InitiativeMembership.objects.create(user=user, initiative=self, is_admin=is_admin)
 
 
 class InitiativeMembership(models.Model):
@@ -63,7 +80,7 @@ class InitiativeMembership(models.Model):
     Links together a User and an Initiative. The memberhisp can be deactivated
     and is the token used to identify all actions permormed by the user within
     the Initiative (Add layers, Post journals, etc).
-    A member can also act as an admin to an Organization, which is indicated by his Membership `is_admin` field.
+    A member can also act as an admin to an initiative, which is indicated by his Membership `is_admin` field.
     """
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     initiative = models.ForeignKey(Initiative)
@@ -82,7 +99,7 @@ class InitiativeMembership(models.Model):
 
 class JoinRequest(models.Model):
     """
-    Represents a request from a user to join the Organization. Must be approved by an admin.
+    Represents a request from a user to join the initiative. Must be approved by an admin.
     """
     initiative = models.ForeignKey(Initiative)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='initiatives_request')
@@ -135,7 +152,7 @@ class InitiativeLayer(models.Model):
 
 class InitiativeMapStory(models.Model):
     """
-    Represents a Mapstory that is sponsored by an Organization
+    Represents a Mapstory that is sponsored by an Initiative
     """
     mapstory = models.ForeignKey(MapStory)
     initiative = models.ForeignKey(Initiative)
