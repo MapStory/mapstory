@@ -20,7 +20,9 @@ from ...forms import KeywordsForm, PublishStatusForm
 
 # Gets the custom user model
 User = get_user_model()
-testUser = get_test_user()
+testUser = User.objects.all().first()
+testUser.set_password("admin")
+testUser.save()
 
 
 class TestMapstory(TestCase):
@@ -37,6 +39,7 @@ class TestMapstory(TestCase):
         """
         Should save in database
         """
+        self.client.login(username=testUser.username, password="admin")
         self.assertEqual(0, MapStory.objects.all().count())
         self.mapstory.save()
         self.assertEqual(1, MapStory.objects.all().count())
@@ -83,6 +86,7 @@ class MapViewsTest(MapStoryTestMixin):
         # Should exist in the database
         found = MapStory.objects.get(id=test_mapstory.id)
         self.assertEquals(found.title, test_mapstory.title)
+        self.client.login(username=testUser.username, password="admin")
         # Should get a 200 response from the URL
         response = self.client.get(reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}))
         self.assertEquals(response.status_code, 200)
@@ -94,6 +98,7 @@ class MapViewsTest(MapStoryTestMixin):
     def test_post_mapstory_detail_keyword_post(self):
         # Should create add a keyword
         test_mapstory = create_mapstory(testUser, 'Testing Map 02')
+        self.client.login(username=testUser.username, password="admin")
         response = self.client.post(reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}), {'add_keyword': 'test_keyword'})
         self.assertEquals(response.status_code, 200)
 
@@ -119,6 +124,7 @@ class MapViewsTest(MapStoryTestMixin):
         form_data = {'is_published': True, 'published_submit_btn': True}
         form = PublishStatusForm(data=form_data)
         self.assertTrue(form.is_valid())
+        self.client.login(username=testUser.username, password="admin")
         response = self.client.post(reverse('mapstory_detail',
                                             kwargs={"slug": test_mapstory.slug}), form_data)
         self.assertEquals(response.status_code, 200)
@@ -133,6 +139,7 @@ class MapViewsTest(MapStoryTestMixin):
         self.assertIsNotNone(test_mapstory.id)
 
         # Should get a 200 response from the URL
+        self.client.login(username=testUser.username, password="admin")
         response = self.client.get(reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}))
         self.assertEquals(response.status_code, 200)
 
@@ -161,6 +168,7 @@ class MapViewsTest(MapStoryTestMixin):
         self.assertIsNotNone(test_mapstory.id)
 
         # Should get a 200 response from the URL
+        self.client.login(username=testUser.username, password="admin")
         response = self.client.get(reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}))
         self.assertEquals(response.status_code, 200)
 
