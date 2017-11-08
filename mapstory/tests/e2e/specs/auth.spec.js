@@ -154,7 +154,7 @@ describe('User auth', function() {
 			});
 		});
 
-		it('> should log in admin', function() {
+		xit('> should log in admin', function() {
 			if(auth.userAvatar.isPresent() == true) {
 				auth.logout();
 			}
