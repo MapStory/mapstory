@@ -147,7 +147,7 @@ class TestInitiativesAPI(TestCase):
         admin_membership = ini.add_member(admin_usr, is_admin=True)
         self.assertTrue(admin_membership.is_admin)
         self.assertTrue(self.login())
-        response = self.client.get(reverse('initiatives:manager', kwargs={
+        response = self.client.get(reverse('initiatives:manage', kwargs={
             'slug': ini.slug
         }), follow=True)
         self.assertContains(response, ini.name)

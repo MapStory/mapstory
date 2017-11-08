@@ -144,3 +144,19 @@ def manager(request, slug):
         'memberships': memberships,
         'ini_image': initiative.image,
     })
+
+
+@login_required
+def add_layer(request, slug, layer_pk):
+    return HttpResponse("Hola")
+
+
+@login_required
+def add_mapstory(request, slug, mapstory_pk):
+    return HttpResponse("add_mapstory")
+
+
+@login_required
+def approve_membership(request, slug):
+    return HttpResponse("Hello member")
+
