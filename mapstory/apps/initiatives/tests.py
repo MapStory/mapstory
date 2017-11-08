@@ -151,5 +151,3 @@ class TestInitiativesAPI(TestCase):
             'slug': ini.slug
         }), follow=True)
         self.assertContains(response, ini.name)
-
-

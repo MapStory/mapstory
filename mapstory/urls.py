@@ -38,6 +38,7 @@ from mapstory.views import map_detail
 from mapstory.views import new_map
 from mapstory.views import ProfileDetail, profile_delete, profile_edit, proxy
 from mapstory.views import SearchView
+from mapstory.apps.organizations.views import organization_detail
 
 
 geonode_api.register(ResourceBaseResource())
