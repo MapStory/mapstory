@@ -31,7 +31,7 @@
                     <hr style="margin-top:15px;margin-bottom:5px">
                     <h3 class="pull-right">
                         {% if entry.example_map %}
-                            <a href="{% url 'map_detail' entry.example_map.id %}">{{ entry.example_map.title }}</a> |
+                            <a href="{% url 'map_detdail' entry.example_map.id %}">{{ entry.example_map.title }}</a> |
                         {% endif %}
                         {% if entry.external_link %}
                             <a href="{{ entry.external_link }}">{{entry.external_link_title|default:"More"}}</a>

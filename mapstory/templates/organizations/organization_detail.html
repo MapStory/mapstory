@@ -1,0 +1,108 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load url from future %}
+{% block title %}{% trans "Organization" %}{% endblock %}
+{% block body_class %}search{% endblock %}
+{% block body_outer %}
+    <div class="org_container">
+        {% include 'organizations/_organization_header.html' %}
+        <div class="organization_content">
+            <!-- Side Column -->
+            <div class="org_left_column">
+                <!-- Navigation -->
+                <div class="organization_navigation" style="padding-top: 29px;">
+                    <ul>
+                        <li><a href="#">{{ org.title }} Home</a></li>
+                        <li><a href="#org-mapstories-section">MapStories</a></li>
+                        <li><a href="#org-layers-section">StoryLayers</a></li>
+                    </ul>
+                </div>
+                <!-- Country -->
+                <div class="organization_about" style="margin-top: 0px;">
+                    <p class="organization_country">{{ org.city }},{{ org.country }}</p>
+                </div>
+                <!-- About -->
+                <div class="organization_about">
+                    <p class="organization_about_title">About {{ org.title }}</p>
+                    <div class="organization_about_content">
+                        <p>{{ org.about }}</p>
+                    </div>
+                </div>
+                <!-- Organization Links -->
+                {% if urls %}
+                <div class="organization_urls">
+                {% for url in urls %}
+                    <div class="organization_link">
+                        <a href="{{ url.url }}">{{ url.url }}</a>
+                    </div>
+                {% endfor %}
+                </div>
+                {% endif %}
+                <!-- Social Media Links -->
+                {% if social_icons %}
+                <div class="organization_social">
+                    {% for social_icon in social_icons %}
+                    <div class="social_icon">
+                    <a href="{{ social_icon.url }}">
+                        <i class="fa {{ social_icon.icon }}">{{ social_icon.name }}</i>
+                    </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <!-- Organization Members -->
+                <div class="organization_members">
+                    <h3 class="organization_about_title">ORGANIZATION MEMBERS</h3>
+                    {% for membership in members %}
+                        <a href="/storyteller/{{ membership.user.username }}">
+                            {% include "cards/organization_member_card.html" with membership=membership %}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- Main Column -->
+            <div class="org_right_column">
+            {% block organization_content %}
+                <!-- FEATURED -->
+                <section id="org-featured">
+                    <div>
+                    {% if layers or mapstories %}
+                        <h2>Featured StoryLayers &amp; MapStories</h2>
+                        {% for layer in layers %}
+                            {% if layer.is_featured %}
+                            {% include "cards/layer_card.html" with layer=layer %}
+                            {% endif %}
+                        {% endfor %}
+                        {% for mapstory in mapstories %}
+                            {% if mapstory.is_featured %}
+                            {% include "cards/mapstory_card.html" with mapstory=mapstory %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                    </div>
+                </section>
+                <!-- MAPSTORIES -->
+                <section id="org-mapstories-section">
+                {% if mapstories %}
+                    <h2>MapStories</h2>
+                    {% for mapstory in mapstories %}
+                        {% include "cards/mapstory_card.html" with mapstory=mapstory %}
+                    {% endfor %}
+                {% endif %}
+                </section>
+                <!-- LAYERS -->
+                <section id="org-layers-section">
+                {% if layers %}
+                    <h2>Layers</h2>
+                    {% for layer in layers %}
+                        {% include "cards/layer_card.html" with layer=layer %}
+                    {% endfor %}
+                {% endif %}
+                </section>
+            {% endblock %}
+            </div>
+            <div style="clear: both;">
+            </div>
+        </div>
+    </div>
+{% endblock %}

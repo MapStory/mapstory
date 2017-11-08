@@ -87,7 +87,28 @@
                     </div>
                 </div>
 
-                <div class="col-sm-11">            
+                <div class="col-sm-11">
+                {% if request.user.is_authenticated %}
+                    {% if organizations.count > 0 %}
+                    <div class="Summary org_summary">
+                        <h3> Add to Organization </h3>
+                        <hr>
+                        <div class="col-sm-9 tab-content">
+                        <div class='row'>
+                            {% for org in organizations %}
+                            <div>
+                                <form action="{% url "organizations:add_mapstory" slug=org.organization.slug mapstory_pk=resource.pk %}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <input type="submit" class="button org-join-button" value="{{ org.organization }}">
+                                </form>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endif %}
                     <div class="Summary">
                         <div><h3>Summary</h3></div>
                         <hr>

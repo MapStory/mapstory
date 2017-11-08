@@ -32,15 +32,13 @@ def get_test_user():
     Returns:
         TYPE: User
     """
-    all_users = User.objects.all()
-    if all_users.count() > 0:
-        return all_users[0]
-    else:
-        return User.objects.create_user(
-            username='modeltester',
-            email='modeltester@models.com',
-            password='glassonion232123'
-        )
+    user, created = User.objects.get_or_create(
+        username='modeltester', email='modeltester@models.com'
+    )
+    if created:
+        user.set_password('glassonion232123')
+        user.save()
+    return user
 
 
 def create_user(username, password, **kwargs):
@@ -55,10 +53,8 @@ def create_user(username, password, **kwargs):
         (username, password)
     """
     user, created = get_user_model().objects.get_or_create(username=username, **kwargs)
-
-    if created:
-        user.set_password(password)
-        user.save()
+    user.set_password(password)
+    user.save()
 
     return username, password
 

@@ -1,0 +1,30 @@
+<div class="organization_hero">
+    <div class="organization_icon">
+        <div class="organization_icon_image">
+            {% if org_image %}
+                <img width="115" height="115" src="{{ org_image.url }}">
+            {% else %}
+                <img src="http://via.placeholder.com/115x115">
+            {% endif %}
+        </div>
+    </div>
+    <div class="organization_header">
+        <h1>{{ org.title }}</h1>
+        <h4 class="org-slogan">{{ org.slogan }}</h4>
+        <div class="button-container">
+        {% if not membership %}
+            <form action="{% url 'organizations:request_membership' slug=org.slug %}" method="post">
+                {% csrf_token %}
+                <input class="button org-join-button" type="submit" value="Join this Organization" />
+            </form>
+        {% else %}
+            {% if membership.is_admin %}
+                <a href="{% url 'organizations:manage' slug=org.slug %}" >
+                    <button class="button org-join-button">Manage</button>
+                </a>
+            {% endif %}
+        {% endif %}
+        </div>
+    </div>
+    <div style="clear: both;"></div>
+</div>
