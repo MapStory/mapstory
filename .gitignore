@@ -15,6 +15,7 @@ node_modules
 .ropeproject
 static_root
 uploaded
+.sauce
 .vagrant
 .vaultpass
 .vscode
