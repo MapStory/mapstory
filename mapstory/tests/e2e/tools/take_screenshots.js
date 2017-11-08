@@ -3,7 +3,7 @@
 let homePage = require('../pages/home.po');
 let images_page = require('../pages/images.po');
 
-let enabled = true;
+let enabled = false;
 let constants = require("../tools/constants");
 
 /**

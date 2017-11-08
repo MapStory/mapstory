@@ -21,7 +21,7 @@ describe('Home page image check', () => {
 		expect(browser.pixDiff).toBeTruthy();
 	});
 
-	it('should match the home page', () => {
+	xit('should match the home page', () => {
 		homePage.logout();
 
 
@@ -44,7 +44,7 @@ describe('Home page image check', () => {
 		});
 	});
 
-	it('should match login modal', () => {
+	xit('should match login modal', () => {
 		homePage.logout();
 		homePage.loginIcon.click();
 		images_page.loginModal.waitReady();
