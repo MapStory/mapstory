@@ -251,7 +251,7 @@ def add_layer(request, slug, layer_pk):
             obj.save()
             messages.success(request, "Added Layer to Initiative")
 
-    return redirect(reverse("initiative:detail", kwargs={'slug': slug}))
+    return redirect(reverse("initiatives:detail", kwargs={'slug': slug}))
 
 
 @login_required

@@ -70,12 +70,12 @@
                         <h2>Featured StoryLayers &amp; MapStories</h2>
                         {% for layer in layers %}
                             {% if layer.is_featured %}
-                            {% include "cards/layer_card.html" with layer=layer %}
+                            {% include "initiatives/layer_card.html" with layer=layer %}
                             {% endif %}
                         {% endfor %}
                         {% for mapstory in mapstories %}
                             {% if mapstory.is_featured %}
-                            {% include "cards/mapstory_card.html" with mapstory=mapstory %}
+                            {% include "initiatives/mapstory_card.html" with mapstory=mapstory %}
                             {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -86,7 +86,7 @@
                 {% if mapstories %}
                     <h2>MapStories</h2>
                     {% for mapstory in mapstories %}
-                        {% include "cards/mapstory_card.html" with mapstory=mapstory %}
+                        {% include "initiatives/mapstory_card.html" with mapstory=mapstory %}
                     {% endfor %}
                 {% endif %}
                 </section>
@@ -95,7 +95,7 @@
                 {% if layers %}
                     <h2>Layers</h2>
                     {% for layer in layers %}
-                        {% include "cards/layer_card.html" with layer=layer %}
+                        {% include "initiatives/layer_card.html" with layer=layer %}
                     {% endfor %}
                 {% endif %}
                 </section>

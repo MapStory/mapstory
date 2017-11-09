@@ -937,7 +937,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     for membership in user_ini_memberships.all():
         if(layer.owner == request.user) or membership.is_admin:
             ini_memberships.append(membership)
-            
+
     if len(ini_memberships) < 1:
         ini_memberships = None
 
