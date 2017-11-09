@@ -2,9 +2,9 @@
 exit_status=0
 
 if [ $TRAVIS ]; then
-    SELENIUM="ondemand.saucelabs.com/wd/hub"
+    SELENIUM="http://ondemand.saucelabs.com/wd/hub"
 else
-    SELENIUM="sauce-connect:4445/wd/hub"
+    SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@sauce-connect:4445/wd/hub"
 fi
 
 # Run end-to-end tests
@@ -12,7 +12,7 @@ fi
 
 # Run acceptance tests
 pushd acceptance
-codeceptjs run --steps --override "{ \"helpers\": { \"Protractor\": { \"seleniumAddress\": \"http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@$SELENIUM\"} } }"; (( exit_status = exit_status || $? ))
+codeceptjs run --steps --override "{ \"helpers\": { \"Protractor\": { \"seleniumAddress\": \"$SELENIUM\"} } }"; (( exit_status = exit_status || $? ))
 popd
 
 echo "Done running all tests."
