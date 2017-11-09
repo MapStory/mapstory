@@ -43,7 +43,7 @@ before_install:
 
   # Install test tools
   - pip install coveralls
-  - npm install -g protractor
+  - npm install -g codeceptjs-protractor protractor
   - npm link protractor selenium-webdriver
   - npm install pix-diff
 
@@ -73,8 +73,7 @@ script:
   # Wait for django container to come up
   - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
   - pushd mapstory/tests
-  - ./runE2ETests.sh
- # - protractor e2e/conf.js
+  - ./runAllTests.sh
   - popd
 
 after_success:
