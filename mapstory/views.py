@@ -1098,13 +1098,23 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
 
     # Check if user is admin in one of those organizations
     org_stories = OrganizationMapStory.objects.filter(mapstory=map_obj)
-
     org_admin_memberships = []
-    memberships = OrganizationMembership.objects.filter(user_id = request.user.pk)
-
+    memberships = OrganizationMembership.objects.filter(user_id=request.user.pk)
     for membership in memberships.all():
         if membership.is_admin:
             org_admin_memberships.append(membership)
+
+    if len(org_admin_memberships) < 1:
+        org_admin_memberships = None
+
+    ini_memberships = InitiativeMembership.objects.filter(user_id=request.user.pk)
+    ini_admin_memberships = []
+    for m in ini_memberships.all():
+        if m.is_admin:
+            ini_admin_memberships.append(m)
+
+    if len(ini_admin_memberships) < 1:
+        ini_admin_memberships = None
 
 
     context_dict = {
@@ -1121,7 +1131,8 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
         'share_url': share_url,
         'share_title': share_title,
         'share_description': share_description,
-        'organizations': org_admin_memberships
+        'organizations': org_admin_memberships,
+        'initiatives': ini_admin_memberships,
     }
 
     if settings.SOCIAL_ORIGINS:

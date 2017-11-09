@@ -232,7 +232,7 @@ def add_layer(request, slug, layer_pk):
         pass
     else:
         messages.error(request, "You are not allowed to do this.")
-        return redirect(reverse("initiative:detail", kwargs={'slug': slug}))
+        return redirect(reverse("initiatives:detail", kwargs={'slug': slug}))
 
     if request.POST:
         # Check if not already added
@@ -275,7 +275,7 @@ def add_mapstory(request, slug, mapstory_pk):
         pass
     else:
         messages.error(request, "You are not allowed to do this.")
-        return redirect(reverse("initiative:detail", kwargs={'slug': slug}))
+        return redirect(reverse("initiatives:detail", kwargs={'slug': slug}))
 
     if request.POST:
         # Check if not already added
@@ -293,7 +293,7 @@ def add_mapstory(request, slug, mapstory_pk):
             obj.save()
             messages.success(request, "Added MapStory to Initiative")
 
-    return redirect(reverse("initiative:detail", kwargs={'slug': slug}))
+    return redirect(reverse("initiatives:detail", kwargs={'slug': slug}))
 
 
 @login_required
@@ -319,7 +319,7 @@ def approve_membership(request, slug):
         if not admin_membership.is_admin:
             # No permission
             messages.warning(request, "You do not have permissions to do this.")
-            return redirect(reverse("initiative:detail", kwargs={'slug': slug}))
+            return redirect(reverse("initiatives:detail", kwargs={'slug': slug}))
         else:
             # We have permission, continue
             request_pk = request.POST.get("request_pk")
@@ -336,5 +336,5 @@ def approve_membership(request, slug):
                 join_request.decline(admin_membership)
                 messages.success(request, "Request to join declined.")
 
-    return redirect(reverse('initiative:manage', kwargs={'slug': slug}))
+    return redirect(reverse('initiatives:manage', kwargs={'slug': slug}))
 
