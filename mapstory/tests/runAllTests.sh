@@ -1,6 +1,9 @@
 #!/bin/bash
 exit_status=0
 
+echo "First:"
+set
+
 if [ $TRAVIS ]; then
     SELENIUM="http://ondemand.saucelabs.com/wd/hub"
 else
