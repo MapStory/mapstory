@@ -18,27 +18,96 @@ def initiatives_list(request):
 
 
 def initiative_detail(request, slug):
+    """
+    Organization Detail View.
+    Shows detailed information about an Organization.
+    :param request: The http request.
+    :param slug: The Organization's slug.
+    :return: A render view.
+    """
     ini = get_object_or_404(models.Initiative, slug=slug)
-    members = models.InitiativeMembership.objects.filter(initiative=ini, is_active=True)
-    layers = models.InitiativeLayer.objects.filter(initiative=ini)
-    mapstories = models.InitiativeMapStory.objects.filter(initiative=ini)
-    membership = models.InitiativeMembership.objects.filter(initiative=ini, user__pk=request.user.pk)
 
-    if membership.count() > 1:
-        raise SuspiciousOperation('More than one membership found for this user in initiatives')
-    if membership.count() > 0:
-        membership = membership.first()
+    # Determine the type of HTTP request
+    if request.POST:
+        # Handle form data
+        if request.POST.get("add_featured_layer"):
+            layer_pk = request.POST.get("layer_pk")
+            found_layer = get_object_or_404(models.InitiativeLayer, initiative=ini, layer__pk=layer_pk)
+            found_layer.is_featured = True
+            found_layer.save()
+            messages.success(request, "Added Layer to Featured")
 
+        elif request.POST.get("remove_layer"):
+            layer_pk = request.POST.get("layer_pk")
+            found_layer = get_object_or_404(models.InitiativeLayer, initiative=ini, layer__pk=layer_pk)
+            found_layer.delete()
+            messages.success(request, "Removed Layer from Organization")
 
+        elif request.POST.get("remove_featured_layer"):
+            layer_pk = request.POST.get("layer_pk")
+            found_layer = get_object_or_404(models.InitiativeLayer, initiative=ini, layer__pk=layer_pk)
+            found_layer.is_featured = False
+            found_layer.save()
+            messages.success(request, "Removed Layer from Featured")
 
-    return render(request, 'initiatives/detail.html', context={
+        elif request.POST.get("remove_mapstory"):
+            mapstory_pk = request.POST.get("mapstory_pk")
+            found_mapstory = get_object_or_404(models.InitiativeMapStory, initiative=ini, mapstory__pk=mapstory_pk)
+            found_mapstory.delete()
+            messages.success(request, "Removed MapStory from Organization")
+
+        elif request.POST.get("remove_featured_mapstory"):
+            mapstory_pk = request.POST.get("mapstory_pk")
+            found_mapstory = get_object_or_404(models.InitiativeMapStory, initiative=ini, mapstory__pk=mapstory_pk)
+            found_mapstory.is_featured = False
+            found_mapstory.save()
+            messages.success(request, "Removed MapStory from Featured")
+
+        elif request.POST.get("add_featured_mapstory"):
+            mapstory_pk = request.POST.get("mapstory_pk")
+            found_mapstory = get_object_or_404(models.InitiativeMapStory, initiative=ini, mapstory__pk=mapstory_pk)
+            found_mapstory.is_featured = True
+            found_mapstory.save()
+            messages.success(request, "Added MapStory to Featured")
+
+    members = models.InitiativeMembership.objects.filter(initiative=ini)
+    ini_layers = models.InitiativeLayer.objects.filter(initiative=ini)
+    ini_mapstories = models.InitiativeMapStory.objects.filter(initiative=ini)
+
+    layers = []
+    mapstories = []
+
+    # Check membership
+    membership = None
+    memberships = models.InitiativeMembership.objects.filter(initiative=ini, user__pk=request.user.pk)
+    if memberships.count() > 0:
+        membership = memberships.first()
+
+    for l in ini_layers:
+        share_url = "https://%s/layers/%s" % (request.get_host(), l.layer.name)
+        layers.append({
+            'layer': l.layer,
+            'url': share_url,
+            'is_featured': l.is_featured
+        })
+
+    for m in ini_mapstories:
+        share_url = "https://%s/story/%s" % (request.get_host(), m.mapstory.id)
+        mapstories.append({
+            'mapstory': m.mapstory,
+            'url': share_url,
+            'is_featured': m.is_featured,
+        })
+
+    context = {
         'ini': ini,
         'members': members,
         'layers': layers,
         'mapstories': mapstories,
         'membership': membership,
-        'ini_image': ini.image,
-    })
+        'org_image': ini.image,
+    }
+    return render(request, 'initiatives/detail.html', context=context)
 
 
 @login_required
@@ -72,6 +141,7 @@ def request_membership(request, slug):
         messages.success(request, 'A request to join has been made')
 
     return redirect(reverse("initiatives:detail", kwargs={'slug': slug}))
+
 
 def _edit_initiative_with_forms(initiative, basic):
     """
@@ -148,15 +218,123 @@ def manager(request, slug):
 
 @login_required
 def add_layer(request, slug, layer_pk):
-    return HttpResponse("Hola")
+    """
+    Adds a layer to an Initiative.
+    :param request: HTTP request.
+    :param slug: The Initiative slug.
+    :param layer_pk: The Layer id.
+    :return: An HTTPResponse
+    """
+    ini = get_object_or_404(models.Initiative, slug=slug)
+    membership = get_object_or_404(models.InitiativeMembership, user_id=request.user.pk, initiative=ini)
+
+    if membership.is_admin or membership.is_active:
+        pass
+    else:
+        messages.error(request, "You are not allowed to do this.")
+        return redirect(reverse("initiative:detail", kwargs={'slug': slug}))
+
+    if request.POST:
+        # Check if not already added
+        ini = get_object_or_404(models.Initiative, slug=slug)
+        found = models.InitiativeLayer.objects.filter(initiative=ini, layer_id=layer_pk)
+
+        if found.count() > 0:
+            # Duplicate Layer
+            messages.warning(request, "This layer has already been added to this Initiative.")
+        else:
+            # Add the Layer
+            obj = models.InitiativeLayer()
+            obj.initiative = ini
+            obj.layer_id = layer_pk
+            obj.membership = membership
+            obj.save()
+            messages.success(request, "Added Layer to Initiative")
+
+    return redirect(reverse("initiative:detail", kwargs={'slug': slug}))
 
 
 @login_required
 def add_mapstory(request, slug, mapstory_pk):
-    return HttpResponse("add_mapstory")
+    """
+        Adds a Mapstory to an Initiative.
+        :param request: HTTPRequest
+        :param slug: The Initiative's slug.
+        :param mapstory_pk: Mapstory id
+        :return: HTTPResponse
+        """
+    ini = get_object_or_404(models.Initiative, slug=slug)
+    membership = get_object_or_404(
+        models.InitiativeMembership,
+        user__pk=request.user.pk,
+        initiative=ini,
+    )
+
+    # Make sure we have permissions to do this
+    if membership.is_admin or membership.is_active:
+        pass
+    else:
+        messages.error(request, "You are not allowed to do this.")
+        return redirect(reverse("initiative:detail", kwargs={'slug': slug}))
+
+    if request.POST:
+        # Check if not already added
+        found = models.InitiativeMapStory.objects.filter(initiative=ini, mapstory__pk=mapstory_pk)
+
+        if found.count() > 0:
+            # Give a warning to the user
+            messages.warning(request, "This Mapstory has already been added to this Initiative.")
+        else:
+            # Add it to the Initiative
+            obj = models.InitiativeMapStory()
+            obj.initiative = ini
+            obj.mapstory_id = mapstory_pk
+            obj.membership = membership
+            obj.save()
+            messages.success(request, "Added MapStory to Initiative")
+
+    return redirect(reverse("initiative:detail", kwargs={'slug': slug}))
 
 
 @login_required
 def approve_membership(request, slug):
-    return HttpResponse("Hello member")
+    """
+        Approves a request for membership
+        :param request: HTTP Request
+        :param slug: The Initiatives's slug.
+        :return: A new membership if success.
+        """
+    if not request.user.is_authenticated():
+        messages.warning(request, "You are not logged in.")
+        return redirect(reverse("index_view"))
+
+    if request.POST:
+        # Make sure that we have permission
+        admin_membership = get_object_or_404(
+            models.InitiativeMembership,
+            initiative=get_object_or_404(models.Initiative, slug=slug),
+            user_id=request.user.pk
+        )
+
+        if not admin_membership.is_admin:
+            # No permission
+            messages.warning(request, "You do not have permissions to do this.")
+            return redirect(reverse("initiative:detail", kwargs={'slug': slug}))
+        else:
+            # We have permission, continue
+            request_pk = request.POST.get("request_pk")
+            join_request = get_object_or_404(models.JoinRequest, pk=request_pk)
+            approval = request.POST.get("approval")
+
+            # Approve Request to join
+            if approval == 'accept':
+                new_membership = join_request.approve(admin_membership)
+                messages.success(request, "New member added to Initiative.")
+
+            # Decline Request to join
+            elif approval == 'decline':
+                join_request.decline(admin_membership)
+                messages.success(request, "Request to join declined.")
+
+    return redirect(reverse('initiative:manage', kwargs={'slug': slug}))
 

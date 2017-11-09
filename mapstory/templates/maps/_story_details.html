@@ -108,6 +108,25 @@
                         </div>
                     </div>
                     {% endif %}
+                    {% if organizations.count > 0 %}
+                    <div class="Summary org_summary">
+                        <h3> Add to Initiative </h3>
+                        <hr>
+                        <div class="col-sm-9 tab-content">
+                        <div class='row'>
+                            {% for ini in initiatives %}
+                            <div>
+                                <form action="{% url "initiatives:add_mapstory" slug=ini.initiative.slug mapstory_pk=resource.pk %}"
+                                    method="post">
+                                    {% csrf_token %}
+                                    <input type="submit" class="button org-join-button" value="{{ ini.initiative }}">
+                                </form>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 {% endif %}
                     <div class="Summary">
                         <div><h3>Summary</h3></div>
