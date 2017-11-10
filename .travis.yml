@@ -28,6 +28,8 @@ addons:
     tunnel_domains: docker
 
 before_install:
+  - echo "SAUCE_USERNAME - $SAUCE_USERNAME"
+  - echo "SAUCE_ACCESS_KEY - $SAUCE_ACCESS_KEY"
   # Temporary fix for the Basho repo being down
   - sudo rm -vf /etc/apt/sources.list.d/*riak*
   # Install Docker Engine
@@ -73,6 +75,8 @@ script:
   # Wait for django container to come up
   - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
   - pushd mapstory/tests
+  - echo "SAUCE_USERNAME - $SAUCE_USERNAME"
+  - echo "SAUCE_ACCESS_KEY - $SAUCE_ACCESS_KEY"
   - ./runE2ETests.sh
  # - protractor e2e/conf.js
   - popd
