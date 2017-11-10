@@ -16,6 +16,8 @@ python:
 env:
   global:
     - DOCKER_COMPOSE_VERSION=1.14.0
+    - SAUCE_USERNAME=cuttlefish
+    - SAUCE_ACCESS_KEY=59a985d3-597d-4722-92f8-e75d928b3cff
 
 addons:
   hostname: docker
@@ -24,8 +26,6 @@ addons:
   sauce_connect:
     username: cuttlefish
     tunnel_domains: docker
-  jwt:
-    secure: emUFqNE+Hi0yA30vsm4ug0eqzaxnkFKcxWEM5FcKBqvAgKgZj6Y5+r2AuCMb2sFHLwpmQKTVLJ+LFdt/XaGFVS/fsRzWWo08ba6Aem+H7quuCR6q6X8j7fS2pn9XtdRr3Fxbe8eLL0dJJnHMArN6aaWrP3O/8aqu/oZQVxv4SoVcACLG6me48FUcHzzV4QlGHdnXRXwBtQXWRz0du0r8nWk+a0eWp7kTeHT34VihdCtu4tL/SkHdkdGfYMzoRDT2nt0H4CAAiy6OlzkIKT0pQdIL8bRF3ye1hyoF6PTbjE7xCKKzIYDGgz9rfhi5Kjes+Y1WoaBDgecaukfzJYz5q3mzaCeQ2witpbKBSbvp2sedMtxBE53JEu/CZKuTfcwPHj8X0GN/tVayiXx44XsBpUvc0GCTh6vHJy+tnWygueEQayFTxnQk2Q4Ltvkg+KBuOmoektUNKM51t8UZ2FrpGkKNsUQlBO/93L8f0FFmY1ePgayvpwvzqoXdmnXayDautTLL21D/v2pKwdPBFvgnwIu9VG0JsJ5y4uy6vDUJOejWiSe7x+mzoc+BN6tfyUgaGcim36a2a1P0luDgi6MtZIAlowUayqLNz66AU2dsoetN3FDm2zo0Vv3whxoPdJ0kScSaY1kzW7D799WRarVLEGnEEP480gqjbA0cyx+1Tjc=
 
 before_install:
   - echo "SAUCE_USERNAME - $SAUCE_USERNAME"
