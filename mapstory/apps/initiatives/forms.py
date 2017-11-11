@@ -11,9 +11,9 @@ class BasicInformation(forms.Form):
         - Display Photo
         - About
     """
-    name = forms.CharField(required=True)
-    slogan = forms.CharField(required=True)
-    city = forms.CharField(required=False)
-    country = forms.CharField(required=False)
+    name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'org_manage_field'}))
+    slogan = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'org_manage_field'}))
+    city = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'org_manage_field'}))
+    country = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'org_manage_field'}))
     image = forms.ImageField(required=False)
-    about = forms.CharField(widget=forms.Textarea, required=True)
+    about = forms.CharField(widget=forms.Textarea(attrs={'class': 'org_manage_field'}), required=True)

@@ -39,10 +39,9 @@
                 </div>
             </div>
             <div class="org_right_column" id="organizers-members">
-                <h2>Manage Memberships</h2>
                 <section id="join-requests">
                     <!-- MEMBERSHIP REQUESTS -->
-                    <div class="requests-section">
+                    <div class="requests-section basic_form">
                     {% if join_requests %}
                         <h3>MEMBERSHIP REQUESTS</h3>
                         {% for request in join_requests %}
@@ -71,7 +70,7 @@
                     </div>
 
                     <!-- MEMBERS -->
-                    <div class="members-section">
+                    <div class="members-section basic_form">
                     {% if memberships %}
                         <h3>MEMBERS</h3>
                         {% for member in memberships %}
@@ -83,11 +82,10 @@
                     </div>
                     <div style="clear: both;"></div>
                 </section>
-                <h2>Edit Initiative</h2>
                 <form action="." method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <section id="basic-info">
-                        <div>
+                        <div class="basic_form">
                             <h3>BASIC INFORMATION</h3>
                             <hr/>
                             {{ basic_form.as_p }}
