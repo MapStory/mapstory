@@ -5,7 +5,7 @@ echo "First:"
 set
 
 if [ $TRAVIS ]; then
-    SELENIUM="http://ondemand.saucelabs.com/wd/hub"
+    SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com/wd/hub"
 else
     SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@sauce-connect:4445/wd/hub"
 fi
@@ -15,6 +15,7 @@ fi
 
 # Run acceptance tests
 pushd acceptance
+echo $SELENIUM
 codeceptjs run --steps --override "{ \"helpers\": { \"Protractor\": { \"seleniumAddress\": \"$SELENIUM\"} } }"; (( exit_status = exit_status || $? ))
 popd
 
