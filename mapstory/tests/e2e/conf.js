@@ -149,7 +149,7 @@ if(process.env.DOCKER) {
 if(process.env.TRAVIS) {
 	// Use sauce labs for cloud browser testing
 	// TODO(Zunware): Use https!!!
-	selenium_url = 'http://' + process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY +'@ondemand.saucelabs.com/wd/hub';
+	selenium_url = 'http://' + process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY +'@localhost:4445/wd/hub';
 	multi_cabapilities = [{
 		'browserName' : 'firefox',
 		'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
