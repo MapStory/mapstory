@@ -13,7 +13,7 @@ fi
 # Run acceptance tests
 pushd acceptance
 echo $SELENIUM
-codeceptjs run --steps --override "{ \"helpers\": { \"Protractor\": { \"seleniumAddress\": \"$SELENIUM\"} } }"; (( exit_status = exit_status || $? ))
+codeceptjs run --steps --override "{ \"helpers\": { \"Protractor\": { \"user\": \"$SAUCE_USERNAME\", \"key\": \"$SAUCE_ACCESS_KEY\", \"seleniumAddress\": \"$SELENIUM\"} } }"; (( exit_status = exit_status || $? ))
 popd
 
 echo "Done running all tests."
