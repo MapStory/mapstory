@@ -8,9 +8,6 @@ exists()
 
 exit_status=0
 
-echo "Second:"
-set
-
 if exists figlet; then
 	figlet "Mapstory-tests"; (( exit_status = exit_status || $? ))
 else
