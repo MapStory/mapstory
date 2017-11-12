@@ -2,7 +2,8 @@
 exit_status=0
 
 if [ $TRAVIS ]; then
-    SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com/wd/hub"
+#    SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com/wd/hub"
+    SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@docker:4445/wd/hub"
 else
     SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@sauce-connect:4445/wd/hub"
 fi
