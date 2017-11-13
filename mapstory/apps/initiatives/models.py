@@ -99,7 +99,8 @@ class InitiativeMembership(models.Model):
 
 class JoinRequest(models.Model):
     """
-    Represents a request from a user to join the initiative. Must be approved by an admin.
+    Represents a request from a user to join the initiative.
+    Must be approved by an admin.
     """
     initiative = models.ForeignKey(Initiative)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='initiatives_request')
@@ -130,6 +131,10 @@ class JoinRequest(models.Model):
         return new_membership
 
     def decline(self, admin_membership):
+        """
+        Declines membership
+        :param admin_membership: The membership
+        """
         if not admin_membership.is_admin:
             return None
 
@@ -138,7 +143,9 @@ class JoinRequest(models.Model):
 
 
 class InitiativeLayer(models.Model):
-    """Represents a Layer that is sponsored by an Initiative"""
+    """
+    Represents a Layer that is sponsored by an Initiative
+    """
     membership = models.ForeignKey(InitiativeMembership)
     initiative = models.ForeignKey(Initiative)
     layer = models.ForeignKey(Layer)

@@ -151,3 +151,134 @@ class TestInitiativesAPI(TestCase):
             'slug': ini.slug
         }), follow=True)
         self.assertContains(response, ini.name)
+
+    def test_join_this_organization(self):
+        usr = get_test_user()
+        ini = get_initiative()
+        count = models.JoinRequest.objects.all().count()
+        self.assertTrue(
+            self.client.login(username=usr.username, password='glassonion232123')
+        )
+        response = self.client.post(
+            reverse('initiatives:request_membership', kwargs={'slug': ini.slug}),
+            data={'data': 'data'},
+            follow=True
+        )
+
+        self.assertEqual(200, response.status_code)
+        new_count = models.JoinRequest.objects.all().count()
+        self.assertTrue(count + 1 == new_count)
+
+    def test_request_membership_without_auth(self):
+        ini = get_initiative()
+        usr = get_test_user()
+        response = self.client.post(
+            reverse('initiatives:request_membership', kwargs={
+                'slug': ini.slug,
+            }),
+            follow=True,
+            data={'hi': 'hello'}
+        )
+        self.assertTrue(200 == response.status_code)
+        self.assertTemplateNotUsed('initiatives/detail.html')
+
+    def test_manager_unauthorized(self):
+        ini = get_initiative()
+        response = self.client.get(reverse('initiatives:manage', kwargs={'slug': ini.slug}), follow=True)
+
+    def test_manager_post_form(self):
+        ini = get_initiative()
+        usr = get_test_user()
+        admin_membership = ini.add_member(usr, is_admin=True)
+        self.assertTrue(
+            self.client.login(username=usr.username, password='glassonion232123')
+        )
+        response = self.client.post(
+            reverse('initiatives:manage', kwargs={'slug': ini.slug}),
+            follow=True,
+            data={
+                'name': 'test',
+                'slogan': 'test',
+                'city': 'test',
+                'country': 'test',
+                'image': None,
+                'about': 'test',
+            }
+        )
+        self.assertEqual(200, response.status_code)
+
+    def test_approve_membership(self):
+        ini = get_initiative()
+        usr = get_test_user()
+        join = models.JoinRequest.objects.create(
+            initiative=ini,
+            user=usr,
+        )
+        self.assertIsNotNone(join)
+        self.assertEqual(join.initiative.pk, ini.pk)
+        self.assertEqual(join.user.pk, usr.pk)
+        self.assertEqual(True, join.is_open)
+        self.assertIsNone(join.approved_by)
+
+        admin_usr = get_user("some_admin", "some_admin@admin.com", "adminadmin")
+        admin_membership = models.InitiativeMembership.objects.create(
+            user=admin_usr,
+            initiative=ini,
+            is_admin=True
+        )
+        new_membership = join.approve(admin_membership)
+        self.assertIsNotNone(new_membership)
+        self.assertFalse(join.is_open)
+        self.assertEqual(join.approved_by, admin_membership)
+        self.assertFalse(new_membership.is_admin)
+        self.assertEqual(new_membership.user.pk, usr.pk)
+        self.assertTrue(self.client.login(username='some_admin', password="adminadmin"))
+        response = self.client.post(
+            reverse('initiatives:approve_membership', kwargs={
+                'slug': ini.slug
+            }),
+            follow=True,
+            data={
+                'request_pk': join.pk,
+                'approval': 'accept'
+            }
+        )
+        self.assertEqual(200, response.status_code)
+
+    def test_deny_membership(self):
+        ini = get_initiative()
+        usr = get_test_user()
+        join = models.JoinRequest.objects.create(
+            initiative=ini,
+            user=usr,
+        )
+        self.assertIsNotNone(join)
+        self.assertEqual(join.initiative.pk, ini.pk)
+        self.assertEqual(join.user.pk, usr.pk)
+        self.assertEqual(True, join.is_open)
+        self.assertIsNone(join.approved_by)
+
+        admin_usr = get_user("some_admin", "some_admin@admin.com", "adminadmin")
+        admin_membership = models.InitiativeMembership.objects.create(
+            user=admin_usr,
+            initiative=ini,
+            is_admin=True
+        )
+        new_membership = join.approve(admin_membership)
+        self.assertIsNotNone(new_membership)
+        self.assertFalse(join.is_open)
+        self.assertEqual(join.approved_by, admin_membership)
+        self.assertFalse(new_membership.is_admin)
+        self.assertEqual(new_membership.user.pk, usr.pk)
+        self.assertTrue(self.client.login(username='some_admin', password="adminadmin"))
+        response = self.client.post(
+            reverse('initiatives:approve_membership', kwargs={
+                'slug': ini.slug
+            }),
+            follow=True,
+            data={
+                'request_pk': join.pk,
+                'approval': 'decline'
+            }
+        )
+        self.assertEqual(200, response.status_code)

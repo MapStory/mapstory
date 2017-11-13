@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import SuspiciousOperation
 from django.core.urlresolvers import reverse
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotAllowed
 
 
 from . import models
@@ -120,7 +120,6 @@ def request_membership(request, slug):
     :return: HTTPResponse
     """
     if not request.user.is_authenticated():
-        # TODO: Show the login popup.
         messages.warning(request, 'Please Log In or Sign Up before joining an initiative.')
         return redirect(reverse("index_view"))
 
@@ -158,6 +157,7 @@ def _edit_initiative_with_forms(initiative, basic):
     initiative.image = basic.cleaned_data['image']
     initiative.save()
 
+
 @login_required
 def manager(request, slug):
     """
@@ -174,7 +174,7 @@ def manager(request, slug):
     if not membership.is_admin:
         # User is NOT AUTHORIZED!
         # TODO: Send the user somewhere else
-        return HttpResponse("You are not authorized!")
+        return HttpResponseNotAllowed("Not authorized")
 
     join_requests = models.JoinRequest.objects.filter(initiative=initiative, is_open=True)
     memberships = models.InitiativeMembership.objects.filter(initiative=initiative)
