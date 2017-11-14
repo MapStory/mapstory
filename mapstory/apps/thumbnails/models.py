@@ -26,7 +26,7 @@ def resize_gif(path, save_as=None, resize_to=None):
         print("Warning: only 1 frame found")
         all_frames[0].save(save_as, optimize=True)
     else:
-        all_frames[0].save(save_as, optimize=True, save_all=True, append_images=all_frames[1:], loop=1000)
+        all_frames[0].save(save_as, optimize=True, save_all=True, append_images=all_frames[1:], loop=1000, duration=500)
 
 
 def analyze_image(path):
@@ -125,7 +125,7 @@ class ThumbnailImage(SingletonModel):
         # Supports Animated thumbnails
         if self.thumbnail_image.name.endswith('.gif'):
             gif_image = pil_image_obj
-            gif_image.save(new_image_io, format='GIF', save_all=True)
+            gif_image.save(new_image_io, format='GIF', save_all=True, duration=500)
         else:
             # Save as PNG
             new_image = pil_image_obj.resize((thumbnail_width, thumbnail_height))

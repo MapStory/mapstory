@@ -31,7 +31,7 @@ let setupScreenshotOnError = function () {
 					let stream = fs.createWriteStream(filename);
 					stream.write(new Buffer(png, 'base64'));
 					stream.end();
-					console.log('\t***SCRENSHOT: "'+ filename + '" SMILE!***\n');
+					console.log('\t***SCREENSHOT: "'+ filename + '" SMILE!***\n');
 				});
 			}
 			return originalAddExpectationResult.apply(this, arguments);

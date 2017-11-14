@@ -14,7 +14,7 @@
 'use strict';
 
 // Config
-let specTimeoutMs = 10000; // 10 seconds
+let specTimeoutMs = 30000; // 30 seconds
 
 /**
  * Current workaround until https://github.com/angular/protractor/issues/1102
