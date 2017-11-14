@@ -100,7 +100,7 @@
                                 <form action="{% url "organizations:add_mapstory" slug=org.organization.slug mapstory_pk=resource.pk %}"
                                     method="post">
                                     {% csrf_token %}
-                                    <input type="submit" class="button org-join-button" value="{{ org.organization }}">
+                                    <input type="submit" class="btn btn-primary btn-md btn-block btb_orgs" value="{{ org.organization }}">
                                 </form>
                             </div>
                             {% endfor %}
@@ -119,7 +119,7 @@
                                 <form action="{% url "initiatives:add_mapstory" slug=ini.initiative.slug mapstory_pk=resource.pk %}"
                                     method="post">
                                     {% csrf_token %}
-                                    <input type="submit" class="button org-join-button" value="{{ ini.initiative }}">
+                                    <input type="submit" class="btn btn-primary btn-md btn-block btb_orgs" value="{{ ini.initiative }}">
                                 </form>
                             </div>
                             {% endfor %}
