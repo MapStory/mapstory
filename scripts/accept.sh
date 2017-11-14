@@ -1,0 +1,43 @@
+#!/bin/bash
+
+if [ $TRAVIS ]; then
+#    SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com/wd/hub"
+    SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@docker:4445/wd/hub"
+    CAPABILITIES="
+    {
+        'browserName' : 'firefox',
+        'tunnel-identifier': '$TRAVIS_JOB_NUMBER',
+        'name': 'Mapstory Acceptance Firefox Tests',
+        'build': '$TRAVIS_BUILD_NUMBER',
+        'tags': ['$TRAVIS_PYTHON_VERSION', 'CI']
+    }"
+
+    OVERRIDE="
+    {
+        'helpers': {
+            'Protractor': {
+                'user': '$SAUCE_USERNAME',
+                'key': '$SAUCE_ACCESS_KEY',
+                'seleniumAddress': '$SELENIUM',
+                'capabilities': $CAPABILITIES
+            }
+        }
+    }"
+else
+    SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@sauce-connect:4445/wd/hub"
+    OVERRIDE="
+    {
+        'helpers': {
+            'Protractor': {
+                'user': '$SAUCE_USERNAME',
+                'key': '$SAUCE_ACCESS_KEY',
+                'seleniumAddress': '$SELENIUM'
+            }
+        }
+    }"
+fi
+
+OVERRIDE=${OVERRIDE//\'/\"} # replace single quotes with double quotes
+
+cd /opt/mapstory/tests/acceptance
+codeceptjs "$@" --override "$OVERRIDE"

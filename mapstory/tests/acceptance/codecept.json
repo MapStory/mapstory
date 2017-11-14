@@ -11,7 +11,8 @@
       "seleniumAddress": "http://sauce-connect:4445/wd/hub",
       "waitForTimeout": 30000,
       "scriptsTimeout": 30000,
-      "getPageTimeout": 30000
+      "getPageTimeout": 30000,
+      "smartWait": 5000
     }
   },
   "include": {
