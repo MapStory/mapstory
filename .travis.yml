@@ -62,7 +62,7 @@ install:
   - $DCO up pgadmin
   - $DCO run django "--init-db --collect-static --reindex"
   - npm install -g protractor pix-diff
-  - cp scripts/accept.sh /usr/local/bin/accept
+  - sudo cp scripts/accept.sh /usr/local/bin/accept
 
 script:
   - $DCO up django_volumes
