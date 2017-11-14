@@ -74,7 +74,7 @@ script:
   # Wait for django container to come up
   - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
   - pushd mapstory/tests
-  - SOURCE_HOME=$PWD ./runAllTests.sh
+  - SOURCE_HOME=/home/travis/build/MapStory/mapstory ./runAllTests.sh
   - popd
 
 after_success:
