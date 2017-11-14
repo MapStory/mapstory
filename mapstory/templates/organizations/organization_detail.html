@@ -9,17 +9,9 @@
         <div class="organization_content">
             <!-- Side Column -->
             <div class="org_left_column">
-                <!-- Navigation -->
-                <div class="organization_navigation" style="padding-top: 29px;">
-                    <ul>
-                        <li><a href="#">{{ org.title }} Home</a></li>
-                        <li><a href="#org-mapstories-section">MapStories</a></li>
-                        <li><a href="#org-layers-section">StoryLayers</a></li>
-                    </ul>
-                </div>
                 <!-- Country -->
-                <div class="organization_about" style="margin-top: 0px;">
-                    <p class="organization_country">{{ org.city }},{{ org.country }}</p>
+                <div class="organization_about_city" style="margin-top: 0px;">
+                    <p class="organization_country">{{ org.city }}, {{ org.country }}</p>
                 </div>
                 <!-- About -->
                 <div class="organization_about">
@@ -44,7 +36,7 @@
                     {% for social_icon in social_icons %}
                     <div class="social_icon">
                     <a href="{{ social_icon.url }}">
-                        <i class="fa {{ social_icon.icon }}">{{ social_icon.name }}</i>
+                        <i class="fa {{ social_icon.icon }}"></i>{{ social_icon.name }}
                     </a>
                     </div>
                     {% endfor %}

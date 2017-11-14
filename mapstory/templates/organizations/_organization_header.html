@@ -10,7 +10,9 @@
     </div>
     <div class="organization_header">
         <h1>{{ org.title }}</h1>
-        <h4 class="org-slogan">{{ org.slogan }}</h4>
+        <div class="org_slogan_container">
+            <h4 class="org-slogan">{{ org.slogan }}</h4>
+        </div>
         <div class="button-container">
         {% if not membership %}
             <form action="{% url 'organizations:request_membership' slug=org.slug %}" method="post">
