@@ -1,0 +1,24 @@
+{
+  "tests": "./*_test.js",
+  "timeout": 30000,
+  "output": "./output",
+  "helpers": {
+    "Protractor": {
+      "url": "https://docker",
+      "driver": "sauce",
+      "browser": "chrome",
+      "rootElement": "body",
+      "seleniumAddress": "http://sauce-connect:4445/wd/hub",
+      "waitForTimeout": 30000,
+      "scriptsTimeout": 30000,
+      "getPageTimeout": 30000,
+      "smartWait": 5000
+    }
+  },
+  "include": {
+    "I": "./steps_file.js"
+  },
+  "bootstrap": false,
+  "mocha": {},
+  "name": "acceptance"
+}
