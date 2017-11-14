@@ -272,9 +272,9 @@ describe('[Survey Tests] |', function() {
 		});
 		/**
 			d. Uploading:
-			  Where you able to upload sucesfulluy?
+			  Were you able to upload succesfully?
 		**/
-		describe('<d> Uploading', function() {
+		xdescribe('<d> Uploading', function() {
 			beforeEach(function() {
 				element(by.linkText('Create')).click();
 				home_page.importLayerLink.click();
@@ -350,7 +350,7 @@ describe('[Survey Tests] |', function() {
 		/**
 			e. Click 'Update Metadata' and add responses to questions. Does it display correctly?
 		**/
-		describe('<e> Update Metadata', function() {
+		xdescribe('<e> Update Metadata', function() {
 			beforeEach(function() {
 				element(by.linkText('Create')).click();
 				home_page.importLayerLink.click();
@@ -383,7 +383,7 @@ describe('[Survey Tests] |', function() {
 		/**
 			f. Click update layer settings again and make sure that "Is published" is checked and save. Go to explore and find your update layer. Did you find it?
 		**/
-		describe('<f> Set is published', function() {
+		xdescribe('<f> Set is published', function() {
 			beforeEach(function() {
 				element(by.linkText('Create')).click();
 				home_page.importLayerLink.click();

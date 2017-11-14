@@ -19,12 +19,13 @@ env:
     - secure: "IMm6jAeLGJ1Vo3L81JIEh2/Z2jIARYFBviQ5cxTTH88ndN2Oj03rPDjvkP44YZwZT7Gd768Ve1PuEgq5oVmqd+oZF7hUEh08LalUV9aOkIRFEc8SjuUJVFhFzUGovqDr+Kg+Y7OqDODhZjvORqnNpOkWNUUnR26MsRY/x9vNO50="
     - secure: "FJobmS7HNb2L95ZN0s81r/MpmM5kizgyoG6bUpgIaYhQMweJgLPinHOWB+54VAr7jkdDjN5b+4hHa1pcWNSWGLDgxMZxj9pPej7Aiq0wvFMlbzai3W+/FcNENHjd3sBTLNpWiBrpQNyUXP2/+2QWPMqCbUfiS90AkA5Du198pjE="
 
-
 addons:
   hostname: docker
+  hosts:
+    - docker
   # For sauceLabs (DO NOT REMOVE)
-  sauce_connect: true
-
+  sauce_connect:
+    tunnel_domains: docker
 
 before_install:
   # Temporary fix for the Basho repo being down
@@ -40,8 +41,11 @@ before_install:
   - docker-compose --version
   - DCO="docker-compose -f docker-compose.yml -f docker/docker-compose.travis.yml"
 
-  # Install other tools
+  # Install test tools
   - pip install coveralls
+  - npm install -g protractor
+  - npm link protractor selenium-webdriver
+  - npm install pix-diff
 
   # Ensure a clean environment
   - $DCO kill
@@ -60,13 +64,18 @@ install:
   - npm install -g protractor pix-diff
 
 script:
+  - $DCO up django_volumes
   - $DCO up -d nginx
+  - $DCO up django_volumes
   - $DCO kill django
-  - $DCO ps
-  # TODO: Fix Protractor tests
-#  - $DCO run protractor protractor conf.js
-#  - protractor mapstory/tests/e2e/conf.js
-  - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
+  - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --init-db --test
+  - $DCO up -d django
+  # Wait for django container to come up
+  - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
+  - pushd mapstory/tests
+  - ./runE2ETests.sh
+ # - protractor e2e/conf.js
+  - popd
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then

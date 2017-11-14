@@ -37,8 +37,10 @@ describe('Composer', function() {
 
     });
 
+/*
 	it('should fail here :)', () => {
 	   expect(true).toBe(false);
     });
+*/
 });
 
