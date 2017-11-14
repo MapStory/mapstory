@@ -1,6 +1,9 @@
 # Temporary. 1.0.8 has breaking changes.
 gsconfig==1.0.6
 
+# New version breaks the unit tests
+geonode-user-messages==0.1.6
+
 psycopg2==2.4.5
 numpy==1.8.2
 
@@ -55,6 +58,7 @@ django-solo==1.1.2
 
 # Testing dependencies
 coverage
+ipdbplugin==1.4.5
 
 # Security Updates
 pycsw==2.0.3

@@ -6,8 +6,10 @@ exists()
   command -v "$1" >/dev/null 2>&1
 }
 
+exit_status=0
+
 if exists figlet; then
-	figlet "Mapstory-tests"
+	figlet "Mapstory-tests"; (( exit_status = exit_status || $? ))
 else
 	echo ''
 	echo '----------------'
@@ -17,7 +19,7 @@ else
 fi
 
 if exists protractor; then
-	protractor e2e/conf.js
+	protractor e2e/conf.js; (( exit_status = exit_status || $? ))
 else
 	echo 'Error: Could not find conf, or protractor is not installed!'
 	echo 'Please install protractor from: protractortest.org'
@@ -27,3 +29,5 @@ fi
 if exists cowsay; then
 	cowsay "Done"
 fi
+
+exit $exit_status

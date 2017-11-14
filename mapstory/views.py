@@ -74,6 +74,7 @@ from apps.journal.models import JournalEntry
 from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
 from mapstory.apps.favorite.models import Favorite
 from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
+from mapstory.apps.organizations.models import OrganizationMembership, OrganizationLayer, OrganizationMapStory
 from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditGeonodeProfileForm
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm, DistributionUrlForm
 from mapstory.forms import SignupForm
@@ -926,6 +927,15 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     share_title = "%s by %s." % (layer.title, layer.owner)
     share_description = layer.abstract
 
+    # Get membership buttons ready:
+    admin_memberships = []
+    # Check if user is admin in one of those organizations
+    users_org_memberships = OrganizationMembership.objects.filter(user_id=request.user.pk)
+    for membership in users_org_memberships.all():
+        # We have permission if we own the layer, or if we are an organization's admin.
+        if (layer.owner == request.user) or membership.is_admin:
+            admin_memberships.append(membership)
+
     context_dict = {
         "resource": layer,
         "permissions_json": _perms_info_json(layer),
@@ -943,6 +953,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "share_url": share_url,
         "share_title": share_title,
         "share_description": share_description,
+        "organizations":admin_memberships,
     }
 
     context_dict["viewer"] = json.dumps(
@@ -1079,6 +1090,17 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
     share_title = "%s by %s." % (map_obj.title, map_obj.owner)
     share_description = map_obj.abstract
 
+    # Check if user is admin in one of those organizations
+    org_stories = OrganizationMapStory.objects.filter(mapstory=map_obj)
+
+    org_admin_memberships = []
+    memberships = OrganizationMembership.objects.filter(user_id = request.user.pk)
+
+    for membership in memberships.all():
+        if membership.is_admin:
+            org_admin_memberships.append(membership)
+
+
     context_dict = {
         'config': config,
         'resource': map_obj,
@@ -1092,7 +1114,8 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
         'thumb_form': map_thumb_form,
         'share_url': share_url,
         'share_title': share_title,
-        'share_description': share_description
+        'share_description': share_description,
+        'organizations': org_admin_memberships
     }
 
     if settings.SOCIAL_ORIGINS:

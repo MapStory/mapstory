@@ -4,23 +4,24 @@ from mapstory.apps.boxes.utils import parse_date_time
 from datetime import datetime
 from django.contrib.gis.db import models as gis
 
+
 class StoryBoxManager(models.Manager):
 
     def copy_map_story_boxes(self, source_id, target):
         source = Map.objects.get(id=source_id)
         copies = []
-        print 'copy from', source_id, source.storybox_set.all()
-        print 'to target', target.id
+        print('copy from', source_id, source.storybox_set.all())
+        print('to target', target.id)
         for box in source.storybox_set.all():
             box.map = target
             box.pk = None
             copies.append(box)
-        print copies
+        print(copies)
         StoryBox.objects.bulk_create(copies)
+
 
 class StoryBox(models.Model):
     objects = StoryBoxManager()
-
 
     PLAYBACK_RATE = (('seconds', 'Seconds'),('minutes', 'Minutes'),)
     INTERVAL_RATE = (('minutes', 'Minutes'),('hours', 'Hours'),

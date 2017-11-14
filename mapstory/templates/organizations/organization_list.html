@@ -1,0 +1,11 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load url from future %}
+{% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
+{% block body_class %}search{% endblock %}
+{% block body_outer %}
+    <h2 class="subtitle">Organizations</h2>
+    {% for org in organizations %}
+        {% include 'cards/organization_card.html' with organization=org %}
+    {% endfor %}
+{% endblock %}

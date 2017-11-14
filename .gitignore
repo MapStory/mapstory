@@ -15,6 +15,7 @@ node_modules
 .ropeproject
 static_root
 uploaded
+.sauce
 .vagrant
 .vaultpass
 .vscode
@@ -29,7 +30,8 @@ cover
 result.json
 .noseids
 ghostdriver.log
+mapstory/tests/acceptance/output/
+mapstory/tests/e2e/images/diff/
 mapstory/tests/errors/err*
 mapstory/tests/errors/known/err*
-mapstory/tests/e2e/images/diff/
 ll_scripts/

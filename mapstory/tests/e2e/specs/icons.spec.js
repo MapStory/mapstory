@@ -16,7 +16,7 @@ describe('Composer', function() {
 		browser.ignoreSynchronization = true;
 	});
 
-	it('should upload a gif as a thumbnail', () => {
+	xit('should upload a gif as a thumbnail', () => {
 	   gif_upload.get();
 
         // Click compose story
@@ -37,8 +37,10 @@ describe('Composer', function() {
 
     });
 
+/*
 	it('should fail here :)', () => {
 	   expect(true).toBe(false);
     });
+*/
 });
 
