@@ -4,6 +4,7 @@ LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 ENV DOCKER true
 ENV SOURCE_HOME /opt
 
+WORKDIR $SOURCE_HOME/mapstory
 RUN set -ex \
     && npm install -g \
         codeceptjs-protractor \
@@ -15,9 +16,8 @@ RUN set -ex \
         pix-diff \
     && webdriver-manager update
 
-COPY scripts/accept.sh /usr/local/bin/accept
-
 WORKDIR $SOURCE_HOME/mapstory/tests
+COPY scripts/accept.sh /usr/local/bin/accept
 COPY mapstory/tests ./
 
 CMD ["./runAllTests.sh"]
