@@ -19,10 +19,10 @@ def initiatives_list(request):
 
 def initiative_detail(request, slug):
     """
-    Organization Detail View.
-    Shows detailed information about an Organization.
+    Initiative Detail View.
+    Shows detailed information about an Initiative.
     :param request: The http request.
-    :param slug: The Organization's slug.
+    :param slug: The Initiative's slug.
     :return: A render view.
     """
     ini = get_object_or_404(models.Initiative, slug=slug)
@@ -41,7 +41,7 @@ def initiative_detail(request, slug):
             layer_pk = request.POST.get("layer_pk")
             found_layer = get_object_or_404(models.InitiativeLayer, initiative=ini, layer__pk=layer_pk)
             found_layer.delete()
-            messages.success(request, "Removed Layer from Organization")
+            messages.success(request, "Removed Layer from Initiative")
 
         elif request.POST.get("remove_featured_layer"):
             layer_pk = request.POST.get("layer_pk")
@@ -54,7 +54,7 @@ def initiative_detail(request, slug):
             mapstory_pk = request.POST.get("mapstory_pk")
             found_mapstory = get_object_or_404(models.InitiativeMapStory, initiative=ini, mapstory__pk=mapstory_pk)
             found_mapstory.delete()
-            messages.success(request, "Removed MapStory from Organization")
+            messages.success(request, "Removed MapStory from Initiative")
 
         elif request.POST.get("remove_featured_mapstory"):
             mapstory_pk = request.POST.get("mapstory_pk")
@@ -105,7 +105,7 @@ def initiative_detail(request, slug):
         'layers': layers,
         'mapstories': mapstories,
         'membership': membership,
-        'org_image': ini.image,
+        'ini_image': ini.image,
     }
     return render(request, 'initiatives/detail.html', context=context)
 
