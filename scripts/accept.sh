@@ -1,4 +1,5 @@
 #!/bin/bash
+# expects $SOURCE_HOME
 
 if [ $TRAVIS ]; then
 #    SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com/wd/hub"
@@ -39,5 +40,5 @@ fi
 
 OVERRIDE=${OVERRIDE//\'/\"} # replace single quotes with double quotes
 
-cd /opt/mapstory/tests/acceptance
+cd $SOURCE_HOME/mapstory/tests/acceptance
 codeceptjs "$@" --override "$OVERRIDE"

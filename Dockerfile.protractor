@@ -2,7 +2,7 @@ FROM node:8.8
 LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 
 ENV DOCKER true
-WORKDIR /opt/mapstory
+ENV SOURCE_HOME /opt
 
 RUN set -ex \
     && npm install -g \
@@ -17,7 +17,7 @@ RUN set -ex \
 
 COPY scripts/accept.sh /usr/local/bin/accept
 
-WORKDIR /opt/mapstory/tests
+WORKDIR $SOURCE_HOME/mapstory/tests
 COPY mapstory/tests ./
 
 CMD ["./runAllTests.sh"]
