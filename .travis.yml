@@ -73,9 +73,8 @@ script:
   - $DCO up -d django
   # Wait for django container to come up
   - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
-  - SOURCE_HOME=$PWD
   - pushd mapstory/tests
-  - ./runAllTests.sh
+  - SOURCE_HOME=$PWD ./runAllTests.sh
   - popd
 
 after_success:
