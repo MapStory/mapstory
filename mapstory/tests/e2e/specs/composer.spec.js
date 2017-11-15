@@ -21,7 +21,7 @@ describe('Composer', function() {
 		home.login('admin', 'admin');
 	});
 
-	it('> should display welcome modal', function() {
+	xit('> should display welcome modal', function() {
 		page.get();
 		expect(page.compose_story.waitReady()).toBeTruthy();
 		expect(page.take_tour.waitReady()).toBeTruthy();
@@ -66,7 +66,7 @@ describe('Composer', function() {
 	*/
 
 
-	it('> should set properties in properties modal', function(done) {
+	xit('> should set properties in properties modal', function(done) {
 		page.get();
 		expect(page.compose_story.waitReady()).toBeTruthy();
 		page.compose_story.click();
@@ -104,7 +104,7 @@ describe('Composer', function() {
 		done();
 	});
 
-	it('> should begin creating', function() {
+	xit('> should begin creating', function() {
 		page.get();
 		expect(page.compose_story.waitReady()).toBeTruthy();
 		page.compose_story.click();

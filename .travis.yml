@@ -43,7 +43,7 @@ before_install:
 
   # Install test tools
   - pip install coveralls
-  - npm install -g protractor
+  - npm install -g codeceptjs-protractor protractor
   - npm link protractor selenium-webdriver
   - npm install pix-diff
 
@@ -62,6 +62,7 @@ install:
   - $DCO up pgadmin
   - $DCO run django "--init-db --collect-static --reindex"
   - npm install -g protractor pix-diff
+  - sudo cp scripts/accept.sh /usr/local/bin/accept
 
 script:
   - $DCO up django_volumes
@@ -73,8 +74,7 @@ script:
   # Wait for django container to come up
   - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
   - pushd mapstory/tests
-  - ./runE2ETests.sh
- # - protractor e2e/conf.js
+  - SOURCE_HOME=/home/travis/build/MapStory/mapstory ./runAllTests.sh
   - popd
 
 after_success:

@@ -2,10 +2,12 @@ FROM node:8.8
 LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 
 ENV DOCKER true
-WORKDIR /opt/mapstory
+ENV SOURCE_HOME /opt
 
+WORKDIR $SOURCE_HOME/mapstory
 RUN set -ex \
     && npm install -g \
+        codeceptjs-protractor \
         protractor \
     && npm link \
         protractor \
@@ -14,7 +16,8 @@ RUN set -ex \
         pix-diff \
     && webdriver-manager update
 
-WORKDIR /opt/mapstory/tests
+WORKDIR $SOURCE_HOME/mapstory/tests
+COPY scripts/accept.sh /usr/local/bin/accept
 COPY mapstory/tests ./
 
-CMD ["./runE2ETests.sh"]
+CMD ["./runAllTests.sh"]

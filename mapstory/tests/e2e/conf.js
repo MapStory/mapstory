@@ -183,7 +183,7 @@ if(process.env.TRAVIS) {
 		multiCapabilities: multi_cabapilities,
 		jasmineNodeOpts: {
 			showColors: true,
-			defaultTimeoutInterval: timeout * 2
+			defaultTimeoutInterval: timeout * 4
 		},
 		getPageTimeout: timeout,
 		allScriptsTimeout: timeout,
