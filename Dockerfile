@@ -1,5 +1,5 @@
 FROM quay.io/mapstory/python-gdal:2.7.x-2.2.x
-MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
+LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 
 ENV MEDIA_ROOT /var/lib/mapstory/media
 ENV STATIC_ROOT /var/lib/mapstory/static
@@ -43,7 +43,7 @@ RUN set -ex \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
         nodejs \
-    && npm install -g bower grunt \
+    && npm install -g bower grunt webpack \
     && rm -rf ~/.npm \
     && rm -rf /tmp/npm-* \
     && rm -rf /var/lib/apt/lists/*
@@ -77,6 +77,7 @@ RUN set -ex \
     && git clone -b angular-1.6 --depth 1 https://github.com/GeoNode/django-osgeo-importer.git \
     && pip install -e ./django-osgeo-importer \
     && git clone -b master --depth 1 https://github.com/MapStory/story-tools.git \
+    && git clone -b master --depth 1 https://github.com/MapStory/story-tools-composer.git \
     && chown -R mapstory:mapstory .
 
 # Install dependencies from requirements.txt
@@ -90,14 +91,6 @@ COPY epsg_extra /usr/local/lib/python2.7/dist-packages/pyproj/data/
 RUN cat /etc/ssl/certs/ca-certificates.crt >> /usr/local/lib/python2.7/site-packages/httplib2/cacerts.txt
 
 # Cache these. Hopefully it will speed up the later steps.
-# USER mapstory
-# WORKDIR $APP_PATH/deps/geonode/geonode/static
-# RUN set -ex \
-#     && npm install \
-#     && rm -rf ~/.npm \
-#     && rm -rf /tmp/npm-* \
-#     && bower install \
-#     && rm -rf ~/.cache/bower
 COPY mapstory/static $APP_PATH/mapstory/static
 WORKDIR $APP_PATH/mapstory/static
 RUN chown -R mapstory:mapstory .
@@ -108,6 +101,16 @@ RUN set -ex \
     && rm -rf /tmp/npm-* \
     && bower install \
     && rm -rf ~/.cache/bower
+WORKDIR $APP_PATH/deps/story-tools-composer
+RUN set -ex \
+    && npm install \
+    && bower install \
+    && webpack --output-public-path='/static/composer/' \
+    && rm -rf ~/.npm \
+    && rm -rf /tmp/npm-* \
+    && rm -rf ~/.cache/bower \
+    && rm -rf /tmp/phantomjs
+
 USER root
 WORKDIR $APP_PATH
 
@@ -119,14 +122,6 @@ COPY ./*.py ./
 RUN chown -R mapstory:mapstory $APP_PATH
 
 USER mapstory
-# WORKDIR $APP_PATH/deps/geonode/geonode/static
-# RUN set -ex \
-#     && npm install \
-#     && rm -rf ~/.npm \
-#     && rm -rf /tmp/npm-* \
-#     && bower install \
-#     && rm -rf ~/.cache/bower \
-#     && grunt copy
 
 WORKDIR $APP_PATH/mapstory/static
 RUN set -ex \
@@ -135,6 +130,16 @@ RUN set -ex \
     && grunt concat \
     && grunt less:development \
     && grunt copy:development \
+    && rm -rf ~/.npm \
+    && rm -rf /tmp/npm-* \
+    && rm -rf ~/.cache/bower \
+    && rm -rf /tmp/phantomjs
+
+WORKDIR $APP_PATH/deps/story-tools-composer
+RUN set -ex \
+    && npm install \
+    && bower install \
+    && webpack \
     && rm -rf ~/.npm \
     && rm -rf /tmp/npm-* \
     && rm -rf ~/.cache/bower \
