@@ -77,11 +77,12 @@ script:
   - SOURCE_HOME=/home/travis/build/MapStory/mapstory ./runAllTests.sh
   - popd
 
-after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-      docker login -u="$QUAY_USERNAME" -p="$QUAY_PASSWORD" quay.io
-      $DCO push
-    fi
+### Currently quay.io is pulling the repos automatically
+# after_success:
+#   - if [ "$TRAVIS_BRANCH" == "master" ]; then
+#       docker login -u="$QUAY_USERNAME" -p="$QUAY_PASSWORD" quay.io;
+#       $DCO push;
+#     fi
 
 after_script:
   - $DCO kill
