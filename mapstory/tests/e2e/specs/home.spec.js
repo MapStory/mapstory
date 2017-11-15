@@ -39,7 +39,7 @@ describe('Mapstory Home', function() {
 		expect(browser.getTitle()).toEqual('MapStory');
 	});
 
-	it('> should be authorized', function(){
+	xit('> should be authorized', function(){
 		auth.isLoggedIn().then(function(isLogged){
 			expect(isLogged).toBeTruthy();
 		});
