@@ -92,6 +92,26 @@ class TestInitiativesModels(TestCase):
         self.assertFalse(new_membership.is_admin)
         self.assertEqual(new_membership.user.pk, usr.pk)
 
+    def test_add_layer(self):
+        layer = create_layer('Test Layer', 'Abstract', get_test_user())
+        self.assertIsNotNone(layer)
+
+        o = get_initiative()
+        m = models.InitiativeMembership.objects.create(user=get_test_user(), initiative=o, is_admin=True)
+        count = models.InitiativeLayer.objects.all().count()
+        o.add_layer(layer, m)
+        self.assertEqual(count + 1, models.InitiativeLayer.objects.all().count())
+
+    def test_add_mapstory_helper(self):
+        test_mapstory = create_mapstory(get_test_user(), 'Testing Map 01')
+
+        initial_count = models.InitiativeMapStory.objects.all().count()
+        o = get_initiative()
+        membership = models.InitiativeMembership.objects.create(user=get_test_user(), initiative=o, is_admin=True)
+
+        self.assertIsNotNone(o.add_mapstory(test_mapstory, membership))
+        self.assertEqual(initial_count + 1, models.InitiativeMapStory.objects.all().count())
+
 
 class TestInitiativesAPI(TestCase):
     """
@@ -152,7 +172,7 @@ class TestInitiativesAPI(TestCase):
         }), follow=True)
         self.assertContains(response, ini.name)
 
-    def test_join_this_organization(self):
+    def test_join_this_initiative(self):
         usr = get_test_user()
         ini = get_initiative()
         count = models.JoinRequest.objects.all().count()
@@ -282,3 +302,166 @@ class TestInitiativesAPI(TestCase):
             }
         )
         self.assertEqual(200, response.status_code)
+
+    def test_api_add_layer(self):
+        ini = get_initiative()
+        usr = get_test_user()
+        layer = create_layer('Test Layer', 'Abstract', usr)
+        models.InitiativeMembership.objects.create(
+            initiative=ini,
+            user=usr,
+            is_admin=True,
+        )
+        initial_layer_count = models.InitiativeLayer.objects.count()
+
+        # Attempt to login the client
+        self.assertTrue(self.client.login(username=usr.username, password="glassonion232123"))
+
+        response = self.client.post(
+            reverse(
+                'initiatives:add_layer',
+                kwargs={
+                    'layer_pk': layer.pk,
+                    'slug': ini.slug
+                }
+            ),
+            {'data': 'data'}
+        )
+        self.assertRedirects(
+            response,
+            expected_url=reverse("initiatives:detail", kwargs={'slug': ini.slug}))
+        # Should update the Initiatives's layer count
+        self.assertEqual(initial_layer_count + 1, models.InitiativeLayer.objects.count())
+
+    def test_add_mapstory_with_membership(self):
+        user = get_test_user()
+        self.assertTrue(self.client.login(username=user.username, password="glassonion232123"))
+        o = get_initiative()
+        self.assertIsNotNone(o.add_member(user, is_admin=True))
+        mapstory = create_mapstory(user, "Testing Mapstory")
+        self.assertIsNotNone(mapstory)
+
+        initial_count = models.InitiativeMapStory.objects.filter(initiative=o).count()
+        response = self.client.post(
+            reverse("initiatives:add_mapstory", kwargs={
+                'slug': o.slug,
+                'mapstory_pk': mapstory.pk
+            }),
+            {'data': 'data'},
+            follow=True
+        )
+        self.assertEqual(200, response.status_code)
+        # Should have added 1 mapstory to the initiative
+        final_count = models.InitiativeMapStory.objects.filter(initiative=o).count()
+        self.assertEqual(initial_count + 1, final_count)
+
+    def test_add_mapstory_without_membership(self):
+        user = User.objects.create_user(
+            username="usernametest",
+            password="apassword"
+        )
+        count = models.InitiativeMapStory.objects.all().count()
+        o = get_initiative()
+        mapstory = create_mapstory(user, "Testing Mapstory")
+        response = self.client.post(
+            reverse("initiatives:add_mapstory", kwargs={
+                'slug': o.slug,
+                'mapstory_pk': mapstory.pk
+            }),
+            {},
+            follow=True
+        )
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(count, models.InitiativeMapStory.objects.all().count())
+
+    def test_add_featured_layer(self):
+        o = get_initiative()
+        u = get_test_user()
+        layer = create_layer('Test Layer', 'Abstract', u)
+        membership = models.InitiativeMembership.objects.create(initiative=o, user=u)
+        o.add_layer(layer, membership)
+        r = self.client.post(reverse("initiatives:detail", kwargs={"slug": o.slug}), data={
+            "add_featured_layer": "quesito",
+            "layer_pk": layer.pk,
+            "mapstory_pk": layer.pk,
+        })
+        self.assertEqual(200, r.status_code)
+
+    def test_organization_detail_view_post(self):
+        o = get_initiative()
+        u = get_test_user()
+        layer = create_layer('Test Layer', 'Abstract', u)
+        membership = models.InitiativeMembership.objects.create(initiative=o, user=u)
+        o.add_layer(layer, membership)
+        r = self.client.post(reverse("initiatives:detail", kwargs={"slug": o.slug}), data={
+            "add_featured_layer": "quesito",
+            "layer_pk": layer.pk,
+            "mapstory_pk": layer.pk,
+        })
+        self.assertEqual(200, r.status_code)
+
+    def test_organization_detail_view_post_remove_layer(self):
+        o = get_initiative()
+        u = get_test_user()
+        layer = create_layer('Test Layer', 'Abstract', u)
+        membership = models.InitiativeMembership.objects.create(initiative=o, user=u)
+        o.add_layer(layer, membership)
+        r = self.client.post(reverse("initiatives:detail", kwargs={"slug": o.slug}), data={
+            "remove_layer": "q",
+            "layer_pk": layer.pk,
+            "mapstory_pk": layer.pk,
+        })
+        self.assertEqual(200, r.status_code)
+
+    def test_organization_detail_view_post_remove_featured_layer(self):
+        o = get_initiative()
+        u = get_test_user()
+        layer = create_layer('Test Layer', 'Abstract', u)
+        membership = models.InitiativeMembership.objects.create(initiative=o, user=u)
+        o.add_layer(layer, membership)
+        r = self.client.post(reverse("initiatives:detail", kwargs={"slug": o.slug}), data={
+            "remove_featured_layer": "q",
+            "layer_pk": layer.pk,
+            "mapstory_pk": layer.pk,
+        })
+        self.assertEqual(200, r.status_code)
+
+    def test_organization_detail_view_post_remove_mapstory(self):
+        o = get_initiative()
+        u = get_test_user()
+        layer = create_layer('Test Layer', 'Abstract', u)
+        membership = models.InitiativeMembership.objects.create(initiative=o, user=u)
+        o.add_layer(layer, membership)
+        r = self.client.post(reverse("initiatives:detail", kwargs={"slug": o.slug}), data={
+            "remove_mapstory": "q",
+            "layer_pk": layer.pk,
+            "mapstory_pk": layer.pk,
+        })
+        self.assertEqual(404, r.status_code)
+
+    def test_organization_detail_view_post_remove_featured_mapstory(self):
+        o = get_initiative()
+        u = get_test_user()
+        layer = create_layer('Test Layer', 'Abstract', u)
+        membership = models.InitiativeMembership.objects.create(initiative=o, user=u)
+        o.add_layer(layer, membership)
+        r = self.client.post(reverse("initiatives:detail", kwargs={"slug": o.slug}), data={
+            "remove_featured_mapstory": "q",
+            "layer_pk": layer.pk,
+            "mapstory_pk": layer.pk,
+        })
+        self.assertEqual(404, r.status_code)
+
+    def test_organization_detail_view_post_add_featured_mapstory(self):
+        o = get_initiative()
+        u = get_test_user()
+        map_created = create_mapstory(u, "Title")
+        layer = create_layer('Test Layer', 'Abstract', u)
+        membership = models.InitiativeMembership.objects.create(initiative=o, user=u)
+        o.add_layer(layer, membership)
+        r = self.client.post(reverse("initiatives:detail", kwargs={"slug": o.slug}), data={
+            "add_featured_mapstory": "q",
+            "layer_pk": layer.pk,
+            "mapstory_pk": map_created.pk,
+        })
+        self.assertEqual(404, r.status_code)

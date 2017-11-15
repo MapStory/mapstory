@@ -74,6 +74,25 @@ class Initiative(models.Model):
 
         return InitiativeMembership.objects.create(user=user, initiative=self, is_admin=is_admin)
 
+    def add_layer(self, layer, membership):
+        """Adds a Layer to the Organization.
+
+        :param layer: The Layer to be added.
+        :param membership: Membership used for the transaction.
+        :return: The OrganizationLayer object created.
+        """
+        # TODO: Check if membership is allowed to add layer
+        return InitiativeLayer.objects.create(initiative=self, layer=layer, membership=membership)
+
+    def add_mapstory(self, mapstory, membership):
+        """Adds a Mapstory to the Organization.
+        :param mapstory: The mapstory to add.
+        :param membership: The membership used for the transaction.
+        :return: The OrganzationMapStory object created.
+        """
+        # TODO: Check if membership is allowed to add layer
+        return InitiativeMapStory.objects.create(mapstory=mapstory, initiative=self, membership=membership)
+
 
 class InitiativeMembership(models.Model):
     """Represents a user's membership to an Initiative.
