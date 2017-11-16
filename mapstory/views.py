@@ -520,6 +520,15 @@ def draft_view(request, slug, template='composer/maploom.html'):
     }))
 
 
+def composer_new_view(request, slug, template='composer_new/composer.html'):
+    story_obj = _resolve_story(request, slug, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
+    config = story_obj.viewer_json(request.user)
+    return render_to_response(template, RequestContext(request, {
+        'config': json.dumps(config),
+        'story': story_obj
+    }))
+
+
 @login_required
 def mapstory_draft(request, storyid, template):
     return draft_view(request, storyid, template)
