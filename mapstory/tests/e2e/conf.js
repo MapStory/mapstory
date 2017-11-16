@@ -93,17 +93,9 @@ let settings = {
 // Testing settings
 // This overrides the configuration if we are using sauce-connect
 if(process.env.DOCKER) {
-	selenium_url = 'http://' +  process.env.SAUCE_USERNAME + ':' + process.env.SAUCE_ACCESS_KEY + '@sauce-connect:4445/wd/hub';
-	multi_cabapilities = [/*{
-		'browserName' : 'firefox',
-//		'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
-		'name': 'Mapstory Firefox Tests',
-//		'build': process.env.TRAVIS_BUILD_NUMBER,
-		'tags': ['dev']
-	},*/{
+	selenium_url = 'http://selenium:4444/wd/hub';
+	multi_cabapilities = [{
 		'browserName' : 'chrome',
-//		'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
-//		'build': process.env.TRAVIS_BUILD_NUMBER,
 		'tags': ['dev'],
 		'name': 'Mapstory Chrome Tests',
 		'chromeOptions': {
