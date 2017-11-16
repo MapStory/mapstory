@@ -1,0 +1,34 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html ng-app="composer">
+<head>
+  <base href="{{ SITEURL }}{{ STATIC_URL }}composer/" target="_blank">
+  <script>
+    window.mapstory = {}
+    window.mapstory.composer = {}
+    window.mapstory.composer.config = {
+      authStatus: {% if user.is_authenticated %} 200{% else %} 401{% endif %},
+      username: {% if user.is_authenticated %} "{{ user.username }}" {% else %} undefined {% endif %},
+      userprofilename: {% if user.is_authenticated %} "{{ user.get_full_name }}" {% else %} undefined {% endif %},
+      userprofileemail: {% if user.is_authenticated %} "{{ user.email }}" {% else %} undefined {% endif %},
+      currentLanguage: "{{language|default:'en'}}",
+      proxy: '{{ PROXY_URL }}',
+      rest: "{% url "maps_browse" %}",
+      ajaxLoginUrl: "{% url "account_ajax_login" %}",
+      homeUrl: "{% url "home" %}",
+      localGeoServerBaseUrl: "{{ GEOSERVER_BASE_URL }}",
+      localCSWBaseUrl: "{{ CATALOGUE_BASE_URL }}",
+      csrfToken: "{{ csrf_token }}",
+    }
+  </script>
+
+  {% include "head.html" %}
+
+</head>
+<body ng-controller="composerController as composer">
+
+  {% include "body.html" %}
+
+</body>
+</html>

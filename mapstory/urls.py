@@ -107,6 +107,10 @@ urlpatterns = patterns('',
     'mapstory.views.draft_view', {'template': 'composer/maploom.html'}, name='maploom-map-view'),
     url(r'^frame/(?P<storyid>[^/]+)/draft','mapstory.views.draft_view',name='draft_view'),
 
+    # Composer-new
+    url(r'^story/(?P<slug>[-\w]+)/composer$',
+        'mapstory.views.composer_new_view', {'template': 'composer_new/composer.html'}, name='composer-view'),
+
     # StoryTools
     url(r'^maps/(?P<mapid>\d+)/viewer$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
     url(r'^maps/(?P<mapid>\d+)/embed$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),

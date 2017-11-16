@@ -67,6 +67,15 @@ for i do # loop over $@
         grunt copy:development
         cd ../..
         python manage.py collectstatic --noinput --ignore node_modules
+
+        # composer
+        ln -s $PWD/deps/story-tools-composer $STATIC_ROOT/composer
+        cd deps/story-tools-composer
+        touch index.html
+        npm install
+        bower install
+        webpack --output-public-path='/static/composer/'
+        cd ../..
     fi
 
     if [ "$i" = "--collect-static-dev" ]; then
@@ -80,6 +89,15 @@ for i do # loop over $@
         grunt copy:development
         cd ../..
         python manage.py collectstatic --link --noinput --ignore node_modules
+
+        # composer
+        ln -s $PWD/deps/story-tools-composer $STATIC_ROOT/composer
+        cd deps/story-tools-composer
+        touch index.html
+        npm install
+        bower install
+        webpack --output-public-path='/static/composer/'
+        cd ../..
     fi
 
     if [ "$i" = "--reindex" ]; then
