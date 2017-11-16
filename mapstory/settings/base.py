@@ -125,9 +125,12 @@ INSTALLED_APPS += MAPSTORY_APPS
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(LOCAL_ROOT, 'templates'),
-                 os.path.join(os.path.dirname(geonode.__file__), 'templates'),
-                 os.path.join(LOCAL_ROOT, 'apps/initiatives')],
+        'DIRS': [
+            os.path.join(LOCAL_ROOT, 'templates'),
+            os.path.join(os.path.dirname(geonode.__file__), 'templates'),
+            os.path.join('deps/story-tools-composer', 'partials'),
+            os.path.join(LOCAL_ROOT, 'apps/initiatives'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
