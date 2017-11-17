@@ -17,7 +17,7 @@
 [submodule "deps/geonode"]
 	path = deps/geonode
 	url = https://github.com/GeoNode/geonode.git
-	branch = 2.6.x
+	branch = 2.7.x
 [submodule "deps/maploom"]
 	path = deps/maploom
 	url = https://github.com/MapStory/MapLoom.git
