@@ -535,6 +535,8 @@ class LayerResource(CommonModelApi):
 class MapStoryResource(CommonModelApi):
     """MapStory API"""
 
+    chapters = fields.ListField(attribute='get_chapter_info')
+
     class Meta(CommonMetaApi):
         queryset = MapStory.objects.distinct().order_by('-date')
         if settings.RESOURCE_PUBLISHING:
