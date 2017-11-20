@@ -1,7 +1,6 @@
 import geonode
 import json
 import uuid
-import copy
 
 from django import core, db
 from django.db.models import signals
