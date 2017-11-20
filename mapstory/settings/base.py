@@ -86,7 +86,6 @@ INSTALLED_APPS += (
     'osgeo_importer',
     'solo',
     'coverage',
-    'notification',
     'mapstory.apps.health_check_geoserver',
     'mapstory.apps.thumbnails',
     'mapstory.annotations',
