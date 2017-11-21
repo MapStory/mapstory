@@ -45,7 +45,15 @@ docker-compose pull
 docker-compose up -d
 ```
 
-Your local site should now be available at `http://docker/`.
+After a few minutes, your local site should be available at `http://docker/`.
+
+If you get a "502 Bad Gateway" error;
+
+```
+docker-compose up django_volume
+docker-compose restart django
+```
+
 
 Additional information about using the docker build is available at our [Docker README](https://github.com/MapStory/mapstory/blob/master/docker/README.md).
 
