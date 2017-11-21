@@ -15,6 +15,61 @@ class MapStory(geonode.base.models.ResourceBase):
     def chapters(self):
         return self.chapter_list.order_by('chapter_index')
 
+    @property
+    def get_chapter_info(self):
+        chapter_list = []
+        for chapter in self.chapters:
+
+            annotations = chapter.annotation_set.all()
+            pin_list = []
+            for annotation in annotations:
+                pin_dict = {
+                    'title': annotation.title,
+                    'content': annotation.content,
+                    'media': annotation.media,
+                    'the_geom': annotation.the_geom,
+                    'start_time': annotation.start_time,
+                    'end_time': annotation.end_time,
+                    'in_timeline': annotation.in_timeline,
+                    'in_map': annotation.in_map,
+                    'appearance': annotation.appearance,
+                    'auto_show': annotation.auto_show,
+                    'pause_playback': annotation.pause_playback
+                }
+                pin_list.append(pin_dict)
+
+            boxes = chapter.storybox_set.all()
+            box_list = []
+            for box in boxes:
+                box_dict = {
+                    'title': box.title,
+                    'description': box.description,
+                    'the_geom': box.the_geom,
+                    'start_time': box.start_time,
+                    'end_time': box.end_time,
+                    'data': box.data,
+                    'center': box.center,
+                    'interval': box.interval,
+                    'intervalRate': box.intervalRate,
+                    'playback': box.playback,
+                    'playbackRate': box.playbackRate,
+                    'speed': box.speed,
+                    'zoom': box.zoom,
+                    'layers': box.layers,
+                    'resolution': box.resolution
+                }
+                box_list.append(box_dict)
+
+            chapter_dict = {
+                'title': chapter.title,
+                'abstract': chapter.abstract,
+                'layers': chapter.layers,
+                'storyframes': box_list,
+                'storypins': pin_list
+            }
+            chapter_list.append(chapter_dict)
+        return chapter_list
+
     def update_from_viewer(self, conf):
 
         if isinstance(conf, basestring):
