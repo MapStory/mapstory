@@ -116,8 +116,8 @@
       $scope.search();
     });
 
-    /////////////////////
-    /* USER VS CONTENT */
+    //////////////////////////////
+    /* USER VS CONTENT VS GROUPS*/
     // Persisting content and storyteller view & queries through page refresh 
 
     // Make the content one active, user inactive
@@ -132,6 +132,8 @@
      $scope.search();
     };
 
+
+
     // Make the user one active, content inactive
     $scope.defaultContent = function() {
       $scope.apiEndpoint = SEARCH_URL;
@@ -141,6 +143,19 @@
         limit: CLIENT_RESULTS_LIMIT, 
         offset: 0,
         order_by: '-popular_count'
+      };
+      $scope.search();
+    };
+
+    //----------------------------------
+    // Organizations and Initiatives
+    $scope.defaultGroups = function() {
+      $scope.apiEndpoint = '/groups/api/';
+      $scope.query = {
+        is_active: true,
+        limit: CLIENT_RESULTS_LIMIT,
+        offset: 0,
+        order_by: 'name'
       };
       $scope.search();
     };
