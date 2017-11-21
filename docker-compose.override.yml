@@ -26,8 +26,6 @@ services:
       context: .
       dockerfile: Dockerfile.protractor
     image: quay.io/mapstory/protractor:master
-    env_file:
-      - .sauce
     links:
       - selenium
 #      - sauce-connect
