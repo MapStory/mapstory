@@ -1,0 +1,57 @@
+<div>
+<md-card style="width:470px; height: auto">
+    <div layout="row" layout-align="start center">
+        <div style=" padding: 10px">
+            <a href="{{ mapstory.url}}">
+                <img src="{{ mapstory.mapstory.thumbnail_url }}" class="card-shadow" />
+            </a>
+        {% if membership %}
+            <div class="manage-container">
+            {% if membership.is_admin %}
+                {% if mapstory.is_featured %}
+                <div class="org_button">
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ mapstory.mapstory.pk }}" name="mapstory_pk">
+                        <input class="card-button" type="submit" name="remove_featured_mapstory" value="Remove from Featured" />
+                    </form>
+                </div>
+                {% else %}
+                <div class="org_button">
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ mapstory.mapstory.pk }}" name="mapstory_pk">
+                        <input class="card-button" type="submit" name="add_featured_mapstory" value="Add to Featured" />
+                    </form>
+                </div>
+                {% endif %}
+                <div class="org_button">
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ mapstory.mapstory.pk }}" name="mapstory_pk">
+                        <input class="card-button" type="submit" name="remove_mapstory" value="Remove from Initiative" />
+                    </form>
+                </div>
+            {% endif %}
+            </div>
+        {% endif %}
+        </div>
+
+        <div>
+            <div layout="column" layout-align="center stretch" style="padding: 0 10px">
+                <p class="tiny-caps" style="margin: 0">
+                    {{'Uncategorized'}}
+                </p>
+                <a href="{{ mapstory.url }}"><h4> {{ mapstory.mapstory }} </h4></a>
+                <p style="font-size: 0.8em; font-weight: 300; margin: 0">
+                    <a href="/storyteller/{{ mapstory.mapstory.owner.username }}" style="color: #757575">
+                        {{ mapstory.mapstory.owner }}
+                    </a>
+                </p>
+                <p class="tiny" style="margin: 0; color: #757575"> Created {{ mapstory.mapstory.date|date }}</p>
+                <p class="tiny" style="margin: 0; color: #757575" >{{ mapstory.mapstory.popular_count }} views </p>
+            </div>
+        </div>
+    </div>
+</md-card>
+</div>
