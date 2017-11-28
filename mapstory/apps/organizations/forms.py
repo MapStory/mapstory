@@ -11,12 +11,12 @@ class BasicInformation(forms.Form):
         - Display Photo
         - About
     """
-    name = forms.CharField(required=True)
-    slogan = forms.CharField(required=True)
-    city = forms.CharField(required=False)
-    country = forms.CharField(required=False)
+    name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'org_manage_field'}))
+    slogan = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'org_manage_field'}))
+    city = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'org_manage_field'}))
+    country = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'org_manage_field'}))
     image = forms.ImageField(required=False)
-    about = forms.CharField(widget=forms.Textarea, required=True)
+    about = forms.CharField(widget=forms.Textarea(attrs={'class': 'org_manage_field'}), required=True)
 
 
 class LinksAndSocialMedia(forms.Form):
@@ -30,11 +30,11 @@ class LinksAndSocialMedia(forms.Form):
         - Github
         - Instragram
     """
-    url0 = forms.URLField(required=False)
-    url1 = forms.URLField(required=False)
-    url2 = forms.URLField(required=False)
-    facebook = forms.URLField(required=False)
-    twitter = forms.URLField(required=False)
-    linkedin = forms.URLField(required=False)
-    github = forms.URLField(required=False)
-    instagram = forms.URLField(required=False)
+    url0 = forms.URLField(required=False, widget=forms.URLInput(attrs={'class': 'org_manage_field'}))
+    url1 = forms.URLField(required=False, widget=forms.URLInput(attrs={'class': 'org_manage_field'}))
+    url2 = forms.URLField(required=False, widget=forms.URLInput(attrs={'class': 'org_manage_field'}))
+    facebook = forms.URLField(required=False, widget=forms.URLInput(attrs={'class': 'org_manage_field'}))
+    twitter = forms.URLField(required=False, widget=forms.URLInput(attrs={'class': 'org_manage_field'}))
+    linkedin = forms.URLField(required=False, widget=forms.URLInput(attrs={'class': 'org_manage_field'}))
+    github = forms.URLField(required=False, widget=forms.URLInput(attrs={'class': 'org_manage_field'}))
+    instagram = forms.URLField(required=False, widget=forms.URLInput(attrs={'class': 'org_manage_field'}))

@@ -1,11 +1,11 @@
 {% load avatar_tags %}
 <div class="organization_member_card" style="margin: 1em;">
     <div class="member_rounded_icon" style="float: left">
-         <img class="img-circle avi-45-backup" src="{% avatar_url membership.user 45 %}" />
+        <img class="img-circle avi-45-backup" src="{% avatar_url membership.user 45 %}" />
     </div>
     <div class="org_member_label" style="padding-left: 4em;">
         <strong>{{ membership.user }}</strong>
-        <p><span>{% if membership.is_admin %}Organizer{% else %}Member{% endif %}</span></p>
+        <p><span>{% if membership.is_admin %}Manager{% else %}Member{% endif %}</span></p>
     </div>
     <div style="clear: both"></div>
 </div>

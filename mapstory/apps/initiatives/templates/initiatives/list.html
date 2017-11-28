@@ -4,8 +4,8 @@
 {% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
-    <h1 class="subtitle">Organizations</h1>
-    {% for org in organizations %}
-        {% include 'cards/organization_card.html' with organization=org %}
+    <h1 class="title">Initiatives</h1>
+    {% for ini in initiatives %}
+        {% include 'initiatives/card.html' with initiative=ini %}
     {% endfor %}
 {% endblock %}
