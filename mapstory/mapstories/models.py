@@ -104,7 +104,7 @@ class MapStory(geonode.base.models.ResourceBase):
         self.save()
 
     def get_absolute_url(self):
-        return '/story/' + str(self.slug)
+        return '/story/' + str(self.slug) + '/'
 
     def viewer_json(self, user):
 
