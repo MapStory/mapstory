@@ -76,11 +76,20 @@
         {% endif %}
         {% if request.user.is_authenticated %}
             {% if organizations.count > 0 %}
-                <div class="side-column-header">Use on Org Page</div>
+                <div class="side-column-header">Use on Organization Page</div>
                 {% for org in organizations %}
                     <form action='{% url "organizations:add_layer" slug=org.organization.slug layer_pk=resource.pk%}' method="post">
                         {% csrf_token %}
                         <input class="btn btn-block btn-detailpage" type="submit" name="add_to_layers" value="{{ org.organization }}" />
+                    </form>
+                {% endfor %}
+            {% endif %}
+            {% if initiatives.count > 0 %}
+                <div class="side-column-header">Use on Initiative Page</div>
+                {% for ini in initiatives %}
+                    <form action='{% url "initiatives:add_layer" slug=ini.initiative.slug layer_pk=resource.pk%}' method="post">
+                        {% csrf_token %}
+                        <input class="btn btn-block btn-detailpage" type="submit" name="add_to_layers" value="{{ ini.initiative }}" />
                     </form>
                 {% endfor %}
             {% endif %}

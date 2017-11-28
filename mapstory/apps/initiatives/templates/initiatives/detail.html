@@ -1,23 +1,31 @@
 {% extends "site_base.html" %}
 {% load i18n %}
 {% load url from future %}
-{% block title %}{% trans "Organization" %}{% endblock %}
+{% block title %}{% trans "Initiative" %}{% endblock %}
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
     <div class="org_container">
-        {% include 'organizations/_organization_header.html' %}
+        {% include 'initiatives/_initiative_header.html' %}
         <div class="organization_content">
             <!-- Side Column -->
             <div class="org_left_column">
+                <!-- Navigation -->
+{#                <div class="organization_navigation" style="padding-top: 29px;">#}
+{#                    <ul>#}
+{#                        <li><a href="#">{{ ini.name }} Home</a></li>#}
+{#                        <li><a href="#ini-mapstories-section">MapStories</a></li>#}
+{#                        <li><a href="#ini-layers-section">StoryLayers</a></li>#}
+{#                    </ul>#}
+{#                </div>#}
                 <!-- Country -->
                 <div class="organization_about_city" style="margin-top: 0px;">
-                    <p class="organization_country">{{ org.city }}, {{ org.country }}</p>
+                    <p class="organization_country">{{ ini.city }}, {{ ini.country }}</p>
                 </div>
                 <!-- About -->
                 <div class="organization_about">
-                    <p class="organization_about_title">About {{ org.title }}</p>
+                    <p class="organization_about_title">About {{ ini.name }}</p>
                     <div class="organization_about_content">
-                        <p>{{ org.about }}</p>
+                        <p>{{ ini.about }}</p>
                     </div>
                 </div>
                 <!-- Organization Links -->
@@ -36,7 +44,7 @@
                     {% for social_icon in social_icons %}
                     <div class="social_icon">
                     <a href="{{ social_icon.url }}">
-                        <i class="fa {{ social_icon.icon }}"></i>{{ social_icon.name }}
+                        <i class="fa {{ social_icon.icon }}">{{ social_icon.name }}</i>
                     </a>
                     </div>
                     {% endfor %}
@@ -44,7 +52,7 @@
                 {% endif %}
                 <!-- Organization Members -->
                 <div class="organization_members">
-                    <h3 class="organization_about_title">ORGANIZATION MEMBERS</h3>
+                    <h3 class="organization_about_title">INITIATIVE MEMBERS</h3>
                     {% for membership in members %}
                         <a href="/storyteller/{{ membership.user.username }}">
                             {% include "cards/organization_member_card.html" with membership=membership %}
@@ -62,12 +70,12 @@
                         <h2>Featured StoryLayers &amp; MapStories</h2>
                         {% for layer in layers %}
                             {% if layer.is_featured %}
-                            {% include "cards/layer_card.html" with layer=layer %}
+                            {% include "initiatives/layer_card.html" with layer=layer %}
                             {% endif %}
                         {% endfor %}
                         {% for mapstory in mapstories %}
                             {% if mapstory.is_featured %}
-                            {% include "cards/mapstory_card.html" with mapstory=mapstory %}
+                            {% include "initiatives/mapstory_card.html" with mapstory=mapstory %}
                             {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -78,7 +86,7 @@
                 {% if mapstories %}
                     <h2>MapStories</h2>
                     {% for mapstory in mapstories %}
-                        {% include "cards/mapstory_card.html" with mapstory=mapstory %}
+                        {% include "initiatives/mapstory_card.html" with mapstory=mapstory %}
                     {% endfor %}
                 {% endif %}
                 </section>
@@ -87,7 +95,7 @@
                 {% if layers %}
                     <h2>Layers</h2>
                     {% for layer in layers %}
-                        {% include "cards/layer_card.html" with layer=layer %}
+                        {% include "initiatives/layer_card.html" with layer=layer %}
                     {% endfor %}
                 {% endif %}
                 </section>

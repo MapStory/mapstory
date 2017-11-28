@@ -1,0 +1,61 @@
+<div>
+<md-card style="width:470px; height: auto">
+<div layout="row" layout-align="start center">
+    <div style="padding: 10px;" >
+        <a href="{{ layer.url }}">
+            <img src="{{ layer.layer.thumbnail_url }}" class="card-shadow" />
+        </a>
+        {% if membership %}
+            <div class="manage-container">
+            {% if membership.is_admin %}
+                {% if layer.is_featured %}
+                <div class="org_button">
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ layer.layer.pk }}" name="layer_pk">
+                        <input class="card-button" type="submit" name="remove_featured_layer" value="Remove from Featured" />
+                    </form>
+                </div>
+                {% else %}
+                <div class="org_button">
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ layer.layer.pk }}" name="layer_pk">
+                        <input class="card-button" type="submit" name="add_featured_layer" value="Add to Featured" />
+                    </form>
+                </div>
+                {% endif %}
+                <div class="org_button">
+                    <form action="." method="post">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ layer.layer.pk }}" name="layer_pk">
+                        <input class="card-button" type="submit" name="remove_layer" value="Remove from Initiative" />
+                    </form>
+                </div>
+            {% endif %}
+            </div>
+        {% endif %}
+
+    </div>
+
+    <div style="height:auto;">
+        <div>
+            <p class="tiny-caps" style="margin: 0; text-align: center; padding-top: 1em;">
+                {{'Uncategorized'}}
+            </p>
+        </div>
+        <div>
+            <a href="{{ layer.url }}"><h4>{{ layer.layer.title }}</h4></a>
+            <p style="font-size: 0.8em; font-weight: 300; margin: 0">
+                <a href="/storyteller/{{ layer.layer.owner.username}}" style="color: #757575">
+                    {{ layer.layer.owner }}
+                </a>
+            </p>
+            <p class="tiny" style="margin: 0; color: #757575"> Created {{ layer.layer.date|date }}</p>
+            <p class="tiny" style="margin: 0; color: #757575" >{{ layer.layer.popular_count }} views </p>
+        </div>
+    </div>
+    <div style="clear: both"></div>
+</div>
+</md-card>
+</div>
