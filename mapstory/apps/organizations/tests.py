@@ -596,14 +596,14 @@ class TestOrganizations(TestCase):
                 'country': 'test',
                 'image': None,
                 'about': 'test',
-                'url0': 'https://josellausas.com',
-                'url1': 'https://josellausas.com',
-                'url2': 'https://josellausas.com',
-                'facebook': 'https://josellausas.com',
-                'twitter': 'https://josellausas.com',
-                'linkedin': 'https://josellausas.com',
-                'github': 'https://josellausas.com',
-                'instagram': 'https://josellausas.com'
+                'url0': 'https://google.com',
+                'url1': 'https://google.com',
+                'url2': 'https://google.com',
+                'facebook': 'https://google.com',
+                'twitter': 'https://google.com',
+                'linkedin': 'https://google.com',
+                'github': 'https://google.com',
+                'instagram': 'https://google.com'
             }
         )
         # Should redirect to detail page
@@ -625,3 +625,7 @@ class TestOrganizations(TestCase):
         # Organization details should be resolved using the slug
         response = self.client.get(reverse('organizations:detail', kwargs={'slug': o2.slug}))
         self.assertContains(response, o2.slogan)
+
+    def test_api(self):
+        r = self.client.get("/organizations/api/organization", follow=True)
+        self.assertEqual(200, r.status_code)
