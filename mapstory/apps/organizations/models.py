@@ -176,6 +176,8 @@ class Organization(models.Model):
         # TODO: Check if membership is allowed to add layer
         return OrganizationMapStory.objects.create(mapstory=mapstory, organization=self, membership=membership)
 
+    def get_member_count(self):
+        return OrganizationMembership.objects.filter(organization=self).count()
 
 class OrganizationMembership(models.Model):
     """Represents a user's membership to an Organization.
