@@ -157,12 +157,11 @@
     };
 
     $scope.showGroups = function() {
-      $scope.apiEndpoint = 'organizations/api/organization/';
+      $scope.apiEndpoint = '/organizations/api/organization';
       $scope.query = {
         groups: true,
         limit: CLIENT_RESULTS_LIMIT,
         offset: 0,
-        order_by: 'name'
       };
       $scope.search();
     };
@@ -171,6 +170,9 @@
     if ($scope.query.storyteller){
       //storyteller explore
       $scope.apiEndpoint = '/api/owners/';
+    }
+    if($scope.query.groups){
+      $scope.apiEndpoint = '/organizations/api/organization'
     }
     else {
       //set it to content
