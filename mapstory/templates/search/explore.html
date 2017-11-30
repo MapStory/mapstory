@@ -85,10 +85,7 @@
             </div>
 
             <div ng-if="query.groups">
-                <!--TODO: Create a sidebar for groups -->
-                {% include 'search/_users_sidebar.html' %}
-
-                {# StoryTeller results #}
+                {% include 'search/_groups_sidebar.html' %}
                 <div ng-hide="explore.totalCount" class="col-sm-9">
                     No Groups matched your selections. Please adjust or clear your filters.
                 </div>
