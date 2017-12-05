@@ -8,7 +8,9 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('mapstories', '0002_mapstory_slug'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('layers', '24_to_26'),
     ]
 
     operations = [
@@ -26,6 +28,28 @@ class Migration(migrations.Migration):
                 ('city', models.CharField(default=b'', max_length=255)),
                 ('country', models.CharField(default=b'', max_length=255)),
                 ('image', models.ImageField(null=True, upload_to=b'initiatives', blank=True)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='InitiativeLayer',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('last_updated', models.DateTimeField(auto_now=True)),
+                ('is_featured', models.BooleanField(default=False)),
+                ('initiative', models.ForeignKey(to='initiatives.Initiative')),
+                ('layer', models.ForeignKey(to='layers.Layer')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='InitiativeMapStory',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('last_updated', models.DateTimeField(auto_now=True)),
+                ('is_featured', models.BooleanField(default=False)),
+                ('initiative', models.ForeignKey(to='initiatives.Initiative')),
+                ('mapstory', models.ForeignKey(to='mapstories.MapStory')),
             ],
         ),
         migrations.CreateModel(
@@ -55,5 +79,15 @@ class Migration(migrations.Migration):
                 ('initiative', models.ForeignKey(to='initiatives.Initiative')),
                 ('user', models.ForeignKey(related_name='initiatives_request', to=settings.AUTH_USER_MODEL)),
             ],
+        ),
+        migrations.AddField(
+            model_name='initiativemapstory',
+            name='membership',
+            field=models.ForeignKey(to='initiatives.InitiativeMembership'),
+        ),
+        migrations.AddField(
+            model_name='initiativelayer',
+            name='membership',
+            field=models.ForeignKey(to='initiatives.InitiativeMembership'),
         ),
     ]
