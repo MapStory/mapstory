@@ -11,6 +11,7 @@ class Migration(migrations.Migration):
         ('mapstories', '0002_mapstory_slug'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('layers', '24_to_26'),
+        ('base_groups', '0001_initial'),
     ]
 
     operations = [
@@ -26,8 +27,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Organization',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('title', models.CharField(max_length=255)),
+                ('basegroup_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='base_groups.BaseGroup')),
                 ('slogan', models.CharField(default=b'', max_length=255)),
                 ('about', models.TextField(default=b'')),
                 ('is_active', models.BooleanField(default=True)),
@@ -41,6 +41,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name_plural': 'Organizations',
             },
+            bases=('base_groups.basegroup',),
         ),
         migrations.CreateModel(
             name='OrganizationLayer',

@@ -6,13 +6,13 @@ from django.utils.text import slugify
 
 from geonode.layers.models import Layer
 from mapstory.mapstories.models import MapStory
+from mapstory.apps.base_groups.models import BaseGroup
 
 
-class Initiative(models.Model):
+class Initiative(BaseGroup):
     """
     The ability to assess and initiate things independently.
     """
-    name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(max_length=255, blank=True, null=True)
     slogan = models.CharField(max_length=255)
