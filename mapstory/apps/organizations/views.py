@@ -300,7 +300,7 @@ def _edit_organization_with_forms(organization, basic, links):
     """
     # TODO: Use this solution:
     # https://stackoverflow.com/questions/1355150/django-when-saving-how-can-you-check-if-a-field-has-changed/1793323#1793323
-    organization.title = basic.cleaned_data['name']
+    organization.name = basic.cleaned_data['name']
     organization.about = basic.cleaned_data['about']
     organization.city = basic.cleaned_data['city']
     organization.slogan = basic.cleaned_data['slogan']
@@ -375,7 +375,7 @@ def manager(request, slug):
     memberships = models.OrganizationMembership.objects.filter(organization=organization)
     org_image = organization.image
     info = {
-        'name': organization.title,
+        'name': organization.name,
         'slogan': organization.slogan,
         'about': organization.about,
         'country': organization.country,

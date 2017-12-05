@@ -6,6 +6,7 @@ from django.utils.text import slugify
 
 from geonode.layers.models import Layer
 from mapstory.mapstories.models import MapStory
+from mapstory.apps.base_groups.models import BaseGroup
 
 
 class OrganizationSocialMedia(models.Model):
@@ -26,7 +27,7 @@ class OrganizationURL(models.Model):
         return u'%s' % self.url
 
 
-class Organization(models.Model):
+class Organization(BaseGroup):
     """Represents an Organization.
     An Organization has:
         - Many Members
@@ -37,7 +38,6 @@ class Organization(models.Model):
         - Many journal posts
 
     """
-    title = models.CharField(max_length=255)
     slogan = models.CharField(max_length=255, default='')
     about = models.TextField(default='')
     is_active = models.BooleanField(default=True)
@@ -60,7 +60,7 @@ class Organization(models.Model):
         verbose_name_plural = 'Organizations'
 
     def __unicode__(self):
-        return u'%s' % self.title
+        return u'%s' % self.name
 
     def save(self, *args, **kwargs):
         """
@@ -72,7 +72,7 @@ class Organization(models.Model):
         """
         if not self.slug:
             # Ensure uniqueness:
-            slug = slugify(self.title)
+            slug = slugify(self.name)
             if not Organization.objects.filter(slug=slug).exists():
                 self.slug = slug
             else:
