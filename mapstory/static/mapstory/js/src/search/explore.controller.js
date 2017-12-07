@@ -157,7 +157,7 @@
     };
 
     $scope.showGroups = function() {
-      $scope.apiEndpoint = '/organizations/api/organization';
+      $scope.apiEndpoint = '/groupsapi/api/group';
       $scope.query = {
         groups: true,
         limit: CLIENT_RESULTS_LIMIT,
@@ -172,7 +172,7 @@
       $scope.apiEndpoint = '/api/owners/';
     }
     if($scope.query.groups){
-      $scope.apiEndpoint = '/organizations/api/organization'
+      $scope.apiEndpoint = '/groupsapi/api/group';
     }
     else {
       //set it to content

@@ -6,15 +6,8 @@
         <div class="content-card">
             <div class="thumbnail-and-content-type">
                 <h4 class="tiny-caps">
-                    <span>
-                        Organization
-                    </span>
-                    <!--TODO: Implement this for Orgs/Inis-->
-                    <!-- <span ng-if="item.type === 'organization'"><i class="fa fa-map-o"></i>
-                        MapStory
-                    </span>
-                    <span ng-if="item.type === 'initiative'"><i class="fa fa-clone"></i> StoryLayer</span>
-                    -->
+                    <span ng-if="item.group_type === 'organization'">Organization</span>
+                    <span ng-if="item.group_type === 'initiative'">Initiative</span>
                 </h4>
                 <a href="{{ item.url }}">
                     <img ng-src="{{ item.image | decodeURIComponent }}" />
