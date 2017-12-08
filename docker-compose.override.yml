@@ -1,36 +1,34 @@
 # Dev configuration
 version: '3.1'
 services:
-  # selenium:
-  #   image: selenium/standalone-chrome
-  #   links:
-  #     - nginx
-  #   networks:
-  #     internal:
-  #   expose:
-  #     - "4444"
-
-  sauce-connect:
-    build: docker/sauce-connect
-    image: quay.io/mapstory/sauce-connect:master
-    env_file:
-      - .sauce
-    command: --tunnel-domains=docker
+  selenium:
+    image: selenium/standalone-chrome
+    links:
+      - nginx
     networks:
       internal:
     expose:
-      - "4445"
+      - "4444"
+
+  # sauce-connect:
+  #   build: docker/sauce-connect
+  #   image: quay.io/mapstory/sauce-connect:master
+  #   env_file:
+  #     - .sauce
+  #   command: --tunnel-domains=docker
+  #   networks:
+  #     internal:
+  #   expose:
+  #     - "4445"
 
   protractor:
     build:
       context: .
       dockerfile: Dockerfile.protractor
     image: quay.io/mapstory/protractor:master
-    env_file:
-      - .sauce
     links:
-#      - selenium
-      - sauce-connect
+      - selenium
+#      - sauce-connect
       - nginx
     volumes:
       - ./mapstory/tests:/opt/mapstory/tests

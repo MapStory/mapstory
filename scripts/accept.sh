@@ -2,7 +2,6 @@
 # expects $SOURCE_HOME
 
 if [ $TRAVIS ]; then
-#    SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com/wd/hub"
     SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@docker:4445/wd/hub"
     CAPABILITIES="
     {
@@ -25,13 +24,11 @@ if [ $TRAVIS ]; then
         }
     }"
 else
-    SELENIUM="http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@sauce-connect:4445/wd/hub"
+    SELENIUM="http://selenium:4444/wd/hub"
     OVERRIDE="
     {
         'helpers': {
             'Protractor': {
-                'user': '$SAUCE_USERNAME',
-                'key': '$SAUCE_ACCESS_KEY',
                 'seleniumAddress': '$SELENIUM'
             }
         }
