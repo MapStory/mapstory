@@ -93,6 +93,15 @@ class Initiative(BaseGroup):
         # TODO: Check if membership is allowed to add layer
         return InitiativeMapStory.objects.create(mapstory=mapstory, initiative=self, membership=membership)
 
+    def get_member_count(self):
+        return InitiativeMembership.objects.filter(initiative=self).count()
+
+    def get_layer_count(self):
+        return InitiativeLayer.objects.filter(initiative=self).count()
+
+    def get_mapstory_count(self):
+        return InitiativeMapStory.objects.filter(initiative=self).count()
+
 
 class InitiativeMembership(models.Model):
     """Represents a user's membership to an Initiative.

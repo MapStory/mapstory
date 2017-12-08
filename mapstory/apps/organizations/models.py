@@ -179,6 +179,12 @@ class Organization(BaseGroup):
     def get_member_count(self):
         return OrganizationMembership.objects.filter(organization=self).count()
 
+    def get_layer_count(self):
+        return OrganizationLayer.objects.filter(organization=self).count()
+
+    def get_mapstory_count(self):
+        return OrganizationMapStory.objects.filter(organizastion=self).count()
+
 class OrganizationMembership(models.Model):
     """Represents a user's membership to an Organization.
     Links together a User and an Organization. The memberhisp can be deactivated

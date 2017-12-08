@@ -1,4 +1,6 @@
+from tastypie.constants import ALL
 from tastypie.resources import ModelResource
+
 from .models import Organization
 
 
@@ -8,6 +10,12 @@ class OrganizationResource(ModelResource):
         queryset = Organization.objects.all()
         resource_name = 'organization'
         allowed_methods = ['get']
+        filtering = {
+            'title': ALL,
+            'city': ALL,
+            'country': ALL,
+            'is_active': ALL,
+        }
 
     def dehydrate(self, bundle):
         bundle.data['url'] = bundle.obj.get_absolute_url()

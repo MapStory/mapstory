@@ -160,6 +160,7 @@
       $scope.apiEndpoint = '/groupsapi/api/group';
       $scope.query = {
         groups: true,
+        is_active: true,
         limit: CLIENT_RESULTS_LIMIT,
         offset: 0,
       };
@@ -173,6 +174,7 @@
     }
     if($scope.query.groups){
       $scope.apiEndpoint = '/groupsapi/api/group';
+      $scope.query.is_active = true;
     }
     else {
       //set it to content

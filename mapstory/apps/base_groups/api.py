@@ -1,4 +1,5 @@
 from tastypie.resources import ModelResource
+from tastypie.constants import ALL
 from .models import BaseGroup
 from mapstory.apps.organizations.models import Organization
 from mapstory.apps.initiatives.models import Initiative
@@ -10,6 +11,10 @@ class BaseGroupResource(ModelResource):
     class Meta:
         queryset = BaseGroup.objects.select_subclasses()
         resource_name = 'group'
+
+        filtering = {
+            'name': ALL,
+        }
 
     def dehydrate(self, bundle):
         # Runtime Polymorphism!!!
