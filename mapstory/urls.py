@@ -129,7 +129,7 @@ urlpatterns = patterns('',
     url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
     url(r'^proxy/', proxy),
     url(r'^favorite/', include('mapstory.apps.favorite.urls')),
-    url(r'^notifications/', include('notification.urls')),
+    url(r'^notifications/', include('pinax.notifications.urls')),
 
     url(r"^flag/", include('mapstory.apps.flag.urls')),
 

@@ -145,7 +145,6 @@ TEMPLATES = [
                 'geonode.context_processors.resource_urls',
                 'geonode.geoserver.context_processors.geoserver_urls',
                 'mapstory.context_processors.context',
-                'user_messages.context_processors.user_messages'
             ],
         },
     },

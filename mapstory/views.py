@@ -64,7 +64,7 @@ from geonode.utils import DEFAULT_ABSTRACT
 from health_check.plugins import plugin_dir
 from icon_commons.models import Icon
 from lxml import etree
-from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
+from pinax.notifications.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 from osgeo_importer.utils import UploadError, launder
 from osgeo_importer.forms import UploadFileForm
 from provider.oauth2.models import AccessToken
