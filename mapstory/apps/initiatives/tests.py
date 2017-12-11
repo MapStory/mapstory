@@ -465,3 +465,7 @@ class TestInitiativesAPI(TestCase):
             "mapstory_pk": map_created.pk,
         })
         self.assertEqual(404, r.status_code)
+
+    def test_api_url(self):
+        response = self.client.get('/initiatives/api/initiative', follow=True)
+        self.assertEqual(200, response.status_code)

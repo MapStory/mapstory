@@ -11,9 +11,9 @@ class BaseGroupResource(ModelResource):
     class Meta:
         queryset = BaseGroup.objects.select_subclasses()
         resource_name = 'group'
-
         filtering = {
             'name': ALL,
+            'group_type': ALL
         }
 
     def dehydrate(self, bundle):
