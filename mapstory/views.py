@@ -314,6 +314,7 @@ class MapStoryConfirmEmailView(ConfirmEmailView):
 
     # Override the post message to include the context data.
     def post(self, *args, **kwargs):
+        self.user = self.request.user
         self.object = confirmation = self.get_object()
         confirmation.confirm()
         ctx = self.get_context_data()
