@@ -11,7 +11,7 @@ class InitiativeResource(ModelResource):
         allowed_methods = ['get']
 
         filtering = {
-            'title': ALL,
+            'name': ALL,
             'city': ALL,
             'country': ALL,
             'is_active': ALL,

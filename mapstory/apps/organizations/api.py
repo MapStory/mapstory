@@ -11,7 +11,7 @@ class OrganizationResource(ModelResource):
         resource_name = 'organization'
         allowed_methods = ['get']
         filtering = {
-            'title': ALL,
+            'name': ALL,
             'city': ALL,
             'country': ALL,
             'is_active': ALL,

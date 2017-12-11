@@ -13,7 +13,7 @@
     <section>
         <h3 class="bold-caps">Groups</h3>
         <div class="clear-filters">
-            <a href="" ng-click="explore.clear('q')">Clear</a>
+            <a href="" ng-click="explore.clear('name')">Clear</a>
         </div>
         <div class="filter-content">
             <div class="search-bar">
@@ -21,7 +21,7 @@
                     <div>
                         <input name="group_search_input"
                                id="group_search_input"
-                               ng-model="query.q"
+                               ng-model="query.name"
                                type="search"
                                class="form-control"
                                ng-enter="search()"
