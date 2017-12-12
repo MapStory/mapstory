@@ -13,14 +13,7 @@ class Initiative(BaseGroup):
     """
     The ability to assess and initiate things independently.
     """
-    created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(max_length=255, blank=True, null=True)
-    slogan = models.CharField(max_length=255)
-    about = models.TextField(default='')
-    is_active = models.BooleanField(default=True)
-    last_updated = models.DateTimeField(auto_now=True)
-    city = models.CharField(default='', max_length=255)
-    country = models.CharField(default='', max_length=255)
     image = models.ImageField(null=True, blank=True, upload_to='initiatives')
 
     def __unicode__(self):

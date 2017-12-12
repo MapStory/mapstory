@@ -14,7 +14,18 @@ class Migration(migrations.Migration):
             name='BaseGroup',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('last_updated', models.DateTimeField(auto_now=True)),
                 ('name', models.CharField(max_length=255)),
+                ('slogan', models.CharField(default=b'', max_length=255)),
+                ('about', models.TextField(default=b'')),
+                ('is_active', models.BooleanField(default=True)),
+                ('city', models.CharField(default=b'', max_length=255)),
+                ('country', models.CharField(default=b'', max_length=255)),
             ],
+            options={
+                'verbose_name': 'BaseGroup',
+                'verbose_name_plural': 'Groups',
+            },
         ),
     ]

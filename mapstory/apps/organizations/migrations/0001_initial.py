@@ -28,13 +28,6 @@ class Migration(migrations.Migration):
             name='Organization',
             fields=[
                 ('basegroup_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='base_groups.BaseGroup')),
-                ('slogan', models.CharField(default=b'', max_length=255)),
-                ('about', models.TextField(default=b'')),
-                ('is_active', models.BooleanField(default=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('last_updated', models.DateTimeField(auto_now=True)),
-                ('city', models.CharField(default=b'', max_length=255)),
-                ('country', models.CharField(default=b'', max_length=255)),
                 ('image', models.ImageField(null=True, upload_to=b'org_profiles', blank=True)),
                 ('slug', models.SlugField(max_length=255, unique=True, null=True, blank=True)),
             ],
