@@ -40,7 +40,7 @@ class BaseGroupResource(ModelResource):
 
         return bundle
 
-    def build_filters(self, filters=None):
+    def build_filters(self, filters=None, ignore_bad_filters=False):
         if filters is None:
             filters = {}
         orm_filters = super(BaseGroupResource, self).build_filters(filters)
@@ -49,6 +49,7 @@ class BaseGroupResource(ModelResource):
             q = filters['q']
             qset = (
                 Q(name__icontains=q)
+                # TODO: Add slug here
             )
             orm_filters.update({'qfilter': qset})
 
