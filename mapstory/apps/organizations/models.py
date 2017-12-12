@@ -38,13 +38,6 @@ class Organization(BaseGroup):
         - Many journal posts
 
     """
-    slogan = models.CharField(max_length=255, default='')
-    about = models.TextField(default='')
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now=True)
-    city = models.CharField(default='', max_length=255)
-    country = models.CharField(default='', max_length=255)
     image = models.ImageField(null=True, blank=True, upload_to='org_profiles')
     facebook = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='facebook')
     twitter = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='twitter')
@@ -184,6 +177,7 @@ class Organization(BaseGroup):
 
     def get_mapstory_count(self):
         return OrganizationMapStory.objects.filter(organizastion=self).count()
+
 
 class OrganizationMembership(models.Model):
     """Represents a user's membership to an Organization.
