@@ -669,7 +669,7 @@ SLACK_USERNAME = os.environ.get('SLACK_USERNAME', '')
 #
 # Misc Settings
 #
-REGISTRATION_OPEN = True
+ACCOUNT_OPEN_SIGNUP = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 AUTOCOMPLETE_QUICK_SEARCH = False
 THEME = os.environ.get('THEME', 'default')
