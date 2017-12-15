@@ -57,6 +57,13 @@ class BaseGroupResource(ModelResource):
             )
             orm_filters.update({'city': qset})
 
+        if 'group_type' in filters:
+            query = filters['group_type']
+            qset = (
+                Q(group_type__in=query)
+            )
+            orm_filters.update({'group_type': qset})
+
         if 'q' in filters:
             q = filters['q']
             qset = (
@@ -73,6 +80,11 @@ class BaseGroupResource(ModelResource):
         else:
             city = None
 
+        if 'group_type' in applicable_filters:
+            group_type = applicable_filters.pop('group_type')
+        else:
+            group_type = None
+
         if 'qfilter' in applicable_filters:
             qfilter = applicable_filters.pop('qfilter')
         else:
@@ -82,6 +94,8 @@ class BaseGroupResource(ModelResource):
         semi_filtered = super(BaseGroupResource, self).apply_filters(request, applicable_filters)
         if city is not None:
             semi_filtered = semi_filtered.filter(city)
+        if group_type is not None:
+            semi_filtered = semi_filtered.filter(group_type)
         if qfilter is not None:
             semi_filtered = semi_filtered.filter(qfilter)
 
