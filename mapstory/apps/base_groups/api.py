@@ -49,6 +49,14 @@ class BaseGroupResource(ModelResource):
             filters = {}
         orm_filters = super(BaseGroupResource, self).build_filters(filters)
 
+        if 'city' in filters:
+            query = filters['city']
+            qset = (
+                Q(city__icontains=query) |
+                Q(country__icontains=query)
+            )
+            orm_filters.update({'city': qset})
+
         if 'q' in filters:
             q = filters['q']
             qset = (
@@ -60,11 +68,21 @@ class BaseGroupResource(ModelResource):
         return orm_filters
 
     def apply_filters(self, request, applicable_filters):
+        if 'city' in applicable_filters:
+            city = applicable_filters.pop('city')
+        else:
+            city = None
+
         if 'qfilter' in applicable_filters:
             qfilter = applicable_filters.pop('qfilter')
         else:
             qfilter = None
 
+        # Apply the filters
         semi_filtered = super(BaseGroupResource, self).apply_filters(request, applicable_filters)
+        if city is not None:
+            semi_filtered = semi_filtered.filter(city)
+        if qfilter is not None:
+            semi_filtered = semi_filtered.filter(qfilter)
 
-        return semi_filtered.filter(qfilter) if qfilter else semi_filtered
+        return semi_filtered
