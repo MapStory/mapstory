@@ -42,3 +42,6 @@ selenium
 #jasmine-data-provider
 
 pandas==0.20.3
+
+# Lower versions aren't working
+beautifulsoup4==4.6.0
