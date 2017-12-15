@@ -19,6 +19,10 @@ class BaseGroupResource(ModelResource):
         resource_name = 'group'
         filtering = {
             'name': ALL,
+            'slogan': ALL,
+            'is_active': ALL,
+            'city': ALL,
+            'country': ALL,
             'group_type': ALL
         }
 
@@ -48,8 +52,8 @@ class BaseGroupResource(ModelResource):
         if 'q' in filters:
             q = filters['q']
             qset = (
-                Q(name__icontains=q)
-                # TODO: Add slug here
+                Q(name__icontains=q) |
+                Q(slogan__icontains=q)
             )
             orm_filters.update({'qfilter': qset})
 
