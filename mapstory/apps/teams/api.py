@@ -10,13 +10,13 @@ from mapstory.apps.organizations.models import Organization
 from mapstory.apps.initiatives.models import Initiative
 from mapstory.apps.organizations.api import OrganizationResource
 from mapstory.apps.initiatives.api import InitiativeResource
-from .models import BaseGroup
+from .models import Team
 
 
-class BaseGroupResource(ModelResource):
+class TeamResource(ModelResource):
     class Meta:
-        queryset = BaseGroup.objects.select_subclasses()
-        resource_name = 'group'
+        queryset = Team.objects.select_subclasses()
+        resource_name = 'team'
         filtering = {
             'name': ALL,
             'slogan': ALL,
@@ -45,7 +45,7 @@ class BaseGroupResource(ModelResource):
     def build_filters(self, filters=None, ignore_bad_filters=False):
         if filters is None:
             filters = {}
-        orm_filters = super(BaseGroupResource, self).build_filters(filters)
+        orm_filters = super(TeamResource, self).build_filters(filters)
 
         if 'city' in filters:
             query = filters['city']
@@ -89,7 +89,7 @@ class BaseGroupResource(ModelResource):
             qfilter = None
 
         # Apply the filters
-        semi_filtered = super(BaseGroupResource, self).apply_filters(request, applicable_filters)
+        semi_filtered = super(TeamResource, self).apply_filters(request, applicable_filters)
         if city is not None:
             semi_filtered = semi_filtered.filter(city)
         if group_type is not None:

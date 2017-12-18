@@ -2,7 +2,7 @@ from django.db import models
 from model_utils.managers import InheritanceManager
 
 
-class BaseGroup(models.Model):
+class Team(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=255)
@@ -17,8 +17,8 @@ class BaseGroup(models.Model):
     objects = InheritanceManager()
 
     class Meta:
-        verbose_name_plural = 'Groups'
-        verbose_name = 'BaseGroup'
+        verbose_name_plural = 'Teams'
+        verbose_name = 'Team'
 
     def __unicode__(self):
         return self.name

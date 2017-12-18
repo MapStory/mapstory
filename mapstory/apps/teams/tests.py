@@ -3,7 +3,9 @@ from django.core.urlresolvers import reverse
 
 from mapstory.apps.organizations.models import Organization
 
+
 class BaseGroupTests(TestCase):
+
     def setUp(self):
         pass
 
@@ -11,7 +13,7 @@ class BaseGroupTests(TestCase):
         pass
 
     def test_api_urls(self):
-        response = self.client.get('/groupsapi/api/group', follow=True)
+        response = self.client.get('/teams/api/team', follow=True)
         self.assertEqual(200, response.status_code)
 
     def test_name_query(self):
