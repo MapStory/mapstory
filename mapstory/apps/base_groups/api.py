@@ -1,15 +1,15 @@
 import re
 
-from django.db.models import Q
-
+from tastypie import fields
 from tastypie.resources import ModelResource
 from tastypie.constants import ALL
+
+from django.db.models import Q
 
 from mapstory.apps.organizations.models import Organization
 from mapstory.apps.initiatives.models import Initiative
 from mapstory.apps.organizations.api import OrganizationResource
 from mapstory.apps.initiatives.api import InitiativeResource
-
 from .models import BaseGroup
 
 
@@ -33,14 +33,12 @@ class BaseGroupResource(ModelResource):
             resource = OrganizationResource()
             bundle = resource.build_bundle(obj=bundle.obj, request=bundle.request)
             bundle.data = resource.full_dehydrate(bundle).data
-            bundle.data['group_type'] = 'organization'
 
         elif isinstance(bundle.obj, Initiative):
             # Associate an Initiative
             resource = InitiativeResource()
             bundle = resource.build_bundle(obj=bundle.obj, request=bundle.request)
             bundle.data = resource.full_dehydrate(bundle).data
-            bundle.data['group_type'] = 'initiative'
 
         return bundle
 
@@ -60,7 +58,7 @@ class BaseGroupResource(ModelResource):
         if 'group_type' in filters:
             query = filters['group_type']
             qset = (
-                Q(group_type__in=query)
+                Q(group_type=query)
             )
             orm_filters.update({'group_type': qset})
 

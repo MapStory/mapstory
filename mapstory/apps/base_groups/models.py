@@ -11,6 +11,7 @@ class BaseGroup(models.Model):
     is_active = models.BooleanField(default=True)
     city = models.CharField(default='', max_length=255)
     country = models.CharField(default='', max_length=255)
+    group_type = models.CharField(default='', max_length=255)
     # Holds all objects that Inherit from this class using model_utils
     # This is used for Polymorphic groups (Orgs and Initiatives)
     objects = InheritanceManager()

@@ -20,4 +20,5 @@ class OrganizationResource(ModelResource):
     def dehydrate(self, bundle):
         bundle.data['url'] = bundle.obj.get_absolute_url()
         bundle.data['members'] = bundle.obj.get_member_count()
+        bundle.data['group_type'] = 'organization'
         return bundle
