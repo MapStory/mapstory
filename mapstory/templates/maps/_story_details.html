@@ -19,7 +19,9 @@
                     </div>
                 </div>
                 <div class="mobile-thumb">
-                    <img ng-src="{{ thumbnail }}" src="{{ thumbnail }}">
+                    <a href="/story/{{ resource.id }}/embed">
+                        <img ng-src="{{ thumbnail }}" src="{{ thumbnail }}">
+                    </a>
                 </div>
                 {% if user == resource.owner %}
                 <a href="/story/{{ resource.id }}/draft">
