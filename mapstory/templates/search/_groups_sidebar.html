@@ -71,16 +71,16 @@
     {% verbatim %}
         <h3 class="bold-caps">Group Type</h3>
         <div class="clear-filters">
-            <a href="" ng-click="explore.clear('group_type__contains')">Clear</a>
+            <a href="" ng-click="explore.clear('group_type')">Clear</a>
         </div>
         <div class="filter-content">
             <div>
               <label>
                 <input type="checkbox"
                   data-value="organization"
-                  data-filter="group_type__in"
+                  data-filter="group_type"
                   ng-click="explore.checkboxQuery($event)"
-                  ng-checked="isActivated('organization', query, 'group_type__in')">
+                  ng-checked="isActivated('organization', query, 'group_type')">
                 </input>
                 Organization
               </label>
@@ -89,9 +89,9 @@
               <label>
                 <input type="checkbox"
                   data-value="initiative"
-                  data-filter="group_type__in"
+                  data-filter="group_type"
                   ng-click="explore.checkboxQuery($event)"
-                  ng-checked="isActivated('initiative', query, 'group_type__in')">
+                  ng-checked="isActivated('initiative', query, 'group_type')">
                 </input>
                 Initiative
               </label>
