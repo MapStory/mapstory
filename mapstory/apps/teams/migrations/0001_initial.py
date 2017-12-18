@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='BaseGroup',
+            name='Team',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
@@ -22,10 +22,11 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True)),
                 ('city', models.CharField(default=b'', max_length=255)),
                 ('country', models.CharField(default=b'', max_length=255)),
+                ('group_type', models.CharField(default=b'', max_length=255)),
             ],
             options={
-                'verbose_name': 'BaseGroup',
-                'verbose_name_plural': 'Groups',
+                'verbose_name': 'Team',
+                'verbose_name_plural': 'Teams',
             },
         ),
     ]

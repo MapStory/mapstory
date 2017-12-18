@@ -8,10 +8,10 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('teams', '0001_initial'),
         ('mapstories', '0002_mapstory_slug'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('layers', '24_to_26'),
-        ('base_groups', '0001_initial'),
     ]
 
     operations = [
@@ -27,14 +27,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Organization',
             fields=[
-                ('basegroup_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='base_groups.BaseGroup')),
+                ('team_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='teams.Team')),
                 ('image', models.ImageField(null=True, upload_to=b'org_profiles', blank=True)),
                 ('slug', models.SlugField(max_length=255, unique=True, null=True, blank=True)),
             ],
             options={
                 'verbose_name_plural': 'Organizations',
             },
-            bases=('base_groups.basegroup',),
+            bases=('teams.team',),
         ),
         migrations.CreateModel(
             name='OrganizationLayer',

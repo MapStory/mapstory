@@ -8,21 +8,21 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('teams', '0001_initial'),
         ('mapstories', '0002_mapstory_slug'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('layers', '24_to_26'),
-        ('base_groups', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='Initiative',
             fields=[
-                ('basegroup_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='base_groups.BaseGroup')),
+                ('team_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='teams.Team')),
                 ('slug', models.SlugField(max_length=255, null=True, blank=True)),
                 ('image', models.ImageField(null=True, upload_to=b'initiatives', blank=True)),
             ],
-            bases=('base_groups.basegroup',),
+            bases=('teams.team',),
         ),
         migrations.CreateModel(
             name='InitiativeLayer',

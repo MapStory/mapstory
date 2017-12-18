@@ -157,7 +157,7 @@
     };
 
     $scope.showGroups = function() {
-      $scope.apiEndpoint = '/groupsapi/api/group';
+      $scope.apiEndpoint = '/teams/api/team';
       $scope.query = {
         groups: true,
         is_active: true,
@@ -173,7 +173,7 @@
       $scope.apiEndpoint = '/api/owners/';
     }
     if($scope.query.groups){
-      $scope.apiEndpoint = '/groupsapi/api/group';
+      $scope.apiEndpoint = '/teams/api/team';
       $scope.query.is_active = true;
     }
     else {

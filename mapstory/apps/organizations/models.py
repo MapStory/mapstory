@@ -6,7 +6,7 @@ from django.utils.text import slugify
 
 from geonode.layers.models import Layer
 from mapstory.mapstories.models import MapStory
-from mapstory.apps.base_groups.models import BaseGroup
+from mapstory.apps.teams.models import Team
 
 
 class OrganizationSocialMedia(models.Model):
@@ -27,7 +27,7 @@ class OrganizationURL(models.Model):
         return u'%s' % self.url
 
 
-class Organization(BaseGroup):
+class Organization(Team):
     """Represents an Organization.
     An Organization has:
         - Many Members

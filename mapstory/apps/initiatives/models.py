@@ -6,10 +6,10 @@ from django.utils.text import slugify
 
 from geonode.layers.models import Layer
 from mapstory.mapstories.models import MapStory
-from mapstory.apps.base_groups.models import BaseGroup
+from mapstory.apps.teams.models import Team
 
 
-class Initiative(BaseGroup):
+class Initiative(Team):
     """
     The ability to assess and initiate things independently.
     """
