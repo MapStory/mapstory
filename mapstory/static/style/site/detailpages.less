@@ -325,6 +325,12 @@ input[name=post] {
   padding: 3px;
   img {
     border-radius: 3px;
+    // size catch for default avatar. 
+    // warning: this will get out of sync with the template tags 
+    // & requests used to generate avatars if we don't keep an eye on it
+    // if we change any {% avatar user _size_%} template tags we should check
+    // this here too for the default grey avatar to match
+    max-height: 50px;
   }
 }
 
