@@ -11,7 +11,7 @@
             <ul>
                 <li ng-click="defaultContent();" ng-class="{active: query.content}">Content</li>
                 <li ng-click="defaultOwners();" ng-class="{active: query.storyteller}">StoryTellers</li>
-                <li ng-click="showGroups();" ng-class="{active: query.groups}">Groups</li>
+                <li ng-click="showGroups();" ng-class="{active: query.groups}">Teams</li>
             </ul>
         </nav>
         <!--Content-->
@@ -87,7 +87,7 @@
             <div ng-if="query.groups">
                 {% include 'search/_groups_sidebar.html' %}
                 <div ng-hide="explore.totalCount" class="col-sm-9">
-                    No Groups matched your selections. Please adjust or clear your filters.
+                    No Teams matched your selections. Please adjust or clear your filters.
                 </div>
                 {% verbatim %}
                 <div ng-if="explore.totalCount" class="col-sm-9">

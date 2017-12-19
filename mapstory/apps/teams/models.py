@@ -3,6 +3,10 @@ from model_utils.managers import InheritanceManager
 
 
 class Team(models.Model):
+    """
+    A Team.
+    Has members. Functions an abastract base object for Organizations and Initiatives.
+    """
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=255)
