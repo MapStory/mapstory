@@ -14,6 +14,9 @@ from .models import Team
 
 
 class TeamResource(ModelResource):
+    """
+    Team API.
+    """
     class Meta:
         queryset = Team.objects.select_subclasses()
         resource_name = 'team'
@@ -27,15 +30,20 @@ class TeamResource(ModelResource):
         }
 
     def dehydrate(self, bundle):
+        """
+        Populates the fields for API.
+        :param bundle: ResourceBundle
+        :return: bundle
+        """
         # Runtime Polymorphism!!!
         if isinstance(bundle.obj, Organization):
-            # Associate an Organization
+            # Converts to a Organization
             resource = OrganizationResource()
             bundle = resource.build_bundle(obj=bundle.obj, request=bundle.request)
             bundle.data = resource.full_dehydrate(bundle).data
 
         elif isinstance(bundle.obj, Initiative):
-            # Associate an Initiative
+            # Converts to an Initiative
             resource = InitiativeResource()
             bundle = resource.build_bundle(obj=bundle.obj, request=bundle.request)
             bundle.data = resource.full_dehydrate(bundle).data
@@ -43,10 +51,17 @@ class TeamResource(ModelResource):
         return bundle
 
     def build_filters(self, filters=None, ignore_bad_filters=False):
+        """
+        Setup filters.
+        :param filters: filter list.
+        :param ignore_bad_filters: Should ignore bad filters.
+        :return: orm_filters
+        """
         if filters is None:
             filters = {}
         orm_filters = super(TeamResource, self).build_filters(filters)
 
+        # Handle city filters
         if 'city' in filters:
             query = filters['city']
             qset = (
@@ -55,6 +70,7 @@ class TeamResource(ModelResource):
             )
             orm_filters.update({'city': qset})
 
+        # Handle group type
         if 'group_type' in filters:
             query = filters['group_type']
             qset = (
@@ -62,6 +78,7 @@ class TeamResource(ModelResource):
             )
             orm_filters.update({'group_type': qset})
 
+        # Handle name filters
         if 'q' in filters:
             q = filters['q']
             qset = (
@@ -73,6 +90,12 @@ class TeamResource(ModelResource):
         return orm_filters
 
     def apply_filters(self, request, applicable_filters):
+        """
+        Applies any filters in applicable_filters.
+        :param request: The request.
+        :param applicable_filters: The applicable filters.
+        :return: filtered list.
+        """
         if 'city' in applicable_filters:
             city = applicable_filters.pop('city')
         else:
