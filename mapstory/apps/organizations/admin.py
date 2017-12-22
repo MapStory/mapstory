@@ -39,11 +39,9 @@ class OrganizationAdmin(admin.ModelAdmin):
     """
     inlines = [
         MembershipInlineAdmin,
-        OrganizationLayersInline,
-        OrganizationMapstoryInline,
     ]
+
+    exclude = ['slug']
 
 
 admin.site.register(Organization, OrganizationAdmin)
-admin.site.register(OrganizationMembership)
-admin.site.register(JoinRequest)
