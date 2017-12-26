@@ -26,3 +26,4 @@ class InitiativeMapstoryInline(admin.StackedInline):
 
 
 admin.site.register(Initiative, InitiativeAdmin)
+admin.site.register(InitiativeMembership)
