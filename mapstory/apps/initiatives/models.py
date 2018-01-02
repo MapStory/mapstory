@@ -9,12 +9,40 @@ from mapstory.mapstories.models import MapStory
 from mapstory.apps.teams.models import Team
 
 
+class InitiativeSocialMedia(models.Model):
+    name = models.CharField(max_length=255)
+    icon = models.CharField(max_length=255)
+    url = models.URLField()
+
+    def __unicode__(self):
+        return u'%s' % self.url
+
+
+class InitiativeURL(models.Model):
+    url = models.URLField(max_length=255)
+
+    def __unicode__(self):
+        return u'%s' % self.url
+
+
 class Initiative(Team):
     """
     The ability to assess and initiate things independently.
     """
     slug = models.SlugField(max_length=255, blank=True, null=True)
     image = models.ImageField(null=True, blank=True, upload_to='initiatives')
+
+    # Social Media
+    facebook = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='facebook')
+    twitter = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='twitter')
+    instagram = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='instagram')
+    github = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='github')
+    linkedin = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='linkedin')
+
+    # Links
+    url0 = models.ForeignKey(InitiativeURL, blank=True, null=True, related_name="url0")
+    url1 = models.ForeignKey(InitiativeURL, blank=True, null=True, related_name="url1")
+    url2 = models.ForeignKey(InitiativeURL, blank=True, null=True, related_name="url2")
 
     def __unicode__(self):
         return self.name
