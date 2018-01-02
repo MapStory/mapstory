@@ -63,7 +63,7 @@ class TeamTests(ResourceTestCaseMixin, TestCase):
         self.assertContains(resp, team.about)
 
     def test_team_name_filter(self):
-        team = Organization.objects.create(
+        team = Team.objects.create(
             name='TestingTeam', about='About this team', slogan='Testing teams team'
         )
 
