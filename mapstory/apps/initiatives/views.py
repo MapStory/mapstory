@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotAllowed
 
 
+from ..organizations.forms import LinksAndSocialMedia
 from . import models
 from . import forms
 
@@ -99,6 +100,30 @@ def initiative_detail(request, slug):
             'is_featured': m.is_featured,
         })
 
+    # Build social media icons
+    social_icons = []
+    if ini.facebook:
+        social_icons.append(models.InitiativeSocialMedia.objects.get(pk=ini.facebook.pk))
+    if ini.twitter:
+        social_icons.append(models.InitiativeSocialMedia.objects.get(pk=ini.twitter.pk))
+    if ini.instagram:
+        social_icons.append(models.InitiativeSocialMedia.objects.get(pk=ini.instagram.pk))
+    if ini.linkedin:
+        social_icons.append(models.InitiativeSocialMedia.objects.get(pk=ini.linkedin.pk))
+    if ini.github:
+        social_icons.append(models.InitiativeSocialMedia.objects.get(pk=ini.github.pk))
+
+    # Build the Links
+    ini_urls = []
+    if ini.url0:
+        ini_urls.append(models.InitiativeURL.objects.get(pk=ini.url0.pk))
+
+    if ini.url1:
+        ini_urls.append(models.InitiativeURL.objects.get(pk=ini.url1.pk))
+
+    if ini.url2:
+        ini_urls.append(models.InitiativeURL.objects.get(pk=ini.url2.pk))
+
     context = {
         'ini': ini,
         'members': members,
@@ -106,6 +131,8 @@ def initiative_detail(request, slug):
         'mapstories': mapstories,
         'membership': membership,
         'ini_image': ini.image,
+        'social_icons': social_icons,
+        'urls': ini_urls
     }
     return render(request, 'initiatives/detail.html', context=context)
 
@@ -142,7 +169,77 @@ def request_membership(request, slug):
     return redirect(reverse("initiatives:detail", kwargs={'slug': slug}))
 
 
-def _edit_initiative_with_forms(initiative, basic):
+def _save_social_icons(initiative, facebook, twitter, instagram, linkedin, github):
+    """
+    Saves the social media urls for an Organization.
+    :param initiative: The initiative
+    :param facebook: URL for facebook
+    :param twitter: URL for twitter
+    :param instagram: URL for instagram
+    :param linkedin: URL for linkedin
+    :param github: URL for github
+    :return:
+    """
+    if facebook:
+        if not initiative.facebook:
+            initiative.facebook = models.InitiativeSocialMedia.objects.create(
+                name="facebook",
+                icon="fa-facebook",
+                url=facebook
+            )
+        else:
+            initiative.facebook.url = facebook
+            initiative.facebook.save()
+
+    if twitter:
+        if not initiative.twitter:
+            initiative.twitter = models.InitiativeSocialMedia.objects.create(
+                name="twitter",
+                icon="fa-twitter",
+                url=twitter
+            )
+        else:
+            initiative.twitter.url = twitter
+            initiative.twitter.save()
+
+    if instagram:
+        if not initiative.instagram:
+            initiative.instagram = models.InitiativeSocialMedia.objects.create(
+                name="instagram",
+                icon="fa-instagram",
+                url=instagram
+            )
+        else:
+            initiative.instagram.url = instagram
+            initiative.instagram.save()
+
+    if linkedin:
+        if not initiative.linkedin:
+            initiative.linkedin = models.InitiativeSocialMedia.objects.create(
+                name="linkedin",
+                icon="fa-linkedin",
+                url=linkedin
+            )
+        else:
+            initiative.linkedin.url = linkedin
+            initiative.linkedin.save()
+
+    if github:
+        if not initiative.github:
+            initiative.github = models.InitiativeSocialMedia.objects.create(
+                name="github",
+                icon="fa-github",
+                url=github
+            )
+        else:
+            initiative.github.url = github
+            initiative.github.save()
+
+    # Save the changes
+    initiative.save()
+
+
+def _edit_initiative_with_forms(initiative, basic, links):
     """
     Helper function for for setting an initiatives's data from forms.
     :param initiative: The initiative
@@ -155,7 +252,42 @@ def _edit_initiative_with_forms(initiative, basic):
     initiative.slogan = basic.cleaned_data['slogan']
     initiative.country = basic.cleaned_data['country']
     initiative.image = basic.cleaned_data['image']
+
+    if links.cleaned_data['url0']:
+        if initiative.url0:
+            initiative.url0.url = links.cleaned_data['url0']
+            initiative.url0.save()
+        else:
+            initiative.url0 = models.InitiativeURL.objects.create(
+                url=links.cleaned_data['url0']
+            )
+
+    if links.cleaned_data['url1']:
+        if initiative.url1:
+            initiative.url1.url = links.cleaned_data['url1']
+        else:
+            initiative.url1 = models.InitiativeURL.objects.create(
+                url=links.cleaned_data['url1']
+            )
+
+    if links.cleaned_data['url2']:
+        if initiative.url2:
+            initiative.url2.url = links.cleaned_data['url2']
+        else:
+            initiative.url2 = models.InitiativeURL.objects.create(
+                url=links.cleaned_data['url2']
+            )
+
     initiative.save()
+
+    _save_social_icons(
+        initiative,
+        facebook=links.cleaned_data['facebook'],
+        instagram=links.cleaned_data['instagram'],
+        twitter=links.cleaned_data['twitter'],
+        linkedin=links.cleaned_data['linkedin'],
+        github=links.cleaned_data['github'],
+    )
 
 
 @login_required
@@ -178,6 +310,13 @@ def manager(request, slug):
 
     join_requests = models.JoinRequest.objects.filter(initiative=initiative, is_open=True)
     memberships = models.InitiativeMembership.objects.filter(initiative=initiative)
+
+    # Social Media
+    facebook = initiative.facebook
+    twitter = initiative.twitter
+    linkedin = initiative.linkedin
+    github = initiative.github
+    instagram = initiative.instagram
     info = {
         'name': initiative.name,
         'slogan': initiative.slogan,
@@ -187,15 +326,27 @@ def manager(request, slug):
         'image': initiative.image,
     }
 
+    links = {
+        'url0': initiative.url0,
+        'url1': initiative.url1,
+        'url2': initiative.url2,
+        'facebook': facebook.url if facebook else "",
+        'twitter': twitter.url if twitter else "",
+        'linkedin': linkedin.url if linkedin else "",
+        'github': github.url if github else "",
+        'instagram': instagram.url if instagram else "",
+    }
+
     # Determine the type of HTTP request
     if request.POST:
         # Get POST data
         basic_info_form = forms.BasicInformation(request.POST, request.FILES)
+        links_form = LinksAndSocialMedia(request.POST)
 
         # Check for valid forms
-        if basic_info_form.is_valid():
+        if basic_info_form.is_valid() and links_form.is_valid():
             # All forms are valid
-            _edit_initiative_with_forms(initiative, basic_info_form)
+            _edit_initiative_with_forms(initiative, basic_info_form, links_form)
 
             messages.success(request, "Saved changes to Initiative.")
 
@@ -206,10 +357,12 @@ def manager(request, slug):
 
     # Set the forms initial data
     basic_info_form = forms.BasicInformation(initial=info)
+    links_form = LinksAndSocialMedia(initial=links)
 
     return render(request, 'initiatives/manager.html', {
         'ini': initiative,
         'basic_form': basic_info_form,
+        'links_form': links_form,
         'join_requests': join_requests,
         'memberships': memberships,
         'ini_image': initiative.image,

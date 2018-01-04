@@ -6,6 +6,7 @@ from django.utils.text import slugify
 
 from geonode.layers.models import Layer
 from mapstory.mapstories.models import MapStory
+from mapstory.apps.teams.models import Team
 
 
 class OrganizationSocialMedia(models.Model):
@@ -26,7 +27,7 @@ class OrganizationURL(models.Model):
         return u'%s' % self.url
 
 
-class Organization(models.Model):
+class Organization(Team):
     """Represents an Organization.
     An Organization has:
         - Many Members
@@ -37,14 +38,6 @@ class Organization(models.Model):
         - Many journal posts
 
     """
-    title = models.CharField(max_length=255)
-    slogan = models.CharField(max_length=255, default='')
-    about = models.TextField(default='')
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now=True)
-    city = models.CharField(default='', max_length=255)
-    country = models.CharField(default='', max_length=255)
     image = models.ImageField(null=True, blank=True, upload_to='org_profiles')
     facebook = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='facebook')
     twitter = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='twitter')
@@ -60,7 +53,7 @@ class Organization(models.Model):
         verbose_name_plural = 'Organizations'
 
     def __unicode__(self):
-        return u'%s' % self.title
+        return u'%s' % self.name
 
     def save(self, *args, **kwargs):
         """
@@ -72,7 +65,7 @@ class Organization(models.Model):
         """
         if not self.slug:
             # Ensure uniqueness:
-            slug = slugify(self.title)
+            slug = slugify(self.name)
             if not Organization.objects.filter(slug=slug).exists():
                 self.slug = slug
             else:
@@ -175,6 +168,15 @@ class Organization(models.Model):
         """
         # TODO: Check if membership is allowed to add layer
         return OrganizationMapStory.objects.create(mapstory=mapstory, organization=self, membership=membership)
+
+    def get_member_count(self):
+        return OrganizationMembership.objects.filter(organization=self).count()
+
+    def get_layer_count(self):
+        return OrganizationLayer.objects.filter(organization=self).count()
+
+    def get_mapstory_count(self):
+        return OrganizationMapStory.objects.filter(organizastion=self).count()
 
 
 class OrganizationMembership(models.Model):

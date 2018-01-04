@@ -15,7 +15,7 @@ testUser = get_test_user()
 def get_test_organization():
     """Creates and returns a test Organization model"""
     org = models.Organization()
-    org.title = 'Test'
+    org.name = 'Test'
     org.slogan = 'Slogan here'
     org.about = "Yeah!"
     org.save()
@@ -33,9 +33,9 @@ class TestOrganizations(TestCase):
 
     def test_organization_list_view(self):
         orgs = [
-            models.Organization.objects.create(title='Test 02'),
-            models.Organization.objects.create(title='Test 03'),
-            models.Organization.objects.create(title='Test 000004'),
+            models.Organization.objects.create(name='Test 02'),
+            models.Organization.objects.create(name='Test 03'),
+            models.Organization.objects.create(name='Test 000004'),
         ]
 
         c = Client()
@@ -43,7 +43,7 @@ class TestOrganizations(TestCase):
         self.assertEqual(200, response.status_code)
 
         for org in orgs:
-            self.assertContains(response, org.title)
+            self.assertContains(response, org.name)
 
     def test_organization_detail_view(self):
         c = Client()
@@ -51,14 +51,14 @@ class TestOrganizations(TestCase):
         response = c.get(reverse('organizations:detail', kwargs={'slug': o.slug}))
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, template_name='organizations/organization_detail.html')
-        self.assertContains(response, o.title)
+        self.assertContains(response, o.name)
         self.assertContains(response, o.slogan)
         self.assertContains(response, o.about)
 
     def test_organization_model(self):
         init_count = len(models.Organization.objects.all())
         o = models.Organization()
-        o.title = "Test Organization"
+        o.name = "Test Organization"
         o.admin_user = testUser
         o.save()
         # Need to save before adding members!
@@ -75,7 +75,7 @@ class TestOrganizations(TestCase):
 
     def test_add_member(self):
         o = models.Organization()
-        o.title = "Test Organization 2"
+        o.name = "Test Organization 2"
         o.admin_user = testUser
         o.save()
 
@@ -96,7 +96,7 @@ class TestOrganizations(TestCase):
 
     def test_remove_member(self):
         o = models.Organization()
-        o.title = "Test Organization 2"
+        o.name = "Test Organization 2"
         o.admin_user = testUser
         o.save()
 
@@ -126,7 +126,7 @@ class TestOrganizations(TestCase):
             password="apassword"
         )
         o = models.Organization()
-        o.title = "Testing"
+        o.name = "Testing"
         o.save()
         mapstory = create_mapstory(user, "Testing Mapstory")
         response = self.client.post(
@@ -347,7 +347,7 @@ class TestOrganizations(TestCase):
         # Check the details page for links.
         response = self.client.get(org.get_absolute_url())
         self.assertEqual(200, response.status_code)
-        self.assertContains(response, org.title)
+        self.assertContains(response, org.name)
 
         management_url = reverse("organizations:manage", kwargs={'slug': org.slug})
 
@@ -596,14 +596,14 @@ class TestOrganizations(TestCase):
                 'country': 'test',
                 'image': None,
                 'about': 'test',
-                'url0': 'https://josellausas.com',
-                'url1': 'https://josellausas.com',
-                'url2': 'https://josellausas.com',
-                'facebook': 'https://josellausas.com',
-                'twitter': 'https://josellausas.com',
-                'linkedin': 'https://josellausas.com',
-                'github': 'https://josellausas.com',
-                'instagram': 'https://josellausas.com'
+                'url0': 'https://google.com',
+                'url1': 'https://google.com',
+                'url2': 'https://google.com',
+                'facebook': 'https://google.com',
+                'twitter': 'https://google.com',
+                'linkedin': 'https://google.com',
+                'github': 'https://google.com',
+                'instagram': 'https://google.com'
             }
         )
         # Should redirect to detail page
@@ -612,8 +612,8 @@ class TestOrganizations(TestCase):
 
     def test_duplicate_slugs(self):
         # Make organizations with the same title
-        o1 = models.Organization.objects.create(title="Slugy", slogan="Testing slugs", about="This is about a slug")
-        o2 = models.Organization.objects.create(title="Slugy", slogan="This is not same", about="This is about a slug")
+        o1 = models.Organization.objects.create(name="Slugy", slogan="Testing slugs", about="This is about a slug")
+        o2 = models.Organization.objects.create(name="Slugy", slogan="This is not same", about="This is about a slug")
 
         # Both should have slugs
         self.assertIsNotNone(o1.slug)
@@ -625,3 +625,7 @@ class TestOrganizations(TestCase):
         # Organization details should be resolved using the slug
         response = self.client.get(reverse('organizations:detail', kwargs={'slug': o2.slug}))
         self.assertContains(response, o2.slogan)
+
+    def test_api(self):
+        r = self.client.get("/organizations/api/organization", follow=True)
+        self.assertEqual(200, r.status_code)

@@ -1,94 +1,125 @@
 {% extends "site_base.html" %}
 {% load i18n %}
 {% load url from future %}
-{% block title %} {% trans "Explore" %} - {{ block.super}} {% endblock %}
+{% block title %} {% trans "Explore" %} - {{ block.super }} {% endblock %}
 {% block body_class %}search{% endblock %}
 {% block body_outer %}
-<div ng-controller="exploreController as explore">
-    <nav class="explore-tabs col-sm-offset-3">
-        <ul>
-          <li ng-click="defaultContent();" ng-class="{active: query.content}">Content</li>
-          <li ng-click="defaultOwners();" ng-class="{active: query.storyteller}">StoryTellers</li>
-        </ul>
-    </nav>
-    <div>
-        <div ng-if="query.content">
-            {% include 'search/_content_sidebar.html' %}
+    <!--Explore Controller-->
+    <div ng-controller="exploreController as explore">
+        <!--Tabs-->
+        <nav class="explore-tabs col-sm-offset-3">
+            <ul>
+                <li ng-click="defaultContent();" ng-class="{active: query.content}">Content</li>
+                <li ng-click="defaultOwners();" ng-class="{active: query.storyteller}">StoryTellers</li>
+                <li ng-click="showGroups();" ng-class="{active: query.groups}">Teams</li>
+            </ul>
+        </nav>
+        <!--Content-->
+        <div>
+            <div ng-if="query.content">
+                {% include 'search/_content_sidebar.html' %}
 
-            {% comment %} Content results {% endcomment %}
-             <div ng-hide="explore.totalCount" class="col-sm-9">
-                 No stories or layers matched your selections. Please adjust or clear your filters.
-             </div>
-             {% verbatim %}
-            <div ng-if="explore.totalCount" class="col-sm-9">
-                <div class="showing-results">
-                    Showing {{explore.startIndex}}-{{explore.endIndex}} of {{explore.totalCount}} results
+                {% comment %} Content results {% endcomment %}
+                <div ng-hide="explore.totalCount" class="col-sm-9">
+                    No stories or layers matched your selections. Please adjust or clear your filters.
                 </div>
-                <div class="sort-by">
-                
-                    <md-input-container class="md-block" flex-gt-md>
-                        <label>Sort by</label>
-                        <md-select ng-model="query.order_by">
-                          <md-option ng-repeat="state in orderingOptions.resource" value="{{state.sort}}">
-                            {{state.name}}
-                          </md-option>
-                        </md-select>
-                      </md-input-container>
-                {% endverbatim %}
-                </div>
-                <div class="content-results">
-                    <ul>
-                        {% verbatim %}
-                        <li ng-repeat="item in cards"
-                            resource-id="{{ item.id }}"
-                            class="col-lg-4 col-sm-6 resource-{{ item.id }}">
-                        {% endverbatim %}
-                        
-                        {% include 'search/_result_content.html' %}
-                        
-                    </ul>
-                </div>
-            </div>
-            {% comment %} End Content results {% endcomment %}
-        </div>
-        <div ng-if="query.storyteller">
-            {% include 'search/_users_sidebar.html' %}
-
-            {# StoryTeller results #}
-            <div ng-hide="explore.totalCount" class="col-sm-9">
-                 No StoryTellers matched your selections. Please adjust or clear your filters.
-             </div>
                 {% verbatim %}
-                  <div ng-if="explore.totalCount" class="col-sm-9">
-                <div class="showing-results">
-                    Showing {{explore.startIndex}}-{{explore.endIndex}} of {{explore.totalCount}} results
-                </div>
-                <div class="sort-by">
-                    <md-input-container class="md-block" flex-gt-md>
-                        <label>Sort by</label>
-                        <md-select ng-model="query.order_by">
-                          <md-option ng-repeat="state in orderingOptions.owner" value="{{state.sort}}">
-                            {{state.name}}
-                          </md-option>
-                        </md-select>
-                      </md-input-container>
-                {% endverbatim %}
-                </div>
-                <div class="storyteller-results">
-                    <ul>{% include 'search/_result_users.html' %}</ul>
-                </div>
+                <div ng-if="explore.totalCount" class="col-sm-9">
+                    <div class="showing-results">
+                        Showing {{explore.startIndex}}-{{explore.endIndex}} of {{explore.totalCount}} results
+                    </div>
+                    <div class="sort-by">
 
+                        <md-input-container class="md-block" flex-gt-md>
+                            <label>Sort by</label>
+                            <md-select ng-model="query.order_by">
+                                <md-option ng-repeat="state in orderingOptions.resource" value="{{state.sort}}">
+                                    {{state.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                        {% endverbatim %}
+                    </div>
+                    <div class="content-results">
+                        <ul>
+                            {% verbatim %}
+                            <li ng-repeat="item in cards"
+                                resource-id="{{ item.id }}"
+                                class="col-lg-4 col-sm-6 resource-{{ item.id }}">
+                            {% endverbatim %}
+                                {% include 'search/_result_content.html' %}
+                        </ul>
+                    </div>
+                </div>
+                {% comment %} End Content results {% endcomment %}
             </div>
-        </div>
-        {# shared pagination between storyteller and content results #}
-        {% verbatim %}
-        <div ng-if="explore.totalCount" class="pull-right">
-            <a href><i ng-click="pageDown()" class="fa fa-chevron-left"></i></a>
-                page {{explore.currentPage}} of {{explore.numPages}}
-            <a href><i ng-click="pageUp()" class="fa fa-chevron-right"></i></a>
-        </div>
-        {% endverbatim %}
-    </div>
-</div>
 
+            <div ng-if="query.storyteller">
+                {% include 'search/_users_sidebar.html' %}
+
+                {# StoryTeller results #}
+                <div ng-hide="explore.totalCount" class="col-sm-9">
+                    No StoryTellers matched your selections. Please adjust or clear your filters.
+                </div>
+                {% verbatim %}
+                <div ng-if="explore.totalCount" class="col-sm-9">
+                    <div class="showing-results">
+                        Showing {{explore.startIndex}}-{{explore.endIndex}} of {{explore.totalCount}} results
+                    </div>
+                    <div class="sort-by">
+                        <md-input-container class="md-block" flex-gt-md>
+                            <label>Sort by</label>
+                            <md-select ng-model="query.order_by">
+                                <md-option ng-repeat="state in orderingOptions.owner" value="{{state.sort}}">
+                                    {{state.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                        {% endverbatim %}
+                    </div>
+                    <div class="storyteller-results">
+                        <ul>{% include 'search/_result_users.html' %}</ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <div ng-if="query.groups">
+                {% include 'search/_groups_sidebar.html' %}
+                <div ng-hide="explore.totalCount" class="col-sm-9">
+                    No Teams matched your selections. Please adjust or clear your filters.
+                </div>
+                {% verbatim %}
+                <div ng-if="explore.totalCount" class="col-sm-9">
+                    <div class="showing-results">
+                        Showing {{explore.startIndex}}-{{explore.endIndex}} of {{explore.totalCount}} results
+                    </div>
+                    <div class="sort-by">
+                        <md-input-container class="md-block" flex-gt-md>
+                            <label>Sort by</label>
+                            <md-select ng-model="query.order_by">
+                                <md-option ng-repeat="state in orderingOptions.owner" value="{{state.sort}}">
+                                    {{state.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                        {% endverbatim %}
+                    </div>
+                    <div class="storyteller-results">
+                        {% include 'search/_result_groups.html' %}
+                    </div>
+
+                </div>
+            </div>
+            {# shared pagination between storyteller and content results #}
+            {% verbatim %}
+            <div ng-if="explore.totalCount" class="pull-right">
+                <a href><i ng-click="pageDown()" class="fa fa-chevron-left"></i></a>
+                page {{explore.currentPage}} of {{explore.numPages}}
+                <a href><i ng-click="pageUp()" class="fa fa-chevron-right"></i></a>
+            </div>
+            {% endverbatim %}
+        </div>
+    </div>
+    <!--end: Explore Controller-->
 {% endblock %}

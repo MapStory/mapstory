@@ -38,7 +38,6 @@ from mapstory.views import map_detail
 from mapstory.views import new_map
 from mapstory.views import ProfileDetail, profile_delete, profile_edit, proxy
 from mapstory.views import SearchView
-from mapstory.apps.organizations.views import organization_detail
 
 
 geonode_api.register(ResourceBaseResource())
@@ -65,50 +64,50 @@ layer_detail_patterns = patterns('',
     )
 
 urlpatterns = patterns('',
-    # Home
-    url(r'^$', IndexView.as_view(), name="index_view"),
+                       # Home
+                       url(r'^$', IndexView.as_view(), name="index_view"),
 
-    # Adding Threaded Comments app
-    url(r'^articles/comments/', include('django_comments.urls')),
+                       # Adding Threaded Comments app
+                       url(r'^articles/comments/', include('django_comments.urls')),
 
-    # Account
-    url(r"^account/signup/$", MapStorySignupView.as_view(), name="account_signup"),
-    url(r"^account/confirm_email/(?P<key>\w+)/$", MapStoryConfirmEmailView.as_view(), name="account_confirm_email"),
+                       # Account
+                       url(r"^account/signup/$", MapStorySignupView.as_view(), name="account_signup"),
+                       url(r"^account/confirm_email/(?P<key>\w+)/$", MapStoryConfirmEmailView.as_view(), name="account_confirm_email"),
 
-    # Accounts
-    url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))), #temp fix for social auth redirect
-    url(r'^accounts/verify/$', 'mapstory.views.account_verify',  name='account_verify'),
+                       # Accounts
+                       url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))),  #temp fix for social auth redirect
+                       url(r'^accounts/verify/$', 'mapstory.views.account_verify',  name='account_verify'),
 
-    # Blog Comments
-    url(r'^blog/comments/', include('fluent_comments.urls')),
+                       # Blog Comments
+                       url(r'^blog/comments/', include('fluent_comments.urls')),
 
-    # Maps
-    url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
-    url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
-    url(r'^maps/new_map', new_map, name='new_map'),
-    url(r'^maps/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
+                       # Maps
+                       url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
+                       url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
+                       url(r'^maps/new_map', new_map, name='new_map'),
+                       url(r'^maps/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
 
-    # Health Check status
-    url(r'^status/', include('health_check.urls'), name='health_check'),
+                       # Health Check status
+                       url(r'^status/', include('health_check.urls'), name='health_check'),
 
-    # Story
-    url(r'^story$', 'mapstory.views.new_story_json', name='new_story_json'),
-    url(r'^story/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
-    url(r'^story/(?P<slug>[-\w]+)/$', map_detail, name='mapstory_detail'),
-    url(r'^story/(?P<slug>[-\w]+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
-    url(r'^story/chapter/new$', 'mapstory.views.new_map_json', name='new_map_json'),
+                       # Story
+                       url(r'^story$', 'mapstory.views.new_story_json', name='new_story_json'),
+                       url(r'^story/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
+                       url(r'^story/(?P<slug>[-\w]+)/$', map_detail, name='mapstory_detail'),
+                       url(r'^story/(?P<slug>[-\w]+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
+                       url(r'^story/chapter/new$', 'mapstory.views.new_map_json', name='new_map_json'),
 
-    # MapLoom
-    url(r'^story/new$', new_map, {'template': 'composer/maploom.html'},
+                       # MapLoom
+                       url(r'^story/new$', new_map, {'template': 'composer/maploom.html'},
         name='new-story'),
-    url(r'^maps/edit$', new_map, {'template': 'composer/maploom.html'}, name='map-edit'),
-    url(r'^maps/(?P<mapid>\d+)/view$', 'mapstory.views.map_view', {'template': 'composer/maploom.html'}, name='map-view'),
-    url(r'^story/(?P<slug>[-\w]+)/draft$',
+                       url(r'^maps/edit$', new_map, {'template': 'composer/maploom.html'}, name='map-edit'),
+                       url(r'^maps/(?P<mapid>\d+)/view$', 'mapstory.views.map_view', {'template': 'composer/maploom.html'}, name='map-view'),
+                       url(r'^story/(?P<slug>[-\w]+)/draft$',
     'mapstory.views.draft_view', {'template': 'composer/maploom.html'}, name='maploom-map-view'),
-    url(r'^frame/(?P<storyid>[^/]+)/draft','mapstory.views.draft_view',name='draft_view'),
+                       url(r'^frame/(?P<storyid>[^/]+)/draft','mapstory.views.draft_view',name='draft_view'),
 
-    # Composer-new
-    url(r'^story/(?P<slug>[-\w]+)/composer$',
+                       # Composer-new
+                       url(r'^story/(?P<slug>[-\w]+)/composer$',
         'mapstory.views.composer_new_view', {'template': 'composer_new/composer.html'}, name='composer-view'),
 
     # StoryTools

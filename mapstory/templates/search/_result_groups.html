@@ -1,0 +1,43 @@
+{% load i18n avatar_tags %}
+{% verbatim %}
+<div>
+    <ul>
+    <li ng-repeat="item in cards" resource-id="{{ item.id }}" class="col-lg-4 col-sm-6 resource-{{ item.id }}">
+        <div class="content-card">
+
+            <div class="thumbnail-and-content-type">
+                <h4 class="tiny-caps">
+                    <span ng-if="item.group_type === 'organization'">Organization</span>
+                    <span ng-if="item.group_type === 'initiative'">Initiative</span>
+                </h4>
+                <a href="{{ item.url }}">
+                    <img ng-src="{{ item.image | decodeURIComponent }}" />
+                </a>
+            </div>
+
+
+            <a href="{{ item.url }}">
+                <h3 class="content-title">{{ item.name }}</h3>
+            </a>
+
+
+            <h4 class="tiny-caps">
+                {{ item.city ? item.category : 'Uncategorized' }}
+            </h4>
+
+            <div class="content-abstract">
+                {{ item.slogan | limitTo:75 }}{{ item.slogan.length > 75 ? '...' : '' }}
+            </div>
+
+            <div class="content-date">
+                {{ item.city }}, {{ item.country }}
+            </div>
+
+            <div class="content-views">
+                {{ item.members ? item.members : '0' }} Members
+            </div>
+        </div>
+    </li>
+    </ul>
+</div>
+{% endverbatim %}

@@ -1,0 +1,104 @@
+{% load i18n %}
+{% load url from future %}
+{% comment %} Filter sidebar for StoryTellers {% endcomment %}
+
+<aside class="col-sm-3 explore-filters">
+    <section>
+        <h2 class="side-title">Filter Results</h2>
+        <div class="clear-filters">
+            <a href="" ng-click="showGroups()">Clear all</a>
+        </div>
+    </section>
+
+    <section>
+        <h3 class="bold-caps">Name</h3>
+        <div class="clear-filters">
+            <a href="" ng-click="explore.clear('q')">Clear</a>
+        </div>
+        <div class="filter-content">
+            <div class="search-bar">
+                <form role="search">
+                    <div>
+                        <input name="group_search_input"
+                               id="group_search_input"
+                               ng-model="query.q"
+                               type="search"
+                               class="form-control"
+                               ng-enter="search()"
+                               placeholder="Filter by Group...">
+                        <button class="btn" type="submit" ng-click="search()">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section ng-controller="citiesController as cit">
+        <h3 class="bold-caps">City or Country</h3>
+        <div class="clear-filters">
+            <a href="" ng-click="explore.clear('city__icontains')">Clear</a>
+        </div>
+        <div class="filter-content">
+            {% verbatim %}
+            <md-content class="md-padding" layout="column">
+                <md-chips ng-model="cit.cityChips"
+                          md-autocomplete-snap
+                          md-on-add="explore.addQuery('city__icontains', $chip.city)"
+                          md-on-remove="explore.removeQuery('city__icontains', $chip.city)"
+                          md-transform-chip="cit.cities.newChip($chip)">
+                    <md-autocomplete
+                            ng-hide="cit.disabled"
+                            md-selected-item="selectedItem"
+                            md-search-text="searchText"
+                            md-items="item in cit.async(searchText)"
+                            md-item-text="item.city"
+                            placeholder="Filter by a city...">
+                        <span md-highlight-text="searchText">{{item.city}}</span>
+                    </md-autocomplete>
+                    <md-chip-template>
+                        {{$chip.city}}
+                    </md-chip-template>
+                </md-chips>
+                <button class="btn" type="submit" ng-click="search()" ng-hide="cit.disabled">
+                    <i class="fa fa-search"></i>
+                </button>
+            </md-content>
+            {% endverbatim %}
+        </div>
+    </section>
+    <section>
+    {% verbatim %}
+        <h3 class="bold-caps">Team Type</h3>
+        <div class="clear-filters">
+            <a href="" ng-click="explore.clear('group_type')">Clear</a>
+        </div>
+        <div class="filter-content">
+            <div>
+              <label>
+                <input type="checkbox"
+                  data-value="organization"
+                  data-filter="group_type"
+                  ng-click="explore.checkboxQuery($event)"
+                  ng-checked="isActivated('organization', query, 'group_type')">
+                </input>
+                Organization
+              </label>
+            </div>
+            <div>
+              <label>
+                <input type="checkbox"
+                  data-value="initiative"
+                  data-filter="group_type"
+                  ng-click="explore.checkboxQuery($event)"
+                  ng-checked="isActivated('initiative', query, 'group_type')">
+                </input>
+                Initiative
+              </label>
+            </div>
+        </div>
+    {% endverbatim %}
+    </section>
+
+</aside>
+{% comment %} End filter sidebar for StoryTellers {% endcomment %}

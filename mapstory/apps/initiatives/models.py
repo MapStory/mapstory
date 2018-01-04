@@ -6,22 +6,43 @@ from django.utils.text import slugify
 
 from geonode.layers.models import Layer
 from mapstory.mapstories.models import MapStory
+from mapstory.apps.teams.models import Team
 
 
-class Initiative(models.Model):
+class InitiativeSocialMedia(models.Model):
+    name = models.CharField(max_length=255)
+    icon = models.CharField(max_length=255)
+    url = models.URLField()
+
+    def __unicode__(self):
+        return u'%s' % self.url
+
+
+class InitiativeURL(models.Model):
+    url = models.URLField(max_length=255)
+
+    def __unicode__(self):
+        return u'%s' % self.url
+
+
+class Initiative(Team):
     """
     The ability to assess and initiate things independently.
     """
-    name = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(max_length=255, blank=True, null=True)
-    slogan = models.CharField(max_length=255)
-    about = models.TextField(default='')
-    is_active = models.BooleanField(default=True)
-    last_updated = models.DateTimeField(auto_now=True)
-    city = models.CharField(default='', max_length=255)
-    country = models.CharField(default='', max_length=255)
     image = models.ImageField(null=True, blank=True, upload_to='initiatives')
+
+    # Social Media
+    facebook = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='facebook')
+    twitter = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='twitter')
+    instagram = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='instagram')
+    github = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='github')
+    linkedin = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='linkedin')
+
+    # Links
+    url0 = models.ForeignKey(InitiativeURL, blank=True, null=True, related_name="url0")
+    url1 = models.ForeignKey(InitiativeURL, blank=True, null=True, related_name="url1")
+    url2 = models.ForeignKey(InitiativeURL, blank=True, null=True, related_name="url2")
 
     def __unicode__(self):
         return self.name
@@ -92,6 +113,15 @@ class Initiative(models.Model):
         """
         # TODO: Check if membership is allowed to add layer
         return InitiativeMapStory.objects.create(mapstory=mapstory, initiative=self, membership=membership)
+
+    def get_member_count(self):
+        return InitiativeMembership.objects.filter(initiative=self).count()
+
+    def get_layer_count(self):
+        return InitiativeLayer.objects.filter(initiative=self).count()
+
+    def get_mapstory_count(self):
+        return InitiativeMapStory.objects.filter(initiative=self).count()
 
 
 class InitiativeMembership(models.Model):

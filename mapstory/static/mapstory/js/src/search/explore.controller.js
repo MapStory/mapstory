@@ -107,6 +107,17 @@
           { name: 'Username A-Z',
             sort: 'username'
           }
+        ],
+      name:
+        [
+          {
+            name: 'Group Name Z-A',
+            sort: '-name'
+          },
+          {
+            name: 'Group Name A-Z',
+            sort: 'name'
+          }
         ]
     };
 
@@ -144,12 +155,28 @@
       };
       $scope.search();
     };
+
+    $scope.showGroups = function() {
+      $scope.apiEndpoint = '/teams/api/team';
+      $scope.query = {
+        groups: true,
+        is_active: true,
+        limit: CLIENT_RESULTS_LIMIT,
+        offset: 0,
+      };
+      $scope.search();
+    };
     
     //// Default settings upon landing (without clicking topbar/switch) ///
     if ($scope.query.storyteller){
       //storyteller explore
       $scope.apiEndpoint = '/api/owners/';
-    } else {
+    }
+    if($scope.query.groups){
+      $scope.apiEndpoint = '/teams/api/team';
+      $scope.query.is_active = true;
+    }
+    else {
       //set it to content
       $scope.query.content = true;
 
