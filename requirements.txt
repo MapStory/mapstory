@@ -1,16 +1,3 @@
-# Temporary. 1.0.8 has breaking changes.
-gsconfig==1.0.6
-
-# New version breaks the unit tests
-geonode-user-messages==0.1.6
-
-psycopg2==2.4.5
-numpy==1.8.2
-
-# Force Django 1.8.7: GeoNode's setup.py pulls in newer
-# despite GeoNode requirements.txt pinning 1.8.7
-Django==1.8.7
-
 -e ./deps/geonode
 -e ./deps/django-maploom
 -e ./deps/django-osgeo-importer
@@ -28,10 +15,6 @@ elasticsearch==1.6.0
 django-slack==4.1.0
 ipdb==0.10.3
 
-# Celery Requirements
-celery==3.1.23
-django-celery==3.1.16
-
 SQLAlchemy==1.0.14
 django-health-check==2.2.1
 
@@ -40,13 +23,7 @@ django-oauth2-provider==0.2.6.1
 django-social-auth==0.7.22
 oauth2==1.5.211
 
-# Add new social login app
-requests>=2.5.1
-python-social-auth==0.2.21
-
-#AWS S3 dependencies
-django-storages==1.1.8
-boto==2.38.0
+python-social-auth==0.2.2
 
 #threaded comments dependencies
 django-contrib-comments==1.6.2
@@ -57,26 +34,18 @@ django-fluent-comments==1.0.5
 django-solo==1.1.2
 
 # Testing dependencies
-coverage
 ipdbplugin==1.4.5
 
-# Security Updates
-pycsw==2.0.3
-
-#command line picker
 pick
 
-# Mock for testing
-mock
-
-# Selenium testing
 selenium
 #jasmine-data-provider
 
-# Activity Streams
-django-activity-stream==0.6.1
-
 pandas==0.20.3
+
+# Lower versions aren't working
+beautifulsoup4==4.6.0
+
 geonode-user-accounts==1.0.13
 
 # Django model utils
