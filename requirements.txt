@@ -81,3 +81,7 @@ geonode-user-accounts==1.0.13
 
 # Django model utils
 django-model-utils==3.0.0
+
+# Fixes slugify by bumping version
+awesome-slugify==1.6.5
+
