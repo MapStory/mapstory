@@ -90,6 +90,11 @@ COPY epsg_extra /usr/local/lib/python2.7/dist-packages/pyproj/data/
 # Add the system and self-signed CAs.
 RUN cat /etc/ssl/certs/ca-certificates.crt >> /usr/local/lib/python2.7/site-packages/httplib2/cacerts.txt
 
+# Override the version of awesome-slugify
+# Using HEAD as of 2018-01-09
+# The version isn't changed, so it has trouble differentiation from the version in pypy. Thus this manual update.
+RUN pip install --no-cache-dir -U git+git://github.com/dimka665/awesome-slugify@a6563949965bcddd976b7b3fb0babf76e3b490f7#egg=awesome-slugify
+
 # Cache these. Hopefully it will speed up the later steps.
 COPY mapstory/static $APP_PATH/mapstory/static
 WORKDIR $APP_PATH/mapstory/static
