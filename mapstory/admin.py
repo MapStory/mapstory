@@ -2,6 +2,8 @@ from django import forms
 from django.contrib import admin
 
 from geonode.people.admin import ProfileAdmin as UserAdmin
+from geonode.layers.models import Layer
+from geonode.layers.admin import LayerAdmin
 
 from mapstory.apps.flag import admin as flag_admin
 from mapstory.export import export_via_model
@@ -146,7 +148,19 @@ class MapStoryAdmin(admin.ModelAdmin):
     list_editable = ('title', 'owner', 'category')
     list_filter = ('featured', )
 
+class ExtendedLayerAdmin(LayerAdmin):
+    list_display_links = ('id',)
+    list_display = (
+        'id',
+        'title',
+        'owner',
+        'date',
+        'category')
+    list_editable = ('title', 'owner', 'category')
+    list_filter = ('featured', )
 
+admin.site.unregister(Layer)
+admin.site.register(Layer, ExtendedLayerAdmin)
 admin.site.register(MapStory, MapStoryAdmin)
 admin.site.register(GetPage, GetPageAdmin)
 admin.site.register(GetPageContent, GetPageContentAdmin)
