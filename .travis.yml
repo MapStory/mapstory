@@ -28,6 +28,7 @@ addons:
     tunnel_domains: docker
 
 before_install:
+  - set
   # Temporary fix for the Basho repo being down
   - sudo rm -vf /etc/apt/sources.list.d/*riak*
   # Install Docker Engine
