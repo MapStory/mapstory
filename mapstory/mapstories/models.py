@@ -108,16 +108,16 @@ class MapStory(geonode.base.models.ResourceBase):
 
     def viewer_json(self, user):
         if self.category is not None:
-            categoryID = self.category.id
+            category_id = self.category.id
         else:
-            categoryID = None
+            category_id = None
 
         about = {
             'title': self.title,
             'abstract': self.abstract,
             'owner': self.owner.name_long,
             'username': self.owner.username,
-            'categoryID': categoryID
+            'categoryID': category_id
         }
 
         config = {
