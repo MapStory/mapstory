@@ -28,7 +28,7 @@ addons:
     tunnel_domains: docker
 
 before_install:
-  - set
+  - if [ -z "$SAUCE_ACCESS_KEY" ]; then echo "Sauce is not available"; else echo "Sauce is available."; fi
   # Install Docker Engine
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
