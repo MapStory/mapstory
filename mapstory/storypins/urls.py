@@ -22,6 +22,6 @@ from django.conf.urls import patterns, url
 
 
 urlpatterns = patterns(
-    'mapstory.annotations.views',
-    url(r'^maps/(?P<mapid>\d+)/annotations$', 'annotations', name='annotations'),
+    'mapstory.storypins.views',
+    url(r'^maps/(?P<mapid>\d+)/storypins$', 'storypins', name='storypins'),
 )

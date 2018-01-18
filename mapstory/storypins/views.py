@@ -7,16 +7,16 @@ from django.http import HttpResponse
 from geonode.utils import json_response
 from geonode.utils import resolve_object
 
-from mapstory.annotations.forms import AnnotationForm
-from mapstory.annotations.models import Annotation
-from mapstory.annotations.utils import unicode_csv_dict_reader
+from mapstory.storypins.forms import StoryPinForm
+from mapstory.storypins.models import StoryPin
+from mapstory.storypins.utils import unicode_csv_dict_reader
 from mapstory.mapstories.models import Map
 
 
-def _annotations_get(req, mapid):
+def _storypins_get(req, mapid):
     mapobj = resolve_object(req, Map, {'id': mapid}, permission='base.view_resourcebase')
     cols = ['title', 'content', 'media', 'start_time', 'end_time', 'in_map', 'in_timeline', 'appearance', 'auto_show', 'pause_playback']
-    ann = Annotation.objects.filter(map=mapid)
+    ann = StoryPin.objects.filter(map=mapid)
     ann = ann.order_by('start_time', 'end_time', 'title')
     if bool(req.GET.get('in_map', False)):
         ann = ann.filter(in_map=True)
@@ -31,7 +31,7 @@ def _annotations_get(req, mapid):
 
     if 'csv' in req.GET:
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=map-%s-annotations.csv' % mapobj.id
+        response['Content-Disposition'] = 'attachment; filename=map-%s-storypins.csv' % mapobj.id
         response['Content-Encoding'] = 'utf-8'
         writer = csv.writer(response)
         writer.writerow(cols)
@@ -68,7 +68,7 @@ def _annotations_get(req, mapid):
     return json_response({'type':'FeatureCollection','features':encode(ann)})
 
 
-def _annotations_post(req, mapid):
+def _storypins_post(req, mapid):
     mapobj = resolve_object(req, Map, {'id':mapid}, permission='base.change_resourcebase')
 
     # default action
@@ -77,7 +77,7 @@ def _annotations_post(req, mapid):
     get_props = lambda r: r['properties']
     # operation to run on completion
     finish = lambda: None
-    # track created annotations
+    # track created storypins
     created = []
     # csv or client to account for differences
     form_mode = 'client'
@@ -103,9 +103,9 @@ def _annotations_post(req, mapid):
         form_mode = 'csv'
         content_type = 'text/html'
         get_props = lambda r: r
-        ids = list(Annotation.objects.filter(map=mapobj).values_list('id', flat=True))
+        ids = list(StoryPin.objects.filter(map=mapobj).values_list('id', flat=True))
         # delete existing, we overwrite
-        finish = lambda: Annotation.objects.filter(id__in=ids).delete()
+        finish = lambda: StoryPin.objects.filter(id__in=ids).delete()
         overwrite = True
 
         def error_format(row_errors):
@@ -117,13 +117,13 @@ def _annotations_post(req, mapid):
             return 'The following rows had problems:<ul><li>' + '</li><li>'.join(response) + "</li></ul>"
 
     if action == 'delete':
-        Annotation.objects.filter(pk__in=data['ids'], map=mapobj).delete()
+        StoryPin.objects.filter(pk__in=data['ids'], map=mapobj).delete()
         return json_response({'success': True})
 
     if action != 'upsert':
         return HttpResponse('%s not supported' % action, status=400)
 
-    errors = _write_annotations(data, get_props, id_collector, mapobj, overwrite, form_mode)
+    errors = _write_storypins(data, get_props, id_collector, mapobj, overwrite, form_mode)
 
     if errors:
         transaction.rollback()
@@ -140,7 +140,7 @@ def _annotations_post(req, mapid):
     return json_response(body=body, errors=errors, content_type=content_type)
 
 
-def _write_annotations(data, get_props, id_collector, mapobj, overwrite, form_mode):
+def _write_storypins(data, get_props, id_collector, mapobj, overwrite, form_mode):
     i = None
     errors = []
     for i, r in enumerate(data):
@@ -149,13 +149,13 @@ def _write_annotations(data, get_props, id_collector, mapobj, overwrite, form_mo
         ann = None
         id = r.get('id', None)
         if id and not overwrite:
-            ann = Annotation.objects.get(map=mapobj, pk=id)
+            ann = StoryPin.objects.get(map=mapobj, pk=id)
 
         # form expects everything in the props, copy geometry in
         if 'geometry' in r:
             props['geometry'] = r['geometry']
         props.pop('id', None)
-        form = AnnotationForm(props, instance=ann, form_mode=form_mode)
+        form = StoryPinForm(props, instance=ann, form_mode=form_mode)
         if not form.is_valid():
             errors.append((i, form.errors))
         else:
@@ -167,11 +167,11 @@ def _write_annotations(data, get_props, id_collector, mapobj, overwrite, form_mo
     return errors
 
 
-def annotations(req, mapid):
-    '''management of annotations for a given mapid'''
+def storypins(req, mapid):
+    '''management of storypins for a given mapid'''
     if req.method == 'GET':
-        return _annotations_get(req, mapid)
+        return _storypins_get(req, mapid)
     if req.method == 'POST':
-        return _annotations_post(req, mapid)
+        return _storypins_post(req, mapid)
 
     return HttpResponse(status=400)

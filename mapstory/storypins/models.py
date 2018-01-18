@@ -2,28 +2,28 @@ from django.db import models
 
 from datetime import datetime
 
-from mapstory.annotations.utils import parse_date_time
+from mapstory.storypins.utils import parse_date_time
 from mapstory.mapstories.models import Map
 
 
-class AnnotationManager(models.Manager):
+class StoryPinManager(models.Manager):
 
-    def copy_map_annotations(self, source_id, target):
+    def copy_map_storypins(self, source_id, target):
         source = Map.objects.get(id=source_id)
         copies = []
-        print 'copy from', source_id, source.annotation_set.all()
+        print 'copy from', source_id, source.storypin_set.all()
         print 'to target', target.id
-        for ann in source.annotation_set.all():
+        for ann in source.storypin_set.all():
             ann.map = target
             ann.pk = None
             copies.append(ann)
         print copies
-        Annotation.objects.bulk_create(copies)
+        StoryPin.objects.bulk_create(copies)
         print 'yeah'
 
 
-class Annotation(models.Model):
-    objects = AnnotationManager()
+class StoryPin(models.Model):
+    objects = StoryPinManager()
 
     map = models.ForeignKey(Map)
     title = models.TextField()
@@ -58,7 +58,7 @@ class Annotation(models.Model):
 
 def map_copied(sender, source_id, **kw):
     try:
-        Annotation.objects.copy_map_annotations(source_id, sender)
+        StoryPin.objects.copy_map_storypins(source_id, sender)
     except:
         print 'dammit jim'
         import traceback
