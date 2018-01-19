@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
-from annotations.urls import urlpatterns as annotations_urls
+from storypins.urls import urlpatterns as storypins_urls
 # to replace /api/base & /api/owners GeoNode routes with our own:
 # unregister old routes before geonode.urls.urlpatterns is imported
 from geonode.api.urls import api as geonode_api
@@ -146,7 +146,7 @@ urlpatterns = patterns('',
                        url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain"), name='robots'),
                        ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 
-urlpatterns += annotations_urls
+urlpatterns += storypins_urls
 
 urlpatterns += maploom_urls
 
