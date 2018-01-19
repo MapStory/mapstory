@@ -23,13 +23,18 @@ addons:
   hostname: docker
   hosts:
     - docker
-  # For sauceLabs (DO NOT REMOVE)
+  # For SauceLabs (DO NOT REMOVE)
   sauce_connect:
     tunnel_domains: docker
 
 before_install:
-  # Temporary fix for the Basho repo being down
-  - sudo rm -vf /etc/apt/sources.list.d/*riak*
+  - echo "Travis PR repo $TRAVIS_PULL_REQUEST_SLUG";
+    echo "Travis PR branch $TRAVIS_PULL_REQUEST_BRANCH";
+    echo "Travis target repo $TRAVIS_REPO_SLUG";
+    echo "Travis target branch $TRAVIS_BRANCH";
+    echo "Travis build number $TRAVIS_BUILD_NUMBER";
+    echo "Travis commit $TRAVIS_COMMIT";
+  - if [ -z "$SAUCE_ACCESS_KEY" ]; then echo "Sauce is not available"; else echo "Sauce is available."; fi
   # Install Docker Engine
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
@@ -61,7 +66,7 @@ install:
   - $DCO up -d postgres elasticsearch rabbitmq
   - $DCO up pgadmin
   - $DCO run django "--init-db --collect-static --reindex"
-  - npm install -g protractor pix-diff
+  - if [ ! -z "$SAUCE_ACCESS_KEY" ]; then npm install -g protractor pix-diff; fi
   - sudo cp scripts/accept.sh /usr/local/bin/accept
 
 script:
@@ -71,11 +76,20 @@ script:
   - $DCO kill django
   - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --init-db --test
   - $DCO up -d django
+  # Use the docker selenium setup if running on a fork's PR because Sauce credentials aren't available
+  - if [ -z "$SAUCE_ACCESS_KEY" ]; then $DCO up -d selenium; fi
   # Wait for django container to come up
   - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
-  - pushd mapstory/tests
-  - SOURCE_HOME=/home/travis/build/MapStory/mapstory ./runAllTests.sh
-  - popd
+  - if [ -z "$SAUCE_ACCESS_KEY" ]; then
+      echo "Sauce is not available";
+      $DCO up protractor;
+    else
+      echo "Sauce is available";
+      pushd mapstory/tests;
+      SOURCE_HOME=/home/travis/build/MapStory/mapstory ./runAllTests.sh;
+      popd;
+    fi
+  - echo "tests are done"
 
 ### Currently quay.io is pulling the repos automatically
 # after_success:

@@ -10,17 +10,6 @@ services:
     expose:
       - "4444"
 
-  # sauce-connect:
-  #   build: docker/sauce-connect
-  #   image: quay.io/mapstory/sauce-connect:master
-  #   env_file:
-  #     - .sauce
-  #   command: --tunnel-domains=docker
-  #   networks:
-  #     internal:
-  #   expose:
-  #     - "4445"
-
   protractor:
     build:
       context: .
@@ -28,7 +17,6 @@ services:
     image: quay.io/mapstory/protractor:master
     links:
       - selenium
-#      - sauce-connect
       - nginx
     volumes:
       - ./mapstory/tests:/opt/mapstory/tests

@@ -2,6 +2,29 @@
 version: '3.1'
 services:
 
+  # This is used when building on forks because auth tokens for Sauce are unavailable
+  selenium:
+    image: selenium/standalone-chrome
+    links:
+      - nginx
+    networks:
+      internal:
+    expose:
+      - "4444"
+
+  protractor:
+    build:
+      context: .
+      dockerfile: Dockerfile.protractor
+    image: quay.io/mapstory/protractor:master
+    links:
+      - selenium
+      - nginx
+    volumes:
+      - ./mapstory/tests:/opt/mapstory/tests
+    networks:
+      internal:
+
   postgres:
     image: mdillon/postgis:9.5
     env_file:
