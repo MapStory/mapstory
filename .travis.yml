@@ -23,7 +23,7 @@ addons:
   hostname: docker
   hosts:
     - docker
-  # For sauceLabs (DO NOT REMOVE)
+  # For SauceLabs (DO NOT REMOVE)
   sauce_connect:
     tunnel_domains: docker
 
