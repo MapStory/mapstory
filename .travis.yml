@@ -1,6 +1,7 @@
 branches:
   only:
     - master
+    - lab
 
 sudo: required
 dist: trusty
