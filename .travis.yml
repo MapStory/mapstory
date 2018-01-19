@@ -28,10 +28,10 @@ addons:
     tunnel_domains: docker
 
 before_install:
-  - echo "Travis repo: TRAVIS_REPO_SLUG";
-    echo "Travis branch: $TRAVIS_BRANCH";
-    echo "Travis build number: $TRAVIS_BUILD_NUMBER";
-    echo "Travis commit: $TRAVIS_COMMIT";
+  - echo "Travis repo $TRAVIS_REPO_SLUG";
+    echo "Travis branch $TRAVIS_BRANCH";
+    echo "Travis build number $TRAVIS_BUILD_NUMBER";
+    echo "Travis commit $TRAVIS_COMMIT";
   - if [ -z "$SAUCE_ACCESS_KEY" ]; then echo "Sauce is not available"; else echo "Sauce is available."; fi
   # Install Docker Engine
   - sudo apt-get update
