@@ -28,6 +28,10 @@ addons:
     tunnel_domains: docker
 
 before_install:
+  - echo "Travis repo: TRAVIS_REPO_SLUG";
+    echo "Travis branch: $TRAVIS_BRANCH";
+    echo "Travis build number: $TRAVIS_BUILD_NUMBER";
+    echo "Travis commit: $TRAVIS_COMMIT";
   - if [ -z "$SAUCE_ACCESS_KEY" ]; then echo "Sauce is not available"; else echo "Sauce is available."; fi
   # Install Docker Engine
   - sudo apt-get update
@@ -75,8 +79,10 @@ script:
   # Wait for django container to come up
   - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
   - if [ -z "$SAUCE_ACCESS_KEY" ]; then
+      echo "Sauce is not available";
       $DCO up protractor;
     else
+      echo "Sauce is available";
       pushd mapstory/tests;
       SOURCE_HOME=/home/travis/build/MapStory/mapstory ./runAllTests.sh;
       popd;
