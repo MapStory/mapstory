@@ -8,14 +8,14 @@ from django.test import TransactionTestCase
 from django.test.client import Client
 from django.test.utils import override_settings
 
-from mapstory.annotations.models import Annotation
-from mapstory.annotations.utils import unicode_csv_dict_reader
-from mapstory.annotations.utils import make_point
+from mapstory.storypins.models import StoryPin
+from mapstory.storypins.utils import unicode_csv_dict_reader
+from mapstory.storypins.utils import make_point
 from mapstory.mapstories.models import Map
 
 
 @override_settings(DEBUG=True)
-class AnnotationsTest(TransactionTestCase):
+class StoryPinsTest(TransactionTestCase):
     fixtures = ['initial_data.json', 'map_data.json', 'sample_admin.json']
     c = Client()
 
@@ -31,8 +31,8 @@ class AnnotationsTest(TransactionTestCase):
 
         return username, password
 
-    def get_x(self, annotation):
-        x_coord = int(json.loads(annotation.the_geom)['coordinates'][0])
+    def get_x(self, storypin):
+        x_coord = int(json.loads(storypin.the_geom)['coordinates'][0])
         return x_coord
 
     def setUp(self):
@@ -51,7 +51,7 @@ class AnnotationsTest(TransactionTestCase):
         self.dummy = dummy
         self.admin_map = admin_map
 
-    def make_annotations(self, mapobj, cnt=100):
+    def make_storypins(self, mapobj, cnt=100):
         point = make_point(5, 23)
         end_time = 9999999999
         for a in range(cnt):
@@ -60,12 +60,12 @@ class AnnotationsTest(TransactionTestCase):
             # make sure some geometries are missing
             geom = point if cnt % 2 == 0 else None
             # make the names sort nicely by title/number
-            Annotation.objects.create(title='ann%2d' % a, map=mapobj,
+            StoryPin.objects.create(title='ann%2d' % a, map=mapobj,
                                       start_time=start_time,
                                       end_time=end_time, the_geom=geom).save()
 
-    def test_copy_annotations(self):
-        self.make_annotations(self.dummy)
+    def test_copy_storypins(self):
+        self.make_storypins(self.dummy)
 
         admin_map = Map.objects.create(owner=self.admin, zoom=1, center_x=0, center_y=0, title='map2')
         # have to use a 'dummy' map to create the appropriate JSON
@@ -73,28 +73,28 @@ class AnnotationsTest(TransactionTestCase):
         target.id = None  # let Django auto-gen a good PK
         target.save()
 
-        Annotation.objects.copy_map_annotations(self.dummy.id, target)
+        StoryPin.objects.copy_map_storypins(self.dummy.id, target)
         # make sure we have 100 and we can resolve the corresponding copies
-        self.assertEqual(100, target.annotation_set.count())
-        for a in self.dummy.annotation_set.all():
-            self.assertTrue(target.annotation_set.get(title=a.title))
+        self.assertEqual(100, target.storypin_set.count())
+        for a in self.dummy.storypin_set.all():
+            self.assertTrue(target.storypin_set.get(title=a.title))
 
     def test_get(self):
-        '''make 100 annotations and get them all as well as paging through'''
-        self.make_annotations(self.dummy)
+        '''make 100 storypins and get them all as well as paging through'''
+        self.make_storypins(self.dummy)
 
-        response = self.c.get(reverse('annotations', args=[self.dummy.id]))
+        response = self.c.get(reverse('storypins', args=[self.dummy.id]))
         rows = json.loads(response.content)['features']
         self.assertEqual(100, len(rows))
 
         for p in range(4):
-            response = self.c.get(reverse('annotations', args=[self.dummy.id]) + "?page=%s" % p)
+            response = self.c.get(reverse('storypins', args=[self.dummy.id]) + "?page=%s" % p)
             rows = json.loads(response.content)['features']
             self.assertEqual(25, len(rows))
 
             titles = [row['properties']['title'] for row in rows]
             # check the first title on each page
-            # because make_annotations() creates a set sorted by start_time,
+            # because make_storypins() creates a set sorted by start_time,
             # these should be: (ann 0, ann25, ann50, ann75)
             self.assertEqual('ann%2d' % (p * 25), titles[0])
 
@@ -102,8 +102,8 @@ class AnnotationsTest(TransactionTestCase):
         '''test post operations'''
 
         # make 1 and update it
-        self.make_annotations(self.dummy, 1)
-        ann = Annotation.objects.filter(map=self.dummy)[0]
+        self.make_storypins(self.dummy, 1)
+        ann = StoryPin.objects.filter(map=self.dummy)[0]
         data = json.dumps({
             'features': [{
                 'geometry': {'type': 'Point', 'coordinates': [5.000000, 23.000000]},
@@ -116,14 +116,14 @@ class AnnotationsTest(TransactionTestCase):
             }]
         })
         # without login, expect failure
-        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), data, "application/json")
+        resp = self.c.post(reverse('storypins', args=[self.dummy.id]), data, "application/json")
         self.assertEqual(403, resp.status_code)
 
         # login and verify change accepted
         self.c.login(username="test_admin", password="test_admin")
-        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), data, "application/json")
+        resp = self.c.post(reverse('storypins', args=[self.dummy.id]), data, "application/json")
         self.assertEqual(200, resp.status_code)
-        ann = Annotation.objects.get(id=ann.id)
+        ann = StoryPin.objects.get(id=ann.id)
         self.assertEqual(ann.title, "new title")
         self.assertEqual(self.get_x(ann), 5)
         self.assertEqual(ann.end_time, 1371136048)
@@ -138,36 +138,36 @@ class AnnotationsTest(TransactionTestCase):
                 }
             }]
         })
-        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), data, "application/json")
+        resp = self.c.post(reverse('storypins', args=[self.dummy.id]), data, "application/json")
         self.assertEqual(200, resp.status_code)
         resp = json.loads(resp.content)
         self.assertEqual(resp['success'], True)
-        ann = Annotation.objects.get(id=ann.id + 1)
+        ann = StoryPin.objects.get(id=ann.id + 1)
         self.assertEqual(ann.title, "new ann")
 
     def test_delete(self):
         '''test delete operations'''
 
-        # make 10 annotations, drop numbers 4-7
-        self.make_annotations(self.dummy, 10)
-        current_anns = Annotation.objects.filter(map=self.dummy)
+        # make 10 storypins, drop numbers 4-7
+        self.make_storypins(self.dummy, 10)
+        current_anns = StoryPin.objects.filter(map=self.dummy)
         titles_to_delete = [u'ann 4', u'ann 5', u'ann 6', u'ann 7']
         ids_to_delete = [ann.id for ann in current_anns if ann.title in titles_to_delete]
         data = json.dumps({'action': 'delete', 'ids': ids_to_delete})
         # verify failure before login
-        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), data, "application/json")
+        resp = self.c.post(reverse('storypins', args=[self.dummy.id]), data, "application/json")
         self.assertEqual(403, resp.status_code)
 
         # now check success
         self.c.login(username="test_admin", password="test_admin")
-        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), data, "application/json")
+        resp = self.c.post(reverse('storypins', args=[self.dummy.id]), data, "application/json")
         self.assertEqual(200, resp.status_code)
 
         # these are gone
-        ann = Annotation.objects.filter(id__in=ids_to_delete)
+        ann = StoryPin.objects.filter(id__in=ids_to_delete)
         self.assertEqual(0, ann.count())
         # six remain
-        ann = Annotation.objects.filter(map=self.dummy)
+        ann = StoryPin.objects.filter(map=self.dummy)
         self.assertEqual(6, ann.count())
 
     def test_csv_upload(self):
@@ -175,7 +175,7 @@ class AnnotationsTest(TransactionTestCase):
 
         # @todo cleanup and break out into simpler cases
 
-        self.make_annotations(self.dummy, 2)
+        self.make_storypins(self.dummy, 2)
 
         header = u"id,title,content,lat,lon,start_time,end_time,appearance\n"
 
@@ -190,34 +190,34 @@ class AnnotationsTest(TransactionTestCase):
         fp.seek(0)
 
         # verify failure before login
-        resp = self.c.post(reverse('annotations', args=[self.dummy.id]),{'csv':fp})
+        resp = self.c.post(reverse('storypins', args=[self.dummy.id]),{'csv':fp})
         self.assertEqual(403, resp.status_code)
 
-        # still only 2 annotations
-        self.assertEqual(2, Annotation.objects.filter(map=self.dummy.id).count())
+        # still only 2 storypins
+        self.assertEqual(2, StoryPin.objects.filter(map=self.dummy.id).count())
 
         # login, rewind the buffer and verify
         self.c.login(username="test_admin", password="test_admin")
 
         fp.seek(0)
-        resp = self.c.post(reverse('annotations', args=[self.dummy.id]),{'csv':fp})
+        resp = self.c.post(reverse('storypins', args=[self.dummy.id]),{'csv':fp})
         self.assertEqual(200, resp.status_code)
         # response type must be text/html for ext fileupload
         self.assertEqual('text/html', resp['content-type'])
         jsresp = json.loads(resp.content)
         self.assertEqual(True, jsresp['success'])
-        ann = Annotation.objects.filter(map=self.dummy.id)
+        ann = StoryPin.objects.filter(map=self.dummy.id)
         # we uploaded 3, the other 2 should be deleted (overwrite mode)
         self.assertEqual(3, ann.count())
-        ann = Annotation.objects.get(title='bar foo')
+        ann = StoryPin.objects.get(title='bar foo')
         self.assertEqual(self.get_x(ann), 20.)
-        ann = Annotation.objects.get(title='bunk')
+        ann = StoryPin.objects.get(title='bunk')
         self.assertTrue(u'\u201c', ann.content)
-        ann = Annotation.objects.get(title='foo bar')
+        ann = StoryPin.objects.get(title='foo bar')
         self.assertEqual('foo bar', ann.title)
         self.assertEqual(self.get_x(ann), 10.)
 
-        resp = self.c.get(reverse('annotations',args=[self.dummy.id]) + "?csv")
+        resp = self.c.get(reverse('storypins',args=[self.dummy.id]) + "?csv")
         # verify each row has the same number of fields, even if some fields
         # are empty
         for l in resp.content.split('\r\n'):
@@ -240,8 +240,8 @@ class AnnotationsTest(TransactionTestCase):
             ',\x93windows quotes\x94,yay,,,,'
         ))
         fp.seek(0)
-        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), {'csv': fp})
-        ann = Annotation.objects.get(map=self.dummy.id)
+        resp = self.c.post(reverse('storypins', args=[self.dummy.id]), {'csv': fp})
+        ann = StoryPin.objects.get(map=self.dummy.id)
         # windows quotes are unicode now
         self.assertEqual(u'\u201cwindows quotes\u201d', ann.title)
 
@@ -251,10 +251,10 @@ class AnnotationsTest(TransactionTestCase):
             str(header) * 2
         ))
         fp.seek(0)
-        resp = self.c.post(reverse('annotations', args=[self.dummy.id]), {'csv': fp})
+        resp = self.c.post(reverse('storypins', args=[self.dummy.id]), {'csv': fp})
         self.assertEqual(400, resp.status_code)
         # there should only be one that we uploaded before
-        Annotation.objects.get(map=self.dummy.id)
+        StoryPin.objects.get(map=self.dummy.id)
         self.assertEqual('yay', ann.content)
 
         # and check for the errors related to the invalid data we sent

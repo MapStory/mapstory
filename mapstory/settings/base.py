@@ -88,7 +88,7 @@ INSTALLED_APPS += (
     'notification',
     'mapstory.apps.health_check_geoserver',
     'mapstory.apps.thumbnails',
-    'mapstory.annotations',
+    'mapstory.storypins',
     'mapstory.apps.journal',
     'mapstory.apps.favorite',
     'mapstory.apps.teams',
