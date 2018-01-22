@@ -84,3 +84,6 @@ django-model-utils==3.0.0
 
 # Fixes slugify by bumping version to HEAD as of 2018-01-09
 git+git://github.com/dimka665/awesome-slugify@a6563949965bcddd976b7b3fb0babf76e3b490f7#egg=awesome-slugify
+
+# Temporary fix until we upgrade to Geonode 2.7.x
+django-polymorphic==1.3
