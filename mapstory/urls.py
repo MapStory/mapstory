@@ -82,7 +82,7 @@ urlpatterns = patterns('',
                        url(r'^blog/comments/', include('fluent_comments.urls')),
 
                        # Maps
-                       url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
+                       url(r'^maps/(?P<mapid>\d+)/storyframes$', include('mapstory.apps.storyframes.urls')),
                        url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
                        url(r'^maps/new_map', new_map, name='new_map'),
                        url(r'^maps/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
