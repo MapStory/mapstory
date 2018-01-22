@@ -167,6 +167,7 @@ class ProfileDetail(DetailView):
         for notice in NoticeType.objects.filter(label__in=PROFILE_NOTICE_SETTINGS):
             notice_settings.append(NoticeSetting.for_user(self.object, notice, NOTICE_MEDIA[0][0]))
         ctx['notice_settings'] = notice_settings
+        ctx['interests'] = json.dumps(self.object.mapstoryprofile.interests_slug_list())
 
         return ctx
 
