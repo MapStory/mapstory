@@ -40,7 +40,7 @@ RUN set -ex \
 
 # Install phantomjs
 RUN set -ex \
-    && echo "deb http://ftp.debian.org/debian jessie-backports main" >> sources.list \
+    && echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
         phantomjs \
