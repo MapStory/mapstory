@@ -107,12 +107,12 @@ class MapStory(geonode.base.models.ResourceBase):
         return '/story/' + str(self.slug) + '/'
 
     def viewer_json(self, user):
-
         about = {
             'title': self.title,
             'abstract': self.abstract,
             'owner': self.owner.name_long,
-            'username': self.owner.username
+            'username': self.owner.username,
+            'categoryID': self.category.id if self.category is not None else None
         }
 
         config = {
