@@ -70,8 +70,8 @@ class MapstoryProfile(models.Model):
         blank=True,
         null=True)
 
-    def keyword_slug_list(self):
-        return [kw.slug for kw in self.keywords.all()]
+    def interests_slug_list(self):
+        return [kw.slug for kw in self.interests.all()]
 
 def profile_post_save(instance, sender, **kwargs):
     MapstoryProfile.objects.filter(user_id=instance.id).update(

@@ -12,6 +12,7 @@
 
   function profileController($injector, $scope, $http) {
     $scope.counts = {};
+    $scope.interestChips = interests;
 
     $scope.query = {
       owner__username__in: PROFILE_USERNAME,
