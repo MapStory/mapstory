@@ -20,6 +20,13 @@
     <div class="sidebar-header"><h3>Expertise</h3></div>
     <div class="sidebar-content">{{ profile.mapstoryprofile.expertise }}</div>
 {% endif %}
+{% if interests != "[]" %}
+    <div class="sidebar-header"><h3>Interests</h3></div>
+    <md-content>
+        <md-chips ng-model="interestChips" readonly="true" md-removable="false" md-max-chips="20">
+        </md-chips>
+    </md-content>   
+{% endif %}
 {% if user.Volunteer_Technical_Community %}
     <div class="sidebar-content"><p>Volunteer Technical Community Member</p></div>
 {% endif %}
@@ -58,3 +65,8 @@ TODO: change help text in /geonode/geonode/people/models.py to encourage correct
         <button class="btn btn-danger"><a href="{% url "profile_delete" user.username %}">{% trans "delete profile" %}</a> </button>
     </div>
 {% endif %}
+
+{# storing interests from the ctx dictionary in js scope to be available in profile.controller.js for chip generation #}
+<script>
+    var interests = {{interests|safe}};
+</script>
