@@ -61,6 +61,7 @@ class MapStory(geonode.base.models.ResourceBase):
                 box_list.append(box_dict)
 
             chapter_dict = {
+                'map_id': chapter.id,
                 'title': chapter.title,
                 'abstract': chapter.abstract,
                 'layers': chapter.layers,

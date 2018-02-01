@@ -16,6 +16,7 @@ geonode_api.unregister('base')
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
 from geonode.urls import urlpatterns
 from maploom.geonode.urls import urlpatterns as maploom_urls
+from mapstories.urls import urlpatterns as mapstories_urls
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
 from tastypie.api import Api
 
@@ -145,6 +146,8 @@ urlpatterns = patterns('',
                        url(r'^initiatives/', include('mapstory.apps.initiatives.urls', namespace='initiatives')),
                        url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain"), name='robots'),
                        ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
+
+urlpatterns += mapstories_urls
 
 urlpatterns += annotations_urls
 
