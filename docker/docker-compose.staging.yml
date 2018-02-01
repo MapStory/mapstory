@@ -2,7 +2,7 @@
 version: '3.1'
 services:
   pgadmin:
-    image: quay.io/mapstory/pgadmin:prod
+    image: quay.io/mapstory/pgadmin:staging
     ports:
       - "5050:5050"
     secrets:
@@ -11,16 +11,16 @@ services:
   elasticsearch:
 
   rabbitmq:
-    image: quay.io/mapstory/rabbitmq:prod
+    image: quay.io/mapstory/rabbitmq:staging
     secrets:
       - env_rabbitmq_auth
 
   django:
-    image: quay.io/mapstory/django:prod
+    image: quay.io/mapstory/django:staging
     env_file:
-      - docker/env/prod/public_host.env
-      - docker/env/prod/geoserver.env
-      - docker/env/prod/mapstory.env
+      - docker/env/staging/public_host.env
+      - docker/env/staging/geoserver.env
+      - docker/env/staging/mapstory.env
     secrets:
       - env_db_auth
       - env_email_auth
@@ -33,11 +33,11 @@ services:
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   celery:
-    image: quay.io/mapstory/django:prod
+    image: quay.io/mapstory/django:staging
     env_file:
-      - docker/env/prod/public_host.env
-      - docker/env/prod/geoserver.env
-      - docker/env/prod/mapstory.env
+      - docker/env/staging/public_host.env
+      - docker/env/staging/geoserver.env
+      - docker/env/staging/mapstory.env
     secrets:
       - env_db_auth
       - env_email_auth
@@ -51,16 +51,16 @@ services:
 
   geoserver:
     env_file:
-      - docker/env/prod/public_host.env
-      - docker/env/prod/geoserver.env
+      - docker/env/staging/public_host.env
+      - docker/env/staging/geoserver.env
     secrets:
       - env_db_auth
       - env_geoserver_auth
 
   nginx:
-    image: quay.io/mapstory/nginx:prod
+    image: quay.io/mapstory/nginx:staging
     env_file:
-      - docker/env/prod/public_host.env
+      - docker/env/staging/public_host.env
     volumes:
       - .:/srv/mapstory/:ro # mapstory_static has symlinks to this
       - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
