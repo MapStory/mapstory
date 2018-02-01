@@ -1,0 +1,94 @@
+# mapstory.org configuration
+version: '3.1'
+services:
+  pgadmin:
+    image: quay.io/mapstory/pgadmin:prod
+    ports:
+      - "5050:5050"
+    secrets:
+      - env_db_auth
+
+  elasticsearch:
+
+  rabbitmq:
+    image: quay.io/mapstory/rabbitmq:prod
+    secrets:
+      - env_rabbitmq_auth
+
+  django:
+    image: quay.io/mapstory/django:prod
+    env_file:
+      - docker/env/prod/public_host.env
+      - docker/env/prod/geoserver.env
+      - docker/env/prod/mapstory.env
+    secrets:
+      - env_db_auth
+      - env_email_auth
+      - env_geoserver_auth
+      - env_rabbitmq_auth
+      - env_slack_auth
+      - env_social_auth
+    volumes:
+      - .:/srv/mapstory/
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
+
+  celery:
+    image: quay.io/mapstory/django:prod
+    env_file:
+      - docker/env/prod/public_host.env
+      - docker/env/prod/geoserver.env
+      - docker/env/prod/mapstory.env
+    secrets:
+      - env_db_auth
+      - env_email_auth
+      - env_geoserver_auth
+      - env_rabbitmq_auth
+      - env_slack_auth
+      - env_social_auth
+    volumes:
+      - .:/srv/mapstory/
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
+
+  geoserver:
+    env_file:
+      - docker/env/prod/public_host.env
+      - docker/env/prod/geoserver.env
+    secrets:
+      - env_db_auth
+      - env_geoserver_auth
+
+  nginx:
+    image: quay.io/mapstory/nginx:prod
+    env_file:
+      - docker/env/prod/public_host.env
+    volumes:
+      - .:/srv/mapstory/:ro # mapstory_static has symlinks to this
+      - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
+    secrets:
+      - ssl_cert
+      - ssl_key
+
+volumes:
+  geoserver:
+    driver: rexray
+  mapstory_media:
+    driver: rexray
+  site-packages:
+
+secrets:
+  ssl_cert:
+    file: ../secrets/ssl_cert
+  ssl_key:
+    file: ../secrets/ssl_key
+  env_db_auth:
+    file: ../secrets/env/db_auth
+  env_email_auth:
+    file: ../secrets/env/email_auth
+  env_geoserver_auth:
+    file: ../secrets/env/geoserver_auth
+  env_rabbitmq_auth:
+    file: ../secrets/env/rabbitmq_auth
+  env_slack_auth:
+    file: ../secrets/env/slack_auth
+  env_social_auth:
+    file: ../secrets/env/social_auth
