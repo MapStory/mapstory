@@ -603,7 +603,7 @@ DEBUG_STATIC = True
 DEBUG = str_to_bool(os.environ.get('DEBUG', 'False'))
 if not DEBUG:
     ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split('|')
-SESSION_COOKIE_DOMAIN = os.environ['PUBLIC_HOST']
+SESSION_COOKIE_DOMAIN = None
 
 LOGGING = {
     'version': 1,
