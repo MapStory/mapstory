@@ -2,17 +2,17 @@ import json
 
 from django import forms
 
-from mapstory.annotations.models import Annotation
-from mapstory.annotations.utils import datetime_to_seconds
-from mapstory.annotations.utils import make_point
-from mapstory.annotations.utils import parse_date_time
+from mapstory.storypins.models import StoryPin
+from mapstory.storypins.utils import datetime_to_seconds
+from mapstory.storypins.utils import make_point
+from mapstory.storypins.utils import parse_date_time
 
 
-class AnnotationForm(forms.ModelForm):
+class StoryPinForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.form_mode = kwargs.pop('form_mode', 'client')
-        super(AnnotationForm, self).__init__(*args, **kwargs)
+        super(StoryPinForm, self).__init__(*args, **kwargs)
 
     def parse_float(self, name):
         val = self.data.get(name, None)
@@ -42,7 +42,7 @@ class AnnotationForm(forms.ModelForm):
             self.data['the_geom'] = make_point(lon, lat)
         self._convert_time('start_time')
         self._convert_time('end_time')
-        super(AnnotationForm, self).full_clean()
+        super(StoryPinForm, self).full_clean()
         self._errors.update(self._my_errors)
 
     def _convert_time(self, key):
@@ -73,5 +73,5 @@ class AnnotationForm(forms.ModelForm):
         self.data[key] = str(numeric) if numeric is not None else None
 
     class Meta:
-        model = Annotation
+        model = StoryPin
         fields = '__all__'

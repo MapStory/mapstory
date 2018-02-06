@@ -87,7 +87,7 @@ INSTALLED_APPS += (
     'coverage',
     'mapstory.apps.health_check_geoserver',
     'mapstory.apps.thumbnails',
-    'mapstory.annotations',
+    'mapstory.storypins',
     'mapstory.apps.journal',
     'mapstory.apps.favorite',
     'mapstory.apps.teams',
@@ -111,7 +111,7 @@ INSTALLED_APPS += (
 
 MAPSTORY_APPS = (
 
-    'mapstory.apps.boxes',
+    'mapstory.apps.storyframes',
     'mapstory.apps.flag', # - temporarily using this instead of the flag app for django because they need to use AUTH_USER_MODEL
 
 )
@@ -289,7 +289,6 @@ IMPORT_HANDLERS = (
     'osgeo_importer.handlers.geoserver.GeoServerTimeHandler',
     'osgeo_importer.handlers.geoserver.GeoWebCacheHandler',
     'osgeo_importer.handlers.geonode.GeoNodePublishHandler',
-    'osgeo_importer.handlers.geoserver.GenericSLDHandler',
     'mapstory.import_handlers.LayerAppendHandler'
 )
 
