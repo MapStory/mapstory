@@ -1,27 +1,27 @@
 from django.db import models
 from mapstory.mapstories.models import Map
-from mapstory.apps.boxes.utils import parse_date_time
+from mapstory.apps.storyframes.utils import parse_date_time
 from datetime import datetime
 from django.contrib.gis.db import models as gis
 
 
-class StoryBoxManager(models.Manager):
+class StoryFrameManager(models.Manager):
 
-    def copy_map_story_boxes(self, source_id, target):
+    def copy_map_story_frames(self, source_id, target):
         source = Map.objects.get(id=source_id)
         copies = []
-        print('copy from', source_id, source.storybox_set.all())
+        print('copy from', source_id, source.storyframe_set.all())
         print('to target', target.id)
-        for box in source.storybox_set.all():
-            box.map = target
-            box.pk = None
-            copies.append(box)
+        for storyframe in source.storyframe_set.all():
+            storyframe.map = target
+            storyframe.pk = None
+            copies.append(storyframe)
         print(copies)
-        StoryBox.objects.bulk_create(copies)
+        StoryFrame.objects.bulk_create(copies)
 
 
-class StoryBox(models.Model):
-    objects = StoryBoxManager()
+class StoryFrame(models.Model):
+    objects = StoryFrameManager()
 
     PLAYBACK_RATE = (('seconds', 'Seconds'),('minutes', 'Minutes'),)
     INTERVAL_RATE = (('minutes', 'Minutes'),('hours', 'Hours'),
@@ -62,12 +62,12 @@ class StoryBox(models.Model):
         return self._timefmt(self.end_time) if self.end_time else ''
 
     class Meta:
-        verbose_name_plural = "StoryBox"
+        verbose_name_plural = "StoryFrame"
 
 
 def map_copied(sender, source_id, **kw):
     try:
-        StoryBox.objects.copy_map_story_boxes(source_id, sender)
+        StoryFrame.objects.copy_map_story_frames(source_id, sender)
     except:
         import traceback
         traceback.print_exc()

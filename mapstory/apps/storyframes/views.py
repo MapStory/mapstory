@@ -1,37 +1,36 @@
+from django.db import transaction
+from django.http import HttpResponse
+from .models import StoryFrame
+from .forms import StoryFrameForm
+from .utils import unicode_csv_dict_reader
+from geonode.utils import resolve_object
+from mapstory.mapstories.models import Map
+from geonode.utils import json_response
+
 import csv
 import json
 
-from django.db import transaction
-from django.http import HttpResponse
 
-from geonode.utils import json_response
-from geonode.utils import resolve_object
-
-from mapstory.annotations.forms import AnnotationForm
-from mapstory.annotations.models import Annotation
-from mapstory.annotations.utils import unicode_csv_dict_reader
-from mapstory.mapstories.models import Map
-
-
-def _annotations_get(req, mapid):
+def _storyframes_get(req, mapid):
     mapobj = resolve_object(req, Map, {'id': mapid}, permission='base.view_resourcebase')
-    cols = ['title', 'content', 'media', 'start_time', 'end_time', 'in_map', 'in_timeline', 'appearance', 'auto_show', 'pause_playback']
-    ann = Annotation.objects.filter(map=mapid)
-    ann = ann.order_by('start_time', 'end_time', 'title')
+    cols = ['title', 'description', 'start_time', 'end_time', 'center', 'speed',
+            'interval', 'playback', 'playbackRate', 'intervalRate', 'zoom']
+    storyframe = StoryFrame.objects.filter(map=mapid)
+    storyframe = storyframe.order_by('start_time', 'end_time', 'title')
     if bool(req.GET.get('in_map', False)):
-        ann = ann.filter(in_map=True)
+        storyframe = storyframe.filter(in_map=True)
     if bool(req.GET.get('in_timeline', False)):
-        ann = ann.filter(in_timeline=True)
+        storyframe = storyframe.filter(in_timeline=True)
     if 'page' in req.GET:
         page = int(req.GET['page'])
         page_size = 25
         start = page * page_size
         end = start + page_size
-        ann = ann[start:end]
+        storyframe = storyframe[start:end]
 
     if 'csv' in req.GET:
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=map-%s-annotations.csv' % mapobj.id
+        response = HttpResponse(mimetype='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=map-%s-storyframes.csv' % mapobj.id
         response['Content-Encoding'] = 'utf-8'
         writer = csv.writer(response)
         writer.writerow(cols)
@@ -40,7 +39,7 @@ def _annotations_get(req, mapid):
         # default csv writer chokes on unicode
         encode = lambda v: v.encode('utf-8') if isinstance(v, basestring) else str(v)
         get_value = lambda a, c: getattr(a, c) if c not in ('start_time', 'end_time') else ''
-        for a in ann:
+        for a in    storyframe:
             vals = [encode(get_value(a, c)) for c in cols]
             vals[sidx] = a.start_time_str
             vals[eidx] = a.end_time_str
@@ -53,7 +52,7 @@ def _annotations_get(req, mapid):
     def encode(query_set):
         results = []
         for res in query_set:
-            feature = {'id': res.id}
+            feature = { 'id' : res.id}
             if res.the_geom:
                 feature['geometry'] = res.the_geom
 
@@ -61,14 +60,22 @@ def _annotations_get(req, mapid):
             for p in props:
                 val = getattr(res, p)
                 if val is not None:
-                    fp[p] = val
+                    if isinstance(val, unicode) and '{' in val:
+                        import ast
+                        fp[p] = ast.literal_eval(val)
+                    elif isinstance(val, unicode) and '[' in val:
+                        import ast
+                        fp[p] = ast.literal_eval(val)
+
+                    else:
+                        fp[p] = val
             results.append(feature)
         return results
 
-    return json_response({'type':'FeatureCollection','features':encode(ann)})
+    return json_response({'type':'FeatureCollection','features':encode(storyframe)})
 
 
-def _annotations_post(req, mapid):
+def _storyframes_post(req, mapid):
     mapobj = resolve_object(req, Map, {'id':mapid}, permission='base.change_resourcebase')
 
     # default action
@@ -77,7 +84,7 @@ def _annotations_post(req, mapid):
     get_props = lambda r: r['properties']
     # operation to run on completion
     finish = lambda: None
-    # track created annotations
+    # track created storyframes
     created = []
     # csv or client to account for differences
     form_mode = 'client'
@@ -103,9 +110,9 @@ def _annotations_post(req, mapid):
         form_mode = 'csv'
         content_type = 'text/html'
         get_props = lambda r: r
-        ids = list(Annotation.objects.filter(map=mapobj).values_list('id', flat=True))
+        ids = list(StoryFrame.objects.filter(map=mapobj).values_list('id', flat=True))
         # delete existing, we overwrite
-        finish = lambda: Annotation.objects.filter(id__in=ids).delete()
+        finish = lambda: StoryFrame.objects.filter(id__in=ids).delete()
         overwrite = True
 
         def error_format(row_errors):
@@ -117,45 +124,53 @@ def _annotations_post(req, mapid):
             return 'The following rows had problems:<ul><li>' + '</li><li>'.join(response) + "</li></ul>"
 
     if action == 'delete':
-        Annotation.objects.filter(pk__in=data['ids'], map=mapobj).delete()
+        StoryFrame.objects.filter(pk__in=data['ids'], map=mapobj).delete()
         return json_response({'success': True})
 
     if action != 'upsert':
         return HttpResponse('%s not supported' % action, status=400)
 
-    errors = _write_annotations(data, get_props, id_collector, mapobj, overwrite, form_mode)
-
-    if errors:
-        transaction.rollback()
+    try:
+        with transaction.atomic():
+            errors = _try_write_storyframes(data, get_props, id_collector, mapobj, overwrite, form_mode)
+    except RuntimeError as e:
         body = None
         if error_format:
-            return HttpResponse(error_format(errors), status=400)
-    else:
-        finish()
-        transaction.commit()
-        body = {'success': True}
-        if created:
-            body['ids'] = created
+            return HttpResponse(error_format(['Runtime Error']), status=400)
+
+    finish()
+    body = {'success': True}
+    if created:
+        body['ids'] = created
 
     return json_response(body=body, errors=errors, content_type=content_type)
 
 
-def _write_annotations(data, get_props, id_collector, mapobj, overwrite, form_mode):
+def _try_write_storyframes(data, get_props, id_collector, mapobj, overwrite, form_mode):
+    errors = _write_storyframes(data, get_props, id_collector, mapobj, overwrite, form_mode)
+
+    if len(errors) > 0:
+        raise RuntimeError
+
+    return errors
+
+
+def _write_storyframes(data, get_props, id_collector, mapobj, overwrite, form_mode):
     i = None
     errors = []
     for i, r in enumerate(data):
         props = get_props(r)
         props['map'] = mapobj.id
-        ann = None
+        storyframe = None
         id = r.get('id', None)
         if id and not overwrite:
-            ann = Annotation.objects.get(map=mapobj, pk=id)
+            storyframe = StoryFrame.objects.get(map=mapobj, pk=id)
 
         # form expects everything in the props, copy geometry in
         if 'geometry' in r:
             props['geometry'] = r['geometry']
         props.pop('id', None)
-        form = AnnotationForm(props, instance=ann, form_mode=form_mode)
+        form = StoryFrameForm(props, instance=storyframe, form_mode=form_mode)
         if not form.is_valid():
             errors.append((i, form.errors))
         else:
@@ -167,11 +182,15 @@ def _write_annotations(data, get_props, id_collector, mapobj, overwrite, form_mo
     return errors
 
 
-def annotations(req, mapid):
-    '''management of annotations for a given mapid'''
+def storyframes(req, mapid):
+    '''management of storyframes for a given mapid'''
     if req.method == 'GET':
-        return _annotations_get(req, mapid)
+        return _storyframes_get(req, mapid)
     if req.method == 'POST':
-        return _annotations_post(req, mapid)
+        return _storyframes_post(req, mapid)
 
     return HttpResponse(status=400)
+
+
+
+
