@@ -291,7 +291,6 @@ IMPORT_HANDLERS = (
     'osgeo_importer.handlers.geoserver.GeoServerTimeHandler',
     'osgeo_importer.handlers.geoserver.GeoWebCacheHandler',
     'osgeo_importer.handlers.geonode.GeoNodePublishHandler',
-    'osgeo_importer.handlers.geoserver.GenericSLDHandler',
     'mapstory.import_handlers.LayerAppendHandler'
 )
 
