@@ -1,12 +1,12 @@
 from django.contrib import admin
 
-from mapstory.annotations.models import Annotation
+from mapstory.storypins.models import StoryPin
 
 
-class AnnotationAdmin(admin.ModelAdmin):
+class StoryPinAdmin(admin.ModelAdmin):
     list_display = ('id', 'map', 'title')
     list_filter = ('map', 'in_map', 'in_timeline',)
     search_fields = ('map__title', 'title', 'content',)
 
 
-admin.site.register(Annotation, AnnotationAdmin)
+admin.site.register(StoryPin, StoryPinAdmin)

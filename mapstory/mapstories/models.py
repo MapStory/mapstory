@@ -20,45 +20,45 @@ class MapStory(geonode.base.models.ResourceBase):
         chapter_list = []
         for chapter in self.chapters:
 
-            annotations = chapter.annotation_set.all()
-            pin_list = []
-            for annotation in annotations:
-                pin_dict = {
-                    'title': annotation.title,
-                    'content': annotation.content,
-                    'media': annotation.media,
-                    'the_geom': annotation.the_geom,
-                    'start_time': annotation.start_time,
-                    'end_time': annotation.end_time,
-                    'in_timeline': annotation.in_timeline,
-                    'in_map': annotation.in_map,
-                    'appearance': annotation.appearance,
-                    'auto_show': annotation.auto_show,
-                    'pause_playback': annotation.pause_playback
+            storypins = chapter.storypin_set.all()
+            storypin_list = []
+            for storypin in storypins:
+                storypin_dict = {
+                    'title': storypin.title,
+                    'content': storypin.content,
+                    'media': storypin.media,
+                    'the_geom': storypin.the_geom,
+                    'start_time': storypin.start_time,
+                    'end_time': storypin.end_time,
+                    'in_timeline': storypin.in_timeline,
+                    'in_map': storypin.in_map,
+                    'appearance': storypin.appearance,
+                    'auto_show': storypin.auto_show,
+                    'pause_playback': storypin.pause_playback
                 }
-                pin_list.append(pin_dict)
+                storypin_list.append(storypin_dict)
 
-            boxes = chapter.storybox_set.all()
-            box_list = []
-            for box in boxes:
-                box_dict = {
-                    'title': box.title,
-                    'description': box.description,
-                    'the_geom': box.the_geom,
-                    'start_time': box.start_time,
-                    'end_time': box.end_time,
-                    'data': box.data,
-                    'center': box.center,
-                    'interval': box.interval,
-                    'intervalRate': box.intervalRate,
-                    'playback': box.playback,
-                    'playbackRate': box.playbackRate,
-                    'speed': box.speed,
-                    'zoom': box.zoom,
-                    'layers': box.layers,
-                    'resolution': box.resolution
+            storyframes = chapter.storyframe_set.all()
+            storyframe_list = []
+            for storyframe in storyframes:
+                storyframe_dict = {
+                    'title': storyframe.title,
+                    'description': storyframe.description,
+                    'the_geom': storyframe.the_geom,
+                    'start_time': storyframe.start_time,
+                    'end_time': storyframe.end_time,
+                    'data': storyframe.data,
+                    'center': storyframe.center,
+                    'interval': storyframe.interval,
+                    'intervalRate': storyframe.intervalRate,
+                    'playback': storyframe.playback,
+                    'playbackRate': storyframe.playbackRate,
+                    'speed': storyframe.speed,
+                    'zoom': storyframe.zoom,
+                    'layers': storyframe.layers,
+                    'resolution': storyframe.resolution
                 }
-                box_list.append(box_dict)
+                storyframe_list.append(storyframe_dict)
 
             chapter_dict = {
                 'story_id': self.id,
@@ -66,8 +66,8 @@ class MapStory(geonode.base.models.ResourceBase):
                 'title': chapter.title,
                 'abstract': chapter.abstract,
                 'layers': chapter.layers,
-                'storyframes': box_list,
-                'storypins': pin_list
+                'storyframes': storyframe_list,
+                'storypins': storypin_list
             }
             chapter_list.append(chapter_dict)
         return chapter_list

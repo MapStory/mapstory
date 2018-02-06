@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
-from annotations.urls import urlpatterns as annotations_urls
+from storypins.urls import urlpatterns as storypins_urls
 # to replace /api/base & /api/owners GeoNode routes with our own:
 # unregister old routes before geonode.urls.urlpatterns is imported
 from geonode.api.urls import api as geonode_api
@@ -83,7 +83,7 @@ urlpatterns = patterns('',
                        url(r'^blog/comments/', include('fluent_comments.urls')),
 
                        # Maps
-                       url(r'^maps/(?P<mapid>\d+)/boxes$', include('mapstory.apps.boxes.urls')),
+                       url(r'^maps/(?P<mapid>\d+)/storyframes$', include('mapstory.apps.storyframes.urls')),
                        url(r'^maps/new/data$', 'mapstory.views.new_map_json', name='new_map_json'),
                        url(r'^maps/new_map', new_map, name='new_map'),
                        url(r'^maps/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
@@ -149,7 +149,7 @@ urlpatterns = patterns('',
 
 urlpatterns += mapstories_urls
 
-urlpatterns += annotations_urls
+urlpatterns += storypins_urls
 
 urlpatterns += maploom_urls
 
