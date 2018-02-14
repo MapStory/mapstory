@@ -40,10 +40,16 @@ RUN apt-get update \
 # Install Node and related tools
 RUN set -ex \
     && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
+    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
         nodejs \
-    && npm install -g bower grunt webpack \
+        yarn \
+    && npm install -g \
+        bower \
+        grunt \
+        webpack \
     && rm -rf ~/.npm \
     && rm -rf /tmp/npm-* \
     && rm -rf /var/lib/apt/lists/*
@@ -108,8 +114,7 @@ RUN set -ex \
     && rm -rf ~/.cache/bower
 WORKDIR $APP_PATH/deps/story-tools-composer
 RUN set -ex \
-    && npm install \
-    && bower install \
+    && yarn install \
     && webpack --output-public-path='/static/composer/' \
     && rm -rf ~/.npm \
     && rm -rf /tmp/npm-* \
@@ -142,8 +147,7 @@ RUN set -ex \
 
 WORKDIR $APP_PATH/deps/story-tools-composer
 RUN set -ex \
-    && npm install \
-    && bower install \
+    && yarn install \
     && webpack \
     && rm -rf ~/.npm \
     && rm -rf /tmp/npm-* \
