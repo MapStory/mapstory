@@ -146,7 +146,7 @@ class CreateStoryLayerThumbnailTask(Task):
 
 
     # call phantomjs and save the thumbnail
-    # return - filename thumbnail saved to
+    # return - image data
     def create_screenshot(self, layer):
         fname = self.create_temp_filename()
         try:

@@ -4,11 +4,11 @@ import os
 
 from geonode.layers.models import Layer
 from mapstory.apps.thumbnails.tasks import CreateStoryLayerThumbnailTask
+from PIL import Image
+from StringIO import StringIO
 
-
-# python manage.py test --noinput mapstory.apps.thumbnails.test_storylayer_thumbnail
+# python manage.py test --noinput --nocapture  mapstory.apps.thumbnails.test_storylayer_thumbnail
 class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
-
     # note - while this is running, there is likely a thumbnail generation task occuring in the background
     # (kicked off by the importer)
     #   So, the layer may or may not have a thumbnail attached to it (and might have one in the future).
@@ -48,6 +48,15 @@ class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
         self.assertFalse(layer.has_thumbnail())
         self.assertEqual(layer.thumbnail_url, layer.get_thumbnail_url())
 
+        # verify image - quick check to see if the size is correct (which means it generated an image)
+        #  TO DO: add test to check actual image (note -- highly unstable because it relies on Geoserver style
+        #         and basemap to NOT change).
+        imageData = thumb_generator.create_screenshot(layer)
+        image_file = StringIO(imageData)
+        image = Image.open(image_file)
+
+        self.assertEqual(image.size[0], 200)
+        self.assertEqual(image.size[1], 150)
 
     def test_withoutFeatures(self):
         layer = self.fully_import_file(os.path.realpath('mapstory/tests/sampledata/'), 'empty_layer.zip', 'date')
@@ -60,8 +69,8 @@ class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
         # validate bounding box and time
         bounding_box, timepositions = thumb_generator.retreive_WMS_metadata(layer)
         self.assertIsNone(timepositions)
-        self.assertTrue(
-            bounding_box[0] > bounding_box[2])  # for empty datasets, bounding box is JTS default (which is invalid)
+        # for empty datasets, bounding box is JTS default (which is invalid)
+        self.assertTrue(bounding_box[0] > bounding_box[2])
 
         # there's no data, so no changes!
         self.assertFalse(layer.has_thumbnail())
