@@ -240,6 +240,7 @@ class CreateStoryLayerThumbnailTask(Task):
             print "EXCEPTION - thumbnail generation"
             print(e)
             print traceback.format_exc()
+            raise
 
 
 # convenience method (used by geonode) to start (via celery) the

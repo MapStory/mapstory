@@ -11,7 +11,7 @@ from geonode.geoserver.helpers import ogc_server_settings
 from geonode.layers.models import Layer
 from geoserver.catalog import Catalog
 from osgeo_importer.importers import OGRImport
-from osgeo_importer.tests.tests_original import UploaderHelper, setUpModule
+from osgeo_importer.tests.tests_original import setUpModule
 from osgeo_importer.utils import ImportHelper
 from django.contrib.gis.gdal import DataSource
 from django.contrib.auth import get_user_model
