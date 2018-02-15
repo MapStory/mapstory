@@ -73,7 +73,6 @@ for i do # loop over $@
         cd deps/story-tools-composer
         touch index.html
         npm install
-        bower install
         webpack --output-public-path='/static/composer/'
         cd ../..
     fi
@@ -95,7 +94,6 @@ for i do # loop over $@
         cd deps/story-tools-composer
         touch index.html
         npm install
-        bower install
         webpack --output-public-path='/static/composer/'
         cd ../..
     fi
