@@ -161,7 +161,7 @@ RUN set -ex \
     && mkdir -p /usr/local/lib/python2.7/site-packages-copy \
     && chown -R mapstory:mapstory /usr/local/lib/python2.7/site-packages-copy
 
-COPY docker/django/run.sh docker/django/
+COPY docker/django/run.sh $APP_PATH/docker/django/
 RUN ln -s $APP_PATH/docker/django/run.sh /opt/run.sh
 
 USER mapstory
