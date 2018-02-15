@@ -118,7 +118,6 @@ RUN set -ex \
     && webpack --output-public-path='/static/composer/' \
     && rm -rf ~/.npm \
     && rm -rf /tmp/npm-* \
-    && rm -rf ~/.cache/bower \
     && rm -rf /tmp/phantomjs
 
 USER root
@@ -151,7 +150,6 @@ RUN set -ex \
     && webpack \
     && rm -rf ~/.npm \
     && rm -rf /tmp/npm-* \
-    && rm -rf ~/.cache/bower \
     && rm -rf /tmp/phantomjs
 
 USER root
