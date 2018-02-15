@@ -1,5 +1,5 @@
 FROM nginx
-MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
+LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 
 ENV MEDIA_ROOT=/var/lib/mapstory/media
 ENV STATIC_ROOT=/var/lib/mapstory/static

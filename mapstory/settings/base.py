@@ -88,7 +88,7 @@ INSTALLED_APPS += (
     'notification',
     'mapstory.apps.health_check_geoserver',
     'mapstory.apps.thumbnails',
-    'mapstory.annotations',
+    'mapstory.storypins',
     'mapstory.apps.journal',
     'mapstory.apps.favorite',
     'mapstory.apps.teams',
@@ -112,7 +112,7 @@ INSTALLED_APPS += (
 
 MAPSTORY_APPS = (
 
-    'mapstory.apps.boxes',
+    'mapstory.apps.storyframes',
     'mapstory.apps.flag', # - temporarily using this instead of the flag app for django because they need to use AUTH_USER_MODEL
 
 )
@@ -291,7 +291,6 @@ IMPORT_HANDLERS = (
     'osgeo_importer.handlers.geoserver.GeoServerTimeHandler',
     'osgeo_importer.handlers.geoserver.GeoWebCacheHandler',
     'osgeo_importer.handlers.geonode.GeoNodePublishHandler',
-    'osgeo_importer.handlers.geoserver.GenericSLDHandler',
     'mapstory.import_handlers.LayerAppendHandler'
 )
 
@@ -603,7 +602,7 @@ DEBUG_STATIC = True
 DEBUG = str_to_bool(os.environ.get('DEBUG', 'False'))
 if not DEBUG:
     ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split('|')
-SESSION_COOKIE_DOMAIN = os.environ['PUBLIC_HOST']
+SESSION_COOKIE_DOMAIN = None
 
 LOGGING = {
     'version': 1,

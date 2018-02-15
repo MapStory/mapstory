@@ -49,11 +49,17 @@ RUN set -ex \
 
 # Install Node and related tools
 RUN set -ex \
-    && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
+    && curl -sL https://deb.nodesource.com/setup_6.x | /bin/bash - \
+    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
         nodejs \
-    && npm install -g bower grunt webpack \
+        yarn \
+    && npm install -g \
+        bower \
+        grunt \
+        webpack \
     && rm -rf ~/.npm \
     && rm -rf /tmp/npm-* \
     && rm -rf /var/lib/apt/lists/*
@@ -118,12 +124,10 @@ RUN set -ex \
     && rm -rf ~/.cache/bower
 WORKDIR $APP_PATH/deps/story-tools-composer
 RUN set -ex \
-    && npm install \
-    && bower install \
+    && yarn install \
     && webpack --output-public-path='/static/composer/' \
     && rm -rf ~/.npm \
     && rm -rf /tmp/npm-* \
-    && rm -rf ~/.cache/bower \
     && rm -rf /tmp/phantomjs
 
 USER root
@@ -152,12 +156,10 @@ RUN set -ex \
 
 WORKDIR $APP_PATH/deps/story-tools-composer
 RUN set -ex \
-    && npm install \
-    && bower install \
+    && yarn install \
     && webpack \
     && rm -rf ~/.npm \
     && rm -rf /tmp/npm-* \
-    && rm -rf ~/.cache/bower \
     && rm -rf /tmp/phantomjs
 
 USER root
@@ -169,7 +171,8 @@ RUN set -ex \
     && mkdir -p /usr/local/lib/python2.7/site-packages-copy \
     && chown -R mapstory:mapstory /usr/local/lib/python2.7/site-packages-copy
 
-COPY docker/django/run.sh /opt/
+COPY docker/django/run.sh $APP_PATH/docker/django/
+RUN ln -s $APP_PATH/docker/django/run.sh /opt/run.sh
 
 USER mapstory
 VOLUME $STATIC_ROOT

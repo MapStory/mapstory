@@ -151,9 +151,9 @@
             if (options.id) {
                 stStoryMapBuilder.modifyStoryMap(self.storyMap, options);
 
-                var annotationsLoad = $http.get("/maps/" + options.id + "/annotations");
-                var boxesLoad = $http.get("/maps/" + options.id + "/boxes");
-                $q.all([annotationsLoad, boxesLoad]).then(function(values) {
+                var storypinsLoad = $http.get("/maps/" + options.id + "/storypins");
+                var storyframesLoad = $http.get("/maps/" + options.id + "/storyframes");
+                $q.all([storypinsLoad, storyframesLoad]).then(function(values) {
                     StoryPinLayerManager.loadFromGeoJSON(values[0].data, self.storyMap.getMap().getView().getProjection(), true);
                     StoryBoxLayerManager.loadFromGeoJSON(values[1].data, self.storyMap.getMap().getView().getProjection(), true);
                 });
@@ -246,7 +246,7 @@ module.controller('viewerController', function($scope, $location, $injector, $lo
     $scope.timeControlsManager = $injector.instantiate(TimeControlsManager);
     $scope.mapManager = MapManager;
 
-    var values = {annotations: [], boxes: [], data: []};
+    var values = {storypins: [], storyframes: [], data: []};
 
     $scope.nextChapter = function(){
         var nextChapter = Number(MapManager.storyChapter) + 1;

@@ -1,5 +1,5 @@
 FROM fenglc/pgadmin4:1.4
-MAINTAINER Tyler Battle <tbattle@boundlessgeo.com>
+LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 
 ENV PACKAGES "postgresql-client"
 ENV SCRIPTS /scripts
