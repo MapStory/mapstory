@@ -49,6 +49,9 @@ services:
       - .:/srv/mapstory/
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
+  django_volumes:
+    image: quay.io/mapstory/django:staging
+
   geoserver:
     env_file:
       - docker/env/staging/public_host.env
