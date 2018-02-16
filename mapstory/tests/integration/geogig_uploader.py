@@ -137,6 +137,7 @@ class GeoGigUploaderBase(ImportHelper):
         full_fname = os.path.join(path, fname)
         configs = self.prepare_file_for_import(full_fname)
         configs[0].update({'name': name})
+        configs[0].update({'layer_name': name})
         configs[0].update(time_config)
 
         # configure the datastore/repo
