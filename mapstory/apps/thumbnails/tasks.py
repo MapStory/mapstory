@@ -6,6 +6,7 @@ import traceback
 import os
 
 from geonode.base.models import Link
+from geonode.geoserver.helpers import create_gs_thumbnail_geonode
 from owslib.wms import WebMapService
 from lxml import etree
 from geonode.layers.models import Layer
@@ -246,5 +247,8 @@ class CreateStoryLayerThumbnailTask(Task):
 # convenience method (used by geonode) to start (via celery) the
 # thumbnail generation task.
 def create_gs_thumbnail_mapstory(instance, overwrite, quiet=True):
+    # if this is a map (i.e. multiple layers), handoff to original implementation
+    if instance.class_name == 'Map':
+        return create_gs_thumbnail_geonode(instance, overwrite)
     task = CreateStoryLayerThumbnailTask()
     task.delay(instance.pk, overwrite=overwrite,quiet=quiet)
