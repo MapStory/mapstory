@@ -246,7 +246,7 @@ class CreateStoryLayerThumbnailTask(Task):
 
 # convenience method (used by geonode) to start (via celery) the
 # thumbnail generation task.
-def create_gs_thumbnail_mapstory(instance, overwrite, quiet=True):
+def create_gs_thumbnail_mapstory(instance, overwrite, quiet=False):
     # if this is a map (i.e. multiple layers), handoff to original implementation
     if instance.class_name == 'Map':
         return create_gs_thumbnail_geonode(instance, overwrite)
