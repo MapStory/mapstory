@@ -40,6 +40,13 @@ class CreateStoryLayerThumbnailTask(Task):
         process_env = os.environ.copy()
         process_env.update(env)
 
+        p = subprocess.Popen(args, env=process_env, stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        print "out:"+str(out)
+        print "err:"+str(err)
+        return  p.returncode
+
+
         p = subprocess.Popen(args, env=process_env)
 
         max_iterations = timeout  # seconds
@@ -197,7 +204,7 @@ class CreateStoryLayerThumbnailTask(Task):
         return layer.thumbnail_url
 
     # main celery task entry point
-    def run(self, pk, overwrite=False,quiet=True):
+    def run(self, pk, overwrite=False,quiet=False):
         """Create a thumbnail for the given layer.
            If an actual (non-default) thumbnail exists and overwrite=False then this does nothing.
            Otherwise a thumbnail is generated:

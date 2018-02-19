@@ -15,7 +15,7 @@ class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
     def test_withFeatures(self):
         layer = self.fully_import_file(os.path.realpath('mapstory/tests/sampledata/'), 'railroads.zip', 'YEAR')
         thumb_generator = CreateStoryLayerThumbnailTask()
-
+        thumb_generator.quiet =False
         # this layer has features in it
         self.assertTrue(thumb_generator.has_features(layer))
 
