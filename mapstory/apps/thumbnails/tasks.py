@@ -16,6 +16,7 @@ from tempfile import NamedTemporaryFile
 import math
 import logging
 
+
 # Celery-compatible task to create thumbnails using PhantomJS
 class CreateStoryLayerThumbnailTask(Task):
     """This creates a thumbnail using PhantomJS"""
@@ -31,47 +32,29 @@ class CreateStoryLayerThumbnailTask(Task):
            If the process takes too long, it will aggressively terminate the process and return None
            timeout = max time to allow process to run (in seconds)
            env = extra environment variables to set (dictionary)
-           Returns either the exit code from the process (0=good) or None (did not complete)
+           Returns either the exit code from the process (0=good) or process exit code or 124 (timeout).
+
+           Celery logs too verbose?  set celery worker_redirect_stdouts_level config to lower level
            """
 
         logging.debug("executing command: " + str(args))
+
+        # use the command line timeout
+        # execute like timeout 66 phantomjs ...
+        args.insert(0, "timeout")
+        args.insert(1, str(timeout))
 
         # update environment
         process_env = os.environ.copy()
         process_env.update(env)
 
-        p = subprocess.Popen(args, env=process_env, stdout=subprocess.PIPE)
+        p = subprocess.Popen(args, env=process_env, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         out, err = p.communicate()
-        print "out:"+str(out)
-        print "err:"+str(err)
-        return  p.returncode
-
-
-        p = subprocess.Popen(args, env=process_env)
-
-        max_iterations = timeout  # seconds
-        iteration = 0
-
-        while True:
-            time.sleep(1)
-            iteration += 1
-            result = p.poll()
-            if result is not None:
-                break
-            if iteration >= max_iterations:
-                break
-
-        # over time - aggressively kill
-        if result is None:
-            p.terminate()
-            time.sleep(1)
-            terminated = p.poll()
-            if terminated is None:
-                p.kill()
+        result = p.poll()
 
         logging.debug("command result - " + str(result))
 
-        return result  # None if fail
+        return result, out, err  # None if fail
 
     def has_features(self, layer):
         layername = layer.typename.encode('utf-8')
@@ -119,7 +102,7 @@ class CreateStoryLayerThumbnailTask(Task):
     def create_phantomjs_args(self, layer, tempfname):
         boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer)
 
-        wms = settings.OGC_SERVER['default']['LOCATION'] + "geonode/wms"
+        wms = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + "geonode/wms"
         layerName = layer.typename.encode('utf-8')
         xmin = boundingBoxWGS84[0]
         ymin = boundingBoxWGS84[1]
@@ -140,7 +123,7 @@ class CreateStoryLayerThumbnailTask(Task):
                 xmin, ymin, xmax, ymax,
                 time,
                 tempfname,
-                self.quiet]
+                "False"]  # we capture output, so never be quiet
         args = [str(arg) for arg in args]  # convert numbers to string
 
         return args
@@ -152,24 +135,23 @@ class CreateStoryLayerThumbnailTask(Task):
         file.close()
         return fname
 
-
     # call phantomjs and save the thumbnail
     # return - image data
     def create_screenshot(self, layer):
         fname = self.create_temp_filename()
         try:
             args = self.create_phantomjs_args(layer, fname)
-            print "calling phantomjs "+ str(args)
-            resultCode = self.run_process(args, env={'QT_QPA_PLATFORM': 'minimal'})
+            resultCode, _out, _err = self.run_process(args, env={'QT_QPA_PLATFORM': 'minimal'})
             if (resultCode != 0):
                 raise Exception(
-                    'Unknown issue running PhantomJS for thumbnail generation - exit code=' + str(
-                        resultCode) + " -- args: " + str(args))
+                    'Unknown issue running PhantomJS for thumbnail generation - exit code='
+                    + str(resultCode) + " -- args: " + str(args)
+                    + "stdout:" + str(_out) + "stderr:" + str(_err))
             with open(fname, mode='rb') as file:
                 imageData = file.read()
             return imageData
         finally:
-            os.remove(fname) #clean up
+            os.remove(fname)  # clean up
 
     # if there are any thumbnails associated with the layer, delete them.
     # This will set the thumbnail to the static "no thumbnail" image
@@ -184,11 +166,10 @@ class CreateStoryLayerThumbnailTask(Task):
         layer.thumbnail_url = layer.get_thumbnail_url()
 
     # this is the official geonode thumbnail name
-    def get_official_thumbnail_name(self,layer):
-        return 'layer-' + layer.uuid + '-thumb.png' # this is Geonode official naming
+    def get_official_thumbnail_name(self, layer):
+        return 'layer-' + layer.uuid + '-thumb.png'  # this is Geonode official naming
 
-
-    def setup_thumbnail(self,layer,overwrite):
+    def setup_thumbnail(self, layer, overwrite):
         # if we are not overwriting, and there's a real thumbnail there, then do nothing!
         if (overwrite) or (not layer.has_thumbnail()):
             # if there's no features, then we don't create a thumbnail -- use the default thumbnail
@@ -204,7 +185,7 @@ class CreateStoryLayerThumbnailTask(Task):
         return layer.thumbnail_url
 
     # main celery task entry point
-    def run(self, pk, overwrite=False,quiet=False):
+    def run(self, pk, overwrite=False):
         """Create a thumbnail for the given layer.
            If an actual (non-default) thumbnail exists and overwrite=False then this does nothing.
            Otherwise a thumbnail is generated:
@@ -214,7 +195,7 @@ class CreateStoryLayerThumbnailTask(Task):
             pk - layer PK (int)
             overwrite - true = always generate an image, false = do not overwrite an existing image
                         note - if there isn't an existing image, one is always generated
-            quiet - True -> don't spew debug information
+
 
            Signals;
               If the thumbnail URL has changed, send layer post_save() signal (i.e. search re-indexing)
@@ -231,7 +212,6 @@ class CreateStoryLayerThumbnailTask(Task):
         """
 
         try:
-            self.quiet = quiet
             layer = Layer.objects.get(pk=pk)
 
             # None => Default URL
@@ -239,7 +219,7 @@ class CreateStoryLayerThumbnailTask(Task):
             if layer.has_thumbnail():
                 old_url = layer.thumbnail_url
 
-            new_url = self.setup_thumbnail(layer,overwrite)
+            new_url = self.setup_thumbnail(layer, overwrite)
 
             if old_url != new_url:
                 layer.save(update_fields=['thumbnail_url'])  # be explict about what changed
@@ -253,9 +233,9 @@ class CreateStoryLayerThumbnailTask(Task):
 
 # convenience method (used by geonode) to start (via celery) the
 # thumbnail generation task.
-def create_gs_thumbnail_mapstory(instance, overwrite, quiet=False):
+def create_gs_thumbnail_mapstory(instance, overwrite):
     # if this is a map (i.e. multiple layers), handoff to original implementation
     if instance.class_name == 'Map':
         return create_gs_thumbnail_geonode(instance, overwrite)
     task = CreateStoryLayerThumbnailTask()
-    task.delay(instance.pk, overwrite=overwrite,quiet=quiet)
+    task.delay(instance.pk, overwrite=overwrite)

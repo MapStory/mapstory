@@ -7,6 +7,7 @@ from mapstory.apps.thumbnails.tasks import CreateStoryLayerThumbnailTask
 from PIL import Image
 from StringIO import StringIO
 
+
 # python manage.py test --noinput --nocapture  mapstory.apps.thumbnails.test_storylayer_thumbnail
 class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
     # note - while this is running, there is likely a thumbnail generation task occuring in the background
@@ -15,7 +16,7 @@ class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
     def test_withFeatures(self):
         layer = self.fully_import_file(os.path.realpath('mapstory/tests/sampledata/'), 'railroads.zip', 'YEAR')
         thumb_generator = CreateStoryLayerThumbnailTask()
-        thumb_generator.quiet =False
+
         # this layer has features in it
         self.assertTrue(thumb_generator.has_features(layer))
 
@@ -85,13 +86,18 @@ class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
         thumb_generator = CreateStoryLayerThumbnailTask()
 
         # non-zero exit
-        result = thumb_generator.run_process(["python", "-c", "exit(1)"], timeout=2)
+        result, _out, _err = thumb_generator.run_process(["python", "-c", "exit(1)"], timeout=2)
         self.assertEqual(result, 1)
 
         # runs too long
-        result = thumb_generator.run_process(["sleep", "3"], timeout=1)
-        self.assertIsNone(result)
+        result, _out, _err = thumb_generator.run_process(["sleep", "3"], timeout=1)
+        self.assertEqual(result, 124)
 
         # works fine
-        result = thumb_generator.run_process(["python", "-c", "exit(0)"], timeout=2)
+        result, _out, _err = thumb_generator.run_process(["python", "-c", "exit(0)"], timeout=2)
         self.assertEqual(result, 0)
+
+        # capture output
+        result, _out, _err = thumb_generator.run_process(["python", "-c", "print 'abc'+'def'"], timeout=2)
+        self.assertEqual(result, 0)
+        self.assertTrue("abcdef" in _out)
