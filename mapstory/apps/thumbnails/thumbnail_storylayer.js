@@ -26,7 +26,7 @@ var args = system.args;
 //       wasn't already an error).
 
 if (args.length != 11) {
-    console.log('run with args: htmlFname wms layerName xmin ymin xmax ymax time output.fname quiet');
+    system.stdout.writeLine('run with args: htmlFname wms layerName xmin ymin xmax ymax time output.fname quiet');
     phantom.exit(-1);
 }
 
@@ -47,15 +47,15 @@ if (timeRange.toLowerCase() == "all")
     timeRange = '-99999999999-01-01T00:00:00.0Z/99999999999-01-01T00:00:00.0Z';
 
 if (!quiet) {
-    system.stderr.writeLine('wms = ' + wms);
-    system.stderr.writeLine('layerName = ' + layerName);
-    system.stderr.writeLine('xmin = ' + (xmin));
-    system.stderr.writeLine('ymin = ' + (ymin));
-    system.stderr.writeLine('xmax = ' + (xmax));
-    system.stderr.writeLine('ymax = ' + (ymax));
-    system.stderr.writeLine('timeRange = ' + timeRange);
-    system.stderr.writeLine('outFname = ' + outFname);
-    system.stderr.writeLine('quiet = ' + quiet);
+    system.stdout.writeLine('wms = ' + wms);
+    system.stdout.writeLine('layerName = ' + layerName);
+    system.stdout.writeLine('xmin = ' + (xmin));
+    system.stdout.writeLine('ymin = ' + (ymin));
+    system.stdout.writeLine('xmax = ' + (xmax));
+    system.stdout.writeLine('ymax = ' + (ymax));
+    system.stdout.writeLine('timeRange = ' + timeRange);
+    system.stdout.writeLine('outFname = ' + outFname);
+    system.stdout.writeLine('quiet = ' + quiet);
 
     // add some debugging output
     addDebugEvents(page, system);
@@ -88,7 +88,7 @@ page.open(htmlFname, function () {
                 return  window.error_occured;
             });
             if (error_text != ''){
-                system.stderr.writeLine('phantomjs - error occured - '+error_text);
+                system.stdout.writeLine('phantomjs - error occured - '+error_text);
                 phantom.exit(1);
             }
 
@@ -112,7 +112,7 @@ page.open(htmlFname, function () {
     //take screenshot - determine the size/location of the map div and then take the screenshot
     function takescreenshot() {
         if (!quiet)
-            system.stderr.writeLine('taking screenshot...');
+            system.stdout.writeLine('taking screenshot...');
         var clipRect = page.evaluate(function () {
             var cr = document.querySelector("#map").getBoundingClientRect();
             return cr;
@@ -127,7 +127,7 @@ page.open(htmlFname, function () {
 
         page.render(outFname, {format: 'png'});
         if (!quiet)
-            system.stderr.writeLine('done screenshot...');
+            system.stdout.writeLine('done screenshot...');
         phantom.exit(0);//all done - quit with OK
     }
 
@@ -138,36 +138,36 @@ function addDebugEvents(page, system) {
 
 
     page.onResourceRequested = function (request) {
-        system.stderr.writeLine('onResourceRequested');
-        system.stderr.writeLine('  +  url: ' + request.url);
+        system.stdout.writeLine('onResourceRequested');
+        system.stdout.writeLine('  +  url: ' + request.url);
     };
 
     page.onResourceReceived = function (response) {
-        system.stderr.writeLine('onResourceReceived');
-        system.stderr.writeLine('  url: ' + response.url);
+        system.stdout.writeLine('onResourceReceived');
+        system.stdout.writeLine('  url: ' + response.url);
     };
 
 
     page.onNavigationRequested = function (url, type, willNavigate, main) {
-        system.stderr.writeLine('onNavigationRequested');
-        system.stderr.writeLine('  url: ' + url);
+        system.stdout.writeLine('onNavigationRequested');
+        system.stdout.writeLine('  url: ' + url);
     };
 
     page.onConsoleMessage = function (msg) {
-        console.log('CONSOLE: ' + msg);
+        system.stdout.writeLine('CONSOLE: ' + msg);
     };
 
     page.onResourceError = function (resourceError) {
-        system.stderr.writeLine('onResourceError');
-        system.stderr.writeLine('  error: ' + resourceError.errorString);
-        system.stderr.writeLine('  url: ' + resourceError.url);
+        system.stdout.writeLine('onResourceError');
+        system.stdout.writeLine('  error: ' + resourceError.errorString);
+        system.stdout.writeLine('  url: ' + resourceError.url);
     };
 
     page.onResourceError = function (resourceError) {
-        system.stderr.writeLine('onResourceError');
-        system.stderr.writeLine('  - url: ' + resourceError.url);
-        system.stderr.writeLine('  - errorCode: ' + resourceError.errorCode);
-        system.stderr.writeLine('  - errorString: ' + resourceError.errorString);
+        system.stdout.writeLine('onResourceError');
+        system.stdout.writeLine('  - url: ' + resourceError.url);
+        system.stdout.writeLine('  - errorCode: ' + resourceError.errorCode);
+        system.stdout.writeLine('  - errorString: ' + resourceError.errorString);
     };
 
     // from http://phantomjs.org/api/phantom/handler/on-error.html
@@ -180,7 +180,7 @@ function addDebugEvents(page, system) {
                 msgStack.push(' -> ' + (t.file || t.sourceURL) + ': ' + t.line + (t.function ? ' (in function ' + t.function + ')' : ''));
             });
         }
-        console.log(msgStack.join('\n'));
+        system.stdout.writeLine(msgStack.join('\n'));
     };
 
 }
