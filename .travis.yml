@@ -60,10 +60,9 @@ before_install:
 
   - mkdir -p cover
   - chmod a+rwx cover
-  - $DCO pull
 
 install:
-  - $DCO build django celery
+  - $DCO build
   - $DCO up -d postgres elasticsearch rabbitmq
   - $DCO up pgadmin
   - $DCO run django "--init-db --collect-static --reindex"
