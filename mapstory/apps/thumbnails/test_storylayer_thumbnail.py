@@ -1,11 +1,55 @@
+from __future__ import division
+
 from mapstory.tests.integration.geogig_uploader import GeoGigUploaderBase
 from django.test import TestCase
 import os
 
 from geonode.layers.models import Layer
 from mapstory.apps.thumbnails.tasks import CreateStoryLayerThumbnailTask
-from PIL import Image
+from PIL import Image, ImageChops
 from StringIO import StringIO
+
+
+def compare_images(img1, img2, rgb_difference=1):
+    """compare two images.
+       rgb_difference = how different pixels need to be to be considered different
+                     1 -> any difference is detected
+                     n -> larger means minor differences aren't detected (see code)
+       different sizes ==> exception
+       otherwise, return the % of pixels that aren't the same in the images.
+       """
+    # make sure they are RGB
+    img1 = img1.convert("RGB")
+    img2 = img2.convert("RGB")
+    if img1.size[0] != img2.size[0] or img1.size[1] != img2.size[1]:
+        raise Exception("compare_images - images aren't the same size")
+    diffImage = ImageChops.difference(img1, img2)
+    differentPixels = 0
+    for w in range(0, diffImage.width):
+        for h in range(0, diffImage.height):
+            pixel = diffImage.getpixel((w, h))
+            difference = pixel[0] + pixel[1] + pixel[2]  # absolute pixel difference
+            if difference > rgb_difference:
+                differentPixels += 1
+    return differentPixels / (img1.size[0] * img1.size[1])
+
+
+# simple tests to verify that the image comparer (compare_images) is working correctly
+class TestImgCompare(TestCase):
+    def test_img_compare_same(self):
+        img1 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"))
+        img2 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"))
+        self.assertEqual(compare_images(img1, img2), 0.0)
+
+    def test_img_compare_diff1(self):
+        img1 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"))
+        img2 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-no_basemap.png"))
+        self.assertGreater(compare_images(img1, img2), 0.9)
+
+    def test_img_compare_diff2(self):
+        img1 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"))
+        img2 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-no_wms.png"))
+        self.assertGreater(compare_images(img1, img2), 0.1)
 
 
 # python manage.py test --noinput --nocapture  mapstory.apps.thumbnails.test_storylayer_thumbnail
@@ -50,14 +94,27 @@ class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
         self.assertEqual(layer.thumbnail_url, layer.get_thumbnail_url())
 
         # verify image - quick check to see if the size is correct (which means it generated an image)
-        #  TO DO: add test to check actual image (note -- highly unstable because it relies on Geoserver style
-        #         and basemap to NOT change).
         imageData = thumb_generator.create_screenshot(layer)
         image_file = StringIO(imageData)
         image = Image.open(image_file)
 
         self.assertEqual(image.size[0], 200)
         self.assertEqual(image.size[1], 150)
+
+        # image comparision - check that the generated thumbnail matches the pre-checked thumbnail
+        img_pregen = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"))
+        percent_diff = compare_images(img_pregen, image)
+        if percent_diff > 0.02:  # > 2% different
+            raise Exception(
+                "thumbnail does not match test image - " + thumb_generator.get_official_thumbnail_name(layer))
+        # GETTING TEST CASE FAILURE HERE?
+        #
+        # If you've changed the style or basemap, this will fail.  However, its easy to fix
+        # The above failure will spit out something like 'layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png'
+        # docker cp mapstory_django_1:/var/lib/mapstory/media/thumbs/layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png .
+        # manually verify that the image is correct, then replace railroads-thumb-correct.png
+        # cp layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png
+
 
     def test_withoutFeatures(self):
         layer = self.fully_import_file(os.path.realpath('mapstory/tests/sampledata/'), 'empty_layer.zip', 'date')
@@ -101,3 +158,5 @@ class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
         result, _out, _err = thumb_generator.run_process(["python", "-c", "print 'abc'+'def'"], timeout=2)
         self.assertEqual(result, 0)
         self.assertTrue("abcdef" in _out)
+
+
