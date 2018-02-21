@@ -1,0 +1,196 @@
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/static/vendor/OpenLayers/ol.css" type="text/css">
+
+    <script src="/static/vendor/OpenLayers/ol.js" type="text/javascript"></script>
+    <title>OpenLayers screenshot</title>
+</head>
+<body>
+
+<div id="map" class="map"></div>
+<script type="text/javascript">
+
+
+    var map_width = 200;
+    var map_height = 150;
+
+    // these are for tracking rendering process - see https://stackoverflow.com/a/47644720
+    // and open layers documentation.
+
+    var tiles_in_flight = 0; //number of outstanding tile requests in progress
+    var images_in_flight = 0; //number of outstanding image (WMS) requests in progress
+
+    var ready_to_start_render = 0; //anything before this is set is setup!
+    var ready_for_final_render = 0; // if there are no tiles in flight at the end of the compose, we're good for final render
+    var ready_for_screenshot = 0; // take the screenshot now
+
+    var error_occured = ""; // ""= no error occured
+
+    // uncomment this if you want to run this stand-alone (testing only)
+//    window.onload = function () {
+//        setup("https://mapstory.org/geoserver/geonode/wms",
+//              "agricultureus_161b1bf0",
+//            -180,-90,180,90,
+//            "-99999999999-01-01T00:00:00.0Z/99999999999-01-01T00:00:00.0Z"
+//            );
+//    }
+
+    // call this to setup the map and start the rendering process
+    // when ready_for_screenshot=1, you should be ready for a screenshot
+    // NOTE: due to openlayer rendering when there is wrapping across (+-180), you
+    //       should wait 1 sec after ready_for_screenshot=1 before taking a screenshot
+    //       There are no http requests outstanding and the requested tiles are already prepared for rendering.
+    //
+    // time_bounds = 'none'  --> timeless layer, do not include a &TIME=... param in GetMap request
+    function setup(wms, layerName, xmin, ymin, xmax, ymax, time_bounds) {
+
+        console.log('wms = ' + wms);
+        console.log('layerName = ' + layerName);
+        console.log('xmin = ' + parseFloat(xmin));
+        console.log('ymin = ' + parseFloat(ymin));
+        console.log('xmax = ' + parseFloat(xmax));
+        console.log('ymax = ' + parseFloat(ymax));
+        console.log('timeRange = ' + time_bounds);
+
+        // convert LL -> web mercator
+        var extent_map = ol.proj.transformExtent([xmin, ymin, xmax, ymax], 'EPSG:4326', 'EPSG:3857');
+        // let OL choose a reasonable view
+        var view_options = {padding: [7, 7, 7, 7], constrainResolution: false, size: [map_width, map_height]};
+
+        console.log('extent_map = ' + extent_map);
+        console.log('view_options = ' + view_options);
+
+        //set size of map
+        document.getElementById("map").style.width = map_width + "px";
+        document.getElementById("map").style.height = map_height + "px";
+
+        // setup layers
+        var layers = [
+            create_OSM_layer(),
+            create_WMS_layer(wms, layerName, time_bounds)
+        ];
+        map = create_map(layers, extent_map, view_options);
+    }
+
+
+    // create the OL maps with the given layers and view configuration
+    function create_map(layers, viewExtent, viewOptions) {
+        var view = new ol.View();
+        view.fit(viewExtent, viewOptions);
+
+        var map = new ol.Map({
+            controls: ol.control.defaults({
+                zoom: false,
+                attribution: false,
+                rotate: false
+            }),
+            target: 'map',
+            layers: layers,
+            view: view,
+            interactions:  //turn off all animations
+                ol.interaction.defaults({
+                    dragPan: false,
+                    mouseWheelZoom: false
+                }).extend([
+                    new ol.interaction.DragPan({kinetic: false}),
+                    new ol.interaction.MouseWheelZoom({duration: 0})
+                ])
+        });
+
+        //track compose/render changes
+        map.on('postrender', function (event) {
+            console.log("postRender");
+            if (ready_for_final_render) {
+                ready_for_screenshot = true; // we are totally ready to screenshot
+                console.log("SCREENSHOT -- you can take a screen shot now (NOTE - should wait 1 second)");
+            }
+        });
+
+        map.on('postcompose', function (event) {
+            ready_for_final_render = ready_to_start_render && (tiles_in_flight == 0) && (images_in_flight == 0);
+            console.log("postcompose - ready_for_final_render=" + ready_for_final_render + ", ready_to_start_render=" + ready_to_start_render + ", tiles_in_flight=" + tiles_in_flight + ", images_in_flight=" + images_in_flight);
+        });
+
+        //cause a rendering to occur
+        map.renderSync();
+        console.log("renderSync -- all tiles and images should be in flight between now and postcompose" + tiles_in_flight);
+        ready_to_start_render = true;  // we are done setup!
+
+        return map;
+    }
+
+    // setup OSM as a normal XYZ tile service + attach listeners
+    function create_OSM_layer() {
+        var options_url = 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var layer = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+                crossOrigin: null,
+                opaque: true,
+                maxZoom: 19,
+                url: options_url,
+                transition: 0
+            })
+        });
+
+        //setup layer tracking
+        layer.getSource().on('tileloadstart', function () {
+            tiles_in_flight++;
+            console.log("tile load start - total outstanding=" + tiles_in_flight);
+        });
+
+        layer.getSource().on('tileloadend', function () {
+            tiles_in_flight--;
+            console.log("tile load end - total outstanding=" + tiles_in_flight);
+        });
+
+        layer.getSource().on('tileloaderror', function (evt) {
+            error_occured = "basemap tile could not be retrieved - ";
+            error_occured += evt.tile.l;
+            tiles_in_flight--;
+            console.log("tile load error - total outstanding=" + tiles_in_flight);
+        });
+
+        return layer;
+    }
+
+    //setup a WMS layer
+    // time='none' --> do not make a &TIME=... request
+    // time='...' --> add a &TIME=... request
+    function create_WMS_layer(baseurl, layerName, time) {
+        var params = {'LAYERS': 'geonode:' + layerName};
+        if (time != 'none')
+            params['TIME'] = time;
+
+        var layer = new ol.layer.Image({
+            source: new ol.source.ImageWMS({
+                url: baseurl,
+                params: params,
+                ratio: 1,
+                serverType: 'geoserver'
+            })
+        });
+
+        // listeners for tracking http requests
+        layer.getSource().on('imageloadend', function () {
+            images_in_flight--;
+            console.log("IMAGE LOADED");
+        });
+        layer.getSource().on('imageloaderror', function (evt) {
+            error_occured = "WMS image could not be retrieved - ";
+            error_occured += evt.image.i;
+            images_in_flight--;
+            console.log("IMAGE LOADED -- error");
+        });
+
+        layer.getSource().on('imageloadstart', function () {
+            images_in_flight++;
+            console.log("IMAGE load START");
+        });
+
+        return layer;
+    }
+
+</script>
+
+</body>
+</html>

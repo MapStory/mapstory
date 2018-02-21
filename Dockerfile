@@ -30,11 +30,21 @@ RUN set -ex \
         paver
 
 # Install misc libs
-RUN apt-get update \
+RUN set -ex \
+    && apt-get update \
     && apt-get install -y --no-install-recommends \
         libgeos-dev \
         libjpeg-dev \
         libxml2-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install phantomjs
+ENV QT_QPA_PLATFORM minimal
+RUN set -ex \
+    && echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        phantomjs \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node and related tools
