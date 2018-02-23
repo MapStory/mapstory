@@ -1,6 +1,7 @@
 from celery import Task
 
-import time
+from django.db import connection
+
 import subprocess
 import traceback
 import os
@@ -230,7 +231,6 @@ class CreateStoryLayerThumbnailTask(Task):
             print traceback.format_exc()
             raise
 
-
 # convenience method (used by geonode) to start (via celery) the
 # thumbnail generation task.
 def create_gs_thumbnail_mapstory(instance, overwrite):
@@ -239,3 +239,22 @@ def create_gs_thumbnail_mapstory(instance, overwrite):
         return create_gs_thumbnail_geonode(instance, overwrite)
     task = CreateStoryLayerThumbnailTask()
     task.delay(instance.pk, overwrite=overwrite)
+
+# convenience method (used by geonode) to start (via celery) the
+# thumbnail generation task.
+# this version is transaction aware -- it will schedule when the
+# current transaction is committed...
+def create_gs_thumbnail_mapstory_tx_aware(instance, overwrite):
+    # if this is a map (i.e. multiple layers), handoff to original implementation
+    if instance.class_name == 'Map':
+        return create_gs_thumbnail_geonode(instance, overwrite)
+    # because layer hasn't actually been committed yet, we don't create the thumbnail until the transaction commits
+    # if the task were to run now, it wouldnt be able to retreive layer from the database
+    connection.on_commit(lambda: run_task(instance.pk,overwrite))
+    # if you get an error here, it probably means you aren't using the transaction_hooks proxy DB type
+    # cf https://django-transaction-hooks.readthedocs.io/en/latest/
+
+# run the actual task
+def run_task(pk,overwrite):
+    task = CreateStoryLayerThumbnailTask()
+    task.delay(pk, overwrite=overwrite)
