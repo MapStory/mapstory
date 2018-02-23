@@ -60,13 +60,11 @@ before_install:
 
   - mkdir -p cover
   - chmod a+rwx cover
-  - $DCO pull
 
 install:
-  - $DCO build django celery
+  - $DCO build
   - $DCO up -d postgres elasticsearch rabbitmq
   - $DCO up pgadmin
-  - $DCO run django "--init-db --collect-static --reindex"
   - if [ ! -z "$SAUCE_ACCESS_KEY" ]; then npm install -g protractor pix-diff; fi
   - sudo cp scripts/accept.sh /usr/local/bin/accept
 
@@ -74,8 +72,11 @@ script:
   - $DCO up django_volumes
   - $DCO up -d nginx
   - $DCO up django_volumes
+    # Wait for django container to come up
+  - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
+  - $DCO up django_volumes
   - $DCO kill django
-  - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --init-db --test
+  - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
   - $DCO up -d django
   # Use the docker selenium setup if running on a fork's PR because Sauce credentials aren't available
   - if [ -z "$SAUCE_ACCESS_KEY" ]; then $DCO up -d selenium; fi
