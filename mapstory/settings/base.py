@@ -701,3 +701,6 @@ SCHEMA_DOWNLOAD_EXCLUDE = [
 # Feature toggles
 #
 FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
+
+# Choose thumbnail generator -- this is the delayed phantomjs generator
+THUMBNAIL_GENERATOR = "mapstory.apps.thumbnails.tasks.create_gs_thumbnail_mapstory"
