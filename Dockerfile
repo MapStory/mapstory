@@ -59,7 +59,7 @@ RUN set -ex \
     && npm install -g \
         bower \
         grunt \
-        webpack \
+        webpack@^3.10.0 \
     && rm -rf ~/.npm \
     && rm -rf /tmp/npm-* \
     && rm -rf /var/lib/apt/lists/*
