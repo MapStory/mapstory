@@ -60,7 +60,7 @@ class CreateStoryLayerThumbnailTask(Task):
     def has_features(self, layer):
         layername = layer.typename.encode('utf-8')
 
-        url = settings.OGC_SERVER['default']['LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
+        url = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
         url += layername + "/wfs?request=GetFeature&maxfeatures=1&request=GetFeature&typename=geonode%3A" + layername + "&version=1.1.0"
 
         feats = urllib2.urlopen(url).read()
@@ -76,7 +76,7 @@ class CreateStoryLayerThumbnailTask(Task):
     def retreive_WMS_metadata(self, layer):
         layername = layer.typename.encode('utf-8')
         url = settings.OGC_SERVER['default'][
-                  'LOCATION'] + "geonode/" + layername + "/wms"  # workspace is hard-coded in the importer
+                  'PUBLIC_LOCATION'] + "geonode/" + layername + "/wms"  # workspace is hard-coded in the importer
         url += "?request=GetCapabilities&version=1.1.1"
         wms = WebMapService(url)
 
@@ -229,7 +229,7 @@ class CreateStoryLayerThumbnailTask(Task):
             print "EXCEPTION - thumbnail generation"
             print(e)
             print traceback.format_exc()
-            raise
+            self.retry(max_retries=5, countdown=5) # retry in 5 seconds
 
 # convenience method (used by geonode) to start (via celery) the
 # thumbnail generation task.
