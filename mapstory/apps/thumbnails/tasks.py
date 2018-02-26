@@ -60,17 +60,16 @@ class CreateStoryLayerThumbnailTask(Task):
 
     # add geoserver user/password to a request
     def request_geoserver_with_credentials(self, url):
-        _user = settings.OGC_SERVER['default']["USER"]
-        _password = settings.OGC_SERVER['default']["PASSWORD"]
+        user = settings.OGC_SERVER['default']["USER"]
+        password = settings.OGC_SERVER['default']["PASSWORD"]
 
         http_client = httplib2.Http()
-        http_client.add_credentials(_user, _password)
-        http_client.add_credentials(_user, _password)
+        http_client.add_credentials(user, password)
 
         _netloc = urlparse(url).netloc
         http_client.authorizations.append(
             httplib2.BasicAuthentication(
-                (_user, _password),
+                (user, password),
                 _netloc,
                 url,
                 {},
