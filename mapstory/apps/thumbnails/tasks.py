@@ -129,7 +129,7 @@ class CreateStoryLayerThumbnailTask(Task):
     def create_phantomjs_args(self, layer, tempfname):
         boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer)
 
-        wms = settings.OGC_SERVER['default']['LOCATION'] + "geonode/wms"
+        wms = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + "geonode/wms"
         layerName = layer.typename.encode('utf-8')
         xmin = boundingBoxWGS84[0]
         ymin = boundingBoxWGS84[1]
