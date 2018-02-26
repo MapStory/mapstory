@@ -85,7 +85,7 @@ class CreateStoryLayerThumbnailTask(Task):
     def has_features(self, layer):
         layername = layer.typename.encode('utf-8')
 
-        url = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
+        url = settings.OGC_SERVER['default']['LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
         url += layername + "/wfs?request=GetFeature&maxfeatures=1&request=GetFeature&typename=geonode%3A" + layername + "&version=1.1.0"
 
         feats = self.request_geoserver_with_credentials(url)
