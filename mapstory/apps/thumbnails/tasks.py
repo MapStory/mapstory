@@ -75,10 +75,11 @@ class CreateStoryLayerThumbnailTask(Task):
     # timepositions = list of dates (string)
     def retreive_WMS_metadata(self, layer):
         layername = layer.typename.encode('utf-8')
-        url = settings.OGC_SERVER['default'][
-                  'PUBLIC_LOCATION'] + "geonode/" + layername + "/wms"  # workspace is hard-coded in the importer
-        url += "?request=GetCapabilities&version=1.1.1"
-        wms = WebMapService(url)
+        url = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + "geonode/"    # workspace is hard-coded in the importer
+        url += layername + "/wms?request=GetCapabilities&version=1.1.1"
+
+        get_cap_data = urllib2.urlopen(url).read()
+        wms = WebMapService(url, xml=get_cap_data)
 
         # I found that some dataset advertise illegal bounds - fix them up
         xmin = wms[layername].boundingBoxWGS84[0]
