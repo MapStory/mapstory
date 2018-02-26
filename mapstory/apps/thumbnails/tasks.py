@@ -100,7 +100,7 @@ class CreateStoryLayerThumbnailTask(Task):
     # timepositions = list of dates (string)
     def retreive_WMS_metadata(self, layer):
         layername = layer.typename.encode('utf-8')
-        url = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
+        url = settings.OGC_SERVER['default']['LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
         url += layername + "/wms?request=GetCapabilities&version=1.1.1"
 
         get_cap_data= self.request_geoserver_with_credentials(url)
@@ -129,7 +129,7 @@ class CreateStoryLayerThumbnailTask(Task):
     def create_phantomjs_args(self, layer, tempfname):
         boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer)
 
-        wms = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + "geonode/wms"
+        wms = settings.OGC_SERVER['default']['LOCATION'] + "geonode/wms"
         layerName = layer.typename.encode('utf-8')
         xmin = boundingBoxWGS84[0]
         ymin = boundingBoxWGS84[1]
