@@ -93,8 +93,12 @@ for i do # loop over $@
         ln -s $PWD/deps/story-tools-composer $STATIC_ROOT/composer
         cd deps/story-tools-composer
         touch index.html
-        npm install
-        webpack --output-public-path='/static/composer/'
+        yarn install
+        cd deps/story-tools
+        yarn link
+        cd ../..
+        yarn link story-tools
+        yarn run bundle --output-public-path='/static/composer/'
         cd ../..
     fi
 
