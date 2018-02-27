@@ -1,3 +1,4 @@
+
 from celery import Task
 
 from django.db import connection
@@ -12,11 +13,11 @@ from owslib.wms import WebMapService
 from lxml import etree
 from geonode.layers.models import Layer
 from django.conf import settings
-import urllib2
 from tempfile import NamedTemporaryFile
 import math
 import logging
-
+import httplib2
+from urlparse import urlparse
 
 # Celery-compatible task to create thumbnails using PhantomJS
 class CreateStoryLayerThumbnailTask(Task):
@@ -57,13 +58,36 @@ class CreateStoryLayerThumbnailTask(Task):
 
         return result, out, err  # None if fail
 
+    # add geoserver user/password to a request
+    def request_geoserver_with_credentials(self, url):
+        user = settings.OGC_SERVER['default']["USER"]
+        password = settings.OGC_SERVER['default']["PASSWORD"]
+
+        http_client = httplib2.Http()
+        http_client.add_credentials(user, password)
+
+        _netloc = urlparse(url).netloc
+        http_client.authorizations.append(
+            httplib2.BasicAuthentication(
+                (user, password),
+                _netloc,
+                url,
+                {},
+                None,
+                None,
+                http_client
+            )
+        )
+        resp, content = http_client.request(url)
+        return content
+
     def has_features(self, layer):
         layername = layer.typename.encode('utf-8')
 
         url = settings.OGC_SERVER['default']['LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
         url += layername + "/wfs?request=GetFeature&maxfeatures=1&request=GetFeature&typename=geonode%3A" + layername + "&version=1.1.0"
 
-        feats = urllib2.urlopen(url).read()
+        feats = self.request_geoserver_with_credentials(url)
         root = etree.fromstring(feats)
 
         nfeatures = root.attrib['numberOfFeatures']
@@ -75,10 +99,11 @@ class CreateStoryLayerThumbnailTask(Task):
     # timepositions = list of dates (string)
     def retreive_WMS_metadata(self, layer):
         layername = layer.typename.encode('utf-8')
-        url = settings.OGC_SERVER['default'][
-                  'LOCATION'] + "geonode/" + layername + "/wms"  # workspace is hard-coded in the importer
-        url += "?request=GetCapabilities&version=1.1.1"
-        wms = WebMapService(url)
+        url = settings.OGC_SERVER['default']['LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
+        url += layername + "/wms?request=GetCapabilities&version=1.1.1"
+
+        get_cap_data= self.request_geoserver_with_credentials(url)
+        wms = WebMapService(url, xml=get_cap_data)
 
         # I found that some dataset advertise illegal bounds - fix them up
         xmin = wms[layername].boundingBoxWGS84[0]
@@ -229,7 +254,7 @@ class CreateStoryLayerThumbnailTask(Task):
             print "EXCEPTION - thumbnail generation"
             print(e)
             print traceback.format_exc()
-            raise
+            self.retry(max_retries=5, countdown=31) # retry in 31 seconds (auth cache timeout)
 
 # convenience method (used by geonode) to start (via celery) the
 # thumbnail generation task.
