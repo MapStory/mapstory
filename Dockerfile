@@ -56,12 +56,11 @@ RUN set -ex \
     && apt-get install -y --no-install-recommends \
         nodejs \
         yarn \
-    && npm install -g \
+    && yarn global add \
         bower \
         grunt \
         webpack@^3.10.0 \
-    && rm -rf ~/.npm \
-    && rm -rf /tmp/npm-* \
+    && yarn cache clean \
     && rm -rf /var/lib/apt/lists/*
 
 #RUN mkdir -p $MEDIA_ROOT && chown www-data $MEDIA_ROOT
@@ -117,17 +116,15 @@ WORKDIR $APP_PATH/mapstory/static
 RUN chown -R mapstory:mapstory .
 USER mapstory
 RUN set -ex \
-    && npm install \
-    && rm -rf ~/.npm \
-    && rm -rf /tmp/npm-* \
+    && yarn install \
+    && yarn cache clean \
     && bower install \
     && rm -rf ~/.cache/bower
 WORKDIR $APP_PATH/deps/story-tools-composer
 RUN set -ex \
     && yarn install \
     && webpack --output-public-path='/static/composer/' \
-    && rm -rf ~/.npm \
-    && rm -rf /tmp/npm-* \
+    && yarn cache clean \
     && rm -rf /tmp/phantomjs
 
 USER root
@@ -144,22 +141,23 @@ USER mapstory
 
 WORKDIR $APP_PATH/mapstory/static
 RUN set -ex \
-    && npm install \
+    && yarn install \
     && bower install \
     && grunt concat \
     && grunt less:development \
     && grunt copy:development \
-    && rm -rf ~/.npm \
-    && rm -rf /tmp/npm-* \
+    && yarn cache clean \
     && rm -rf ~/.cache/bower \
     && rm -rf /tmp/phantomjs
 
 WORKDIR $APP_PATH/deps/story-tools-composer
-RUN set -ex \
-    && yarn install \
-    && webpack \
-    && rm -rf ~/.npm \
-    && rm -rf /tmp/npm-* \
+RUN set -ex; \
+    && ./scripts/run.sh --bundle \
+    && mkdir /tmp/story-tools-composer/ \
+    && mv ./node_modules /tmp/story-tools-composer/ \
+    && mkdir /tmp/story-tools/ \
+    && mv ./deps/story-tools/node_modules /tmp/story-tools/ \
+    && yarn cache clean \
     && rm -rf /tmp/phantomjs
 
 USER root

@@ -22,6 +22,16 @@ rm $APP_PATH/cover/.ignore_$HOSTNAME
 rm /usr/local/lib/python2.7/site-packages-copy/.ignore_$HOSTNAME
 echo 'Permissions look good'
 
+# Populate node_modules in story-tools-composer if it's missing
+cd $APP_PATH/deps/story-tools-composer
+if [ ! -d "node_modules" ]; then
+  cp /tmp/story-tools-composer/node_modules ./
+fi
+# And for composer's story-tools
+if [ ! -d "deps/story-tools/node_modules" ]; then
+  cp /tmp/story-tools/node_modules ./deps/story-tools/
+fi
+
 cd $APP_PATH
 
 # Load secrets as environment variables
@@ -69,11 +79,8 @@ for i do # loop over $@
         python manage.py collectstatic --noinput --ignore node_modules
 
         # composer
-        ln -s $PWD/deps/story-tools-composer $STATIC_ROOT/composer
         cd deps/story-tools-composer
-        touch index.html
-        npm install
-        webpack --output-public-path='/static/composer/'
+        COMPOSER_BUNDLE_ARGS="--output-public-path=$STATIC_ROOT/composer/" ./scripts/run.sh --bundle
         cd ../..
     fi
 
@@ -90,15 +97,8 @@ for i do # loop over $@
         python manage.py collectstatic --link --noinput --ignore node_modules
 
         # composer
-        ln -s $PWD/deps/story-tools-composer $STATIC_ROOT/composer
         cd deps/story-tools-composer
-        touch index.html
-        yarn install
-        cd deps/story-tools
-        yarn link
-        cd ../..
-        yarn link story-tools
-        yarn run bundle --output-public-path='/static/composer/'
+        COMPOSER_BUNDLE_ARGS="--output-public-path=$STATIC_ROOT/composer/" ./scripts/run.sh --bundle-dev
         cd ../..
     fi
 
