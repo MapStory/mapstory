@@ -1,5 +1,6 @@
 **/*.DS_Store
 **/*.pyc
+**/node_modules/
 **/deps/*/.git/
 .git/
 .vagrant/

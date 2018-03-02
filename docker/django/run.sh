@@ -24,12 +24,12 @@ echo 'Permissions look good'
 
 # Populate node_modules in story-tools-composer if it's missing
 cd $APP_PATH/deps/story-tools-composer
-if [ ! -d "node_modules" ]; then
-  cp /tmp/story-tools-composer/node_modules ./
+if [ ! -d "./node_modules" ]; then
+  cp -r /tmp/story-tools-composer/node_modules ./
 fi
 # And for composer's story-tools
-if [ ! -d "deps/story-tools/node_modules" ]; then
-  cp /tmp/story-tools/node_modules ./deps/story-tools/
+if [ ! -d "./deps/story-tools/node_modules" ]; then
+  cp -r /tmp/story-tools/node_modules ./deps/story-tools/
 fi
 
 cd $APP_PATH

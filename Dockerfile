@@ -59,6 +59,7 @@ RUN set -ex \
     && yarn global add \
         bower \
         grunt \
+        gulp-cli \
         webpack@^3.10.0 \
     && yarn cache clean \
     && rm -rf /var/lib/apt/lists/*
@@ -151,7 +152,7 @@ RUN set -ex \
     && rm -rf /tmp/phantomjs
 
 WORKDIR $APP_PATH/deps/story-tools-composer
-RUN set -ex; \
+RUN set -ex \
     && ./scripts/run.sh --bundle \
     && mkdir /tmp/story-tools-composer/ \
     && mv ./node_modules /tmp/story-tools-composer/ \
