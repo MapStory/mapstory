@@ -125,6 +125,7 @@ WORKDIR $APP_PATH/deps/story-tools-composer
 RUN set -ex \
     && yarn install \
     && webpack --output-public-path='/static/composer/' \
+    && cp -r . $APP_PATH/mapstory/static/composer \
     && yarn cache clean \
     && rm -rf /tmp/phantomjs
 
@@ -158,6 +159,7 @@ RUN set -ex \
     && mv ./node_modules /tmp/story-tools-composer/ \
     && mkdir /tmp/story-tools/ \
     && mv ./deps/story-tools/node_modules /tmp/story-tools/ \
+    && cp -r . $APP_PATH/mapstory/static/composer \
     && yarn cache clean \
     && rm -rf /tmp/phantomjs
 
