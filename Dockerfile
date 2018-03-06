@@ -112,7 +112,7 @@ RUN cat /etc/ssl/certs/ca-certificates.crt >> /usr/local/lib/python2.7/site-pack
 RUN pip install --no-cache-dir -U git+git://github.com/dimka665/awesome-slugify@a6563949965bcddd976b7b3fb0babf76e3b490f7#egg=awesome-slugify
 
 # Cache these. Hopefully it will speed up the later steps.
-COPY mapstory/static $APP_PATH/mapstory/static
+COPY --chown=mapstory:mapstory mapstory/static $APP_PATH/mapstory/static
 WORKDIR $APP_PATH/mapstory/static
 RUN chown -R mapstory:mapstory .
 USER mapstory
@@ -133,10 +133,10 @@ USER root
 WORKDIR $APP_PATH
 
 # Copy in dependencies
-COPY deps ./deps
+COPY --chown=mapstory:mapstory deps ./deps
 # Copy in the code
-COPY mapstory ./mapstory
-COPY ./*.py ./
+COPY --chown=mapstory:mapstory mapstory ./mapstory
+COPY --chown=mapstory:mapstory ./*.py ./
 RUN chown -R mapstory:mapstory $APP_PATH
 
 USER mapstory
@@ -159,6 +159,7 @@ RUN set -ex \
     && mv ./node_modules /tmp/story-tools-composer/ \
     && mkdir /tmp/story-tools/ \
     && mv ./deps/story-tools/node_modules /tmp/story-tools/ \
+    && rm -rf $APP_PATH/mapstory/static/composer \
     && cp -r . $APP_PATH/mapstory/static/composer \
     && yarn cache clean \
     && rm -rf /tmp/phantomjs
@@ -172,7 +173,7 @@ RUN set -ex \
     && mkdir -p /usr/local/lib/python2.7/site-packages-copy \
     && chown -R mapstory:mapstory /usr/local/lib/python2.7/site-packages-copy
 
-COPY docker/django/run.sh $APP_PATH/docker/django/
+COPY --chown=mapstory:mapstory docker/django/run.sh $APP_PATH/docker/django/
 RUN ln -s $APP_PATH/docker/django/run.sh /opt/run.sh
 
 USER mapstory
