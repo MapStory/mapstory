@@ -1,3 +1,4 @@
+from PIL import Image
 from celery import Task
 
 from django.db import connection
@@ -12,11 +13,12 @@ from owslib.wms import WebMapService
 from lxml import etree
 from geonode.layers.models import Layer
 from django.conf import settings
-import urllib2
 from tempfile import NamedTemporaryFile
 import math
 import logging
-
+import httplib2
+from urlparse import urlparse
+import numpy
 
 # Celery-compatible task to create thumbnails using PhantomJS
 class CreateStoryLayerThumbnailTask(Task):
@@ -57,13 +59,36 @@ class CreateStoryLayerThumbnailTask(Task):
 
         return result, out, err  # None if fail
 
+    # add geoserver user/password to a request
+    def request_geoserver_with_credentials(self, url):
+        user = settings.OGC_SERVER['default']["USER"]
+        password = settings.OGC_SERVER['default']["PASSWORD"]
+
+        http_client = httplib2.Http()
+        http_client.add_credentials(user, password)
+
+        _netloc = urlparse(url).netloc
+        http_client.authorizations.append(
+            httplib2.BasicAuthentication(
+                (user, password),
+                _netloc,
+                url,
+                {},
+                None,
+                None,
+                http_client
+            )
+        )
+        resp, content = http_client.request(url)
+        return content
+
     def has_features(self, layer):
         layername = layer.typename.encode('utf-8')
 
         url = settings.OGC_SERVER['default']['LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
         url += layername + "/wfs?request=GetFeature&maxfeatures=1&request=GetFeature&typename=geonode%3A" + layername + "&version=1.1.0"
 
-        feats = urllib2.urlopen(url).read()
+        feats = self.request_geoserver_with_credentials(url)
         root = etree.fromstring(feats)
 
         nfeatures = root.attrib['numberOfFeatures']
@@ -75,10 +100,11 @@ class CreateStoryLayerThumbnailTask(Task):
     # timepositions = list of dates (string)
     def retreive_WMS_metadata(self, layer):
         layername = layer.typename.encode('utf-8')
-        url = settings.OGC_SERVER['default'][
-                  'LOCATION'] + "geonode/" + layername + "/wms"  # workspace is hard-coded in the importer
-        url += "?request=GetCapabilities&version=1.1.1"
-        wms = WebMapService(url)
+        url = settings.OGC_SERVER['default']['LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
+        url += layername + "/wms?request=GetCapabilities&version=1.1.1"
+
+        get_cap_data= self.request_geoserver_with_credentials(url)
+        wms = WebMapService(url, xml=get_cap_data)
 
         # I found that some dataset advertise illegal bounds - fix them up
         xmin = wms[layername].boundingBoxWGS84[0]
@@ -100,8 +126,7 @@ class CreateStoryLayerThumbnailTask(Task):
         return [xmin, ymin, xmax, ymax], wms[layername].timepositions
 
     # phantomJSFile htmlFile wms layerName xmin ymin xmax ymax time output.fname
-    def create_phantomjs_args(self, layer, tempfname):
-        boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer)
+    def create_phantomjs_args(self, layer, boundingBoxWGS84, timepositions, tempfname,time="ALL"):
 
         wms = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + "geonode/wms"
         layerName = layer.typename.encode('utf-8')
@@ -110,7 +135,6 @@ class CreateStoryLayerThumbnailTask(Task):
         xmax = boundingBoxWGS84[2]
         ymax = boundingBoxWGS84[3]
 
-        time = "ALL"  # entire dataset (all times)
         if timepositions is None:
             time = "NONE"  # this is a time-less dataset, don't request time-limited data
 
@@ -141,7 +165,8 @@ class CreateStoryLayerThumbnailTask(Task):
     def create_screenshot(self, layer):
         fname = self.create_temp_filename()
         try:
-            args = self.create_phantomjs_args(layer, fname)
+            boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer)
+            args = self.create_phantomjs_args(layer,boundingBoxWGS84, timepositions, fname)
             resultCode, _out, _err = self.run_process(args, env={'QT_QPA_PLATFORM': 'minimal'})
             if (resultCode != 0):
                 raise Exception(
@@ -229,7 +254,78 @@ class CreateStoryLayerThumbnailTask(Task):
             print "EXCEPTION - thumbnail generation"
             print(e)
             print traceback.format_exc()
-            raise
+            self.retry(max_retries=5, countdown=31) # retry in 31 seconds (auth cache timeout)
+
+
+# ------------------------------------------------------------------------------------------------------------
+
+
+
+# Celery-compatible task to create thumbnails using PhantomJS
+class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
+    NTIMESLICES = 10
+
+    def choose_timeslices(self, timepositions, nslices):
+        # if just a few slices, use all of them
+        if len(timepositions) < nslices:
+            return timepositions
+        # otherwise, have to group timepositions
+
+        # split into 10 sub-lists, all approx same size
+        #   this uses the INDEX
+        # ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'] into 4 would be
+        #  [array([0, 1, 2]), array([3, 4, 5]), array([6, 7]), array([8, 9])]
+        chunks = numpy.array_split(numpy.array(xrange(0, len(timepositions))), nslices)
+        # get the original data for the 1st and last value in the list
+        # i.e. (From above) --> ['a/c', 'd/f', 'g/h', 'i/j']
+        return [timepositions[x[0]] + "/" + timepositions[x[-1]] for x in chunks]
+
+    # given a list of image filenames, save as an animated gif
+    def create_animated_GIF(self, frame_fnames):
+        gif_fname = self.create_temp_filename()
+        try:
+            images = []
+            for fname in frame_fnames:
+                images.append(Image.open(fname))
+
+            images[0].save(gif_fname, format="GIF", save_all=True, append_images=images[1:], loop=10000, duration=1000)
+
+            with open(gif_fname, mode='rb') as file:
+                imageData = file.read()
+            return imageData
+        finally:
+            os.remove(gif_fname)  # clean up
+
+    # overwrite from non-animated class
+    #
+    # for each timeslice
+    #     create a image for it
+    # use PIL to create an animated GIF
+    # delete all the single-timeslice gifs
+    # return the animated GIF
+    def create_screenshot(self, layer):
+        boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer)
+        if timepositions is None or len(timepositions) == 1:  # cannot animate, call parent implementation
+            return super(CreateStoryLayerAnimatedThumbnailTask, self).create_screenshot(layer)
+
+        try:
+            frame_fnames = []
+            for timeslice in self.choose_timeslices(timepositions, self.NTIMESLICES):
+                fname = self.create_temp_filename()
+                frame_fnames.append(fname)
+                args = self.create_phantomjs_args(layer, boundingBoxWGS84, timepositions, fname, timeslice)
+                resultCode, _out, _err = self.run_process(args, env={'QT_QPA_PLATFORM': 'minimal'})
+                if (resultCode != 0):
+                    raise Exception('Unknown issue running PhantomJS for thumbnail generation - exit code='
+                                    + str(resultCode) + " -- args: " + str(args)
+                                    + "stdout:" + str(_out) + "stderr:" + str(_err))
+            return self.create_animated_GIF(frame_fnames)
+        finally:
+            for to_delete_fname in frame_fnames:
+                os.remove(to_delete_fname)  # clean up
+
+# ------------------------------------------------------------------------------------------------------------
+
 
 # convenience method (used by geonode) to start (via celery) the
 # thumbnail generation task.
@@ -237,7 +333,7 @@ def create_gs_thumbnail_mapstory(instance, overwrite):
     # if this is a map (i.e. multiple layers), handoff to original implementation
     if instance.class_name == 'Map':
         return create_gs_thumbnail_geonode(instance, overwrite)
-    task = CreateStoryLayerThumbnailTask()
+    task = CreateStoryLayerAnimatedThumbnailTask()
     task.delay(instance.pk, overwrite=overwrite)
 
 # convenience method (used by geonode) to start (via celery) the
@@ -256,5 +352,5 @@ def create_gs_thumbnail_mapstory_tx_aware(instance, overwrite):
 
 # run the actual task
 def run_task(pk,overwrite):
-    task = CreateStoryLayerThumbnailTask()
+    task = CreateStoryLayerAnimatedThumbnailTask()
     task.delay(pk, overwrite=overwrite)
