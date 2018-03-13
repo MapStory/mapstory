@@ -41,7 +41,7 @@
     //       should wait 1 sec after ready_for_screenshot=1 before taking a screenshot
     //       There are no http requests outstanding and the requested tiles are already prepared for rendering.
     //
-    // time_bounds = 'none'  --> timeless layer, do not include a &TIME=... param in GetMap request
+    // time_bounds = 'NONE'  --> timeless layer, do not include a &TIME=... param in GetMap request
     function setup(wms, layerName, xmin, ymin, xmax, ymax, time_bounds) {
 
         console.log('wms = ' + wms);
@@ -158,7 +158,7 @@
     // time='...' --> add a &TIME=... request
     function create_WMS_layer(baseurl, layerName, time) {
         var params = {'LAYERS': 'geonode:' + layerName};
-        if (time != 'none')
+        if (time != 'NONE')
             params['TIME'] = time;
 
         var layer = new ol.layer.Image({
