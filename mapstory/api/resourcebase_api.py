@@ -456,8 +456,6 @@ class CommonModelApi(ModelResource):
             'abstract',
             'csw_wkt_geometry',
             'csw_type',
-            'distribution_description',
-            'distribution_url',
             'owner__username',
             'share_count',
             'popular_count',
