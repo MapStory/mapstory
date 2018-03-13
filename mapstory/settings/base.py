@@ -476,7 +476,7 @@ CELERY_IGNORE_RESULT = False
 #
 # Haystack Settings
 #
-HAYSTACK_SEARCH = True
+HAYSTACK_SEARCH = False
 # Update facet counts from Haystack
 HAYSTACK_FACET_COUNTS = False
 HAYSTACK_URL = "%s://%s:%d" % (os.environ['PRIVATE_PROTOCOL'], os.environ['ELASTIC_HOST'], int(os.environ['ELASTIC_PORT']))
