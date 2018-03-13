@@ -19,7 +19,7 @@ services:
       - selenium
       - nginx
     volumes:
-      - ./mapstory/tests:/opt/mapstory/tests
+      - ./mapstory/tests:/opt/mapstory/tests:cached
     networks:
       internal:
 
@@ -66,7 +66,7 @@ services:
     environment:
       GIT_DIR: /git
     volumes:
-      - ./deps/maploom:/usr/src/app
+      - ./deps/maploom:/usr/src/app:cached
       - .git:/git
 
   django-maploom-build:
@@ -77,8 +77,8 @@ services:
     depends_on:
       - maploom-build
     volumes:
-      - ./deps/django-maploom:/django-maploom
-      - ./deps/maploom:/maploom
+      - ./deps/django-maploom:/django-maploom:cached
+      - ./deps/maploom:/maploom:cached
       - .git:/git
 
   story-tools-build:
@@ -87,7 +87,7 @@ services:
     environment:
       GIT_DIR: /git
     volumes:
-      - ./deps/story-tools:/usr/src/app
+      - ./deps/story-tools:/usr/src/app:cached
       - .git:/git
 
   django:
@@ -101,8 +101,8 @@ services:
       - docker/env/dev/db_auth.env
     command: [--collect-static-dev, --init-db, --reindex, --serve-dev]
     volumes:
-      - .:/srv/mapstory/
-      - ./cover:/srv/mapstory/cover
+      - .:/srv/mapstory/:cached
+      - ./cover:/srv/mapstory/cover:cached
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
 #    ports:
 #      - "8000:8000"
@@ -121,8 +121,8 @@ services:
       - docker/env/dev/mapstory.env
       - docker/env/dev/db_auth.env
     volumes:
-      - .:/srv/mapstory/
-      - ./cover:/srv/mapstory/cover
+      - .:/srv/mapstory/:cached
+      - ./cover:/srv/mapstory/cover:cached
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   django_volumes:
@@ -146,7 +146,7 @@ services:
     env_file:
       - docker/env/dev/public_host.env
     volumes:
-      - .:/srv/mapstory/ # mapstory_static has symlinks to this
+      - .:/srv/mapstory/:cached # mapstory_static has symlinks to this
       - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
     networks:
       internal:
