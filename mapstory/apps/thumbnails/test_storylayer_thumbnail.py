@@ -5,7 +5,7 @@ from django.test import TestCase
 import os
 
 from geonode.layers.models import Layer
-from mapstory.apps.thumbnails.tasks import CreateStoryLayerThumbnailTask
+from mapstory.apps.thumbnails.tasks import CreateStoryLayerThumbnailTask, CreateStoryLayerAnimatedThumbnailTask
 from PIL import Image, ImageChops
 from StringIO import StringIO
 
@@ -51,6 +51,104 @@ class TestImgCompare(TestCase):
         img2 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-no_wms.png"))
         self.assertGreater(compare_images(img1, img2), 0.1)
 
+
+# ------------------------------------------------------------------------------------------------------------
+
+
+
+
+# python manage.py test --noinput --nocapture  mapstory.apps.thumbnails.test_storylayer_thumbnail
+class TestAnimatedStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
+    # lots of timelice -- directly call the timechooser
+    def test_timeslice_reduction(self):
+        timepositions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
+        thumb_generator = CreateStoryLayerAnimatedThumbnailTask()
+
+        times = thumb_generator.choose_timeslices(timepositions, 4)
+        self.assertEqual(len(times), 4)
+        self.assertEqual(times, ['a/c', 'd/f', 'g/h', 'i/j'])
+        times = thumb_generator.choose_timeslices(timepositions, 5)
+        self.assertEqual(len(times), 5)
+        self.assertEqual(times, ['a/b', 'c/d', 'e/f', 'g/h', 'i/j'])
+
+    # we create an animated GIF and then verify it
+    # this is testing the thumb_generator.create_animated_GIF(fnames) method.
+    #
+    def test_animated_GIF_creation(self):
+        thumb_generator = CreateStoryLayerAnimatedThumbnailTask()
+        fnames = [
+            os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"),
+            os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-no_basemap.png"),
+            os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-no_wms.png")
+        ]
+        orig_images = [Image.open(fname) for fname in fnames]
+
+        gif_data = thumb_generator.create_animated_GIF(fnames)
+        image_file = StringIO(gif_data)
+        gif_image = Image.open(image_file)
+
+        self.assertTrue(gif_image.is_animated)
+        self.assertEqual(gif_image.n_frames, 3)
+
+        frames = [Image.new('RGBA', gif_image.size), Image.new('RGBA', gif_image.size),
+                  Image.new('RGBA', gif_image.size)]
+        gif_image.seek(0)
+        frames[0].paste(gif_image)
+        gif_image.seek(1)
+        frames[1].paste(gif_image)
+        gif_image.seek(2)
+        frames[2].paste(gif_image)
+
+        # due to pallet differences, we allow a little bit of difference
+        self.assertTrue(compare_images(orig_images[0], frames[0], 12) < 0.05)
+        self.assertTrue(compare_images(orig_images[1], frames[1], 12) < 0.05)
+        self.assertTrue(compare_images(orig_images[2], frames[2], 12) < 0.05)
+
+    # note - while this is running, there is likely a thumbnail generation task occuring in the background
+    # (kicked off by the importer)
+    #   So, the layer may or may not have a thumbnail attached to it (and might have one in the future).
+    def test_railroads(self):
+        layer = self.fully_import_file(os.path.realpath('mapstory/tests/sampledata/'), 'railroads.zip', 'YEAR')
+        thumb_generator = CreateStoryLayerAnimatedThumbnailTask()
+
+        # verify image - quick check to see if the size is correct (which means it generated an image)
+        imageData = thumb_generator.create_screenshot(layer)
+        image_file = StringIO(imageData)
+        image = Image.open(image_file)
+
+        self.assertEqual(image.size[0], 200)
+        self.assertEqual(image.size[1], 150)
+        self.assertTrue(image.is_animated)
+        self.assertEqual(image.n_frames, 6)
+
+    def test_prisons(self):
+        layer = self.fully_import_file(os.path.realpath('mapstory/tests/sampledata/'), 'PRISONS.csv', 'Year')
+        thumb_generator = CreateStoryLayerAnimatedThumbnailTask()
+
+        # verify image - quick check to see if the size is correct (which means it generated an image)
+        imageData = thumb_generator.create_screenshot(layer)
+        image_file = StringIO(imageData)
+        image = Image.open(image_file)
+
+        self.assertEqual(image.size[0], 200)
+        self.assertEqual(image.size[1], 150)
+        self.assertTrue(image.is_animated)
+        self.assertEqual(image.n_frames, 10)
+
+    # test an empty layer -- this will not be animated
+    def test_empty_layer(self):
+        layer = self.fully_import_file(os.path.realpath('mapstory/tests/sampledata/'), 'empty_layer.zip', 'date')
+        thumb_generator = CreateStoryLayerAnimatedThumbnailTask()
+
+        imageData = thumb_generator.create_screenshot(layer)
+        image_file = StringIO(imageData)
+        image = Image.open(image_file)
+
+        self.assertEqual(image.format, "PNG") # not a GIF
+
+
+
+# ------------------------------------------------------------------------------------------------------------
 
 # python manage.py test --noinput --nocapture  mapstory.apps.thumbnails.test_storylayer_thumbnail
 class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
@@ -107,14 +205,13 @@ class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
         if percent_diff > 0.02:  # > 2% different
             raise Exception(
                 "thumbnail does not match test image - " + thumb_generator.get_official_thumbnail_name(layer))
-        # GETTING TEST CASE FAILURE HERE?
-        #
-        # If you've changed the style or basemap, this will fail.  However, its easy to fix
-        # The above failure will spit out something like 'layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png'
-        # docker cp mapstory_django_1:/var/lib/mapstory/media/thumbs/layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png .
-        # manually verify that the image is correct, then replace railroads-thumb-correct.png
-        # cp layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png
-
+            # GETTING TEST CASE FAILURE HERE?
+            #
+            # If you've changed the style or basemap, this will fail.  However, its easy to fix
+            # The above failure will spit out something like 'layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png'
+            # docker cp mapstory_django_1:/var/lib/mapstory/media/thumbs/layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png .
+            # manually verify that the image is correct, then replace railroads-thumb-correct.png
+            # cp layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png
 
     def test_withoutFeatures(self):
         layer = self.fully_import_file(os.path.realpath('mapstory/tests/sampledata/'), 'empty_layer.zip', 'date')
@@ -158,5 +255,3 @@ class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
         result, _out, _err = thumb_generator.run_process(["python", "-c", "print 'abc'+'def'"], timeout=2)
         self.assertEqual(result, 0)
         self.assertTrue("abcdef" in _out)
-
-
