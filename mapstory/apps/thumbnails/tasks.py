@@ -296,7 +296,7 @@ class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
         finally:
             os.remove(gif_fname)  # clean up
 
-    # overwrite from non-animated class
+    # override from non-animated class
     #
     # for each timeslice
     #     create a image for it
@@ -306,7 +306,7 @@ class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
     def create_screenshot(self, layer):
         boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer)
         if timepositions is None or len(timepositions) == 1:  # cannot animate, call parent implementation
-            return super(CreateStoryLayerAnimatedThumbnailTask, self).create_screenshot(layer)
+            return CreateStoryLayerThumbnailTask.create_screenshot(self,layer)
 
         try:
             frame_fnames = []
