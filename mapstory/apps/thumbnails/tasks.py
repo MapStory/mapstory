@@ -83,16 +83,22 @@ class CreateStoryLayerThumbnailTask(Task):
         return content
 
     def has_features(self, layer):
-        layername = layer.typename.encode('utf-8')
+        try:
+            layername = layer.typename.encode('utf-8')
 
-        url = settings.OGC_SERVER['default']['LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
-        url += layername + "/wfs?request=GetFeature&maxfeatures=1&request=GetFeature&typename=geonode%3A" + layername + "&version=1.1.0"
+            url = settings.OGC_SERVER['default']['LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
+            url += layername + "/wfs?request=GetFeature&maxfeatures=1&request=GetFeature&typename=geonode%3A" + layername + "&version=1.1.0"
 
-        feats = self.request_geoserver_with_credentials(url)
-        root = etree.fromstring(feats)
+            feats = self.request_geoserver_with_credentials(url)
+            root = etree.fromstring(feats)
 
-        nfeatures = root.attrib['numberOfFeatures']
-        return nfeatures == "1"
+            nfeatures = root.attrib['numberOfFeatures']
+            return nfeatures == "1"
+        except Exception as e:
+            print "ERROR occurred communicating with WFS, url="+url
+            if feats is not None:
+                print "server response: "+str(feats)
+            raise e
 
     # returns:
     #  bounding_box, timepositions = retreive_WMS_metadata(...)
@@ -251,7 +257,7 @@ class CreateStoryLayerThumbnailTask(Task):
                 layer.save(update_fields=['thumbnail_url'])  # be explict about what changed
 
         except Exception as e:
-            print "EXCEPTION - thumbnail generation"
+            print "EXCEPTION - thumbnail generation for layer pk="+str(pk)
             print(e)
             print traceback.format_exc()
             self.retry(max_retries=5, countdown=31) # retry in 31 seconds (auth cache timeout)
