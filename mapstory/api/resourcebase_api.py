@@ -542,7 +542,10 @@ class MapStoryResource(CommonModelApi):
         if settings.RESOURCE_PUBLISHING:
             queryset = queryset.filter(is_published=True)
         resource_name = 'mapstories'
-
+        filtering = {
+            'id': ALL,
+            'slug': ALL
+        }
 
 class MapResource(CommonModelApi):
 
