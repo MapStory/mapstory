@@ -168,11 +168,11 @@
     };
     
     //// Default settings upon landing (without clicking topbar/switch) ///
-    if ($scope.query.storyteller){
+    if ($scope.query.storyteller) {
       //storyteller explore
       $scope.apiEndpoint = '/api/owners/';
     }
-    if($scope.query.groups){
+    else if ($scope.query.groups) {
       $scope.apiEndpoint = '/teams/api/team';
       $scope.query.is_active = true;
     }

@@ -38,7 +38,7 @@ var xmin = parseFloat(args[4]);
 var ymin = parseFloat(args[5]);
 var xmax = parseFloat(args[6]);
 var ymax = parseFloat(args[7]);
-var timeRange = args[8].toLowerCase();
+var timeRange = args[8];
 var outFname = args[9];
 var quiet = args[10].toLowerCase() == 'true';
 

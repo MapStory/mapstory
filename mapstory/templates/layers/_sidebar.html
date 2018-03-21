@@ -33,7 +33,6 @@
     {% if request.user.is_authenticated %}
     {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
     {% get_obj_perms request.user for resource.get_self_resource.layer as "layer_perms" %}
-        {% if "change_layer_data" in layer_perms %}
             <div class="side-column-header">Edit this Layer</div>
             <a href='{% url "map-edit" %}?layer={{ resource.service_typename }}&mode=edit' target="_blank">
                 <button class="btn btn-block btn-detailpage">
@@ -46,7 +45,6 @@
                     {% trans 'Append Data' %}
                 </button>
             </a>
-        {% endif %}
         {% if "change_resourcebase" in perms or "change_resourcebase_metadata" in perms%}
             <a href="#metaForm" data-toggle="modal">
                 <button class="btn btn-block btn-detailpage">

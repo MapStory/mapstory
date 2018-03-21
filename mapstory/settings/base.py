@@ -160,7 +160,8 @@ DATABASE_PORT = '5432'
 if DATABASE_PASSWORD:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+                    # we use transaction_hooks so we can attach on_commit actions
+            'ENGINE': 'transaction_hooks.backends.postgresql_psycopg2',
             'NAME': 'mapstory',
             'USER': 'mapstory',
             'PASSWORD': DATABASE_PASSWORD,
@@ -704,4 +705,4 @@ SCHEMA_DOWNLOAD_EXCLUDE = [
 FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
 
 # Choose thumbnail generator -- this is the delayed phantomjs generator
-THUMBNAIL_GENERATOR = "mapstory.apps.thumbnails.tasks.create_gs_thumbnail_mapstory"
+THUMBNAIL_GENERATOR = "mapstory.apps.thumbnails.tasks.create_gs_thumbnail_mapstory_tx_aware"
