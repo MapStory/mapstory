@@ -135,6 +135,18 @@ class TestAnimatedStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
         self.assertTrue(image.is_animated)
         self.assertEqual(image.n_frames, 10)
 
+    # test an empty layer -- this will not be animated
+    def test_empty_layer(self):
+        layer = self.fully_import_file(os.path.realpath('mapstory/tests/sampledata/'), 'empty_layer.zip', 'date')
+        thumb_generator = CreateStoryLayerAnimatedThumbnailTask()
+
+        imageData = thumb_generator.create_screenshot(layer)
+        image_file = StringIO(imageData)
+        image = Image.open(image_file)
+
+        self.assertEqual(image.format, "PNG") # not a GIF
+
+
 
 # ------------------------------------------------------------------------------------------------------------
 
