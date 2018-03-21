@@ -1,0 +1,5 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Ensure that .sh files use LF line endings.  
+.sh text eol=lf
