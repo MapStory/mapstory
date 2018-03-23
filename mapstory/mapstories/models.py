@@ -61,6 +61,8 @@ class MapStory(geonode.base.models.ResourceBase):
                 storyframe_list.append(storyframe_dict)
 
             chapter_dict = {
+                'story_id': self.id,
+                'map_id': chapter.id,
                 'title': chapter.title,
                 'abstract': chapter.abstract,
                 'layers': chapter.layers,
@@ -178,7 +180,7 @@ class Map(geonode.maps.models.Map):
 
         self.viewer_playbackmode = conf['viewer_playbackmode'] or 'Instant'
 
-        self.chapter_index = conf['chapter_index']
+        self.chapter_index = conf.get('id') or conf.get('chapter_index')
         story_id = conf.get('story_id', 0)
         story_obj = MapStory.objects.get(id=story_id)
         self.story = story_obj
