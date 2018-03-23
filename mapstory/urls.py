@@ -98,18 +98,14 @@ urlpatterns = patterns('',
                        url(r'^story/(?P<slug>[-\w]+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
                        url(r'^story/chapter/new$', 'mapstory.views.new_map_json', name='new_map_json'),
 
-                       # MapLoom
-                       url(r'^story/new$', new_map, {'template': 'composer/maploom.html'},
-        name='new-story'),
+                       # Composer
+                       url(r'^story/(?P<slug>[-\w]+)/draft$',
+                        'mapstory.views.composer_new_view', {'template': 'composer_new/composer.html'}, name='composer-view'),
+                       url(r'^story/new$', new_map, {'template': 'composer_new/composer.html'}, name='new-story'),
+
+                       # Editor
                        url(r'^maps/edit$', new_map, {'template': 'composer/maploom.html'}, name='map-edit'),
                        url(r'^maps/(?P<mapid>\d+)/view$', 'mapstory.views.map_view', {'template': 'composer/maploom.html'}, name='map-view'),
-                       url(r'^story/(?P<slug>[-\w]+)/draft$',
-    'mapstory.views.draft_view', {'template': 'composer/maploom.html'}, name='maploom-map-view'),
-                       url(r'^frame/(?P<storyid>[^/]+)/draft','mapstory.views.draft_view',name='draft_view'),
-
-                       # Composer-new
-                       url(r'^story/(?P<slug>[-\w]+)/composer$',
-        'mapstory.views.composer_new_view', {'template': 'composer_new/composer.html'}, name='composer-view'),
 
                        # StoryTools
                        url(r'^maps/(?P<mapid>\d+)/viewer$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
