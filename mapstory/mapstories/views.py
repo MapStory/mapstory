@@ -9,7 +9,7 @@ def save_mapstory(request):
     config = json.loads(request.body)
     print config
     
-    mapstory = MapStory.objects.get(id=config['id'])
+    mapstory = MapStory.objects.get(id=config['story_id'])
 
     mapstory.title = config['about']['title']
     mapstory.abstract = config['about']['abstract']
