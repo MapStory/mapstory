@@ -77,21 +77,21 @@ class MapStory(geonode.base.models.ResourceBase):
         if isinstance(conf, basestring):
             conf = json.loads(conf)
 
-        self.title = conf['title']
-        self.abstract = conf['abstract']
+        self.title = conf['about']['title']
+        self.abstract = conf['about']['abstract']
         self.is_published = conf['is_published']
         # Ensure that the slug is unique.
         try:
-            instance = MapStory.objects.get(slug=slugify(conf['title']))
+            instance = MapStory.objects.get(slug=slugify(self.title))
             if instance.id == self.id:
-                self.slug = slugify(conf['title'])
+                self.slug = slugify(self.title)
             else:
-                self.slug = slugify(conf['title']) + '-' + str(self.id)
+                self.slug = slugify(self.title) + '-' + str(self.id)
         except MapStory.DoesNotExist:
-            self.slug = slugify(conf['title'])
+            self.slug = slugify(self.title)
 
-        if conf['category'] is not None:
-            self.category = geonode.base.models.TopicCategory(conf['category'])
+        if conf['about']['category'] is not None:
+            self.category = geonode.base.models.TopicCategory(conf['about']['category'])
 
         if self.uuid is None or self.uuid == '':
             self.uuid = str(uuid.uuid1())
