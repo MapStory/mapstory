@@ -26,7 +26,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.db.models import Max
 
-from tastypie.test import ResourceTestCase, TestApiClient
+from tastypie.test import ResourceTestCaseMixin, TestApiClient
 
 from .models import Favorite
 from geonode.base.models import TopicCategory
@@ -34,7 +34,7 @@ from mapstory.tests.populate_test_data import create_models
 from geonode.documents.models import Document
 
 
-class FavoriteTest(ResourceTestCase):
+class FavoriteTest(ResourceTestCaseMixin):
     """
     Tests mapstory.apps.favorite app/module
     """

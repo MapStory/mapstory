@@ -85,7 +85,6 @@ INSTALLED_APPS += (
     'osgeo_importer',
     'solo',
     'coverage',
-    'notification',
     'mapstory.apps.health_check_geoserver',
     'mapstory.apps.thumbnails',
     'mapstory.storypins',
@@ -146,7 +145,6 @@ TEMPLATES = [
                 'geonode.context_processors.resource_urls',
                 'geonode.geoserver.context_processors.geoserver_urls',
                 'mapstory.context_processors.context',
-                'user_messages.context_processors.user_messages'
             ],
         },
     },
@@ -470,8 +468,11 @@ CELERY_DEFAULT_EXCHANGE_TYPE = "direct"
 CELERY_DEFAULT_ROUTING_KEY = "default"
 CELERY_CREATE_MISSING_QUEUES = True
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = str_to_bool(os.environ.get('CELERY_EAGER_PROPAGATES_EXCEPTIONS', 'False'))
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERY_RESULT_BACKEND = 'db+postgresql://mapstory:%s@%s:%s/mapstory' % (DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT)
 CELERY_IGNORE_RESULT = False
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+CELERY_ACCEPT_CONTENT = ['pickle']
 
 #
 # Haystack Settings
@@ -673,7 +674,7 @@ SLACK_USERNAME = os.environ.get('SLACK_USERNAME', '')
 #
 # Misc Settings
 #
-REGISTRATION_OPEN = True
+ACCOUNT_OPEN_SIGNUP = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 AUTOCOMPLETE_QUICK_SEARCH = False
 THEME = os.environ.get('THEME', 'default')

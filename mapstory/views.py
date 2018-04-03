@@ -64,7 +64,7 @@ from geonode.utils import DEFAULT_ABSTRACT
 from health_check.plugins import plugin_dir
 from icon_commons.models import Icon
 from lxml import etree
-from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
+from pinax.notifications.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 from osgeo_importer.utils import UploadError, launder
 from osgeo_importer.forms import UploadFileForm
 from provider.oauth2.models import AccessToken
@@ -158,8 +158,6 @@ class ProfileDetail(DetailView):
         ctx['journal_entries_published'] = JournalEntry.objects.filter(author=self.object, publish=True).count()
         ctx['favorites'] = Favorite.objects.filter(user=self.object).order_by('-created_on')
         ctx['icons'] = Icon.objects.filter(owner=self.object)
-        ctx['threads_all'] = Thread.ordered(Thread.objects.inbox(self.object))
-        ctx['threads_unread'] = Thread.ordered(Thread.objects.unread(self.object))
         ctx['action_list'] = actor_stream(ctx['profile'])
         # need to render the form
         ctx['form'] = UploadFileForm()
@@ -317,6 +315,7 @@ class MapStoryConfirmEmailView(ConfirmEmailView):
 
     # Override the post message to include the context data.
     def post(self, *args, **kwargs):
+        self.user = self.request.user
         self.object = confirmation = self.get_object()
         confirmation.confirm()
         ctx = self.get_context_data()

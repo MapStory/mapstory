@@ -8,8 +8,8 @@ from django.views.decorators.http import require_POST
 from agon_ratings.models import Rating
 import geonode
 from geonode.tasks.email import send_queued_notifications
-from notification import models as notification
-from notification.models import NoticeSetting, NoticeType, NOTICE_MEDIA
+from pinax.notifications import models as notification
+from pinax.notifications.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 from threadedcomments.models import ThreadedComment
 from user_messages.models import Message
 
