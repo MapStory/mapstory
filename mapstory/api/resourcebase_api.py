@@ -537,6 +537,11 @@ class MapStoryResource(CommonModelApi):
 
     chapters = fields.ListField(attribute='get_chapter_info')
 
+    def prepend_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/slug/(?P<slug>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
+        ]
+
     class Meta(CommonMetaApi):
         queryset = MapStory.objects.distinct().order_by('-date')
         if settings.RESOURCE_PUBLISHING:

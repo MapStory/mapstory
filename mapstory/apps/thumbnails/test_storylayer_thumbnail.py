@@ -100,9 +100,9 @@ class TestAnimatedStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
         frames[2].paste(gif_image)
 
         # due to pallet differences, we allow a little bit of difference
-        self.assertTrue(compare_images(orig_images[0], frames[0], 12) < 0.05)
-        self.assertTrue(compare_images(orig_images[1], frames[1], 12) < 0.05)
-        self.assertTrue(compare_images(orig_images[2], frames[2], 12) < 0.05)
+        self.assertTrue(compare_images(orig_images[0], frames[0], 14) < 0.05)
+        self.assertTrue(compare_images(orig_images[1], frames[1], 14) < 0.05)
+        self.assertTrue(compare_images(orig_images[2], frames[2], 14) < 0.05)
 
     # note - while this is running, there is likely a thumbnail generation task occuring in the background
     # (kicked off by the importer)
