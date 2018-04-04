@@ -25,49 +25,51 @@ var args = system.args;
 //       and security ("Blocked a frame with origin...").  Ignore this - it doesn't happen if there
 //       wasn't already an error).
 
-if (args.length != 11) {
-    system.stdout.writeLine('run with args: htmlFname wms layerName xmin ymin xmax ymax time output.fname quiet');
+if (args.length != 12) {
+    system.stdout.writeLine('run with args: htmlFname wms layerName xmin ymin xmax ymax time output.fname basemapXYZURL styles');
     phantom.exit(-1);
 }
 
 //parse from command line
 var htmlFname = args[1]
 var wms = args[2];
-var layerName = args[3].toLowerCase();
+var layerNames = args[3].toLowerCase();
 var xmin = parseFloat(args[4]);
 var ymin = parseFloat(args[5]);
 var xmax = parseFloat(args[6]);
 var ymax = parseFloat(args[7]);
 var timeRange = args[8];
 var outFname = args[9];
-var quiet = args[10].toLowerCase() == 'true';
+var basemapXYZURL = args[10];
+var styles = args[11];
+
 
 
 if (timeRange.toLowerCase() == "all")
     timeRange = '-99999999999-01-01T00:00:00.0Z/99999999999-01-01T00:00:00.0Z';
 
-if (!quiet) {
+
     system.stdout.writeLine('wms = ' + wms);
-    system.stdout.writeLine('layerName = ' + layerName);
+    system.stdout.writeLine('layerNames = ' + layerNames);
     system.stdout.writeLine('xmin = ' + (xmin));
     system.stdout.writeLine('ymin = ' + (ymin));
     system.stdout.writeLine('xmax = ' + (xmax));
     system.stdout.writeLine('ymax = ' + (ymax));
     system.stdout.writeLine('timeRange = ' + timeRange);
     system.stdout.writeLine('outFname = ' + outFname);
-    system.stdout.writeLine('quiet = ' + quiet);
-
+    system.stdout.writeLine('basemapXYZURL = ' + basemapXYZURL);
+    system.stdout.writeLine('styles = ' + styles);
     // add some debugging output
     addDebugEvents(page, system);
-}
+
 
 
 //open the HTML file and get ready to screen grab
 page.open(htmlFname, function () {
     //get the map setup in the OL app
-    page.evaluate(function (wms, layerName, xmin, ymin, xmax, ymax, time) {
-        setup(wms, layerName, xmin, ymin, xmax, ymax, time);
-    }, wms, layerName, xmin, ymin, xmax, ymax, timeRange);
+    page.evaluate(function (wms, layerNames,styles, xmin, ymin, xmax, ymax, time,basemapXYZURL) {
+        setup(wms, layerNames,styles, xmin, ymin, xmax, ymax, time,basemapXYZURL);
+    }, wms, layerNames,styles, xmin, ymin, xmax, ymax, timeRange,basemapXYZURL);
 
     // if it takes too long, hard close
     setTimeout(function () {
@@ -111,8 +113,8 @@ page.open(htmlFname, function () {
 
     //take screenshot - determine the size/location of the map div and then take the screenshot
     function takescreenshot() {
-        if (!quiet)
-            system.stdout.writeLine('taking screenshot...');
+
+        system.stdout.writeLine('taking screenshot...');
         var clipRect = page.evaluate(function () {
             var cr = document.querySelector("#map").getBoundingClientRect();
             return cr;
@@ -126,8 +128,7 @@ page.open(htmlFname, function () {
         };
 
         page.render(outFname, {format: 'png'});
-        if (!quiet)
-            system.stdout.writeLine('done screenshot...');
+        system.stdout.writeLine('done screenshot...');
         phantom.exit(0);//all done - quit with OK
     }
 

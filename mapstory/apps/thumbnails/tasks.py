@@ -19,6 +19,10 @@ import logging
 import httplib2
 from urlparse import urlparse
 import numpy
+from django.conf import settings
+from mapstory.mapstories.models import MapStory
+from mapstory.mapstories.models import Map
+import datetime
 
 # Celery-compatible task to create thumbnails using PhantomJS
 class CreateStoryLayerThumbnailTask(Task):
@@ -60,7 +64,8 @@ class CreateStoryLayerThumbnailTask(Task):
         return result, out, err  # None if fail
 
     # add geoserver user/password to a request
-    def request_geoserver_with_credentials(self, url):
+    @staticmethod
+    def request_geoserver_with_credentials( url):
         user = settings.OGC_SERVER['default']["USER"]
         password = settings.OGC_SERVER['default']["PASSWORD"]
 
@@ -104,12 +109,12 @@ class CreateStoryLayerThumbnailTask(Task):
     #  bounding_box, timepositions = retreive_WMS_metadata(...)
     # bounding box = [xmin, ymin, xmax, ymax]
     # timepositions = list of dates (string)
-    def retreive_WMS_metadata(self, layer):
-        layername = layer.typename.encode('utf-8')
+    @staticmethod
+    def retreive_WMS_metadata( layername):
         url = settings.OGC_SERVER['default']['LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
         url += layername + "/wms?request=GetCapabilities&version=1.1.1"
 
-        get_cap_data= self.request_geoserver_with_credentials(url)
+        get_cap_data= CreateStoryLayerThumbnailTask.request_geoserver_with_credentials(url)
         wms = WebMapService(url, xml=get_cap_data)
 
         # I found that some dataset advertise illegal bounds - fix them up
@@ -132,17 +137,16 @@ class CreateStoryLayerThumbnailTask(Task):
         return [xmin, ymin, xmax, ymax], wms[layername].timepositions
 
     # phantomJSFile htmlFile wms layerName xmin ymin xmax ymax time output.fname
-    def create_phantomjs_args(self, layer, boundingBoxWGS84, timepositions, tempfname,time="ALL"):
+    def create_phantomjs_args(self, layerName, boundingBoxWGS84, tempfname, time="ALL",
+                              basemapXYZURL='https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              styles=""):
 
         wms = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + "geonode/wms"
-        layerName = layer.typename.encode('utf-8')
         xmin = boundingBoxWGS84[0]
         ymin = boundingBoxWGS84[1]
         xmax = boundingBoxWGS84[2]
         ymax = boundingBoxWGS84[3]
 
-        if timepositions is None:
-            time = "NONE"  # this is a time-less dataset, don't request time-limited data
 
         args = ["phantomjs",
                 "--ignore-ssl-errors=true",
@@ -154,7 +158,8 @@ class CreateStoryLayerThumbnailTask(Task):
                 xmin, ymin, xmax, ymax,
                 time,
                 tempfname,
-                "False"]  # we capture output, so never be quiet
+                basemapXYZURL,
+                styles]
         args = [str(arg) for arg in args]  # convert numbers to string
 
         return args
@@ -171,8 +176,9 @@ class CreateStoryLayerThumbnailTask(Task):
     def create_screenshot(self, layer):
         fname = self.create_temp_filename()
         try:
-            boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer)
-            args = self.create_phantomjs_args(layer,boundingBoxWGS84, timepositions, fname)
+            boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer.typename.encode('utf-8'))
+            time = "NONE" if timepositions is None else "ALL"
+            args = self.create_phantomjs_args(layer.typename.encode('utf-8'),boundingBoxWGS84, fname,time)
             resultCode, _out, _err = self.run_process(args, env={'QT_QPA_PLATFORM': 'minimal'})
             if (resultCode != 0):
                 raise Exception(
@@ -187,6 +193,7 @@ class CreateStoryLayerThumbnailTask(Task):
 
     # if there are any thumbnails associated with the layer, delete them.
     # This will set the thumbnail to the static "no thumbnail" image
+    # NOTE: works with any ResourceBase (not just layer)
     def set_layer_thumbnail_default(self, layer):
         if not layer.has_thumbnail():
             return  # already done
@@ -271,7 +278,8 @@ class CreateStoryLayerThumbnailTask(Task):
 class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
     NTIMESLICES = 10
 
-    def choose_timeslices(self, timepositions, nslices):
+    @staticmethod
+    def choose_timeslices(timepositions, nslices):
         # if just a few slices, use all of them
         if len(timepositions) < nslices:
             return timepositions
@@ -310,7 +318,7 @@ class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
     # delete all the single-timeslice gifs
     # return the animated GIF
     def create_screenshot(self, layer):
-        boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer)
+        boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer.typename.encode('utf-8'))
         if timepositions is None or len(timepositions) == 1:  # cannot animate, call parent implementation
             return CreateStoryLayerThumbnailTask.create_screenshot(self,layer)
 
@@ -319,7 +327,7 @@ class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
             for timeslice in self.choose_timeslices(timepositions, self.NTIMESLICES):
                 fname = self.create_temp_filename()
                 frame_fnames.append(fname)
-                args = self.create_phantomjs_args(layer, boundingBoxWGS84, timepositions, fname, timeslice)
+                args = self.create_phantomjs_args(layer.typename.encode('utf-8'), boundingBoxWGS84, fname, timeslice)
                 resultCode, _out, _err = self.run_process(args, env={'QT_QPA_PLATFORM': 'minimal'})
                 if (resultCode != 0):
                     raise Exception('Unknown issue running PhantomJS for thumbnail generation - exit code='
@@ -331,6 +339,198 @@ class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
                 os.remove(to_delete_fname)  # clean up
 
 # ------------------------------------------------------------------------------------------------------------
+
+
+class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
+
+    # given a chapter, determine the background tile_url (osm or mapbox)
+    # might return None if there isn't one define (shouldn't happen based on GUI)
+    @staticmethod
+    def tileURL(chapter):
+        # look for a visible background layer for the chapter
+        background = [x for x in chapter.layers if x.visibility and x.group == 'background']
+        if len(background) == 0:
+            return None
+
+        config = background[0]
+
+        # get from actual settings file (config is slightly different!)
+        config_main = [x for x in settings.MAP_BASELAYERS if "name" in x and x["name"] == config.name][0]
+
+        # cf. https://wiki.openstreetmap.org/wiki/Tile_servers
+        if config_main["source"]["ptype"] == "gxp_osmsource":
+            if config.name == "mapnik":
+                return 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            if config.name == "hot":
+                return 'https://{a-b}.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png'
+
+        # cf. https://api.tiles.mapbox.com/v3/mapbox.world-dark.jsonp?secure=1
+        if config_main["source"]["ptype"] == "gxp_mapboxsource":
+            return "https://{a-b}.tiles.mapbox.com/v3/mapbox." + config_main["name"] + "/{z}/{x}/{y}.png"
+
+        raise Exception("unable to determine tile URL for background layer - " + config["name"])
+
+    # returns a list of layers
+    # layer -> {name, style_name (might be ""),bounds,timeslices (might be None)}}
+    @staticmethod
+    def get_layer_metadata(chapter):
+        result = []
+        for layer in [x for x in chapter.layers if x.visibility and x.group != 'background']:
+            metadata = CreateStoryLayerThumbnailTask.retreive_WMS_metadata(layer.name)
+            style = layer.styles if layer.styles is not None else ""
+            result.append({"name": layer.name, "style_name": style, "bounds": metadata[0], "timeslices": metadata[1]})
+        return result
+
+    # we need to parse the timeslices (so we can do comparisons), make a list of all of them, then unique/sort them
+    @staticmethod
+    def combine_timeslices(layer_metadata_list):
+        list_list_slices = [x["timeslices"] for x in layer_metadata_list if x["timeslices"] is not None]
+        # flatten list of list
+        all_slices = [x for sub_list in list_list_slices for x in sub_list]
+        if len(all_slices) == 0:  # all layers don't have times
+            return ["NONE"]
+        # parse
+        all_slices = [datetime.datetime.strptime(x, "%Y-%m-%dT%H:%M:%S.%fZ") for x in all_slices]
+        # unique and sort
+        all_slices = list(sorted(set(all_slices)))
+        # back to strings
+        all_slices = [x.isoformat() + "Z" for x in all_slices]
+        return all_slices
+
+    # compute bounds for a list of layer metadata {"bounds":[xmin,ymin, xmax, ymax]}
+    # will return [-180,-90,180,90] if there isn't any real bounds
+    @staticmethod
+    def combine_bounds(layer_metadata_list):
+        # bounds is present and isn't null (0,0,-1,-1)
+        list_bounds = [x["bounds"] for x in layer_metadata_list if
+                       x["bounds"] is not None and x["bounds"][0] < x["bounds"][2]]
+        # this shouldn't happen...
+        if len(list_bounds) == 0:
+            return [-180, -90, 180, 90]
+
+        xmin = min([bounds[0] for bounds in list_bounds])
+        ymin = min([bounds[1] for bounds in list_bounds])
+        xmax = max([bounds[2] for bounds in list_bounds])
+        ymax = max([bounds[3] for bounds in list_bounds])
+
+        return [xmin, ymin, xmax, ymax]
+
+    # create the thumbnail, given info about the layers configured for the story
+    def create_thumbnail(self, layer_names, layer_styles, full_bounds, intervals, tileURL):
+        try:
+            frame_fnames = []
+            for timeslice in intervals:
+                fname = self.create_temp_filename()
+                frame_fnames.append(fname)
+                timeslice_by_layer = ",".join(timeslice)
+                args = self.create_phantomjs_args(layer_names, full_bounds, fname, timeslice_by_layer, tileURL,
+                                                  layer_styles)
+                resultCode, _out, _err = self.run_process(args, env={'QT_QPA_PLATFORM': 'minimal'})
+                if (resultCode != 0):
+                    raise Exception('Unknown issue running PhantomJS for thumbnail generation - exit code='
+                                    + str(resultCode) + " -- args: " + str(args)
+                                    + "stdout:" + str(_out) + "stderr:" + str(_err))
+            return self.create_animated_GIF(frame_fnames)
+        finally:
+            for to_delete_fname in frame_fnames:
+                os.remove(to_delete_fname)  # clean up
+
+    # returns a list, the same length as intervals
+    # each item in the result is a list the same length as the # of layers
+    #
+    # if all the layers are simple, then this will just replicate the same interval for each layer
+    # i.e. if intervals = [a,b,c] and there are 2 layers -->
+    #    [  [a,a], [b,b], [c,c] ]
+    #
+    # however, if the layermetadata indicates there isn't timeslices for that layer, then
+    # its corresponding interval will be "NONE"  For example,
+    # if intervals = [a,b,c] and there are 3 layers, with the 2nd layer having no timeslices, -->
+    # [  [a,NONE,a], [b,NONE,b], [c,NONE,c] ]
+    @staticmethod
+    def create_layers_intervals(intervals, layer_metadatas):
+        result = []  # one for each frame in animation (len(intervals))
+        for interval in intervals:
+            item = []  # one for each layer in the story
+            for layer_metadata in layer_metadatas:
+                value = "NONE" if layer_metadata['timeslices'] is None else interval
+                item.append(value)
+            result.append(item)
+        return result
+
+    # for testing - get all the info required for a thumbnail, and return in a dic
+    # "intervals_by_layer" -- list of list, one for each frame and one for each layer
+    # "layer_names" -- comma separated string with the names of the layers
+    # "layer_styles" -- comma separated string wih the names of the style (maybe "")
+    # "full_bounds" -- viewport
+    # "tile_URL" -- basemap XYZ tile URL
+    # "playback_type" -- unused (UI only allows instant)
+    @staticmethod
+    def get_all_thumbnail_info(chapter):
+        result = {"playback_type": chapter.viewer_playbackmode}  # note - currently only "Instant" is possible}
+        layer_metadata = CreateStoryAnimatedThumbnailTask.get_layer_metadata(chapter)
+        if len(layer_metadata) == 0:
+            return None  # cannot compute
+        result["tile_URL"] = CreateStoryAnimatedThumbnailTask.tileURL(chapter)
+
+        combined_timeslices = CreateStoryAnimatedThumbnailTask.combine_timeslices(layer_metadata)
+        intervals = CreateStoryAnimatedThumbnailTask.choose_timeslices(combined_timeslices,
+                                                                       CreateStoryAnimatedThumbnailTask.NTIMESLICES)
+        result["intervals_by_layer"] = CreateStoryAnimatedThumbnailTask.create_layers_intervals(intervals,
+                                                                                                layer_metadata)
+
+        result["full_bounds"] = CreateStoryAnimatedThumbnailTask.combine_bounds(layer_metadata)
+        result["layer_names"] = ",".join([x["name"] for x in layer_metadata])
+        result["layer_styles"] = ",".join([x["style_name"] for x in layer_metadata])
+        return result
+
+    # create a thumbnail given the info dictionary (cf get_all_thumbnail_info)
+    def create_thumbnail_from_info(self, thumbnail_info):
+        thumbnail = self.create_thumbnail(thumbnail_info["layer_names"],
+                                          thumbnail_info["layer_styles"],
+                                          thumbnail_info["full_bounds"],
+                                          thumbnail_info["intervals_by_layer"],
+                                          thumbnail_info["tile_URL"])
+        return thumbnail
+
+    # update the story's thumbnail
+    def update_thumbnail(self, mapstory):
+        if len(mapstory.chapters) == 0:
+            self.set_layer_thumbnail_default(mapstory)  # no chapters, no thumbnail
+            return None
+
+        chapter = mapstory.chapters[0]  # mapstory.mapstories.models.Map
+
+        thumbnail_info = self.get_all_thumbnail_info(chapter)
+        if thumbnail_info is None:
+            self.set_layer_thumbnail_default(mapstory)  # no active layers, no thumbnail
+            return None
+
+        thumbnail = self.create_thumbnail_from_info(thumbnail_info)
+
+        finalFname = self.get_official_thumbnail_name(mapstory)
+        mapstory.save_thumbnail(finalFname, thumbnail)
+        return mapstory.thumbnail_url
+
+    def run(self, pk, overwrite=True):
+        try:
+            mapstory = MapStory.objects.get(pk=pk)
+
+            # None => Default URL
+            old_url = None
+            if mapstory.has_thumbnail():
+                old_url = mapstory.thumbnail_url
+
+            new_url = self.update_thumbnail(mapstory)
+
+            if old_url != new_url:
+                mapstory.save(update_fields=['thumbnail_url'])  # be explict about what changed
+
+
+        except Exception as e:
+            print "EXCEPTION - thumbnail generation for story pk=" + str(pk)
+            print(e)
+            print traceback.format_exc()
+            self.retry(max_retries=5, countdown=31)  # retry in 31 seconds (auth cache timeout)
 
 
 # convenience method (used by geonode) to start (via celery) the
@@ -359,4 +559,20 @@ def create_gs_thumbnail_mapstory_tx_aware(instance, overwrite):
 # run the actual task
 def run_task(pk,overwrite):
     task = CreateStoryLayerAnimatedThumbnailTask()
+    task.delay(pk, overwrite=overwrite)
+
+# --------------------------
+
+def create_mapstory_thumbnail(instance, overwrite):
+    task = CreateStoryAnimatedThumbnailTask()
+    task.delay(instance.pk, overwrite=overwrite)
+
+
+# call this to schedule a mapstory story thumbnail (wait until current tx finishes)
+def create_mapstory_thumbnail_tx_aware(instance, overwrite):
+    connection.on_commit(lambda: run_task_story(instance.pk,overwrite))
+
+# run the actual task
+def run_task_story(pk,overwrite):
+    task = CreateStoryAnimatedThumbnailTask()
     task.delay(pk, overwrite=overwrite)
