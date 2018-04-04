@@ -416,7 +416,7 @@ def map_view(request, mapid, snapshot=None, template='maps/map_view.html'):
     }))
 
 
-def mapstory_view(request, slug, snapshot=None, template='viewer/story_viewer.html'):
+def mapstory_view(request, slug, snapshot=None, template='composer_new/composer.html'):
     """
     The view that returns the map viewer opened to
     the mapstory with the given ID.
@@ -432,7 +432,8 @@ def mapstory_view(request, slug, snapshot=None, template='viewer/story_viewer.ht
     config['about']['detail_url'] = slug
 
     return render_to_response(template, RequestContext(request, {
-        'config': json.dumps(config)
+        'config': json.dumps(config),
+        'composerMode': False,
     }))
 
 

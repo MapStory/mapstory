@@ -7,6 +7,7 @@
   <script>
     window.mapstory = {}
     window.mapstory.composer = {}
+    window.mapstory.composerMode = "{{ composerMode }}"
     window.mapstory.composer.config = {
       authStatus: {% if user.is_authenticated %} 200{% else %} 401{% endif %},
       username: {% if user.is_authenticated %} "{{ user.username }}" {% else %} undefined {% endif %},
