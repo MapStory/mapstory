@@ -532,8 +532,8 @@ class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
 
         # image comparision - check that the generated thumbnail matches the pre-checked thumbnail
         img_pregen = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"))
-        percent_diff = compare_images(img_pregen, image)
-        if percent_diff > 0.02:  # > 2% different
+        percent_diff = compare_images(img_pregen, image,11)
+        if percent_diff > 0.05:  # > 5% different
             raise Exception(
                 "thumbnail does not match test image - " + thumb_generator.get_official_thumbnail_name(layer))
             # GETTING TEST CASE FAILURE HERE?
