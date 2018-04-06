@@ -27,13 +27,21 @@
     var error_occured = ""; // ""= no error occured
 
     // uncomment this if you want to run this stand-alone (testing only)
-//    window.onload = function () {
-//        setup("https://mapstory.org/geoserver/geonode/wms",
-//              "agricultureus_161b1bf0",
-//            -180,-90,180,90,
-//            "-99999999999-01-01T00:00:00.0Z/99999999999-01-01T00:00:00.0Z"
-//            );
-//    }
+    // or you can just copy-and-paste into console
+    // NOTE: reload the page everytime BEFORE you run this (or you'll mess up the map)
+/*
+   window.onload = function () {
+
+           setup("https://docker/geoserver/geonode/wms",
+             "railroads_5e884fa4,prisons_0880a312",
+             ",admin-0-0-simple-point-PRISONS_0880a312",
+            -165.288543701, 19.6744384766, -67.2776412964, 71.2739944458,
+            "-99999999999-01-01T00:00:00.0Z/99999999999-01-01T00:00:00.0Z,1811-01-01T00:00:00Z/1869-01-01T00:00:00Z",
+            'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            );
+
+    }
+ */
 
     // call this to setup the map and start the rendering process
     // when ready_for_screenshot=1, you should be ready for a screenshot
@@ -42,15 +50,28 @@
     //       There are no http requests outstanding and the requested tiles are already prepared for rendering.
     //
     // time_bounds = 'NONE'  --> timeless layer, do not include a &TIME=... param in GetMap request
-    function setup(wms, layerName, xmin, ymin, xmax, ymax, time_bounds) {
-
+    function setup(wms, layerNames, styles, xmin, ymin, xmax, ymax, time_bounds,basemapXYZURL) {
+        console.log("setting up...");
         console.log('wms = ' + wms);
-        console.log('layerName = ' + layerName);
+        console.log('layerNames = ' + layerNames);
+        console.log('styles = ' + styles);
         console.log('xmin = ' + parseFloat(xmin));
         console.log('ymin = ' + parseFloat(ymin));
         console.log('xmax = ' + parseFloat(xmax));
         console.log('ymax = ' + parseFloat(ymax));
         console.log('timeRange = ' + time_bounds);
+        console.log('basemapXYZURL = ' + basemapXYZURL);
+
+
+        layerNames_list = layerNames.split(",");
+        styles_list = styles.split(",");
+        time_bounds_list = time_bounds.split(",");
+
+        if ( (layerNames_list.length !=styles_list.length) && (styles_list.length != time_bounds_list.length) ) {
+            error_occured = "layerNames,styles,timeRange are not the same length!";
+            return;
+        }
+
 
         // convert LL -> web mercator
         var extent_map = ol.proj.transformExtent([xmin, ymin, xmax, ymax], 'EPSG:4326', 'EPSG:3857');
@@ -65,10 +86,14 @@
         document.getElementById("map").style.height = map_height + "px";
 
         // setup layers
-        var layers = [
-            create_OSM_layer(),
-            create_WMS_layer(wms, layerName, time_bounds)
-        ];
+        var layers=[];
+        if (basemapXYZURL != "None")
+           layers = [create_XYZ_layer(basemapXYZURL)]; //basemap
+
+        for (t=0;t<layerNames_list.length;t++) {
+            var layer =  create_WMS_layer(wms, layerNames_list[t],styles_list[t], time_bounds_list[t]);
+            layers.push(layer);
+        }
         map = create_map(layers, extent_map, view_options);
     }
 
@@ -120,8 +145,8 @@
     }
 
     // setup OSM as a normal XYZ tile service + attach listeners
-    function create_OSM_layer() {
-        var options_url = 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    function create_XYZ_layer(basemapXYZURL) {
+        var options_url = basemapXYZURL;
         var layer = new ol.layer.Tile({
             source: new ol.source.XYZ({
                 crossOrigin: null,
@@ -156,8 +181,8 @@
     //setup a WMS layer
     // time='none' --> do not make a &TIME=... request
     // time='...' --> add a &TIME=... request
-    function create_WMS_layer(baseurl, layerName, time) {
-        var params = {'LAYERS': 'geonode:' + layerName};
+    function create_WMS_layer(baseurl, layerNames,styles, time) {
+        var params = {'LAYERS':  layerNames,'STYLES':styles}
         if (time != 'NONE')
             params['TIME'] = time;
 
