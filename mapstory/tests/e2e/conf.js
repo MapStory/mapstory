@@ -86,6 +86,12 @@ let settings = {
 			width: browser_width,
 			height: browser_height
 		});
+
+		// Workaround for pending:
+		jasmine.Suite.prototype.pend = function (message) {
+  		this.markedPending = true;
+  		this.children.forEach(spec => spec.pend(message));
+		};
 	}
 };
 
