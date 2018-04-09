@@ -1,5 +1,6 @@
 const auth = require('../pages/auth.po');
 const home = require('../pages/home.po');
+const composer = require('../pages/composer.po');
 
 describe("Composer Survey https://rey52.typeform.com/to/U2GlO3", () => {
 
@@ -13,14 +14,20 @@ describe("Composer Survey https://rey52.typeform.com/to/U2GlO3", () => {
 
   }).pend("TODO");
 
+  it("should open composer", () => {
+      home.get();
+      // expect(page.navBar.isDisplayed()).toBe(true);
+      home.menuCreate.click();
+
+      // The links inside the dropdown
+      expect(home.composeStoryLink.waitReady()).toBe(true);
+      // Click on 'Compose Story' inside the dropdown menu
+      home.composeStoryLink.click();
+  });
+
   describe("1. Launching the composer", () => {
     describe("(a) Launch the composer and provide basic information about your new story", () => {
-      it("should open composer", () => {
-        // Open Home page
-        // Click on 'Create'
-        // Click on 'Compose Story' inside the dropdown menu
 
-      }).pend("TODO");
 
       it("should edit the story title and summary", () => {
         // Click on 'Edit Story Info'
@@ -53,9 +60,14 @@ describe("Composer Survey https://rey52.typeform.com/to/U2GlO3", () => {
     describe("(c) Create a new chapter and update its chapter info", () => {
       it("should create a new chapter", () => {
         // Click on 'Table of Contents'
-        // Click 'Add New Chapter' button
+        composer.table_of_contents_button.click();
 
-      }).pend("TODO");
+        // Click 'Add New Chapter' button
+        expect(composer.new_chapter_button.waitReady()).toBe(true);
+        expect(composer.chapter_binds.count()).toBe(3);
+        composer.new_chapter_button.click();
+        expect(composer.chapter_binds.count()).toBe(6);
+      });
 
       it("should edit the newly created chapter", () => {
         // Click on Chapter 2 'detail' arrow.
@@ -150,10 +162,21 @@ describe("Composer Survey https://rey52.typeform.com/to/U2GlO3", () => {
   });
 
   describe("6. Creating, updating and bulk uploading storypins", () => {
+    it("should open storypins sidebar", () => {
+      expect(composer.storypins_button.waitReady()).toBe(true);
+      composer.storypins_button.click();
+
+      expect(composer.add_storypin_button.waitReady()).toBe(true);
+      expect(composer.storypin_binds.count()).toBe(1);
+      composer.add_storypin_button.click();
+      expect(composer.storypin_binds.count()).toBe(2);
+    });
+
     describe("(a) Create a new storypin." +
       " Provide a title, summary, media embed, pin location and time extents. " +
       "Tick all the checkboxes.", () => {
-    }).pend("TODO");
+
+    });
     describe("(b) Upload multiple storypins using Bulk Upload. After upload, click Play.", () => {
     }).pend("TODO");
     describe("(c) Delete a storypin.", () => {
