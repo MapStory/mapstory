@@ -90,6 +90,9 @@ from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
 from .notifications import PROFILE_NOTICE_SETTINGS
 from tasks import delete_mapstory
+from mapstory.apps.thumbnails.tasks import create_mapstory_thumbnail_tx_aware
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 
 
 plugin_dir.register(GeoServerHealthCheck)
@@ -450,6 +453,27 @@ def _resolve_story(request, id, permission='base.change_resourcebase',
     return resolve_object(request, MapStory, {key: id}, permission=permission,
                           permission_msg=msg, **kwargs)
 
+# request a (future) story thumbnail to be created
+# we only allow  PUT/POST since this modifies data
+@require_http_methods(["PUT", "POST"])
+@csrf_exempt
+def story_generate_thumbnail(request, storyid):
+    if not request.user.is_authenticated():
+        return HttpResponse(
+                _PERMISSION_MSG_LOGIN,
+                status=401,
+                content_type="text/plain"
+        )
+
+    story_obj = MapStory.objects.get(id=storyid)
+    if not request.user.has_perm('change_resourcebase', story_obj.get_self_resource()):
+        return HttpResponse(
+                _PERMISSION_MSG_SAVE,
+                status=401,
+                content_type="text/plain"
+        )
+    create_mapstory_thumbnail_tx_aware(story_obj,True)
+    return HttpResponse("create story thumbnail task was scheduled for story id="+str(story_obj.id)+", with uuid="+str(story_obj.uuid))
 
 def save_story(request, storyid):
     if not request.user.is_authenticated():
