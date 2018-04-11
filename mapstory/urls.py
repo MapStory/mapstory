@@ -94,6 +94,7 @@ urlpatterns = patterns('',
                        # Story
                        url(r'^story$', 'mapstory.views.new_story_json', name='new_story_json'),
                        url(r'^story/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
+                       url(r'^story/(?P<storyid>[^/]+)/generate_thumbnail', 'mapstory.views.story_generate_thumbnail', name='story_generate_thumbnail'),
                        url(r'^story/(?P<slug>[-\w]+)/$', map_detail, name='mapstory_detail'),
                        url(r'^story/(?P<slug>[-\w]+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
                        url(r'^story/chapter/new$', 'mapstory.views.new_map_json', name='new_map_json'),
