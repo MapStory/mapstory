@@ -349,8 +349,9 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
     def tileURL(chapter):
         # look for a visible background layer for the chapter
         background = [x for x in chapter.layers if x.visibility and x.group == 'background']
+        # if there's no background, use the default
         if len(background) == 0:
-            return None
+            return "https://{a-b}.tiles.mapbox.com/v3/mapbox.world-dark/{z}/{x}/{y}.png"
 
         config = background[0]
 
