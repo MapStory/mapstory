@@ -151,6 +151,7 @@
             source: new ol.source.XYZ({
                 crossOrigin: null,
                 opaque: true,
+                minZoom: 1, //some mapbox layer don't have Z=0
                 maxZoom: 19,
                 url: options_url,
                 transition: 0
