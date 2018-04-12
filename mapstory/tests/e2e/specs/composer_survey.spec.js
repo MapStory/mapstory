@@ -2,7 +2,7 @@ const auth = require('../pages/auth.po');
 const home = require('../pages/home.po');
 const composer = require('../pages/composer.po');
 
-describe("Composer Survey https://rey52.typeform.com/to/U2GlO3", () => {
+describe("Composer Survey", () => {
 
   it("should be logged in", () => {
     home.get();
@@ -167,7 +167,6 @@ describe("Composer Survey https://rey52.typeform.com/to/U2GlO3", () => {
       composer.storypins_button.click();
 
       expect(composer.add_storypin_button.waitReady()).toBe(true);
-      expect(composer.storypin_binds.count()).toBe(1);
       composer.add_storypin_button.click();
       expect(composer.storypin_binds.count()).toBe(2);
     });
