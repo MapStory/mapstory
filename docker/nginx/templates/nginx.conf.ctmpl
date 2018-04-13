@@ -62,6 +62,7 @@ http {
     location /uploaded/ {
       alias {{ env "MEDIA_ROOT" }}/;
       add_header Cache-Control "max-age: 0, must-revalidate";
+      add_header Last-Modified "";
       etag on;
     }
 
