@@ -130,30 +130,22 @@ def _storyframes_post(req, mapid):
     if action != 'upsert':
         return HttpResponse('%s not supported' % action, status=400)
 
-    try:
-        with transaction.atomic():
-            errors = _try_write_storyframes(data, get_props, id_collector, mapobj, overwrite, form_mode)
-    except RuntimeError as e:
-        body = None
-        if error_format:
-            return HttpResponse(error_format(['Runtime Error']), status=400)
-
-    finish()
-    body = {'success': True}
-    if created:
-        body['ids'] = created
-
-    return json_response(body=body, errors=errors, content_type=content_type)
-
-
-def _try_write_storyframes(data, get_props, id_collector, mapobj, overwrite, form_mode):
     errors = _write_storyframes(data, get_props, id_collector, mapobj, overwrite, form_mode)
 
-    if len(errors) > 0:
-        raise RuntimeError
+    if errors:
+        transaction.rollback()
+        body = None
+        if error_format:
+            return HttpResponse(error_format(errors), status=400)
+    else:
+        finish()
+        transaction.commit()
+        body = {'success': True}
+        if created:
+            body['ids'] = created
 
-    return errors
-
+    return json_response(body=body, errors=errors, content_type=content_type)
+    
 
 def _write_storyframes(data, get_props, id_collector, mapobj, overwrite, form_mode):
     i = None
