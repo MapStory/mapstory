@@ -144,8 +144,6 @@ urlpatterns = patterns('',
                        url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain"), name='robots'),
                        ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
 
-urlpatterns += mapstories_urls
-
 urlpatterns += storypins_urls
 
 urlpatterns += maploom_urls
