@@ -243,6 +243,8 @@ describe('Composer Survey', () => {
 
 				// Should see the first storypin we created.
 				expect(pin0.$('.heading').getText()).toBe('The first storypin');
+
+
 			});
 		});
 
