@@ -5,14 +5,16 @@
 'use strict';
 
 require('../tools/waitReady.js');
+
 let make_id = require('../tools/make_id.js');
 let wait_times = require('../tools/wait_times.js');
-let constants = require("../tools/constants");
+let constants = require('../tools/constants');
 
 /**
  * Composer Page Object
  */
 let composer = function() {
+
 
 	this.startComposingLink = $('#start-composing');
 	this.welcome_modal      = $('.modal-content');
@@ -34,6 +36,16 @@ let composer = function() {
 	this.story_chapter_01_link = this.story_chapter_01_div.element(by.css('a'));
 	this.publish_link = element(by.css('span[style="display: inline-block;width: 25%;float: left;text-align: center;"]'))
 	this.confirm_publish_button = element(by.buttonText('Publish'));
+	this.new_chapter_button = element(by.buttonText('Add New Chapter'));
+	this.table_of_contents_button = element(by.linkText('Table of Contents'));
+	// this.table_of_contents = $('.sidebar-toc-content');
+	this.chapter_binds = $('.sidebar-toc-content').all(by.binding('chapter'));
+	this.storypins_button = $('[ng-click="updateSelected(\'pins\')"]');
+	this.add_storypin_button = $('[ng-click="on_add_storypin()"]');
+	this.storypin_binds = $('#pin-list').all(by.binding('pin'));
+	this.bulk_upload_button = element(by.buttonText('Bulk Upload'));
+	this.upload_modal = $('#modal-body');
+	this.csv_button = this.upload_modal.$('#bulk_pin_csv_file');
 
 	/**
 	 * Gets the Composer page

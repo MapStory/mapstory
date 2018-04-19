@@ -53,14 +53,15 @@ let settings = {
 	seleniumAddress: selenium_url,
 	//--------------------------
 	// Use this to run all test files
-	specs: ['specs/*.spec.js'],
-	/*
+	// specs: ['specs/*.spec.js'],
+
 	specs: [
-		// 'tools/take_screenshots.js',
-		'specs/auth.spec.js',
-		'specs/composer.spec.js',
-		'specs/explore.spec.js',
-		'specs/home.spec.js',
+		//'tools/take_screenshots.js',
+		//'specs/auth.spec.js',
+		// 'specs/composer.spec.js',
+		'specs/composer_survey.spec.js'
+		//'specs/explore.spec.js',
+		//'specs/home.spec.js',
 		// 'specs/icon_upload.spec.js',
 		// 'specs/image.spec.js',
 		// 'specs/journal.spec.js',
@@ -68,7 +69,6 @@ let settings = {
 		// 'specs/survey.spec.js',
 		// 'specs/icons.spec.js'
 	],
-	*/
 	multiCapabilities: multi_cabapilities,
 	jasmineNodeOpts: {
 		showColors: true,
@@ -86,6 +86,12 @@ let settings = {
 			width: browser_width,
 			height: browser_height
 		});
+
+		// Workaround for pending:
+		jasmine.Suite.prototype.pend = function (message) {
+  		this.markedPending = true;
+  		this.children.forEach(spec => spec.pend(message));
+		};
 	}
 };
 
