@@ -30,6 +30,7 @@ services:
     image: quay.io/mapstory/django
     depends_on:
       - django_volumes
+      - pgadmin
     links:
       - elasticsearch
       - rabbitmq
@@ -79,6 +80,8 @@ services:
   nginx:
     build: ./docker/nginx
     image: quay.io/mapstory/nginx
+    depends_on:
+      - celery
     links:
       - django
       - geoserver
