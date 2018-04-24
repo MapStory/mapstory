@@ -24,6 +24,7 @@ class MapStory(geonode.base.models.ResourceBase):
             storypin_list = []
             for storypin in storypins:
                 storypin_dict = {
+                    'id': storypin.id,
                     'title': storypin.title,
                     'content': storypin.content,
                     'media': storypin.media,
@@ -42,6 +43,7 @@ class MapStory(geonode.base.models.ResourceBase):
             storyframe_list = []
             for storyframe in storyframes:
                 storyframe_dict = {
+                    'id': storyframe.id,
                     'title': storyframe.title,
                     'description': storyframe.description,
                     'the_geom': storyframe.the_geom,
