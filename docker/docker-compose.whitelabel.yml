@@ -71,6 +71,8 @@ services:
       - docker/env/whitelabel/public_host.env
       - docker/env/whitelabel/geoserver.env
       - docker/env/whitelabel/mapstory.env
+    links:
+      - postgres
     command: [--collect-static, --init-db, --reindex, --serve]
     secrets:
       - env_email_auth
@@ -109,6 +111,8 @@ services:
       - docker/env/whitelabel/db_auth.env
       - docker/env/whitelabel/public_host.env
       - docker/env/whitelabel/geoserver.env
+    links:
+      - postgres
     volumes:
       - geoserver:/var/lib/geoserver
     secrets:
