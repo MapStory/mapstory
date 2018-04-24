@@ -29,6 +29,9 @@ import geonode
 from geonode.settings import *
 import pyproj
 
+def str_to_bool(v):
+    return v.lower() in ("yes", "true", "t", "1")
+
 #
 # General Django development settings
 #
@@ -234,11 +237,6 @@ OGC_SERVER = {
         'PG_GEOGIG': True
     }
 }
-
-
-def str_to_bool(v):
-    return v.lower() in ("yes", "true", "t", "1")
-
 
 #
 # Email Settings
@@ -698,10 +696,10 @@ SCHEMA_DOWNLOAD_EXCLUDE = [
     'date_parsed',
 ]
 
+# Choose thumbnail generator -- this is the delayed phantomjs generator
+THUMBNAIL_GENERATOR = "mapstory.apps.thumbnails.tasks.create_gs_thumbnail_mapstory_tx_aware"
+
 #
 # Feature toggles
 #
 FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
-
-# Choose thumbnail generator -- this is the delayed phantomjs generator
-THUMBNAIL_GENERATOR = "mapstory.apps.thumbnails.tasks.create_gs_thumbnail_mapstory_tx_aware"
