@@ -1,0 +1,150 @@
+# whitelabel test configuration
+version: '3.1'
+services:
+  postgres:
+    image: mdillon/postgis:9.6
+    env_file:
+      - docker/env/whitelabel/db_auth.env
+      - docker/env/whitelabel/postgres.env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      internal:
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: quay.io/mapstory/pgadmin:master
+    env_file:
+      - docker/env/whitelabel/db_auth.env
+    ports:
+      - "5050:5050"
+
+  elasticsearch:
+    ports:
+      - "9200:9200"
+
+  rabbitmq:
+    image: quay.io/mapstory/rabbitmq:master
+    secrets:
+      - env_rabbitmq_auth
+    ports:
+      - "15671:15671"
+      - "15672:15672"
+
+  maploom-build:
+    build: ./deps/maploom
+    image: quay.io/mapstory/maploom-build
+    environment:
+      GIT_DIR: /git
+    volumes:
+      - ./deps/maploom:/usr/src/app
+      - .git:/git
+
+  django-maploom-build:
+    build: ./deps/django-maploom
+    image: quay.io/mapstory/django-maploom-build
+    environment:
+      GIT_DIR: /git
+    depends_on:
+      - maploom-build
+    volumes:
+      - ./deps/django-maploom:/django-maploom
+      - ./deps/maploom:/maploom
+      - .git:/git
+
+  story-tools-build:
+    build: ./deps/story-tools
+    image: quay.io/mapstory/story-tools-build
+    environment:
+      GIT_DIR: /git
+    volumes:
+      - ./deps/story-tools:/usr/src/app
+      - .git:/git
+
+  django:
+    image: quay.io/mapstory/django:master
+    env_file:
+      - docker/env/whitelabel/db_auth.env
+      - docker/env/whitelabel/public_host.env
+      - docker/env/whitelabel/geoserver.env
+      - docker/env/whitelabel/mapstory.env
+    command: [--collect-static, --init-db, --reindex, --serve]
+    secrets:
+      - env_email_auth
+      - env_geoserver_auth
+      - env_rabbitmq_auth
+      - env_slack_auth
+      - env_social_auth
+    volumes:
+      - .:/srv/mapstory/
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
+    ports:
+      - "8000:8000"
+
+  celery:
+    image: quay.io/mapstory/django:master
+    env_file:
+      - docker/env/whitelabel/db_auth.env
+      - docker/env/whitelabel/public_host.env
+      - docker/env/whitelabel/geoserver.env
+      - docker/env/whitelabel/mapstory.env
+    secrets:
+      - env_email_auth
+      - env_geoserver_auth
+      - env_rabbitmq_auth
+      - env_slack_auth
+      - env_social_auth
+    volumes:
+      - .:/srv/mapstory/
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
+
+  django_volumes:
+    image: quay.io/mapstory/django:master
+
+  geoserver:
+    env_file:
+      - docker/env/whitelabel/db_auth.env
+      - docker/env/whitelabel/public_host.env
+      - docker/env/whitelabel/geoserver.env
+    volumes:
+      - geoserver:/var/lib/geoserver
+    secrets:
+      - env_geoserver_auth
+    ports:
+      - "8080:8080"
+
+  nginx:
+    image: quay.io/mapstory/nginx:master
+    env_file:
+      - docker/env/whitelabel/public_host.env
+    volumes:
+      - .:/srv/mapstory/:ro # mapstory_static has symlinks to this
+      - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
+    secrets:
+      - ssl_cert
+      - ssl_key
+
+volumes:
+  site-packages:
+  geoserver:
+  mapstory_media:
+  postgres:
+
+secrets:
+  ssl_cert:
+    file: ../secrets/ssl_cert
+  ssl_key:
+    file: ../secrets/ssl_key
+  env_email_auth:
+    file: ../secrets/env/email_auth
+  env_geoserver_auth:
+    file: ../secrets/env/geoserver_auth
+  env_rabbitmq_auth:
+    file: ../secrets/env/rabbitmq_auth
+  env_slack_auth:
+    file: ../secrets/env/slack_auth
+  env_social_auth:
+    file: ../secrets/env/social_auth
