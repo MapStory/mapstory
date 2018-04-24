@@ -68,6 +68,7 @@ class MapStory(geonode.base.models.ResourceBase):
                 'title': chapter.title,
                 'abstract': chapter.abstract,
                 'layers': chapter.layers,
+                'layers_config': chapter.layers_config,
                 'storyframes': storyframe_list,
                 'storypins': storypin_list
             }
@@ -171,6 +172,7 @@ class Map(geonode.maps.models.Map):
 
     chapter_index = db.models.IntegerField(_('chapter index'), null=True, blank=True)
     viewer_playbackmode = db.models.CharField(_('Viewer Playback'), max_length=32, blank=True, null=True)
+    layers_config = db.models.TextField(null=True, blank=True)
 
     def update_from_viewer(self, conf):
 
@@ -185,6 +187,7 @@ class Map(geonode.maps.models.Map):
         self.chapter_index = conf.get('id') or conf.get('chapter_index')
         story_id = conf.get('story_id', 0)
         story_obj = MapStory.objects.get(id=story_id)
+        self.layers_config = conf["layers"]
         self.story = story_obj
         self.save()
 
