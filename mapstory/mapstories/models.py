@@ -187,7 +187,7 @@ class Map(geonode.maps.models.Map):
         self.chapter_index = conf.get('id') or conf.get('chapter_index')
         story_id = conf.get('story_id', 0)
         story_obj = MapStory.objects.get(id=story_id)
-        self.layers_config = conf["layers"]
+        self.layers_config = json.dumps(conf["layers"])
         self.story = story_obj
         self.save()
 
