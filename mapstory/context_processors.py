@@ -17,7 +17,7 @@ def context(req):
         FEATURE_MULTIPLE_STORY_CHAPTERS=getattr(settings, 'FEATURE_MULTIPLE_STORY_CHAPTERS', False),
         GOOGLE_ANALYTICS=getattr(settings, 'GOOGLE_ANALYTICS', None),
         THEME=getattr(settings, 'THEME', 'default'),
-        BRANDING_SITE_NAME=getattr(settings, 'BRANDING_SITE_NAME', 'MapStory'),
+        SITE_NAME=getattr(settings, 'SITE_NAME', 'MapStory'),
         BRANDING_STORY_NAME=getattr(settings, 'BRANDING_STORY_NAME', 'MapStory'),
         BRANDING_STORIES_NAME=getattr(settings, 'BRANDING_STORIES_NAME', 'MapStories'),
         BRANDING_LAYER_NAME=getattr(settings, 'BRANDING_LAYER_NAME', 'StoryLayer'),
