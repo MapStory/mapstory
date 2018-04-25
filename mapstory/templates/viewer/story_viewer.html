@@ -32,7 +32,7 @@
         <div class="content">
             {% verbatim %}
             <a target="_blank" href="/story/{{ mapManager.detail_url }}/view" class="viewer-story-title" ng-bind="mapManager.title"></a>
-            <a target="_blank" href="/storyteller/{{ mapManager.username }}" class="viewer-author">MapStory by {{ mapManager.owner }}</a>
+            <a target="_blank" href="/storyteller/{{ mapManager.username }}" class="viewer-author">{{ BRANDING_STORY_NAME }} by {{ mapManager.owner }}</a>
             <div class="viewer-chapter-number">Chapter {{ mapManager.storyChapter}}</div>
             <div class="viewer-chapter-title" ng-bind="mapManager.storyMap.getStoryTitle()"></div>
             <p ng-bind="mapManager.storyMap.getStoryAbstract()"></p>
