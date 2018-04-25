@@ -2,6 +2,9 @@ const auth = require('../pages/auth.po');
 const home = require('../pages/home.po');
 const composer = require('../pages/composer.po');
 let path = require('path');
+// const protractor = require('protractor');
+const EC = protractor.ExpectedConditions;
+// const ptor = protractor.getInstance();
 
 
 describe('Composer Survey', () => {
@@ -243,8 +246,17 @@ describe('Composer Survey', () => {
 
 				// Should see the first storypin we created.
 				expect(pin0.$('.heading').getText()).toBe('The first storypin');
+			});
 
+			it('should save and keep changes', () => {
+				// Click the save button
+				composer.save_story_button.click();
 
+				// Wait for page reload
+				browser.wait(EC.urlContains('draft'), 10000);
+
+				// Check that storypins are still there
+				expect(composer.storypins.length).toEqual(1);
 			});
 		});
 

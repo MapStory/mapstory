@@ -46,6 +46,9 @@ let composer = function() {
 	this.bulk_upload_button = element(by.buttonText('Bulk Upload'));
 	this.upload_modal = $('#modal-body');
 	this.csv_button = this.upload_modal.$('#bulk_pin_csv_file');
+	this.save_story_button = $('[ng-click="saveMap()"]');
+	this.storypins = element.all(by.repeater('($index,pin) in pinSvc.getPins(stateSvc.getChapterIndex())'));
+
 
 	/**
 	 * Gets the Composer page
