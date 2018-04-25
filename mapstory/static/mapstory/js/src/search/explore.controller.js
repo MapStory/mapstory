@@ -13,6 +13,11 @@
     var vm = this;
 
     $scope.query = $location.search();
+    $scope.SITE_NAME = SITE_NAME;
+    $scope.BRANDING_STORY_NAME = BRANDING_STORY_NAME;
+    $scope.BRANDING_STORIES_NAME = BRANDING_STORIES_NAME;
+    $scope.BRANDING_LAYER_NAME = BRANDING_LAYER_NAME;
+    $scope.BRANDING_LAYERS_NAME = BRANDING_LAYERS_NAME;
     $scope.query.limit = $scope.query.limit || CLIENT_RESULTS_LIMIT;
     $scope.query.offset = $scope.query.offset || 0;
 

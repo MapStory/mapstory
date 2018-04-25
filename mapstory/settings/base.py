@@ -66,8 +66,10 @@ LOCALE_PATHS = (
 
 # Branding
 SITE_NAME = SITENAME
-STORY_NAME = os.environ.get('STORY_NAME', 'MapStory')
-STORIES_NAME = os.environ.get('STORIES_NAME', 'MapStories')
+BRANDING_STORY_NAME = os.environ.get('BRANDING_STORY_NAME', 'MapStory')
+BRANDING_STORIES_NAME = os.environ.get('BRANDING_STORIES_NAME', 'MapStories')
+BRANDING_LAYER_NAME = os.environ.get('BRANDING_LAYER_NAME', 'StoryLayer')
+BRANDING_LAYERS_NAME = os.environ.get('BRANDING_LAYERS_NAME', 'StoryLayers')
 THEME = os.environ.get('THEME', 'default')
 
 # Misc

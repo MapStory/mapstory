@@ -1,16 +1,16 @@
 <div class="modal-header">
-    <h3 class="modal-title">Create a new StoryLayer<img class="import-wizard-icon" ng-src="{{ modalImage }}"/></h3>
+    <h3 class="modal-title">Create a new {{ BRANDING_LAYER_NAME }}<img class="import-wizard-icon" ng-src="{{ modalImage }}"/></h3>
 </div>
 <div class="modal-body row">
     <div class="col-sm-12 col-md-12 col-lg-12 import-wizard-modal">
         <wizard on-finish="createLayer()">
 
             <wz-step title="Name" canexit="nameValid">
-                <h3><strong>Name your StoryLayer</strong></h3>
+                <h3><strong>Name your {{ BRANDING_LAYER_NAME }}</strong></h3>
                 <p>Descriptive layer names make it easy for others to find your data.</p>
                 <form name="importOptionsForm" class="form-horizontal import-options-form">
                     <div class="form-group">
-                        <input id="layerName" placeholder="My StoryLayer" type="text" class=input-lg ng-model="layer.configuration_options.name">
+                        <input id="layerName" placeholder="My {{ BRANDING_LAYER_NAME }}" type="text" class=input-lg ng-model="layer.configuration_options.name">
                     </div>
 
                     <div class="import-wizard-button">
@@ -20,8 +20,8 @@
             </wz-step>
 
             <wz-step title="Type" canexit="true">
-                <h3><strong>Choose Type of StoryLayer</strong></h3>
-                <p>Next, lets determine what kind of StoryLayer you want to create. Here is a list of each kind of StoryLayer you can make, and a link
+                <h3><strong>Choose Type of {{ BRANDING_LAYER_NAME }}</strong></h3>
+                <p>Next, lets determine what kind of {{ BRANDING_LAYER_NAME }} you want to create. Here is a list of each kind of {{ BRANDING_LAYER_NAME }} you can make, and a link
                     to an example so you can see what they look like:</p>
                 <form name="importOptionsForm" class="form-horizontal import-options-form">
                     <div class="form-group">
@@ -43,7 +43,7 @@
             <wz-step title="Add Attributes">
                 <h3><strong>Add attributes</strong></h3>
                 <form name="attributes" class="form-horizontal import-options-form">
-                    <p>Now, define your attributes for this StoryLayer. Attributes are pieces of information that explain a feature.
+                    <p>Now, define your attributes for this {{ BRANDING_LAYER_NAME }}. Attributes are pieces of information that explain a feature.
                         For example, if you are collecting features about libraries, your Attributes might be "Year Founded" and "Library Name".
                         One thing to note: don't give any of your attributes the title "name". This will cause errors in the creation process.</p>
                     <div style="padding-top: 10px" class="col-md-offset-9">
@@ -127,22 +127,22 @@
             </wz-step>
             -->
             <wz-step title="Create">
-                <h3><strong>Ok, we're ready to create the StoryLayer!</strong></h3>
-                <p>Click below to create your StoryLayer</p>
+                <h3><strong>Ok, we're ready to create the {{ BRANDING_LAYER_NAME }}!</strong></h3>
+                <p>Click below to create your {{ BRANDING_LAYER_NAME }}</p>
                 <div>
-                    <div class="clrs-green fnt-weight-400" ng-show="success">Your new StoryLayer<span ng-show="created_layers.length > 1">s are</span><span
+                    <div class="clrs-green fnt-weight-400" ng-show="success">Your new {{ BRANDING_LAYER_NAME }}<span ng-show="created_layers.length > 1">s are</span><span
                             ng-show="created_layers.length > 1"> is</span> ready.
                     </div>
                     <div class="clrs-green fnt-weight-400" ng-repeat="created_layer in created_layers" ng-show="success">View the <a
-                            href="{{ created_layer.url }}?showMetadata=true" class="fnt-weight-600" target="_self">StoryLayer</a>.
+                            href="{{ created_layer.url }}?showMetadata=true" class="fnt-weight-600" target="_self">{{ BRANDING_LAYER_NAME }}</a>.
                     </div>
-                    <div class="clrs-red fnt-weight-400" ng-show="errors.length">StoryLayer creation has failed.</div>
+                    <div class="clrs-red fnt-weight-400" ng-show="errors.length">{{ BRANDING_LAYER_NAME }} creation has failed.</div>
                     <div class="clrs-red fnt-weight-400" ng-repeat="error in errors" ng-show="errors.length"><span
                             style="font-weight: 600">{{ error[0] }}:</span> {{ error[1] }}</div>
                 </div>
                 <div class="import-wizard-button">
                     <i class="fa fa-spinner fa-spin fa-3x" ng-show="processing"></i>
-                    <button class="btn" ng-show="!processing && !success" type="submit" wz-next value="Continue">Create my StoryLayer <i
+                    <button class="btn" ng-show="!processing && !success" type="submit" wz-next value="Continue">Create my {{ BRANDING_LAYER_NAME }} <i
                             class="fa fa-arrow-circle-right"></i></button>
                 </div>
                 <div>
