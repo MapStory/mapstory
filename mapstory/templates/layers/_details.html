@@ -48,15 +48,15 @@
                     {% endif %}
                     <div  class="row">
                         <div class="col-sm-12">
-                            <ul class="nav nav-tabs details-tabs" 
-                                {% if GEOGIG_ENABLED and resource.link_set.geogig %} 
+                            <ul class="nav nav-tabs details-tabs"
+                                {% if GEOGIG_ENABLED and resource.link_set.geogig %}
                                     ng-controller="geogigController"
-                                 {% endif %}   
+                                 {% endif %}
                                 >
-                                <li class="active"><a href="#Metadata" data-toggle="tab">About this StoryLayer</a></li>
-                                {% if GEOGIG_ENABLED and resource.link_set.geogig %} 
+                                <li class="active"><a href="#Metadata" data-toggle="tab">About this {{ BRANDING_LAYER_NAME }}</a></li>
+                                {% if GEOGIG_ENABLED and resource.link_set.geogig %}
                                 <li><a href="#Edits" data-toggle="tab">Contributions ({% verbatim %}{{ stats.totalCommits| number}}{% endverbatim %})</a></li>
-                                {% endif %}  
+                                {% endif %}
                                 <li><a href="#Comments" data-toggle="tab">Comments ({{ num_comments }})</a></li>
                                 <li><a href="#ShareLayer" data-toggle="tab">Share</a></li>
                                 {% if resource.category %}
@@ -102,7 +102,7 @@
                                                     md-on-remove="removeTag($chip)"
                                                     md-transform-chip="newChip($chip)"
                                                     md-separator-keys="separateOn"
-                                                    placeholder="Add tags for this StoryLayer...">
+                                                    placeholder="Add tags for this {{ BRANDING_LAYER_NAME }}...">
                                                     </md-chips>
                                                 </md-content>
                                             </td>

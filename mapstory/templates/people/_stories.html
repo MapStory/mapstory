@@ -1,17 +1,17 @@
 {% load i18n %}
 {# this tab is predominantly controlled by client-side angular logic and values #}
-<div id="stories_list" class="tab-pane active" 
+<div id="stories_list" class="tab-pane active"
     ng-controller="storiesController as story">
-    
+
     <div class="no-content" ng-hide="story.totalCount">
-        <h2>No MapStories.</h2>
+        <h2>No {{ BRANDING_STORIES_NAME }}.</h2>
     </div>
     {% verbatim %}
     <div ng-show="story.totalCount">
         <div class="pull-right">
             Showing {{story.startIndex}}-{{story.endIndex}} of {{story.totalCount}} results
         </div>
-        <div class="clearfix content-results">  
+        <div class="clearfix content-results">
             <ul>
                 <li ng-repeat="item in story.cards" resource-id="{{ item.id }}"
                         class="col-lg-4 col-sm-6 resource-{{ item.id }}">
