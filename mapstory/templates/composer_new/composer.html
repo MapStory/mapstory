@@ -14,18 +14,20 @@
       userprofilename: {% if user.is_authenticated %} "{{ user.get_full_name }}" {% else %} undefined {% endif %},
       userprofileemail: {% if user.is_authenticated %} "{{ user.email }}" {% else %} undefined {% endif %},
       currentLanguage: "{{language|default:'en'}}",
-      proxy: '{{ PROXY_URL }}',
+      proxy: "{{ PROXY_URL }}",
       rest: "{% url "maps_browse" %}",
       ajaxLoginUrl: "{% url "account_ajax_login" %}",
       homeUrl: "{% url "home" %}",
       localGeoServerBaseUrl: "{{ GEOSERVER_BASE_URL }}",
       localCSWBaseUrl: "{{ CATALOGUE_BASE_URL }}",
       csrfToken: "{{ csrf_token }}",
+    }
+    window.mapstory.composer.config.branding = {
       siteName: "{{ SITE_NAME }}",
-      brandingStoryName: "{{ BRANDING_STORY_NAME }}",
-      brandingStoriesName: "{{ BRANDING_STORIES_NAME }}",
-      brandingLayerName: "{{ BRANDING_LAYER_NAME }}",
-      brandingLayersName: "{{ BRANDING_LAYERS_NAME }}",
+      storyName: "{{ BRANDING_STORY_NAME }}",
+      storiesName: "{{ BRANDING_STORIES_NAME }}",
+      layerName: "{{ BRANDING_LAYER_NAME }}",
+      layersName: "{{ BRANDING_LAYERS_NAME }}",
     }
   </script>
 
