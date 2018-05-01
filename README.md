@@ -2,7 +2,7 @@
 MapStory
 ================
 
-[![Coverage Status](https://coveralls.io/repos/github/MapStory/mapstory/badge.svg?branch=master)](https://coveralls.io/github/MapStory/mapstory?branch=master) [![Build Status](https://travis-ci.org/MapStory/mapstory.svg?branch=master)](https://travis-ci.org/MapStory/mapstory) [![Waffle.io - Issues in progress](https://badge.waffle.io/MapStory/mapstory.png?label=in%20progress&title=In%20Progress)](https://waffle.io/MapStory/mapstory?utm_source=badge) [![Build Status](https://saucelabs.com/buildstatus/zunware)](https://saucelabs.com/beta/builds/a90681af072a474083478115f31567b0)
+[![Coverage Status](https://coveralls.io/repos/github/MapStory/mapstory/badge.svg?branch=master)](https://coveralls.io/github/MapStory/mapstory?branch=master) [![Build Status](https://travis-ci.org/MapStory/mapstory.svg?branch=master)](https://travis-ci.org/MapStory/mapstory) [![Build Status](https://saucelabs.com/buildstatus/zunware)](https://saucelabs.com/beta/builds/a90681af072a474083478115f31567b0)
 
 [![Build Status](https://saucelabs.com/browser-matrix/zunware.svg)](https://saucelabs.com/beta/builds/a90681af072a474083478115f31567b0)
 
