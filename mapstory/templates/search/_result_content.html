@@ -6,9 +6,11 @@
             <div class="content-result-type">
                 <h4 class="tiny-caps">
                     <span ng-if="item.type === 'mapstory'"><i class="fa fa-map-o"></i>
-                        MapStory
+                        {{ BRANDING_STORY_NAME }}
                     </span>
-                    <span ng-if="item.type === 'layer'"><i class="fa fa-clone"></i> StoryLayer</span>
+                    <span ng-if="item.type === 'layer'"><i class="fa fa-clone"></i>
+                        {{ BRANDING_LAYER_NAME }}
+                    </span>
                 </h4>
             </div>
             <a href="{{ item.detail_url }}">

@@ -29,11 +29,13 @@ import geonode
 from geonode.settings import *
 import pyproj
 
+def str_to_bool(v):
+    return v.lower() in ("yes", "true", "t", "1")
+
 #
 # General Django development settings
 #
-
-SITENAME = 'MapStory'
+SITENAME = os.environ.get('SITE_NAME', 'MapStory')
 SITEURL = "%s://%s" % (os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
 
 # Defines the directory that contains the settings file as the LOCAL_ROOT
@@ -57,6 +59,23 @@ ROOT_URLCONF = 'mapstory.urls'
 LOCALE_PATHS = (
                    os.path.join(LOCAL_ROOT, 'locale'),
                ) + LOCALE_PATHS
+
+#
+# Site Customizations
+#
+
+# Branding
+SITE_NAME = SITENAME
+BRANDING_STORY_NAME = os.environ.get('BRANDING_STORY_NAME', 'MapStory')
+BRANDING_STORIES_NAME = os.environ.get('BRANDING_STORIES_NAME', 'MapStories')
+BRANDING_LAYER_NAME = os.environ.get('BRANDING_LAYER_NAME', 'StoryLayer')
+BRANDING_LAYERS_NAME = os.environ.get('BRANDING_LAYERS_NAME', 'StoryLayers')
+THEME = os.environ.get('THEME', 'default')
+
+# Misc
+REGISTRATION_OPEN = str_to_bool(os.environ.get('REGISTRATION_OPEN', 'True'))
+USER_SNAP = str_to_bool(os.environ.get('USER_SNAP', 'False'))
+GOOGLE_ANALYTICS = os.environ.get('GOOGLE_ANALYTICS', '')
 
 #
 # Application Settings
@@ -234,11 +253,6 @@ OGC_SERVER = {
         'PG_GEOGIG': True
     }
 }
-
-
-def str_to_bool(v):
-    return v.lower() in ("yes", "true", "t", "1")
-
 
 #
 # Email Settings
@@ -673,12 +687,8 @@ SLACK_USERNAME = os.environ.get('SLACK_USERNAME', '')
 #
 # Misc Settings
 #
-REGISTRATION_OPEN = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 AUTOCOMPLETE_QUICK_SEARCH = False
-THEME = os.environ.get('THEME', 'default')
-USER_SNAP = True
-GOOGLE_ANALYTICS = os.environ.get('GOOGLE_ANALYTICS', '')
 LOCAL_CONTENT = False
 
 # Override number of results per page listed in the GeoNode search pages
@@ -698,10 +708,10 @@ SCHEMA_DOWNLOAD_EXCLUDE = [
     'date_parsed',
 ]
 
+# Choose thumbnail generator -- this is the delayed phantomjs generator
+THUMBNAIL_GENERATOR = "mapstory.apps.thumbnails.tasks.create_gs_thumbnail_mapstory_tx_aware"
+
 #
 # Feature toggles
 #
 FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
-
-# Choose thumbnail generator -- this is the delayed phantomjs generator
-THUMBNAIL_GENERATOR = "mapstory.apps.thumbnails.tasks.create_gs_thumbnail_mapstory_tx_aware"

@@ -33,7 +33,7 @@
     <!-- Featured Content -->
     <section class="featured-cards" ng-controller="featuredController as featured">
         <div layout="column" layout-align="start center">
-            <h2 class="homepage">Featured MapStories from Across the Community</h2>
+            <h2 class="homepage">Featured {{ BRANDING_MAPSTORIES_NAME }} from Across the Community</h2>
             <div layout="row" layout-sm="column" layout-xs="column" style="max-width: 1750px;">
                 <ul layout="row" class="no-style-list" layout-wrap layout-align="center center">
                     <li ng-repeat="item in featured.cards">
@@ -60,8 +60,8 @@
                     <img src="{{ STATIC_URL }}mapstory/img/icon_upload.png"  />
                 </div>
                 <aside >
-                    <h3 class="homepage">Upload StoryLayers</h3>
-                    <p class="homepage"> Upload datasets as StoryLayers or, if you don't have data to upload, generate new StoryLayers from scratch. </p>
+                    <h3 class="homepage">Upload {{ BRANDING_LAYERS_NAME }}</h3>
+                    <p class="homepage"> Upload datasets as {{ BRANDING_LAYERS_NAME }} or, if you don't have data to upload, generate new {{ BRANDING_LAYERS_NAME }} from scratch. </p>
                 </aside>
             </article>
 
@@ -70,8 +70,8 @@
                     <img src="{{ STATIC_URL }}mapstory/img/icon_edit.png"  />
                 </div>
                 <aside>
-                    <h3 class="homepage">Edit StoryLayers</h3>
-                    <p class="homepage"> Edit StoryLayers shared by the community to make them as complete and accurate as possible.</p>
+                    <h3 class="homepage">Edit {{ BRANDING_LAYERS_NAME }}</h3>
+                    <p class="homepage"> Edit {{ BRANDING_LAYERS_NAME }} shared by the community to make them as complete and accurate as possible.</p>
                 </aside>
             </article>
 
@@ -80,8 +80,8 @@
                     <img src="{{ STATIC_URL }}mapstory/img/icon_compose.png"  />
                 </div>
                 <aside>
-                    <h3 class="homepage">Compose MapStories</h3>
-                    <p class="homepage">Compose MapStories by combining StoryLayers with text, images and video and then share them with a global audience. </p>
+                    <h3 class="homepage">Compose {{ BRANDING_STORIES_NAME }}</h3>
+                    <p class="homepage">Compose {{ BRANDING_STORIES_NAME }} by combining {{ BRANDING_LAYERS_NAME }} with text, images and video and then share them with a global audience. </p>
                 </aside>
             </article>
 
@@ -119,7 +119,7 @@
 
             <h2 class="homepage">Share your expertise through edits</h2>
 
-            <p style="padding-left: 20px; font-size: 22px">Curate the accuracy and quality of StoryLayers by adding ratings, checking metadata, making comments and committing version edits.</p>
+            <p style="padding-left: 20px; font-size: 22px">Curate the accuracy and quality of {{ BRANDING_LAYERS_NAME }} by adding ratings, checking metadata, making comments and committing version edits.</p>
 
             <a href="/getstarted">
                 <button class="button accent-button-inverse">
@@ -141,7 +141,7 @@
         <div layout="column" layout-align="center center">
             <h2 class="homepage">Bring your story to life</h2>
 
-            <p style="padding-left: 20px; font-size: 22px">Combine StoryLayers with narrative elements like images, text and video to compose MapStories that explain how and why change occurs. No coding required.</p>
+            <p style="padding-left: 20px; font-size: 22px">Combine {{ BRANDING_LAYERS_NAME }} with narrative elements like images, text and video to compose {{ BRANDING_STORIES_NAME }} that explain how and why change occurs. No coding required.</p>
 
             <a href="/getstarted">
                 <button class="button accent-button-inverse">

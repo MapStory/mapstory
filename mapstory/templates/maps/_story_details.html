@@ -27,14 +27,14 @@
                 <a href="/story/{{ resource.id }}/draft">
                     <button class="btn btn-danger resume-edit">
                         <i class="fa fa-pencil"></i>
-                        {% if resource.is_published %} Change Published MapStory 
-                        {% else %} Resume Draft 
+                        {% if resource.is_published %} Change Published {{ STORY_NAME }}
+                        {% else %} Resume Draft
                         {% endif %}
                     </button>
                 </a>
                 <a href="/story/{{ resource.id }}/embed">
                     <button class="btn btn-detail mobile-play">
-                        <i class="fa fa-play"></i> Play MapStory  
+                        <i class="fa fa-play"></i> Play {{ STORY_NAME }}
                     </button>
                 </a>
                 {% endif %}
@@ -137,7 +137,7 @@
                             {% if resource.abstract != '' %}
                                 {{ resource.abstract }}
                             {% else %}
-                                <div class="no-chapter-summary"> Unfortunately, no summary has been provided for this MapStory.</div>
+                                <div class="no-chapter-summary"> Unfortunately, no summary has been provided for this {{ STORY_NAME }}.</div>
                             {% endif %}
                         </div>
                         {% if resource.chapters.count = 1 %}
@@ -168,7 +168,7 @@
                                 md-on-remove="removeTag($chip)"
                                 md-transform-chip="newChip($chip)"
                                 md-separator-keys="separateOn"
-                                placeholder="Add tags for this MapStory...">
+                                placeholder="Add tags for this {{ BRANDING_STORY_NAME }}...">
                                 </md-chips>
                             </md-content>
                         </div>
@@ -272,13 +272,6 @@
                             {% csrf_token %}
                             <p>{{ thumb_form.non_field_errors }}</p>
                             <p>{{ thumb_form.docfile.label_tag }} </p>
-                            <p>
-                                {{ thumb_form.thumbnail_image.errors }}
-                                {{ thumb_form.thumbnail_image }}
-                            </p>
-                            <button style="width:200px" class="btn btn-primary btn-md btn-block" type="submit">
-                              Change Image
-                            </button>
                         </form>
                           </td>
                       </tr>
@@ -287,7 +280,7 @@
                     {% if resource.owner == user %}
                     <div style= "padding-top: 40px">
                         <button class="btn btn-danger">
-                            <a href="{% url "map_remove" resource.id %}">{% trans "Delete this " %}MapStory</a>
+                            <a href="{% url "map_remove" resource.id %}">{% trans "Delete this " %}{{ BRANDING_STORY_NAME }}</a>
                         </button>
                     </div>
                     {% endif %}

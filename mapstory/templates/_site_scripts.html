@@ -15,6 +15,11 @@
     {% else %}
         SEARCH_URL = '{% url 'api_dispatch_list' api_name='api' resource_name='base' %}'
     {% endif %}
+    SITE_NAME = "{{ SITE_NAME }}";
+    BRANDING_STORY_NAME = "{{ BRANDING_STORY_NAME }}";
+    BRANDING_STORIES_NAME = "{{ BRANDING_STORIES_NAME }}";
+    BRANDING_LAYER_NAME = "{{ BRANDING_LAYER_NAME }}";
+    BRANDING_LAYERS_NAME = "{{ BRANDING_LAYERS_NAME }}";
     USER = "{{ user }}";
 </script>
 
@@ -94,6 +99,6 @@
     </script>
 {% endif %}
 <script>
-// instantiate clipboard for link sharing   
-    new Clipboard('.copyclip'); 
+// instantiate clipboard for link sharing
+    new Clipboard('.copyclip');
 </script>
