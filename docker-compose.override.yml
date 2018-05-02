@@ -99,6 +99,8 @@ services:
       - docker/env/dev/geoserver.env
       - docker/env/dev/mapstory.env
       - docker/env/dev/db_auth.env
+    environment:
+      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
     command: [--collect-static-dev, --init-db, --reindex, --serve-dev]
     volumes:
       - .:/srv/mapstory/:cached
@@ -113,13 +115,13 @@ services:
     image: quay.io/mapstory/django:master
     links:
       - postgres
-    environment:
-      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
     env_file:
       - docker/env/dev/public_host.env
       - docker/env/dev/geoserver.env
       - docker/env/dev/mapstory.env
       - docker/env/dev/db_auth.env
+    environment:
+      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
     volumes:
       - .:/srv/mapstory/:cached
       - ./cover:/srv/mapstory/cover:cached
