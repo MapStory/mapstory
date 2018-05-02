@@ -65,6 +65,8 @@ services:
       - docker/env/dev/geoserver.env
       - docker/env/dev/mapstory.env
       - docker/env/dev/db_auth.env
+    environment:
+      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
     command: [--collect-static, --init-db, --reindex, --serve-dev]
 #    command: --init-db --test
     volumes:
@@ -83,6 +85,7 @@ services:
       - docker/env/dev/mapstory.env
       - docker/env/dev/db_auth.env
     environment:
+      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
       CELERY_NUM_WORKERS: 1
     volumes:
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
