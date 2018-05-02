@@ -33,7 +33,7 @@
     <!-- Featured Content -->
     <section class="featured-cards" ng-controller="featuredController as featured">
         <div layout="column" layout-align="start center">
-            <h2 class="homepage">Featured {{ BRANDING_MAPSTORIES_NAME }} from Across the Community</h2>
+            <h2 class="homepage">Featured {{ BRANDING_STORIES_NAME }} from Across the Community</h2>
             <div layout="row" layout-sm="column" layout-xs="column" style="max-width: 1750px;">
                 <ul layout="row" class="no-style-list" layout-wrap layout-align="center center">
                     <li ng-repeat="item in featured.cards">
@@ -52,13 +52,18 @@
     <!-- How it Works -->
     <section class="how-homepage" layout="column" >
         <h2 class="homepage">How It Works</h2>
-
         <div layout-gt-sm="row" layout-align-gt-sm="center start" layout="column" layout-align="space-around center">
-
             <article layout-gt-sm="column" layout="row" layout-align-gt-sm="space-around center">
+                {% if THEME == 'orange' %}
                 <div class="how-icon">
                     <img src="{{ STATIC_URL }}mapstory/img/icon_upload.png"  />
                 </div>
+                {% endif %}
+                {% if THEME == 'blue' %}
+                <div class="how-icon">
+                    <img src="{{ STATIC_URL }}mapstory/img/icon_upload_dark_blue.png"  />
+                </div>
+                {% endif %}
                 <aside >
                     <h3 class="homepage">Upload {{ BRANDING_LAYERS_NAME }}</h3>
                     <p class="homepage"> Upload datasets as {{ BRANDING_LAYERS_NAME }} or, if you don't have data to upload, generate new {{ BRANDING_LAYERS_NAME }} from scratch. </p>
@@ -66,9 +71,17 @@
             </article>
 
             <article layout-gt-sm="column" layout="row" layout-align-gt-sm="space-around center">
+
+                {% if THEME == 'orange' %}
                 <div class="how-icon" >
                     <img src="{{ STATIC_URL }}mapstory/img/icon_edit.png"  />
                 </div>
+                {% endif %}
+                {% if THEME == 'blue' %}
+                <div class="how-icon" >
+                    <img src="{{ STATIC_URL }}mapstory/img/icon_edit_dark_blue.png"  />
+                </div>
+                {% endif %}
                 <aside>
                     <h3 class="homepage">Edit {{ BRANDING_LAYERS_NAME }}</h3>
                     <p class="homepage"> Edit {{ BRANDING_LAYERS_NAME }} shared by the community to make them as complete and accurate as possible.</p>
@@ -76,9 +89,17 @@
             </article>
 
             <article layout-gt-sm="column" layout="row" layout-align-gt-sm="space-around center">
+
+                {% if THEME == 'orange' %}
                 <div class="how-icon" style="margin-right: 30px">
                     <img src="{{ STATIC_URL }}mapstory/img/icon_compose.png"  />
                 </div>
+                {% endif %}
+                {% if THEME == 'blue' %}
+                <div class="how-icon" style="margin-right: 30px">
+                    <img src="{{ STATIC_URL }}mapstory/img/icon_compose_dark_blue.png"  />
+                </div>
+                {% endif %}
                 <aside>
                     <h3 class="homepage">Compose {{ BRANDING_STORIES_NAME }}</h3>
                     <p class="homepage">Compose {{ BRANDING_STORIES_NAME }} by combining {{ BRANDING_LAYERS_NAME }} with text, images and video and then share them with a global audience. </p>
@@ -97,9 +118,18 @@
 
     <!-- Contribute -->
     <section class="contribute-commons" layout="row" layout-align="center center" layout-xs="column"  layout-align-xs="space-around center">
+        {% if THEME == 'orange' %}
         <center>
             <img src="{{ STATIC_URL }}mapstory/img/global_data_commons.png" class="img-circle home-shadow" style="width: 75%; min-width: 350px">
         </center>
+        {% endif %}
+
+        {% if THEME == 'blue' %}
+        <center>
+            <img src="{{ STATIC_URL }}mapstory/img/global_data_commons_blue.png" class="img-circle home-shadow" style="width: 75%; min-width: 350px">
+        </center>
+        {% endif %}
+
         <div layout="column" layout-align="center center">
             <h2 class="homepage">Contribute to the global data commons</h2>
 
@@ -127,10 +157,17 @@
                 </button>
             </a>
         </div>
-
+        {% if THEME == 'orange' %}
         <center>
             <img src="{{ STATIC_URL }}mapstory/img/expertise_through_edits.png" class="home-shadow" style="width: 75%; min-width: 350px"/>
         </center>
+        {% endif %}
+
+        {% if THEME == 'blue' %}
+        <center>
+            <img src="{{ STATIC_URL }}mapstory/img/expertise_through_edits_blue.png" class="home-shadow" style="width: 75%; min-width: 350px"/>
+        </center>
+        {% endif %}
     </section>
 
     <!-- Bring to Life -->
@@ -151,6 +188,7 @@
         </div>
     </section>
     <!--#THEMOREYOUKNOW-->
+    {% if THEME == 'orange' %}
     <section class="more-you-know" layout="column" style="background-image: url('{{ STATIC_URL }}/mapstory/img/bg_topography.png');" layout-align="center center">
         <p class="more"> The more we all know about the story of our planet, the more likely we are to treat it, and each other well. Sign up, and become a mapstoryteller today. </p>
 
@@ -188,5 +226,6 @@
             </div>
         </div>
     </section>
+    {% endif %}
 </div>
 {% endblock %}
