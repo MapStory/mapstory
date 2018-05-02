@@ -1,6 +1,7 @@
 {% load i18n %}
 <footer class="site-footer">
     <div layout-gt-sm="row" layout="column" layout-align="space-around start">
+        {% if THEME == 'orange' %}
         <section layout="column" flex-gt-sm="33">
             <h3 class="bold-caps">Support Us</h3>
             <p> {{ site.assets.footer_text | safe }} </p>
@@ -10,6 +11,9 @@
                 </button>
             </a>
         </section>
+        {% endif %}
+
+        {% if THEME == 'orange' %}
         <section layout="column" flex-gt-sm="33">
             <h3 class="bold-caps">Create an Account</h3>
             <p>{{ SITE_NAME }} is free to use for anyone age 13 and up. Sign up now!</p>
@@ -19,6 +23,9 @@
                 </button>
             </a>
         </section>
+        {% endif %}
+
+        {% if THEME == 'orange' %}
         <section layout="column" flex-gt-sm="33">
             <h3 class="bold-caps">Ways to Connect</h3>
             <p>We want to hear from you! Visit <a href="https://wiki.mapstory.org">the Wiki</a> to find and share more
@@ -34,6 +41,7 @@
                 </a>
             </span>
         </section>
+        {% endif %}
     </div>
     <div class="pull-left version-number">{% trans "version" %} {{ VERSION }}</div>
 </footer>
