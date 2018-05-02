@@ -28,11 +28,11 @@
                         {% if user.is_authenticated %}
                             <li>
                                 <a class="pointer" ng-controller="ImportController"
-                                   ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', '{{ default_layer_config }}', null, null, null)">{% trans "Import {{ BRANDING_LAYER_NAME }}" %}</a>
+                                   ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', '{{ default_layer_config }}', null, null, null)">{% blocktrans %}Import {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a>
                             </li>
                             <li>
                                 <a class="pointer" ng-controller="createLayerCtrl"
-                                   ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}')">{% trans "Create {{ BRANDING_LAYER_NAME }}" %}</a>
+                                   ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}')">{% blocktrans %}Create {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a>
                             </li>
                             <li>
                                 <a href="{% url 'upload' %}">{% trans "Upload Icons" %}</a>
@@ -41,10 +41,10 @@
                                 <a href="{% url 'new-story' %}?tour">{% trans "Compose Story" %}</a>
                             </li>
                         {% else %}
-                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Import {{ BRANDING_LAYER_NAME }}" %}</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Create {{ BRANDING_LAYER_NAME }}" %}</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Upload Icons" %}</a></li>
-                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Compose Story" %}</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% blocktrans %}Import {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% blocktrans %}Create {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% blocktrans %}Upload Icons{% endblocktrans %}</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% blocktrans %}Compose Story{% endblocktrans %}</a></li>
                         {% endif %}
                     </ul>
                 </li>
