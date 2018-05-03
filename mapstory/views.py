@@ -643,6 +643,7 @@ def layer_append_minimal(source, target, request_cookies):
     The main layer_append logic that can run outside of a request.
     """
     source = 'geonode:' + source
+    target = 'geonode:' + target
 
     def chunk_list(list, chunk_size):
         """Yield successive chunk_size chunks from list."""
