@@ -48,8 +48,10 @@
                         {% endif %}
                     </ul>
                 </li>
-                <li class="nav-link"><a href="{% url 'getpage' 'started' %}" ng-hide="THEME == blue">{% trans "Get Started" %}</a></li>
-                <li class="nav-link"><a href="{% url 'journal' %}" ng-hide="SITE_NAME == StoryScapes">{% trans "Journal" %}</a></li>
+                {% if THEME == 'orange' %}
+                <li class="nav-link"><a href="{% url 'getpage' 'started' %}">{% trans "Get Started" %}</a></li>
+                <li class="nav-link"><a href="{% url 'journal' %}">{% trans "Journal" %}</a></li>
+                {% endif %}
 
                 {% if user.is_authenticated %}
                     <li id="js-navigation-more" class="nav-link more user-menu">
