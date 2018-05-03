@@ -48,9 +48,11 @@
                                 <div id="user_activities" class="tab-pane">
                                     {% include 'people/_activity_feed.html' %}
                                 </div>
+                                {% if THEME == 'orange' %}
                                 <div id="journal_entries" class="tab-pane">
                                     {% include 'people/_journal.html' %}
                                 </div>
+                                {% endif %}
                                 <div id="favorite_list" class="tab-pane">
                                     {% include "favorite/_favorite_list.html" %}
                                 </div>
