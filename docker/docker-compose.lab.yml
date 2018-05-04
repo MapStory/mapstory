@@ -71,6 +71,8 @@ services:
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
       - docker/env/lab/mapstory.env
+    environment:
+      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
     command: [--collect-static, --init-db, --reindex, --serve]
     secrets:
       - env_email_auth
@@ -91,6 +93,8 @@ services:
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
       - docker/env/lab/mapstory.env
+    environment:
+      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
     secrets:
       - env_email_auth
       - env_geoserver_auth

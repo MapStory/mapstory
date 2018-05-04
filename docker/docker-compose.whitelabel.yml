@@ -71,6 +71,8 @@ services:
       - docker/env/whitelabel/public_host.env
       - docker/env/whitelabel/geoserver.env
       - docker/env/whitelabel/mapstory.env
+    environment:
+      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
     links:
       - postgres
     command: [--collect-static, --init-db, --reindex, --serve]
@@ -93,6 +95,8 @@ services:
       - docker/env/whitelabel/public_host.env
       - docker/env/whitelabel/geoserver.env
       - docker/env/whitelabel/mapstory.env
+    environment:
+      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
     secrets:
       - env_email_auth
       - env_geoserver_auth

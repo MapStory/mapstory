@@ -50,7 +50,7 @@ from geonode.layers.models import Layer
 from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
 from geonode.geoserver.views import layer_acls, resolve_user
 from geonode.layers.views import _resolve_layer
-from geonode.maps.views import snapshot_config, _PERMISSION_MSG_SAVE, _PERMISSION_MSG_LOGIN
+from geonode.maps.views import map_json, snapshot_config, _PERMISSION_MSG_SAVE, _PERMISSION_MSG_LOGIN
 from geonode.maps.models import MapLayer, MapSnapshot
 from geonode.people.models import Profile
 from geonode.security.views import _perms_info_json
@@ -399,6 +399,22 @@ def new_map_json(request):
     else:
         return HttpResponse(status=405)
 
+@login_required
+def mapstory_map_json(request, mapid, snapshot=None):
+    if request.method =='PUT':
+        map_obj = Map.objects.get(id=mapid)
+        if not request.user.has_perm('change_resourcebase', map_obj.get_self_resource()):
+            return HttpResponse(
+                _PERMISSION_MSG_SAVE,
+                status=401,
+                content_type="text/plain"
+            )
+
+        config = json.loads(request.body)
+        map_obj.layers_config = json.dumps(config['layers'])
+        map_obj.save()
+
+    return map_json(request, mapid, snapshot)
 
 @xframe_options_exempt
 def map_view(request, mapid, snapshot=None, template='maps/map_view.html'):
@@ -627,6 +643,7 @@ def layer_append_minimal(source, target, request_cookies):
     The main layer_append logic that can run outside of a request.
     """
     source = 'geonode:' + source
+    target = 'geonode:' + target
 
     def chunk_list(list, chunk_size):
         """Yield successive chunk_size chunks from list."""
