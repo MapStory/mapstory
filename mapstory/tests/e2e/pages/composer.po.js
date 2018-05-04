@@ -47,8 +47,12 @@ let composer = function() {
 	this.upload_modal = $('#modal-body');
 	this.csv_button = this.upload_modal.$('#bulk_pin_csv_file');
 	this.save_story_button = $('[ng-click="saveMap()"]');
-	this.storypins = element.all(by.repeater('($index,pin) in pinSvc.getPins(stateSvc.getChapterIndex())'));
-
+	this.storypins = element.all(by.css('.storypin-content'));
+	this.edit_story = $('[ng-click="openStoryModal()"]');
+	this.edit_story_title = element(by.model('stateSvc.config.about.title'));
+	this.edit_story_summary = element(by.model('stateSvc.config.about.abstract'));
+	this.edit_category = element(by.model('stateSvc.config.about.category'));
+	this.edit_save_button = $('.modal-footer').element(by.buttonText('Save'));
 
 	/**
 	 * Gets the Composer page

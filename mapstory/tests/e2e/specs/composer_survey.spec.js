@@ -1,6 +1,7 @@
 const auth = require('../pages/auth.po');
 const home = require('../pages/home.po');
 const composer = require('../pages/composer.po');
+const makeid = require('../tools/make_id');
 let path = require('path');
 // const protractor = require('protractor');
 const EC = protractor.ExpectedConditions;
@@ -35,11 +36,27 @@ describe('Composer Survey', () => {
 
 
 			it('should edit the story title and summary', () => {
-				// Click on 'Edit Story Info'
+				// Click on 'Edit Story Info
+				expect(composer.edit_story.waitReady()).toBe(true);
+				composer.edit_story.click();
+
 				// Change the 'Title'
+				expect(composer.edit_story_title.waitReady()).toBe(true);
+				const title = 'Test #' + makeid(5);
+				composer.edit_story_title.clear().sendKeys(title);
+
 				// Change the 'Summary'
+				composer.edit_story_summary.clear().sendKeys('This is a test summary. This is only a test!');
+
+				// Select a Category
+				composer.edit_category.element(by.cssContainingText('option', 'Geopolitics')).click();
+
 				// Click 'Save'
-			}).pend('TODO');
+				composer.edit_save_button.click();
+
+				// Wait for page reload
+				browser.wait(EC.urlContains('draft'), 10000);
+			});
 
 			it('should show \'Save Successful\' message', () => {
 
@@ -216,7 +233,7 @@ describe('Composer Survey', () => {
 			});
 
 			it('should reject embedding non-whitelisted urls', () => {
-				const videoEmbededUrl = 'https://josellausas.com/';
+				const videoEmbededUrl = 'https://google.com/';
 				pinForm0.$('#storypin_media').clear().sendKeys(videoEmbededUrl);
 
 				// Click save
@@ -252,11 +269,8 @@ describe('Composer Survey', () => {
 				// Click the save button
 				composer.save_story_button.click();
 
-				// Wait for page reload
-				browser.wait(EC.urlContains('draft'), 10000);
-
 				// Check that storypins are still there
-				expect(composer.storypins.length).toEqual(1);
+				expect(composer.storypins.count()).toBe(1);
 			});
 		});
 

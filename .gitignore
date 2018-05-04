@@ -35,3 +35,4 @@ mapstory/tests/e2e/images/diff/
 mapstory/tests/errors/err*
 mapstory/tests/errors/known/err*
 ll_scripts/
+mapstory/tests/package-lock.json
