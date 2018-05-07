@@ -6,7 +6,9 @@ services:
     env_file:
       - docker/env/storyscapes/postgres.env
     secrets:
-      - env_db_auth
+      - postgres_user
+      - postgres_password
+      - postgres_db
     volumes:
       - postgres:/var/lib/postgresql/data
     networks:
@@ -109,3 +111,11 @@ secrets:
     file: ../secrets/env/slack_auth
   env_social_auth:
     file: ../secrets/env/social_auth
+  postgres_user:
+    file: ../secrets/postgres/postgres_user
+  postgres_password:
+    file: ../secrets/postgres/postgres_password
+  postgres_db:
+    file: ../secrets/postgres/postgres_db
+
+
