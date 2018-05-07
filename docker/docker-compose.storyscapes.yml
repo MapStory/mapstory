@@ -15,19 +15,19 @@ services:
       - "5432"
 
   pgadmin:
-    image: quay.io/mapstory/pgadmin:master
+    image: quay.io/mapstory/pgadmin:storyscapes
     secrets:
       - env_db_auth
 
   elasticsearch:
 
   rabbitmq:
-    image: quay.io/mapstory/rabbitmq:master
+    image: quay.io/mapstory/rabbitmq:storyscapes
     secrets:
       - env_rabbitmq_auth
 
   django:
-    image: quay.io/mapstory/django:master
+    image: quay.io/mapstory/django:storyscapes
     env_file:
       - docker/env/storyscapes/public_host.env
       - docker/env/storyscapes/geoserver.env
@@ -46,7 +46,7 @@ services:
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   celery:
-    image: quay.io/mapstory/django:master
+    image: quay.io/mapstory/django:storyscapes
     env_file:
       - docker/env/storyscapes/public_host.env
       - docker/env/storyscapes/geoserver.env
@@ -63,7 +63,7 @@ services:
       - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   django_volumes:
-    image: quay.io/mapstory/django:master
+    image: quay.io/mapstory/django:storyscapes
 
   geoserver:
     env_file:
@@ -76,7 +76,7 @@ services:
       - env_geoserver_auth
 
   nginx:
-    image: quay.io/mapstory/nginx:master
+    image: quay.io/mapstory/nginx:storyscapes
     env_file:
       - docker/env/storyscapes/public_host.env
     volumes:
