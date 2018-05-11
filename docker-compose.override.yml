@@ -24,7 +24,7 @@ services:
       internal:
 
   postgres:
-    image: mdillon/postgis:9.6
+    image: mdillon/postgis:9.6-alpine
     env_file:
       - docker/env/dev/db_auth.env
       - docker/env/dev/postgres.env
