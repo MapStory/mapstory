@@ -4,6 +4,8 @@ services:
   pgadmin:
     build: ./docker/pgadmin
     image: quay.io/mapstory/pgadmin
+    volumes:
+      - pgadmin:/var/lib/pgadmin
     networks:
       internal:
     expose:
@@ -104,3 +106,4 @@ volumes:
   geoserver:
   mapstory_static:
   mapstory_media:
+  pgadmin:

@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+# Parent Dockerfile sets this as a VOLUME.
+# We need to set the owndership as root at runtime.
+chown -R pgadmin:pgadmin /var/lib/pgadmin
+
 # Load secrets as environment variables
 for secret in /run/secrets/env_*; do
     # Pattern matches with no results are treated as string literals.
@@ -39,6 +43,11 @@ for i do # loop over $@
 
     # Serve the pgadmin application
     if [ "$i" = "--serve" ]; then
-        /docker-entrypoint.sh
+        su-exec pgadmin /usr/local/bin/docker-entrypoint.sh pgadmin4
+    fi
+
+    # Serve the pgadmin application
+    if [ "$i" = "--shell" ]; then
+        su-exec pgadmin /bin/sh
     fi
 done

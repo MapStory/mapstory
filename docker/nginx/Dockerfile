@@ -1,4 +1,4 @@
-FROM nginx
+FROM nginx:1.14-alpine
 LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 
 ENV MEDIA_ROOT=/var/lib/mapstory/media
@@ -9,14 +9,13 @@ ENV CONSUL_TEMPLATE_VERSION=0.18.1
 VOLUME $MEDIA_ROOT
 
 # Install tools and openssl/cert support
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        ca-certificates \
-        wget \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk --no-cache add \
+    ca-certificates \
+    wget
 
 # Install consul-template
 RUN set -ex \
+    && mkdir /opt \
     && wget -qO /opt/consul-template.tgz https://releases.hashicorp.com/consul-template/$CONSUL_TEMPLATE_VERSION/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.tgz \
     && tar xf /opt/consul-template.tgz -C /opt/ consul-template \
     && rm /opt/consul-template.tgz
