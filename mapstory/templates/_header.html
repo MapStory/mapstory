@@ -32,7 +32,7 @@
                             </li>
                             <li>
                                 <a class="pointer" ng-controller="createLayerCtrl"
-                                   ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}')">{% blocktrans %}Create {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a>
+                                   ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', '{{ BRANDING_LAYER_NAME }}', '{{ BRANDING_LAYERS_NAME }}')">{% blocktrans %}Create {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a>
                             </li>
                             <li>
                                 <a href="{% url 'upload' %}">{% trans "Upload Icons" %}</a>
