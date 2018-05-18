@@ -127,6 +127,14 @@ for i do # loop over $@
         fi
     fi
 
+    if [ "$i" = "--lint" ]; then
+        echo 'Running linters'
+        echo 'Running linter for story-tools-composer'
+        cd deps/story-tools-composer
+        yarn run lint
+        cd ../..
+    fi
+
     if [ "$i" = "--celery" ]; then
         echo 'Running celery workers'
         wait_for_pg
