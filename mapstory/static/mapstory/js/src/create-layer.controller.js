@@ -10,7 +10,7 @@
     .controller('createLayerModalCtrl', createLayerModalCtrl);
 
   function createLayerCtrl($scope, $uibModal) {
-    $scope.open = function (templateUrl, modalImage, staticUrl) {
+    $scope.open = function (templateUrl, modalImage, staticUrl, brandingLayerName, brandingLayersName) {
       var modalInstance = $uibModal.open({
         animation: true,
         templateUrl: templateUrl || 'importWizard.html',
@@ -21,6 +21,12 @@
           },
           staticUrl: function () {
             return staticUrl;
+          },
+          brandingLayerName: function () {
+            return brandingLayerName;
+          },
+          brandingLayersName: function () {
+            return brandingLayersName;
           }
         }
       });
@@ -33,10 +39,12 @@
     };
   }
 
-  function createLayerModalCtrl($scope, $modalInstance, $http, modalImage, staticUrl) {
+  function createLayerModalCtrl($scope, $modalInstance, $http, modalImage, staticUrl, brandingLayerName, brandingLayersName) {
     $scope.staticUrl = staticUrl;
     $scope.modalImage = modalImage;
     $scope.processing = false;
+    $scope.BRANDING_LAYER_NAME = brandingLayerName;
+    $scope.BRANDING_LAYERS_NAME = brandingLayersName;
     $scope.layer = {
        configuration_options: {
          attributes: {
