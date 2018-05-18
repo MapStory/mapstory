@@ -62,6 +62,8 @@ for i do # loop over $@
         python manage.py migrate --noinput
         echo '    load initial data'
         python manage.py loaddata --app mapstory initial_data
+        echo '    set initial user id at 1000'
+        python manage.py loaddata --app mapstory initial_user_id
         echo '    create admin user'
         python manage.py create_admin_user --name=admin --password=admin
     fi
