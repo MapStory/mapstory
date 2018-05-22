@@ -82,7 +82,7 @@ class MapStory(geonode.base.models.ResourceBase):
 
         self.title = conf['about']['title']
         self.abstract = conf['about']['abstract']
-        self.is_published = conf['is_published']
+        self.is_published = conf['isPublished']
         # Ensure that the slug is unique.
         try:
             instance = MapStory.objects.get(slug=slugify(self.title))
@@ -99,7 +99,7 @@ class MapStory(geonode.base.models.ResourceBase):
         if self.uuid is None or self.uuid == '':
             self.uuid = str(uuid.uuid1())
 
-        removed_chapter_ids = conf['removed_chapters']
+        removed_chapter_ids = conf['removedChapters']
         if removed_chapter_ids is not None and len(removed_chapter_ids) > 0:
             for chapter_id in removed_chapter_ids:
                 map_obj = Map.objects.get(id=chapter_id)
@@ -164,7 +164,6 @@ class MapStory(geonode.base.models.ResourceBase):
     class Meta(geonode.base.models.ResourceBase.Meta):
         verbose_name_plural = 'MapStories'
         db_table = 'maps_mapstory'
-        pass
 
 
 class Map(geonode.maps.models.Map):
@@ -185,7 +184,7 @@ class Map(geonode.maps.models.Map):
         self.viewer_playbackmode = conf['viewer_playbackmode'] or 'Instant'
 
         self.chapter_index = conf.get('id') or conf.get('chapter_index')
-        story_id = conf.get('story_id', 0)
+        story_id = conf.get('storyId', 0)
         story_obj = MapStory.objects.get(id=story_id)
         self.layers_config = json.dumps(conf["layers"])
         self.story = story_obj
@@ -205,7 +204,7 @@ def default_is_published(sender, **kwargs):
     GeoNode's resourcebase model defaults is_published to True; override this
     so that new MapStory/Map objects are not published by default.
     """
-    instance = kwargs["instance"]
+    instance = kwargs['instance']
     if instance.id is None:  # only reset default when object is first created
         instance.is_published = False
 
