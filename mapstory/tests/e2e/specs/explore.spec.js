@@ -1,24 +1,24 @@
 /**
  * Explore Page e2e Tests
  */
-'use strict';
+"use strict";
 
-require('../tools/waitReady.js');
+require("../tools/waitReady.js");
 
-describe('Explore page', function() {
-	let explore_page = require('../pages/explore.po');
+describe("Explore page", function () {
+  let explorePage = require("../pages/explore.po");
 
-	beforeEach(function() {
-		explore_page.get();
-	});
+  beforeEach(function () {
+    explorePage.get();
+  });
 
-	xit('> loads correctly', function() {
-		// TODO: Dynamically check for the title
-		expect(browser.getTitle()).toEqual(explore_page.title);
-		// expect(explore_page.storyteller_search_tab.waitReady()).toBeTruthy();
-		// expect(explore_page.search_bar.waitReady()).toBeTruthy();
-		// expect(explore_page.search_button.waitReady()).toBeTruthy();
-		// expect(explore_page.filter_all.waitReady()).toBeTruthy();
-		// expect(explore_page.filter_mapstory.waitReady()).toBeTruthy();
-	});
+  xit("> loads correctly", function () {
+    // TODO: Dynamically check for the title
+    expect(browser.getTitle()).toEqual(explorePage.title);
+    // expect(explorePage.storyteller_search_tab.waitReady()).toBeTruthy();
+    // expect(explorePage.search_bar.waitReady()).toBeTruthy();
+    // expect(explorePage.search_button.waitReady()).toBeTruthy();
+    // expect(explorePage.filter_all.waitReady()).toBeTruthy();
+    // expect(explorePage.filter_mapstory.waitReady()).toBeTruthy();
+  });
 });
