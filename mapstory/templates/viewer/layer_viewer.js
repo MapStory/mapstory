@@ -105,7 +105,7 @@
     });
   });
 
-  module.controller('viewerController', function($scope, $location, $injector, $log, MapManager, TimeControlsManager, $modal) {
+  module.controller('viewerController', function($scope, $location, $injector, $log, MapManager, TimeControlsManager, $uibModal) {
     $scope.timeControlsManager = $injector.instantiate(TimeControlsManager);
     $scope.mapManager = MapManager;
 
@@ -124,7 +124,7 @@
               "but should be up soon. If this problem persists please let the administrators know." +
               "</span></div>";
       }
-      $modal.open({
+      $uibModal.open({
         template: msg
       });
       $log.warn(problems);
