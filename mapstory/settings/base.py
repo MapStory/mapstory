@@ -104,6 +104,7 @@ INSTALLED_APPS += (
     'osgeo_importer',
     'solo',
     'coverage',
+    'django_classification_banner',
     'notification',
     'mapstory.apps.health_check_geoserver',
     'mapstory.apps.thumbnails',
@@ -165,6 +166,7 @@ TEMPLATES = [
                 'geonode.context_processors.resource_urls',
                 'geonode.geoserver.context_processors.geoserver_urls',
                 'mapstory.context_processors.context',
+                'django_classification_banner.context_processors.classification',
                 'user_messages.context_processors.user_messages'
             ],
         },
@@ -710,6 +712,15 @@ SCHEMA_DOWNLOAD_EXCLUDE = [
 
 # Choose thumbnail generator -- this is the delayed phantomjs generator
 THUMBNAIL_GENERATOR = "mapstory.apps.thumbnails.tasks.create_gs_thumbnail_mapstory_tx_aware"
+
+#
+# Classification banner
+#
+CLASSIFICATION_BANNER_ENABLED = str_to_bool(os.getenv('CLASSIFICATION_BANNER_ENABLED', 'False'))
+CLASSIFICATION_TEXT = os.getenv('CLASSIFICATION_TEXT', 'UNCLASSIFIED//FOUO')
+CLASSIFICATION_TEXT_COLOR = os.getenv('CLASSIFICATION_TEXT_COLOR', 'white')
+CLASSIFICATION_BACKGROUND_COLOR = os.getenv('CLASSIFICATION_BACKGROUND_COLOR', 'green')
+CLASSIFICATION_LINK = os.getenv('CLASSIFICATION_LINK', None)
 
 #
 # Feature toggles

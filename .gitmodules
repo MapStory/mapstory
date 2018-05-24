@@ -1,10 +1,10 @@
+[submodule "deps/django-classification-banner"]
+	path = deps/django-classification-banner
+	url = https://github.com/cuttlefish/django-classification-banner.git
+	branch = master
 [submodule "deps/django-mailer"]
 	path = deps/django-mailer
 	url = https://github.com/pinax/django-mailer.git
-	branch = master
-[submodule "deps/icon-commons"]
-	path = deps/icon-commons
-	url = https://github.com/MapStory/icon-commons.git
 	branch = master
 [submodule "deps/django-osgeo-importer"]
 	path = deps/django-osgeo-importer
@@ -18,6 +18,10 @@
 	path = deps/geonode
 	url = https://github.com/MapStory/geonode.git
 	branch = mapstory-2.6.x
+[submodule "deps/icon-commons"]
+	path = deps/icon-commons
+	url = https://github.com/MapStory/icon-commons.git
+	branch = master
 [submodule "deps/maploom"]
 	path = deps/maploom
 	url = https://github.com/MapStory/MapLoom.git

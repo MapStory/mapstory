@@ -92,6 +92,8 @@ RUN set -ex \
     && pip install -e ./icon-commons \
     && git clone -b angular-1.6 --depth 1 https://github.com/GeoNode/django-osgeo-importer.git \
     && pip install -e ./django-osgeo-importer \
+    && git clone -b master --depth 1 https://github.com/cuttlefish/django-classification-banner.git \
+    && pip install -e ./django-classification-banner \
     && git clone -b master --depth 1 https://github.com/MapStory/story-tools.git \
     && git clone -b master --depth 1 https://github.com/MapStory/story-tools-composer.git \
     && chown -R mapstory:mapstory .

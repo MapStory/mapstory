@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load classification_banner i18n %}
 <footer class="site-footer">
     <div layout-gt-sm="row" layout="column" layout-align="space-around start">
         {% if THEME == 'orange' %}
@@ -44,4 +44,7 @@
         {% endif %}
     </div>
     <div class="pull-left version-number">{% trans "version" %} {{ VERSION }}</div>
+    {% if CLASSIFICATION_BANNER_ENABLED and CLASSIFICATION_FOOTER_ENABLED %}
+        <div class="classification_banner_bottom_padding"></div>
+    {% endif %}
 </footer>
