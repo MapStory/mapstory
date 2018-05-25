@@ -32,9 +32,9 @@
                     <div class="navbar" ng-controller="tileProgressController">
                         <st-playback-controls class="pull-left"  playback-options="playbackOptions"
                                               time-controls="timeControlsManager.timeControls"></st-playback-controls>
-                        <progressbar animate="false" class="navbar-nav navbar-right" value="tilesLoadedProgress">
+                        <uib-progressbar animate="false" class="navbar-nav navbar-right" value="tilesLoadedProgress">
                             <b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad"></b>
-                        </progressbar>
+                        </uib-progressbar>
                     </div>
                     <div id="playback-settings" class="panel-collapse collapse">
                         <div class="panel-heading">Playback Options</div>
