@@ -1,7 +1,3 @@
-[submodule "deps/django-classification-banner"]
-	path = deps/django-classification-banner
-	url = https://github.com/cuttlefish/django-classification-banner.git
-	branch = master
 [submodule "deps/django-mailer"]
 	path = deps/django-mailer
 	url = https://github.com/pinax/django-mailer.git
