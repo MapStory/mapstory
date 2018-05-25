@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load classification_banner i18n %}
 
 <!DOCTYPE html>
 <html ng-app="composer">
@@ -35,8 +35,18 @@
 
 </head>
 <body ng-controller="composerController as composer">
+  {% classification_banner %}
+  <header class="navigation" role="banner">
+    {% if CLASSIFICATION_BANNER_ENABLED %}
+      <div class="classification_banner_top_padding"></div>
+    {% endif %}
+  </header>
 
   {% include "body.html" %}
 
+  {% if CLASSIFICATION_BANNER_ENABLED and CLASSIFICATION_FOOTER_ENABLED %}
+    <div class="classification_banner_bottom_padding"></div>
+  {% endif %}
+  {% include "_classification_warning_scripts.html" %}
 </body>
 </html>

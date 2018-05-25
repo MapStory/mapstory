@@ -1,4 +1,4 @@
-{% load i18n avatar_tags maploom_tags %}
+{% load i18n avatar_tags classification_banner maploom_tags %}
 
 <!DOCTYPE html>
 <html ng-app="MapLoom" ng-controller="AppCtrl">
@@ -63,14 +63,18 @@
   console.log('############ config: ', config);
 </script>
 
-
+{% include '_classification_warning_scripts.html' %}
 </head>
 <body style="height:100%">
+    {% classification_banner %}
+    {% if CLASSIFICATION_BANNER_ENABLED %}
+    <div class="classification_banner_top_padding"></div>
+    {% endif %}
 
+    {% maploom_html %}
 
-      {% maploom_html %}
-
-
-
+    {% if CLASSIFICATION_BANNER_ENABLED and CLASSIFICATION_FOOTER_ENABLED %}
+        <div class="classification_banner_bottom_padding"></div>
+    {% endif %}
 </body>
 </html>
