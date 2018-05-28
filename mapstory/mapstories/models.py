@@ -181,7 +181,7 @@ class Map(geonode.maps.models.Map):
         #super allows us to call base class function implementation from geonode
         super(Map, self).update_from_viewer(conf)
 
-        self.viewer_playbackmode = conf['viewer_playbackmode'] or 'Instant'
+        self.viewer_playbackmode = conf['viewerPlaybackMode'] or 'Instant'
 
         self.chapter_index = conf.get('id') or conf.get('chapter_index')
         story_id = conf.get('storyId', 0)
