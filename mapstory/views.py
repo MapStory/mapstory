@@ -73,7 +73,6 @@ from user_messages.models import Thread
 from apps.journal.models import JournalEntry
 from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
 from mapstory.apps.favorite.models import Favorite
-from mapstory.apps.thumbnails.models import ThumbnailImage, ThumbnailImageForm
 from mapstory.apps.initiatives.models import InitiativeMembership, InitiativeLayer, InitiativeMapStory
 from mapstory.apps.organizations.models import OrganizationMembership, OrganizationLayer, OrganizationMapStory
 from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditGeonodeProfileForm
@@ -936,34 +935,6 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     content_moderators = Group.objects.filter(name='content_moderator').first()
 
-    thumbnail_dir = os.path.join(settings.MEDIA_ROOT, 'thumbs')
-    default_thumbnail_array = layer.get_thumbnail_url().split('/')
-    default_thumbnail_name = default_thumbnail_array[
-        len(default_thumbnail_array) - 1
-    ]
-    default_thumbnail = os.path.join(thumbnail_dir, default_thumbnail_name)
-
-    if request.method == 'POST':
-        thumb_form = ThumbnailImageForm(request.POST, request.FILES)
-        if thumb_form.is_valid():
-            new_img = ThumbnailImage(
-                thumbnail_image=request.FILES['thumbnail_image']
-            )
-            new_img.save()
-            user_upload_thumbnail = ThumbnailImage.objects.all()[0]
-            user_upload_thumbnail_filepath = str(
-                user_upload_thumbnail.thumbnail_image
-            )
-
-            # only create backup for original thumbnail
-            if os.path.isfile(default_thumbnail + '.bak') is False:
-                os.rename(default_thumbnail, default_thumbnail + '.bak')
-
-            os.rename(user_upload_thumbnail_filepath, default_thumbnail)
-
-    else:
-        thumb_form = ThumbnailImageForm()
-
     thumbnail = layer.get_thumbnail_url
 
     # This will get URL encoded later and is used for the social media share URL
@@ -1006,7 +977,6 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "distributionurl_form": distributionurl_form,
         "content_moderators": content_moderators,
         "thumbnail": thumbnail,
-        "thumb_form": thumb_form,
         "share_url": share_url,
         "share_title": share_title,
         "share_description": share_description,
@@ -1114,32 +1084,6 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
         keywords_form = KeywordsForm(instance=map_obj)
         published_form = PublishStatusForm(instance=map_obj)
 
-    map_thumbnail_dir = os.path.join(settings.MEDIA_ROOT, 'thumbs')
-    map_default_thumbnail_array = map_obj.get_thumbnail_url().split('/')
-    map_default_thumbnail_name = 'map' + str(slug) + '.jpg'
-    map_default_thumbnail = os.path.join(map_thumbnail_dir,
-                                         map_default_thumbnail_name)
-
-    # TODO: create function to handle map and layer thumbs
-    if request.method == 'POST':
-        map_thumb_form = ThumbnailImageForm(request.POST, request.FILES)
-        if map_thumb_form.is_valid():
-            map_new_img = ThumbnailImage(
-                thumbnail_image=request.FILES['thumbnail_image']
-            )
-            map_new_img.save()
-            map_obj.save_thumbnail(map_default_thumbnail_name, map_new_img)
-            map_user_upload_thumbnail = ThumbnailImage.objects.all()[0]
-            map_user_upload_thumbnail_filepath = str(
-                map_user_upload_thumbnail.thumbnail_image
-            )
-
-            os.rename(map_user_upload_thumbnail_filepath,
-                      map_default_thumbnail)
-
-    else:
-        map_thumb_form = ThumbnailImageForm()
-
     map_thumbnail = map_obj.get_thumbnail_url
     update_es_index(MapStory, MapStory.objects.get(id=map_obj.id))
 
@@ -1179,7 +1123,6 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
         'keywords_form': keywords_form,
         'published_form': published_form,
         'thumbnail': map_thumbnail,
-        'thumb_form': map_thumb_form,
         'share_url': share_url,
         'share_title': share_title,
         'share_description': share_description,
