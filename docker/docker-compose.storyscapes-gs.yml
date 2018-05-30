@@ -1,0 +1,125 @@
+# storyscapes test configuration
+version: '3.1'
+services:
+  postgres:
+    image: mdillon/postgis:9.6
+    env_file:
+      - docker/env/storyscapes-gs/postgres.env
+    secrets:
+      - postgres_user
+      - postgres_password
+      - postgres_db
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      internal:
+    expose:
+      - "5432"
+
+  pgadmin:
+    image: quay.io/mapstory/pgadmin:storyscapes
+    secrets:
+      - env_db_auth
+
+  elasticsearch:
+
+  rabbitmq:
+    image: quay.io/mapstory/rabbitmq:storyscapes
+    secrets:
+      - env_rabbitmq_auth
+
+  django:
+    image: mapstory/django:storyscapes-gs
+    env_file:
+      - docker/env/storyscapes-gs/public_host.env
+      - docker/env/storyscapes-gs/geoserver.env
+      - docker/env/storyscapes-gs/mapstory.env
+    links:
+      - postgres
+    secrets:
+      - env_db_auth
+      - env_email_auth
+      - env_geoserver_auth
+      - env_rabbitmq_auth
+      - env_slack_auth
+      - env_social_auth
+      - env_geoaxis_auth
+    volumes:
+      - .:/srv/mapstory/
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
+
+  celery:
+    image: mapstory/django:storyscapes-gs
+    env_file:
+      - docker/env/storyscapes-gs/public_host.env
+      - docker/env/storyscapes-gs/geoserver.env
+      - docker/env/storyscapes-gs/mapstory.env
+    secrets:
+      - env_db_auth
+      - env_email_auth
+      - env_geoserver_auth
+      - env_rabbitmq_auth
+      - env_slack_auth
+      - env_social_auth
+    volumes:
+      - .:/srv/mapstory/
+      - site-packages:/usr/local/lib/python2.7/site-packages-copy
+
+  django_volumes:
+    image: mapstory/django:storyscapes-gs
+
+  geoserver:
+    env_file:
+      - docker/env/storyscapes-gs/public_host.env
+      - docker/env/storyscapes-gs/geoserver.env
+    links:
+      - postgres
+    secrets:
+      - env_db_auth
+      - env_geoserver_auth
+
+  nginx:
+    image: quay.io/mapstory/nginx:storyscapes
+    env_file:
+      - docker/env/storyscapes-gs/public_host.env
+    volumes:
+      - .:/srv/mapstory/:ro # mapstory_static has symlinks to this
+      - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
+    secrets:
+      - ssl_cert
+      - ssl_key
+
+volumes:
+  geoserver:
+  mapstory_media:
+  postgres:
+  site-packages:
+
+secrets:
+  ssl_cert:
+    file: ../secrets/ssl_cert
+  ssl_key:
+    file: ../secrets/ssl_key
+  env_db_auth:
+    file: ../secrets/env/db_auth
+  env_email_auth:
+    file: ../secrets/env/email_auth
+  env_geoserver_auth:
+    file: ../secrets/env/geoserver_auth
+  env_rabbitmq_auth:
+    file: ../secrets/env/rabbitmq_auth
+  env_slack_auth:
+    file: ../secrets/env/slack_auth
+  env_social_auth:
+    file: ../secrets/env/social_auth
+  postgres_user:
+    file: ../secrets/postgres/postgres_user
+  postgres_password:
+    file: ../secrets/postgres/postgres_password
+  postgres_db:
+    file: ../secrets/postgres/postgres_db
+  env_geoaxis_auth:
+    file: ../secrets/env/geoaxis_auth
+
+
+

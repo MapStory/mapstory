@@ -176,6 +176,7 @@ if settings.LOCAL_CONTENT:
 
 if settings.ENABLE_SOCIAL_LOGIN:
     urlpatterns += patterns('',
-        url('', include('social.apps.django_app.urls', namespace='social')),
+        #url('', include('social.apps.django_app.urls', namespace='social')),
+        url('', include('social_django.urls', namespace='social')),
         url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
     )

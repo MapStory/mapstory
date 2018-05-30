@@ -36,3 +36,5 @@ mapstory/tests/errors/err*
 mapstory/tests/errors/known/err*
 ll_scripts/
 mapstory/tests/package-lock.json
+mapstory/**/local_settings.py
+
