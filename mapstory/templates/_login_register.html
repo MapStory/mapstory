@@ -112,7 +112,7 @@
                 <br/>
                     <div class="row justify-content-center">
                         
-                        {% if ENABLED_SOCIAL_AUTHS.facebook %}
+                        {% if ENABLED_SOCIAL_AUTHS.facebook|default:False %}
                         <div class="col-sm-4">
                             <a href="{% url 'social:begin' 'facebook' %}">
                                 <div class="facebook-btn btn btn-md bg-ms btn-block">
@@ -122,7 +122,7 @@
                         </div>
                         {% endif %}
                         
-                        {% if ENABLED_SOCIAL_AUTHS.google_oauth2 %}
+                        {% if ENABLED_SOCIAL_AUTHS.google_oauth2|default:False %}
                         <div class="col-sm-4">
                             <a href="{% url 'social:begin' 'google-oauth2' %}">
                                 <div class="google-btn btn btn-md bg-ms btn-block">
@@ -132,11 +132,11 @@
                         </div>
                         {% endif %}
                         
-                        {% if ENABLED_SOCIAL_AUTHS.geoaxis %}
+                        {% if ENABLED_SOCIAL_AUTHS.geoaxis|default:False %}
                         <div class="col-sm-4">
                             <a href="{% url 'social:begin' 'geoaxis' %}">
-                                <div class="login-auth-btn btn btn-md btn-ms btn-block">
-                                    <i class="fa fa-lock" style="font-color: white"></i> Log In with GeoAxis
+                                <div class="login-auth-btn btn btn-ms btn-md btn-block">
+                                    <i class="fa fa-lock" style="font-color:white"></i> Log In with GeoAxis
                                 </div>
                             </a>
                         </div>
