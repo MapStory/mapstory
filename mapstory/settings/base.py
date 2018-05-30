@@ -31,7 +31,12 @@ import pyproj
 
 def str_to_bool(v):
     return v.lower() in ("yes", "true", "t", "1")
-
+    
+def isValid(v):
+    if v and len(v) > 0:
+        return True
+    else:
+        return False
 #
 # General Django development settings
 #
@@ -74,6 +79,7 @@ THEME = os.environ.get('THEME', 'default')
 
 # Misc
 REGISTRATION_OPEN = str_to_bool(os.environ.get('REGISTRATION_OPEN', 'True'))
+ENABLE_FORMS_LOGIN = str_to_bool(os.environ.get('ENABLE_FORMS_LOGIN', 'True'))
 USER_SNAP = str_to_bool(os.environ.get('USER_SNAP', 'False'))
 GOOGLE_ANALYTICS = os.environ.get('GOOGLE_ANALYTICS', '')
 
@@ -511,32 +517,32 @@ HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
 # Social Authentication Settings
 #
 ENABLE_SOCIAL_LOGIN = str_to_bool(os.environ['ENABLE_SOCIAL_LOGIN'])
+ENABLED_SOCIAL_AUTHS = dict()
+
 if ENABLE_SOCIAL_LOGIN:
     SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
 
     INSTALLED_APPS += (
-        'social.apps.django_app.default',
-        'provider',
-        'provider.oauth2',
+        'social_django',
     )
 
     AUTHENTICATION_BACKENDS = (
-        'social.backends.google.GoogleOAuth2',
-        'social.backends.facebook.FacebookOAuth2',
+        'social_core.backends.google.GoogleOAuth2',
+        'social_core.backends.facebook.FacebookOAuth2',
     )
 
 DEFAULT_AUTH_PIPELINE = (
-    'social.pipeline.social_auth.social_details',
-    'social.pipeline.social_auth.social_uid',
-    'social.pipeline.social_auth.auth_allowed',
-    'social.pipeline.social_auth.social_user',
-    'social.pipeline.user.get_username',
-    'social.pipeline.mail.mail_validation',
-    'social.pipeline.social_auth.associate_by_email',
-    'social.pipeline.user.create_user',
-    'social.pipeline.social_auth.associate_user',
-    'social.pipeline.social_auth.load_extra_data',
-    'social.pipeline.user.user_details'
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.mail.mail_validation',
+    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details'
 )
 
 SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('FACEBOOK_APP_ID','')
@@ -545,9 +551,11 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id,name,email',
 }
+ENABLED_SOCIAL_AUTHS['facebook'] = isValid(SOCIAL_AUTH_FACEBOOK_KEY)
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_OATH2_CLIENT_ID','')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OATH2_CLIENT_SECRET','')
+ENABLED_SOCIAL_AUTHS['google_oauth2'] = isValid(SOCIAL_AUTH_GOOGLE_OAUTH2_KEY)
 
 GEOFENCE_SECURITY_ENABLED = False
 
@@ -727,3 +735,24 @@ CLASSIFICATION_LINK = os.getenv('CLASSIFICATION_LINK', None)
 # Feature toggles
 #
 FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
+
+SOCIAL_AUTH_GEOAXIS_KEY = os.getenv('OAUTH_GEOAXIS_KEY', None)
+SOCIAL_AUTH_GEOAXIS_SECRET = os.getenv('OAUTH_GEOAXIS_SECRET', None)
+SOCIAL_AUTH_GEOAXIS_HOST = os.getenv('OAUTH_GEOAXIS_HOST', None)
+OAUTH_GEOAXIS_USER_FIELDS = os.getenv(
+    'OAUTH_GEOAXIS_USER_FIELDS', 'username, email, last_name, first_name')
+SOCIAL_AUTH_GEOAXIS_USER_FIELDS = map(
+    str.strip, OAUTH_GEOAXIS_USER_FIELDS.split(','))
+OAUTH_GEOAXIS_SCOPES = os.getenv('OAUTH_GEOAXIS_SCOPES', 'UserProfile.me')
+SOCIAL_AUTH_GEOAXIS_SCOPE = map(str.strip, OAUTH_GEOAXIS_SCOPES.split(','))
+ENABLE_GEOAXIS_LOGIN = isValid(SOCIAL_AUTH_GEOAXIS_KEY)
+ENABLED_SOCIAL_AUTHS['geoaxis'] = isValid(SOCIAL_AUTH_GEOAXIS_KEY)
+
+if SITEURL.startswith('https'):
+    SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+# GeoAxisOAuth2 will cause all login attempt to fail if
+# SOCIAL_AUTH_GEOAXIS_HOST is None
+if ENABLED_SOCIAL_AUTHS.get('geoaxis', False):
+    AUTHENTICATION_BACKENDS += (
+        'django_geoaxis.backends.geoaxis.GeoAxisOAuth2',
+    )

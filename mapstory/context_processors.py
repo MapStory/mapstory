@@ -13,7 +13,10 @@ def context(req):
     append_config = getattr(settings, 'DEFAULT_APPEND_CONFIG')
     return dict(
         AUTOCOMPLETE_QUICK_SEARCH=getattr(settings, 'AUTOCOMPLETE_QUICK_SEARCH', False),
+        ENABLE_FORMS_LOGIN=getattr(settings, 'ENABLE_FORMS_LOGIN', True),
+        REGISTRATION_OPEN=getattr(settings, 'REGISTRATION_OPEN', True),
         ENABLE_SOCIAL_LOGIN=getattr(settings, 'ENABLE_SOCIAL_LOGIN', False),
+        ENABLED_SOCIAL_AUTHS=getattr(settings, 'ENABLED_SOCIAL_AUTHS', dict()),
         FEATURE_MULTIPLE_STORY_CHAPTERS=getattr(settings, 'FEATURE_MULTIPLE_STORY_CHAPTERS', False),
         GOOGLE_ANALYTICS=getattr(settings, 'GOOGLE_ANALYTICS', None),
         THEME=getattr(settings, 'THEME', 'default'),

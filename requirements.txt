@@ -16,6 +16,7 @@ Django==1.8.7
 -e ./deps/django-maploom
 -e ./deps/django-osgeo-importer
 -e ./deps/icon-commons
+-e ./deps/django-geoaxis
 
 docutils
 textile
@@ -37,12 +38,13 @@ django-health-check==2.2.1
 
 #specific dependency versions from mapstory v1 to support oauth and social authnz
 django-oauth2-provider==0.2.6.1
-django-social-auth==0.7.22
+#django-social-auth==0.7.22
 oauth2==1.5.211
 
 # Add new social login app
 requests>=2.5.1
-python-social-auth==0.2.21
+#python-social-auth==0.2.21
+social-auth-app-django==2.1.0
 
 #AWS S3 dependencies
 django-storages==1.1.8
@@ -95,3 +97,5 @@ git+https://github.com/cuttlefish/django-classification-banner.git@footer
 
 # Newer versions have import errors
 django-autocomplete-light==2.3.3
+
+
