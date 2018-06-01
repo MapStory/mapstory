@@ -39,9 +39,6 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 
 import requests
-from account.conf import settings as account_settings
-from account.views import ConfirmEmailView
-from account.views import SignupView
 from actstream.models import actor_stream
 from geonode.base.models import TopicCategory, Region
 from geonode.documents.models import get_related_documents
@@ -77,7 +74,6 @@ from mapstory.apps.initiatives.models import InitiativeMembership, InitiativeLay
 from mapstory.apps.organizations.models import OrganizationMembership, OrganizationLayer, OrganizationMapStory
 from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditGeonodeProfileForm
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm, DistributionUrlForm
-from mapstory.forms import SignupForm
 from mapstory.importers import GeoServerLayerCreator
 from mapstory.mapstories.models import MapStory, Map
 from mapstory.models import GetPage
@@ -111,28 +107,6 @@ class IndexView(TemplateView):
 
         return ctx
 
-
-class MapStorySignupView(SignupView):
-
-    form_class = SignupForm
-
-    def after_signup(self, form):
-        self.create_profile(form)
-        super(MapStorySignupView, self).after_signup(form)
-
-    def form_valid(self, form):
-        # ensure all new accounts are lowercase
-        form.cleaned_data["username"] = form.cleaned_data["username"].lower()
-        super(MapStorySignupView, self).form_valid(form)
-        return redirect(self.get_success_url())
-
-    def create_profile(self, form):
-        profile = self.created_user
-        profile.first_name = form.cleaned_data["first_name"]
-        profile.last_name = form.cleaned_data["last_name"]
-        profile.save()
-
-
 class GetPageView(DetailView):
     template_name = 'mapstory/getpage.html'
     model = GetPage
@@ -160,8 +134,6 @@ class ProfileDetail(DetailView):
         ctx['journal_entries_published'] = JournalEntry.objects.filter(author=self.object, publish=True).count()
         ctx['favorites'] = Favorite.objects.filter(user=self.object).order_by('-created_on')
         ctx['icons'] = Icon.objects.filter(owner=self.object)
-        ctx['threads_all'] = Thread.ordered(Thread.objects.inbox(self.object))
-        ctx['threads_unread'] = Thread.ordered(Thread.objects.unread(self.object))
         ctx['action_list'] = actor_stream(ctx['profile'])
         # need to render the form
         ctx['form'] = UploadFileForm()
@@ -310,46 +282,6 @@ def proxy(request):
         response['www-authenticate'] = "GeoNode"
 
     return response
-
-
-class MapStoryConfirmEmailView(ConfirmEmailView):
-    """
-    Extends the ConfirmEmailView to send the welcome email.
-    """
-
-    # Override the post message to include the context data.
-    def post(self, *args, **kwargs):
-        self.object = confirmation = self.get_object()
-        confirmation.confirm()
-        ctx = self.get_context_data()
-        self.after_confirmation(confirmation, ctx)
-        redirect_url = self.get_redirect_url()
-        if not redirect_url:
-            ctx = self.get_context_data()
-            return self.render_to_response(ctx)
-        if self.messages.get("email_confirmed"):
-            messages.add_message(
-                self.request,
-                self.messages["email_confirmed"]["level"],
-                self.messages["email_confirmed"]["text"].format(**{
-                    "email": confirmation.email_address.email
-                })
-            )
-        return redirect(redirect_url)
-
-    def after_confirmation(self, confirmation, ctx):
-        """
-        Send the welcome email.
-        """
-        subject = render_to_string("account/email/welcome_subject.txt")
-        html_content = render_to_string("account/email/welcome_message.html", ctx)
-        text_content = render_to_string("account/email/welcome_message.txt", ctx)
-        msg = EmailMultiAlternatives(subject, text_content,
-                                     account_settings.DEFAULT_FROM_EMAIL, [confirmation.email_address.email])
-        msg.attach_alternative(html_content, "text/html")
-        msg.send()
-        super(MapStoryConfirmEmailView, self).after_confirmation(confirmation)
-
 
 @login_required
 def new_map_json(request):
