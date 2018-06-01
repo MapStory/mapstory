@@ -30,8 +30,6 @@ from mapstory.views import download_append_csv, download_append_shp
 from mapstory.views import GetPageView
 from mapstory.views import IndexView
 from mapstory.views import LeaderListView
-from mapstory.views import MapStoryConfirmEmailView
-from mapstory.views import MapStorySignupView
 from mapstory.views import layer_detail, layer_detail_id, layer_create
 from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from mapstory.views import layer_remove, map_remove
@@ -70,10 +68,6 @@ urlpatterns = patterns('',
 
                        # Adding Threaded Comments app
                        url(r'^articles/comments/', include('django_comments.urls')),
-
-                       # Account
-                       url(r"^account/signup/$", MapStorySignupView.as_view(), name="account_signup"),
-                       url(r"^account/confirm_email/(?P<key>\w+)/$", MapStoryConfirmEmailView.as_view(), name="account_confirm_email"),
 
                        # Accounts
                        url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))),  #temp fix for social auth redirect

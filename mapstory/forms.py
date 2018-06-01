@@ -1,20 +1,12 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-import account.forms
 from geonode.people.models import Profile
 from geonode.base.models import ResourceBase
 import taggit
 
 from mapstory.mapstory_profile.models import MapstoryProfile
 from mapstory.mapstories.models import MapStory
-
-
-class SignupForm(account.forms.SignupForm):
-
-    first_name = forms.CharField(label='First Name', max_length=100)
-    last_name = forms.CharField(label='Last Name', max_length=100)
-
 
 # A form for just keywords
 class KeywordsForm(forms.ModelForm):
