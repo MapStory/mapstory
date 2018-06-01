@@ -74,6 +74,9 @@ RUN set -ex \
     && mkdir -p $MEDIA_ROOT && chown mapstory $MEDIA_ROOT \
     && mkdir -p $STATIC_ROOT && chown mapstory $STATIC_ROOT
 
+WORKDIR $APP_PATH
+RUN pip install celery==4.1.0
+
 # Clone submodules temporarily. They're needed for the install.
 # These will be overwrriten when we load the code volume.
 # We don't use COPY because it will force rebuilds on any changes.
