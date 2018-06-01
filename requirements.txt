@@ -42,6 +42,7 @@ django-transaction-hooks==0.2
 git+https://github.com/cuttlefish/django-classification-banner.git@footer
 
 # Pinned dependencies for geonode
+beautifulsoup4==4.6.0
 django-autocomplete-light==2.3.3
 django-model-utils==3.0.0
 elasticsearch==1.6.0
