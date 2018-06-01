@@ -477,7 +477,7 @@ AUTO_GENERATE_AVATAR_SIZES = (35, 45, 75, 100)
 #
 # Celery Settings
 #
-BROKER_URL = "amqp://%s:%s@%s/%s" % (os.environ['RABBITMQ_APPLICATION_USER'], os.environ['RABBITMQ_APPLICATION_PASSWORD'], os.environ['RABBITMQ_HOST'], os.environ['RABBITMQ_APPLICATION_VHOST'])
+BROKER_URL = "amqp://mapstory:%s@%s/%s" % (os.environ['RABBITMQ_APPLICATION_PASSWORD'], os.environ['RABBITMQ_HOST'], os.environ['RABBITMQ_APPLICATION_VHOST'])
 CELERY_ALWAYS_EAGER = str_to_bool(os.environ.get('CELERY_ALWAYS_EAGER', 'False'))  # False makes tasks run asynchronously
 CELERY_DEFAULT_QUEUE = "default"
 CELERY_DEFAULT_EXCHANGE = "default"
@@ -485,8 +485,11 @@ CELERY_DEFAULT_EXCHANGE_TYPE = "direct"
 CELERY_DEFAULT_ROUTING_KEY = "default"
 CELERY_CREATE_MISSING_QUEUES = True
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = str_to_bool(os.environ.get('CELERY_EAGER_PROPAGATES_EXCEPTIONS', 'False'))
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+CELERY_RESULT_BACKEND = 'db+postgresql://mapstory:%s@%s:%s/mapstory' % (DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT)
 CELERY_IGNORE_RESULT = False
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+CELERY_ACCEPT_CONTENT = ['pickle']
 
 #
 # Haystack Settings
