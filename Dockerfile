@@ -80,7 +80,7 @@ RUN set -ex \
 #USER mapstory
 WORKDIR $APP_PATH/deps
 RUN set -ex \
-    && git clone -b 2.6.x --depth 1 https://github.com/GeoNode/geonode.git \
+    && git clone -b 2.8.0 --depth 1 https://github.com/GeoNode/geonode.git \
     && sed -i 's/Paver==1.2.1/Paver==1.2.4/' ./geonode/setup.py \
     && pip install -e ./geonode \
     && git clone -b feature/composer-wip --depth 1 https://github.com/MapStory/maploom.git \
