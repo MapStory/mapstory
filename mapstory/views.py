@@ -85,7 +85,7 @@ from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
 from .notifications import PROFILE_NOTICE_SETTINGS
 from tasks import delete_mapstory
-from mapstory.apps.thumbnails.tasks import create_mapstory_thumbnail_tx_aware
+# from mapstory.apps.thumbnails.tasks import create_mapstory_thumbnail_tx_aware
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 
@@ -419,7 +419,7 @@ def story_generate_thumbnail(request, storyid):
                 status=401,
                 content_type="text/plain"
         )
-    create_mapstory_thumbnail_tx_aware(story_obj,True)
+    #create_mapstory_thumbnail_tx_aware(story_obj,True)
     return HttpResponse("create story thumbnail task was scheduled for story id="+str(story_obj.id)+", with uuid="+str(story_obj.uuid))
 
 def save_story(request, storyid):
