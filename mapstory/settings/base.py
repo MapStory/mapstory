@@ -105,7 +105,6 @@ INSTALLED_APPS += (
     'solo',
     'coverage',
     'django_classification_banner',
-    'notification',
     'mapstory.apps.health_check_geoserver',
     'mapstory.apps.thumbnails',
     'mapstory.storypins',
