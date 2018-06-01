@@ -64,9 +64,11 @@
 </script>
 
 {% include '_classification_warning_scripts.html' %}
+{% include '_login_warning_scripts.html' %}
 </head>
 <body style="height:100%">
     {% classification_banner %}
+    {% include "_login_warning.html" %}
     {% if CLASSIFICATION_BANNER_ENABLED %}
     <div class="classification_banner_top_padding"></div>
     {% endif %}
