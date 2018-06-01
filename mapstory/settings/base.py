@@ -165,7 +165,6 @@ TEMPLATES = [
                 'geonode.geoserver.context_processors.geoserver_urls',
                 'mapstory.context_processors.context',
                 'django_classification_banner.context_processors.classification',
-                'user_messages.context_processors.user_messages'
             ],
         },
     },
