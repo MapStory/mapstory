@@ -45,7 +45,6 @@ services:
       - "8000"
 
   celery:
-    build: .
     image: quay.io/mapstory/django
     depends_on:
       - django_volumes
@@ -62,7 +61,6 @@ services:
       - "8000"
 
   django_volumes:
-    build: .
     image: quay.io/mapstory/django
     user: root
     entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory"
