@@ -26,7 +26,7 @@
       return $http.get(SEARCH_URL, {params: query || {}})
         .then(
           /* success */
-          function(response) { 
+          function(response) {
             vm.cards = response.data.objects;
           },
           /* failure */
