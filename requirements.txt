@@ -12,10 +12,10 @@ numpy==1.8.2
 Django==1.8.7
 
 -e ./deps/geonode
--e ./deps/django-mailer
+git+https://github.com/pinax/django-mailer.git@bcd2f819d9e2716e307d33d9ff50332cb35bbb50#egg=django-mailer
 -e ./deps/django-maploom
 -e ./deps/django-osgeo-importer
--e ./deps/icon-commons
+git+https://github.com/MapStory/icon-commons.git#egg=django-icon-commons
 
 docutils
 textile

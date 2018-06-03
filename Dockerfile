@@ -86,10 +86,6 @@ RUN set -ex \
     && git clone -b feature/composer-wip --depth 1 https://github.com/MapStory/maploom.git \
     && git clone -b composer --depth 1 https://github.com/MapStory/django-maploom.git \
     && pip install -e ./django-maploom \
-    && git clone -b master --depth 1 https://github.com/pinax/django-mailer.git \
-    && pip install -e ./django-mailer \
-    && git clone -b master --depth 1 https://github.com/MapStory/icon-commons.git \
-    && pip install -e ./icon-commons \
     && git clone -b angular-1.6 --depth 1 https://github.com/GeoNode/django-osgeo-importer.git \
     && pip install -e ./django-osgeo-importer \
     && git clone -b master --depth 1 https://github.com/MapStory/story-tools.git \
