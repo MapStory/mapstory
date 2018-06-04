@@ -73,7 +73,7 @@ BRANDING_LAYERS_NAME = os.environ.get('BRANDING_LAYERS_NAME', 'StoryLayers')
 THEME = os.environ.get('THEME', 'default')
 
 # Misc
-REGISTRATION_OPEN = str_to_bool(os.environ.get('REGISTRATION_OPEN', 'True'))
+ACCOUNT_OPEN_SIGNUP = str_to_bool(os.environ.get('REGISTRATION_OPEN', 'True'))
 USER_SNAP = str_to_bool(os.environ.get('USER_SNAP', 'False'))
 GOOGLE_ANALYTICS = os.environ.get('GOOGLE_ANALYTICS', '')
 
