@@ -756,3 +756,5 @@ if ENABLED_SOCIAL_AUTHS.get('geoaxis', False):
     AUTHENTICATION_BACKENDS += (
         'django_geoaxis.backends.geoaxis.GeoAxisOAuth2',
     )
+VERIFY_SSL = str_to_bool(os.getenv('VERIFY_SSL', 'True'))
+
