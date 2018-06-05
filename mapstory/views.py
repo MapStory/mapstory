@@ -922,7 +922,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             * (NON_WMS_BASE_LAYERS + [maplayer])))
     context_dict["preview"] = getattr(
         settings,
-        'LAYER_PREVIEW_LIBRARY')
+        'GEONODE_CLIENT_LAYER_PREVIEW_LIBRARY')
 
     if request.user.has_perm('download_resourcebase', layer.get_self_resource()):
         if layer.storeType == 'dataStore':
