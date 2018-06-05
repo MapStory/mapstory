@@ -27,6 +27,8 @@ def context(req):
         BRANDING_LAYERS_NAME=getattr(settings, 'BRANDING_LAYERS_NAME', 'StoryLayers'),
         CLASSIFICATION_BANNER_ENABLED=getattr(settings, 'CLASSIFICATION_BANNER_ENABLED', False),
         CLASSIFICATION_FOOTER_ENABLED=getattr(settings, 'CLASSIFICATION_FOOTER_ENABLED', False),
+        LOGIN_WARNING_ENABLED=getattr(settings, 'LOGIN_WARNING_ENABLED', False),
+        LOGIN_WARNING_TEXT=getattr(settings, 'LOGIN_WARNING_TEXT', ''),
         USER_SNAP=getattr(settings, 'USER_SNAP', False),
         VERSION=get_version(),
         default_append_config=json.dumps(append_config),

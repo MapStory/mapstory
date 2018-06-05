@@ -517,7 +517,6 @@ HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
 # Social Authentication Settings
 #
 ENABLE_SOCIAL_LOGIN = str_to_bool(os.environ['ENABLE_SOCIAL_LOGIN'])
-ENABLED_SOCIAL_AUTHS = dict()
 
 if ENABLE_SOCIAL_LOGIN:
     SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
@@ -525,37 +524,65 @@ if ENABLE_SOCIAL_LOGIN:
     INSTALLED_APPS += (
         'social_django',
     )
+    ENABLED_SOCIAL_AUTHS = dict()
+    AUTHENTICATION_BACKENDS = ()
 
-    AUTHENTICATION_BACKENDS = (
-        'social_core.backends.google.GoogleOAuth2',
-        'social_core.backends.facebook.FacebookOAuth2',
+    DEFAULT_AUTH_PIPELINE = (
+        'social_core.pipeline.social_auth.social_details',
+        'social_core.pipeline.social_auth.social_uid',
+        'social_core.pipeline.social_auth.auth_allowed',
+        'social_core.pipeline.social_auth.social_user',
+        'social_core.pipeline.user.get_username',
+        'social_core.pipeline.mail.mail_validation',
+        'social_core.pipeline.social_auth.associate_by_email',
+        'social_core.pipeline.user.create_user',
+        'social_core.pipeline.social_auth.associate_user',
+        'social_core.pipeline.social_auth.load_extra_data',
+        'social_core.pipeline.user.user_details'
     )
 
-DEFAULT_AUTH_PIPELINE = (
-    'social_core.pipeline.social_auth.social_details',
-    'social_core.pipeline.social_auth.social_uid',
-    'social_core.pipeline.social_auth.auth_allowed',
-    'social_core.pipeline.social_auth.social_user',
-    'social_core.pipeline.user.get_username',
-    'social_core.pipeline.mail.mail_validation',
-    'social_core.pipeline.social_auth.associate_by_email',
-    'social_core.pipeline.user.create_user',
-    'social_core.pipeline.social_auth.associate_user',
-    'social_core.pipeline.social_auth.load_extra_data',
-    'social_core.pipeline.user.user_details'
-)
+    ## Social Auth Facebook Configuration
+    SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('FACEBOOK_APP_ID','')
+    SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_APP_SECRET','')
+    SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+    SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+        'fields': 'id,name,email',
+    }
+    ENABLED_SOCIAL_AUTHS['facebook'] = isValid(SOCIAL_AUTH_FACEBOOK_KEY)
+    if ENABLED_SOCIAL_AUTHS.get('facebook', False):
+        AUTHENTICATION_BACKENDS += (
+            'social_core.backends.facebook.FacebookOAuth2',
+        )
 
-SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('FACEBOOK_APP_ID','')
-SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_APP_SECRET','')
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'fields': 'id,name,email',
-}
-ENABLED_SOCIAL_AUTHS['facebook'] = isValid(SOCIAL_AUTH_FACEBOOK_KEY)
+    ## Social Auth Google Configuration
+    SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_OATH2_CLIENT_ID','')
+    SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OATH2_CLIENT_SECRET','')
+    ENABLED_SOCIAL_AUTHS['google_oauth2'] = isValid(SOCIAL_AUTH_GOOGLE_OAUTH2_KEY)
+    if ENABLED_SOCIAL_AUTHS.get('google_oauth2', False):
+        AUTHENTICATION_BACKENDS += (
+            'social_core.backends.google.GoogleOAuth2',
+        )
+        
+    ## Social Auth GeoAxis Configuration
+    SOCIAL_AUTH_GEOAXIS_KEY = os.getenv('OAUTH_GEOAXIS_KEY', None)
+    SOCIAL_AUTH_GEOAXIS_SECRET = os.getenv('OAUTH_GEOAXIS_SECRET', None)
+    SOCIAL_AUTH_GEOAXIS_HOST = os.getenv('OAUTH_GEOAXIS_HOST', None)
+    OAUTH_GEOAXIS_USER_FIELDS = os.getenv(
+        'OAUTH_GEOAXIS_USER_FIELDS', 'username, email, last_name, first_name')
+    SOCIAL_AUTH_GEOAXIS_USER_FIELDS = map(
+        str.strip, OAUTH_GEOAXIS_USER_FIELDS.split(','))
+    OAUTH_GEOAXIS_SCOPES = os.getenv('OAUTH_GEOAXIS_SCOPES', 'UserProfile.me')
+    SOCIAL_AUTH_GEOAXIS_SCOPE = map(str.strip, OAUTH_GEOAXIS_SCOPES.split(','))
+    ENABLE_GEOAXIS_LOGIN = isValid(SOCIAL_AUTH_GEOAXIS_KEY)
+    ENABLED_SOCIAL_AUTHS['geoaxis'] = isValid(SOCIAL_AUTH_GEOAXIS_KEY)
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_OATH2_CLIENT_ID','')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OATH2_CLIENT_SECRET','')
-ENABLED_SOCIAL_AUTHS['google_oauth2'] = isValid(SOCIAL_AUTH_GOOGLE_OAUTH2_KEY)
+    if ENABLED_SOCIAL_AUTHS.get('geoaxis', False):
+        AUTHENTICATION_BACKENDS += (
+            'django_geoaxis.backends.geoaxis.GeoAxisOAuth2',
+        )
+    
+    if SITEURL.startswith('https'):
+        SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 GEOFENCE_SECURITY_ENABLED = False
 
@@ -732,10 +759,40 @@ CLASSIFICATION_BACKGROUND_COLOR = os.getenv('CLASSIFICATION_BACKGROUND_COLOR', '
 CLASSIFICATION_LINK = os.getenv('CLASSIFICATION_LINK', None)
 
 #
+# Login warning
+#
+LOGIN_WARNING_ENABLED = str_to_bool(os.getenv('LOGIN_WARNING_ENABLED', 'False'))
+if LOGIN_WARNING_ENABLED:
+    LOGIN_WARNING_TEXT = os.getenv(
+        'LOGIN_WARNING_TEXT',
+        '''<p>You are accessing a U.S. Government (USG) Information System
+         (IS) that is provided for USG-authorized use only.  By using this
+         IS (which includes any device attached to this IS), you consent to
+         the following conditions:</p><ul><li>The USG routinely intercepts,
+         and monitors communications on this IS for purposes including, but
+         not limited to, penetration testing, COMSEC monitoring, network
+         operations and defense, personnel misconduct (PM), law enforcement
+         (LE), and counterintelligence (CI) investigations.</li><li>At any
+         time, the USG may inspect and seize data stored on this IS.</li>
+         <li>Communications using, or data stored on, this IS are not
+         private, are subject to routine monitoring, interception, and search,
+         and may be disclosed or used for any USG-authorized purpose.</li>
+         </ul><p>This IS includes security measures (e.g., authentication and
+         access controls) to protect USG interests -- not for your personal
+         benefit or privacy.  Notwithstanding the above, using this IS does
+         not constitute consent to PM, LE, or CI investigative searching or
+         monitoring of the content of privileged communications, or work
+         product, related to personal representation or services by attorneys,
+         psychotherapists, or clergy, and their assistants. Such
+         communications and work product are private and confidential.
+         See User Agreement for details.</p>''')
+
+#
 # Feature toggles
 #
 FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
 
+<<<<<<< HEAD
 SOCIAL_AUTH_GEOAXIS_KEY = os.getenv('OAUTH_GEOAXIS_KEY', None)
 SOCIAL_AUTH_GEOAXIS_SECRET = os.getenv('OAUTH_GEOAXIS_SECRET', None)
 SOCIAL_AUTH_GEOAXIS_HOST = os.getenv('OAUTH_GEOAXIS_HOST', None)
@@ -756,5 +813,7 @@ if ENABLED_SOCIAL_AUTHS.get('geoaxis', False):
     AUTHENTICATION_BACKENDS += (
         'django_geoaxis.backends.geoaxis.GeoAxisOAuth2',
     )
+=======
+>>>>>>> f5a2ce40a623c932cb036d537551f00e6ae7b3c1
 VERIFY_SSL = str_to_bool(os.getenv('VERIFY_SSL', 'True'))
 
