@@ -16,7 +16,6 @@ Django==1.8.7
 -e ./deps/django-maploom
 -e ./deps/django-osgeo-importer
 -e ./deps/icon-commons
--e ./deps/django-geoaxis
 
 docutils
 textile
@@ -43,6 +42,9 @@ oauth2==1.5.211
 # Add new social login app
 requests>=2.5.1
 social-auth-app-django==2.1.0
+
+# GeoAxis Social Login support
+git+https://github.com/boundlessgeo/django-geoaxis.git#egg=django_geoaxis
 
 #AWS S3 dependencies
 django-storages==1.1.8

@@ -96,8 +96,6 @@ RUN set -ex \
     && pip install -e ./django-osgeo-importer \
     && git clone -b master --depth 1 https://github.com/MapStory/story-tools.git \
     && git clone -b master --depth 1 https://github.com/MapStory/story-tools-composer.git \
-    && git clone https://github.com/boundlessgeo/django-geoaxis.git \
-    && pip install -e ./django-geoaxis \
     && chown -R mapstory:mapstory .
 
 # Install dependencies from requirements.txt
