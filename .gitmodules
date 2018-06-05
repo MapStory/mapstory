@@ -30,6 +30,3 @@
 	path = deps/story-tools-composer
 	url = https://github.com/MapStory/story-tools-composer.git
 	branch = master
-[submodule "deps/django-geoaxis"]
-	path = deps/django-geoaxis
-	url = https://github.com/boundlessgeo/django-geoaxis.git
