@@ -792,28 +792,5 @@ if LOGIN_WARNING_ENABLED:
 #
 FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
 
-<<<<<<< HEAD
-SOCIAL_AUTH_GEOAXIS_KEY = os.getenv('OAUTH_GEOAXIS_KEY', None)
-SOCIAL_AUTH_GEOAXIS_SECRET = os.getenv('OAUTH_GEOAXIS_SECRET', None)
-SOCIAL_AUTH_GEOAXIS_HOST = os.getenv('OAUTH_GEOAXIS_HOST', None)
-OAUTH_GEOAXIS_USER_FIELDS = os.getenv(
-    'OAUTH_GEOAXIS_USER_FIELDS', 'username, email, last_name, first_name')
-SOCIAL_AUTH_GEOAXIS_USER_FIELDS = map(
-    str.strip, OAUTH_GEOAXIS_USER_FIELDS.split(','))
-OAUTH_GEOAXIS_SCOPES = os.getenv('OAUTH_GEOAXIS_SCOPES', 'UserProfile.me')
-SOCIAL_AUTH_GEOAXIS_SCOPE = map(str.strip, OAUTH_GEOAXIS_SCOPES.split(','))
-ENABLE_GEOAXIS_LOGIN = isValid(SOCIAL_AUTH_GEOAXIS_KEY)
-ENABLED_SOCIAL_AUTHS['geoaxis'] = isValid(SOCIAL_AUTH_GEOAXIS_KEY)
-
-if SITEURL.startswith('https'):
-    SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
-# GeoAxisOAuth2 will cause all login attempt to fail if
-# SOCIAL_AUTH_GEOAXIS_HOST is None
-if ENABLED_SOCIAL_AUTHS.get('geoaxis', False):
-    AUTHENTICATION_BACKENDS += (
-        'django_geoaxis.backends.geoaxis.GeoAxisOAuth2',
-    )
-=======
->>>>>>> f5a2ce40a623c932cb036d537551f00e6ae7b3c1
 VERIFY_SSL = str_to_bool(os.getenv('VERIFY_SSL', 'True'))
 
