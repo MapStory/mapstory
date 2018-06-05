@@ -34,8 +34,6 @@ services:
       - docker/env/storyscapes-gs/public_host.env
       - docker/env/storyscapes-gs/geoserver.env
       - docker/env/storyscapes-gs/mapstory.env
-    environment:
-      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
     links:
       - postgres
     secrets:
