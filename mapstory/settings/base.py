@@ -171,6 +171,12 @@ TEMPLATES = [
 ]
 
 #
+# Authentication Settings
+#
+ACCOUNT_ADAPTER = 'mapstory.views.CustomAccountAdapter'
+ACCOUNT_FORMS = {'signup': 'mapstory.forms.CustomSignupForm'}
+
+#
 # Database Settings
 #
 DATABASE_HOST = os.environ['DATABASE_HOST']

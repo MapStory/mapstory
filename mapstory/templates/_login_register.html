@@ -59,6 +59,9 @@
                         </div>
                     </div>
                 {% endif %}
+                {% if ACCOUNT_OPEN_SIGNUP %}
+                    Don't have an account? <a href="{% url "account_signup" %}">Sign Up.</a>
+                {% endif %}
             </div>
         </div><!-- /login.modal-content -->
     </div><!-- /login.modal-dialog -->

@@ -40,6 +40,7 @@ from django.views.generic.list import ListView
 
 import requests
 from actstream.models import actor_stream
+from allauth.account.adapter import DefaultAccountAdapter
 from geonode.base.models import TopicCategory, Region
 from geonode.documents.models import get_related_documents
 from geonode.geoserver.helpers import ogc_server_settings
@@ -106,6 +107,12 @@ class IndexView(TemplateView):
         ctx['journal_entries'] = JournalEntry.objects.filter(publish=True, show_on_main=True)[:8]
 
         return ctx
+
+class CustomAccountAdapter(DefaultAccountAdapter):
+
+    def get_login_redirect_url(self, request):
+        path = "/storyteller/edit/{username}/"
+        return path.format(username=request.user.username)
 
 class GetPageView(DetailView):
     template_name = 'mapstory/getpage.html'
