@@ -65,7 +65,6 @@ from lxml import etree
 from pinax.notifications.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 from osgeo_importer.utils import UploadError, launder
 from osgeo_importer.forms import UploadFileForm
-from provider.oauth2.models import AccessToken
 from user_messages.models import Thread
 
 from apps.journal.models import JournalEntry
@@ -1116,35 +1115,6 @@ def map_remove(request, mapid, template='maps/map_remove.html'):
     elif request.method == 'POST':
         delete_mapstory(object_id=map_obj.id)
         return HttpResponseRedirect(reverse("profile_detail", kwargs={'slug': map_obj.owner}))
-
-
-def account_verify(request):
-
-    access_token = request.GET.get('access_token', '')
-
-    if not access_token:
-        auth = request.META.get('HTTP_AUTHORIZATION', b'')
-        if type(auth) == type(''):
-            # Work around django test client oddness
-            auth = auth.encode('iso-8859-1')
-        auth = auth.split()
-        if auth and auth[0].lower() == 'bearer':
-            access_token = auth[1]
-
-    try:
-        token = AccessToken.objects.select_related('user')
-        token = token.get(token=access_token, expires__gt=provider_now())
-    except AccessToken.DoesNotExist:
-        msg = 'No access token'
-        return HttpResponseForbidden(msg)
-
-    user = token.user
-
-    if not user.is_active:
-        msg = 'User inactive or deleted: %s' % user.username
-        return HttpResponseForbidden(msg)
-    return HttpResponse('{"id":"%s","first_name":"%s","last_name":"%s","username":"%s","email":"%s"}'
-            % (user.id, user.first_name, user.last_name, user.username, user.email), mimetype='application/json')
 
 
 def layer_detail_id(request, layerid):

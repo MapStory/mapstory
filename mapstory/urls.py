@@ -69,10 +69,6 @@ urlpatterns = patterns('',
                        # Adding Threaded Comments app
                        url(r'^articles/comments/', include('django_comments.urls')),
 
-                       # Accounts
-                       url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))),  #temp fix for social auth redirect
-                       url(r'^accounts/verify/$', 'mapstory.views.account_verify',  name='account_verify'),
-
                        # Blog Comments
                        url(r'^blog/comments/', include('fluent_comments.urls')),
 
