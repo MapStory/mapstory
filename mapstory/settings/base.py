@@ -105,7 +105,6 @@ INSTALLED_APPS += (
     'solo',
     'coverage',
     'django_classification_banner',
-    'mapstory.apps.health_check_geoserver',
     'mapstory.apps.thumbnails',
     'mapstory.storypins',
     'mapstory.apps.journal',
@@ -115,12 +114,6 @@ INSTALLED_APPS += (
     'mapstory.apps.initiatives',
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
-    'health_check',
-    'health_check.db',
-    'health_check.cache',
-    'health_check.storage',
-    'health_check.contrib.celery',
-    'health_check.contrib.s3boto_storage',
 )
 # DO NOT REMOVE (read commment above)
 INSTALLED_APPS += (

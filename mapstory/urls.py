@@ -79,9 +79,6 @@ urlpatterns = patterns('',
                        url(r'^maps/new_map', new_map, name='new_map'),
                        url(r'^maps/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
 
-                       # Health Check status
-                       url(r'^status/', include('health_check.urls'), name='health_check'),
-
                        # Story
                        url(r'^story$', 'mapstory.views.new_story_json', name='new_story_json'),
                        url(r'^story/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),

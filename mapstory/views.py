@@ -59,7 +59,6 @@ from geonode.utils import default_map_config
 from geonode.utils import forward_mercator, llbbox_to_mercator
 from geonode.utils import DEFAULT_TITLE
 from geonode.utils import DEFAULT_ABSTRACT
-from health_check.plugins import plugin_dir
 from icon_commons.models import Icon
 from lxml import etree
 from pinax.notifications.models import NoticeSetting, NoticeType, NOTICE_MEDIA
@@ -68,7 +67,6 @@ from osgeo_importer.forms import UploadFileForm
 from user_messages.models import Thread
 
 from apps.journal.models import JournalEntry
-from mapstory.apps.health_check_geoserver.plugin_health_check import GeoServerHealthCheck
 from mapstory.apps.favorite.models import Favorite
 from mapstory.apps.initiatives.models import InitiativeMembership, InitiativeLayer, InitiativeMapStory
 from mapstory.apps.organizations.models import OrganizationMembership, OrganizationLayer, OrganizationMapStory
@@ -88,9 +86,6 @@ from tasks import delete_mapstory
 from mapstory.apps.thumbnails.tasks import create_mapstory_thumbnail_tx_aware
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
-
-
-plugin_dir.register(GeoServerHealthCheck)
 
 
 class IndexView(TemplateView):

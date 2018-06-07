@@ -11,8 +11,6 @@ django-slack==4.1.0
 ipdb==0.10.3
 textile
 
-django-health-check==2.2.1
-
 #threaded comments dependencies
 django-contrib-comments==1.6.2
 django-threadedcomments==1.0.1
