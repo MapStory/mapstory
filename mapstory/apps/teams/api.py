@@ -50,16 +50,10 @@ class TeamResource(ModelResource):
 
         return bundle
 
-    def build_filters(self, filters=None, ignore_bad_filters=False):
-        """
-        Setup filters.
-        :param filters: filter list.
-        :param ignore_bad_filters: Should ignore bad filters.
-        :return: orm_filters
-        """
+    def build_filters(self, filters=None, **kwargs):
         if filters is None:
             filters = {}
-        orm_filters = super(TeamResource, self).build_filters(filters)
+        orm_filters = super(TeamResource, self).build_filters(filters, **kwargs)
 
         # Handle city filters
         if 'city' in filters:
