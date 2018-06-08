@@ -793,7 +793,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             return HttpResponse(_PERMISSION_MSG_VIEW, status=403, content_type="text/plain")
 
     if layer.storeType == "remoteStore":
-        service = layer.service
+        service = layer.remote_service
         source_params = {
             "ptype": service.ptype,
             "remote": True,
