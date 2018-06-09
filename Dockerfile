@@ -12,6 +12,8 @@ WORKDIR $TMP
 
 # Add CA cert for self signing
 COPY docker/nginx/ca.crt /usr/local/share/ca-certificates/
+COPY docker/nginx/cacerts/Certificates_v5.3_DoD.pem.crt /usr/local/share/ca-certificates/
+
 RUN set -ex \
     && update-ca-certificates
 
