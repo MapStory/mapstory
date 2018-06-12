@@ -32,19 +32,19 @@
                         <div class="tabbable-line">
                             {# navigation tabs and content counts for each section #}
                             {% include 'people/_nav_tabs.html' %}
-                            
+
                             <div class="tab-content">
                             {# the following 3 tabs are rendered with client-side angular logic and values #}
-                                
+
                                 {% include 'people/_stories.html' %}
-                                
+
                                 {% include 'people/_layers.html' %}
 
                                 {% if user == profile %}
                                     {% include 'people/_uploads.html' %}
                                 {% endif %}
 
-                            {# the remaining 5 tabs are rendered with django logic and values #}     
+                            {# the remaining 5 tabs are rendered with django logic and values #}
                                 <div id="user_activities" class="tab-pane">
                                     {% include 'people/_activity_feed.html' %}
                                 </div>
