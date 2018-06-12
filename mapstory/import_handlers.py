@@ -40,7 +40,11 @@ class TruncatedNameHandler(ImportHandlerMixin):
                                                                         d['PASSWORD'], d['HOST'], d['PORT'])
 
         with OGRTruncatedConverter(connection_string) as datasource:
-            converted_fields = datasource.convert_truncated(str(layer),str(layer_config.get('appendTo')))
+            if layer_config.get('appendTo').split(':')[1] is not None:
+                dest_layer_name = layer_config.get('appendTo').split(':')[1]
+            else:
+                dest_layer_name = layer_config.get('appendTo')
+            converted_fields = datasource.convert_truncated(str(layer), str(dest_layer_name))
 
         for date_field in set(layer_config.get('convert_to_date', [])):
             if date_field in converted_fields:
