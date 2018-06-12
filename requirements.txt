@@ -29,6 +29,9 @@ pandas==0.20.3
 
 django-transaction-hooks==0.2
 
+# CLI library used by some management commands
+pick
+
 # Change when https://github.com/garnertb/django-classification-banner/pull/6 is merged
 git+https://github.com/cuttlefish/django-classification-banner.git@footer
 
