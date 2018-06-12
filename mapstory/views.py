@@ -61,7 +61,6 @@ from geonode.utils import DEFAULT_TITLE
 from geonode.utils import DEFAULT_ABSTRACT
 from icon_commons.models import Icon
 from lxml import etree
-from pinax.notifications.models import NoticeSetting, NoticeType, NOTICE_MEDIA
 from osgeo_importer.utils import UploadError, launder
 from osgeo_importer.forms import UploadFileForm
 from user_messages.models import Thread
@@ -81,7 +80,6 @@ from mapstory.models import get_sponsors, get_images
 from mapstory.search.utils import update_es_index
 from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
-from .notifications import PROFILE_NOTICE_SETTINGS
 from tasks import delete_mapstory
 from mapstory.apps.thumbnails.tasks import create_mapstory_thumbnail_tx_aware
 from django.views.decorators.http import require_http_methods
@@ -138,10 +136,6 @@ class ProfileDetail(DetailView):
         ctx['action_list'] = actor_stream(ctx['profile'])
         # need to render the form
         ctx['form'] = UploadFileForm()
-        notice_settings = []
-        for notice in NoticeType.objects.filter(label__in=PROFILE_NOTICE_SETTINGS):
-            notice_settings.append(NoticeSetting.for_user(self.object, notice, NOTICE_MEDIA[0][0]))
-        ctx['notice_settings'] = notice_settings
         ctx['interests'] = json.dumps(self.object.mapstoryprofile.interests_slug_list())
 
         return ctx

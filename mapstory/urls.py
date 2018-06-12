@@ -25,7 +25,6 @@ from mapstory.api.resourcebase_api import ResourceBaseResource
 from mapstory.api.urls import api as mapstory_api
 from mapstory.apps.favorite.urls import api as favorites_api
 from mapstory.importers import UploadedLayerResource
-from mapstory.notifications import notify_download, set_profile_notification
 from mapstory.views import download_append_csv, download_append_shp
 from mapstory.views import GetPageView
 from mapstory.views import IndexView
@@ -103,7 +102,6 @@ urlpatterns = patterns('',
 
                        url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
                        url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
-                       url(r"^storyteller/edit/(?P<username>[^/]*)/set-notification$", set_profile_notification, name="set_profile_notification"),
 
                        url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
                        url(r'^search/$', SearchView.as_view(), name='search'),
@@ -114,14 +112,12 @@ urlpatterns = patterns('',
                        url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
                        url(r'^proxy/', proxy),
                        url(r'^favorite/', include('mapstory.apps.favorite.urls')),
-                       url(r'^notifications/', include('pinax.notifications.urls')),
 
                        url(r"^flag/", include('mapstory.apps.flag.urls')),
 
                        url(r'^layers/create$', layer_create, name='layer_create'),
                        url(r'^layers/(?P<layername>[^/]*)/viewer$', layer_detail, {'template': 'viewer/layer_viewer.html'}, name="layer_viewer"),
                        url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
-                       url(r'^layers/notify-download$', notify_download, name='notify-layer-download'),
                        url(r'^layers/download-append-csv$', download_append_csv, name='download_append_csv'),
                        url(r'^layers/download-append-shp$', download_append_shp, name='download_append_shp'),
                        url(r'^layers/acls', layer_acls_mapstory, name='layer_acls_mapstory'),
