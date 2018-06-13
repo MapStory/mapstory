@@ -280,8 +280,9 @@ def proxy(request):
 
 @login_required
 def new_map_json(request):
+    
     if request.method == 'GET':
-        config = new_map_config(request)
+        map_obj, config = new_map_config(request)
         if isinstance(config, HttpResponse):
             return config
         else:
@@ -299,7 +300,7 @@ def new_map_json(request):
                       center_x=0, center_y=0)
         map_obj.save()
         map_obj.set_default_permissions()
-
+        map_obj.handle_moderated_uploads()
         # If the body has been read already, use an empty string.
         # See https://github.com/django/django/commit/58d555caf527d6f1bdfeab14527484e4cca68648
         # for a better exception to catch when we move to Django 1.7.
