@@ -1,3 +1,4 @@
+{% load socialaccount %}
 <div class="modal fade" id="loginModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -43,6 +44,25 @@
                 {% if ACCOUNT_OPEN_SIGNUP %}
                     Don't have an account? <a href="{% url "account_signup" %}">Sign Up.</a>
                 {% endif %}
+            </div>
+
+            <br/>
+            <div class="row justify-content-center">
+                <div class="col-sm-4">
+                    <a href="{% provider_login_url "google" %}">
+                                 <div class="login-auth-btn btn btn-md bg-ms btn-block">
+                                     <i class="fa fa-google"></i> Log In with Google
+                                 </div>
+                             </a>
+                </div>
+
+                <div class="col-sm-4">
+                    <a href="{% provider_login_url "geoaxis" %}">
+                                 <div class="login-auth-btn btn btn-md bg-ms btn-block">
+                                     <i class="fa fa-lock"></i> Log In with GeoAxis
+                                 </div>
+                             </a>
+                </div>
             </div>
         </div><!-- /login.modal-content -->
     </div><!-- /login.modal-dialog -->

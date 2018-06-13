@@ -153,7 +153,12 @@ if settings.LOCAL_CONTENT:
     urlpatterns = static(settings.STATIC_URL + "assets", document_root=settings.LOCAL_ROOT + "/../../mapstory-assets", show_indexes=True) + urlpatterns
 
 if settings.ENABLE_SOCIAL_LOGIN:
-    urlpatterns += patterns('',
-        url('', include('social.apps.django_app.urls', namespace='social')),
-        url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
-    )
+    pass
+    #urlpatterns += patterns('',
+    #    url('', include('social.apps.django_app.urls', namespace='social')),
+    #    url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
+    #)
+
+urlpatterns += patterns('',
+        url(r'^accounts/', include('allauth.urls')),
+)
