@@ -48,7 +48,7 @@ from geonode.layers.models import Layer
 from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
 from geonode.geoserver.views import layer_acls, resolve_user
 from geonode.layers.views import _resolve_layer
-from geonode.maps.views import map_json, snapshot_config, _PERMISSION_MSG_SAVE, _PERMISSION_MSG_LOGIN
+from geonode.maps.views import clean_config, map_json, snapshot_config, _PERMISSION_MSG_SAVE, _PERMISSION_MSG_LOGIN
 from geonode.maps.models import MapLayer, MapSnapshot
 from geonode.people.models import Profile
 from geonode.security.views import _perms_info_json
@@ -1266,26 +1266,3 @@ def new_map_config(request):
         else:
             config = DEFAULT_MAP_CONFIG
     return json.dumps(config)
-
-
-# TODO should be a util
-
-def clean_config(conf):
-    if isinstance(conf, basestring):
-        config = json.loads(conf)
-        config_extras = [
-            "rest",
-            "homeUrl",
-            "localGeoServerBaseUrl",
-            "localCSWBaseUrl",
-            "csrfToken",
-            "db_datastore",
-            "authorizedRoles"]
-        for config_item in config_extras:
-            if config_item in config:
-                del config[config_item]
-            if config_item in config["map"]:
-                del config["map"][config_item]
-        return json.dumps(config)
-    else:
-        return conf
