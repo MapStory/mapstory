@@ -53,6 +53,7 @@ from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, 
 from geonode.geoserver.views import layer_acls, resolve_user
 from geonode.layers.views import _resolve_layer
 from geonode.maps.views import clean_config, map_json, snapshot_config, _PERMISSION_MSG_SAVE, _PERMISSION_MSG_LOGIN
+from geonode.maps.views import add_layers_to_map_config
 from geonode.maps.models import MapLayer, MapSnapshot
 from geonode.people.models import Profile
 from geonode.security.views import _perms_info_json
@@ -351,22 +352,37 @@ def mapstory_map_json(request, mapid, snapshot=None):
     return map_json(request, mapid, snapshot)
 
 @xframe_options_exempt
-def map_view(request, mapid, snapshot=None, template='maps/map_view.html'):
+def map_view(request, mapid, snapshot=None, layer_name=None,
+             template='maps/map_view.html'):
     """
     The view that returns the map composer opened to
     the map with the given map ID.
     """
+    # This is a MapStory specific change.
     map_obj = _resolve_story(request, mapid, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
+    # End MapStory Specific Change
+    if 'access_token' in request.session:
+        access_token = request.session['access_token']
+    else:
+        access_token = None
 
     if snapshot is None:
-        config = map_obj.viewer_json(request.user)
+        config = map_obj.viewer_json(request.user, access_token)
     else:
-        config = snapshot_config(snapshot, map_obj, request.user)
+        config = snapshot_config(snapshot, map_obj, request.user, access_token)
 
-    return render_to_response(template, RequestContext(request, {
+    if layer_name:
+        config = add_layers_to_map_config(
+            request, map_obj, (layer_name, ), False)
+
+    return render(request, template, context={
         'config': json.dumps(config),
-        'map': map_obj
-    }))
+        'map': map_obj,
+        'preview': getattr(
+            settings,
+            'GEONODE_CLIENT_LAYER_PREVIEW_LIBRARY',
+            'geoext')
+    })
 
 
 def mapstory_view(request, slug, snapshot=None, template='composer_new/composer.html'):
