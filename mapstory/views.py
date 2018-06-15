@@ -288,7 +288,7 @@ def proxy(request):
 
 @login_required
 def new_map_json(request):
-    
+
     if request.method == 'GET':
         map_obj, config = new_map_config(request)
         if isinstance(config, HttpResponse):
@@ -528,14 +528,23 @@ def mapstory_draft(request, storyid, template):
 
 
 @login_required
-def new_map(request, template):
-    config = new_map_config(request)
+def new_map(request, template='maps/map_new.html'):
+    map_obj, config = new_map_config(request)
+    context_dict = {
+        'config': config,
+        'map': map_obj
+    }
+    context_dict["preview"] = getattr(
+        settings,
+        'GEONODE_CLIENT_LAYER_PREVIEW_LIBRARY',
+        'geoext')
     if isinstance(config, HttpResponse):
         return config
     else:
-        return render_to_response(template, RequestContext(request, {
-            'config': config,
-        }))
+        return render(
+            request,
+            template,
+            context=context_dict)
 
 
 @login_required
