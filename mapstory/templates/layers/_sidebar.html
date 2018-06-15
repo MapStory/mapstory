@@ -35,7 +35,7 @@
     {% get_obj_perms request.user for resource.get_self_resource.layer as "layer_perms" %}
             <div class="side-column-header">Edit this Layer</div>
             <!-- Only shows if not a service feature -->
-            {% if not resource.service %}
+            {% if resource.storeType != "remoteStore" %}
             <a href='{% url "map-edit" %}?layer={{ resource.service_typename }}&mode=edit' target="_blank">
                 <button class="btn btn-block btn-detailpage">
                     {% trans "Edit Features" %}
