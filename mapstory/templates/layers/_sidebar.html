@@ -34,14 +34,13 @@
     {% get_obj_perms request.user for resource.get_self_resource as "perms" %}
     {% get_obj_perms request.user for resource.get_self_resource.layer as "layer_perms" %}
             <div class="side-column-header">Edit this Layer</div>
-            <!-- Only shows if not a service feature -->
+            <!-- Only shows if not a remoteStore feature -->
             {% if resource.storeType != "remoteStore" %}
             <a href='{% url "map-edit" %}?layer={{ resource.service_typename }}&mode=edit' target="_blank">
                 <button class="btn btn-block btn-detailpage">
                     {% trans "Edit Features" %}
                 </button>
             </a>
-
             <a ng-controller="ImportController" style="cursor: pointer"
                ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '{{ STATIC_URL }}mapstory/img/mapstory-icon.png', '{{ STATIC_URL }}', '{{ default_append_config }}', '{{ resource.typename }}', '{{ shapefile_link }}','{{ csv_link }}')">
                 <button class="btn btn-block btn-detailpage">
