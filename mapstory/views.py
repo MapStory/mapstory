@@ -48,6 +48,7 @@ from geonode import geoserver
 from geonode.base.models import TopicCategory, Region
 from geonode.documents.models import get_related_documents
 from geonode.geoserver.helpers import ogc_server_settings
+from geonode.groups.models import GroupProfile
 from geonode.layers.models import Layer
 from geonode.layers.views import _PERMISSION_MSG_GENERIC, _PERMISSION_MSG_VIEW, _PERMISSION_MSG_DELETE
 from geonode.geoserver.views import layer_acls, resolve_user
@@ -1279,21 +1280,43 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
     '''
     The view that show details of each map
     '''
-
+    # MapStory specific change from mapid parameter to slug parameter
     map_obj = _resolve_map(request, slug, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
 
     # Update count for popularity ranking,
     # but do not includes admins or resource owners
     if request.user != map_obj.owner and not request.user.is_superuser:
-        MapStory.objects.filter(id=map_obj.id).update(popular_count=F('popular_count') + 1)
+        Map.objects.filter(
+            id=map_obj.id).update(
+            popular_count=F('popular_count') + 1)
+
+    if 'access_token' in request.session:
+        access_token = request.session['access_token']
+    else:
+        access_token = None
 
     if snapshot is None:
-        config = map_obj.viewer_json(request.user)
+        config = map_obj.viewer_json(request.user, access_token)
     else:
-        config = snapshot_config(snapshot, map_obj, request.user)
+        config = snapshot_config(snapshot, map_obj, request.user, access_token)
 
     config = json.dumps(config)
+    layers = MapLayer.objects.filter(map=map_obj.id)
+    links = map_obj.link_set.download()
+
+    group = None
+    if map_obj.group:
+        try:
+            group = GroupProfile.objects.get(slug=map_obj.group.name)
+        except GroupProfile.DoesNotExist:
+            group = None
+
+    ###
+    # MapStory Specific Changes
+    ###
+
     chapters = map_obj.chapters
+    # Overwrite the layers list so that we can add all layers from all chapters.
     layers = []
     for chapter in chapters:
         layers = layers + list(chapter.local_layers)
@@ -1354,14 +1377,21 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
     if len(ini_admin_memberships) < 1:
         ini_admin_memberships = None
 
+    ###
+    # End MapStory Specific Changes
+    ###
 
     context_dict = {
         'config': config,
         'resource': map_obj,
+        'group': group,
         'layers': layers,
-        'keywords': keywords,
+        'perms_list': get_perms(request.user, map_obj.get_self_resource()),
         'permissions_json': _perms_info_json(map_obj),
-        'documents': get_related_documents(map_obj),
+        "documents": get_related_documents(map_obj),
+        'links': links,
+        # MapStory Specific Additions
+        'keywords': keywords,
         'keywords_form': keywords_form,
         'published_form': published_form,
         'thumbnail': map_thumbnail,
@@ -1372,9 +1402,19 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
         'initiatives': ini_admin_memberships,
     }
 
+    context_dict["preview"] = getattr(
+        settings,
+        'GEONODE_CLIENT_LAYER_PREVIEW_LIBRARY',
+        'geoext')
+    context_dict["crs"] = getattr(
+        settings,
+        'DEFAULT_MAP_CRS',
+        'EPSG:900913')
+
     if settings.SOCIAL_ORIGINS:
         context_dict["social_links"] = build_social_links(request, map_obj)
-    return render_to_response(template, RequestContext(request, context_dict))
+
+    return render(request, template, context=context_dict)
 
 
 @login_required
@@ -1451,7 +1491,13 @@ def new_map_config(request):
     default map configuration is used.  If copy is specified
     and the map specified does not exist a 404 is returned.
     '''
-    DEFAULT_MAP_CONFIG, DEFAULT_BASE_LAYERS = default_map_config(None)
+    DEFAULT_MAP_CONFIG, DEFAULT_BASE_LAYERS = default_map_config(request)
+
+    if 'access_token' in request.session:
+        access_token = request.session['access_token']
+    else:
+        access_token = None
+
     map_obj = None
     if request.method == 'GET' and 'copy' in request.GET:
         mapid = request.GET['copy']
@@ -1459,10 +1505,11 @@ def new_map_config(request):
 
         map_obj.abstract = DEFAULT_ABSTRACT
         map_obj.title = DEFAULT_TITLE
-        map_obj.viewer_playbackmode = DEFAULT_VIEWER_PLAYBACKMODE
         if request.user.is_authenticated():
             map_obj.owner = request.user
-        config = map_obj.viewer_json(request.user)
+
+        config = map_obj.viewer_json(request.user, access_token)
+        map_obj.handle_moderated_uploads()
         del config['id']
     else:
         if request.method == 'GET':
@@ -1473,111 +1520,10 @@ def new_map_config(request):
             return HttpResponse(status=405)
 
         if 'layer' in params:
-            bbox = None
             map_obj = Map(projection=getattr(settings, 'DEFAULT_MAP_CRS',
-                          'EPSG:900913'))
-            layers = []
-            for layer_name in params.getlist('layer'):
-                try:
-                    layer = _resolve_layer(request, layer_name)
-                except ObjectDoesNotExist:
-                    # bad layer, skip
-                    continue
-
-                if not request.user.has_perm(
-                        'view_resourcebase',
-                        obj=layer.get_self_resource()):
-                    # invisible layer, skip inclusion
-                    continue
-
-                layer_bbox = layer.bbox
-                # assert False, str(layer_bbox)
-                if bbox is None:
-                    bbox = list(layer_bbox[0:4])
-                else:
-                    bbox[0] = min(bbox[0], layer_bbox[0])
-                    bbox[1] = max(bbox[1], layer_bbox[1])
-                    bbox[2] = min(bbox[2], layer_bbox[2])
-                    bbox[3] = max(bbox[3], layer_bbox[3])
-
-                config = layer.attribute_config()
-
-                # Add required parameters for GXP lazy-loading
-                config["title"] = layer.title
-                config["queryable"] = True
-
-                config["srs"] = getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913')
-                config["bbox"] = bbox if config["srs"] != 'EPSG:900913' \
-                    else llbbox_to_mercator([float(coord) for coord in bbox])
-
-                if layer.storeType == "remoteStore":
-                    service = layer.service
-                    maplayer = MapLayer(map=map_obj,
-                                        name=layer.typename,
-                                        ows_url=layer.ows_url,
-                                        layer_params=json.dumps(config),
-                                        visibility=True,
-                                        source_params=json.dumps({
-                                            "ptype": service.ptype,
-                                            "remote": True,
-                                            "url": service.base_url,
-                                            "name": service.name}))
-                else:
-                    # for non-remoteStore layers, MapLoom expects layer.ows_url
-                    # to actually be this individual layer's full path (e.g.,
-                    # mapstory.org.geoserver/workspace/layername/wms)
-
-                    ows_url = '{0}{1}/{2}/wms'.format(
-                        settings.OGC_SERVER['default']['PUBLIC_LOCATION'],
-                        layer.workspace,
-                        layer.name)
-                    maplayer = MapLayer(
-                        map=map_obj,
-                        name=layer.name,
-                        ows_url=ows_url,
-                        # use DjangoJSONEncoder to handle Decimal values
-                        layer_params=json.dumps(config, cls=DjangoJSONEncoder),
-                        visibility=True
-                    )
-
-                layers.append(maplayer)
-
-            if bbox is not None:
-                minx, miny, maxx, maxy = [float(c) for c in bbox]
-                x = (minx + maxx) / 2
-                y = (miny + maxy) / 2
-
-                if getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913') == "EPSG:4326":
-                    center = list((x, y))
-                else:
-                    center = list(forward_mercator((x, y)))
-
-                if center[1] == float('-inf'):
-                    center[1] = 0
-
-                BBOX_DIFFERENCE_THRESHOLD = 1e-5
-
-                # Check if the bbox is invalid
-                valid_x = (maxx - minx) ** 2 > BBOX_DIFFERENCE_THRESHOLD
-                valid_y = (maxy - miny) ** 2 > BBOX_DIFFERENCE_THRESHOLD
-
-                if valid_x:
-                    width_zoom = math.log(360 / abs(maxx - minx), 2)
-                else:
-                    width_zoom = 15
-
-                if valid_y:
-                    height_zoom = math.log(360 / abs(maxy - miny), 2)
-                else:
-                    height_zoom = 15
-
-                map_obj.center_x = center[0]
-                map_obj.center_y = center[1]
-                map_obj.zoom = math.ceil(min(width_zoom, height_zoom))
-
-            config = map_obj.viewer_json(
-                request.user, *(DEFAULT_BASE_LAYERS + layers))
-            config['fromLayer'] = True
+                                             'EPSG:900913'))
+            config = add_layers_to_map_config(
+                request, map_obj, params.getlist('layer'))
         else:
             config = DEFAULT_MAP_CONFIG
-    return json.dumps(config)
+    return map_obj, json.dumps(config)
