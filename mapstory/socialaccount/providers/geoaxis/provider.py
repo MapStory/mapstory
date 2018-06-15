@@ -2,6 +2,7 @@ from django.conf import settings
 from allauth.account.models import EmailAddress
 from allauth.socialaccount.providers.base import AuthAction, ProviderAccount
 from allauth.socialaccount.providers.oauth2.provider import OAuth2Provider
+import os
 
 class GeoAxisAccount(ProviderAccount):
     def get_profile_url(self):
@@ -23,13 +24,6 @@ class GeoAxisProvider(OAuth2Provider):
     def get_default_scope(self):
         return settings.ALLAUTH_GEOAXIS_SCOPE
 
-    #def get_auth_params(self, request, action):
-    #    ret = super(GeoAxisProvider, self).get_auth_params(request,
-    #                                                      action)
-    #    if action == AuthAction.REAUTHENTICATE:
-    #        ret['prompt'] = 'select_account consent'
-    #    return ret
-
     def extract_uid(self, data):
         return str(data['uid'])
 
@@ -44,6 +38,5 @@ class GeoAxisProvider(OAuth2Provider):
                        verified=True,
                        primary=True))
         return ret
-
 
 provider_classes = [GeoAxisProvider]

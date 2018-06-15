@@ -525,48 +525,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 #
-# Social Authentication Settings
+# GeoAxis Settings
 #
-ENABLE_SOCIAL_LOGIN = str_to_bool(os.environ['ENABLE_SOCIAL_LOGIN'])
-# if ENABLE_SOCIAL_LOGIN:
-#     SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
-#
-#     INSTALLED_APPS += (
-#         'social.apps.django_app.default',
-#         'provider',
-#         'provider.oauth2',
-#     )
-#
-#     AUTHENTICATION_BACKENDS = (
-#         'social.backends.google.GoogleOAuth2',
-#         'social.backends.facebook.FacebookOAuth2',
-#     )
-#
-# DEFAULT_AUTH_PIPELINE = (
-#     'social.pipeline.social_auth.social_details',
-#     'social.pipeline.social_auth.social_uid',
-#     'social.pipeline.social_auth.auth_allowed',
-#     'social.pipeline.social_auth.social_user',
-#     'social.pipeline.user.get_username',
-#     'social.pipeline.mail.mail_validation',
-#     'social.pipeline.social_auth.associate_by_email',
-#     'social.pipeline.user.create_user',
-#     'social.pipeline.social_auth.associate_user',
-#     'social.pipeline.social_auth.load_extra_data',
-#     'social.pipeline.user.user_details'
-# )
-#
-# SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('FACEBOOK_APP_ID','')
-# SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_APP_SECRET','')
-# SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-# SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-#     'fields': 'id,name,email',
-# }
-#
-# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_OATH2_CLIENT_ID','')
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OATH2_CLIENT_SECRET','')
-#
-
 ALLAUTH_GEOAXIS_HOST = os.getenv("OAUTH_GEOAXIS_HOST", None)
 ALLAUTH_GEOAXIS_USER_FIELDS = map(
         str.strip, os.getenv(

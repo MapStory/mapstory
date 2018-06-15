@@ -100,7 +100,7 @@ services:
       - docker/env/dev/mapstory.env
       - docker/env/dev/db_auth.env
     environment:
-      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
+      REQUESTS_CA_BUNDLE: "/etc/ssl/certs/ca-certificates.crt"
     command: [--collect-static-dev, --init-db, --reindex, --serve-dev]
     volumes:
       - .:/srv/mapstory/:cached
