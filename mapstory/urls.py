@@ -29,7 +29,7 @@ from mapstory.views import download_append_csv, download_append_shp
 from mapstory.views import GetPageView
 from mapstory.views import IndexView
 from mapstory.views import LeaderListView
-from mapstory.views import layer_detail, layer_detail_id, layer_create
+from mapstory.views import layer_detail, layer_create
 from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from mapstory.views import layer_remove, map_remove
 from mapstory.views import map_detail
@@ -54,12 +54,6 @@ if 'geonode.geoserver' in settings.INSTALLED_APPS:
                            url(r'^layers/resolve_user/?$', resolve_user, name='layer_resolve_user_dep'),
                            url(r'^layers/download$', layer_batch_download, name='layer_batch_download_dep'),
                            )
-
-layer_detail_patterns = patterns('',
-    url(r'^layers/(?P<layerid>\d+)$', layer_detail_id, name="layer_detail_id"),
-    url(r'^storylayer/(?P<layerid>\d+)$', layer_detail_id, name="storylayer_detail_id"),
-    url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
-    )
 
 urlpatterns = patterns('',
                        # Home
@@ -116,6 +110,7 @@ urlpatterns = patterns('',
                        url(r"^flag/", include('mapstory.apps.flag.urls')),
 
                        url(r'^layers/create$', layer_create, name='layer_create'),
+                       url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
                        url(r'^layers/(?P<layername>[^/]*)/viewer$', layer_detail, {'template': 'viewer/layer_viewer.html'}, name="layer_viewer"),
                        url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
                        url(r'^layers/download-append-csv$', download_append_csv, name='download_append_csv'),
@@ -126,7 +121,7 @@ urlpatterns = patterns('',
                        url(r'^organizations/', include('mapstory.apps.organizations.urls', namespace='organizations')),
                        url(r'^initiatives/', include('mapstory.apps.initiatives.urls', namespace='initiatives')),
                        url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain"), name='robots'),
-                       ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
+                       ) + geonode_layers_urlpatterns + urlpatterns
 
 urlpatterns += mapstories_urls
 
