@@ -32,6 +32,12 @@ import pyproj
 def str_to_bool(v):
     return v.lower() in ("yes", "true", "t", "1")
 
+def is_valid(v):
+    if v and len(v) > 0:
+        return True
+    else:
+        return False
+
 #
 # General Django development settings
 #
@@ -114,6 +120,7 @@ INSTALLED_APPS += (
     'mapstory.apps.initiatives',
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
+    'allauth.socialaccount.providers.google',
 )
 # DO NOT REMOVE (read commment above)
 INSTALLED_APPS += (
@@ -121,6 +128,11 @@ INSTALLED_APPS += (
     'actstream',
 )
 # Thanks !
+
+if is_valid(os.getenv("ALLAUTH_GEOAXIS_HOST")):
+    INSTALLED_APPS += (
+        'mapstory.socialaccount.providers.geoaxis',
+    )
 
 MAPSTORY_APPS = (
 
@@ -158,6 +170,7 @@ TEMPLATES = [
                 'geonode.geoserver.context_processors.geoserver_urls',
                 'mapstory.context_processors.context',
                 'django_classification_banner.context_processors.classification',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -506,47 +519,14 @@ HAYSTACK_CONNECTIONS = {
 SKIP_PERMS_FILTER = True
 HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
 
-#
-# Social Authentication Settings
-#
-ENABLE_SOCIAL_LOGIN = str_to_bool(os.environ['ENABLE_SOCIAL_LOGIN'])
-if ENABLE_SOCIAL_LOGIN:
-    SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
 
-    INSTALLED_APPS += (
-        'social.apps.django_app.default',
-        'provider',
-        'provider.oauth2',
-    )
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
 
-    AUTHENTICATION_BACKENDS = (
-        'social.backends.google.GoogleOAuth2',
-        'social.backends.facebook.FacebookOAuth2',
-    )
-
-DEFAULT_AUTH_PIPELINE = (
-    'social.pipeline.social_auth.social_details',
-    'social.pipeline.social_auth.social_uid',
-    'social.pipeline.social_auth.auth_allowed',
-    'social.pipeline.social_auth.social_user',
-    'social.pipeline.user.get_username',
-    'social.pipeline.mail.mail_validation',
-    'social.pipeline.social_auth.associate_by_email',
-    'social.pipeline.user.create_user',
-    'social.pipeline.social_auth.associate_user',
-    'social.pipeline.social_auth.load_extra_data',
-    'social.pipeline.user.user_details'
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
-
-SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('FACEBOOK_APP_ID','')
-SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_APP_SECRET','')
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'fields': 'id,name,email',
-}
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_OATH2_CLIENT_ID','')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OATH2_CLIENT_SECRET','')
 
 GEOFENCE_SECURITY_ENABLED = False
 
