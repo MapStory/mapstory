@@ -121,7 +121,6 @@ INSTALLED_APPS += (
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
     'allauth.socialaccount.providers.google',
-    'mapstory.socialaccount.providers.geoaxis',
 )
 # DO NOT REMOVE (read commment above)
 INSTALLED_APPS += (
@@ -129,6 +128,11 @@ INSTALLED_APPS += (
     'actstream',
 )
 # Thanks !
+
+if is_valid(os.getenv("ALLAUTH_GEOAXIS_HOST")):
+    INSTALLED_APPS += (
+        'mapstory.socialaccount.providers.geoaxis',
+    )
 
 MAPSTORY_APPS = (
 
@@ -523,20 +527,6 @@ AUTHENTICATION_BACKENDS = (
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 )
-
-#
-# GeoAxis Settings
-#
-ALLAUTH_GEOAXIS_HOST = os.getenv("OAUTH_GEOAXIS_HOST", None)
-ALLAUTH_GEOAXIS_USER_FIELDS = map(
-        str.strip, os.getenv(
-                'OAUTH_GEOAXIS_USER_FIELDS', 'username, email, last_name, first_name').split(','))
-ALLAUTH_GEOAXIS_SCOPE = map(
-        str.strip, os.getenv('OAUTH_GEOAXIS_SCOPES', 'UserProfile.me').split(','))
-
-
-
-
 
 GEOFENCE_SECURITY_ENABLED = False
 

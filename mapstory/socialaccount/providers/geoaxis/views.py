@@ -1,5 +1,5 @@
 import requests
-from django.conf import settings
+import os
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -13,11 +13,11 @@ from .provider import GeoAxisProvider
 class GeoAxisOAuth2Adapter(OAuth2Adapter):
     provider_id = GeoAxisProvider.id
     access_token_url = 'https://{0}/ms_oauth/oauth2/endpoints/' \
-                       'oauthservice/tokens'.format(getattr(settings, 'ALLAUTH_GEOAXIS_HOST', 'localhost'))
+                       'oauthservice/tokens'.format(os.getenv("ALLAUTH_GEOAXIS_HOST", 'localhost'))
     authorize_url = 'https://{0}/ms_oauth/oauth2/endpoints/' \
-                       'oauthservice/authorize'.format(getattr(settings, 'ALLAUTH_GEOAXIS_HOST', 'localhost'))
+                       'oauthservice/authorize'.format(os.getenv("ALLAUTH_GEOAXIS_HOST", 'localhost'))
     profile_url = 'https://{0}/ms_oauth/resources/userprofile/me'\
-        .format(getattr(settings, 'ALLAUTH_GEOAXIS_HOST', 'localhost'))
+        .format(os.getenv("ALLAUTH_GEOAXIS_HOST", 'localhost'))
     basic_auth = True
 
     def complete_login(self, request, app, token, **kwargs):

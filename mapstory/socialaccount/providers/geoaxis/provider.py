@@ -5,11 +5,6 @@ from allauth.socialaccount.providers.oauth2.provider import OAuth2Provider
 import os
 
 class GeoAxisAccount(ProviderAccount):
-    def get_profile_url(self):
-        return self.account.extra_data.get('link')
-
-    def get_avatar_url(self):
-        return self.account.extra_data.get('picture')
 
     def to_str(self):
         dflt = super(GeoAxisAccount, self).to_str()
@@ -22,7 +17,7 @@ class GeoAxisProvider(OAuth2Provider):
     account_class = GeoAxisAccount
 
     def get_default_scope(self):
-        return settings.ALLAUTH_GEOAXIS_SCOPE
+        return map(str.strip, os.getenv('ALLAUTH_GEOAXIS_SCOPES', 'UserProfile.me').split(','))
 
     def extract_uid(self, data):
         return str(data['uid'])
