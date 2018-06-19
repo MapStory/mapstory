@@ -106,17 +106,18 @@ urlpatterns = patterns('',
                        url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
                        url(r'^proxy/', proxy),
                        url(r'^favorite/', include('mapstory.apps.favorite.urls')),
-
                        url(r"^flag/", include('mapstory.apps.flag.urls')),
 
+                       # Layers
+                       url(r'^layers/acls', layer_acls_mapstory, name='layer_acls_mapstory'),
                        url(r'^layers/create$', layer_create, name='layer_create'),
+                       url(r'^layers/download-append-csv$', download_append_csv, name='download_append_csv'),
+                       url(r'^layers/download-append-shp$', download_append_shp, name='download_append_shp'),
+                       url(r'^layers/resolve_user', resolve_user_mapstory, name='resolve_user_mapstory'),
                        url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
                        url(r'^layers/(?P<layername>[^/]*)/viewer$', layer_detail, {'template': 'viewer/layer_viewer.html'}, name="layer_viewer"),
                        url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
-                       url(r'^layers/download-append-csv$', download_append_csv, name='download_append_csv'),
-                       url(r'^layers/download-append-shp$', download_append_shp, name='download_append_shp'),
-                       url(r'^layers/acls', layer_acls_mapstory, name='layer_acls_mapstory'),
-                       url(r'^layers/resolve_user', resolve_user_mapstory, name='resolve_user_mapstory'),
+
                        url(r'^teams/', include('mapstory.apps.teams.urls', namespace='teams')),
                        url(r'^organizations/', include('mapstory.apps.organizations.urls', namespace='organizations')),
                        url(r'^initiatives/', include('mapstory.apps.initiatives.urls', namespace='initiatives')),
