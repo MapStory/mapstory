@@ -394,8 +394,13 @@ def mapstory_view(request, slug, snapshot=None, template='composer_new/composer.
 
     story_obj = _resolve_map(request, slug, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
 
+    if 'access_token' in request.session:
+        access_token = request.session['access_token']
+    else:
+        access_token = None
+
     if snapshot is None:
-        config = story_obj.viewer_json(request.user)
+        config = story_obj.viewer_json(request.user, access_token)
     else:
         config = snapshot_config(snapshot, story_obj, request.user)
 
