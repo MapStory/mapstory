@@ -1532,3 +1532,18 @@ def new_map_config(request):
         else:
             config = DEFAULT_MAP_CONFIG
     return map_obj, json.dumps(config)
+
+def get_remote_url(request, layername):
+    layer = _resolve_layer(
+        request,
+        layername,
+        'base.delete_resourcebase',
+        _PERMISSION_MSG_DELETE)
+
+    url = None
+
+    if layer.remote_service is not None:
+        service = layer.remote_service
+        url = service.online_resource
+
+    return HttpResponse(url)

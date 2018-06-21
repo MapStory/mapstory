@@ -36,6 +36,7 @@ from mapstory.views import map_detail
 from mapstory.views import new_map
 from mapstory.views import ProfileDetail, profile_delete, profile_edit, proxy
 from mapstory.views import SearchView
+from mapstory.views import get_remote_url
 
 
 geonode_api.register(ResourceBaseResource())
@@ -117,6 +118,7 @@ urlpatterns = patterns('',
                        url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
                        url(r'^layers/(?P<layername>[^/]*)/viewer$', layer_detail, {'template': 'viewer/layer_viewer.html'}, name="layer_viewer"),
                        url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
+                       url(r'^layers/(?P<layername>[^/]*)/remote$', get_remote_url, name="get_remote_url"),
 
                        url(r'^teams/', include('mapstory.apps.teams.urls', namespace='teams')),
                        url(r'^organizations/', include('mapstory.apps.organizations.urls', namespace='organizations')),
