@@ -13,10 +13,39 @@
         <div class="container">
             <div class="row">
                 {{ resource.tags }}
-                <div class="col-7 fixed-aspect">
+                <div>
+
+                </div>
+                <div class="col-lg-9 fixed-aspect">
                     <div id="embedded_map" class="mrg-btm story">
                         <div id="preview_map"></div>
                     </div>
+                    {% if request.user.is_authenticated %}
+                    {% user_rating request.user resource "layer" as user_layer_rating %}
+                        <div id="user_rating" class="pull-right category-layer" data-score="{{ user_layer_rating }}"></div>
+                    {% endif %}
+                </div>
+                <div class="col-md-2 side-column details">
+                    <ul class="layer-sidebar">
+                        <li>
+                            <i class="fa fa-star"></i>
+                            {% if resource.rating %}
+                                {{ resource.rating }} of 5 stars
+                            {% else %}
+                                Not yet rated
+                            {% endif %}
+                        </li>
+                        <li><i class="fa fa-eye"></i> {{ resource.popular_count }} {% trans 'views' %}</li>
+                    </ul>
+                {% if request.user.is_authenticated %}
+                    <ul class="layer-sidebar">
+                        <li>{% include "favorite/_favorite.html" %}</li>
+                        <li><i class="fa fa-flag"></i>
+                            <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">Flag</a>
+                        </li>
+                        {% include '_flag_content.html' %}
+                    </ul>
+                {% endif %}
                 </div>
                 <div class="mobile-thumb">
                     <a href="/story/{{ resource.id }}/embed">
@@ -278,8 +307,33 @@
                         </button>
                     </div>
                     {% endif %}
-                </div>
 
+                    <div class="tab-pane layer-comments" id="Comments">
+                        {% render_comment_list for resource %}
+                        {% if user.is_authenticated %}
+                            {% render_comment_form for resource %}
+                        {% endif %}
+                    </div>
+{#                    {% if DISPLAY_COMMENTS %}#}
+{#                        <article class="tab-pane" id="comments">#}
+{#                            {% include "_comments.html" %}#}
+{#                        </article>#}
+{#                    {% endif %}#}
+{##}
+{#                    {% if DISPLAY_RATINGS %}#}
+{#                        <article class="tab-pane" id="rate">#}
+{#                        {% if request.user.is_authenticated %}#}
+{#                            <h3>{% trans "Rate this Map" %}</h3>#}
+{#                            {% user_rating request.user resource "map" as user_map_rating %}#}
+{#                            <div id="user_rating" class="category-map" data-score="{{ user_map_rating }}"></div>#}
+{#                        {% endif %}#}
+{#                            <h3>{% trans 'Average Rating' %}</h3>#}
+{#                            {% overall_rating resource "map" as map_rating %}#}
+{#                            {% num_ratings resource as num_votes %}#}
+{#                            <div class="overall_rating" style="float:left" data-score="{{ map_rating }}"></div> ({{num_votes}})#}
+{#                        </article>#}
+{#                    {% endif %}#}
+                </div>
             </div>
         </div>
     </section>
