@@ -37,8 +37,7 @@
                         </li>
                         <li><i class="fa fa-eye"></i> {{ resource.popular_count }} {% trans 'views' %}</li>
                     </ul>
-                {% if request.user.is_authenticated %}
-
+                    {% if request.user.is_authenticated %}
                     <ul class="layer-sidebar">
                         <!-- Favorite -->
                         <li>{% include "favorite/_favorite.html" %}</li>
@@ -48,7 +47,7 @@
                         </li>
                         {% include '_flag_content.html' %}
                     </ul>
-                {% endif %}
+                    {% endif %}
                 </div>
                 <div class="mobile-thumb">
                     <a href="/story/{{ resource.id }}/embed">
