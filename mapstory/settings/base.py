@@ -741,3 +741,16 @@ if LOGIN_WARNING_ENABLED:
 FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
 
 X_FRAME_OPTIONS = 'ALLOWALL'
+
+# audit settings
+AUDIT_ENABLED = str_to_bool(os.getenv('AUDIT_ENABLED', 'False'))
+if AUDIT_ENABLED:
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'mapstory.audit',
+    )
+
+    AUDIT_TO_FILE = str_to_bool(os.getenv('AUDIT_TO_FILE', 'False'))
+    AUDIT_LOGFILE_LOCATION = os.getenv(
+        'AUDIT_LOGFILE_LOCATION',
+        os.path.join(LOCAL_ROOT, 'audit_log.json')
+    )
