@@ -22,8 +22,7 @@
                         <!-- TODO: Implement this for stories instead of layers. -->
                         <!-- TODO: Implement this for stories instead of layers. -->
                         {% user_rating request.user resource "layer" as user_layer_rating %}
-                        <div id="user_rating" class="pull-right category-layer"
-                             data-score="{{ user_layer_rating }}"></div>
+                        <div id="user_rating" class="pull-right category-layer" data-score="{{ user_layer_rating }}"></div>
                     {% endif %}
                 </div>
                 <div class="col-md-2 side-column details">
