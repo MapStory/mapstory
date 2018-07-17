@@ -18,13 +18,6 @@
                     <div id="embedded_map" class="mrg-btm story">
                         <div id="preview_map"></div>
                     </div>
-                    {% if request.user.is_authenticated %}
-                        <!-- TODO: Implement this for stories instead of layers. -->
-                        <!-- TODO: Implement this for stories instead of layers. -->
-                        {% user_rating request.user resource "layer" as user_layer_rating %}
-                        <div id="user_rating" class="pull-right category-layer"
-                             data-score="{{ user_layer_rating }}"></div>
-                    {% endif %}
                 </div>
                 <div class="col-md-2 side-column details">
                     <!-- Rating -->
@@ -39,6 +32,15 @@
                         </li>
                         <li><i class="fa fa-eye"></i> {{ resource.popular_count }} {% trans 'views' %}</li>
                     </ul>
+                        <div>
+                            User Rating Below:
+                        {% if request.user.is_authenticated %}
+                        {% user_rating request.user resource "mapstory" as the_user_rating %}
+                            <div class="my_rating">User rating: {{ the_user_rating }}</div>
+                            <div id="user_rating" class="category-mapstory" data-score="{{ the_user_rating }}"></div>
+                            <div id="user_rating" class="category-mapstory"></div>
+                        {% endif %}
+                        </div>
                     {% if request.user.is_authenticated %}
                         <ul class="layer-sidebar">
                             <!-- Favorite -->
@@ -345,7 +347,7 @@
                 </div>
     </section>
 </div>
-
+{% user_rating_js request.user resource "mapstory" %}
 {% block extra_script %}
     {% include "favorite/_favorite_js.html" %}
 {% endblock %}

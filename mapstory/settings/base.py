@@ -738,3 +738,15 @@ if LOGIN_WARNING_ENABLED:
 FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
 
 X_FRAME_OPTIONS = 'ALLOWALL'
+
+# User ratings
+if AGON_RATINGS_CATEGORY_CHOICES:
+    AGON_RATINGS_CATEGORY_CHOICES['mapstory.mapstories.MapStory'] = {
+        "mapstory": "how good is this story?"
+    }
+else:
+    AGON_RATINGS_CATEGORY_CHOICES = {
+        'mapstory.mapstories.MapStory': {
+            "mapstory": "how good is this story?"
+        }
+    }
