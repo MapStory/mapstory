@@ -36,3 +36,6 @@ mapstory/tests/errors/err*
 mapstory/tests/errors/known/err*
 ll_scripts/
 mapstory/tests/package-lock.json
+
+# audit log
+audit_log.json

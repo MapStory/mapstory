@@ -22,8 +22,7 @@
                         <!-- TODO: Implement this for stories instead of layers. -->
                         <!-- TODO: Implement this for stories instead of layers. -->
                         {% user_rating request.user resource "layer" as user_layer_rating %}
-                        <div id="user_rating" class="pull-right category-layer"
-                             data-score="{{ user_layer_rating }}"></div>
+                        <div id="user_rating" class="pull-right category-layer" data-score="{{ user_layer_rating }}"></div>
                     {% endif %}
                 </div>
                 <div class="col-md-2 side-column details">
@@ -40,15 +39,15 @@
                         <li><i class="fa fa-eye"></i> {{ resource.popular_count }} {% trans 'views' %}</li>
                     </ul>
                     {% if request.user.is_authenticated %}
-                        <ul class="layer-sidebar">
-                            <!-- Favorite -->
-                            <li>{% include "favorite/_favorite.html" %}</li>
-                            <!-- Flag -->
-                            <li><i class="fa fa-flag"></i>
-                                <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">Flag</a>
-                            </li>
-                            {% include '_flag_content.html' %}
-                        </ul>
+                    <ul class="layer-sidebar">
+                        <!-- Favorite -->
+                        <li>{% include "favorite/_favorite.html" %}</li>
+                        <!-- Flag -->
+                        <li><i class="fa fa-flag"></i>
+                            <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">Flag</a>
+                        </li>
+                        {% include '_flag_content.html' %}
+                    </ul>
                     {% endif %}
                 </div>
                 <div class="mobile-thumb">
