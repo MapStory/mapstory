@@ -1,0 +1,59 @@
+{% extends "viewer/view_base.html" %}
+
+{% load i18n %}
+
+{% block title %} {% trans "Viewer" %} - {{ block.super }} {% endblock %}
+
+{% block head %}
+    {{ block.super }}
+    <link href="{{ STATIC_URL }}style/themes/{{THEME}}/maps-theme.css" rel="stylesheet" />
+    <style>
+        .map {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            border: 0px solid #ccc;
+            background-color: white;
+        }
+    </style>
+{% endblock head %}
+
+{% block middle %}
+    <div ng-app="viewer" ng-controller="viewerController as viewer" id="story-viewer">
+        <div class="map" id="mapContainer">
+            <span ng-if="loading">Loading...</span>
+            <div id="map"></div>
+            <div id="footer" class="footer">
+                <div id="time-controls-panel2" ng-show="timeControlsManager.timeControls" class="floating-below">
+                    <div class="navbar" ng-controller="tileProgressController">
+                        <st-playback-controls class="pull-left"  playback-options="playbackOptions"
+                                              time-controls="timeControlsManager.timeControls"></st-playback-controls>
+                        <uib-progressbar animate="false" class="navbar-nav navbar-right" value="tilesLoadedProgress">
+                            <b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad"></b>
+                        </uib-progressbar>
+                    </div>
+                    <div id="playback-settings" class="panel-collapse collapse">
+                        <div class="panel-heading">Playback Options</div>
+                        <st-playback-settings playback-options="playbackOptions"
+                                              time-controls="timeControlsManager.timeControls"></st-playback-settings>
+                    </div>
+                    <div id="timeline" style="display:none;"></div>
+                    <div featureinfobox id="info-box" ng-show="featureInfoService.getSelectedItem() && featureInfoService.getEnabled()"
+                        class="feature-info-box-popup">
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block extra_script %}
+<script src="{{ STATIC_URL }}vendor/jquery/dist/jquery.min.js"></script>
+<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-vendor-all.js"></script>
+<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-core-all.js"></script>
+<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-mapstory.js"></script>
+{% include 'viewer/layer_viewer.js' %}
+{% endblock extra_script %}
