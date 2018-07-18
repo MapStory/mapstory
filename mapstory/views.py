@@ -88,6 +88,7 @@ from mapstory.models import get_sponsors, get_images
 from mapstory.search.utils import update_es_index
 from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
+from mapstory.apps.favorite.utils import get_favorite_info
 from tasks import delete_mapstory
 from mapstory.apps.thumbnails.tasks import create_mapstory_thumbnail_tx_aware
 from django.views.decorators.http import require_http_methods
@@ -1417,6 +1418,10 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
 
     if settings.SOCIAL_ORIGINS:
         context_dict["social_links"] = build_social_links(request, map_obj)
+
+    # Favorites
+    if request.user.is_authenticated():
+        context_dict["favorite_info"] = get_favorite_info(request.user, map_obj)
 
     return render(request, template, context=context_dict)
 

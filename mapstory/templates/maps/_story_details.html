@@ -39,15 +39,15 @@
                         <li><i class="fa fa-eye"></i> {{ resource.popular_count }} {% trans 'views' %}</li>
                     </ul>
                     {% if request.user.is_authenticated %}
-                    <ul class="layer-sidebar">
-                        <!-- Favorite -->
-                        <li>{% include "favorite/_favorite.html" %}</li>
-                        <!-- Flag -->
-                        <li><i class="fa fa-flag"></i>
-                            <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">Flag</a>
-                        </li>
-                        {% include '_flag_content.html' %}
-                    </ul>
+                        <ul class="layer-sidebar">
+                            <!-- Favorite -->
+                            <li>{% include "favorite/_favorite.html" %}</li>
+                            <!-- Flag -->
+                            <li><i class="fa fa-flag"></i>
+                                <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">Flag</a>
+                            </li>
+                            {% include '_flag_content.html' %}
+                        </ul>
                     {% endif %}
                 </div>
                 <div class="mobile-thumb">
@@ -344,3 +344,7 @@
                 </div>
     </section>
 </div>
+
+{% block extra_script %}
+    {% include "favorite/_favorite_js.html" %}
+{% endblock %}
