@@ -120,7 +120,6 @@ INSTALLED_APPS += (
     'mapstory.apps.initiatives',
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
-    'allauth.socialaccount.providers.google',
 )
 # DO NOT REMOVE (read commment above)
 INSTALLED_APPS += (
