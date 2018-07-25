@@ -19,7 +19,8 @@ class GeoAxisOAuth2Adapter(OAuth2Adapter):
     profile_url = 'https://{0}/ms_oauth/resources/userprofile/me'\
         .format(os.getenv("ALLAUTH_GEOAXIS_HOST", 'localhost'))
     basic_auth = True
-
+    redirect_uri_protocol = 'https'
+    
     def complete_login(self, request, app, token, **kwargs):
         resp = requests.get(self.profile_url,
                             params={'access_token': token.token},
