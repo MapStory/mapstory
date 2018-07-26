@@ -70,22 +70,14 @@ for i do # loop over $@
 
     if [ "$i" = "--collect-static" ]; then
         echo 'Collecting static files'
-        rm -rf $STATIC_ROOT/*
-        cd mapstory/static
-        npm install
-        bower install
-        grunt concat
-        grunt less:development
-        grunt copy:development
-        cd ../..
         python manage.py collectstatic --noinput --ignore node_modules
 
         # composer
         cd deps/story-tools-composer
-        #COMPOSER_BUNDLE_ARGS="--output-public-path=$STATIC_ROOT/composer/" ./scripts/run.sh --bundle
+        #COMPOSER_BUNDLE_ARGS="--output-public-path=$STATIC_ROOT/composer/" ./scripts/run.sh --bundle-dev
         ./scripts/run.sh --bundle
         rm -rf $STATIC_ROOT/composer
-        cp -r . $STATIC_ROOT/composer
+        ln -s `pwd` $STATIC_ROOT/composer
         cd ../..
     fi
 
