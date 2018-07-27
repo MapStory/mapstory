@@ -183,7 +183,41 @@ TEMPLATES = [
 ACCOUNT_ADAPTER = 'mapstory.views.CustomAccountAdapter'
 ACCOUNT_FORMS = {'signup': 'mapstory.forms.CustomSignupForm'}
 
+AUTHENTICATION_BACKENDS = (
+    'oauth2_provider.backends.OAuth2Backend',
+
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # Required and used by geonode for object permissions
+    'guardian.backends.ObjectPermissionBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+OAUTH2_PROVIDER = {
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope',
+        'groups': 'Access to your groups'
+    },
+
+    'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
+}
+
 GEOFENCE_SECURITY_ENABLED = True
+
+# authorized exempt urls
+ADDITIONAL_AUTH_EXEMPT_URLS = os.getenv('ADDITIONAL_AUTH_EXEMPT_URLS', ())
+
+if isinstance(ADDITIONAL_AUTH_EXEMPT_URLS, str):
+    ADDITIONAL_AUTH_EXEMPT_URLS = tuple(map(str.strip, ADDITIONAL_AUTH_EXEMPT_URLS.split(',')))
+
+AUTH_EXEMPT_URLS = ('/capabilities', '/complete/*', '/login/*',
+                    '/api/o/*', '/api/roles', '/api/adminRole',
+                    '/api/users', '/o/token/*', '/o/authorize/*',
+                    ) + ADDITIONAL_AUTH_EXEMPT_URLS
 
 #
 # Database Settings
@@ -272,6 +306,15 @@ OGC_SERVER = {
         'PG_GEOGIG': True
     }
 }
+
+AUTH_IP_WHITELIST = []
+
+GEOFENCE = {
+    'url': os.environ.get('GEOFENCE_URL', '%s/geofence' % GEOSERVER_LOCATION.strip('/')),
+    'username': os.environ.get('GEOFENCE_USERNAME', GEOSERVER_USER),
+    'password': os.environ.get('GEOFENCE_PASSWORD', GEOSERVER_PASSWORD)
+}
+
 
 #
 # Email Settings
