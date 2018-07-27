@@ -122,12 +122,6 @@ INSTALLED_APPS += (
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
 )
-# DO NOT REMOVE (read commment above)
-INSTALLED_APPS += (
-    'mapstory.apps.activities',
-    'actstream',
-)
-# Thanks !
 
 if is_valid(os.getenv("ALLAUTH_GEOAXIS_HOST")):
     INSTALLED_APPS += (
@@ -142,6 +136,13 @@ MAPSTORY_APPS = (
 )
 
 INSTALLED_APPS += MAPSTORY_APPS
+
+# DO NOT REMOVE (read commment above)
+INSTALLED_APPS += (
+    'mapstory.apps.activities',
+    'actstream',
+)
+# Thanks !
 
 #
 # Template Settings
@@ -181,6 +182,8 @@ TEMPLATES = [
 #
 ACCOUNT_ADAPTER = 'mapstory.views.CustomAccountAdapter'
 ACCOUNT_FORMS = {'signup': 'mapstory.forms.CustomSignupForm'}
+
+GEOFENCE_SECURITY_ENABLED = True
 
 #
 # Database Settings
@@ -236,6 +239,11 @@ if DATABASE_PASSWORD:
 GEOSERVER_LOCATION = "%s://%s:%d/geoserver/" % (os.environ['PRIVATE_PROTOCOL'], os.environ['GEOSERVER_HOST_INTERNAL'], int(os.environ['GEOSERVER_PORT_INTERNAL']))
 GEOSERVER_PUBLIC_LOCATION = "%s://%s/geoserver/" % (os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
 
+GEOSERVER_USER = os.environ.get('GEOSERVER_USER', 'admin')
+GEOSERVER_PASSWORD = os.environ.get('GEOSERVER_PASSWORD', 'geoserver')
+GEOSERVER_LOG = '%s/geoserver/data/logs/geoserver.log' % os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))
+GEOGIG_DATASTORE_DIR = '/var/lib/geoserver/data/geogig'
+
 OGC_SERVER = {
     'default': {
         'BACKEND': 'geonode.geoserver',
@@ -246,21 +254,21 @@ OGC_SERVER = {
         # the proxy won't work and the integration tests will fail
         # the entire block has to be overridden in the local_settings
         'PUBLIC_LOCATION': GEOSERVER_PUBLIC_LOCATION,
-        'USER': 'admin',
-        'PASSWORD': os.environ['GEOSERVER_PASSWORD'],
+        'USER': GEOSERVER_USER,
+        'PASSWORD': GEOSERVER_PASSWORD,
         'MAPFISH_PRINT_ENABLED': True,
         'PRINT_NG_ENABLED': True,
         'GEONODE_SECURITY_ENABLED': True,
+        'GEOFENCE_SECURITY_ENABLED' : GEOFENCE_SECURITY_ENABLED,
         'GEOGIG_ENABLED': True,
         'WMST_ENABLED': False,
         'BACKEND_WRITE_ENABLED': True,
         'WPS_ENABLED': True,
-        'LOG_FILE': '%s/geoserver/data/logs/geoserver.log'
-        % os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir)),
+        'LOG_FILE': GEOSERVER_LOG,
         # Set to name of database in DATABASES dictionary to enable
         'DATASTORE': 'geogig',
         'TIMEOUT': 10,  # number of seconds to allow for HTTP requests,
-        'GEOGIG_DATASTORE_DIR': '/var/lib/geoserver/data/geogig',
+        'GEOGIG_DATASTORE_DIR': GEOGIG_DATASTORE_DIR,
         'PG_GEOGIG': True
     }
 }
@@ -517,20 +525,6 @@ HAYSTACK_CONNECTIONS = {
 }
 SKIP_PERMS_FILTER = True
 HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
-
-
-AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
-
-    # Required and used by geonode for object permissions
-    'guardian.backends.ObjectPermissionBackend',
-
-    # `allauth` specific authentication methods, such as login by e-mail
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
-
-GEOFENCE_SECURITY_ENABLED = False
 
 #
 # Activity Stream Settings
