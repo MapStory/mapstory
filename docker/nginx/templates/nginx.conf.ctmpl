@@ -37,9 +37,12 @@ http {
     ssl_certificate_key {{ env "SSL_KEY" }};
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 
+    
+    {{ if or (env "FORCE_HTTPS_REDIRECT") "True" | parseBool }}
     if ($scheme = http) {
       return 301 https://{{ env "PUBLIC_HOST" }}$request_uri;
     }
+    {{ end }}
 
     root /var/www;
 
@@ -71,7 +74,7 @@ http {
       proxy_pass http://geoserver:8080/geoserver/;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Proto {{ or (env "PUBLIC_PROTOCOL") "$scheme" }};
       proxy_set_header Host $http_host;
       proxy_redirect off;
     }
@@ -84,7 +87,7 @@ http {
       proxy_redirect off;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Scheme $scheme;
-      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-Proto {{ or (env "PUBLIC_PROTOCOL") "$scheme" }};
       proxy_connect_timeout 90s;
       proxy_read_timeout 90s;
       proxy_pass http://django:8000/;
