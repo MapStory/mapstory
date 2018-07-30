@@ -12,6 +12,7 @@
                     {% comment %} Log In {% endcomment %}
                     <div class="tab-pane active" id="login">
                         <br/>
+                        {% if ENABLE_FORM_LOGIN %}
                         <form class="form form-horizontal" method="post" action="{% url 'account_login' %}?next={{ request.path }}">
                         {% csrf_token %}
                             <div class="form-group">
@@ -40,6 +41,7 @@
                                 </div>
                             </div>
                         </form>
+                        {% endif %}
                     </div>
                 </div>
                 {% if ACCOUNT_OPEN_SIGNUP %}

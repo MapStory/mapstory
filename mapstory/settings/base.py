@@ -80,6 +80,7 @@ THEME = os.environ.get('THEME', 'default')
 
 # Misc
 ACCOUNT_OPEN_SIGNUP = str_to_bool(os.environ.get('REGISTRATION_OPEN', 'True'))
+ENABLE_FORM_LOGIN = str_to_bool(os.environ.get('ENABLE_FORMS_LOGIN', 'True'))
 USER_SNAP = str_to_bool(os.environ.get('USER_SNAP', 'False'))
 GOOGLE_ANALYTICS = os.environ.get('GOOGLE_ANALYTICS', '')
 
@@ -273,7 +274,6 @@ ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
 ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = str_to_bool(os.environ['ACCOUNT_EMAIL_CONFIRMATION_REQUIRED'])
 ACCOUNT_LOGIN_REDIRECT_URL = '/'
-ACCOUNT_OPEN_SIGNUP = True
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', '')
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
