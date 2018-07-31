@@ -8,7 +8,7 @@ import traceback
 import os
 
 from geonode.base.models import Link
-from geonode.geoserver.helpers import create_gs_thumbnail_geonode
+from geonode.layers.utils import create_gs_thumbnail_geonode
 from owslib.wms import WebMapService
 from lxml import etree
 from geonode.layers.models import Layer

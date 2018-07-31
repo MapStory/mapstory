@@ -12,6 +12,10 @@ WORKDIR $TMP
 
 # Add CA cert for self signing
 COPY docker/nginx/ca.crt /usr/local/share/ca-certificates/
+COPY docker/nginx/cacerts/Certificates_v5.3_DoD.pem.crt /usr/local/share/ca-certificates/
+COPY docker/nginx/cacerts/comodorsacertificationauthority.crt /usr/local/share/ca-certificates/
+COPY docker/nginx/cacerts/comodorsadomainvalidationsecureserverca.crt /usr/local/share/ca-certificates/
+
 RUN set -ex \
     && update-ca-certificates
 
@@ -74,13 +78,16 @@ RUN set -ex \
     && mkdir -p $MEDIA_ROOT && chown mapstory $MEDIA_ROOT \
     && mkdir -p $STATIC_ROOT && chown mapstory $STATIC_ROOT
 
+WORKDIR $APP_PATH
+RUN pip install celery==4.1.0
+
 # Clone submodules temporarily. They're needed for the install.
 # These will be overwrriten when we load the code volume.
 # We don't use COPY because it will force rebuilds on any changes.
 #USER mapstory
 WORKDIR $APP_PATH/deps
 RUN set -ex \
-    && git clone -b 2.6.x --depth 1 https://github.com/GeoNode/geonode.git \
+    && git clone -b 2.8.0 --depth 1 https://github.com/GeoNode/geonode.git \
     && sed -i 's/Paver==1.2.1/Paver==1.2.4/' ./geonode/setup.py \
     && pip install -e ./geonode \
     && git clone -b feature/composer-wip --depth 1 https://github.com/MapStory/maploom.git \

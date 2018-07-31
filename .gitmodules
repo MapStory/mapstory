@@ -13,7 +13,7 @@
 [submodule "deps/geonode"]
 	path = deps/geonode
 	url = https://github.com/MapStory/geonode.git
-	branch = mapstory-2.6.x
+	branch = 2.8.0
 [submodule "deps/icon-commons"]
 	path = deps/icon-commons
 	url = https://github.com/MapStory/icon-commons.git

@@ -71,8 +71,7 @@
                             <li class="divider"></li>
                             <li><a href="{% url "messages_inbox" %}">{% trans "Messages" %}</a></li>
                             <li><a href="{% url 'edit_profile' user.username %}">{% trans "Edit Profile" %}</a></li>
-                            <li><a href="{% url 'account_password' %}">{% trans "Change Password" %}</a></li>
-                            <li><a href="{% url 'profile_detail' slug=user.username %}?showNotifications=true">{% trans "Notification Settings" %}</a></li>
+                            <li><a href="{% url "account_change_password" %}">{% trans "Change Password" %}</a></li>
                             <li class="divider"></li>
                             <li><a href="{% url 'getpage' 'started' %}">{% trans "Help" %}</a></li>
                             <li class="divider"></li>
@@ -84,7 +83,7 @@
                             <li><a href="{% url 'announcements_list' %}">{% trans "Announcements" %}</a></li>
                         {% endif %}
                         {% if user.is_superuser %}
-                            <li><a href="{% url 'account_invite_user' %}">{% trans "Invite User" %}</a></li>
+                            <li><a href="{% url "geonode.invitations:geonode-send-invite" %}">{% trans "Invite User" %}</a></li>
                             <li><a href="{% url 'services' %}">{% trans "Remote Services" %}</a></li>
                             <li><a href="{{ GEOSERVER_BASE_URL }}">{% trans "GeoServer" %}</a></li>
                             <li class="divider"></li>
@@ -108,7 +107,10 @@
                         </form>
                     </li>
                 {% else %}
-                    <li class="nav-link"><a data-toggle="modal" data-target="#loginModal">{% trans "Log In" %}</a></li>
+                    <li class="nav-link"><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Log In" %}</a></li>
+                    {% if ACCOUNT_OPEN_SIGNUP %}
+                        <li class="nav-link"><a href="{% url "account_signup" %}">{% trans "Sign Up" %}</a></li>
+                    {% endif %}
                 {% endif %}
             </ul>
             <div class="navigation-tools">

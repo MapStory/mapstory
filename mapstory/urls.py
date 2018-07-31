@@ -25,20 +25,18 @@ from mapstory.api.resourcebase_api import ResourceBaseResource
 from mapstory.api.urls import api as mapstory_api
 from mapstory.apps.favorite.urls import api as favorites_api
 from mapstory.importers import UploadedLayerResource
-from mapstory.notifications import notify_download, set_profile_notification
 from mapstory.views import download_append_csv, download_append_shp
 from mapstory.views import GetPageView
 from mapstory.views import IndexView
 from mapstory.views import LeaderListView
-from mapstory.views import MapStoryConfirmEmailView
-from mapstory.views import MapStorySignupView
-from mapstory.views import layer_detail, layer_detail_id, layer_create
+from mapstory.views import layer_detail, layer_create
 from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from mapstory.views import layer_remove, map_remove
 from mapstory.views import map_detail
 from mapstory.views import new_map
 from mapstory.views import ProfileDetail, profile_delete, profile_edit, proxy
 from mapstory.views import SearchView
+from mapstory.views import get_remote_url
 
 
 geonode_api.register(ResourceBaseResource())
@@ -58,26 +56,12 @@ if 'geonode.geoserver' in settings.INSTALLED_APPS:
                            url(r'^layers/download$', layer_batch_download, name='layer_batch_download_dep'),
                            )
 
-layer_detail_patterns = patterns('',
-    url(r'^layers/(?P<layerid>\d+)$', layer_detail_id, name="layer_detail_id"),
-    url(r'^storylayer/(?P<layerid>\d+)$', layer_detail_id, name="storylayer_detail_id"),
-    url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
-    )
-
 urlpatterns = patterns('',
                        # Home
                        url(r'^$', IndexView.as_view(), name="index_view"),
 
                        # Adding Threaded Comments app
                        url(r'^articles/comments/', include('django_comments.urls')),
-
-                       # Account
-                       url(r"^account/signup/$", MapStorySignupView.as_view(), name="account_signup"),
-                       url(r"^account/confirm_email/(?P<key>\w+)/$", MapStoryConfirmEmailView.as_view(), name="account_confirm_email"),
-
-                       # Accounts
-                       url(r'^accounts/profile/$', RedirectView.as_view(url=reverse_lazy('index_view'))),  #temp fix for social auth redirect
-                       url(r'^accounts/verify/$', 'mapstory.views.account_verify',  name='account_verify'),
 
                        # Blog Comments
                        url(r'^blog/comments/', include('fluent_comments.urls')),
@@ -88,9 +72,6 @@ urlpatterns = patterns('',
                        url(r'^maps/(?P<mapid>\d+)/data$', 'mapstory.views.mapstory_map_json', name='mapstory_map_json'),
                        url(r'^maps/new_map', new_map, name='new_map'),
                        url(r'^maps/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
-
-                       # Health Check status
-                       url(r'^status/', include('health_check.urls'), name='health_check'),
 
                        # Story
                        url(r'^story$', 'mapstory.views.new_story_json', name='new_story_json'),
@@ -116,7 +97,6 @@ urlpatterns = patterns('',
 
                        url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
                        url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
-                       url(r"^storyteller/edit/(?P<username>[^/]*)/set-notification$", set_profile_notification, name="set_profile_notification"),
 
                        url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
                        url(r'^search/$', SearchView.as_view(), name='search'),
@@ -127,23 +107,24 @@ urlpatterns = patterns('',
                        url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
                        url(r'^proxy/', proxy),
                        url(r'^favorite/', include('mapstory.apps.favorite.urls')),
-                       url(r'^notifications/', include('notification.urls')),
-
                        url(r"^flag/", include('mapstory.apps.flag.urls')),
 
+                       # Layers
+                       url(r'^layers/acls', layer_acls_mapstory, name='layer_acls_mapstory'),
                        url(r'^layers/create$', layer_create, name='layer_create'),
-                       url(r'^layers/(?P<layername>[^/]*)/viewer$', layer_detail, {'template': 'viewer/layer_viewer.html'}, name="layer_viewer"),
-                       url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
-                       url(r'^layers/notify-download$', notify_download, name='notify-layer-download'),
                        url(r'^layers/download-append-csv$', download_append_csv, name='download_append_csv'),
                        url(r'^layers/download-append-shp$', download_append_shp, name='download_append_shp'),
-                       url(r'^layers/acls', layer_acls_mapstory, name='layer_acls_mapstory'),
                        url(r'^layers/resolve_user', resolve_user_mapstory, name='resolve_user_mapstory'),
+                       url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
+                       url(r'^layers/(?P<layername>[^/]*)/viewer$', layer_detail, {'template': 'viewer/layer_viewer.html'}, name="layer_viewer"),
+                       url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
+                       url(r'^layers/(?P<layername>[^/]*)/remote$', get_remote_url, name="get_remote_url"),
+
                        url(r'^teams/', include('mapstory.apps.teams.urls', namespace='teams')),
                        url(r'^organizations/', include('mapstory.apps.organizations.urls', namespace='organizations')),
                        url(r'^initiatives/', include('mapstory.apps.initiatives.urls', namespace='initiatives')),
                        url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain"), name='robots'),
-                       ) + geonode_layers_urlpatterns + layer_detail_patterns + urlpatterns
+                       ) + geonode_layers_urlpatterns + urlpatterns
 
 urlpatterns += mapstories_urls
 
@@ -174,8 +155,11 @@ if settings.DEBUG:
 if settings.LOCAL_CONTENT:
     urlpatterns = static(settings.STATIC_URL + "assets", document_root=settings.LOCAL_ROOT + "/../../mapstory-assets", show_indexes=True) + urlpatterns
 
-if settings.ENABLE_SOCIAL_LOGIN:
-    urlpatterns += patterns('',
-        url('', include('social.apps.django_app.urls', namespace='social')),
-        url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
-    )
+    #urlpatterns += patterns('',
+    #    url('', include('social.apps.django_app.urls', namespace='social')),
+    #    url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
+    #)
+
+urlpatterns += patterns('',
+        url(r'^accounts/', include('allauth.urls')),
+)

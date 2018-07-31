@@ -65,8 +65,8 @@ class CommonModelApi(ModelResource):
         full=True)
     owner = fields.ToOneField(ProfileResource, 'owner', full=True)
 
-    def build_filters(self, filters={}):
-        orm_filters = super(CommonModelApi, self).build_filters(filters)
+    def build_filters(self, filters={}, **kwargs):
+        orm_filters = super(CommonModelApi, self).build_filters(filters, **kwargs)
         if 'type__in' in filters and filters[
                 'type__in'] in FILTER_TYPES.keys():
             orm_filters.update({'type': filters.getlist('type__in')})

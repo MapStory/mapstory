@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-import account.forms
+from allauth.account.forms import SignupForm
 from geonode.people.models import Profile
 from geonode.base.models import ResourceBase
 import taggit
@@ -9,12 +9,12 @@ import taggit
 from mapstory.mapstory_profile.models import MapstoryProfile
 from mapstory.mapstories.models import MapStory
 
+# Custom Signup Form
+class CustomSignupForm(SignupForm):
+    first_name = forms.CharField(max_length=30, label='First Name')
+    last_name = forms.CharField(max_length=30, label='Last Name')
 
-class SignupForm(account.forms.SignupForm):
-
-    first_name = forms.CharField(label='First Name', max_length=100)
-    last_name = forms.CharField(label='Last Name', max_length=100)
-
+    field_order = ['username', 'first_name', 'last_name', 'email', 'password']
 
 # A form for just keywords
 class KeywordsForm(forms.ModelForm):

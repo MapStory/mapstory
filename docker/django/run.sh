@@ -25,11 +25,11 @@ echo 'Permissions look good'
 # Populate node_modules in story-tools-composer if it's missing
 cd $APP_PATH/deps/story-tools-composer
 if [ ! -d "./node_modules" ]; then
-  cp -r /tmp/story-tools-composer/node_modules ./
+    cp -r /tmp/story-tools-composer/node_modules ./
 fi
 # And for composer's story-tools
 if [ ! -d "./deps/story-tools/node_modules" ]; then
-  cp -r /tmp/story-tools/node_modules ./deps/story-tools/
+    cp -r /tmp/story-tools/node_modules ./deps/story-tools/
 fi
 
 cd $APP_PATH
@@ -66,6 +66,8 @@ for i do # loop over $@
         python manage.py loaddata --app mapstory initial_user_id
         echo '    create admin user'
         python manage.py create_admin_user --name=admin --password=admin
+        echo '    create oauth app'
+        python manage.py create_oauth_app --name=GeoServer --user=admin --redirect-uri="${PUBLIC_PROTOCOL}://${PUBLIC_HOST}/geoserver/" --client-id=$OAUTH_CLIENT_ID --secret=$OAUTH_CLIENT_SECRET
     fi
 
     if [ "$i" = "--collect-static" ]; then
