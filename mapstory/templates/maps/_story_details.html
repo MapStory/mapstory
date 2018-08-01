@@ -8,15 +8,47 @@
 {% load guardian_tags %}
 {% load flag_tags %}
 {% load avatar_tags %}
+{% get_comment_count for resource as num_comments %}
 <div ng-controller="detailController">
     <section class="slice" id="dashboard">
         <div class="container">
             <div class="row">
                 {{ resource.tags }}
-                <div class="col-7 fixed-aspect">
+                <div class="col-lg-9 fixed-aspect">
                     <div id="embedded_map" class="mrg-btm story">
                         <div id="preview_map"></div>
                     </div>
+                    {% if request.user.is_authenticated %}
+                        <!-- TODO: Implement this for stories instead of layers. -->
+                        <!-- TODO: Implement this for stories instead of layers. -->
+                        {% user_rating request.user resource "layer" as user_layer_rating %}
+                        <div id="user_rating" class="pull-right category-layer" data-score="{{ user_layer_rating }}"></div>
+                    {% endif %}
+                </div>
+                <div class="col-md-2 side-column details">
+                    <!-- Rating -->
+                    <ul class="layer-sidebar">
+                        <li>
+                            <i class="fa fa-star"></i>
+                            {% if resource.rating %}
+                                {{ resource.rating }} of 5 stars
+                            {% else %}
+                                Not yet rated
+                            {% endif %}
+                        </li>
+                        <li><i class="fa fa-eye"></i> {{ resource.popular_count }} {% trans 'views' %}</li>
+                    </ul>
+                    {% if request.user.is_authenticated %}
+                        <ul class="layer-sidebar">
+                            <!-- Favorite -->
+                            <li>{% include "favorite/_favorite.html" %}</li>
+                            <!-- Flag -->
+                            <li><i class="fa fa-flag"></i>
+                                <a href="#flag" role="button" data-toggle="modal" style="hover: cursor;">Flag</a>
+                            </li>
+                            {% include '_flag_content.html' %}
+                        </ul>
+                    {% endif %}
                 </div>
                 <div class="mobile-thumb">
                     <a href="/story/{{ resource.id }}/embed">
@@ -24,31 +56,32 @@
                     </a>
                 </div>
                 {% if user == resource.owner %}
-                <a href="/story/{{ resource.id }}/draft">
-                    <button class="btn btn-danger resume-edit">
-                        <i class="fa fa-pencil"></i>
-                        {% if resource.is_published %} Change Published {{ STORY_NAME }}
-                        {% else %} Resume Draft
-                        {% endif %}
-                    </button>
-                </a>
-                <a href="/story/{{ resource.id }}/embed">
-                    <button class="btn btn-detail mobile-play">
-                        <i class="fa fa-play"></i> Play {{ STORY_NAME }}
-                    </button>
-                </a>
+                    <a href="/story/{{ resource.id }}/draft">
+                        <button class="btn btn-danger resume-edit">
+                            <i class="fa fa-pencil"></i>
+                            {% if resource.is_published %} Change Published {{ STORY_NAME }}
+                            {% else %} Resume Draft
+                            {% endif %}
+                        </button>
+                    </a>
+                    <a href="/story/{{ resource.id }}/embed">
+                        <button class="btn btn-detail mobile-play">
+                            <i class="fa fa-play"></i> Play {{ STORY_NAME }}
+                        </button>
+                    </a>
                 {% endif %}
             </div>
             <div class="row">
                 <div class="col-sm-11">
                     <div class="overview">
-                        <h2> {{resource.title}} </h2>
+                        <h2> {{ resource.title }} </h2>
                         <div class="row">
                             <div class="col-sm-10">
                                 <a href="{% url 'profile_detail' slug=resource.owner.username %}">
-                                    <img class="img-circle avi-45-backup" src="{% avatar_url resource.owner 45 %}" />
+                                    <img class="img-circle avi-45-backup" src="{% avatar_url resource.owner 45 %}"/>
                                 </a>
-                                 <a ng-href="{% url 'profile_detail' slug=resource.owner.username %}" target="_blank" style="font-size: larger;">
+                                <a ng-href="{% url 'profile_detail' slug=resource.owner.username %}" target="_blank"
+                                   style="font-size: larger;">
                                     {% if resource.owner.first_name != '' %}
                                         {{ resource.owner.first_name }} {{ resource.owner.last_name }}
                                     {% else %}
@@ -72,64 +105,69 @@
                             {% endblock share_icons %}
                         </div>
                         <h3>Map Services</h3>
-                        <div class="embed">Share 
-                            <input id="shareStory" value ="https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.slug %}">
+                        <div class="embed">Share
+                            <input id="shareStory" value="https://
+                                    {{ request.get_host }}{% url 'mapstory.views.map_detail' resource.slug %}">
                             <button class="copyclip btn" data-clipboard-target="#shareStory">
-                                <i class="fa fa-clipboard" aria-hidden="true"></i>
-                            </button>  
-                        </div>
-                        {% if resource.chapters %}
-                        <div class="embed"> Embed
-                            <input id="embedStory" value="<iframe style='border: none;' height='400' width='600' src='https://{{ request.get_host }}/story/{{ resource.slug }}/embed'></iframe>">
-                            <button  class="copyclip btn" data-clipboard-target="#embedStory">
                                 <i class="fa fa-clipboard" aria-hidden="true"></i>
                             </button>
                         </div>
+                        {% if resource.chapters %}
+                            <div class="embed"> Embed
+                                <input id="embedStory"
+                                       value="<iframe style='border: none;' height='400' width='600' src='https://{{ request.get_host }}/story/{{ resource.slug }}/embed'></iframe>">
+                                <button class="copyclip btn" data-clipboard-target="#embedStory">
+                                    <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                </button>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
-
                 <div class="col-sm-11">
-                {% if request.user.is_authenticated %}
-                    {% if organizations.count > 0 %}
-                    <div class="Summary org_summary">
-                        <h3> Add to Organization </h3>
-                        <hr>
-                        <div class="col-sm-9 tab-content">
-                        <div class='row'>
-                            {% for org in organizations %}
-                            <div>
-                                <form action="{% url "organizations:add_mapstory" slug=org.organization.slug mapstory_pk=resource.pk %}"
-                                    method="post">
-                                    {% csrf_token %}
-                                    <input type="submit" class="btn btn-primary btn-md btn-block btb_orgs" value="{{ org.organization }}">
-                                </form>
+                    {% if request.user.is_authenticated %}
+                        {% if organizations.count > 0 %}
+                            <div class="Summary org_summary">
+                                <h3> Add to Organization </h3>
+                                <hr>
+                                <div class="col-sm-9 tab-content">
+                                    <div class='row'>
+                                        {% for org in organizations %}
+                                            <div>
+                                                <form action="{% url "organizations:add_mapstory" slug=org.organization.slug mapstory_pk=resource.pk %}"
+                                                      method="post">
+                                                    {% csrf_token %}
+                                                    <input type="submit"
+                                                           class="btn btn-primary btn-md btn-block btb_orgs"
+                                                           value="{{ org.organization }}">
+                                                </form>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
                             </div>
-                            {% endfor %}
-                        </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    {% if initiatives.count > 0 %}
-                    <div class="Summary org_summary">
-                        <h3> Add to Initiatives </h3>
-                        <hr>
-                        <div class="col-sm-9 tab-content">
-                        <div class='row'>
-                            {% for ini in initiatives %}
-                            <div>
-                                <form action="{% url "initiatives:add_mapstory" slug=ini.initiative.slug mapstory_pk=resource.pk %}"
-                                    method="post">
-                                    {% csrf_token %}
-                                    <input type="submit" class="btn btn-primary btn-md btn-block btb_orgs" value="{{ ini.initiative }}">
-                                </form>
+                        {% endif %}
+                        {% if initiatives.count > 0 %}
+                            <div class="Summary org_summary">
+                                <h3> Add to Initiatives </h3>
+                                <hr>
+                                <div class="col-sm-9 tab-content">
+                                    <div class='row'>
+                                        {% for ini in initiatives %}
+                                            <div>
+                                                <form action="{% url "initiatives:add_mapstory" slug=ini.initiative.slug mapstory_pk=resource.pk %}"
+                                                      method="post">
+                                                    {% csrf_token %}
+                                                    <input type="submit"
+                                                           class="btn btn-primary btn-md btn-block btb_orgs"
+                                                           value="{{ ini.initiative }}">
+                                                </form>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
                             </div>
-                            {% endfor %}
-                        </div>
-                        </div>
-                    </div>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
                     <div class="Summary">
                         <div><h3>Summary</h3></div>
                         <hr>
@@ -137,24 +175,26 @@
                             {% if resource.abstract != '' %}
                                 {{ resource.abstract }}
                             {% else %}
-                                <div class="no-chapter-summary"> Unfortunately, no summary has been provided for this {{ STORY_NAME }}.</div>
+                                <div class="no-chapter-summary"> Unfortunately, no summary has been provided for
+                                    this {{ STORY_NAME }}.
+                                </div>
                             {% endif %}
                         </div>
-                        {% if resource.chapters.count = 1 %}
+                        {% if resource.chapters.count == 1 %}
                             {% for item in resource.chapters %}
                                 {% if item.abstract != '' %}
-                                <div class="short-abstract">
-                                    <h4>{{ item.title }}</h4>
-                                    <hr>
-                                    {{ item.abstract  }}
-                                </div>
+                                    <div class="short-abstract">
+                                        <h4>{{ item.title }}</h4>
+                                        <hr>
+                                        {{ item.abstract }}
+                                    </div>
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
                         <br>
                         <div>Category: {{ resource.category }}</div>
                         <!-- <div>Region: Placeholder {{ resource.region.name }}</div> -->
-                        <div class="story-tags">Tags: 
+                        <div class="story-tags">Tags:
                             <script type="text/javascript">
                                 // Pass the keyword list from the django template into the javascript
                                 var keywords = {{keywords|safe}};
@@ -162,63 +202,65 @@
                                 var loggedIn = "{{user.is_authenticated}}";
                             </script>
                             <md-content class="md-padding" layout="column">
-                                <md-chips ng-model="chips" 
-                                readonly="readOnly"
-                                md-on-add="addTag($chip)"
-                                md-on-remove="removeTag($chip)"
-                                md-transform-chip="newChip($chip)"
-                                md-separator-keys="separateOn"
-                                placeholder="Add tags for this {{ BRANDING_STORY_NAME }}...">
+                                <md-chips ng-model="chips"
+                                          readonly="readOnly"
+                                          md-on-add="addTag($chip)"
+                                          md-on-remove="removeTag($chip)"
+                                          md-transform-chip="newChip($chip)"
+                                          md-separator-keys="separateOn"
+                                          placeholder="Add tags for this {{ BRANDING_STORY_NAME }}...">
                                 </md-chips>
                             </md-content>
                         </div>
                     </div>
                     {% if resource.chapters.count > 1 %}
-                    <div class="chapters">
+                        <div class="chapters">
                         <div><h3> Chapters </h3></div>
                         <hr>
                         <div class='row'>
                             <div class="col-sm-3 chapter-tabs">
                                 <ul class="nav nav-pills nav-stacked">
-                                {% for item in resource.chapters %}
-                                {% if forloop.first %}
-                                <li class="active"><a href="#ch-{{ item.id }}" data-toggle="tab">
-                                    {% if item.title != '' %}
-                                        {{ item.title }}
-                                    {% else %}
-                                        Chapter {{forloop.counter}}
-                                    {% endif %}
-                                </a></li>
-                                {% else %}
-                                <li><a href="#ch-{{ item.id }}" data-toggle="tab">
-                                    {% if item.title != '' %}
-                                        {{ item.title }}
-                                    {% else %}
-                                        Chapter {{forloop.counter}}
-                                    {% endif %}
-                                </a></li>
-                                {% endif %}
-                                {% endfor %}
+                                    {% for item in resource.chapters %}
+                                        {% if forloop.first %}
+                                            <li class="active"><a href="#ch-{{ item.id }}" data-toggle="tab">
+                                                {% if item.title != '' %}
+                                                    {{ item.title }}
+                                                {% else %}
+                                                    Chapter {{ forloop.counter }}
+                                                {% endif %}
+                                            </a></li>
+                                        {% else %}
+                                            <li><a href="#ch-{{ item.id }}" data-toggle="tab">
+                                                {% if item.title != '' %}
+                                                    {{ item.title }}
+                                                {% else %}
+                                                    Chapter {{ forloop.counter }}
+                                                {% endif %}
+                                            </a></li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </div>
                             <div class="col-sm-9 tab-content">
                                 {% for item in resource.chapters %}
-                                {% if forloop.first %}
-                                <div class="tab-pane active" id="ch-{{ item.id }}">
-                                {% else %}
-                                <div class="tab-pane" id="ch-{{ item.id }}">
-                                {% endif %}
-                                    {% if item.abstract != '' %}
-                                    <h3>Chapter {{forloop.counter}}: {{ item.title }}</h3>
-                                    <p>{{ item.abstract  }}</p>
+                                    {% if forloop.first %}
+                                        <div class="tab-pane active" id="ch-{{ item.id }}">
                                     {% else %}
-                                       <div class="no-chapter-summary"> Unfortunately, there are no details provided for Chapter {{forloop.counter}}.</div>
+                                        <div class="tab-pane" id="ch-{{ item.id }}">
                                     {% endif %}
+                                {% if item.abstract != '' %}
+                                    <h3>Chapter {{ forloop.counter }}: {{ item.title }}</h3>
+                                    <p>{{ item.abstract }}</p>
+                                {% else %}
+                                    <div class="no-chapter-summary"> Unfortunately, there are no details provided for
+                                        Chapter {{ forloop.counter }}.
+                                    </div>
+                                {% endif %}
                                 </div>
                                 {% endfor %}
-                            </div>    
+                                </div>
+                            </div>
                         </div>
-                    </div>
                     {% endif %}
                     <div class="story-layers">
                         <div><h3> Layers </h3></div>
@@ -226,61 +268,83 @@
                         <div class='row'>
                             <div class="col-sm-3 layer-tabs">
                                 <ul class="nav nav-pills nav-stacked">
-                                {% for item in layers %}                  
-                                    {% if forloop.first %}
-                                    <li class="active"><a href="#layer-{{ item.id }}" data-toggle="tab">{{ item.title }}</a></li>
-                                    {% else %}
-                                    <li><a href="#layer-{{ item.id }}" data-toggle="tab">{{ item.title }}</a></li>
-                                    {% endif %}
-                                {% endfor %}
+                                    {% for item in layers %}
+                                        {% if forloop.first %}
+                                            <li class="active"><a href="#layer-{{ item.id }}"
+                                                                  data-toggle="tab">{{ item.title }}</a></li>
+                                        {% else %}
+                                            <li><a href="#layer-{{ item.id }}" data-toggle="tab">{{ item.title }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
                                 </ul>
                             </div>
                             <div class="col-sm-9 tab-content">
                                 {% for item in layers %}
-                                {% if forloop.first %}
-                                <div class="tab-pane active" id="layer-{{ item.id }}">
-                                {% else %}
-                                <div class="tab-pane" id="layer-{{ item.id }}">
-                                {% endif %}
-                                    <div class="col-sm-5">
-                                        <a href="{{ item.detail_url }}">
-                                            <img class="thumb img-responsive details" ng-src="{{ item.thumbnail_url }}"/>
-                                        </a>
-                                        <p> {{item.title}}</p>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <p>{{ item.abstract  }}</p>
-                                    </div>
+                                    {% if forloop.first %}
+                                        <div class="tab-pane active" id="layer-{{ item.id }}">
+                                    {% else %}
+                                        <div class="tab-pane" id="layer-{{ item.id }}">
+                                    {% endif %}
+                                <div class="col-sm-5">
+                                    <a href="{{ item.detail_url }}">
+                                        <img class="thumb img-responsive details" ng-src="{{ item.thumbnail_url }}"/>
+                                    </a>
+                                    <p> {{ item.title }}</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <p>{{ item.abstract }}</p>
+                                </div>
                                 </div>
                                 {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% if content_moderators in user.groups.all or user == resource.owner or user.is_superuser %}
+                            <div class="Summary">
+                                <div>
+                                    <h3>
+                                        Thumbnail
+                                    </h3>
+                                </div>
+                                <hr>
+                                <tr>
+                                    <td width="35%">
+                                        <a href="{{ thumbnail }}"><img ng-src="{{ thumbnail }}" src="{{ thumbnail }}"
+                                                                       id="change-thumbnail-image"></a>
+                                    </td>
+                                </tr>
+                            </div>
+                        {% endif %}
+                        {% if resource.owner == user %}
+                            <div style="padding-top: 40px">
+                                <button class="btn btn-danger">
+                                    <a href="{% url "map_remove" resource.id %}">
+                                        {% trans "Delete this " %}{{ BRANDING_STORY_NAME }}</a>
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <ul class="nav nav-tabs details-tabs">
+                            <li class="active"><a href="#StoryComments" data-toggle="tab">Comments</a></li>
+                        </ul>
+                        <div class="tab-content details">
+                            <div class="tab-pane active" id="StoryComments">
+                                {% render_comment_list for resource %}
+                                {% if user.is_authenticated %}
+                                    {% render_comment_form for resource %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                    {% if content_moderators in user.groups.all or user == resource.owner or user.is_superuser %}
-                    <div class="Summary">
-                      <div>
-                        <h3>
-                          Thumbnail
-                        </h3>
-                      </div>
-                      <hr>
-                      <tr>
-                          <td width="35%">
-                              <a href="{{ thumbnail }}"><img ng-src="{{ thumbnail }}" src="{{ thumbnail }}" id="change-thumbnail-image"></a>
-                          </td>
-                      </tr>
-                    </div>
-                    {% endif %}
-                    {% if resource.owner == user %}
-                    <div style= "padding-top: 40px">
-                        <button class="btn btn-danger">
-                            <a href="{% url "map_remove" resource.id %}">{% trans "Delete this " %}{{ BRANDING_STORY_NAME }}</a>
-                        </button>
-                    </div>
-                    {% endif %}
                 </div>
-
-            </div>
-        </div>
     </section>
 </div>
+
+{% block extra_script %}
+    {% include "favorite/_favorite_js.html" %}
+{% endblock %}

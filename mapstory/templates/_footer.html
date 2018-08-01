@@ -17,7 +17,7 @@
         <section layout="column" flex-gt-sm="33">
             <h3 class="bold-caps">Create an Account</h3>
             <p>{{ SITE_NAME }} is free to use for anyone age 13 and up. Sign up now!</p>
-            <a href="#" data-toggle="modal" data-target="#loginModal" class="homepage">
+            <a href="{% url "account_signup" %}" class="homepage">
                 <button class="button button-solid" style="vertical-align:middle">
                     <span>Sign Up</span>
                 </button>

@@ -19,7 +19,7 @@
                     <p class="homepage-splash">Working together, we're mapping the world as it evolves geographically, at local, regional and global scales. Join us!</p>
 
                     {% if not user.is_authenticated %}
-                        <a href="#" data-toggle="modal" data-target="#loginModal">
+                        <a href="{% url "account_signup" %}">
                             <button class="button button-solid">
                                 <span>Sign Up</span>
                             </button>
@@ -108,7 +108,7 @@
 
         </div>
         {% if not user.is_authenticated %}
-            <a href="#" data-toggle="modal" data-target="#loginModal" style="text-align: center">
+            <a href="{% url "account_signup" %}" style="text-align: center">
                 <button class="button button-solid">
                     <span>Sign Up</span>
                 </button>
@@ -192,7 +192,7 @@
     <section class="more-you-know" layout="column" style="background-image: url('{{ STATIC_URL }}/mapstory/img/bg_topography.png');" layout-align="center center">
         <p class="more"> The more we all know about the story of our planet, the more likely we are to treat it, and each other well. Sign up, and become a mapstoryteller today. </p>
 
-        <a href="#" data-toggle="modal" data-target="#loginModal">
+        <a href="{% url "account_signup" %}">
             <button class="button button-solid">
                 <span>Sign Up</span>
             </button>

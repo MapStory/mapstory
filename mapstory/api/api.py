@@ -70,9 +70,8 @@ class MapstoryOwnersResource(TypeFilteredResource):
         return super(MapstoryOwnersResource, self).serialize(
             request, data, format, options)
 
-    def build_filters(self, filters={}):
-
-        orm_filters = super(MapstoryOwnersResource, self).build_filters(filters)
+    def build_filters(self, filters={}, **kwargs):
+        orm_filters = super(MapstoryOwnersResource, self).build_filters(filters, **kwargs)
 
         if 'interests' in filters:
             query = filters['interests']

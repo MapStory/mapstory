@@ -29,6 +29,14 @@
       layerName: "{{ BRANDING_LAYER_NAME }}",
       layersName: "{{ BRANDING_LAYERS_NAME }}",
     }
+    window.mapstory.composer.config.classificationBanner = {
+      enabled: {% if CLASSIFICATION_BANNER_ENABLED %} true {% else %} false {% endif %},
+      footerEnabled: {% if CLASSIFICATION_BANNER_FOOTER_ENABLED %} true {% else %} false {% endif %},
+      text: "{{ CLASSIFICATION_TEXT }}",
+      textColor:"{{ CLASSIFICATION_TEXT_COLOR }}",
+      backgroundColor: "{{ CLASSIFICATION_BACKGROUND_COLOR }}",
+      link: "{{ CLASSIFICATION_LINK }}",
+    }
   </script>
 
   {% include "head.html" %}

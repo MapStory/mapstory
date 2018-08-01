@@ -3,10 +3,10 @@
 {% if request.user.is_authenticated %}
 <script type="text/javascript">
     // set on page load, does not vary with button state.
-    var favoriteAddUrl = "{{ favorite_info.add_url }}"
+    const favoriteAddUrl = "{{ favorite_info.add_url }}";
 
     // varies with button state.
-    var favoriteCurrentUrl = null;
+    let favoriteCurrentUrl = null;
 
     // add click behavior to the Add/Delete Favorite button.
     $("#favoriteLink").click(function(event) {

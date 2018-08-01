@@ -1,6 +1,5 @@
 import datetime
 import hashlib
-import notifications
 import os
 import search
 
@@ -11,9 +10,6 @@ import geonode
 import textile
 
 from mapstory.mapstories.models import MapStory, Map
-
-
-notifications.set_mapstory_notifications()
 
 
 class CustomSite(db.models.Model):
