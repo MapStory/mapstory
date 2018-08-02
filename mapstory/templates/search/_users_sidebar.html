@@ -141,5 +141,29 @@
                         {% endverbatim %}
                     </div>
                 </section>
+                <section>
+                    <h3 class="bold-caps">VTC Members</h3>
+                    <div class="filter-content">
+                        <p>
+                            {% if THEME == 'orange' %}
+                            <a href="http://wiki.mapstory.org/Volunteer_Technical_Community">
+                                Volunteer Technical Community (VTC) members
+                            </a>
+                            {% else %}
+                                Volunteer Technical Community (VTC) members
+                            {% endif %}
+                            can answer questions and help if you send them a message.
+                        </p>
+                      <label>
+                        <input type="checkbox"
+                          data-value="true"
+                          data-filter="mapstoryprofile__Volunteer_Technical_Community"
+                          ng-click="explore.checkboxQuery($event)"
+                          ng-checked="isActivated('true', query, 'mapstoryprofile__Volunteer_Technical_Community')">
+                        </input>
+                        VTC Members only
+                      </label>
+                    </div>
+                </section>
             </aside>
             {% comment %} End filter sidebar for StoryTellers {% endcomment %}
