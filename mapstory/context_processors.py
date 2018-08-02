@@ -32,5 +32,6 @@ def context(req):
         default_append_config=json.dumps(append_config),
         default_layer_config=json.dumps(default_config),
         favorite_info=get_favorite_info(req),
-        site=Site.objects.get_current()
+        site=Site.objects.get_current(),
+        ADMIN_EMAIL=getattr(settings, 'ADMIN_EMAIL', "")
     )
