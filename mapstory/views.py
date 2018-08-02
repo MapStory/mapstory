@@ -1541,7 +1541,7 @@ def get_remote_url(request, layername):
     layer = _resolve_layer(
         request,
         layername,
-        'base.delete_resourcebase',
+        'base.view_resourcebase',
         _PERMISSION_MSG_DELETE)
 
     url = None
