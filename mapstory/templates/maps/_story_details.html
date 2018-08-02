@@ -104,6 +104,7 @@
                                 {% include "share_icons.html" %}
                             {% endblock share_icons %}
                         </div>
+                        {% if THEME == 'orange' %}
                         <h3>Map Services</h3>
                         <div class="embed">Share
                             <input id="shareStory" value="https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.slug %}">
@@ -111,7 +112,6 @@
                                 <i class="fa fa-clipboard" aria-hidden="true"></i>
                             </button>
                         </div>
-                        {% if THEME == 'orange' %}
                         {% if resource.chapters %}
                             <div class="embed"> Embed
                                 <input id="embedStory"
