@@ -24,6 +24,15 @@ from mapstory.mapstories.models import MapStory
 from mapstory.mapstories.models import Map
 import datetime
 
+
+# geonode:layer -> geonode,layer
+# layer -> geonode,layer (geonode workspace assumed)
+def decodeTypeName(typename):
+    result = typename.split(":")
+    if len(result)==1:
+        return "geonode",result
+    return result
+
 # Celery-compatible task to create thumbnails using PhantomJS
 class CreateStoryLayerThumbnailTask(Task):
     """This creates a thumbnail using PhantomJS"""
@@ -87,12 +96,14 @@ class CreateStoryLayerThumbnailTask(Task):
         resp, content = http_client.request(url)
         return content
 
+
     def has_features(self, layer):
         try:
-            layername = layer.typename.encode('utf-8')
+            workspace,layername = decodeTypeName(layer.typename.encode('utf-8'))
 
-            url = settings.OGC_SERVER['default']['LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
-            url += layername + "/wfs?request=GetFeature&maxfeatures=1&request=GetFeature&typename=geonode%3A" + layername + "&version=1.1.0"
+
+            url = settings.OGC_SERVER['default']['LOCATION'] + workspace+"/"  # workspace is hard-coded in the importer
+            url += layername + "/wfs?request=GetFeature&maxfeatures=1&request=GetFeature&typename="+workspace+"%3A" + layername + "&version=1.1.0"
 
             feats = self.request_geoserver_with_credentials(url)
             root = etree.fromstring(feats)
@@ -110,8 +121,10 @@ class CreateStoryLayerThumbnailTask(Task):
     # bounding box = [xmin, ymin, xmax, ymax]
     # timepositions = list of dates (string)
     @staticmethod
-    def retreive_WMS_metadata( layername):
-        url = settings.OGC_SERVER['default']['LOCATION'] + "geonode/"  # workspace is hard-coded in the importer
+    def retreive_WMS_metadata(typename):
+        workspace, layername = decodeTypeName(typename)
+
+        url = settings.OGC_SERVER['default']['LOCATION'] + workspace+"/"  # workspace is hard-coded in the importer
         url += layername + "/wms?request=GetCapabilities&version=1.1.1"
 
         get_cap_data= CreateStoryLayerThumbnailTask.request_geoserver_with_credentials(url)
@@ -137,11 +150,13 @@ class CreateStoryLayerThumbnailTask(Task):
         return [xmin, ymin, xmax, ymax], wms[layername].timepositions
 
     # phantomJSFile htmlFile wms layerName xmin ymin xmax ymax time output.fname
-    def create_phantomjs_args(self, layerName, boundingBoxWGS84, tempfname, time="ALL",
+    def create_phantomjs_args(self, typeName, boundingBoxWGS84, tempfname, time="ALL",
                               basemapXYZURL='https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                               styles=""):
 
-        wms = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + "geonode/wms"
+        workspace, layername = decodeTypeName(typeName)
+
+        wms = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + workspace+"/wms"
         xmin = boundingBoxWGS84[0]
         ymin = boundingBoxWGS84[1]
         xmax = boundingBoxWGS84[2]
@@ -154,7 +169,7 @@ class CreateStoryLayerThumbnailTask(Task):
                 CreateStoryLayerThumbnailTask.phantomjs_file,
                 CreateStoryLayerThumbnailTask.phantomjs_html,
                 wms,
-                layerName,
+                layername,
                 xmin, ymin, xmax, ymax,
                 time,
                 tempfname,
