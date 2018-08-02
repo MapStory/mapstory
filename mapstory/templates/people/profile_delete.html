@@ -13,12 +13,9 @@
     <p>If you would like to deactivate your profile, untick the box below. You will not be able to use your account once deactivated. To reactivate, please email info@mapstory.org.</p>
         <p>Note that the deactivation of a profile does not remove the content that was uploaded with this profile. If you wish to remove content, you may do so manually on your <a href="{% url "profile_detail" slug=user.username %}">profile page.</a> Otherwise, to have your profile completely deleted, you must <a href="mailto:info@mapstory.org">contact an administrator.</a></p>
     {% else %}
-    <!-- TODO: Place admin email here: -->
-    <p>If you would like to deactivate your profile, untick the box below. You will not be able to use your account once deactivated. To reactivate, please email [admin email goes here].</p>
-    <p>Note that the deactivation of a profile does not remove the content that was uploaded with this profile. If you wish to remove content, you may do so manually on your <a href="{% url "profile_detail" slug=user.username %}">profile page.</a> Otherwise, to have your profile completely deleted, you must <a href="#">contact an administrator.</a></p>
+    <p>If you would like to deactivate your profile, untick the box below. You will not be able to use your account once deactivated. To reactivate, please email GEOINTServicesOperations@nga.mil".</p>
+    <p>Note that the deactivation of a profile does not remove the content that was uploaded with this profile. If you wish to remove content, you may do so manually on your <a href="{% url "profile_detail" slug=user.username %}">profile page.</a> Otherwise, to have your profile completely deleted, you must <a href="GEOINTServicesOperations@nga.mil">contact an administrator.</a></p>
     {% endif %}
-
-
     <form action="" method="post" class="form-horizontal">
       {% csrf_token %}
       <div class="form-controls">
