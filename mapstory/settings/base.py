@@ -77,6 +77,7 @@ BRANDING_STORIES_NAME = os.environ.get('BRANDING_STORIES_NAME', 'MapStories')
 BRANDING_LAYER_NAME = os.environ.get('BRANDING_LAYER_NAME', 'StoryLayer')
 BRANDING_LAYERS_NAME = os.environ.get('BRANDING_LAYERS_NAME', 'StoryLayers')
 THEME = os.environ.get('THEME', 'default')
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', '')
 
 # Misc
 ACCOUNT_OPEN_SIGNUP = str_to_bool(os.environ.get('REGISTRATION_OPEN', 'True'))
