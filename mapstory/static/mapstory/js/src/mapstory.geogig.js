@@ -32,7 +32,6 @@
     $scope.logURL = geogigConfig.logURL;
     $scope.repoURL = geogigConfig.repoURL;
 
-
     if ($scope.statisticsURL) {
       geoGigService.geogigCommand($scope.statisticsURL).then(
         function(data) {
@@ -51,10 +50,10 @@
     if ($scope.logURL) {
       geoGigService.geogigCommand($scope.logURL).then(
         function(data) {
-          if (data.response.success) {
+          if (data.data.response) {
             $('#geogig-message').hide();
             $('#geogig-stats').show();
-            var response = data.response.commit;
+            var response = data.data.response.commit;
             if (!Array.isArray(response)) {
               $scope.commits = [response];
             } else {
