@@ -108,7 +108,7 @@
                     </li>
                 {% else %}
                     <li class="nav-link"><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Log In" %}</a></li>
-                    {% if ACCOUNT_OPEN_SIGNUP %}
+                    {% if ACCOUNT_OPEN_SIGNUP and ENABLE_FORM_LOGIN %}
                         <li class="nav-link"><a href="{% url "account_signup" %}">{% trans "Sign Up" %}</a></li>
                     {% endif %}
                 {% endif %}

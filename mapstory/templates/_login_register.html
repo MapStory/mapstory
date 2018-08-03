@@ -44,7 +44,7 @@
                         {% endif %}
                     </div>
                 </div>
-                {% if ACCOUNT_OPEN_SIGNUP %}
+                {% if ACCOUNT_OPEN_SIGNUP and ENABLE_FORM_LOGIN %}
                     Don't have an account? <a href="{% url "account_signup" %}">Sign Up.</a>
                 {% endif %}
                 <hr/>
