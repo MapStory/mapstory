@@ -30,7 +30,7 @@ import datetime
 def decodeTypeName(typename):
     result = typename.split(":")
     if len(result)==1:
-        return "geonode",result
+        return "geonode",result[0]
     return result
 
 # Celery-compatible task to create thumbnails using PhantomJS
