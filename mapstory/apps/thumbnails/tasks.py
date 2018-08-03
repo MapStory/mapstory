@@ -1,5 +1,4 @@
 from PIL import Image
-from celery import Task
 
 from django.db import connection
 
@@ -34,7 +33,7 @@ def decodeTypeName(typename):
     return result
 
 # Celery-compatible task to create thumbnails using PhantomJS
-class CreateStoryLayerThumbnailTask(Task):
+class CreateStoryLayerThumbnailTask:
     """This creates a thumbnail using PhantomJS"""
 
     # location of the phantomJS files
@@ -282,7 +281,7 @@ class CreateStoryLayerThumbnailTask(Task):
             print "EXCEPTION - thumbnail generation for layer pk="+str(pk)
             print(e)
             print traceback.format_exc()
-            self.retry(max_retries=5, countdown=31) # retry in 31 seconds (auth cache timeout)
+
 
 
 # ------------------------------------------------------------------------------------------------------------
@@ -546,17 +545,33 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
             print "EXCEPTION - thumbnail generation for story pk=" + str(pk)
             print(e)
             print traceback.format_exc()
-            self.retry(max_retries=5, countdown=31)  # retry in 31 seconds (auth cache timeout)
 
 
-# convenience method (used by geonode) to start (via celery) the
-# thumbnail generation task.
-def create_gs_thumbnail_mapstory(instance, overwrite):
-    # if this is a map (i.e. multiple layers), handoff to original implementation
-    if instance.class_name == 'Map':
-        return create_gs_thumbnail_geonode(instance, overwrite)
-    task = CreateStoryLayerAnimatedThumbnailTask()
-    task.delay(instance.pk, overwrite=overwrite)
+############################################################################################
+from mapstory.celery import app
+
+
+@app.task(bind=True)
+def task_CreateStoryLayerAnimatedThumbnailTask(self, pk, overwrite=False):
+    try:
+        worker = CreateStoryLayerAnimatedThumbnailTask()
+        worker.run(pk, overwrite)
+        return "pk=" + str(pk)
+    except Exception:
+        self.retry(max_retries=5, countdown=31)
+
+
+@app.task(bind=True)
+def task_CreateStoryAnimatedThumbnailTask(self, pk, overwrite=False):
+    try:
+        worker = CreateStoryAnimatedThumbnailTask()
+        worker.run(pk, overwrite)
+        return "pk=" + str(pk)
+    except Exception:
+        self.retry(max_retries=5, countdown=31)
+
+
+############################################################################################
 
 # convenience method (used by geonode) to start (via celery) the
 # thumbnail generation task.
@@ -568,27 +583,24 @@ def create_gs_thumbnail_mapstory_tx_aware(instance, overwrite):
         return create_gs_thumbnail_geonode(instance, overwrite)
     # because layer hasn't actually been committed yet, we don't create the thumbnail until the transaction commits
     # if the task were to run now, it wouldnt be able to retreive layer from the database
-    connection.on_commit(lambda: run_task(instance.pk,overwrite))
+    connection.on_commit(lambda: run_task(instance.pk, overwrite))
     # if you get an error here, it probably means you aren't using the transaction_hooks proxy DB type
     # cf https://django-transaction-hooks.readthedocs.io/en/latest/
 
+
 # run the actual task
-def run_task(pk,overwrite):
-    task = CreateStoryLayerAnimatedThumbnailTask()
-    task.delay(pk, overwrite=overwrite)
+def run_task(pk, overwrite):
+    task_CreateStoryLayerAnimatedThumbnailTask.delay(pk, overwrite=overwrite)
+
 
 # --------------------------
-
-def create_mapstory_thumbnail(instance, overwrite):
-    task = CreateStoryAnimatedThumbnailTask()
-    task.delay(instance.pk, overwrite=overwrite)
 
 
 # call this to schedule a mapstory story thumbnail (wait until current tx finishes)
 def create_mapstory_thumbnail_tx_aware(instance, overwrite):
-    connection.on_commit(lambda: run_task_story(instance.pk,overwrite))
+    connection.on_commit(lambda: run_task_story(instance.pk, overwrite))
+
 
 # run the actual task
-def run_task_story(pk,overwrite):
-    task = CreateStoryAnimatedThumbnailTask()
-    task.delay(pk, overwrite=overwrite)
+def run_task_story(pk, overwrite):
+    task_CreateStoryAnimatedThumbnailTask.delay(pk, overwrite=overwrite)
