@@ -13,7 +13,7 @@ def context(req):
     append_config = getattr(settings, 'DEFAULT_APPEND_CONFIG')
     return dict(
         AUTOCOMPLETE_QUICK_SEARCH=getattr(settings, 'AUTOCOMPLETE_QUICK_SEARCH', False),
-        ENABLE_FORM_LOGIN=getattr(settings, 'ENABLE_FORMS_LOGIN', True),
+        ENABLE_FORM_LOGIN=getattr(settings, 'ENABLE_FORM_LOGIN', True),
         ENABLE_SOCIAL_LOGIN=getattr(settings, 'ENABLE_SOCIAL_LOGIN', False),
         FEATURE_MULTIPLE_STORY_CHAPTERS=getattr(settings, 'FEATURE_MULTIPLE_STORY_CHAPTERS', False),
         GOOGLE_ANALYTICS=getattr(settings, 'GOOGLE_ANALYTICS', None),
@@ -32,5 +32,6 @@ def context(req):
         default_append_config=json.dumps(append_config),
         default_layer_config=json.dumps(default_config),
         favorite_info=get_favorite_info(req),
-        site=Site.objects.get_current()
+        site=Site.objects.get_current(),
+        ADMIN_EMAIL=getattr(settings, 'ADMIN_EMAIL', '')
     )

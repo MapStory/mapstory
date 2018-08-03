@@ -94,9 +94,12 @@
                             </div>
                         </div>
                         <hr>
+                        {% if THEME == 'orange' %}
                         <p class="pull-right" ng-click="showShare()">Share <i class="fa fa-share"></i></p>
+                        {% endif %}
                         <!-- insert story rating here -->
                     </div>
+                    {% if THEME == 'orange' %}
                     <div id="shareLinks" ng-show="sharing">
                         <h3>Social</h3>
                         <div class="embed">
@@ -106,8 +109,7 @@
                         </div>
                         <h3>Map Services</h3>
                         <div class="embed">Share
-                            <input id="shareStory" value="https://
-                                    {{ request.get_host }}{% url 'mapstory.views.map_detail' resource.slug %}">
+                            <input id="shareStory" value="https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.slug %}">
                             <button class="copyclip btn" data-clipboard-target="#shareStory">
                                 <i class="fa fa-clipboard" aria-hidden="true"></i>
                             </button>
@@ -122,6 +124,7 @@
                             </div>
                         {% endif %}
                     </div>
+                    {% endif %}
                 </div>
                 <div class="col-sm-11">
                     {% if request.user.is_authenticated %}

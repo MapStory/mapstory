@@ -77,10 +77,11 @@ BRANDING_STORIES_NAME = os.environ.get('BRANDING_STORIES_NAME', 'MapStories')
 BRANDING_LAYER_NAME = os.environ.get('BRANDING_LAYER_NAME', 'StoryLayer')
 BRANDING_LAYERS_NAME = os.environ.get('BRANDING_LAYERS_NAME', 'StoryLayers')
 THEME = os.environ.get('THEME', 'default')
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', '')
 
 # Misc
 ACCOUNT_OPEN_SIGNUP = str_to_bool(os.environ.get('REGISTRATION_OPEN', 'True'))
-ENABLE_FORM_LOGIN = str_to_bool(os.environ.get('ENABLE_FORMS_LOGIN', 'True'))
+ENABLE_FORM_LOGIN = str_to_bool(os.environ.get('ENABLE_FORM_LOGIN', 'True'))
 USER_SNAP = str_to_bool(os.environ.get('USER_SNAP', 'False'))
 GOOGLE_ANALYTICS = os.environ.get('GOOGLE_ANALYTICS', '')
 
@@ -730,7 +731,7 @@ SCHEMA_DOWNLOAD_EXCLUDE = [
 ]
 
 # Choose thumbnail generator -- this is the delayed phantomjs generator
-THUMBNAIL_GENERATOR = "mapstory.apps.thumbnails.tasks.create_gs_thumbnail_mapstory_tx_aware"
+THUMBNAIL_GENERATOR = "geonode.layers.utils.create_gs_thumbnail_geonode"
 
 #
 # Classification banner
