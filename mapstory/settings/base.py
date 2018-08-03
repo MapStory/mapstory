@@ -731,7 +731,7 @@ SCHEMA_DOWNLOAD_EXCLUDE = [
 ]
 
 # Choose thumbnail generator -- this is the delayed phantomjs generator
-THUMBNAIL_GENERATOR = "geonode.layers.utils.create_gs_thumbnail_geonode"
+THUMBNAIL_GENERATOR = "mapstory.apps.thumbnails.tasks.create_gs_thumbnail_mapstory_tx_aware"
 
 #
 # Classification banner
