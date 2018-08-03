@@ -281,7 +281,7 @@ class CreateStoryLayerThumbnailTask:
             print "EXCEPTION - thumbnail generation for layer pk="+str(pk)
             print(e)
             print traceback.format_exc()
-
+            raise e # send forward so actual task can retry()
 
 
 # ------------------------------------------------------------------------------------------------------------
@@ -545,6 +545,7 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
             print "EXCEPTION - thumbnail generation for story pk=" + str(pk)
             print(e)
             print traceback.format_exc()
+            raise e # send forward so actual task can retry()
 
 
 ############################################################################################
