@@ -7,12 +7,12 @@ pushd /var/lib/rexray/volumes
 
 # Geoserver
 pushd mapstory_geoserver/data
-tar -xvf $BAK_DIR/geoserver.tar data
+tar -xzf $BAK_DIR/geoserver.tar.gz data
 popd
 
 # Mapstory Media
 pushd mapstory_mapstory_media/data
-tar -xvf $BAK_DIR/mapstory_media.tar .
+tar -xzf $BAK_DIR/mapstory_media.tar.gz .
 popd
 
 popd
