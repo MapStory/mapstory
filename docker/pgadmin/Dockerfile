@@ -1,4 +1,4 @@
-FROM fenglc/pgadmin4:2.1-python2.7-alpine
+FROM quay.io/mapstory/dockercloud-pgadmin4:latest
 LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 
 ENV SCRIPTS /scripts
