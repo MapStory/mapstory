@@ -79,6 +79,7 @@ urlpatterns = patterns('',
                        url(r'^story/(?P<storyid>[^/]+)/generate_thumbnail', 'mapstory.views.story_generate_thumbnail', name='story_generate_thumbnail'),
                        url(r'^story/(?P<slug>[-\w]+)/$', map_detail, name='mapstory_detail'),
                        url(r'^story/(?P<slug>[-\w]+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
+                       url(r'^story/(?P<slug>[-\w]+)/embed$', 'mapstory.views.mapstory_view', name='mapstory_view'),
                        url(r'^story/chapter/new$', 'mapstory.views.new_map_json', name='new_map_json'),
 
                        # Composer
@@ -93,7 +94,6 @@ urlpatterns = patterns('',
                        # StoryTools
                        url(r'^maps/(?P<mapid>\d+)/viewer$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
                        url(r'^maps/(?P<mapid>\d+)/embed$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
-                       url(r'^story/(?P<slug>[-\w]+)/embed$', 'mapstory.views.mapstory_view', {'template': 'viewer/story_viewer.html'}, name='mapstory-viewer'),
 
                        url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
                        url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
