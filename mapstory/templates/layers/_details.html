@@ -192,6 +192,13 @@
                                             <i class="fa fa-clipboard" aria-hidden="true"></i>
                                         </button>
                                     </div>
+                                    <div class="embed"> Embed
+                                        <input id="embedLayer"
+                                               value="<iframe style='border: none;' height='400' width='600' src='https://{{ request.get_host }}/layers/{{ resource.service_typename }}/embed'></iframe>"/>
+                                        <button class="copyclip btn" data-clipboard-target="#embedLayer">
+                                            <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
