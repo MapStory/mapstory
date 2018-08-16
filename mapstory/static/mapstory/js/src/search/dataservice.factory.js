@@ -43,7 +43,7 @@
     /// regions needs to be updated to async
 
     function getRegions(){
-      return $http.get(REGIONS_ENDPOINT)
+      return $http.get(REGIONS_ENDPOINT + '?limit=500')
               .then(regionsForAutocomplete);
     }
 
@@ -54,7 +54,7 @@
       var countryResults = _.map(results, function (region) {
           region._lower = [ region.name.toLowerCase() , region.code.toLowerCase() ];
           codes[region.code] = region;
-        return region;
+          return region;
       });
 
       return {
