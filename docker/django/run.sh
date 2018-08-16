@@ -122,7 +122,7 @@ for i do # loop over $@
         echo 'Running tests'
         wait_for_pg
         rm -f cover/*
-        CELERY_ALWAYS_EAGER=true CELERY_EAGER_PROPAGATES_EXCEPTIONS=true coverage run ./manage.py test
+        CELERY_ALWAYS_EAGER=true CELERY_EAGER_PROPAGATES_EXCEPTIONS=true coverage run ./manage.py test mapstory
         coverage report
         coverage html -d cover
         if [ "$TRAVIS" ]; then
