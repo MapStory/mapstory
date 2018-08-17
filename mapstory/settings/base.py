@@ -716,9 +716,32 @@ LOCAL_CONTENT = False
 # Override number of results per page listed in the GeoNode search pages
 CLIENT_RESULTS_LIMIT = 30
 
-# Download formats available in layer detail download modal
+# Available download formats
+DOWNLOAD_FORMATS_METADATA = [
+    'Atom', 'DIF', 'Dublin Core', 'ebRIM', 'FGDC', 'ISO',
+]
 DOWNLOAD_FORMATS_VECTOR = [
-    'Zipped Shapefile', 'GML 2.0', 'GML 3.1.1', 'CSV', 'GeoJSON', 'KML',
+    'JPEG', 'PDF', 'PNG', 'Zipped Shapefile', 'GML 2.0', 'GML 3.1.1', 'CSV',
+    'Excel', 'GeoJSON', 'KML', 'View in Google Earth', 'Tiles',
+    'QGIS layer file (.qlr)',
+    'QGIS project file (.qgs)',
+]
+DOWNLOAD_FORMATS_RASTER = [
+    'JPEG',
+    'PDF',
+    'PNG',
+    'ArcGrid',
+    'GeoTIFF',
+    'Gtopo30',
+    'ImageMosaic',
+    'KML',
+    'View in Google Earth',
+    'Tiles',
+    'GML',
+    'GZIP',
+    'QGIS layer file (.qlr)',
+    'QGIS project file (.qgs)',
+    'Zipped All Files'
 ]
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
