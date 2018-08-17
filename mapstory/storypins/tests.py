@@ -263,3 +263,4 @@ class StoryPinsTest(TransactionTestCase):
                     '[1] lon : Invalid value for lon : "lon"',
                     '[1] end_time : Unable to read as date : end_time, please format as yyyy-mm-dd']
         self.assertEqual(expected, re.findall('<li>([^<]*)</li>', resp.content))
+
