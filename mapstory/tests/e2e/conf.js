@@ -56,15 +56,15 @@ let settings = {
   specs: [
     // "tools/take_screenshots.js",
     "specs/auth.spec.js",
-    // "specs/composer_survey.spec.js",
-    "specs/explore.spec.js",
-    "specs/home.spec.js",
-    "specs/icon_upload.spec.js",
-    "specs/image.spec.js",
-    "specs/journal.spec.js",
-    "specs/search.spec.js",
-    "specs/survey.spec.js",
-    "specs/icons.spec.js"
+    "specs/composer_survey.spec.js",
+    // "specs/explore.spec.js",
+    // "specs/home.spec.js",
+    // "specs/icon_upload.spec.js",
+    // "specs/image.spec.js",
+    // "specs/journal.spec.js",
+    // "specs/search.spec.js",
+    // "specs/survey.spec.js",
+    // "specs/icons.spec.js"
   ],
   multiCapabilities,
   jasmineNodeOpts: {
