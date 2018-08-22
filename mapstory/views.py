@@ -1076,7 +1076,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     thumbnail = layer.get_thumbnail_url
 
     # This will get URL encoded later and is used for the social media share URL
-    share_url = "https://%s/layers/%s" % (request.get_host(), layer.name)
+    share_url = "https://%s/layers/%s" % (request.get_host(), layer.typename)
     share_title = "%s by %s." % (layer.title, layer.owner)
     share_description = layer.abstract
 
