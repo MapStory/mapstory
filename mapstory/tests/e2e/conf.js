@@ -1,5 +1,3 @@
-"use strict";
-
 /**
  * Protractor tests configuration
  * ==============================
@@ -9,7 +7,7 @@
  * For multiple-browser testing uncomment browsers inside `multiCapabilities`
  *
  */
-let PixDiff = require("pix-diff");
+const PixDiff = require("pix-diff");
 
 //----------------------
 // Variable settings
@@ -34,7 +32,7 @@ let multiCapabilities = [{
     args: [
       "--no-sandbox",
       "--test-type=browser",
-      "--window-size=" + browserWidth + "," + browserHeight
+      `--window-size=${browserWidth},${browserHeight}`
     ],
     prefs: {
       "download": {
@@ -56,18 +54,17 @@ let settings = {
   // specs: ['specs/*.spec.js'],
 
   specs: [
-    //'tools/take_screenshots.js',
-    //'specs/auth.spec.js',
-    // 'specs/composer.spec.js',
-    "specs/composer_survey.spec.js"
-    //'specs/explore.spec.js',
-    //'specs/home.spec.js',
-    // 'specs/icon_upload.spec.js',
-    // 'specs/image.spec.js',
-    // 'specs/journal.spec.js',
-    // 'specs/search.spec.js',
-    // 'specs/survey.spec.js',
-    // 'specs/icons.spec.js'
+    // "tools/take_screenshots.js",
+    "specs/auth.spec.js",
+    // "specs/composer_survey.spec.js",
+    "specs/explore.spec.js",
+    "specs/home.spec.js",
+    "specs/icon_upload.spec.js",
+    "specs/image.spec.js",
+    "specs/journal.spec.js",
+    "specs/search.spec.js",
+    "specs/survey.spec.js",
+    "specs/icons.spec.js"
   ],
   multiCapabilities,
   jasmineNodeOpts: {
@@ -78,7 +75,7 @@ let settings = {
   allScriptsTimeout: timeout,
   // Results output file
   resultJsonOutputFile: "./result.json",
-  onPrepare: function () {
+  onPrepare: () => {
     // Setup pix-diff directories and resolution
     browser.pixDiff = new PixDiff({
       basePath: "e2e/images/",
@@ -88,7 +85,7 @@ let settings = {
     });
 
     // Workaround for pending:
-    jasmine.Suite.prototype.pend = function (message) {
+    jasmine.Suite.prototype.pend = (message) => {
       this.markedPending = true;
       this.children.forEach(spec => spec.pend(message));
     };
@@ -108,7 +105,7 @@ if (process.env.DOCKER) {
       args: [
         "--no-sandbox",
         "--test-type=browser",
-        "--window-size=" + browserWidth + "," + browserHeight
+        `--window-size=${browserWidth},${browserHeight}`
       ],
       prefs: {
         "download": {
@@ -122,7 +119,7 @@ if (process.env.DOCKER) {
     framework: "jasmine",
     seleniumAddress: seleniumURL,
     specs: ["specs/*.spec.js"],
-    multiCapabilities: multiCapabilities,
+    multiCapabilities,
     jasmineNodeOpts: {
       showColors: true,
       defaultTimeoutInterval: timeout * 2
@@ -130,7 +127,7 @@ if (process.env.DOCKER) {
     getPageTimeout: timeout,
     allScriptsTimeout: timeout,
     resultJsonOutputFile: "./result.json",
-    onPrepare: function () {
+    onPrepare:() => {
       browser.pixDiff = new PixDiff({
         basePath: "e2e/images/",
         diffPath: "e2e/images/",
@@ -147,7 +144,7 @@ if (process.env.DOCKER) {
 if (process.env.TRAVIS) {
   // Use sauce labs for cloud browser testing
   // TODO: Use https!!!
-  seleniumURL = "http://" + process.env.SAUCE_USERNAME + ":" + process.env.SAUCE_ACCESS_KEY + "@ondemand.saucelabs.com/wd/hub";
+  seleniumURL = `http://${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}@ondemand.saucelabs.com/wd/hub`;
   multiCapabilities = [{
     "browserName": "firefox",
     "tunnel-identifier": process.env.TRAVIS_JOB_NUMBER,
@@ -164,7 +161,7 @@ if (process.env.TRAVIS) {
       args: [
         "--no-sandbox",
         "--test-type=browser",
-        "--window-size=" + browserWidth + "," + browserHeight
+        `--window-size=${browserWidth},${browserHeight}`
       ],
       prefs: {
         "download": {
@@ -188,7 +185,7 @@ if (process.env.TRAVIS) {
     resultJsonOutputFile: "./result.json",
     sauceUser: process.env.SAUCE_USERNAME,
     sauceKey: process.env.SAUCE_ACCESS_KEY,
-    onPrepare: function () {
+    onPrepare: () => {
       browser.pixDiff = new PixDiff({
         basePath: "e2e/images/",
         diffPath: "e2e/images/",

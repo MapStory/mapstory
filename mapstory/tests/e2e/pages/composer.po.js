@@ -2,8 +2,6 @@
  * Composer Page Object
  * ====================
  */
-"use strict";
-
 require("../tools/waitReady.js");
 
 let make_id = require("../tools/make_id.js");

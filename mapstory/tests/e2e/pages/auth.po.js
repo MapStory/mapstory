@@ -23,10 +23,10 @@ let AuthWizard = function () {
   this.adminLink = element(by.linkText("admin"));
   this.logoutLink = element(by.linkText("Log out"));
   this.login_close_button = element(by.css(".close.pull-right"));
-  this.loginForm = element(by.css("form[action=\"/account/login/?next=/\"]"));
+  this.loginForm = element(by.css("#loginModal"));
   this.userAvatar = element(by.css(".nav-avatar"));
-  this.usernameInput = this.loginForm.element(by.css("input.form-control[name=\"username\"]"));
-  this.passwordInput = this.loginForm.element(by.css("input.form-control[name=\"password\"]"));
+  this.usernameInput = element(by.css("#id_username"));
+  this.passwordInput = element(by.css("#id_password"));
   this.loginButton = this.loginForm.element(by.partialButtonText("Sign in"));
   this.signUpButton = element(by.css("#join-mapstory-button"));
 

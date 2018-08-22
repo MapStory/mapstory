@@ -1,8 +1,8 @@
+const path = require("path");
 const auth = require("../pages/auth.po");
 const home = require("../pages/home.po");
 const composer = require("../pages/composer.po");
 const makeid = require("../tools/make_id");
-const path = require("path");
 
 const EC = protractor.ExpectedConditions;
 
@@ -57,19 +57,19 @@ describe("Composer Survey", () => {
         browser.wait(EC.urlContains("draft"), 10000);
       });
 
-      it("should show 'Save Successful' message", () => {
+      xit("should show 'Save Successful' message", () => {
 
       }).pend("TODO");
 
-      it("should reflect the changes on the title", () => {
+      xit("should reflect the changes on the title", () => {
 
       }).pend("TODO");
     });
   });
 
   describe("2. Creating, updating and managing chapters", () => {
-    describe("(b) Update the chapter information of Chapter 1", () => {
-      it("should edit a chapter title and summary", () => {
+    xdescribe("(b) Update the chapter information of Chapter 1", () => {
+      xit("should edit a chapter title and summary", () => {
         // Click on Chapter 1 'detail' arrow.
         // Change 'Chapter Title'
         // Change 'Chapter Summary'
@@ -90,7 +90,7 @@ describe("Composer Survey", () => {
         expect(composer.chapter_binds.count()).toBe(6);
       });
 
-      it("should edit the newly created chapter", () => {
+      xit("should edit the newly created chapter", () => {
         // Click on Chapter 2 'detail' arrow.
         // Change 'Chapter Title'
         // Change 'Chapter Summary'
@@ -99,7 +99,7 @@ describe("Composer Survey", () => {
     });
 
     describe("(d) Check the first chapter again.", () => {
-      it("should keep the information from chapter 1", () => {
+      xit("should keep the information from chapter 1", () => {
         // Click on Table of contents
         // Check for Chapter 1 info
 
@@ -107,31 +107,31 @@ describe("Composer Survey", () => {
     });
 
     describe("(e) Delete Chapter 2", () => {
-      it("should remove Chapter 2", () => {
+      xit("should remove Chapter 2", () => {
       }).pend("TODO");
     });
   });
 
-  describe("3. Adding and searching for storylayers", () => {
-    describe("(a) Add a random storylayer by using keyword search.", () => {
+  xdescribe("3. Adding and searching for storylayers", () => {
+    xdescribe("(a) Add a random storylayer by using keyword search.", () => {
       // Click on Layer icon
       // Click 'Add a StoryLayer'
       // Type a layer name 'prisions'
 
     }).pend("TODO");
-    describe("(b) Add the storylayer you imported/created earlier.", () => {
+    xdescribe("(b) Add the storylayer you imported/created earlier.", () => {
       // Click 'Add a StoryLayer'
       // Search for the test layer we prepared
       // Add the layer
 
     }).pend("TODO");
-    describe("(c) Click Play.", () => {
+    xdescribe("(c) Click Play.", () => {
       // Click play
 
     }).pend("TODO");
   });
 
-  describe("4. Styling and masking storylayers", () => {
+  xdescribe("4. Styling and masking storylayers", () => {
     describe("(a) Rename the storylayer title using Masking.", () => {
     }).pend("TODO");
     describe("(b) Remove the first storylayer you added from your mapstory.", () => {
@@ -165,7 +165,7 @@ describe("Composer Survey", () => {
     }).pend("TODO");
   });
 
-  describe("5. Creating and updating storyboxes", () => {
+  xdescribe("5. Creating and updating storyboxes", () => {
     describe("(a) Create a new storybox. Provide a title, description, map bounds, start and end times.", () => {
     }).pend("TODO");
 

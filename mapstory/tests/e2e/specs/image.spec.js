@@ -1,4 +1,3 @@
-"use strict";
 require("../tools/waitReady.js");
 
 // This is an example of how to use image-diff tests

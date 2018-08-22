@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+# Install this for using e2e-tests
 # Update npm
 npm i npm
 

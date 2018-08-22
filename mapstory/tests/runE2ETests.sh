@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Note: First start the server with: `webdriver-manager start`
-
 exists()
 {
   command -v "$1" >/dev/null 2>&1

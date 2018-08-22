@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 exit_status=0
 
 # Run end-to-end tests
