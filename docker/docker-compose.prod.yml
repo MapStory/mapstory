@@ -64,6 +64,8 @@ services:
     image: quay.io/mapstory/nginx:prod
     env_file:
       - docker/env/prod/public_host.env
+    environment:
+      - NGINX_NUM_WORKERS=4
     volumes:
       - .:/srv/mapstory/:ro # mapstory_static has symlinks to this
       - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
