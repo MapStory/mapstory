@@ -3,7 +3,6 @@ LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 
 ENV MEDIA_ROOT=/var/lib/mapstory/media
 ENV STATIC_ROOT=/var/lib/mapstory/static
-ENV NGINX_CLIENT_MAX_BODY_SIZE=500m
 ENV CONSUL_TEMPLATE_VERSION=0.18.1
 
 VOLUME $MEDIA_ROOT

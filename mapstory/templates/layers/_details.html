@@ -15,7 +15,7 @@
             <div class="row">
                 <div style="text-align: left">
                     <div>
-                        <h2>{{resource.title}} 
+                        <h2>{{resource.title}}
                         {% if not resource.is_published %}
                             <a href="#metaForm" data-toggle="modal" class="btn btn-danger">
                                 <i class="fa fa-lock"></i> Private
@@ -96,7 +96,7 @@
                                                     var loggedIn = "{{user.is_authenticated}}";
                                                 </script>
                                                 <md-content class="md-padding" layout="column">
-                                                    <md-chips ng-model="chips" 
+                                                    <md-chips ng-model="chips"
                                                     readonly="readOnly"
                                                     md-on-add="addTag($chip)"
                                                     md-on-remove="removeTag($chip)"
@@ -176,7 +176,9 @@
                                         <i class="fa fa-question-circle ng-scope">
                                             <md-tooltip>OpenGIS® Web Map Service Interface Standard</md-tooltip>
                                         </i>
-                                        <input id="shareWMS" value ="https://{{ request.get_host }}/geoserver/geonode/{{ resource }}/wms?REQUEST=GetCapabilities&SERVICE=WMS&TILED=true&VERSION=1.1.1">
+                                        <input id="shareWMS"
+                                               aria-label="WMS"
+                                               value ="https://{{ request.get_host }}/geoserver/geonode/{{ resource.name }}/wms?REQUEST=GetCapabilities&SERVICE=WMS&TILED=true&VERSION=1.1.1">
 
                                         <button class="copyclip btn" data-clipboard-target="#shareWMS">
                                             <i class="fa fa-clipboard" aria-hidden="true"></i>
@@ -186,7 +188,9 @@
                                         <i class="fa fa-question-circle ng-scope">
                                             <md-tooltip>OGC® Web Feature Service</md-tooltip>
                                         </i>
-                                        <input id="shareWFS" value ="https://{{ request.get_host }}/geoserver/geonode/{{ resource }}/wfs?REQUEST=GetCapabilities&SERVICE=WFS&VERSION=2.0.0">
+                                        <input id="shareWFS"
+                                               aria-label="WFS"
+                                               value ="https://{{ request.get_host }}/geoserver/geonode/{{ resource.name }}/wfs?REQUEST=GetCapabilities&SERVICE=WFS&VERSION=2.0.0">
 
                                         <button class="copyclip btn" data-clipboard-target="#shareWFS">
                                             <i class="fa fa-clipboard" aria-hidden="true"></i>
@@ -194,7 +198,8 @@
                                     </div>
                                     <div class="embed"> Embed
                                         <input id="embedLayer"
-                                               value="<iframe style='border: none;' height='400' width='600' src='https://{{ request.get_host }}/layers/{{ resource.service_typename }}/embed'></iframe>"/>
+                                               aria-label="Embed"
+                                               value="<iframe style='border: none;' height='400' width='600' src='https://{{ request.get_host }}/layers/{{ resource.service_typename }}/embed'></iframe>">
                                         <button class="copyclip btn" data-clipboard-target="#embedLayer">
                                             <i class="fa fa-clipboard" aria-hidden="true"></i>
                                         </button>
