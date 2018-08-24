@@ -91,6 +91,7 @@ services:
     environment:
       - NGINX_NUM_WORKERS=2
       - NGINX_GZIP_COMP_LEVEL=4
+      - NGINX_FILE_CACHE_ENABLED=False
       - NGINX_CLIENT_MAX_BODY_SIZE=500m
     networks:
       internal:
