@@ -90,6 +90,7 @@ services:
       - mapstory_static:/var/lib/mapstory/static/:ro
     environment:
       - NGINX_NUM_WORKERS=2
+      - NGINX_GZIP_COMP_LEVEL=4
       - NGINX_CLIENT_MAX_BODY_SIZE=500m
     networks:
       internal:
