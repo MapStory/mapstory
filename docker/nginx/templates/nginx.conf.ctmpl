@@ -23,7 +23,31 @@ http {
 
   keepalive_timeout 65;
 
-  #gzip  on;
+  gzip on;
+  gzip_proxied any;
+  gzip_http_version 1.0;
+  gzip_comp_level {{ or (env "NGINX_GZIP_COMP_LEVEL") "4" }};
+  gzip_min_length 500;
+  gzip_disable msie6;
+  gzip_types
+#    text/html # already included
+    text/css
+    application/javascript
+    text/javascript
+    application/x-javascript
+    text/json
+    application/json
+    text/xml
+    application/xml
+    application/xml+rss
+    application/octet-stream
+    application/font-woff
+    application/font-woff2
+    font/woff
+    font/woff2
+    application/x-font-ttf
+    text/comma-separated-values
+    ;
 
   server {
 
@@ -55,9 +79,6 @@ http {
 
     # serve staticfiles
     location /static/ {
-      gzip            on;
-      #gzip_types      text/css application/x-javascript application/x-font-ttf;
-      gzip_types *;
       alias {{ env "STATIC_ROOT" }}/;
     }
 
@@ -90,9 +111,6 @@ http {
       proxy_connect_timeout 90s;
       proxy_read_timeout 90s;
       proxy_pass http://django:8000/;
-      gzip on;
-      #gzip_types text/html text/xml application/json;
-      gzip_types *;
       client_max_body_size {{ or (env "NGINX_CLIENT_MAX_BODY_SIZE") "500m" }};
     }
   }
