@@ -33,7 +33,8 @@ const PixDiff = require("pix-diff");
 let seleniumURL = "http://#";
 
 if (process.env.DOCKER) {
-  seleniumURL = "http://selenium:4444/wd/hub";
+  // seleniumURL = "http://selenium:4444/wd/hub";
+  seleniumURL = "http://ondemand.saucelabs.com:80";
 } else {
   seleniumURL = "http://localhost:4444/wd/hub";
 }
