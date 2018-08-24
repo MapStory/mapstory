@@ -78,21 +78,21 @@ script:
   - $DCO kill django
   - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
   ### Commenting out everything below because currently the e2e tests are not being run.
-  #- $DCO up -d django
+  - $DCO up -d django
   # Use the docker selenium setup if running on a fork's PR because Sauce credentials aren't available
-  #- if [ -z "$SAUCE_ACCESS_KEY" ]; then $DCO up -d selenium; fi
+  - if [ -z "$SAUCE_ACCESS_KEY" ]; then $DCO up -d selenium; fi
   # Wait for django container to come up
-  #- while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
-  #- if [ -z "$SAUCE_ACCESS_KEY" ]; then
-  #    echo "Sauce is not available";
-  #    $DCO up protractor;
-  #  else
-  #    echo "Sauce is available";
-  #    pushd mapstory/tests;
-  #    SOURCE_HOME=/home/travis/build/MapStory/mapstory ./runAllTests.sh;
-  #    popd;
-  #  fi
-  #- echo "tests are done"
+  - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
+  - if [ -z "$SAUCE_ACCESS_KEY" ]; then
+      echo "Sauce is not available";
+      $DCO up protractor;
+    else
+      echo "Sauce is available";
+      pushd mapstory/tests;
+      SOURCE_HOME=/home/travis/build/MapStory/mapstory ./runAllTests.sh;
+      popd;
+    fi
+  - echo "tests are done"
 
 ### Currently quay.io is pulling the repos automatically
 # after_success:

@@ -1,4 +1,23 @@
 /**
+ * ===========================
+ * === Mapstory E2E Tests ===
+ * ===========================
+ *
+ * Uses protractor for testing from the browser.
+ *
+ * How to run E2E tests
+ * --------------------
+ * 1. Install dependencies with `install_testing_deps.sh` script. Then run `webdriver-manager update`
+ * 2. On one shell : Start the webriver: webdriver-manager start
+ * 3. On another shell: Run the tests with `./runE2ETests.sh`
+ *
+ * Notes
+ * ------
+ * You can use this tool for finding the right selectors: https://github.com/andresdominguez/elementor
+ * After install run: `elementor http://192.168.56.151` to start the tool
+ */
+
+/**
  * Protractor tests configuration
  * ==============================
  *
@@ -57,14 +76,12 @@ let settings = {
     // "tools/take_screenshots.js",
     "specs/auth.spec.js",
     "specs/composer_survey.spec.js",
-    // "specs/explore.spec.js",
-    // "specs/home.spec.js",
-    // "specs/icon_upload.spec.js",
-    // "specs/image.spec.js",
-    // "specs/journal.spec.js",
-    // "specs/search.spec.js",
-    // "specs/survey.spec.js",
-    // "specs/icons.spec.js"
+    "specs/explore.spec.js",
+    "specs/home.spec.js",
+    "specs/icon_upload.spec.js",
+    "specs/image.spec.js",
+    "specs/journal.spec.js",
+    "specs/search.spec.js",
   ],
   multiCapabilities,
   jasmineNodeOpts: {

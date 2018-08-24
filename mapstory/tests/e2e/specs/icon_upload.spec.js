@@ -3,7 +3,7 @@ const wizard = require("../pages/icon_upload.po");
 
 // var screenHelper = require('./screenHelper');
 
-xdescribe("Icon Upload Wizard", () => {
+describe("Icon Upload Wizard", () => {
   beforeEach( () => {
   });
 
@@ -21,7 +21,7 @@ xdescribe("Icon Upload Wizard", () => {
     homePage.menuCreate.click();
     expect(homePage.uploadIconsLink.waitReady()).toBeTruthy();
     homePage.uploadIconsLink.click();
-  });
+  }).pend("Fix");
 
   it("> should upload svg icons", () => {
     expect(homePage.isLoggedIn()).toBeTruthy();
@@ -57,7 +57,7 @@ xdescribe("Icon Upload Wizard", () => {
     successAlert.getText( (text) => {
       expect(text).toEqual(wizard.getSuccessText());
     });
-  });
+  }).pend("Fix");
 
   it("> should reject non svg files", () => {
     expect(homePage.isLoggedIn()).toBeTruthy();
@@ -91,5 +91,5 @@ xdescribe("Icon Upload Wizard", () => {
     successAlert.isPresent( (visible) => {
       expect(visible).toBe(false);
     });
-  });
+  }).pend("Fix");
 });
