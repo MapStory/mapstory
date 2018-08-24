@@ -81,7 +81,6 @@ http {
 
     # wsgi proxy
     location / {
-      client_max_body_size {{ env "NGINX_CLIENT_MAX_BODY_SIZE" }};
       proxy_pass_header Server;
       proxy_set_header Host $http_host;
       proxy_redirect off;
@@ -94,6 +93,7 @@ http {
       gzip on;
       #gzip_types text/html text/xml application/json;
       gzip_types *;
+      client_max_body_size {{ or (env "NGINX_CLIENT_MAX_BODY_SIZE") "500m" }};
     }
   }
 }
