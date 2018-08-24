@@ -33,8 +33,7 @@ const PixDiff = require("pix-diff");
 let seleniumURL = "http://#";
 
 if (process.env.DOCKER) {
-  // seleniumURL = "http://selenium:4444/wd/hub";
-  seleniumURL = "http://ondemand.saucelabs.com:80";
+  seleniumURL = "http://selenium:4444/wd/hub";
 } else {
   seleniumURL = "http://localhost:4444/wd/hub";
 }
@@ -162,7 +161,8 @@ if (process.env.DOCKER) {
 if (process.env.TRAVIS) {
   // Use sauce labs for cloud browser testing
   // TODO: Use https!!!
-  seleniumURL = `http://${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}@ondemand.saucelabs.com/wd/hub`;
+  // seleniumURL = `http://${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}@ondemand.saucelabs.com/wd/hub`;
+  seleniumURL = "http://ondemand.saucelabs.com:80"
   multiCapabilities = [{
     "browserName": "firefox",
     "tunnel-identifier": process.env.TRAVIS_JOB_NUMBER,
