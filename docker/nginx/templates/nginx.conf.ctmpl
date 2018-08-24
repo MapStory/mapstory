@@ -5,7 +5,9 @@ error_log  /var/log/nginx/error.log warn;
 pid        /var/run/nginx.pid;
 
 events {
-  worker_connections  1024;
+  worker_connections 1024;
+  use epoll;
+  multi_accept on;
 }
 
 {{ if or (env "NGINX_FILE_CACHE_ENABLED") "False" | parseBool }}
@@ -25,9 +27,11 @@ http {
 
   access_log  /var/log/nginx/access.log  main;
 
-  sendfile        on;
-  #tcp_nopush     on;
 
+  sendfile on;
+  sendfile_max_chunk 10m;
+  tcp_nopush on;
+  tcp_nodelay on;
   keepalive_timeout 65;
 
   gzip on;
