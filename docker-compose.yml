@@ -72,6 +72,10 @@ services:
     image: quay.io/mapstory/geoserver:2.12.4-1.2
     volumes:
       - geoserver:/var/lib/geoserver
+    environment:
+      - GEOSERVER_CONTACT_ORG=MapStory
+      - GEOSERVER_CONTACT_PERSON=MapStory
+      - GEOSERVER_CONTACT_EMAIL=info@mapstory.org
     networks:
       internal:
     expose:
