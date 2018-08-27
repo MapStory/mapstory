@@ -1,4 +1,4 @@
-FROM rabbitmq:3.6-management-alpine
+FROM rabbitmq:3.7-management-alpine
 LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 
 # The run script loads env vars from Docker secrets
