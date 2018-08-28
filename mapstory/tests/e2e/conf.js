@@ -162,7 +162,8 @@ if (process.env.TRAVIS) {
   // Use sauce labs for cloud browser testing
   // TODO: Use https!!!
   // seleniumURL = `http://${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}@ondemand.saucelabs.com/wd/hub`;
-  seleniumURL = "http://ondemand.saucelabs.com:80"
+  seleniumURL = `http://${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}@ondemand.saucelabs.com/wd/hub`;
+  // seleniumURL = "http://ondemand.saucelabs.com:80"
   multiCapabilities = [{
     "browserName": "firefox",
     "tunnel-identifier": process.env.TRAVIS_JOB_NUMBER,
