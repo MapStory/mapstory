@@ -223,7 +223,7 @@ if (process.env.TRAVIS) {
       defaultTimeoutInterval: timeout * 2,
       realtimeFailure: true,
       isVerbose : false,
-      includeStackTrace : true,
+      includeStackTrace : false,
     },
     getPageTimeout: timeout,
     allScriptsTimeout: timeout,
