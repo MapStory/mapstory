@@ -46,23 +46,23 @@ for i do # loop over $@
         su-exec pgadmin /usr/local/bin/docker-entrypoint.sh pgadmin4
     fi
 
-#    # Dump databases
-#    if [ "$i" = "--dump" ]; then
-#        for f in $SCRIPTS/*.sql
-#        do
-#            dbname=`basename ${f%.*}`
-#            pg_dump --host=$DATABASE_HOST --port=$DATABASE_PORT --username=$DATABASE_USER --dbname=$dbname --schema=public --blobs --format=directory --compress=9 --file=/backups/$dbname --jobs=4
-#        done
-#    fi
-#
-#    # Restore databases
-#    if [ "$i" = "--restore" ]; then
-#        for f in $SCRIPTS/*.sql
-#        do
-#            dbname=`basename ${f%.*}`
-#            pg_restore --host=$DATABASE_HOST --port=$DATABASE_PORT --username=$DATABASE_USER --dbname=$dbname --schema=public --format=directory --file=/backups/$dbname --jobs=4
-#        done
-#    fi
+    # Dump databases
+    if [ "$i" = "--dump" ]; then
+        for f in $SCRIPTS/*.sql
+        do
+            dbname=`basename ${f%.*}`
+            pg_dump --host=$DATABASE_HOST --port=$DATABASE_PORT --username=$DATABASE_USER --dbname=$dbname --schema=public --blobs --format=directory --compress=9 --file=/backups/$dbname --jobs=4
+        done
+    fi
+
+    # Restore databases
+    if [ "$i" = "--restore" ]; then
+        for f in $SCRIPTS/*.sql
+        do
+            dbname=`basename ${f%.*}`
+            pg_restore --host=$DATABASE_HOST --port=$DATABASE_PORT --username=$DATABASE_USER --dbname=$dbname --schema=public --format=directory --file=/backups/$dbname --jobs=4
+        done
+    fi
 
     # Serve the pgadmin application
     if [ "$i" = "--shell" ]; then
