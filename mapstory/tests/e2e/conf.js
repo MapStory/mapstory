@@ -209,7 +209,7 @@ if (process.env.TRAVIS) {
     specs: [
       // "tools/take_screenshots.js",
       "specs/auth.spec.js",
-      // "specs/composer_survey.spec.js",
+      "specs/composer_survey.spec.js",
       // "specs/explore.spec.js",
       // "specs/home.spec.js",
       // "specs/icon_upload.spec.js",
