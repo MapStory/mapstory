@@ -17,10 +17,8 @@ describe("User auth", () => {
   /**
    * Login Button
    */
-  it("Should display a Login Form", (done) => {
-
+  it("Should display a Login Form", () => {
     auth.loginIcon.isDisplayed().then((displayed) => {
-
       if (displayed === false) {
         auth.logout();
       }
@@ -29,9 +27,6 @@ describe("User auth", () => {
 
       auth.loginIcon.click();
       expect(auth.loginForm.waitReady()).toBeTruthy();
-
-      // Jasmine has problems with async. Need to manually specify were done here.
-      done();
     });
   });
 
