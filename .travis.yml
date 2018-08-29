@@ -78,6 +78,7 @@ script:
   - $DCO up django_volumes
   - echo "Sauce is available"; pushd mapstory/tests; SOURCE_HOME=/home/travis/build/MapStory/mapstory/tests
   - ./runAllTests.sh
+  - popd
   - $DCO kill django
   - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
   - echo "tests are done"
