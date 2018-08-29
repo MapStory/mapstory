@@ -62,6 +62,11 @@ let multiCapabilities = [{
   }
 }];
 
+// Defines a before exit callback
+process.on("exit", (code) => {
+  console.log(`About to exit with code: ${code}`);
+});
+
 
 //----------------------
 // Default settings
@@ -86,7 +91,10 @@ let settings = {
   multiCapabilities,
   jasmineNodeOpts: {
     showColors: true,
-    defaultTimeoutInterval: timeout * 2
+    defaultTimeoutInterval: timeout * 2,
+    realtimeFailure: true,
+    isVerbose : false,
+    includeStackTrace : true,
   },
   getPageTimeout: timeout,
   allScriptsTimeout: timeout,
@@ -106,6 +114,10 @@ let settings = {
       this.markedPending = true;
       this.children.forEach(spec => spec.pend(message));
     };
+  },
+
+  onComplete: (exitCode) => {
+    console.log(`COMPLETED WITH CODE: ${exitCode}`)
   }
 };
 
@@ -190,27 +202,53 @@ if (process.env.TRAVIS) {
       }
     }
   }];
+
   settings = {
     framework: "jasmine",
     seleniumAddress: seleniumURL,
-    specs: ["specs/*.spec.js"],
+    specs: [
+      // "tools/take_screenshots.js",
+      "specs/auth.spec.js",
+      "specs/composer_survey.spec.js",
+      "specs/explore.spec.js",
+      "specs/home.spec.js",
+      "specs/icon_upload.spec.js",
+      "specs/image.spec.js",
+      "specs/journal.spec.js",
+      "specs/search.spec.js",
+    ],
     multiCapabilities,
     jasmineNodeOpts: {
       showColors: true,
-      defaultTimeoutInterval: timeout * 4
+      defaultTimeoutInterval: timeout * 2,
+      realtimeFailure: true,
+      isVerbose : false,
+      includeStackTrace : true,
     },
     getPageTimeout: timeout,
     allScriptsTimeout: timeout,
+    // Results output file
     resultJsonOutputFile: "./result.json",
     sauceUser: process.env.SAUCE_USERNAME,
     sauceKey: process.env.SAUCE_ACCESS_KEY,
     onPrepare: () => {
+      // Setup pix-diff directories and resolution
       browser.pixDiff = new PixDiff({
         basePath: "e2e/images/",
         diffPath: "e2e/images/",
         width: browserWidth,
         height: browserHeight
       });
+
+      // Workaround for pending:
+      jasmine.Suite.prototype.pend = (message) => {
+        this.markedPending = true;
+        this.children.forEach(spec => spec.pend(message));
+      };
+    },
+
+    onComplete: (exitCode) => {
+      console.log(`COMPLETED WITH CODE: ${exitCode}`)
     }
   };
 }
