@@ -9,7 +9,7 @@
     window.mapstory.composer = {}
     window.mapstory.composerMode = "False";
     window.mapstory.layerViewerMode = true;
-    window.mapstory.layername = "{{ resource }}";
+    window.mapstory.layername = "{{ resource.name }}";
     window.mapstory.composer.config = {
       authStatus: {% if user.is_authenticated %} 200{% else %} 401{% endif %},
       username: {% if user.is_authenticated %} "{{ user.username }}" {% else %} undefined {% endif %},
