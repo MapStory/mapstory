@@ -76,12 +76,12 @@ script:
     # Wait for django container to come up
   - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
   - $DCO up django_volumes
+#  - $DCO kill django
+  - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
+  - echo "tests are done"
   - echo "Sauce is available"; pushd mapstory/tests; SOURCE_HOME=/home/travis/build/MapStory/mapstory/tests
   - ./runAllTests.sh
   - popd
-  - $DCO kill django
-  - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
-  - echo "tests are done"
 
 ### Currently quay.io is pulling the repos automatically
 # after_success:
