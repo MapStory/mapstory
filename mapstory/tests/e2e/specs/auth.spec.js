@@ -7,7 +7,7 @@ require("../tools/waitReady.js");
 const constants = require("../tools/constants");
 const auth = require("../pages/auth.po");
 
-describe('User auth', () => {
+describe("User auth", () => {
   beforeEach(() => {
     // Fetch Home
     browser.get(constants.baseURL);
@@ -17,7 +17,7 @@ describe('User auth', () => {
   /**
    * Login Button
    */
-  xit('Should display a Login Form', () => {
+  it("Should display a Login Form", () => {
     auth.loginIcon.isDisplayed().then((displayed) => {
       if (displayed === false) {
         auth.logout();
@@ -32,22 +32,22 @@ describe('User auth', () => {
   /**
    * The Auth Form
    */
-  it('should have "Log In" and "Sign up" tabs', () => {
+  it("should have \"Log\" In and \"Sign up\" tabs", () => {
     expect(auth.loginIcon.isDisplayed()).toBeTruthy();
     expect(auth.loginIcon.waitReady()).toBeTruthy();
 
     // Click login
     auth.loginIcon.click();
     expect(auth.loginModal.waitReady()).toBe(true);
-    expect(element(by.linkText('Log In')).isPresent()).toBe(true);
-    expect(element(by.linkText('Sign Up')).isPresent()).toBe(true);
+    expect(element(by.linkText("Log In")).isPresent()).toBe(true);
+    expect(element(by.linkText("Sign Up")).isPresent()).toBe(true);
   });
 
   /**
    * The Log in Form
    */
 
-  it('should be shown by default', () => {
+  it("should be shown by default", () => {
     expect(auth.loginIcon.isDisplayed()).toBeTruthy();
 
     // Click Login
@@ -58,7 +58,7 @@ describe('User auth', () => {
     expect(usernameLabel.waitReady()).toBeTruthy();
   });
 
-  it('> should have a close button', () => {
+  it("> should have a close button", () => {
 
     expect(auth.loginIcon.waitReady()).toBeTruthy();
 
@@ -71,7 +71,7 @@ describe('User auth', () => {
     auth.login_close_button.click();
   });
 
-  it('> should require a username and password for login', () => {
+  it("> should require a username and password for login", () => {
 
     expect(auth.loginIcon.waitReady()).toBeTruthy();
 
@@ -80,7 +80,7 @@ describe('User auth', () => {
     expect(auth.loginForm.waitReady()).toBeTruthy();
 
     // Click submit
-    const submit = element(by.css('.login-auth-btn.btn.btn-md.btn-block'));
+    const submit = element(by.css(".login-auth-btn.btn.btn-md.btn-block"));
     submit.click();
 
     // TODO: Fix catching error message
@@ -95,7 +95,7 @@ describe('User auth', () => {
    */
 
 
-  xit('> should register a new user', () => {
+  xit("> should register a new user", () => {
     expect(auth.loginIcon.isDisplayed()).toBeTruthy();
     // Click login
     auth.loginIcon.click();
