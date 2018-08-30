@@ -176,32 +176,32 @@ if (process.env.TRAVIS) {
   // seleniumURL = `http://${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}@ondemand.saucelabs.com/wd/hub`;
   seleniumURL = `http://${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}@ondemand.saucelabs.com/wd/hub`;
   // seleniumURL = "http://ondemand.saucelabs.com:80"
-  // multiCapabilities = [{
-  //   "browserName": "firefox",
-  //   "tunnel-identifier": process.env.TRAVIS_JOB_NUMBER,
-  //   "name": "Mapstory Firefox Tests",
-  //   "build": process.env.TRAVIS_BUILD_NUMBER,
-  //   "tags": [process.env.TRAVIS_PYTHON_VERSION, "CI"]
-  // }, {
-  //   "browserName": "chrome",
-  //   "tunnel-identifier": process.env.TRAVIS_JOB_NUMBER,
-  //   "build": process.env.TRAVIS_BUILD_NUMBER,
-  //   "tags": [process.env.TRAVIS_PYTHON_VERSION, "CI"],
-  //   "name": "Mapstory Chrome Tests",
-  //   "chromeOptions": {
-  //     args: [
-  //       "--no-sandbox",
-  //       "--test-type=browser",
-  //       `--window-size=${browserWidth},${browserHeight}`
-  //     ],
-  //     prefs: {
-  //       "download": {
-  //         "prompt_for_download": false,
-  //         "default_directory": "../downloads/"
-  //       }
-  //     }
-  //   }
-  // }];
+  multiCapabilities = [{
+    // "browserName": "firefox",
+    // "tunnel-identifier": process.env.TRAVIS_JOB_NUMBER,
+    // "name": "Mapstory Firefox Tests",
+    // "build": process.env.TRAVIS_BUILD_NUMBER,
+    // "tags": [process.env.TRAVIS_PYTHON_VERSION, "CI"]
+    // }, {
+    "browserName": "chrome",
+    "tunnel-identifier": process.env.TRAVIS_JOB_NUMBER,
+    "build": process.env.TRAVIS_BUILD_NUMBER,
+    "tags": [process.env.TRAVIS_PYTHON_VERSION, "CI"],
+    "name": "Mapstory Chrome Tests",
+    "chromeOptions": {
+      args: [
+        "--no-sandbox",
+        "--test-type=browser",
+        `--window-size=${browserWidth},${browserHeight}`
+      ],
+      prefs: {
+        "download": {
+          "prompt_for_download": false,
+          "default_directory": "../downloads/"
+        }
+      }
+    }
+  }];
 
   settings = {
     framework: "jasmine",
