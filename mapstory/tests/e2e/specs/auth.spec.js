@@ -17,7 +17,7 @@ describe('User auth', () => {
   /**
    * Login Button
    */
-  it('Should display a Login Form', () => {
+  xit('Should display a Login Form', () => {
     auth.loginIcon.isDisplayed().then((displayed) => {
       if (displayed === false) {
         auth.logout();
