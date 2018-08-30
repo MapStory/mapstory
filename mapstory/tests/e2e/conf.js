@@ -177,30 +177,32 @@ if (process.env.TRAVIS) {
   seleniumURL = `http://${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}@ondemand.saucelabs.com/wd/hub`;
   // seleniumURL = "http://ondemand.saucelabs.com:80"
   multiCapabilities = [{
-    "browserName": "firefox",
-    "tunnel-identifier": process.env.TRAVIS_JOB_NUMBER,
-    "name": "Mapstory Firefox Tests",
-    "build": process.env.TRAVIS_BUILD_NUMBER,
-    "tags": [process.env.TRAVIS_PYTHON_VERSION, "CI"]
-  }, {
+  //   "browserName": "firefox",
+  //   "tunnel-identifier": process.env.TRAVIS_JOB_NUMBER,
+  //   "name": "Mapstory Firefox Tests",
+  //   "build": process.env.TRAVIS_BUILD_NUMBER,
+  //   "tags": [process.env.TRAVIS_PYTHON_VERSION, "CI"]
+  // }, {
     "browserName": "chrome",
     "tunnel-identifier": process.env.TRAVIS_JOB_NUMBER,
     "build": process.env.TRAVIS_BUILD_NUMBER,
     "tags": [process.env.TRAVIS_PYTHON_VERSION, "CI"],
+    "username": process.env.SAUCE_USERNAME,
+    "accessKey": process.env.SAUCE_ACCESS_KEY,
     "name": "Mapstory Chrome Tests",
-    "chromeOptions": {
-      args: [
-        "--no-sandbox",
-        "--test-type=browser",
-        `--window-size=${browserWidth},${browserHeight}`
-      ],
-      prefs: {
-        "download": {
-          "prompt_for_download": false,
-          "default_directory": "../downloads/"
-        }
-      }
-    }
+    // "chromeOptions": {
+    //   args: [
+    //     "--no-sandbox",
+    //     "--test-type=browser",
+    //     `--window-size=${browserWidth},${browserHeight}`
+    //   ],
+    //   prefs: {
+    //     "download": {
+    //       "prompt_for_download": false,
+    //       "default_directory": "../downloads/"
+    //     }
+    //   }
+    // }
   }];
 
   settings = {
@@ -209,21 +211,21 @@ if (process.env.TRAVIS) {
     specs: [
       // "tools/take_screenshots.js",
       "specs/auth.spec.js",
-      "specs/composer_survey.spec.js",
-      "specs/explore.spec.js",
-      "specs/home.spec.js",
-      "specs/icon_upload.spec.js",
-      "specs/image.spec.js",
-      "specs/journal.spec.js",
-      "specs/search.spec.js",
+      // "specs/composer_survey.spec.js",
+      // "specs/explore.spec.js",
+      // "specs/home.spec.js",
+      // "specs/icon_upload.spec.js",
+      // "specs/image.spec.js",
+      // "specs/journal.spec.js",
+      // "specs/search.spec.js",
     ],
     multiCapabilities,
     jasmineNodeOpts: {
       showColors: true,
       defaultTimeoutInterval: timeout * 2,
-      realtimeFailure: true,
-      isVerbose : false,
-      includeStackTrace : false,
+      // realtimeFailure: true,
+      isVerbose : true,
+      includeStackTrace : true,
     },
     getPageTimeout: timeout,
     allScriptsTimeout: timeout,
@@ -233,12 +235,12 @@ if (process.env.TRAVIS) {
     sauceKey: process.env.SAUCE_ACCESS_KEY,
     onPrepare: () => {
       // Setup pix-diff directories and resolution
-      browser.pixDiff = new PixDiff({
-        basePath: "e2e/images/",
-        diffPath: "e2e/images/",
-        width: browserWidth,
-        height: browserHeight
-      });
+      // browser.pixDiff = new PixDiff({
+      //   basePath: "e2e/images/",
+      //   diffPath: "e2e/images/",
+      //   width: browserWidth,
+      //   height: browserHeight
+      // });
 
       // Workaround for pending:
       jasmine.Suite.prototype.pend = (message) => {
