@@ -233,21 +233,21 @@ if (process.env.TRAVIS) {
     resultJsonOutputFile: "./result.json",
     sauceUser: process.env.SAUCE_USERNAME,
     sauceKey: process.env.SAUCE_ACCESS_KEY,
-    onPrepare: () => {
-      // Setup pix-diff directories and resolution
-      // browser.pixDiff = new PixDiff({
-      //   basePath: "e2e/images/",
-      //   diffPath: "e2e/images/",
-      //   width: browserWidth,
-      //   height: browserHeight
-      // });
-
-      // Workaround for pending:
-      jasmine.Suite.prototype.pend = (message) => {
-        this.markedPending = true;
-        this.children.forEach(spec => spec.pend(message));
-      };
-    },
+    // onPrepare: () => {
+    //   // Setup pix-diff directories and resolution
+    //   // browser.pixDiff = new PixDiff({
+    //   //   basePath: "e2e/images/",
+    //   //   diffPath: "e2e/images/",
+    //   //   width: browserWidth,
+    //   //   height: browserHeight
+    //   // });
+    //
+    //   // Workaround for pending:
+    //   jasmine.Suite.prototype.pend = (message) => {
+    //     this.markedPending = true;
+    //     this.children.forEach(spec => spec.pend(message));
+    //   };
+    // },
   };
 }
 

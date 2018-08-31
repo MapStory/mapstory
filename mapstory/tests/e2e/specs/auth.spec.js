@@ -32,7 +32,7 @@ describe("User auth", () => {
   /**
    * The Auth Form
    */
-  it("should have \"Log\" In and \"Sign up\" tabs", () => {
+  xit("should have \"Log\" In and \"Sign up\" tabs", () => {
     expect(auth.loginIcon.isDisplayed()).toBeTruthy();
     expect(auth.loginIcon.waitReady()).toBeTruthy();
 
@@ -47,7 +47,7 @@ describe("User auth", () => {
    * The Log in Form
    */
 
-  it("should be shown by default", () => {
+  xit("should be shown by default", () => {
     expect(auth.loginIcon.isDisplayed()).toBeTruthy();
 
     // Click Login
@@ -58,7 +58,7 @@ describe("User auth", () => {
     expect(usernameLabel.waitReady()).toBeTruthy();
   });
 
-  it("> should have a close button", () => {
+  xit("> should have a close button", () => {
 
     expect(auth.loginIcon.waitReady()).toBeTruthy();
 
