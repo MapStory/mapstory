@@ -80,6 +80,12 @@ volumes:
   mapstory_media:
     driver: rexray
   site-packages:
+  backups:
+    driver: local
+    driver_opts:
+      type: none
+      device: /backups
+      o: bind
 
 secrets:
   ssl_cert:
