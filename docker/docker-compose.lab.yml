@@ -2,7 +2,7 @@
 version: '3.1'
 services:
   postgres:
-    image: mdillon/postgis:9.6
+    image: quay.io/mapstory/postgis:10.4-2.4.4-alpine
     env_file:
       - docker/env/lab/db_auth.env
       - docker/env/lab/postgres.env
