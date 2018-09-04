@@ -1,0 +1,2 @@
+# daily
+0 0 * * * /home/admin/backup.sh

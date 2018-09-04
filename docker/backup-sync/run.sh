@@ -1,5 +1,5 @@
 #!/bin/sh
-set -ex
+set -e
 
 BAK_DIR=/backups
 TODAY=$(date -u +'%F')
