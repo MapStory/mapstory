@@ -1,2 +1,2 @@
 # daily
-0 0 * * * /home/admin/backup.sh
+0 0 * * * /home/admin/backup.sh >> /var/log/mapstory/daily.log
