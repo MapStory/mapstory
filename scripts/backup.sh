@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -ex
+
 # Backup Postgres DBs
 dco run --rm pgadmin --dump
 
