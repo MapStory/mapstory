@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 BAK_DIR=/backups
 
 ### Restore volumes
