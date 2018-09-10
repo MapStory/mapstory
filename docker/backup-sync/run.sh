@@ -32,5 +32,3 @@ then
     echo "Pushing monthly to S3"
     aws s3 cp --no-progress --recursive $BAK_DIR s3://mapstory-prod-backup/monthly/$TODAY
 fi
-
-rm -r $BAK_DIR/*
