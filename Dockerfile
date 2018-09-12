@@ -7,6 +7,7 @@ ENV APP_PATH /srv/mapstory
 ENV TMP /tmp
 ENV DJANGO_PORT 8000
 ENV PYTHONUNBUFFERED 0
+ENV MISSING_THUMBNAIL /static/mapstory/img/missing_thumb.png
 
 WORKDIR $TMP
 
