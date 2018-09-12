@@ -268,7 +268,7 @@ class StoryFrame(models.Model):
         return self._timefmt(self.end_time) if self.end_time else ''
 
     class Meta:
-        verbose_name_plural = "StoryFrame"
+        verbose_name_plural = "StoryFrames"
 
 
 class StoryPinManager(models.Manager):
@@ -315,6 +315,9 @@ class StoryPin(models.Model):
     @property
     def end_time_str(self):
         return self._timefmt(self.end_time) if self.end_time else ''
+
+    class Meta:
+        verbose_name_plural = "StoryPins"
 
 
 signals.post_init.connect(default_is_published, sender=MapStory)
