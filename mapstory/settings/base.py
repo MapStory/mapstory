@@ -114,7 +114,6 @@ INSTALLED_APPS += (
     'coverage',
     'django_classification_banner',
     'mapstory.apps.thumbnails',
-    'mapstory.storypins',
     'mapstory.apps.journal',
     'mapstory.apps.favorite',
     'mapstory.apps.teams',
@@ -131,7 +130,6 @@ if is_valid(os.getenv("ALLAUTH_GEOAXIS_HOST")):
 
 MAPSTORY_APPS = (
 
-    'mapstory.apps.storyframes',
     'mapstory.apps.flag', # - temporarily using this instead of the flag app for django because they need to use AUTH_USER_MODEL
 
 )
