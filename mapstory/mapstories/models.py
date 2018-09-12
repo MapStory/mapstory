@@ -1,12 +1,15 @@
 import geonode
 import json
 import uuid
+from datetime import datetime
 
 from django import core, db
+from django.db import models
 from django.db.models import signals
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
-# Redefining Map Model and adding additional fields
+
+from mapstory.mapstories.utils import parse_date_time
 
 
 class MapStory(geonode.base.models.ResourceBase):
@@ -166,6 +169,7 @@ class MapStory(geonode.base.models.ResourceBase):
         db_table = 'maps_mapstory'
 
 
+# Redefining Map Model and adding additional fields
 class Map(geonode.maps.models.Map):
     story = db.models.ForeignKey(MapStory, related_name='chapter_list', blank=True, null=True)
 
@@ -206,6 +210,60 @@ def default_is_published(sender, **kwargs):
     instance = kwargs['instance']
     if instance.id is None:  # only reset default when object is first created
         instance.is_published = False
+
+
+class StoryPinManager(models.Manager):
+
+    def copy_map_storypins(self, source_id, target):
+        source = Map.objects.get(id=source_id)
+        copies = []
+        for ann in source.storypin_set.all():
+            ann.map = target
+            ann.pk = None
+            copies.append(ann)
+        StoryPin.objects.bulk_create(copies)
+
+
+class StoryPin(models.Model):
+    objects = StoryPinManager()
+
+    map = models.ForeignKey(Map)
+    title = models.TextField()
+    content = models.TextField(blank=True, null=True)
+    media = models.TextField(blank=True, null=True)
+    the_geom = models.TextField(blank=True, null=True)
+    start_time = models.BigIntegerField(blank=True, null=True)
+    end_time = models.BigIntegerField(blank=True, null=True)
+    in_timeline = models.BooleanField(default=False)
+    in_map = models.BooleanField(default=False)
+    appearance = models.TextField(blank=True, null=True)
+    auto_show = models.BooleanField(default=False)
+    pause_playback = models.BooleanField(default=False)
+
+    def _timefmt(self, val):
+        return datetime.isoformat(datetime.utcfromtimestamp(val))
+
+    def set_start(self, val):
+        self.start_time = parse_date_time(val)
+
+    def set_end(self, val):
+        self.end_time = parse_date_time(val)
+
+    @property
+    def start_time_str(self):
+        return self._timefmt(self.start_time) if self.start_time else ''
+
+    @property
+    def end_time_str(self):
+        return self._timefmt(self.end_time) if self.end_time else ''
+
+
+def map_copied(sender, source_id, **kw):
+    try:
+        StoryPin.objects.copy_map_storypins(source_id, sender)
+    except:
+        import traceback
+        traceback.print_exc()
 
 signals.post_init.connect(default_is_published, sender=MapStory)
 signals.post_init.connect(default_is_published, sender=Map)
