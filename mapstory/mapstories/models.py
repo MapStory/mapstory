@@ -3,6 +3,7 @@ import json
 import uuid
 from datetime import datetime
 
+from django.conf import settings
 from django import core, db
 from django.db import models
 from django.db.models import signals
@@ -127,7 +128,7 @@ class MapStory(geonode.base.models.ResourceBase):
             'id': self.id,
             'about': about,
             'chapters': [chapter.viewer_json(user) for chapter in self.chapters],
-            'thumbnail_url': '/static/geonode/img/missing_thumb.png'
+            'thumbnail_url': settings.MISSING_THUMBNAIL
         }
 
         return config
