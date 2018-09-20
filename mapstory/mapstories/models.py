@@ -98,7 +98,12 @@ class MapStory(geonode.base.models.ResourceBase):
             self.slug = slugify(self.title)
 
         if conf['about']['category'] is not None:
-            self.category = geonode.base.models.TopicCategory(conf['about']['category'])
+            if type(conf['about']['category']) is dict:
+                categoryID = conf['about']['category']['id']
+            else:
+                categoryID = conf['about']['category']
+
+            self.category = geonode.base.models.TopicCategory(categoryID)
 
         if self.uuid is None or self.uuid == '':
             self.uuid = str(uuid.uuid1())
