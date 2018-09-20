@@ -168,12 +168,13 @@
                             <label class="btn bt-large btn-brand" for="my-file-selector">
                                 <input id="my-file-selector" type="file" style="display:none;" nv-file-select uploader="uploader"
                                        onchange="$('#upload-file-info').html($(this).val().substring(12));">
-                                <span ng-show="uploadInProgress">{{ uploadProgressText }}</span>
-                                <span ng-show="!uploadInProgress">Select File...</span>
+                                <span ng-show="uploader.progress > 0 && !uploadSuccessful">Upload in Progress...</span>
+                                <span ng-show="!uploader.progress && !uploadInProgress">Select File...</span>
                             </label>
                         </div>
 
-                        <div>
+                        <div style="margin: 20px 0 10px 0;">
+                            <div ng-show="uploader.progress > 0 && !uploadSuccessful"><i class='fa fa-spinner fa-spin fa-3x'></i></div>
                             <div ng-repeat="fields in errors" class="clrs-red">
                                 <div ng-repeat="error in fields" class="clrs-red">
                                     <i class="fa fa-warning" ng-show="error"></i> {{ error }}

@@ -2,6 +2,7 @@ import geonode
 import json
 import uuid
 
+from django.conf import settings
 from django import core, db
 from django.db.models import signals
 from django.template.defaultfilters import slugify
@@ -124,7 +125,7 @@ class MapStory(geonode.base.models.ResourceBase):
             'id': self.id,
             'about': about,
             'chapters': [chapter.viewer_json(user) for chapter in self.chapters],
-            'thumbnail_url': '/static/geonode/img/missing_thumb.png'
+            'thumbnail_url': settings.MISSING_THUMBNAIL
         }
 
         return config
