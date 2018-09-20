@@ -189,7 +189,7 @@ class Map(geonode.maps.models.Map):
         self.viewer_playbackmode = conf['viewerPlaybackMode'] or 'Instant'
 
         self.chapter_index = conf.get('id') or conf.get('chapter_index')
-        story_id = conf.get('storyId', 0)
+        story_id = conf.get('storyID', 0)
         story_obj = MapStory.objects.get(id=story_id)
         self.layers_config = json.dumps(conf["layers"])
         self.story = story_obj

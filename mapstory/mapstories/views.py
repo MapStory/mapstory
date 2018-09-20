@@ -12,22 +12,28 @@ def save_mapstory(request):
     config = json.loads(request.body)
     print config
 
-    owner = Profile.objects.get(username=request.user)
-
     if config['storyId']:
-        mapstory = MapStory(pk=config['storyId'], owner=owner)
+        mapstory = MapStory.objects.get(pk=config['storyId'])
     else:
-        mapstory = MapStory(owner=owner)
+        mapstory = MapStory(owner=request.user)
 
     mapstory.save()
-    
+    config['storyId'] = mapstory.id
     mapstory.update_from_viewer(conf=config)
 
-    # for index, chapter in enumerate(config['chapters']):
-    #     map = Map.objects.get(pk=config['chapters'][index]['mapId'])
-    #     map.update_from_viewer(chapter)
+    for index, chapter in enumerate(config['chapters']):
 
-    config['storyId'] = mapstory.id
+        config['chapters'][index]["storyID"] = mapstory.id
+
+        if config['chapters'][index]['mapId']:
+            currentChapter = Map.objects.get(pk=config['chapters'][index]['mapId'])
+        else:
+            currentChapter = Map(owner=request.user, zoom=0, center_x=0, center_y=0)
+
+        currentChapter.save()
+        currentChapter.update_from_viewer(conf=chapter)
+        config['chapters'][index]['mapId'] = currentChapter.id
+
 
     return HttpResponse(json.dumps(config))
 
