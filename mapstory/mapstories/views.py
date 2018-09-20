@@ -12,13 +12,13 @@ def save_mapstory(request):
     config = json.loads(request.body)
     print config
 
-    if config['storyId']:
-        mapstory = MapStory.objects.get(pk=config['storyId'])
+    if config['storyID']:
+        mapstory = MapStory.objects.get(pk=config['storyID'])
     else:
         mapstory = MapStory(owner=request.user)
 
     mapstory.save()
-    config['storyId'] = mapstory.id
+    config['storyID'] = mapstory.id
     mapstory.update_from_viewer(conf=config)
 
     for index, chapter in enumerate(config['chapters']):
