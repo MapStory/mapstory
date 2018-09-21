@@ -5,6 +5,7 @@ from django.http import HttpResponse
 
 from .models import Map
 from .models import MapStory
+from .models import StoryFrame
 from .models import StoryPin
 from geonode.people.models import Profile
 
@@ -37,13 +38,26 @@ def save_mapstory(request):
         currentChapter.update_from_viewer(conf=chapter)
         config['chapters'][index]['mapId'] = currentChapter.id
 
+        if chapter['frames']:
+            if chapter['frames']['features']:
+                for index, frame in enumerate(chapter['frames']['features']):
+                    if frame['id']:
+                        currentFrame = StoryFrame.objects.get(pk=frame['id'])
+                    else:
+                        currentFrame = StoryFrame()
+
+                    currentFrame.map_id = chapter['mapId']
+
+                    currentFrame.title = frame['properties']['title']
+
+                    currentFrame.save()
+                    frame['id'] = currentFrame.id
+
         if chapter['pins']['features']:
             for index, pin in enumerate(chapter['pins']['features']):
-                print(pin)
                 if pin['id']:
                     currentPin = StoryPin.objects.get(pk=pin['id'])
                 else:
-                    print("PIN ID IS NULL")
                     currentPin = StoryPin()
 
                 currentPin.map_id = chapter['mapId']
