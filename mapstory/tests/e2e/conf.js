@@ -80,11 +80,11 @@ let settings = {
   specs: [
     // "tools/take_screenshots.js",
     "specs/auth.spec.js",
-    "specs/composer_survey.spec.js",
+    // "specs/composer_survey.spec.js",
     "specs/explore.spec.js",
     "specs/home.spec.js",
     "specs/icon_upload.spec.js",
-    "specs/image.spec.js",
+    // "specs/image.spec.js",
     "specs/journal.spec.js",
     "specs/search.spec.js",
   ],
@@ -101,6 +101,7 @@ let settings = {
   // Results output file
   resultJsonOutputFile: "./result.json",
   onPrepare: () => {
+    browser.manage().window().setSize(browserWidth, browserHeight);
     // Setup pix-diff directories and resolution
     browser.pixDiff = new PixDiff({
       basePath: "e2e/images/",

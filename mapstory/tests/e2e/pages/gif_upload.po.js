@@ -6,27 +6,25 @@
  * Composer Page Object
  * ====================
  */
-"use strict";
-
 require("../tools/waitReady.js");
-let make_id = require("../tools/make_id.js");
-let wait_times = require("../tools/wait_times.js");
-let constants = require("../tools/constants");
+const makeID = require("../tools/make_id.js");
+const waitTimes = require("../tools/wait_times.js");
+const constants = require("../tools/constants");
 
 /**
  * Composer Page Object
  */
-let GIF_uploader = function () {
+function GIFUploader() {
   /**
    * Gets uploader dialog
    */
-  this.get = function () {
-    let composerURL = constants.baseURL + "/story/new?tour";
+  this.get = () => {
+    const composerURL = `${constants.baseURL}/story/new?tour`;
 
     // Angular sync fails on Composer. So we need to turn it off
     browser.ignoreSynchronization = true;
     browser.get(composerURL);
-    browser.sleep(wait_times.composer_tour_modal);
+    browser.sleep(waitTimes.composer_tour_modal);
   };
 
   /**
@@ -34,10 +32,7 @@ let GIF_uploader = function () {
    * @param  {uint} length Length of random ID (Defaults to 5)
    * @return {String}        A random story title
    */
-  this.makeRandomTitle = function (length) {
-    return "test_story_" + make_id(length);
-  };
-
+  this.makeRandomTitle = (length) => `test_story_${makeID(length)}`;
 };
 
-module.exports = new GIF_uploader();
+module.exports = new GIFUploader();

@@ -7,7 +7,7 @@ describe("Icon Upload Wizard", () => {
   beforeEach( () => {
   });
 
-  // // Take a screenshot automatically after each failing test.
+  // Uncomment this to take a screenshot automatically after each failing test.
   // afterEach(function() {
   // 	var passed = jasmine.getEnv().currentSpec.results().passed();
   // 	if (!passed) {

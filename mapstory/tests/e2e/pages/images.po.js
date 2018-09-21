@@ -1,10 +1,8 @@
-"use strict";
-
 require("../tools/waitReady.js");
 
-let images_page = function () {
+function ImagesPage() {
   this.navbar = element(By.css(".navigation"));
   this.loginModal = element(By.id("loginModal"));
 };
 
-module.exports = new images_page();
+module.exports = new ImagesPage();

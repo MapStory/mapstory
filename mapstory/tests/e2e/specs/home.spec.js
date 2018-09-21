@@ -35,8 +35,8 @@ describe("Mapstory Home",() => {
   // "> The \"Navigation Menu\""
   it("> should navigate to \"Explore\"", () => {
     // Click the link
-    expect(page.menu_explore.waitReady()).toBeTruthy();
-    page.menu_explore.click();
+    expect(page.menuExplore.waitReady()).toBeTruthy();
+    page.menuExplore.click();
 
     // Title should be explore
     expect(browser.getTitle()).toEqual(explorePage.title);
@@ -88,13 +88,13 @@ describe("> \"Create\" menu option", () => {
     expect(page.createLayerLink.waitReady()).toBeTruthy();
     page.createLayerLink.click();
 
-    page.createLayer_Step1();
-    page.createLayer_Step2();
-    page.createLayer_Step3();
-    page.createLayer_Step4();
+    page.createLayerStep1();
+    page.createLayerStep2();
+    page.createLayerStep3();
+    page.createLayerStep4();
     // Temporarily disabled
-    // page.createLayer_Step5();
-    page.createLayer_Step6();
+    // page.createLayerStep5();
+    page.createLayerStep6();
     // Async done
     done();
   }).pend("Fix");
@@ -157,12 +157,12 @@ describe("> Import Layer form", () => {
    * Upload a layer
    */
   it("> should complete all steps", () => {
-    page.uploadLayer_Step1();
-    page.uploadLayer_Step2();
-    page.uploadLayer_Step3();
-    page.uploadLayer_Step4();
-    page.uploadLayer_Step5();
-    page.uploadLayer_Step6();
+    page.uploadLayerStep1();
+    page.uploadLayerStep2();
+    page.uploadLayerStep3();
+    page.uploadLayerStep4();
+    page.uploadLayerStep5();
+    page.uploadLayerStep6();
   }).pend("Fix");
 });
 
@@ -172,16 +172,16 @@ describe("> Layer Edit Metadata", () => {
     browser.waitForAngular();
     element(by.linkText("Create")).click();
     page.importLayerLink.click();
-    page.uploadLayer_Step1();
-    page.uploadLayer_Step2();
-    page.uploadLayer_Step3();
-    page.uploadLayer_Step4();
-    page.uploadLayer_Step5();
+    page.uploadLayerStep1();
+    page.uploadLayerStep2();
+    page.uploadLayerStep3();
+    page.uploadLayerStep4();
+    page.uploadLayerStep5();
   });
 
   it("> Can edit metadata", () => {
     // Complete last step
-    page.uploadLayer_Step6();
+    page.uploadLayerStep6();
     browser.sleep(waitTimes.metadata_load);
 
     // Click 'Update Metadata'

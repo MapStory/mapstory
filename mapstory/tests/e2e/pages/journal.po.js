@@ -3,50 +3,48 @@
  * ===================
  */
 
-"use strict";
-
 require("../tools/waitReady.js");
-let auth = require("./auth.po");
-let home_page = require("./home.po");
-let constants = require("../tools/constants");
+const auth = require("./auth.po");
+const HomePage = require("./home.po");
+const constants = require("../tools/constants");
 
 /* global element, by, browser */
 
-let JournalPageObject = function () {
+function JournalPageObject() {
   this.title = "MapStory";
   this.banner = $(".parallax");
   this.h1 = this.banner.$("h1");
-  this.new_entry_button = element(by.partialButtonText("write an entry"));
+  this.newEntryButton = element(by.partialButtonText("write an entry"));
   this.pageCurrent = $(".page-current");
-  this.new_title_input = $("#id_title");
-  this.new_content_input = $("#id_content");
-  this.new_publish_option = $("#id_publish");
-  this.new_save_button = element(by.buttonText("Save"));
-  this.comment_box = $("#id_comment");
-  this.get = function () {
-    browser.get(constants.baseURL + "/journal");
+  this.newTitleInput = $("#id_title");
+  this.newContentInput = $("#id_content");
+  this.newPublishOption = $("#id_publish");
+  this.newSaveButton = element(by.buttonText("Save"));
+  this.commentBox = $("#id_comment");
+  this.get = () => {
+    browser.get(`${constants.baseURL}/journal`);
     browser.waitForAngular();
   };
-  this.make_new_entry = function (title, content, published) {
-    let userAvatar = element(by.css(".nav-avatar"));
+  this.makeNewEntry = (title, content, published) => {
+    const userAvatar = element(by.css(".nav-avatar"));
 
     userAvatar.isPresent().then((present) => {
       if (present === false) {
-        home_page.get();
+        HomePage.get();
         auth.login("admin", "admin");
       }
     });
 
 
     this.get();
-    this.new_entry_button.click();
+    this.newEntryButton.click();
     browser.waitForAngular();
-    this.new_title_input.sendKeys(title);
-    this.new_content_input.sendKeys(content);
+    this.newTitleInput.sendKeys(title);
+    this.newContentInput.sendKeys(content);
     if (published === true) {
-      this.new_publish_option.click();
+      this.newPublishOption.click();
     }
-    this.new_save_button.click();
+    this.newSaveButton.click();
   };
 };
 

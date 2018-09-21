@@ -2,27 +2,23 @@
  * Login Wizard Page Object
  * =========================
  */
-
-"use strict";
-
 const defaultTestUser = "Moofasa";
 const defaultLastName = "Test";
 const defaultEmail = "testing@testmail.com";
 const defaullTestPassword = "testPassword2001!";
 
-let EC = protractor.ExpectedConditions;
+const EC = protractor.ExpectedConditions;
 
 require("../tools/waitReady.js");
-let constants = require("../tools/constants");
+const constants = require("../tools/constants");
 
-let AuthWizard = function () {
-
+function AuthWizard() {
   this.loginIcon = element(by.linkText("Log In"));
   this.loginModal = element(by.css(".modal-content"));
   this.navigationTabs = element(by.css(".nav.nav-tabs"));
   this.adminLink = element(by.linkText("admin"));
   this.logoutLink = element(by.linkText("Log out"));
-  this.login_close_button = element(by.css(".close.pull-right"));
+  this.loginCloseBUtton = element(by.css(".close.pull-right"));
   this.loginForm = element(by.css("#loginModal"));
   this.userAvatar = element(by.css(".nav-avatar"));
   this.usernameInput = element(by.css("#id_username"));
@@ -31,16 +27,16 @@ let AuthWizard = function () {
   this.signUpButton = element(by.css("#join-mapstory-button"));
 
   // Getters
-  this.getUsername = function () {
+  this.getUsername = () => {
     return defaultTestUser;
   };
-  this.getPassword = function () {
+  this.getPassword = () => {
     return defaullTestPassword;
   };
-  this.getEmail = function () {
+  this.getEmail = () => {
     return defaultEmail;
   };
-  this.getLastName = function () {
+  this.getLastName = () => {
     return defaultLastName;
   };
 
@@ -48,16 +44,16 @@ let AuthWizard = function () {
   /**
    * Gets the Auth Wizard
    */
-  this.get = function () {
+  this.get = () => {
     // Refresh page
     browser.get(constants.baseURL);
     browser.waitForAngular();
 
-    let myself = this;
+    const myself = this;
 
     // Logout if we are already authorized
-    this.isLoggedIn().then(function (isAuth) {
-      if (isAuth == true) {
+    this.isLoggedIn().then( (isAuth) => {
+      if (isAuth === true) {
         myself.logout();
       }
       expect(myself.loginIcon.waitReady()).toBeTruthy();
@@ -74,18 +70,18 @@ let AuthWizard = function () {
    * @param  {uint} length The length of the string to be generated
    * @return {string} A random alpha-numeric string of the length
    */
-  this.makeid = function (length) {
+  this.makeid = (length) => {
     let text = "";
-    const possible_characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     // Default to 5
     if (length < 1) {
       length = 5;
     }
 
-    // Builds a random string from the possible_characters
+    // Builds a random string from the chars
     for (let i = 0; i < length; i++)
-      text += possible_characters.charAt(Math.floor(Math.random() * possible_characters.length));
+      text += chars.charAt(Math.floor(Math.random() * chars.length));
 
     return text;
   };
@@ -96,7 +92,7 @@ let AuthWizard = function () {
    * @param username The user's name
    * @param password The password as a string (not the hash)
    */
-  this.login = function (username, password) {
+  this.login = (username, password) => {
     // Click the login Icon
     expect(this.loginIcon.waitReady()).toBeTruthy();
     this.loginIcon.click();
@@ -140,17 +136,15 @@ let AuthWizard = function () {
    * ```
    * @return {Promise} A promise that indicates ifLoggedIn
    */
-  this.isLoggedIn = function () {
-    return this.userAvatar.isPresent();
-  };
+  this.isLoggedIn = () => this.userAvatar.isPresent();
 
 
   /**
    * Logs out. Assumes this is called from the Home Page.
    */
-  this.logout = function () {
-    let myself = this;
-    this.isLoggedIn().then(function (loggedIn) {
+  this.logout = () => {
+    const myself = this;
+    this.isLoggedIn().then( (loggedIn) => {
       if (loggedIn === true) {
         // Click the login button
         myself.adminLink.click();
@@ -172,13 +166,13 @@ let AuthWizard = function () {
    * If no data is provided, random is used.
    * @param  {Object} userData {name, email, password}
    */
-  this.signUp = function (userData) {
+  this.signUp = (userData) => {
     if (userData.name === null) {
-      userData.name = defaultTestUser + "_" + this.makeid(7);
+      userData.name = `${defaultTestUser}_${this.makeid(7)}`;
     }
 
     if (userData.email === null) {
-      userData.email = userData.name + "@testing.com";
+      userData.email = `${userData.name}@testing.com`;
     }
 
     if (userData.password === null) {

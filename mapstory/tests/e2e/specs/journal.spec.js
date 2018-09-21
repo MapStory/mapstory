@@ -17,7 +17,7 @@ describe("Journal Page", () => {
 
   it("should load correctly", () => {
     expect(browser.getTitle()).toEqual(journalPage.title);
-    expect(journalPage.new_entry_button.waitReady()).toBeTruthy();
+    expect(journalPage.newEntryButton.waitReady()).toBeTruthy();
   });
 
   xit("can write a new entry", () => {
@@ -25,7 +25,7 @@ describe("Journal Page", () => {
     const entryTitle = `Testing journal post ${makeID(4)}`;
     const contentID = makeID(12);
     const entryContent = `Some random content to test: ${contentID}`;
-    journalPage.make_new_entry(entryTitle, entryContent, true);
+    journalPage.makeNewEntry(entryTitle, entryContent, true);
 
     // The entry should now be displayed
     journalPage.get();
@@ -62,7 +62,7 @@ describe("Journal Page", () => {
       // Should be able to comment
       const commentID = makeID(3);
       const testComment = `This is a test comment: ${commentID}`;
-      journalPage.comment_box.sendKeys(testComment);
+      journalPage.commentBox.sendKeys(testComment);
 
       const postCommentButton = element(by.buttonText("Post"));
       postCommentButton.click();

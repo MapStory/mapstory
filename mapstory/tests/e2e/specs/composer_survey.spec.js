@@ -12,10 +12,6 @@ describe("Composer Survey", () => {
     auth.login("admin", "admin");
   });
 
-  it("should have a layer ready for testing", () => {
-    // TODO: Import a layer here
-  }).pend("TODO");
-
   it("should open composer", () => {
     home.get();
     // expect(page.navBar.isDisplayed()).toBe(true);
@@ -31,18 +27,18 @@ describe("Composer Survey", () => {
 describe("(a) Launch the composer and provide basic information about your new story", () => {
   it("should edit the story title and summary", () => {
     // Click on 'Edit Story Info
-    expect(composer.edit_story.waitReady()).toBe(true);
-    composer.edit_story.click();
+    expect(composer.editStory.waitReady()).toBe(true);
+    composer.editStory.click();
     // Change the 'Title'
-    expect(composer.edit_story_title.waitReady()).toBe(true);
+    expect(composer.editStoryTitle.waitReady()).toBe(true);
     const title = `Test #${makeid(5)}`;
-    composer.edit_story_title.clear().sendKeys(title);
+    composer.editStoryTitle.clear().sendKeys(title);
     // Change the 'Summary'
-    composer.edit_story_summary.clear().sendKeys("This is a test summary. This is only a test!");
+    composer.editStorySummary.clear().sendKeys("This is a test summary. This is only a test!");
     // Select a Category
-    composer.edit_category.element(by.cssContainingText("option", "Geopolitics")).click();
+    composer.editCategory.element(by.cssContainingText("option", "Geopolitics")).click();
     // Click 'Save'
-    composer.edit_save_button.click();
+    composer.editSaveButton.click();
     // Wait for page reload
     browser.wait(EC.urlContains("draft"), 10000);
   });
@@ -67,13 +63,13 @@ describe("2. Creating, updating and managing chapters", () => {
 
   it("should create a new chapter", () => {
     // Click on 'Table of Contents'
-    composer.table_of_contents_button.click();
+    composer.tableOfContentsButton.click();
 
     // Click 'Add New Chapter' button
-    expect(composer.new_chapter_button.waitReady()).toBe(true);
-    expect(composer.chapter_binds.count()).toBe(3);
-    composer.new_chapter_button.click();
-    expect(composer.chapter_binds.count()).toBe(6);
+    expect(composer.newChapterButton.waitReady()).toBe(true);
+    expect(composer.chapterBinds.count()).toBe(3);
+    composer.newChapterButton.click();
+    expect(composer.chapterBinds.count()).toBe(6);
   });
 
   it("should edit the newly created chapter", () => {
@@ -162,28 +158,28 @@ describe("5. Creating and updating storyboxes", () => {
 
 describe("6. Creating, updating and bulk uploading storypins", () => {
   it("should open storypins sidebar", () => {
-    expect(composer.storypins_button.waitReady()).toBe(true);
-    composer.storypins_button.click();
+    expect(composer.storypinsButton.waitReady()).toBe(true);
+    composer.storypinsButton.click();
   });
 
   // "(a) Create a new storypin."
   it("creates a new pin", () => {
-    expect(composer.add_storypin_button.waitReady()).toBe(true);
-    composer.add_storypin_button.click();
-    expect(composer.storypin_binds.count()).toBe(2);
-  });
 
-  // The Pin
-  const pin0 = $("#pin-overlay-0");
-  const pinForm0 = $("#pin-form-0");
-
-  it("should show the storypin overlay by default", () => {
-    expect(pin0.isDisplayed()).toBeTruthy();
+    browser.sleep(1500);
+    expect(composer.addStorypinButton.waitReady()).toBe(true);
+    composer.addStorypinButton.click();
+    // browser.actions().mouseMove(composer.addStorypinButton).click().perform();
+    // The Pin
+    const pin0 = element(by.css("#pin-overlay-0"));
+    const pinForm0 = element(by.css("#pin-form-0"));
+    expect(pinForm0.waitReady()).toBe(true);
+    expect(pin0.waitReady()).toBe(true);
+    expect(pinForm0.isDisplayed()).toBeTruthy();
   });
 
   it("should change the title and content of the storypin", () => {
-    expect(pin0.$(".heading").getText()).toBe("A StoryPin");
-
+    const pin0 = element(by.css("#pin-overlay-0"));
+    const pinForm0 = element(by.css("#pin-form-0"));
     // Change the title
     pinForm0.$("#storypin_title").clear().sendKeys("The first storypin");
 
@@ -198,6 +194,8 @@ describe("6. Creating, updating and bulk uploading storypins", () => {
   });
 
   it("should embed a youtube video", () => {
+    const pin0 = $("#pin-overlay-0");
+    const pinForm0 = $("#pin-form-0");
     const videoEmbededUrl = "https://www.youtube.com/embed/ferZnZ0_rSM";
     pinForm0.$("#storypin_media").clear().sendKeys(videoEmbededUrl);
 
@@ -210,6 +208,8 @@ describe("6. Creating, updating and bulk uploading storypins", () => {
   });
 
   it("should reject embedding non-whitelisted urls", () => {
+    const pin0 = $("#pin-overlay-0");
+    const pinForm0 = $("#pin-form-0");
     const videoEmbededUrl = "https://google.com/";
     pinForm0.$("#storypin_media").clear().sendKeys(videoEmbededUrl);
 
@@ -222,14 +222,16 @@ describe("6. Creating, updating and bulk uploading storypins", () => {
   });
 
   it("should create pins for chapter 2", () => {
+    const pin0 = element(by.css("#pin-overlay-0"));
+    const pinForm0 = element(by.css("#pin-form-0"));
     // Go to next chapter
     const nextChapterArrow = $("[ng-click=\"nextChapter()\"]");
     nextChapterArrow.click();
 
     // Create new pin
-    expect(composer.add_storypin_button.waitReady()).toBe(true);
-    composer.add_storypin_button.click();
-    expect(composer.storypin_binds.count()).toBe(2);
+    expect(composer.addStorypinButton.waitReady()).toBe(true);
+    composer.addStorypinButton.click();
+    expect(composer.storypinBinds.count()).toBe(2);
 
     // Should have created a new pin.
     expect(pin0.$(".heading").getText()).toBe("A StoryPin");
@@ -240,28 +242,28 @@ describe("6. Creating, updating and bulk uploading storypins", () => {
 
     // Should see the first storypin we created.
     expect(pin0.$(".heading").getText()).toBe("The first storypin");
-  }).pend("Fix");
+  });
 
   it("should save and keep changes", () => {
     // Click the save button
-    composer.save_story_button.click();
+    composer.saveStorypinButton.click();
 
     // Check that storypins are still there
     expect(composer.storypins.count()).toBe(1);
-  }).pend("Fix");
+  });
 });
 
 
 describe("(b) Upload multiple storypins using Bulk Upload. After upload, click Play.", () => {
   it("should create new storypins from a CSV upload", () => {
-    composer.bulk_upload_button.click();
-    expect(composer.upload_modal.waitReady()).toBeTruthy();
-    // composer.csv_button.click();
-    const input = composer.upload_modal.$("#bulk_pin_csv_file");
+    composer.bulkUploadButton.click();
+    expect(composer.uploadModal.waitReady()).toBeTruthy();
+    // composer.CSVButton.click();
+    const input = composer.uploadModal.$("#bulk_pin_csv_file");
     expect(input.waitReady()).toBeTruthy();
     input.sendKeys(path.resolve(__dirname, "../../sampledata/storypins.csv"));
-    composer.upload_modal.$("#ok-btn-modal-bulk").click();
-  }).pend("Fix");
+    composer.uploadModal.$("#ok-btn-modal-bulk").click();
+  });
 });
 
 

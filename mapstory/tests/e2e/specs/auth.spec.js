@@ -3,9 +3,9 @@
  * ================
  */
 const EC = protractor.ExpectedConditions;
-require("../tools/waitReady.js");
 const constants = require("../tools/constants");
 const auth = require("../pages/auth.po");
+require("../tools/waitReady.js");
 
 describe("User auth", () => {
   beforeEach(() => {
@@ -65,10 +65,10 @@ describe("User auth", () => {
     // Click Login
     auth.loginIcon.click();
     expect(auth.loginForm.waitReady()).toBeTruthy();
-    expect(auth.login_close_button.isDisplayed).toBeTruthy();
+    expect(auth.loginCloseBUtton.isDisplayed).toBeTruthy();
 
     // Click close
-    auth.login_close_button.click();
+    auth.loginCloseBUtton.click();
   });
 
   it("> should require a username and password for login", () => {
@@ -101,20 +101,20 @@ describe("User auth", () => {
     auth.loginIcon.click();
     expect(auth.loginForm.waitReady()).toBeTruthy();
     browser.waitForAngular();
-    browser.executeScript('$(\'.modal\').removeClass(\'fade\');');
+    browser.executeScript("$('.modal').removeClass('fade');");
     // Click signup
     browser.driver.sleep(3000);
-    const button = element(by.linkText('Sign Up'));
+    const button = element(by.linkText("Sign Up"));
     // Remove fade effect
     expect(button.waitReady()).toBeTruthy();
     button.click();
     const userid = `tester_${auth.makeid(7)}`;
-    const usernameInput = element(by.css('#id_username'));
-    const nameInput = element(by.css('#id_first_name'));
-    const lastNameInput = element(by.css('#id_last_name'));
-    const emailInput = element(by.css('#id_email'));
-    const passwordInput = element(by.css('#id_password'));
-    const confirmPasswordInput = element(by.css('#password_confirm'));
+    const usernameInput = element(by.css("#id_username"));
+    const nameInput = element(by.css("#id_first_name"));
+    const lastNameInput = element(by.css("#id_last_name"));
+    const emailInput = element(by.css("#id_email"));
+    const passwordInput = element(by.css("#id_password"));
+    const confirmPasswordInput = element(by.css("#password_confirm"));
     // Set username
     expect(usernameInput.waitReady()).toBeTruthy();
     usernameInput.sendKeys(userid);
@@ -129,14 +129,14 @@ describe("User auth", () => {
     // Confirm password
     confirmPasswordInput.sendKeys(auth.getPassword());
     // Accept terms
-    const termsCheckbox = element(by.model('agreed'));
+    const termsCheckbox = element(by.model("agreed"));
     termsCheckbox.click();
     // Click Join
     auth.signUpButton.click();
   });
 });
 
-xit('> should log in admin', () => {
+xit("> should log in admin", () => {
   if (auth.userAvatar.isPresent() === true) {
     auth.logout();
   }
@@ -149,11 +149,11 @@ xit('> should log in admin', () => {
 
   // Input username
   expect(auth.usernameInput.isPresent()).toBe(true);
-  auth.usernameInput.sendKeys('admin');
+  auth.usernameInput.sendKeys("admin");
 
   // Input password
   expect(auth.passwordInput.isPresent()).toBe(true);
-  auth.passwordInput.sendKeys('admin');
+  auth.passwordInput.sendKeys("admin");
 
   // Press the login button
   expect(auth.loginButton.isPresent()).toBe(true);
