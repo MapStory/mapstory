@@ -51,6 +51,12 @@ def save_mapstory(request):
 
                     currentFrame.map_id = chapter['mapId']
 
+                    start_time = datetime_to_seconds(parse_date_time(frame['properties']['start_time']))
+                    end_time = datetime_to_seconds(parse_date_time(frame['properties']['end_time']))
+
+                    currentFrame.center = frame['properties']['center']
+                    currentFrame.end_time = end_time
+                    currentFrame.start_time = start_time
                     currentFrame.title = frame['properties']['title']
 
                     currentFrame.save()
