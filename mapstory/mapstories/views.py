@@ -8,6 +8,7 @@ from .models import Map
 from .models import MapStory
 from .models import StoryFrame
 from .models import StoryPin
+from .utils import datetime_to_seconds, parse_date_time
 from geonode.people.models import Profile
 
 
@@ -64,13 +65,16 @@ def save_mapstory(request):
 
                 currentPin.map_id = chapter['mapId']
 
-                #currentPin.auto_show = pin['properties']['autoShow']
+                start_time = datetime_to_seconds(parse_date_time(pin['properties']['start_time']))
+                end_time = datetime_to_seconds(parse_date_time(pin['properties']['end_time']))
+
                 currentPin.content = pin['properties']['content']
-                #currentPin.end_time = pin['properties']['end_time']
+                currentPin.end_time = end_time
                 currentPin.in_map = pin['properties']['inMap']
                 currentPin.in_timeline = pin['properties']['inTimeline']
                 currentPin.media = pin['properties']['media']
-                #currentPin.start_time = pin['properties']['start_time']
+                currentPin.start_time = start_time
+                currentPin.the_geom = pin['geometry']
                 currentPin.title = pin['properties']['title']
 
                 currentPin.save()
