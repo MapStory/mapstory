@@ -212,13 +212,13 @@ if (process.env.TRAVIS) {
     specs: [
       // "tools/take_screenshots.js",
       "specs/auth.spec.js",
-      "specs/composer_survey.spec.js",
-      // "specs/explore.spec.js",
-      // "specs/home.spec.js",
-      // "specs/icon_upload.spec.js",
+      // "specs/composer_survey.spec.js",
+      "specs/explore.spec.js",
+      "specs/home.spec.js",
+      "specs/icon_upload.spec.js",
       // "specs/image.spec.js",
-      // "specs/journal.spec.js",
-      // "specs/search.spec.js",
+      "specs/journal.spec.js",
+      "specs/search.spec.js",
     ],
     multiCapabilities,
     jasmineNodeOpts: {
@@ -234,21 +234,22 @@ if (process.env.TRAVIS) {
     resultJsonOutputFile: "./result.json",
     sauceUser: process.env.SAUCE_USERNAME,
     sauceKey: process.env.SAUCE_ACCESS_KEY,
-    // onPrepare: () => {
-    //   // Setup pix-diff directories and resolution
-    //   // browser.pixDiff = new PixDiff({
-    //   //   basePath: "e2e/images/",
-    //   //   diffPath: "e2e/images/",
-    //   //   width: browserWidth,
-    //   //   height: browserHeight
-    //   // });
-    //
-    //   // Workaround for pending:
-    //   jasmine.Suite.prototype.pend = (message) => {
-    //     this.markedPending = true;
-    //     this.children.forEach(spec => spec.pend(message));
-    //   };
-    // },
+    onPrepare: () => {
+      browser.manage().window().setSize(browserWidth, browserHeight);
+      // Setup pix-diff directories and resolution
+      // browser.pixDiff = new PixDiff({
+      //   basePath: "e2e/images/",
+      //   diffPath: "e2e/images/",
+      //   width: browserWidth,
+      //   height: browserHeight
+      // });
+
+      // Workaround for pending:
+      jasmine.Suite.prototype.pend = (message) => {
+        this.markedPending = true;
+        this.children.forEach(spec => spec.pend(message));
+      };
+    },
   };
 }
 
