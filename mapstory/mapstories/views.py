@@ -1,6 +1,7 @@
 import json
 import requests
 
+from django.db import transaction
 from django.http import HttpResponse
 
 from .models import Map
@@ -10,6 +11,7 @@ from .models import StoryPin
 from geonode.people.models import Profile
 
 
+@transaction.atomic
 def save_mapstory(request):
     config = json.loads(request.body)
     print config
