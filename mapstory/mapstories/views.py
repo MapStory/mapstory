@@ -80,7 +80,7 @@ def save_mapstory(request):
                 currentPin.in_timeline = pin['properties']['inTimeline']
                 currentPin.media = pin['properties']['media']
                 currentPin.start_time = start_time
-                currentPin.the_geom = pin['geometry']
+                currentPin.the_geom = json.dumps(pin['geometry'])
                 currentPin.title = pin['properties']['title']
 
                 currentPin.save()
