@@ -4,9 +4,6 @@ import time
 
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import TransactionTestCase
-from django.test.client import Client
-from django.test.utils import override_settings
 
 from unittest import skip
 
