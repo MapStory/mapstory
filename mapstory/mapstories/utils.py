@@ -1,6 +1,3 @@
-import codecs
-from cStringIO import StringIO
-import csv
 import datetime
 
 
@@ -41,31 +38,3 @@ def parse_date_time(val):
             return datetime.datetime.strptime(val, p)
         except ValueError:
             pass
-
-
-def unicode_csv_dict_reader(fp):
-    if isinstance(fp, basestring):
-        fp = StringIO(fp)
-
-    # guess encoding, yay
-    encodings = ('utf-8', 'cp1252')
-    for enc in encodings:
-        fp.seek(0)
-        reader = codecs.getreader(enc)(fp)
-        try:
-            for line in reader:
-                line.encode('utf-8')
-            break
-        except UnicodeDecodeError:
-            pass
-    if not enc:
-        raise UnicodeError('unable to decode CSV, invalid characters present')
-
-    fp.seek(0)
-    lines = (line.encode('utf-8') for line in codecs.getreader(enc)(fp, errors='ignore'))
-    reader = csv.DictReader(lines)
-    return (dict([(k, unicode(v, 'utf-8')) for k, v in row.items() if v]) for row in reader)
-
-
-def make_point(x, y):
-    return '{"type" : "Point", "coordinates" : [ %s, %s ]}' % (x, y)
