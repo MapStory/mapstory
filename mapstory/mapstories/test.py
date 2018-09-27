@@ -1,7 +1,5 @@
 import json
 import os
-import re
-import tempfile
 import time
 
 from django.contrib.auth import get_user_model
@@ -10,19 +8,12 @@ from django.test import TransactionTestCase
 from django.test.client import Client
 from django.test.utils import override_settings
 
-from geonode.geoserver.helpers import ogc_server_settings
-from geoserver.catalog import Catalog
 from unittest import skip
 
 from mapstory.tests.AdminClient import AdminClient
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 from mapstory.tests.utils import create_admin_user, generate_testname
 from geonode.maps.models import Layer
-
-from mapstory.mapstories.models import StoryPin
-from mapstory.mapstories.utils import unicode_csv_dict_reader
-from mapstory.mapstories.utils import make_point
-from mapstory.mapstories.models import Map
 
 User = get_user_model()
 test_layer_file_path = os.path.realpath('mapstory/tests/sampledata/lewisandclarktrail.csv')
