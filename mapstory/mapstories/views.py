@@ -62,6 +62,12 @@ def save_mapstory(request):
                     currentFrame.save()
                     frame['id'] = currentFrame.id
 
+        removed_frame_ids = config['removedFrames']
+        if removed_frame_ids is not None and len(removed_frame_ids) > 0:
+            for frame_id in removed_frame_ids:
+                frame_obj = StoryFrame.objects.get(id=frame_id)
+                frame_obj.delete()
+
         if chapter['pins']['features']:
             for index, pin in enumerate(chapter['pins']['features']):
                 if pin['id']:
@@ -85,6 +91,12 @@ def save_mapstory(request):
 
                 currentPin.save()
                 pin['id'] = currentPin.id
+
+        removed_pin_ids = config['removedPins']
+        if removed_pin_ids is not None and len(removed_pin_ids) > 0:
+            for pin_id in removed_pin_ids:
+                pin_obj = StoryPin.objects.get(id=pin_id)
+                pin_obj.delete()
 
     return HttpResponse(json.dumps(config))
 
