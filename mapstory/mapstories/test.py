@@ -4,8 +4,7 @@ import time
 
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from geonode.geoserver.helpers import ogc_server_settings
-from geoserver.catalog import Catalog
+
 from unittest import skip
 
 from mapstory.tests.AdminClient import AdminClient

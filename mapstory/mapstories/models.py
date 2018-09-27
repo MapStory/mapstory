@@ -1,13 +1,16 @@
 import geonode
 import json
 import uuid
+from datetime import datetime
 
 from django.conf import settings
 from django import core, db
+from django.db import models
 from django.db.models import signals
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
-# Redefining Map Model and adding additional fields
+
+from mapstory.mapstories.utils import parse_date_time
 
 
 class MapStory(geonode.base.models.ResourceBase):
@@ -95,7 +98,12 @@ class MapStory(geonode.base.models.ResourceBase):
             self.slug = slugify(self.title)
 
         if conf['about']['category'] is not None:
-            self.category = geonode.base.models.TopicCategory(conf['about']['category'])
+            if isistance(conf['about']['category'], dict):
+                categoryID = conf['about']['category']['id']
+            else:
+                categoryID = conf['about']['category']
+
+            self.category = geonode.base.models.TopicCategory(categoryID)
 
         if self.uuid is None or self.uuid == '':
             self.uuid = str(uuid.uuid1())
@@ -167,6 +175,7 @@ class MapStory(geonode.base.models.ResourceBase):
         db_table = 'maps_mapstory'
 
 
+# Redefining Map Model and adding additional fields
 class Map(geonode.maps.models.Map):
     story = db.models.ForeignKey(MapStory, related_name='chapter_list', blank=True, null=True)
 
@@ -185,7 +194,7 @@ class Map(geonode.maps.models.Map):
         self.viewer_playbackmode = conf['viewerPlaybackMode'] or 'Instant'
 
         self.chapter_index = conf.get('id') or conf.get('chapter_index')
-        story_id = conf.get('storyId', 0)
+        story_id = conf.get('storyID', 0)
         story_obj = MapStory.objects.get(id=story_id)
         self.layers_config = json.dumps(conf["layers"])
         self.story = story_obj
@@ -207,6 +216,115 @@ def default_is_published(sender, **kwargs):
     instance = kwargs['instance']
     if instance.id is None:  # only reset default when object is first created
         instance.is_published = False
+
+
+class StoryFrameManager(models.Manager):
+
+    def copy_map_story_frames(self, source_id, target):
+        source = Map.objects.get(id=source_id)
+        copies = []
+
+        for storyframe in source.storyframe_set.all():
+            storyframe.map = target
+            storyframe.pk = None
+            copies.append(storyframe)
+
+        StoryFrame.objects.bulk_create(copies)
+
+
+class StoryFrame(models.Model):
+    objects = StoryFrameManager()
+
+    PLAYBACK_RATE = (('seconds', 'Seconds'),('minutes', 'Minutes'),)
+    INTERVAL_RATE = (('minutes', 'Minutes'),('hours', 'Hours'),
+                     ('weeks', 'Weeks'),('months', 'Months'),('years', 'Years'),)
+
+    map = models.ForeignKey(Map)
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    the_geom = models.TextField(blank=True, null=True)
+    start_time = models.BigIntegerField(blank=True, null=True)
+    end_time = models.BigIntegerField(blank=True, null=True)
+    data = models.TextField(blank=True, null=True)
+    center = models.TextField(blank=True, null=True)
+    interval = models.IntegerField(blank=True, null=True)
+    intervalRate = models.CharField(max_length=10, choices=INTERVAL_RATE, blank=True, null=True)
+    playback = models.IntegerField(blank=True, null=True)
+    playbackRate = models.CharField(max_length=10, choices=PLAYBACK_RATE, blank=True, null=True)
+    speed = models.TextField(blank=True, null=True)
+    zoom = models.IntegerField(blank=True, null=True)
+    layers = models.TextField(blank=True, null=True)
+    resolution = models.TextField(blank=True, null=True)
+
+    def _timefmt(self, val):
+        return datetime.isoformat(datetime.utcfromtimestamp(val))
+
+    def set_start(self, val):
+        self.start_time = parse_date_time(val)
+
+    def set_end(self, val):
+        self.end_time = parse_date_time(val)
+
+    @property
+    def start_time_str(self):
+        return self._timefmt(self.start_time) if self.start_time else ''
+
+    @property
+    def end_time_str(self):
+        return self._timefmt(self.end_time) if self.end_time else ''
+
+    class Meta:
+        verbose_name_plural = "StoryFrames"
+
+
+class StoryPinManager(models.Manager):
+
+    def copy_map_storypins(self, source_id, target):
+        source = Map.objects.get(id=source_id)
+        copies = []
+        for ann in source.storypin_set.all():
+            ann.map = target
+            ann.pk = None
+            copies.append(ann)
+        StoryPin.objects.bulk_create(copies)
+
+
+class StoryPin(models.Model):
+    objects = StoryPinManager()
+
+    map = models.ForeignKey(Map)
+    title = models.TextField()
+    content = models.TextField(blank=True, null=True)
+    media = models.TextField(blank=True, null=True)
+    the_geom = models.TextField(blank=True, null=True)
+    start_time = models.BigIntegerField(blank=True, null=True)
+    end_time = models.BigIntegerField(blank=True, null=True)
+    in_timeline = models.BooleanField(default=False)
+    in_map = models.BooleanField(default=False)
+    appearance = models.TextField(blank=True, null=True)
+    auto_show = models.BooleanField(default=False)
+    pause_playback = models.BooleanField(default=False)
+
+    def _timefmt(self, val):
+        return datetime.isoformat(datetime.utcfromtimestamp(val))
+
+    def set_start(self, val):
+        self.start_time = parse_date_time(val)
+
+    def set_end(self, val):
+        self.end_time = parse_date_time(val)
+
+    @property
+    def start_time_str(self):
+        return self._timefmt(self.start_time) if self.start_time else ''
+
+    @property
+    def end_time_str(self):
+        return self._timefmt(self.end_time) if self.end_time else ''
+
+    class Meta:
+        verbose_name_plural = "StoryPins"
+
 
 signals.post_init.connect(default_is_published, sender=MapStory)
 signals.post_init.connect(default_is_published, sender=Map)
