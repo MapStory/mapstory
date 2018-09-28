@@ -39,7 +39,10 @@ class MapStory(geonode.base.models.ResourceBase):
                     'in_map': storypin.in_map,
                     'appearance': storypin.appearance,
                     'auto_show': storypin.auto_show,
-                    'pause_playback': storypin.pause_playback
+                    'pause_playback': storypin.pause_playback,
+                    'auto_play': storypin.auto_play,
+                    'offset': storypin.offset,
+                    'play_length': storypin.play_length
                 }
                 storypin_list.append(storypin_dict)
 
@@ -304,6 +307,9 @@ class StoryPin(models.Model):
     appearance = models.TextField(blank=True, null=True)
     auto_show = models.BooleanField(default=False)
     pause_playback = models.BooleanField(default=False)
+    auto_play = models.BooleanField(default=False)
+    offset = models.BigIntegerField(null=True, default=0)
+    play_length = models.BigIntegerField(null=True, default=0)
 
     def _timefmt(self, val):
         return datetime.isoformat(datetime.utcfromtimestamp(val))
