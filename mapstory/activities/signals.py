@@ -18,5 +18,5 @@ def post_save_icon_actstream_handler(sender, instance, created, **kwargs):
 signals.post_save.connect(
     post_save_icon_actstream_handler,
     sender=Icon,
-    dispatch_uid='mapstory.apps.activities.social.icon'
+    dispatch_uid='mapstory.activities.social.icon'
 )

@@ -138,7 +138,7 @@ INSTALLED_APPS += MAPSTORY_APPS
 
 # DO NOT REMOVE (read commment above)
 INSTALLED_APPS += (
-    'mapstory.apps.activities',
+    'mapstory.activities',
     'actstream',
 )
 # Thanks !

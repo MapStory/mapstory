@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class ActivitiesAppConfig(AppConfig):
-    name = 'mapstory.apps.activities'
+    name = 'mapstory.activities'
 
     def ready(self):
         # Imports need to happen here once things are ready.
