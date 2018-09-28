@@ -88,6 +88,9 @@ def save_mapstory(request):
                 currentPin.start_time = start_time
                 currentPin.the_geom = json.dumps(pin['geometry'])
                 currentPin.title = pin['properties']['title']
+                currentPin.auto_play = pin['properties']['auto_play']
+                currentPin.offset = pin['properties']['offset']
+                currentPin.play_length = pin['properties']['play_length']
 
                 currentPin.save()
                 pin['id'] = currentPin.id
