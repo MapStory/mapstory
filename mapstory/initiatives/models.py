@@ -6,7 +6,7 @@ from django.utils.text import slugify
 
 from geonode.layers.models import Layer
 from mapstory.mapstories.models import MapStory
-from mapstory.apps.teams.models import Team
+from mapstory.teams.models import Team
 
 
 class InitiativeSocialMedia(models.Model):

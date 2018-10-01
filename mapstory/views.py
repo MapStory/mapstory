@@ -75,8 +75,8 @@ from user_messages.models import Thread
 
 from apps.journal.models import JournalEntry
 from mapstory.favorite.models import Favorite
-from mapstory.apps.initiatives.models import InitiativeMembership, InitiativeLayer, InitiativeMapStory
-from mapstory.apps.organizations.models import OrganizationMembership, OrganizationLayer, OrganizationMapStory
+from mapstory.initiatives.models import InitiativeMembership, InitiativeLayer, InitiativeMapStory
+from mapstory.organizations.models import OrganizationMembership, OrganizationLayer, OrganizationMapStory
 from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditGeonodeProfileForm
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm, DistributionUrlForm
 from mapstory.importers import GeoServerLayerCreator

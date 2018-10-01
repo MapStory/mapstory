@@ -6,10 +6,10 @@ from tastypie.constants import ALL
 
 from django.db.models import Q
 
-from mapstory.apps.organizations.models import Organization
-from mapstory.apps.initiatives.models import Initiative
-from mapstory.apps.organizations.api import OrganizationResource
-from mapstory.apps.initiatives.api import InitiativeResource
+from mapstory.initiatives.api import InitiativeResource
+from mapstory.initiatives.models import Initiative
+from mapstory.organizations.api import OrganizationResource
+from mapstory.organizations.models import Organization
 from .models import Team
 
 
