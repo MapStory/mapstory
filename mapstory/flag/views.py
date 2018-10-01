@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 from django.contrib import messages
 
-from mapstory.apps.flag.models import add_flag
+from mapstory.flag.models import add_flag
 
 
 @login_required

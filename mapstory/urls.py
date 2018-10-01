@@ -105,7 +105,7 @@ urlpatterns = patterns('',
                        url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
                        url(r'^proxy/', proxy),
                        url(r'^favorite/', include('mapstory.favorite.urls')),
-                       url(r"^flag/", include('mapstory.apps.flag.urls')),
+                       url(r"^flag/", include('mapstory.flag.urls')),
 
                        # Layers
                        url(r'^layers/acls', layer_acls_mapstory, name='layer_acls_mapstory'),

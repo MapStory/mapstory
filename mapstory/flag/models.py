@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext_lazy as _
 
-from mapstory.apps.flag import signals
+from mapstory.flag import signals
 
 
 STATUS = getattr(settings, "FLAG_STATUSES", [
