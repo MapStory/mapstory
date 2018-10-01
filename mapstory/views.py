@@ -74,7 +74,7 @@ from requests import Request
 from user_messages.models import Thread
 
 from apps.journal.models import JournalEntry
-from mapstory.apps.favorite.models import Favorite
+from mapstory.favorite.models import Favorite
 from mapstory.apps.initiatives.models import InitiativeMembership, InitiativeLayer, InitiativeMapStory
 from mapstory.apps.organizations.models import OrganizationMembership, OrganizationLayer, OrganizationMapStory
 from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditGeonodeProfileForm
@@ -88,7 +88,7 @@ from mapstory.models import get_sponsors, get_images
 from mapstory.search.utils import update_es_index
 from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
-from mapstory.apps.favorite.utils import get_favorite_info
+from mapstory.favorite.utils import get_favorite_info
 from tasks import delete_mapstory
 from mapstory.apps.thumbnails.tasks import create_mapstory_thumbnail_tx_aware
 from django.views.decorators.http import require_http_methods

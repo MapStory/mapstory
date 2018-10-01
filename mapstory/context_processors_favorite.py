@@ -1,7 +1,7 @@
 import re
 from geonode.layers.models import Layer
 
-from mapstory.apps.favorite.utils import get_favorite_info as geonode_get_favorite_info
+from mapstory.favorite.utils import get_favorite_info as geonode_get_favorite_info
 from mapstory.mapstories.models import MapStory, Map
 
 # based on urls.py
