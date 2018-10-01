@@ -42,18 +42,18 @@ def compare_images(img1, img2, rgb_difference=1):
 # simple tests to verify that the image comparer (compare_images) is working correctly
 class TestImgCompare(TestCase):
     def test_img_compare_same(self):
-        img1 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"))
-        img2 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"))
+        img1 = Image.open(os.path.realpath("mapstory/thumbnails/test_imgs/railroads-thumb-correct.png"))
+        img2 = Image.open(os.path.realpath("mapstory/thumbnails/test_imgs/railroads-thumb-correct.png"))
         self.assertEqual(compare_images(img1, img2), 0.0)
 
     def test_img_compare_diff1(self):
-        img1 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"))
-        img2 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-no_basemap.png"))
+        img1 = Image.open(os.path.realpath("mapstory/thumbnails/test_imgs/railroads-thumb-correct.png"))
+        img2 = Image.open(os.path.realpath("mapstory/thumbnails/test_imgs/railroads-thumb-no_basemap.png"))
         self.assertGreater(compare_images(img1, img2), 0.9)
 
     def test_img_compare_diff2(self):
-        img1 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"))
-        img2 = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-no_wms.png"))
+        img1 = Image.open(os.path.realpath("mapstory/thumbnails/test_imgs/railroads-thumb-correct.png"))
+        img2 = Image.open(os.path.realpath("mapstory/thumbnails/test_imgs/railroads-thumb-no_wms.png"))
         self.assertGreater(compare_images(img1, img2), 0.1)
 
 
@@ -408,9 +408,9 @@ class TestAnimatedStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
     def test_animated_GIF_creation(self):
         thumb_generator = CreateStoryLayerAnimatedThumbnailTask()
         fnames = [
-            os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"),
-            os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-no_basemap.png"),
-            os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-no_wms.png")
+            os.path.realpath("mapstory/thumbnails/test_imgs/railroads-thumb-correct.png"),
+            os.path.realpath("mapstory/thumbnails/test_imgs/railroads-thumb-no_basemap.png"),
+            os.path.realpath("mapstory/thumbnails/test_imgs/railroads-thumb-no_wms.png")
         ]
         orig_images = [Image.open(fname) for fname in fnames]
 
@@ -531,7 +531,7 @@ class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
         self.assertEqual(image.size[1], 150)
 
         # image comparision - check that the generated thumbnail matches the pre-checked thumbnail
-        img_pregen = Image.open(os.path.realpath("mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png"))
+        img_pregen = Image.open(os.path.realpath("mapstory/thumbnails/test_imgs/railroads-thumb-correct.png"))
         percent_diff = compare_images(img_pregen, image,11)
         if percent_diff > 0.05:  # > 5% different
             raise Exception(
@@ -542,7 +542,7 @@ class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
             # The above failure will spit out something like 'layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png'
             # docker cp mapstory_django_1:/var/lib/mapstory/media/thumbs/layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png .
             # manually verify that the image is correct, then replace railroads-thumb-correct.png
-            # cp layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png mapstory/apps/thumbnails/test_imgs/railroads-thumb-correct.png
+            # cp layer-a94ea7bb-97ae-48a7-8db5-1054ec90c92c-thumb.png mapstory/thumbnails/test_imgs/railroads-thumb-correct.png
 
     def test_withoutFeatures(self):
         layer = self.fully_import_file(os.path.realpath('mapstory/tests/sampledata/'), 'empty_layer.zip', 'date')
