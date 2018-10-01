@@ -5,7 +5,7 @@ from django.test import TestCase
 import os
 
 from geonode.layers.models import Layer
-from mapstory.apps.thumbnails.tasks import CreateStoryLayerThumbnailTask, CreateStoryLayerAnimatedThumbnailTask, \
+from mapstory.thumbnails.tasks import CreateStoryLayerThumbnailTask, CreateStoryLayerAnimatedThumbnailTask, \
     CreateStoryAnimatedThumbnailTask
 from PIL import Image, ImageChops
 from StringIO import StringIO
@@ -59,7 +59,7 @@ class TestImgCompare(TestCase):
 
 # ------------------------------------------------------------------------------------------------------------
 
-# python manage.py test --noinput --nocapture  --keepdb mapstory.apps.thumbnails.test_storylayer_thumbnail
+# python manage.py test --noinput --nocapture  --keepdb mapstory.thumbnails.test_storylayer_thumbnail
 class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
 
     # make a Mapstory object, with basemap layer
@@ -388,7 +388,7 @@ class mock_Map(object):
 # ------------------------------------------------------------------------------------------------------------
 
 
-# python manage.py test --noinput --nocapture  mapstory.apps.thumbnails.test_storylayer_thumbnail
+# python manage.py test --noinput --nocapture  mapstory.thumbnails.test_storylayer_thumbnail
 class TestAnimatedStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
     # lots of timelice -- directly call the timechooser
     def test_timeslice_reduction(self):
@@ -481,7 +481,7 @@ class TestAnimatedStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
 
 # ------------------------------------------------------------------------------------------------------------
 
-# python manage.py test --noinput --nocapture  mapstory.apps.thumbnails.test_storylayer_thumbnail
+# python manage.py test --noinput --nocapture  mapstory.thumbnails.test_storylayer_thumbnail
 class TestStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
     # note - while this is running, there is likely a thumbnail generation task occuring in the background
     # (kicked off by the importer)

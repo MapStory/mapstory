@@ -90,7 +90,7 @@ from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
 from mapstory.favorite.utils import get_favorite_info
 from tasks import delete_mapstory
-from mapstory.apps.thumbnails.tasks import create_mapstory_thumbnail_tx_aware
+from mapstory.thumbnails.tasks import create_mapstory_thumbnail_tx_aware
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 
