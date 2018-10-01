@@ -1,5 +1,5 @@
 from django.test import TestCase
-from mapstory.apps.flag.templatetags.flag_tags import flag
+from mapstory.flag.templatetags.flag_tags import flag
 
 
 class Test_flag_tags(TestCase):

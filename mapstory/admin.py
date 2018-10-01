@@ -5,8 +5,8 @@ from geonode.people.admin import ProfileAdmin as UserAdmin
 from geonode.layers.models import Layer
 from geonode.layers.admin import LayerAdmin
 
-from mapstory.apps.flag import admin as flag_admin
 from mapstory.export import export_via_model
+from mapstory.flag import admin as flag_admin
 from mapstory.models import CustomSite
 from mapstory.models import GetPage
 from mapstory.models import GetPageContent

@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 from django.conf import settings
 from geonode.people.models import Profile
 
-from mapstory.apps.flag.models import FlaggedContent, FlagInstance
+from mapstory.flag.models import FlaggedContent, FlagInstance
 
 from datetime import datetime
 
