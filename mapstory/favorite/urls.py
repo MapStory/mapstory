@@ -21,7 +21,7 @@
 from django.conf.urls import url
 from . import views
 
-from mapstory.apps.favorite.api import FavoriteResource
+from mapstory.favorite.api import FavoriteResource
 from tastypie.api import Api
 
 api = Api(api_name='favorites-api')

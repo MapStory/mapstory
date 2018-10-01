@@ -37,7 +37,7 @@ from geonode.documents.models import Document
 
 class FavoriteTest(ResourceTestCaseMixin, TestCase):
     """
-    Tests mapstory.apps.favorite app/module
+    Tests mapstory.favorite app/module
     """
     def setUp(self):
 
