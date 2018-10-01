@@ -14,7 +14,7 @@ from ...admin import (
     content_html
 )
 
-from mapstory.apps.journal.admin import JournalEntryAdmin
+from mapstory.journal.admin import JournalEntryAdmin
 from ...models import GetPage, GetPageContent
 
 

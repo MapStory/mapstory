@@ -114,7 +114,7 @@ INSTALLED_APPS += (
     'coverage',
     'django_classification_banner',
     'mapstory.apps.thumbnails',
-    'mapstory.apps.journal',
+    'mapstory.journal',
     'mapstory.favorite',
     'mapstory.teams',
     'mapstory.organizations',
