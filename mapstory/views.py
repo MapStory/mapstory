@@ -73,7 +73,7 @@ from osgeo_importer.forms import UploadFileForm
 from requests import Request
 from user_messages.models import Thread
 
-from apps.journal.models import JournalEntry
+from mapstory.journal.models import JournalEntry
 from mapstory.favorite.models import Favorite
 from mapstory.initiatives.models import InitiativeMembership, InitiativeLayer, InitiativeMapStory
 from mapstory.organizations.models import OrganizationMembership, OrganizationLayer, OrganizationMapStory

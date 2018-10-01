@@ -100,7 +100,7 @@ urlpatterns = patterns('',
                        url(r'^search/$', SearchView.as_view(), name='search'),
                        url(r'^about/leadership$', LeaderListView.as_view(template_name='mapstory/leaders.html'), name='about-leaders'),
                        url(r'^icons/', include('icon_commons.urls')),
-                       url(r'^journal/', include('mapstory.apps.journal.urls')),
+                       url(r'^journal/', include('mapstory.journal.urls')),
 
                        url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
                        url(r'^proxy/', proxy),
