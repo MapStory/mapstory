@@ -119,9 +119,9 @@ urlpatterns = patterns('',
                        url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
                        url(r'^layers/(?P<layername>[^/]*)/remote$', get_remote_url, name="get_remote_url"),
 
-                       url(r'^teams/', include('mapstory.apps.teams.urls', namespace='teams')),
-                       url(r'^organizations/', include('mapstory.apps.organizations.urls', namespace='organizations')),
-                       url(r'^initiatives/', include('mapstory.apps.initiatives.urls', namespace='initiatives')),
+                       url(r'^teams/', include('mapstory.teams.urls', namespace='teams')),
+                       url(r'^organizations/', include('mapstory.organizations.urls', namespace='organizations')),
+                       url(r'^initiatives/', include('mapstory.initiatives.urls', namespace='initiatives')),
                        url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain"), name='robots'),
                        ) + geonode_layers_urlpatterns + urlpatterns
 

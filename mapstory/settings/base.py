@@ -116,9 +116,9 @@ INSTALLED_APPS += (
     'mapstory.apps.thumbnails',
     'mapstory.apps.journal',
     'mapstory.favorite',
-    'mapstory.apps.teams',
-    'mapstory.apps.organizations',
-    'mapstory.apps.initiatives',
+    'mapstory.teams',
+    'mapstory.organizations',
+    'mapstory.initiatives',
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
 )

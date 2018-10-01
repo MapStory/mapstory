@@ -3,8 +3,8 @@ from django.core.urlresolvers import reverse
 
 from tastypie.test import ResourceTestCaseMixin
 
-from mapstory.apps.organizations.models import Organization
-from mapstory.apps.initiatives.models import Initiative
+from mapstory.initiatives.models import Initiative
+from mapstory.organizations.models import Organization
 from mapstory.tests.utils import get_test_user, create_mapstory, create_layer, create_user
 from .models import Team
 

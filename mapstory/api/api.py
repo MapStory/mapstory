@@ -10,8 +10,8 @@ from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
 
 from mapstory.mapstory_profile.models import MapstoryProfile
-from mapstory.apps.organizations.models import Organization
-from mapstory.apps.initiatives.models import Initiative
+from mapstory.organizations.models import Organization
+from mapstory.initiatives.models import Initiative
 
 
 class OwnerProfileSerializer(CountJSONSerializer):
