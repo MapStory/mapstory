@@ -27,10 +27,9 @@ def getTestUser():
     Returns:
         TYPE: User 
     """
-    allUsers = User.objects.all()
-    if len(allUsers) > 0 :
-        return allUsers[0]
-    else :
+    try:
+        return User.objects.get(username='profiletester')
+    except User.DoesNotExist:
         return User.objects.create_user(username='profiletester',
                                  email='profiletester@mapstorytests.com',
                                  password='superduperpassword2000')
