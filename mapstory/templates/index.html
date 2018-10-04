@@ -7,15 +7,17 @@
     <section class="splash">
         {% if THEME == 'orange' %}
         <div class="splash-backdrop" style="background-image: url('{{ STATIC_URL }}mapstory/img/hero_img_fallback.png');">
-            <video  autoplay="autoplay" loop="loop" muted="">
+            <video autoplay="autoplay" loop="loop" muted="">
                 <source src="{{ STATIC_URL }}mapstory/img/demo.mp4" type="video/mp4" />
             </video>
         </div>
         {% endif %}
 
         {% if THEME == 'blue' %}
-        <div class="splash-backdrop">
-            <img src="{{ STATIC_URL }}mapstory/img/MS-6.gif">
+        <div class="splash-backdrop" style="background-image: url('{{ STATIC_URL }}mapstory/img/syria.png');">
+            <video autoplay="autoplay" loop="loop" muted="">
+                <source src="{{ STATIC_URL }}mapstory/img/syria.mp4" type="video/mp4" />
+            </video>
         </div>
         {% endif %}
 
