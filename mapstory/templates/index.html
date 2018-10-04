@@ -5,17 +5,17 @@
 <div class="homepage">
     <!-- Tagline + Subtitle -->
     <section class="splash">
-        {% if THEME == 'blue' %}
+        {% if THEME == 'orange' %}
         <div class="splash-backdrop" style="background-image: url('{{ STATIC_URL }}mapstory/img/hero_img_fallback.png');">
             <video  autoplay="autoplay" loop="loop" muted="">
-                <source src="{{ STATIC_URL }}/mapstory/img/demo.mp4" type="video/mp4" />
+                <source src="{{ STATIC_URL }}mapstory/img/demo.mp4" type="video/mp4" />
             </video>
         </div>
         {% endif %}
 
-        {% if THEME == 'orange' %}
+        {% if THEME == 'blue' %}
         <div class="splash-backdrop">
-            <img src="{{ STATIC_URL }}/mapstory/img/MS-6.gif">
+            <img src="{{ STATIC_URL }}mapstory/img/MS-6.gif">
         </div>
         {% endif %}
 
