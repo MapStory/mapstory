@@ -156,7 +156,7 @@
             {% if THEME == 'blue' %}
             <h2 class="homepage">Upload and create spatio-temporal data layers</h2>
 
-            <p style="padding-left: 20px; font-size: 22px">Click Explore to discover StoryLayers covering local, regional global scale and stretching into the past, present and future.  Don’t see what you need? Create a new StoryLayer and share it with others.</p>
+            <p style="padding-left: 20px; font-size: 22px">Click <a href="{% url 'search' %}">Explore</a> to discover {{ BRANDING_LAYERS_NAME }} covering local, regional global scale and stretching into the past, present and future.  Don’t see what you need? Create a new {{ BRANDING_LAYER_NAME }} and share it with others.</p>
             {% endif %}
 
             <a href="/getstarted">
@@ -191,16 +191,16 @@
         {% if THEME == 'blue' %}
         <div layout="column" layout-align="center center">
 
-                <h2 class="homepage">Share your expertise through edits</h2>
+            <h2 class="homepage">Share your expertise</h2>
 
-                <p style="padding-left: 20px; font-size: 22px">Curate the accuracy and quality of {{ BRANDING_LAYERS_NAME }} by adding ratings, checking metadata, making comments and committing version edits.</p>
+            <p style="padding-left: 20px; font-size: 22px">Engage your colleagues with ratings, comments, and edits to continuously improve their data.</p>
 
-                <a href="/getstarted">
-                    <button class="button accent-button-inverse">
-                        <span>Learn More</span>
-                    </button>
-                </a>
-            </div>
+            <a href="/getstarted">
+                <button class="button accent-button-inverse">
+                    <span>Learn More</span>
+                </button>
+            </a>
+        </div>
 
         <center>
             <img src="{{ STATIC_URL }}mapstory/img/expertise_through_edits_blue.png" class="home-shadow" style="width: 75%; min-width: 350px"/>
@@ -227,7 +227,7 @@
     </section>
     <!--#THEMOREYOUKNOW-->
     {% if THEME == 'orange' %}
-    <section class="more-you-know" layout="column" style="background-image: url('{{ STATIC_URL }}/mapstory/img/bg_topography.png');" layout-align="center center">
+    <section class="more-you-know" layout="column" style="background-image: url('{{ STATIC_URL }}mapstory/img/bg_topography.png');" layout-align="center center">
         <p class="more"> The more we all know about the story of our planet, the more likely we are to treat it, and each other well. Sign up, and become a mapstoryteller today. </p>
 
         <a href="{% url "account_signup" %}">
