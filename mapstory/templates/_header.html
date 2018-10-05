@@ -7,7 +7,9 @@
     {% endif %}
     <div class="navigation-wrapper container">
         {% if THEME == 'blue' %}
-            <img src="{{ STATIC_URL }}mapstory/img/storyscapes_banner_logo.png" height="50px"/>
+            <a href="{% url 'home' %}">
+                <img src="{{ STATIC_URL }}mapstory/img/storyscapes_banner_logo.png" height="50px"/>
+            </a>
         {% endif %}
         {% if site.assets.logo %}
             <div class="logo-wrapper">
