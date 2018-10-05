@@ -72,7 +72,7 @@
                             <li><a href="{% url 'profile_detail' slug=user.username %}">{{ user.username }}</a></li>
                             <li class="divider"></li>
                             <li><a href="{% url 'services' %}">{% trans "Remote Services" %}</a></li>
-                            <li><a href="{% url "messages_inbox" %}">{% trans "Messages" %}</a></li>
+                            <li><a href="{% url 'messages_inbox' %}">{% trans "Messages" %}</a></li>
                             <li><a href="{% url 'edit_profile' user.username %}">{% trans "Edit Profile" %}</a></li>
                             {% if not THEME == 'blue' %}
                             <li><a href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a></li>
@@ -88,7 +88,7 @@
                             <li><a href="{% url 'announcements_list' %}">{% trans "Announcements" %}</a></li>
                         {% endif %}
                         {% if user.is_superuser %}
-                            <li><a href="{% url "geonode.invitations:geonode-send-invite" %}">{% trans "Invite User" %}</a></li>
+                            <li><a href="{% url 'geonode.invitations:geonode-send-invite' %}">{% trans "Invite User" %}</a></li>
                             <li><a href="{{ GEOSERVER_BASE_URL }}">{% trans "GeoServer" %}</a></li>
                             <li class="divider"></li>
                         {% endif %}
