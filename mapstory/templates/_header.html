@@ -41,6 +41,12 @@
                                 <a class="pointer" ng-controller="createLayerCtrl"
                                    ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', '{{ BRANDING_LAYER_NAME }}', '{{ BRANDING_LAYERS_NAME }}')">{% blocktrans %}Create {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a>
                             </li>
+                            {# Remote Services is under the user menu for MapStory #}
+                            {% if THEME == 'blue' %}
+                            <li>
+                                <a href="{% url 'services' %}">{% trans "Remote Services" %}</a>
+                            </li>
+                            {% endif %}
                             <li>
                                 <a href="{% url 'upload' %}">{% trans "Upload Icons" %}</a>
                             </li>
@@ -50,6 +56,9 @@
                         {% else %}
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% blocktrans %}Import {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% blocktrans %}Create {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a></li>
+                            {% if THEME == 'blue' %}
+                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Remote Services" %}</a></li>
+                            {% endif %}
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% blocktrans %}Upload Icons{% endblocktrans %}</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% blocktrans %}Compose Story{% endblocktrans %}</a></li>
                         {% endif %}
@@ -71,7 +80,10 @@
                         <ul class="submenu">
                             <li><a href="{% url 'profile_detail' slug=user.username %}">{{ user.username }}</a></li>
                             <li class="divider"></li>
+                            {# Remote services are under the Create menu for StoryScapes #}
+                            {% if THEME == 'orange' and user.is_superuser %}
                             <li><a href="{% url 'services' %}">{% trans "Remote Services" %}</a></li>
+                            {% endif %}
                             <li><a href="{% url "messages_inbox" %}">{% trans "Messages" %}</a></li>
                             <li><a href="{% url 'edit_profile' user.username %}">{% trans "Edit Profile" %}</a></li>
                             <li><a href="{% url "account_change_password" %}">{% trans "Change Password" %}</a></li>
