@@ -153,7 +153,7 @@ TEMPLATES = [
             os.path.join(LOCAL_ROOT, 'templates'),
             os.path.join(os.path.dirname(geonode.__file__), 'templates'),
             os.path.join('deps/story-tools-composer', 'partials'),
-            os.path.join(LOCAL_ROOT, 'apps/initiatives'),
+            os.path.join(LOCAL_ROOT, 'initiatives'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
