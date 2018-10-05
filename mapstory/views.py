@@ -110,10 +110,16 @@ class IndexView(TemplateView):
 
         return ctx
 
-class CustomAccountAdapter(DefaultAccountAdapter):
+class MapStoryAccountAdapter(DefaultAccountAdapter):
 
     def get_login_redirect_url(self, request):
         path = "/storyteller/edit/{username}/"
+        return path.format(username=request.user.username)
+
+class StoryScapesAccountAdapter(DefaultAccountAdapter):
+
+    def get_login_redirect_url(self, request):
+        path = "/"
         return path.format(username=request.user.username)
 
 class GetPageView(DetailView):
