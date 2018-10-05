@@ -74,7 +74,9 @@
                             <li><a href="{% url 'services' %}">{% trans "Remote Services" %}</a></li>
                             <li><a href="{% url "messages_inbox" %}">{% trans "Messages" %}</a></li>
                             <li><a href="{% url 'edit_profile' user.username %}">{% trans "Edit Profile" %}</a></li>
-                            <li><a href="{% url "account_change_password" %}">{% trans "Change Password" %}</a></li>
+                            {% if not THEME == 'blue' %}
+                            <li><a href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a></li>
+                            {% endif %}
                             <li class="divider"></li>
                             <li><a href="{% url 'getpage' 'started' %}">{% trans "Help" %}</a></li>
                             <li class="divider"></li>
