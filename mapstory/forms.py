@@ -83,6 +83,11 @@ class EditMapstoryProfileForm(forms.ModelForm):
                   'social_facebook', 'social_linkedin', 'social_github',
                   'Volunteer_Technical_Community']
 
+class EditStoryScapesProfileForm(forms.ModelForm):
+    class Meta:
+        model = MapstoryProfile
+        fields = ['interests', 'education', 'expertise']
+
 
 # Form with fields from the GeoNode Profile model to be edited
 class EditGeonodeProfileForm(forms.ModelForm):
