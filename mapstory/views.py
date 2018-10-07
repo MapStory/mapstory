@@ -77,7 +77,7 @@ from mapstory.journal.models import JournalEntry
 from mapstory.favorite.models import Favorite
 from mapstory.initiatives.models import InitiativeMembership, InitiativeLayer, InitiativeMapStory
 from mapstory.organizations.models import OrganizationMembership, OrganizationLayer, OrganizationMapStory
-from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditGeonodeProfileForm
+from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditStoryScapesProfileForm, EditGeonodeProfileForm
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm, DistributionUrlForm
 from mapstory.importers import GeoServerLayerCreator
 from mapstory.mapstories.models import MapStory, Map
@@ -172,11 +172,16 @@ def profile_edit(request, username=None):
         if request.method == "POST":
             geonode_form = EditGeonodeProfileForm(request.POST,
                                                   instance=request.user)
-            mapstory_form = EditMapstoryProfileForm(request.POST,
+            if settings.ACCOUNT_EXTRA_PROFILE_FORM == 'EditMapstoryProfileForm':
+                extra_form = EditMapstoryProfileForm(request.POST,
                                                     instance=request.user.mapstoryprofile)
-            if geonode_form.is_valid() and mapstory_form.is_valid():
+            
+            if settings.ACCOUNT_EXTRA_PROFILE_FORM == 'EditStoryScapesProfileForm':
+                extra_form = EditStoryScapesProfileForm(request.POST, instance=request.user.mapstoryprofile)
+
+            if geonode_form.is_valid() and extra_form.is_valid():
                 geonode_form.save()
-                mapstory_form.save()
+                extra_form.save()
                 messages.success(request, "Profile profile updated.")
                 return redirect(
                     reverse(
@@ -185,11 +190,14 @@ def profile_edit(request, username=None):
                             request.user.username]))
         else:
             geonode_form = EditGeonodeProfileForm(instance=request.user)
-            mapstory_form = EditMapstoryProfileForm(instance=request.user.mapstoryprofile)
+            if settings.ACCOUNT_EXTRA_PROFILE_FORM == 'EditMapstoryProfileForm':
+                extra_form = EditMapstoryProfileForm(instance=request.user.mapstoryprofile)
+            if settings.ACCOUNT_EXTRA_PROFILE_FORM == 'EditStoryScapesProfileForm':
+                extra_form = EditStoryScapesProfileForm(instance=request.user.mapstoryprofile)
 
         return render(request, "people/profile_edit.html", {
             "geonode_profile_form": geonode_form,
-            "mapstory_profile_form": mapstory_form
+            "extra_profile_form": extra_form
         })
     else:
         return HttpResponseForbidden(
