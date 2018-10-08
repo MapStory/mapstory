@@ -230,54 +230,6 @@ class LeaderListView(ListView):
     model = Leader
 
 @login_required
-def new_map_json(request):
-
-    if request.method == 'GET':
-        map_obj, config = new_map_config(request)
-        if isinstance(config, HttpResponse):
-            return config
-        else:
-            return HttpResponse(config)
-
-    elif request.method == 'POST':
-        if not request.user.is_authenticated():
-            return HttpResponse(
-                'You must be logged in to save new maps',
-                content_type="text/plain",
-                status=401
-            )
-
-        map_obj = Map(owner=request.user, zoom=0,
-                      center_x=0, center_y=0)
-        map_obj.save()
-        map_obj.set_default_permissions()
-        map_obj.handle_moderated_uploads()
-        # If the body has been read already, use an empty string.
-        # See https://github.com/django/django/commit/58d555caf527d6f1bdfeab14527484e4cca68648
-        # for a better exception to catch when we move to Django 1.7.
-        try:
-            body = request.body
-        except Exception:
-            body = ''
-
-        try:
-            map_obj.update_from_viewer(body)
-            MapSnapshot.objects.create(
-                config=clean_config(body),
-                map=map_obj,
-                user=request.user)
-        except ValueError as e:
-            return HttpResponse(str(e), status=400)
-        else:
-            return HttpResponse(
-                json.dumps({'id': map_obj.id}),
-                status=200,
-                content_type='application/json'
-            )
-    else:
-        return HttpResponse(status=405)
-
-@login_required
 def mapstory_map_json(request, mapid, snapshot=None):
     if request.method =='PUT':
         map_obj = Map.objects.get(id=mapid)

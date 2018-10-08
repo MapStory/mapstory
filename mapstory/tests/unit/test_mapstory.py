@@ -291,17 +291,6 @@ class MapStoryTests(MapStoryTestMixin):
         response = c.get(reverse('new_map'), follow=True)
         self.assertEqual(response.status_code, 200)
 
-    def test_new_map_json_renders(self):
-        """
-        Ensure the new map json returns a 200.
-        """
-        c = AdminClient()
-        response = c.get(reverse('new_map_json'))
-        self.assertLoginRequired(response)
-        c.login_as_admin()
-        response = c.get(reverse('new_map_json'))
-        self.assertEqual(response.status_code, 200)
-
     @skip("TODO")
     @override_settings(GOOGLE_ANALYTICS='testing')
     def test_story_teller_renders(self):
