@@ -33,7 +33,7 @@ from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from mapstory.views import layer_remove, map_remove
 from mapstory.views import map_detail
 from mapstory.views import new_map
-from mapstory.views import ProfileDetail, profile_delete, profile_edit, proxy
+from mapstory.views import ProfileDetail, profile_delete, profile_edit
 from mapstory.views import SearchView
 from mapstory.views import get_remote_url
 
@@ -103,7 +103,6 @@ urlpatterns = patterns('',
                        url(r'^journal/', include('mapstory.journal.urls')),
 
                        url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
-                       url(r'^proxy/', proxy),
                        url(r'^favorite/', include('mapstory.favorite.urls')),
                        url(r"^flag/", include('mapstory.flag.urls')),
 
@@ -143,11 +142,6 @@ urlpatterns += patterns("",
                         url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="profile_edit"),
                         url(r'^story/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'))
 
-
-if settings.DEBUG:
-    urlpatterns = urlpatterns + patterns('',
-        url(r'^testing/(?P<template>.*)$', 'mapstory.views.debug_view'),
-    )
 
 if settings.LOCAL_CONTENT:
     urlpatterns = static(settings.STATIC_URL + "assets", document_root=settings.LOCAL_ROOT + "/../../mapstory-assets", show_indexes=True) + urlpatterns
