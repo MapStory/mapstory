@@ -1,5 +1,3 @@
-{% load mapstory_tags %}
-
 {{ signup_code.inviter }} ({{signup_code.inviter.email}}) has
 invited you to join MapStory ( {{ current_site.domain }} )!
 
