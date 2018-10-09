@@ -264,13 +264,6 @@ describe("Composer Survey", () => {
         expect(pin0.$(".heading").getText()).toBe("The first storypin");
       });
 
-      it("should save and keep changes", () => {
-        // Click the save button
-        composer.save_story_button.click();
-
-        // Check that storypins are still there
-        expect(composer.storypins.count()).toBe(1);
-      });
     });
 
 

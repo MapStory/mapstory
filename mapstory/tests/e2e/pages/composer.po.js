@@ -46,7 +46,6 @@ let composer = function () {
   this.bulk_upload_button = element(by.buttonText("Bulk Upload"));
   this.upload_modal = $("#modal-body");
   this.csv_button = this.upload_modal.$("#bulk_pin_csv_file");
-  this.save_story_button = $("[ng-click=\"saveMap()\"]");
   this.storypins = element.all(by.css(".storypin-content"));
   this.edit_story = $("[ng-click=\"openStoryModal()\"]");
   this.edit_story_title = element(by.model("stateSvc.config.about.title"));

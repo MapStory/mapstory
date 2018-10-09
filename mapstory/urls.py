@@ -13,6 +13,7 @@ from geonode.api.urls import api as geonode_api
 geonode_api.unregister('owners')
 geonode_api.unregister('base')
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
+from geonode.maps.views import new_map
 from geonode.urls import urlpatterns
 from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstories.urls import urlpatterns as mapstories_urls
@@ -30,9 +31,8 @@ from mapstory.views import IndexView
 from mapstory.views import LeaderListView
 from mapstory.views import layer_detail, layer_create
 from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
-from mapstory.views import layer_remove, map_remove
+from mapstory.views import layer_remove
 from mapstory.views import map_detail
-from mapstory.views import new_map
 from mapstory.views import ProfileDetail, profile_delete, profile_edit
 from mapstory.views import SearchView
 from mapstory.views import get_remote_url
@@ -66,13 +66,9 @@ urlpatterns = patterns('',
                        url(r'^blog/comments/', include('fluent_comments.urls')),
 
                        # Maps
-                       url(r'^maps/(?P<mapid>\d+)/data$', 'mapstory.views.mapstory_map_json', name='mapstory_map_json'),
                        url(r'^maps/new_map', new_map, name='new_map'),
-                       url(r'^maps/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
 
                        # Story
-                       url(r'^story$', 'mapstory.views.new_story_json', name='new_story_json'),
-                       url(r'^story/(?P<storyid>[^/]+)/save$', 'mapstory.views.save_story', name='save_story'),
                        url(r'^story/(?P<storyid>[^/]+)/generate_thumbnail', 'mapstory.views.story_generate_thumbnail', name='story_generate_thumbnail'),
                        url(r'^story/(?P<slug>[-\w]+)/$', map_detail, name='mapstory_detail'),
                        url(r'^story/(?P<slug>[-\w]+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
@@ -137,8 +133,7 @@ urlpatterns += importer_urlpatterns
 # this is last to catch reverse lookup from geonode views with the same name
 urlpatterns += patterns("",
                         url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
-                        url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="profile_edit"),
-                        url(r'^story/(?P<mapid>\d+)/remove$', map_remove, name='map_remove'))
+                        url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="profile_edit"))
 
 
 if settings.LOCAL_CONTENT:
