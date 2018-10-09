@@ -237,23 +237,6 @@ class LeaderListView(ListView):
     context_object_name = 'leaders'
     model = Leader
 
-@login_required
-def mapstory_map_json(request, mapid, snapshot=None):
-    if request.method =='PUT':
-        map_obj = Map.objects.get(id=mapid)
-        if not request.user.has_perm('change_resourcebase', map_obj.get_self_resource()):
-            return HttpResponse(
-                _PERMISSION_MSG_SAVE,
-                status=401,
-                content_type="text/plain"
-            )
-
-        config = json.loads(request.body)
-        map_obj.layers_config = json.dumps(config['layers'])
-        map_obj.save()
-
-    return map_json(request, mapid, snapshot)
-
 @xframe_options_exempt
 def map_view(request, mapid, snapshot=None, layer_name=None,
              template='maps/map_view.html'):
@@ -349,78 +332,6 @@ def story_generate_thumbnail(request, storyid):
     create_mapstory_thumbnail_tx_aware(story_obj,True)
     return HttpResponse("create story thumbnail task was scheduled for story id="+str(story_obj.id)+", with uuid="+str(story_obj.uuid))
 
-def save_story(request, storyid):
-    if not request.user.is_authenticated():
-        return HttpResponse(
-                _PERMISSION_MSG_LOGIN,
-                status=401,
-                content_type="text/plain"
-        )
-
-    story_obj = MapStory.objects.get(id=storyid)
-    if not request.user.has_perm('change_resourcebase', story_obj.get_self_resource()):
-        return HttpResponse(
-                _PERMISSION_MSG_SAVE,
-                status=401,
-                content_type="text/plain"
-        )
-
-    try:
-        story_obj.update_from_viewer(request.body)
-        return HttpResponse(json.dumps(story_obj.viewer_json(request.user)))
-    except ValueError as e:
-        return HttpResponse(
-                "The server could not understand the request." + str(e),
-                content_type="text/plain",
-                status=400
-        )
-
-
-def new_story_json(request):
-    if not request.user.is_authenticated():
-        return HttpResponse(
-                'You must be logged in to save new maps',
-                content_type="text/plain",
-                status=401
-        )
-    story_obj = MapStory(owner=request.user)
-    story_obj.save()
-    story_obj.set_default_permissions()
-
-    # If the body has been read already, use an empty string.
-    # See https://github.com/django/django/commit/58d555caf527d6f1bdfeab14527484e4cca68648
-    # for a better exception to catch when we move to Django 1.7.
-    try:
-        body = request.body
-    except Exception:
-        body = ''
-
-    try:
-        story_obj.update_from_viewer(body)
-    except ValueError as e:
-        return HttpResponse(str(e), status=400)
-    else:
-        return HttpResponse(
-                json.dumps({'id': story_obj.id}),
-                status=200,
-                content_type='application/json'
-        )
-
-
-def draft_view(request, slug, template='composer/maploom.html'):
-
-    story_obj = _resolve_story(request, slug, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
-
-    config = story_obj.viewer_json(request.user)
-
-
-
-    return render_to_response(template, RequestContext(request, {
-        'config': json.dumps(config),
-        'story': story_obj
-    }))
-
-
 def composer_new_view(request, slug, template='composer_new/composer.html'):
     story_obj = _resolve_story(request, slug, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
     config = story_obj.viewer_json(request.user)
@@ -428,32 +339,6 @@ def composer_new_view(request, slug, template='composer_new/composer.html'):
         'config': json.dumps(config),
         'story': story_obj
     }))
-
-
-@login_required
-def mapstory_draft(request, storyid, template):
-    return draft_view(request, storyid, template)
-
-
-@login_required
-def new_map(request, template='maps/map_new.html'):
-    map_obj, config = new_map_config(request)
-    context_dict = {
-        'config': config,
-        'map': map_obj
-    }
-    context_dict["preview"] = getattr(
-        settings,
-        'GEONODE_CLIENT_LAYER_PREVIEW_LIBRARY',
-        'geoext')
-    if isinstance(config, HttpResponse):
-        return config
-    else:
-        return render(
-            request,
-            template,
-            context=context_dict)
-
 
 @login_required
 def layer_create(request, template='upload/layer_create.html'):
@@ -1356,21 +1241,6 @@ def layer_remove(request, layername, template='layers/layer_remove.html'):
         return HttpResponse("Not allowed", status=403)
 
 
-@login_required
-def map_remove(request, mapid, template='maps/map_remove.html'):
-    ''' Delete a map, and its constituent layers. '''
-    map_obj = _resolve_map(request, mapid, 'base.delete_resourcebase', _PERMISSION_MSG_VIEW)
-
-    if request.method == 'GET':
-        return render_to_response(template, RequestContext(request, {
-            "map": map_obj
-        }))
-
-    elif request.method == 'POST':
-        delete_mapstory(object_id=map_obj.id)
-        return HttpResponseRedirect(reverse("profile_detail", kwargs={'slug': map_obj.owner}))
-
-
 def layer_detail_id(request, layerid):
     layer = get_object_or_404(Layer, pk=layerid)
     return layer_detail(request, layer.typename)
@@ -1390,53 +1260,6 @@ def resolve_user_mapstory(request):
     result["fullname"] = request.user.username
 
     return HttpResponse(json.dumps(result), content_type="application/json")
-
-
-def new_map_config(request):
-    '''
-    View that creates a new map.
-
-    If the query argument 'copy' is given, the initial map is
-    a copy of the map with the id specified, otherwise the
-    default map configuration is used.  If copy is specified
-    and the map specified does not exist a 404 is returned.
-    '''
-    DEFAULT_MAP_CONFIG, DEFAULT_BASE_LAYERS = default_map_config(request)
-
-    if 'access_token' in request.session:
-        access_token = request.session['access_token']
-    else:
-        access_token = None
-
-    map_obj = None
-    if request.method == 'GET' and 'copy' in request.GET:
-        mapid = request.GET['copy']
-        map_obj = _resolve_map(request, mapid, 'base.view_resourcebase')
-
-        map_obj.abstract = DEFAULT_ABSTRACT
-        map_obj.title = DEFAULT_TITLE
-        if request.user.is_authenticated():
-            map_obj.owner = request.user
-
-        config = map_obj.viewer_json(request.user, access_token)
-        map_obj.handle_moderated_uploads()
-        del config['id']
-    else:
-        if request.method == 'GET':
-            params = request.GET
-        elif request.method == 'POST':
-            params = request.POST
-        else:
-            return HttpResponse(status=405)
-
-        if 'layer' in params:
-            map_obj = Map(projection=getattr(settings, 'DEFAULT_MAP_CRS',
-                                             'EPSG:900913'))
-            config = add_layers_to_map_config(
-                request, map_obj, params.getlist('layer'))
-        else:
-            config = DEFAULT_MAP_CONFIG
-    return map_obj, json.dumps(config)
 
 def get_remote_url(request, layername):
     layer = _resolve_layer(
