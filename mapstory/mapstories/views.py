@@ -1,8 +1,9 @@
 import json
 import requests
 
+from django.core.urlresolvers import reverse
 from django.db import transaction
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from .models import Map
 from .models import MapStory
@@ -102,3 +103,12 @@ def save_mapstory(request):
                 pin_obj.delete()
 
     return HttpResponse(json.dumps(config))
+
+@transaction.atomic
+def delete_mapstory(request, story_id):
+    mapstory = MapStory.objects.get(pk=story_id)
+    if mapstory.owner == request.user:
+        mapstory.delete()
+        return HttpResponseRedirect(reverse("search"))
+    else:
+        return HttpResponse("Not allowed", status=403)

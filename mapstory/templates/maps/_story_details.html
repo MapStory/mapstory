@@ -322,7 +322,7 @@
                         {% if resource.owner == user %}
                             <div style="padding-top: 40px">
                                 <button class="btn btn-danger">
-                                    <a href="{% url "map_remove" resource.id %}">
+                                    <a href="{% url "delete_mapstory" resource.id %}">
                                         {% trans "Delete this " %}{{ BRANDING_STORY_NAME }}</a>
                                 </button>
                             </div>
