@@ -6,7 +6,6 @@ import taggit
 from mapstory.mapstories.models import MapStory
 
 
-
 # A form for just keywords
 class KeywordsForm(forms.ModelForm):
 
@@ -53,4 +52,3 @@ class PublishStatusForm(forms.ModelForm):
     class Meta:
         model = ResourceBase
         fields = ['is_published']
-
