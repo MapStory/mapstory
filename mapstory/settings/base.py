@@ -180,7 +180,7 @@ TEMPLATES = [
 # Authentication Settings
 #
 ACCOUNT_ADAPTER = os.environ.get('ACCOUNT_ADAPTER', 'mapstory.mapstory_profile.views.MapStoryAccountAdapter')
-ACCOUNT_FORMS = {'signup': 'mapstory.forms.CustomSignupForm'}
+ACCOUNT_FORMS = {'signup': 'mapstory.mapstory_profile.forms.CustomSignupForm'}
 ACCOUNT_EXTRA_PROFILE_FORM = os.environ.get('ACCOUNT_EXTRA_PROFILE_FORM', 'EditMapstoryProfileForm')
 
 AUTHENTICATION_BACKENDS = (
