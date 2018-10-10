@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from views import ProfileDetail, profile_delete, profile_edit
+from .views import ProfileDetail, profile_delete, profile_edit
 
 
 urlpatterns = patterns("",

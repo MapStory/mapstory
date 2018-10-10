@@ -35,20 +35,23 @@ class MapstoryProfile(models.Model):
 
     social_facebook = models.CharField(
         _('Facebook Profile'),
-        help_text=_("Provide your Facebook username. From your profile page, this is what comes after 'facebook.com/' in the URL."),
+        help_text=_(
+            "Provide your Facebook username. From your profile page, this is what comes after 'facebook.com/' in the URL."),
         max_length=255,
         null=True,
         blank=True)
 
     social_github = models.CharField(_('GitHub Profile'),
-                                     help_text=_("Provide your Github username, e.g. 'mapstory'."),
+                                     help_text=_(
+                                         "Provide your Github username, e.g. 'mapstory'."),
                                      max_length=255,
                                      null=True,
                                      blank=True)
 
     social_linkedin = models.CharField(
         _('LinkedIn Profile'),
-        help_text=_("Provide your LinkedIn username. From your profile page, this is what comes after 'linkedin.com/in/' in the URL"),
+        help_text=_(
+            "Provide your LinkedIn username. From your profile page, this is what comes after 'linkedin.com/in/' in the URL"),
         max_length=255,
         null=True,
         blank=True)
@@ -78,30 +81,36 @@ class MapstoryProfile(models.Model):
     def interests_slug_list(self):
         return [kw.slug for kw in self.interests.all()]
 
+
 def profile_post_save(instance, sender, **kwargs):
     MapstoryProfile.objects.filter(user_id=instance.id).update(
         avatar_100=avatar_url(instance, 100))
 
+
 def mapstory_profile_post_save(instance, sender, **kwargs):
     geonode.people.models.profile_post_save(instance, sender, **kwargs)
-    registered_group, created = contrib.auth.models.Group.objects.get_or_create(name='registered')
+    registered_group, created = contrib.auth.models.Group.objects.get_or_create(
+        name='registered')
     instance.groups.add(registered_group)
     geonode.people.models.Profile.objects.filter(id=instance.id).update()
+
 
 def avatar_post_save(instance, sender, **kw):
     MapstoryProfile.objects.filter(user_id=instance.user.id).update(
         avatar_100=avatar_url(instance.user, 100))
 
+
 def create_mapstory_profile(sender, instance, created, **kwargs):
     if created:
         MapstoryProfile.objects.create(user=instance)
 
+
 def save_mapstory_profile(sender, instance, **kwargs):
     instance.mapstoryprofile.save()
+
 
 signals.post_save.connect(avatar_post_save, sender=Avatar)
 signals.post_save.connect(profile_post_save, sender=Geonode_Profile)
 signals.post_save.connect(mapstory_profile_post_save, sender=Geonode_Profile)
 signals.post_save.connect(create_mapstory_profile, sender=Geonode_Profile)
 signals.post_save.connect(save_mapstory_profile, sender=Geonode_Profile)
-
