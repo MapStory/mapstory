@@ -17,7 +17,7 @@ from geonode.maps.views import new_map
 from geonode.urls import urlpatterns
 from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstories.urls import urlpatterns as mapstories_urls
-from mapstory_profile.urls import urlpatterns as mapstory_profile_urls
+from mapstory.mapstory_profile.urls import urlpatterns as mapstory_profile_urls
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
 from tastypie.api import Api
 
