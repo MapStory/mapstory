@@ -4,10 +4,10 @@ import datetime
 from httplib import HTTPConnection, HTTPSConnection
 import json
 import logging
-import math
 import ogr
 import os
 import pandas
+import requests
 import shutil
 import StringIO
 import tempfile
@@ -20,28 +20,20 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
-from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse
-from django.core.exceptions import ObjectDoesNotExist
-from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import F
-from django.http import HttpResponse, HttpResponseServerError, Http404
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.http.request import validate_host
 from django.shortcuts import render_to_response, render, redirect, get_object_or_404
 from django.template import RequestContext
-from django.template import loader
-from django.template.loader import render_to_string
 from django.template.response import TemplateResponse
 from django.utils.http import is_safe_url
-from django.utils.timezone import now as provider_now
 from django.utils.translation import ugettext as _
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 
-import requests
 from actstream.models import actor_stream
 from allauth.account.adapter import DefaultAccountAdapter
 from geonode import geoserver
@@ -62,7 +54,6 @@ from geonode.layers.tasks import delete_layer
 from geonode.utils import GXPLayer, GXPMap, resolve_object, bbox_to_projection, check_ogc_backend
 from geonode.utils import build_social_links
 from geonode.utils import default_map_config
-from geonode.utils import forward_mercator, llbbox_to_mercator
 from geonode.utils import DEFAULT_TITLE
 from geonode.utils import DEFAULT_ABSTRACT
 from guardian.shortcuts import get_perms
@@ -71,12 +62,11 @@ from lxml import etree
 from osgeo_importer.utils import UploadError, launder
 from osgeo_importer.forms import UploadFileForm
 from requests import Request
-from user_messages.models import Thread
 
 from mapstory.journal.models import JournalEntry
 from mapstory.favorite.models import Favorite
-from mapstory.initiatives.models import InitiativeMembership, InitiativeLayer, InitiativeMapStory
-from mapstory.organizations.models import OrganizationMembership, OrganizationLayer, OrganizationMapStory
+from mapstory.initiatives.models import InitiativeMembership
+from mapstory.organizations.models import OrganizationMembership, OrganizationMapStory
 from mapstory.forms import DeactivateProfileForm, EditMapstoryProfileForm, EditStoryScapesProfileForm, EditGeonodeProfileForm
 from mapstory.forms import KeywordsForm, MetadataForm, PublishStatusForm, DistributionUrlForm
 from mapstory.importers import GeoServerLayerCreator
@@ -86,7 +76,6 @@ from mapstory.models import Leader
 from mapstory.models import NewsItem
 from mapstory.models import get_sponsors, get_images
 from mapstory.search.utils import update_es_index
-from mapstory.utils import DEFAULT_VIEWER_PLAYBACKMODE
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
 from mapstory.favorite.utils import get_favorite_info
 from tasks import delete_mapstory
