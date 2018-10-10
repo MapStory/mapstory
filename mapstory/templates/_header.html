@@ -87,7 +87,7 @@
                             {% if not THEME == 'blue' %}
                             <li><a href="{% url 'messages_inbox' %}">{% trans "Messages" %}</a></li>
                             {% endif %}
-                            <li><a href="{% url 'edit_profile' user.username %}">{% trans "Edit Profile" %}</a></li>
+                            <li><a href="{% url 'profile_edit' user.username %}">{% trans "Edit Profile" %}</a></li>
                             {% if not THEME == 'blue' %}
                             <li><a href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a></li>
                             {% endif %}

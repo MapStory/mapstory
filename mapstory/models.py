@@ -148,14 +148,6 @@ def get_images():
 def get_sponsors():
     return Sponsor.objects.filter(order__gte=0)
 
-
-def mapstory_profile_post_save(instance, sender, **kwargs):
-    geonode.people.models.profile_post_save(instance, sender, **kwargs)
-    registered_group, created = contrib.auth.models.Group.objects.get_or_create(name='registered')
-    instance.groups.add(registered_group)
-    geonode.people.models.Profile.objects.filter(id=instance.id).update()
-
-
 def mapstory_map_post_save(instance, sender, **kwargs):
     # Call basic post save map functionality from geonode
     geonode.geoserver.signals.geoserver_post_save_map(instance, sender, **kwargs)
@@ -169,6 +161,5 @@ def mapstory_map_post_save(instance, sender, **kwargs):
     except:
         pass
 
-db.models.signals.post_save.connect(mapstory_profile_post_save, sender=geonode.people.models.Profile)
 db.models.signals.post_save.connect(geonode.base.models.resourcebase_post_save, sender=MapStory)
 db.models.signals.post_save.connect(mapstory_map_post_save, sender=Map)

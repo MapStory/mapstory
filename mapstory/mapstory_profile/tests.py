@@ -10,15 +10,14 @@ from django.test import Client
 
 from geonode.people.models import Profile
 
-from ...AdminClient import AdminClient
-from ...MapStoryTestMixin import MapStoryTestMixin
-from ....views import profile_edit
+from mapstory.tests.AdminClient import AdminClient
+from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
+from views import profile_edit
 
 
 User = get_user_model()
 
 
-# @TODO(Zunware): Move this to utils
 def getTestUser():
     """
     Returns an existing user or
@@ -63,12 +62,12 @@ class ProfileDetailViewTest(MapStoryTestMixin):
         self.assertContains(response, testUser.first_name)
 
     def test_get_username_none(self):
-        response = self.client.get(reverse('edit_profile', kwargs={'username': None}), follow=True)
+        response = self.client.get(reverse('profile_edit', kwargs={'username': None}), follow=True)
         self.assertEqual(response.status_code, 200)
 
     def test_profile_edit_page_responses(self):
         otherUser = getTestUser()
-        other_url = reverse('edit_profile', kwargs={'username': otherUser.username})
+        other_url = reverse('profile_edit', kwargs={'username': otherUser.username})
         self.assertEqual(other_url, u'/storyteller/edit/%s/' % otherUser.username)
 
         # Anonymous users should be redirected to login form
@@ -78,7 +77,7 @@ class ProfileDetailViewTest(MapStoryTestMixin):
         self.assertContains(response, 'Log in to an existing account')
 
         # Login with a user
-        edit_user_url = reverse('edit_profile', kwargs={'username':self.test_username})
+        edit_user_url = reverse('profile_edit', kwargs={'username':self.test_username})
         self.userclient.login_as_non_admin(username=self.test_username, password=self.test_password)
         response = self.userclient.get(edit_user_url)
         self.assertEqual(response.status_code, 200)
@@ -104,7 +103,7 @@ class ProfileDetailViewTest(MapStoryTestMixin):
                                            password='superduperpassword2000')
         self.assertIsNotNone(created)
         # Raise the No Profile exception when getting the profile
-        request = factory.get(reverse('edit_profile', kwargs={'username': None}))
+        request = factory.get(reverse('profile_edit', kwargs={'username': None}))
         created.profile = PropertyMock(return_value=Profile.DoesNotExist())
         request.user = created
         response = profile_edit(request, None)
@@ -118,7 +117,7 @@ class ProfileDetailViewTest(MapStoryTestMixin):
                                            email='profiletester@mapstorytests.com',
                                            password='superduperpassword2000')
         self.assertIsNotNone(created)
-        request = factory.get(reverse('edit_profile',kwargs={'username':None} ))
+        request = factory.get(reverse('profile_edit',kwargs={'username':None} ))
         request.user = created
         # Get a response
         response = profile_edit(request, None)

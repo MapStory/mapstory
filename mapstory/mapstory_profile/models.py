@@ -2,9 +2,14 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import signals
 from geonode.people.models import Profile as Geonode_Profile
+
 from avatar.templatetags.avatar_tags import avatar_url
 from avatar.models import Avatar
 from taggit.managers import TaggableManager
+
+from django import contrib
+
+import geonode
 
 
 class MapstoryProfile(models.Model):
@@ -77,6 +82,12 @@ def profile_post_save(instance, sender, **kwargs):
     MapstoryProfile.objects.filter(user_id=instance.id).update(
         avatar_100=avatar_url(instance, 100))
 
+def mapstory_profile_post_save(instance, sender, **kwargs):
+    geonode.people.models.profile_post_save(instance, sender, **kwargs)
+    registered_group, created = contrib.auth.models.Group.objects.get_or_create(name='registered')
+    instance.groups.add(registered_group)
+    geonode.people.models.Profile.objects.filter(id=instance.id).update()
+
 def avatar_post_save(instance, sender, **kw):
     MapstoryProfile.objects.filter(user_id=instance.user.id).update(
         avatar_100=avatar_url(instance.user, 100))
@@ -90,5 +101,7 @@ def save_mapstory_profile(sender, instance, **kwargs):
 
 signals.post_save.connect(avatar_post_save, sender=Avatar)
 signals.post_save.connect(profile_post_save, sender=Geonode_Profile)
+signals.post_save.connect(mapstory_profile_post_save, sender=Geonode_Profile)
 signals.post_save.connect(create_mapstory_profile, sender=Geonode_Profile)
 signals.post_save.connect(save_mapstory_profile, sender=Geonode_Profile)
+

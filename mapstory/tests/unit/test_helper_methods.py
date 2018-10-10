@@ -54,7 +54,3 @@ class TestHelperMethods(TestCase):
     @skip("TODO")
     def test_group_journals(self):
         pass
-
-    @skip("TODO")
-    def test_mapstory_profile_post_save(self):
-        pass

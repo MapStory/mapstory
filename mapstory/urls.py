@@ -17,6 +17,7 @@ from geonode.maps.views import new_map
 from geonode.urls import urlpatterns
 from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstories.urls import urlpatterns as mapstories_urls
+from mapstory_profile.urls import urlpatterns as mapstory_profile_urls
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
 from tastypie.api import Api
 
@@ -33,7 +34,6 @@ from mapstory.views import layer_detail, layer_create
 from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from mapstory.views import layer_remove
 from mapstory.views import map_detail
-from mapstory.views import ProfileDetail, profile_delete, profile_edit
 from mapstory.views import SearchView
 from mapstory.views import get_remote_url
 
@@ -87,8 +87,6 @@ urlpatterns = patterns('',
                        url(r'^maps/(?P<mapid>\d+)/viewer$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
                        url(r'^maps/(?P<mapid>\d+)/embed$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
 
-                       url(r"^storyteller/delete/(?P<username>[^/]*)/$", profile_delete, name="profile_delete"),
-                       url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="edit_profile"),
 
                        url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
                        url(r'^search/$', SearchView.as_view(), name='search'),
@@ -120,6 +118,8 @@ urlpatterns = patterns('',
 
 urlpatterns += mapstories_urls
 
+urlpatterns += mapstory_profile_urls
+
 urlpatterns += maploom_urls
 
 urlpatterns += patterns("", url(r'', include(mapstory_api.urls)))
@@ -129,12 +129,6 @@ urlpatterns += patterns("", url(r'', include(importer_api.urls)))
 urlpatterns += patterns("", url(r'', include(favorites_api.urls)))
 
 urlpatterns += importer_urlpatterns
-
-# this is last to catch reverse lookup from geonode views with the same name
-urlpatterns += patterns("",
-                        url(r"^storyteller/(?P<slug>[^/]*)/$", ProfileDetail.as_view(), name="profile_detail"),
-                        url(r"^storyteller/edit/(?P<username>[^/]*)/$", profile_edit, name="profile_edit"))
-
 
 if settings.LOCAL_CONTENT:
     urlpatterns = static(settings.STATIC_URL + "assets", document_root=settings.LOCAL_ROOT + "/../../mapstory-assets", show_indexes=True) + urlpatterns
