@@ -13,7 +13,7 @@ from geonode.api.urls import api as geonode_api
 geonode_api.unregister('owners')
 geonode_api.unregister('base')
 from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
-from geonode.maps.views import new_map
+from geonode.maps.views import new_map, map_view
 from geonode.urls import urlpatterns
 from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstories.urls import urlpatterns as mapstories_urls
@@ -33,7 +33,6 @@ from mapstory.views import LeaderListView
 from mapstory.views import layer_detail, layer_create
 from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
 from mapstory.views import layer_remove
-from mapstory.views import map_detail
 from mapstory.views import SearchView
 from mapstory.views import get_remote_url
 
@@ -65,28 +64,9 @@ urlpatterns = patterns('',
                        # Blog Comments
                        url(r'^blog/comments/', include('fluent_comments.urls')),
 
-                       # Maps
-                       url(r'^maps/new_map', new_map, name='new_map'),
-
-                       # Story
-                       url(r'^story/(?P<storyid>[^/]+)/generate_thumbnail', 'mapstory.views.story_generate_thumbnail', name='story_generate_thumbnail'),
-                       url(r'^story/(?P<slug>[-\w]+)/$', map_detail, name='mapstory_detail'),
-                       url(r'^story/(?P<slug>[-\w]+)/view$', 'mapstory.views.mapstory_view', name='mapstory_view'),
-                       url(r'^story/(?P<slug>[-\w]+)/embed$', 'mapstory.views.mapstory_view', name='mapstory_view'),
-
-                       # Composer
-                       url(r'^story/(?P<slug>[-\w]+)/draft$',
-                        'mapstory.views.composer_new_view', {'template': 'composer_new/composer.html'}, name='composer-view'),
-                       url(r'^story/new$', new_map, {'template': 'composer_new/composer.html'}, name='new-story'),
-
                        # Editor
                        url(r'^maps/edit$', new_map, {'template': 'composer/maploom.html'}, name='map-edit'),
-                       url(r'^maps/(?P<mapid>\d+)/view$', 'mapstory.views.map_view', {'template': 'composer/maploom.html'}, name='map-view'),
-
-                       # StoryTools
-                       url(r'^maps/(?P<mapid>\d+)/viewer$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
-                       url(r'^maps/(?P<mapid>\d+)/embed$', 'mapstory.views.map_view', {'template': 'viewer/story_viewer.html'}, name='map-viewer'),
-
+                       url(r'^maps/(?P<mapid>\d+)/view$', map_view, {'template': 'composer/maploom.html'}, name='map-view'),
 
                        url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
                        url(r'^search/$', SearchView.as_view(), name='search'),

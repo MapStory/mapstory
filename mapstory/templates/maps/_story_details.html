@@ -109,7 +109,7 @@
                         </div>
                         <h3>Map Services</h3>
                         <div class="embed">Share
-                            <input id="shareStory" value="https://{{ request.get_host }}{% url 'mapstory.views.map_detail' resource.slug %}">
+                            <input id="shareStory" value="https://{{ request.get_host }}{% url 'mapstory.mapstories.views.map_detail' resource.slug %}">
                             <button class="copyclip btn" data-clipboard-target="#shareStory">
                                 <i class="fa fa-clipboard" aria-hidden="true"></i>
                             </button>

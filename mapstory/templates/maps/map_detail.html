@@ -28,11 +28,7 @@
   $(document).ready(function() {
   {% autoescape off %}
       $('<iframe>', {
-     {% if resource.chapters %}
      src: '{%  url 'mapstory_view' resource.slug %}',
-     {% else %}
-     src: '{%  url 'map-viewer' resource.id %}',
-     {% endif %}
      id:  'myFrame',
      allowfullscreen: 'true',
      frameborder: 0,
