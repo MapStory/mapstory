@@ -1,15 +1,16 @@
-import geonode
 import json
 import uuid
 from datetime import datetime
 
-from django.conf import settings
 from django import core, db
+from django.conf import settings
 from django.db import models
 from django.db.models import signals
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 
+import geonode
+from mapstory import search
 from mapstory.mapstories.utils import parse_date_time
 
 
@@ -210,6 +211,19 @@ class Map(geonode.maps.models.Map):
 
         return base_config
 
+def mapstory_map_post_save(instance, sender, **kwargs):
+    # Call basic post save map functionality from geonode
+    geonode.geoserver.signals.geoserver_post_save_map(instance, sender, **kwargs)
+
+    # Assuming map thumbnail was created successfully, updating Story object here
+    if instance.chapter_index == 0:
+        instance.story.update_thumbnail(instance)
+
+    try:
+        search.utils.update_es_index(MapStory, MapStory.objects.get(id=instance.story.id))
+    except:
+        pass
+
 
 def default_is_published(sender, **kwargs):
     """
@@ -334,3 +348,4 @@ class StoryPin(models.Model):
 
 signals.post_init.connect(default_is_published, sender=MapStory)
 signals.post_init.connect(default_is_published, sender=Map)
+db.models.signals.post_save.connect(mapstory_map_post_save, sender=Map)

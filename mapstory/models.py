@@ -1,7 +1,6 @@
 import datetime
 import hashlib
 import os
-import search
 
 from django import conf, db, contrib, template
 from django.contrib.sites.models import Site
@@ -148,18 +147,4 @@ def get_images():
 def get_sponsors():
     return Sponsor.objects.filter(order__gte=0)
 
-def mapstory_map_post_save(instance, sender, **kwargs):
-    # Call basic post save map functionality from geonode
-    geonode.geoserver.signals.geoserver_post_save_map(instance, sender, **kwargs)
-
-    # Assuming map thumbnail was created successfully, updating Story object here
-    if instance.chapter_index == 0:
-        instance.story.update_thumbnail(instance)
-
-    try:
-        search.utils.update_es_index(MapStory, MapStory.objects.get(id=instance.story.id))
-    except:
-        pass
-
 db.models.signals.post_save.connect(geonode.base.models.resourcebase_post_save, sender=MapStory)
-db.models.signals.post_save.connect(mapstory_map_post_save, sender=Map)
