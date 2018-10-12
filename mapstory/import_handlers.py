@@ -1,9 +1,8 @@
 from django import db
 
+from mapstory.storylayers.views import layer_append_minimal
 from osgeo_importer.handlers import ImportHandlerMixin, ensure_can_run
 from osgeo_importer.inspectors import OGRTruncatedConverter
-
-from storylayers.views import layer_append_minimal
 
 
 class LayerAppendHandler(ImportHandlerMixin):
@@ -37,14 +36,15 @@ class TruncatedNameHandler(ImportHandlerMixin):
     def handle(self, layer, layer_config, *args, **kwargs):
         d = db.connections['datastore'].settings_dict
         connection_string = "PG:dbname='%s' user='%s' password='%s' host='%s' port='%s'" % (d['NAME'], d['USER'],
-                                                                        d['PASSWORD'], d['HOST'], d['PORT'])
+                                                                                            d['PASSWORD'], d['HOST'], d['PORT'])
 
         with OGRTruncatedConverter(connection_string) as datasource:
             if layer_config.get('appendTo').split(':')[1] is not None:
                 dest_layer_name = layer_config.get('appendTo').split(':')[1]
             else:
                 dest_layer_name = layer_config.get('appendTo')
-            converted_fields = datasource.convert_truncated(str(layer), str(dest_layer_name))
+            converted_fields = datasource.convert_truncated(
+                str(layer), str(dest_layer_name))
 
         for date_field in set(layer_config.get('convert_to_date', [])):
             if date_field in converted_fields:

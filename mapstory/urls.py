@@ -14,9 +14,9 @@ from mapstory.api.urls import api as mapstory_api
 from mapstory.favorite.urls import api as favorites_api
 from mapstory.importers import UploadedLayerResource
 from mapstory.mapstory_profile.urls import urlpatterns as mapstory_profile_urls
+from mapstory.storylayers.urls import urlpatterns as layers_urls
 from mapstory.views import GetPageView, IndexView, LeaderListView, SearchView
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
-from storylayers.urls import urlpatterns as layers_urls
 from tastypie.api import Api
 
 geonode_api.unregister('owners')
