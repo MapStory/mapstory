@@ -1,42 +1,26 @@
 from django.conf import settings
-from django.conf.urls import patterns
-from django.conf.urls import url
-from django.conf.urls import include
+from django.conf.urls import include, patterns, url
 from django.conf.urls.static import static
-from django.core.urlresolvers import reverse_lazy
-from django.views.generic import RedirectView
 from django.views.generic import TemplateView
 
-# to replace /api/base & /api/owners GeoNode routes with our own:
-# unregister old routes before geonode.urls.urlpatterns is imported
 from geonode.api.urls import api as geonode_api
-geonode_api.unregister('owners')
-geonode_api.unregister('base')
-from geonode.geoserver.views import layer_acls, resolve_user, layer_batch_download
-from geonode.maps.views import new_map, map_view
-from geonode.urls import urlpatterns
+from geonode.maps.views import map_view, new_map
+from geonode.urls import urlpatterns as geonode_urls
 from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstories.urls import urlpatterns as mapstories_urls
-from mapstory.mapstory_profile.urls import urlpatterns as mapstory_profile_urls
-from osgeo_importer.urls import urlpatterns as importer_urlpatterns
-from tastypie.api import Api
-
-from mapstory.api.api import MapstoryOwnersResource, InterestsResource
+from mapstory.api.api import InterestsResource, MapstoryOwnersResource
 from mapstory.api.resourcebase_api import ResourceBaseResource
 from mapstory.api.urls import api as mapstory_api
 from mapstory.favorite.urls import api as favorites_api
 from mapstory.importers import UploadedLayerResource
-from mapstory.views import download_append_csv, download_append_shp
-from mapstory.views import GetPageView
-from mapstory.views import IndexView
-from mapstory.views import LeaderListView
-from mapstory.views import layer_detail, layer_create
-from mapstory.views import layer_acls_mapstory, resolve_user_mapstory
-from mapstory.views import layer_remove
-from mapstory.views import SearchView
-from mapstory.views import get_remote_url
+from mapstory.mapstory_profile.urls import urlpatterns as mapstory_profile_urls
+from mapstory.views import GetPageView, IndexView, LeaderListView, SearchView
+from osgeo_importer.urls import urlpatterns as importer_urlpatterns
+from storylayers.urls import urlpatterns as layers_urls
+from tastypie.api import Api
 
-
+geonode_api.unregister('owners')
+geonode_api.unregister('base')
 geonode_api.register(ResourceBaseResource())
 geonode_api.register(MapstoryOwnersResource())
 geonode_api.register(InterestsResource())
@@ -45,56 +29,48 @@ importer_api = Api(api_name='importer-api')
 # Overwrite Importer URL Routes
 importer_api.register(UploadedLayerResource())
 
-# -- Deprecated url routes for Geoserver authentication -- remove after GeoNode 2.1
-# -- Use /gs/acls, gs/resolve_user/, gs/download instead
-if 'geonode.geoserver' in settings.INSTALLED_APPS:
-    geonode_layers_urlpatterns = patterns('',
-                           url(r'^layers/acls/?$', layer_acls, name='layer_acls_dep'),
-                           url(r'^layers/resolve_user/?$', resolve_user, name='layer_resolve_user_dep'),
-                           url(r'^layers/download$', layer_batch_download, name='layer_batch_download_dep'),
-                           )
-
 urlpatterns = patterns('',
                        # Home
                        url(r'^$', IndexView.as_view(), name="index_view"),
 
                        # Adding Threaded Comments app
-                       url(r'^articles/comments/', include('django_comments.urls')),
+                       url(r'^articles/comments/',
+                           include('django_comments.urls')),
 
                        # Blog Comments
                        url(r'^blog/comments/', include('fluent_comments.urls')),
 
                        # Editor
-                       url(r'^maps/edit$', new_map, {'template': 'composer/maploom.html'}, name='map-edit'),
-                       url(r'^maps/(?P<mapid>\d+)/view$', map_view, {'template': 'composer/maploom.html'}, name='map-view'),
+                       url(r'^maps/edit$', new_map,
+                           {'template': 'composer/maploom.html'}, name='map-edit'),
+                       url(r'^maps/(?P<mapid>\d+)/view$', map_view,
+                           {'template': 'composer/maploom.html'}, name='map-view'),
 
-                       url(r'^get(?P<slug>\w+)$', GetPageView.as_view(), name='getpage'),
+                       url(r'^get(?P<slug>\w+)$',
+                           GetPageView.as_view(), name='getpage'),
                        url(r'^search/$', SearchView.as_view(), name='search'),
-                       url(r'^about/leadership$', LeaderListView.as_view(template_name='mapstory/leaders.html'), name='about-leaders'),
+                       url(r'^about/leadership$', LeaderListView.as_view(
+                           template_name='mapstory/leaders.html'), name='about-leaders'),
                        url(r'^icons/', include('icon_commons.urls')),
                        url(r'^journal/', include('mapstory.journal.urls')),
 
-                       url(r'^donate$', LeaderListView.as_view(template_name='mapstory/donate.html'), name='donate'),
+                       url(r'^donate$', LeaderListView.as_view(
+                           template_name='mapstory/donate.html'), name='donate'),
                        url(r'^favorite/', include('mapstory.favorite.urls')),
                        url(r"^flag/", include('mapstory.flag.urls')),
 
-                       # Layers
-                       url(r'^layers/acls', layer_acls_mapstory, name='layer_acls_mapstory'),
-                       url(r'^layers/create$', layer_create, name='layer_create'),
-                       url(r'^layers/download-append-csv$', download_append_csv, name='download_append_csv'),
-                       url(r'^layers/download-append-shp$', download_append_shp, name='download_append_shp'),
-                       url(r'^layers/resolve_user', resolve_user_mapstory, name='resolve_user_mapstory'),
-                       url(r'^layers/(?P<layername>[^/]*)$', layer_detail, name="layer_detail"),
-                       url(r'^layers/(?P<layername>[^/]*)/viewer$', layer_detail, {'template': 'viewer/layer_viewer.html'}, name="layer_viewer"),
-                       url(r'^layers/(?P<layername>[^/]*)/embed$', layer_detail, {'template': 'viewer/layer_viewer.html'}, name="layer_embed"),
-                       url(r'^layers/(?P<layername>[^/]*)/remove$', layer_remove, name="layer_remove"),
-                       url(r'^layers/(?P<layername>[^/]*)/remote$', get_remote_url, name="get_remote_url"),
-
                        url(r'^teams/', include('mapstory.teams.urls', namespace='teams')),
-                       url(r'^organizations/', include('mapstory.organizations.urls', namespace='organizations')),
-                       url(r'^initiatives/', include('mapstory.initiatives.urls', namespace='initiatives')),
-                       url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type="text/plain"), name='robots'),
-                       ) + geonode_layers_urlpatterns + urlpatterns
+                       url(r'^organizations/', include('mapstory.organizations.urls',
+                                                       namespace='organizations')),
+                       url(r'^initiatives/', include('mapstory.initiatives.urls',
+                                                     namespace='initiatives')),
+                       url(r'^robots\.txt$', TemplateView.as_view(
+                           template_name='robots.txt', content_type="text/plain"), name='robots'),
+                       )
+
+urlpatterns += layers_urls
+
+urlpatterns += geonode_urls
 
 urlpatterns += mapstories_urls
 
@@ -111,13 +87,9 @@ urlpatterns += patterns("", url(r'', include(favorites_api.urls)))
 urlpatterns += importer_urlpatterns
 
 if settings.LOCAL_CONTENT:
-    urlpatterns = static(settings.STATIC_URL + "assets", document_root=settings.LOCAL_ROOT + "/../../mapstory-assets", show_indexes=True) + urlpatterns
-
-    #urlpatterns += patterns('',
-    #    url('', include('social.apps.django_app.urls', namespace='social')),
-    #    url(r'^oauth2/', include('provider.oauth2.urls', namespace='oauth2')),
-    #)
+    urlpatterns = static(settings.STATIC_URL + "assets", document_root=settings.LOCAL_ROOT +
+                         "/../../mapstory-assets", show_indexes=True) + urlpatterns
 
 urlpatterns += patterns('',
-        url(r'^accounts/', include('allauth.urls')),
-)
+                        url(r'^accounts/', include('allauth.urls')),
+                        )
