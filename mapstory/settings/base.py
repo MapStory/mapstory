@@ -121,6 +121,7 @@ INSTALLED_APPS += (
     'mapstory.initiatives',
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
+    'mapstory.storylayers',
 )
 
 if is_valid(os.getenv("ALLAUTH_GEOAXIS_HOST")):
