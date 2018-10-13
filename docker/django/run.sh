@@ -15,11 +15,9 @@ echo 'Testing permissions...'
 touch $MEDIA_ROOT/.ignore_$HOSTNAME
 touch $STATIC_ROOT/.ignore_$HOSTNAME
 touch $APP_PATH/cover/.ignore_$HOSTNAME
-touch /usr/local/lib/python2.7/site-packages-copy/.ignore_$HOSTNAME
 rm $MEDIA_ROOT/.ignore_$HOSTNAME
 rm $STATIC_ROOT/.ignore_$HOSTNAME
 rm $APP_PATH/cover/.ignore_$HOSTNAME
-rm /usr/local/lib/python2.7/site-packages-copy/.ignore_$HOSTNAME
 echo 'Permissions look good'
 
 cd $APP_PATH
@@ -137,9 +135,6 @@ for i do # loop over $@
     if [ "$i" = "--serve-dev" ]; then
         echo 'Dev serving...'
         wait_for_pg
-        echo 'Copying site-packages' # served by nginx
-        rm -rf /usr/local/lib/python2.7/site-packages-copy/*
-        cp -r /usr/local/lib/python2.7/site-packages/* /usr/local/lib/python2.7/site-packages-copy/
         echo 'Running dev server'
         python manage.py runserver 0.0.0.0:$DJANGO_PORT
     fi

@@ -1,5 +1,5 @@
 # Dev configuration
-version: '3.1'
+version: '3.7'
 services:
   composer:
     image: quay.io/mapstory/composer:master
@@ -114,7 +114,6 @@ services:
     volumes:
       - .:/srv/mapstory/:cached
       - ./cover:/srv/mapstory/cover:cached
-      - site-packages:/usr/local/lib/python2.7/site-packages-copy
 #    ports:
 #      - "8000:8000"
     stdin_open: true
@@ -134,7 +133,6 @@ services:
     volumes:
       - .:/srv/mapstory/:cached
       - ./cover:/srv/mapstory/cover:cached
-      - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   django_volumes:
     image: quay.io/mapstory/django:master
@@ -163,9 +161,6 @@ services:
       - NGINX_NUM_WORKERS=1
       - NGINX_GZIP_COMP_LEVEL=1
       - DEV_DEPLOYMENT=True
-    volumes:
-      - .:/srv/mapstory/:cached # mapstory_static has symlinks to this
-      - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
     networks:
       internal:
         aliases:
@@ -173,4 +168,3 @@ services:
 
 volumes:
   postgres:
-  site-packages:

@@ -157,9 +157,7 @@ RUN set -ex \
     && chown -R mapstory:mapstory $STATIC_ROOT \
     && chown -R mapstory:mapstory $MEDIA_ROOT \
     && mkdir -p $APP_PATH/cover \
-    && chown -R mapstory:mapstory $APP_PATH/cover \
-    && mkdir -p /usr/local/lib/python2.7/site-packages-copy \
-    && chown -R mapstory:mapstory /usr/local/lib/python2.7/site-packages-copy
+    && chown -R mapstory:mapstory $APP_PATH/cover
 
 COPY --chown=mapstory:mapstory docker/django/run.sh $APP_PATH/docker/django/
 RUN ln -s $APP_PATH/docker/django/run.sh /opt/run.sh
