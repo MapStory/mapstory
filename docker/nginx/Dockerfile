@@ -1,8 +1,28 @@
-FROM nginx:1.14-alpine
+ARG TAG=master
+FROM quay.io/mapstory/composer:$TAG AS composer
+
+# Moves npm_modules dirs to the correct locations
+RUN ./scripts/run.sh --no-op
+
+
+FROM nginx:1.15-alpine
 LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
+
+### Env vars and their defaults:
+# DEV_DEPLOYMENT=False
+# NGINX_NUM_WORKERS=1
+# NGINX_FILE_CACHE_ENABLED=False
+# NGINX_GZIP_COMP_LEVEL=4
+# NGINX_CLIENT_MAX_BODY_SIZE=500m
+# FORCE_HTTPS_REDIRECT=True
+# PUBLIC_HOST
+# PUBLIC_PROTOCOL
+# SSL_CERT
+# SSL_KEY
 
 ENV MEDIA_ROOT=/var/lib/mapstory/media
 ENV STATIC_ROOT=/var/lib/mapstory/static
+ENV COMPOSER_ROOT=/srv/composer
 ENV CONSUL_TEMPLATE_VERSION=0.18.1
 
 VOLUME $MEDIA_ROOT
@@ -26,5 +46,7 @@ COPY config.hcl /opt/
 COPY templates/ /opt/templates
 
 COPY run.sh /opt/
+
+COPY --from=composer /srv/story-tools-composer /srv/composer
 
 CMD /opt/run.sh
