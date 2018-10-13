@@ -1,6 +1,12 @@
 # mapstory.org configuration
 version: '3.1'
 services:
+  composer:
+    image: quay.io/mapstory/composer:prod
+    build:
+      args:
+        - DEPLOYMENT=production
+
   pgadmin:
     image: quay.io/mapstory/pgadmin:prod
     ports:
@@ -61,6 +67,9 @@ services:
       - env_geoserver_auth
 
   nginx:
+    build:
+      args:
+        - TAG=prod
     image: quay.io/mapstory/nginx:prod
     env_file:
       - docker/env/prod/public_host.env

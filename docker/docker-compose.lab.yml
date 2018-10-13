@@ -1,6 +1,12 @@
 # lab.mapstory.org configuration
 version: '3.1'
 services:
+  composer:
+    image: quay.io/mapstory/composer:lab
+    build:
+      args:
+        - DEPLOYMENT=production
+
   postgres:
     image: mdillon/postgis:9.6
     env_file:
@@ -121,6 +127,9 @@ services:
       - "8080:8080"
 
   nginx:
+    build:
+      args:
+        - TAG=lab
     image: quay.io/mapstory/nginx:lab
     env_file:
       - docker/env/lab/public_host.env

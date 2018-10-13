@@ -6,10 +6,6 @@ services:
     build:
       args:
         - DEPLOYMENT=production
-    networks:
-      internal:
-    ports:
-      - "9090:9090"
 
   # This is used when building on forks because auth tokens for Sauce are unavailable
   selenium:
