@@ -1,5 +1,17 @@
 version: '3.1'
 services:
+  composer:
+    build:
+      context: ./deps/story-tools-composer
+      args:
+        - DEPLOYMENT=production
+    image: quay.io/mapstory/composer
+    command: --no-op
+    networks:
+      internal:
+    expose:
+      - "9090"
+
   backup-sync:
     build: ./docker/backup-sync
     image: quay.io/mapstory/backup-sync:latest
@@ -96,6 +108,7 @@ services:
     image: quay.io/mapstory/nginx
     depends_on:
       - celery
+      - composer
     links:
       - django
       - geoserver

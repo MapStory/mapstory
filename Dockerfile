@@ -101,7 +101,6 @@ RUN set -ex \
     && git clone -b angular-1.6 --depth 1 https://github.com/GeoNode/django-osgeo-importer.git \
     && pip install -e ./django-osgeo-importer \
     && git clone -b master --depth 1 https://github.com/MapStory/story-tools.git \
-    && git clone -b master --depth 1 https://github.com/MapStory/story-tools-composer.git \
     && chown -R mapstory:mapstory .
 
 # Install dependencies from requirements.txt
@@ -129,13 +128,6 @@ RUN set -ex \
     && yarn cache clean \
     && bower install \
     && rm -rf ~/.cache/bower
-WORKDIR $APP_PATH/deps/story-tools-composer
-RUN set -ex \
-    && yarn install \
-    && webpack --output-public-path='/static/composer/' \
-    && cp -r . $APP_PATH/mapstory/static/composer \
-    && yarn cache clean \
-    && rm -rf /tmp/phantomjs
 
 USER root
 WORKDIR $APP_PATH
@@ -158,18 +150,6 @@ RUN set -ex \
     && grunt copy:development \
     && yarn cache clean \
     && rm -rf ~/.cache/bower \
-    && rm -rf /tmp/phantomjs
-
-WORKDIR $APP_PATH/deps/story-tools-composer
-RUN set -ex \
-    && ./scripts/run.sh --bundle \
-    && mkdir /tmp/story-tools-composer/ \
-    && mv ./node_modules /tmp/story-tools-composer/ \
-    && mkdir /tmp/story-tools/ \
-    && mv ./deps/story-tools/node_modules /tmp/story-tools/ \
-    && rm -rf $APP_PATH/mapstory/static/composer \
-    && cp -r . $APP_PATH/mapstory/static/composer \
-    && yarn cache clean \
     && rm -rf /tmp/phantomjs
 
 USER root
