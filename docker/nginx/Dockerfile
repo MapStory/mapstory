@@ -1,9 +1,9 @@
 ARG TAG=master
 FROM quay.io/mapstory/composer:$TAG AS composer
-
 # Moves npm_modules dirs to the correct locations
 RUN ./scripts/run.sh --no-op
 
+FROM quay.io/mapstory/django:$TAG AS django
 
 FROM nginx:1.15-alpine
 LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
@@ -23,6 +23,8 @@ LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 ENV MEDIA_ROOT=/var/lib/mapstory/media
 ENV STATIC_ROOT=/var/lib/mapstory/static
 ENV COMPOSER_ROOT=/srv/composer
+ENV MAPSTORY_ROOT=/srv/mapstory/
+ENV SITE_PACKAGES_ROOT=/usr/local/lib/python2.7/site-packages
 ENV CONSUL_TEMPLATE_VERSION=0.18.1
 
 VOLUME $MEDIA_ROOT
@@ -47,6 +49,8 @@ COPY templates/ /opt/templates
 
 COPY run.sh /opt/
 
-COPY --from=composer /srv/story-tools-composer /srv/composer
+COPY --from=composer /srv/story-tools-composer $COMPOSER_ROOT
+COPY --from=django $MAPSTORY_ROOT $MAPSTORY_ROOT
+COPY --from=django $SITE_PACKAGES_ROOT $SITE_PACKAGES_ROOT
 
 CMD /opt/run.sh

@@ -92,10 +92,14 @@ http {
     #}
     #{% endif %}
 
+    {{ if or (env "DEV_DEPLOYMENT") "False" | parseBool }}
+    # static files will be served by the django proxy
+    {{ else }}
     # serve staticfiles
     location /static/ {
       alias {{ env "STATIC_ROOT" }}/;
     }
+    {{ end }}
 
     {{ if or (env "DEV_DEPLOYMENT") "False" | parseBool }}
     # composer proxy for dev
