@@ -1,6 +1,12 @@
 # storyscapes test configuration
 version: '3.1'
 services:
+  composer:
+    image: quay.io/mapstory/composer:storyscapes
+    build:
+      args:
+        - DEPLOYMENT=production
+
   postgres:
     image: mdillon/postgis:9.6
     env_file:
@@ -78,6 +84,9 @@ services:
       - env_geoserver_auth
 
   nginx:
+    build:
+      args:
+        - TAG=storyscapes
     image: quay.io/mapstory/nginx:storyscapes
     env_file:
       - docker/env/storyscapes/public_host.env

@@ -7,10 +7,8 @@ services:
       args:
         - DEPLOYMENT=development
     command: --bundle-dev --serve-dev
-    networks:
-      internal:
-    ports:
-      - "9090:9090"
+#    ports:
+#      - "9090:9090"
 
   selenium:
     image: selenium/standalone-chrome

@@ -1,6 +1,12 @@
 # mapstory.org configuration
 version: '3.1'
 services:
+  composer:
+    image: quay.io/mapstory/composer:staging
+    build:
+      args:
+        - DEPLOYMENT=production
+
   pgadmin:
     image: quay.io/mapstory/pgadmin:staging
     ports:
@@ -61,6 +67,9 @@ services:
       - env_geoserver_auth
 
   nginx:
+    build:
+      args:
+        - TAG=staging
     image: quay.io/mapstory/nginx:staging
     env_file:
       - docker/env/staging/public_host.env
