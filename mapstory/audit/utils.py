@@ -19,12 +19,14 @@
 #########################################################################
 
 import json
-from .settings import AUDIT_LOGFILE_LOCATION
+from time import gmtime, strftime
+
 from geonode.base.models import ContactRole
 from geonode.documents.models import Document
 from geonode.layers.models import Layer
 from geonode.maps.models import Map
-from time import gmtime, strftime
+
+from .settings import AUDIT_LOGFILE_LOCATION
 
 
 def get_audit_crud_dict(instance, event):

@@ -20,8 +20,10 @@
 
 import logging
 
-from django.contrib.auth import signals as auth_signals, get_user_model
+from django.contrib.auth import get_user_model
+from django.contrib.auth import signals as auth_signals
 from django.db.models import signals as models_signals
+
 from .models import AuditEvent
 from .settings import AUDIT_TO_FILE
 from .utils import (get_audit_crud_dict, get_audit_login_dict, get_time_gmt,
