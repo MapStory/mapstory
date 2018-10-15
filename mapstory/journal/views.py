@@ -1,8 +1,9 @@
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.views.generic.detail import DetailView
-from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, ModelFormMixin, UpdateView
+from django.views.generic.list import ListView
+
 from models import JournalEntry
 
 
@@ -18,7 +19,8 @@ class JournalListView(ListView):
         ctx = super(JournalListView, self).get_context_data(**kwargs)
         user = self.request.user
         if user.is_authenticated():
-            ctx['drafts'] = JournalEntry.objects.filter(author=user, publish=False)
+            ctx['drafts'] = JournalEntry.objects.filter(
+                author=user, publish=False)
         return ctx
 
 
