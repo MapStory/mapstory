@@ -25,14 +25,13 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from django.shortcuts import render_to_response
+from django.shortcuts import get_object_or_404, render_to_response
 from django.template import RequestContext
 
+import models
 from geonode.documents.models import Document
 from geonode.layers.models import Layer
-from mapstory.mapstories.models import MapStory, Map
-import models
+from mapstory.mapstories.models import Map, MapStory
 
 
 @login_required
@@ -86,6 +85,7 @@ def get_favorites(req):
         "favorite/favorite_list.html",
         RequestContext(
             req,
-            {'favorites': models.Favorite.objects.favorites_for_user(req.user), }
+            {'favorites': models.Favorite.objects.favorites_for_user(
+                req.user), }
         )
     )
