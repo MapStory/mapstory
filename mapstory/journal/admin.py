@@ -8,4 +8,5 @@ class JournalEntryAdmin(admin.ModelAdmin):
     list_display = 'title', 'author', 'publish', 'date'
     list_editable = 'publish',
 
+
 admin.site.register(JournalEntry, JournalEntryAdmin)
