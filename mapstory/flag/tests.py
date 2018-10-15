@@ -1,16 +1,20 @@
-from django.core.urlresolvers import reverse
-from django.contrib.contenttypes.models import ContentType
-from django.test import Client
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
+from django.test import Client
+
 from geonode.base.models import TopicCategory
-from mapstory.tests.populate_test_data import create_models
 from mapstory.mapstories.models import Map
-from .models import FlaggedContent
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
+from mapstory.tests.populate_test_data import create_models
+
+from .models import FlaggedContent
 
 User = get_user_model()
 
 # @TODO Replace this with something better that doesn't specify a username and password.
+
+
 class AdminClient(Client):
     def login_as_admin(self, username='admin', password='admin'):
         """
@@ -44,7 +48,8 @@ class FlagsTest(MapStoryTestMixin):
         response = c.get(reverse('flag'))
         self.assertEqual(response.status_code, 405)
 
-        data = dict(content_type=ct.id, object_id=m.id, comment="what is this?", creator_field='owner')
+        data = dict(content_type=ct.id, object_id=m.id,
+                    comment="what is this?", creator_field='owner')
 
         response = c.post(reverse('flag'), data=data)
         self.assertEqual(response.status_code, 302)
@@ -52,6 +57,7 @@ class FlagsTest(MapStoryTestMixin):
         flag = FlaggedContent.objects.first()
         self.assertEqual(flag.content_type, ct)
         self.assertEqual(flag.object_id, data['object_id'])
-        self.assertEqual(flag.flaginstance_set.first().comment, data['comment'])
-        self.assertEqual(flag.flaginstance_set.first().user, User.objects.get(username='admin'))
-
+        self.assertEqual(
+            flag.flaginstance_set.first().comment, data['comment'])
+        self.assertEqual(flag.flaginstance_set.first().user,
+                         User.objects.get(username='admin'))
