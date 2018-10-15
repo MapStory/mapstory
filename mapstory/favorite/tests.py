@@ -27,18 +27,19 @@ from django.core.urlresolvers import reverse
 from django.db.models import Max
 from django.test import TestCase
 
+from geonode.base.models import TopicCategory
+from geonode.documents.models import Document
+from mapstory.tests.populate_test_data import create_models
 from tastypie.test import ResourceTestCaseMixin, TestApiClient
 
 from .models import Favorite
-from geonode.base.models import TopicCategory
-from mapstory.tests.populate_test_data import create_models
-from geonode.documents.models import Document
 
 
 class FavoriteTest(ResourceTestCaseMixin, TestCase):
     """
     Tests mapstory.favorite app/module
     """
+
     def setUp(self):
 
         super(FavoriteTest, self).setUp()
@@ -72,7 +73,8 @@ class FavoriteTest(ResourceTestCaseMixin, TestCase):
         self.assertEqual(favorites_for_user.count(), 2)
 
         # test document favorites for user.
-        document_favorites = Favorite.objects.favorite_documents_for_user(test_user)
+        document_favorites = Favorite.objects.favorite_documents_for_user(
+            test_user)
         self.assertEqual(document_favorites.count(), 2)
 
         # test layer favorites for user.
@@ -88,7 +90,8 @@ class FavoriteTest(ResourceTestCaseMixin, TestCase):
         self.assertEqual(user_favorites.count(), 0)
 
         # test favorite for user and a specific content object.
-        user_content_favorite = Favorite.objects.favorite_for_user_and_content_object(test_user, test_document_1)
+        user_content_favorite = Favorite.objects.favorite_for_user_and_content_object(
+            test_user, test_document_1)
         self.assertEqual(user_content_favorite.object_id, test_document_1.id)
 
         # test bulk favorites.
@@ -120,7 +123,8 @@ class FavoriteTest(ResourceTestCaseMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         json_content = json.loads(response.content)
         self.assertEqual(json_content["has_favorite"], "true")
-        expected_delete_url = reverse("delete_favorite", args=[favorites[0].pk])
+        expected_delete_url = reverse(
+            "delete_favorite", args=[favorites[0].pk])
         self.assertEqual(json_content["delete_url"], expected_delete_url)
 
         # call method again, check for idempotent.
@@ -226,20 +230,21 @@ class FavoriteTest(ResourceTestCaseMixin, TestCase):
         Favorite.objects.create_favorite(test_document_3, test_user)
         Favorite.objects.create_favorite(test_user, test_user)
 
-        self.api_client.client.login(username=self.adm_un, password=self.adm_pw)
-        #Keywords filtering
+        self.api_client.client.login(
+            username=self.adm_un, password=self.adm_pw)
+        # Keywords filtering
         filters = '?keyword=doctagunique'
         resp = self.api_client.get(self.list_url + filters)
         self.assertValidJSONResponse(resp)
         self.assertEquals(len(self.deserialize(resp)['objects']), 1)
 
-        #Title filtering
+        # Title filtering
         filters = '?title=lorem1'
         resp = self.api_client.get(self.list_url + filters)
         self.assertValidJSONResponse(resp)
         self.assertEquals(len(self.deserialize(resp)['objects']), 1)
 
-        #Type filtering
+        # Type filtering
         filters = '?type=profile'
         resp = self.api_client.get(self.list_url + filters)
         self.assertValidJSONResponse(resp)

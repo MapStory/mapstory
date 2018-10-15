@@ -20,8 +20,8 @@
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from geonode.documents.models import Document
@@ -56,7 +56,8 @@ class FavoriteManager(models.Manager):
         impl note: can only be 0 or 1, per the class's unique_together.
         """
         content_type = ContentType.objects.get_for_model(type(content_object))
-        result = self.filter(user=user, content_type=content_type, object_id=content_object.pk)
+        result = self.filter(
+            user=user, content_type=content_type, object_id=content_object.pk)
 
         if len(result) > 0:
             return result[0]
@@ -78,7 +79,7 @@ class FavoriteManager(models.Manager):
             user=user,
             content_type=content_type,
             object_id=content_object.pk,
-            )
+        )
         return favorite
 
 
