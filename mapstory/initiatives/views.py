@@ -1,14 +1,13 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import SuspiciousOperation
 from django.core.urlresolvers import reverse
-from django.contrib import messages
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotAllowed
+from django.http import (HttpResponse, HttpResponseForbidden,
+                         HttpResponseNotAllowed)
+from django.shortcuts import get_object_or_404, redirect, render
 
-
+from . import forms, models
 from ..organizations.forms import LinksAndSocialMedia
-from . import models
-from . import forms
 
 
 def initiatives_list(request):
@@ -33,40 +32,46 @@ def initiative_detail(request, slug):
         # Handle form data
         if request.POST.get("add_featured_layer"):
             layer_pk = request.POST.get("layer_pk")
-            found_layer = get_object_or_404(models.InitiativeLayer, initiative=ini, layer__pk=layer_pk)
+            found_layer = get_object_or_404(
+                models.InitiativeLayer, initiative=ini, layer__pk=layer_pk)
             found_layer.is_featured = True
             found_layer.save()
             messages.success(request, "Added Layer to Featured")
 
         elif request.POST.get("remove_layer"):
             layer_pk = request.POST.get("layer_pk")
-            found_layer = get_object_or_404(models.InitiativeLayer, initiative=ini, layer__pk=layer_pk)
+            found_layer = get_object_or_404(
+                models.InitiativeLayer, initiative=ini, layer__pk=layer_pk)
             found_layer.delete()
             messages.success(request, "Removed Layer from Initiative")
 
         elif request.POST.get("remove_featured_layer"):
             layer_pk = request.POST.get("layer_pk")
-            found_layer = get_object_or_404(models.InitiativeLayer, initiative=ini, layer__pk=layer_pk)
+            found_layer = get_object_or_404(
+                models.InitiativeLayer, initiative=ini, layer__pk=layer_pk)
             found_layer.is_featured = False
             found_layer.save()
             messages.success(request, "Removed Layer from Featured")
 
         elif request.POST.get("remove_mapstory"):
             mapstory_pk = request.POST.get("mapstory_pk")
-            found_mapstory = get_object_or_404(models.InitiativeMapStory, initiative=ini, mapstory__pk=mapstory_pk)
+            found_mapstory = get_object_or_404(
+                models.InitiativeMapStory, initiative=ini, mapstory__pk=mapstory_pk)
             found_mapstory.delete()
             messages.success(request, "Removed MapStory from Initiative")
 
         elif request.POST.get("remove_featured_mapstory"):
             mapstory_pk = request.POST.get("mapstory_pk")
-            found_mapstory = get_object_or_404(models.InitiativeMapStory, initiative=ini, mapstory__pk=mapstory_pk)
+            found_mapstory = get_object_or_404(
+                models.InitiativeMapStory, initiative=ini, mapstory__pk=mapstory_pk)
             found_mapstory.is_featured = False
             found_mapstory.save()
             messages.success(request, "Removed MapStory from Featured")
 
         elif request.POST.get("add_featured_mapstory"):
             mapstory_pk = request.POST.get("mapstory_pk")
-            found_mapstory = get_object_or_404(models.InitiativeMapStory, initiative=ini, mapstory__pk=mapstory_pk)
+            found_mapstory = get_object_or_404(
+                models.InitiativeMapStory, initiative=ini, mapstory__pk=mapstory_pk)
             found_mapstory.is_featured = True
             found_mapstory.save()
             messages.success(request, "Added MapStory to Featured")
@@ -80,7 +85,8 @@ def initiative_detail(request, slug):
 
     # Check membership
     membership = None
-    memberships = models.InitiativeMembership.objects.filter(initiative=ini, user__pk=request.user.pk)
+    memberships = models.InitiativeMembership.objects.filter(
+        initiative=ini, user__pk=request.user.pk)
     if memberships.count() > 0:
         membership = memberships.first()
 
@@ -103,15 +109,20 @@ def initiative_detail(request, slug):
     # Build social media icons
     social_icons = []
     if ini.facebook:
-        social_icons.append(models.InitiativeSocialMedia.objects.get(pk=ini.facebook.pk))
+        social_icons.append(
+            models.InitiativeSocialMedia.objects.get(pk=ini.facebook.pk))
     if ini.twitter:
-        social_icons.append(models.InitiativeSocialMedia.objects.get(pk=ini.twitter.pk))
+        social_icons.append(
+            models.InitiativeSocialMedia.objects.get(pk=ini.twitter.pk))
     if ini.instagram:
-        social_icons.append(models.InitiativeSocialMedia.objects.get(pk=ini.instagram.pk))
+        social_icons.append(
+            models.InitiativeSocialMedia.objects.get(pk=ini.instagram.pk))
     if ini.linkedin:
-        social_icons.append(models.InitiativeSocialMedia.objects.get(pk=ini.linkedin.pk))
+        social_icons.append(
+            models.InitiativeSocialMedia.objects.get(pk=ini.linkedin.pk))
     if ini.github:
-        social_icons.append(models.InitiativeSocialMedia.objects.get(pk=ini.github.pk))
+        social_icons.append(
+            models.InitiativeSocialMedia.objects.get(pk=ini.github.pk))
 
     # Build the Links
     ini_urls = []
@@ -147,12 +158,14 @@ def request_membership(request, slug):
     :return: HTTPResponse
     """
     if not request.user.is_authenticated():
-        messages.warning(request, 'Please Log In or Sign Up before joining an initiative.')
+        messages.warning(
+            request, 'Please Log In or Sign Up before joining an initiative.')
         return redirect(reverse("index_view"))
 
     # Make sure the Request doesnt exist yet.
     ini = get_object_or_404(models.Initiative, slug=slug)
-    found = models.JoinRequest.objects.filter(initiative=ini, user=request.user.pk)
+    found = models.JoinRequest.objects.filter(
+        initiative=ini, user=request.user.pk)
     if found.count() > 0:
         messages.warning(request, 'A request to join has already been made.')
         return redirect(reverse("initiatives:detail", kwargs={'slug': slug}))
@@ -162,7 +175,8 @@ def request_membership(request, slug):
         request_to_join = models.JoinRequest()
         request_to_join.user_id = request.user.pk
         request_to_join.is_open = True
-        request_to_join.initiative = get_object_or_404(models.Initiative, slug=slug)
+        request_to_join.initiative = get_object_or_404(
+            models.Initiative, slug=slug)
         request_to_join.save()
         messages.success(request, 'A request to join has been made')
 
@@ -302,14 +316,17 @@ def manager(request, slug):
     """
     # Check that we are admins
     initiative = get_object_or_404(models.Initiative, slug=slug)
-    membership = get_object_or_404(models.InitiativeMembership, initiative=initiative, user=request.user)
+    membership = get_object_or_404(
+        models.InitiativeMembership, initiative=initiative, user=request.user)
     if not membership.is_admin:
         # User is NOT AUTHORIZED!
         # TODO: Send the user somewhere else
         return HttpResponseNotAllowed("Not authorized")
 
-    join_requests = models.JoinRequest.objects.filter(initiative=initiative, is_open=True)
-    memberships = models.InitiativeMembership.objects.filter(initiative=initiative)
+    join_requests = models.JoinRequest.objects.filter(
+        initiative=initiative, is_open=True)
+    memberships = models.InitiativeMembership.objects.filter(
+        initiative=initiative)
 
     # Social Media
     facebook = initiative.facebook
@@ -346,7 +363,8 @@ def manager(request, slug):
         # Check for valid forms
         if basic_info_form.is_valid() and links_form.is_valid():
             # All forms are valid
-            _edit_initiative_with_forms(initiative, basic_info_form, links_form)
+            _edit_initiative_with_forms(
+                initiative, basic_info_form, links_form)
 
             messages.success(request, "Saved changes to Initiative.")
 
@@ -379,7 +397,8 @@ def add_layer(request, slug, layer_pk):
     :return: An HTTPResponse
     """
     ini = get_object_or_404(models.Initiative, slug=slug)
-    membership = get_object_or_404(models.InitiativeMembership, user_id=request.user.pk, initiative=ini)
+    membership = get_object_or_404(
+        models.InitiativeMembership, user_id=request.user.pk, initiative=ini)
 
     if membership.is_admin or membership.is_active:
         pass
@@ -390,11 +409,13 @@ def add_layer(request, slug, layer_pk):
     if request.POST:
         # Check if not already added
         ini = get_object_or_404(models.Initiative, slug=slug)
-        found = models.InitiativeLayer.objects.filter(initiative=ini, layer_id=layer_pk)
+        found = models.InitiativeLayer.objects.filter(
+            initiative=ini, layer_id=layer_pk)
 
         if found.count() > 0:
             # Duplicate Layer
-            messages.warning(request, "This layer has already been added to this Initiative.")
+            messages.warning(
+                request, "This layer has already been added to this Initiative.")
         else:
             # Add the Layer
             obj = models.InitiativeLayer()
@@ -432,11 +453,13 @@ def add_mapstory(request, slug, mapstory_pk):
 
     if request.POST:
         # Check if not already added
-        found = models.InitiativeMapStory.objects.filter(initiative=ini, mapstory__pk=mapstory_pk)
+        found = models.InitiativeMapStory.objects.filter(
+            initiative=ini, mapstory__pk=mapstory_pk)
 
         if found.count() > 0:
             # Give a warning to the user
-            messages.warning(request, "This Mapstory has already been added to this Initiative.")
+            messages.warning(
+                request, "This Mapstory has already been added to this Initiative.")
         else:
             # Add it to the Initiative
             obj = models.InitiativeMapStory()
@@ -471,7 +494,8 @@ def approve_membership(request, slug):
 
         if not admin_membership.is_admin:
             # No permission
-            messages.warning(request, "You do not have permissions to do this.")
+            messages.warning(
+                request, "You do not have permissions to do this.")
             return redirect(reverse("initiatives:detail", kwargs={'slug': slug}))
         else:
             # We have permission, continue
@@ -490,4 +514,3 @@ def approve_membership(request, slug):
                 messages.success(request, "Request to join declined.")
 
     return redirect(reverse('initiatives:manage', kwargs={'slug': slug}))
-
