@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Initiative, InitiativeMembership, JoinRequest, InitiativeLayer, InitiativeMapStory
+from .models import (Initiative, InitiativeLayer, InitiativeMapStory,
+                     InitiativeMembership, JoinRequest)
 
 
 class MembershipInlineAdmin(admin.StackedInline):
