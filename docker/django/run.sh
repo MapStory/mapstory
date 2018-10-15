@@ -62,7 +62,7 @@ for i do # loop over $@
         echo 'Collecting static files'
         rm -rf $STATIC_ROOT/*
         cd mapstory/static
-        npm install
+        yarn install
         bower install
         grunt concat
         grunt less:development
