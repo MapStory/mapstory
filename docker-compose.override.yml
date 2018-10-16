@@ -7,6 +7,8 @@ services:
       args:
         - DEPLOYMENT=development
     command: --bundle-dev --serve-dev
+    volumes:
+      - ./deps/story-tools-composer:/srv/story-tools-composer:cached
 #    ports:
 #      - "9090:9090"
 
