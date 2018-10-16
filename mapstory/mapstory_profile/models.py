@@ -1,15 +1,13 @@
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from django.db.models import signals
-from geonode.people.models import Profile as Geonode_Profile
-
-from avatar.templatetags.avatar_tags import avatar_url
-from avatar.models import Avatar
-from taggit.managers import TaggableManager
-
 from django import contrib
+from django.db import models
+from django.db.models import signals
+from django.utils.translation import ugettext_lazy as _
 
 import geonode
+from avatar.models import Avatar
+from avatar.templatetags.avatar_tags import avatar_url
+from geonode.people.models import Profile as Geonode_Profile
+from taggit.managers import TaggableManager
 
 
 class MapstoryProfile(models.Model):

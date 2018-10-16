@@ -6,18 +6,20 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseForbidden
-from django.shortcuts import render_to_response, render, redirect, get_object_or_404
+from django.shortcuts import (get_object_or_404, redirect, render,
+                              render_to_response)
 from django.views.generic.detail import DetailView
 
 from actstream.models import actor_stream
 from allauth.account.adapter import DefaultAccountAdapter
 from geonode.people.models import Profile
 from icon_commons.models import Icon
+from mapstory.favorite.models import Favorite
+from mapstory.journal.models import JournalEntry
 from osgeo_importer.forms import UploadFileForm
 
-from mapstory.favorite.models import Favorite
-from .forms import DeactivateProfileForm, EditMapstoryProfileForm, EditStoryScapesProfileForm, EditGeonodeProfileForm
-from mapstory.journal.models import JournalEntry
+from .forms import (DeactivateProfileForm, EditGeonodeProfileForm,
+                    EditMapstoryProfileForm, EditStoryScapesProfileForm)
 
 
 class ProfileDetail(DetailView):
