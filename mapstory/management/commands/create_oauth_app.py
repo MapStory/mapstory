@@ -1,6 +1,8 @@
 from django.core.management.base import BaseCommand
-from oauth2_provider.models import Application
+
 from geonode.people.models import Profile
+from oauth2_provider.models import Application
+
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
@@ -36,13 +38,14 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        app,_ = Application.objects.get_or_create(name=options['name'])
-        u,_ = Profile.objects.get_or_create(username=options['user'])
+        app, _ = Application.objects.get_or_create(name=options['name'])
+        u, _ = Profile.objects.get_or_create(username=options['user'])
         app.user = u
         app.user_id = u.id
         app.client_type = 'confidential'
         app.authorization_grant_type = 'authorization-code'
         app.client_id = options['client-id']
         app.client_secret = options['secret']
-        app.redirect_uris = '{uri}\n{uri}/'.format(uri=options['redirect-uri'].strip('/'))
+        app.redirect_uris = '{uri}\n{uri}/'.format(
+            uri=options['redirect-uri'].strip('/'))
         app.save()
