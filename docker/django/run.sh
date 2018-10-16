@@ -98,17 +98,16 @@ for i do # loop over $@
         coverage report
         coverage html -d cover
         if [ "$TRAVIS" ]; then
-            echo "Running coveralls"
+            echo 'Running coveralls'
             coveralls
         fi
     fi
 
     if [ "$i" = "--lint" ]; then
-        echo 'Running linters'
-        echo 'Running linter for story-tools-composer'
-        cd deps/story-tools-composer
-        yarn run lint
-        cd ../..
+        echo 'Running Python linters for mapstory'
+        pylint --load-plugins pylint_django --load-plugins pylint_django.checkers.db_performance mapstory
+        pycodestyle --show-source --show-pep8 mapstory
+        echo 'Done linting'
     fi
 
     if [ "$i" = "--celery" ]; then
