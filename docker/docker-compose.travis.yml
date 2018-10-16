@@ -1,4 +1,4 @@
-# Dev configuration
+# Travis configuration
 version: '3.7'
 services:
   composer:
@@ -26,7 +26,7 @@ services:
       - selenium
       - nginx
     volumes:
-      - ./mapstory/tests:/opt/mapstory/tests
+      - ./mapstory/tests:/opt/mapstory/tests:cached
     networks:
       internal:
 
@@ -73,11 +73,10 @@ services:
     environment:
       REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
     command: [--collect-static, --init-db, --reindex, --serve]
-#    command: --init-db --test
     volumes:
-      - ./.coveragerc:/srv/mapstory/.coveragerc
-      - ./.git:/srv/mapstory/.git
-      - ./cover:/srv/mapstory/cover
+      - ./.coveragerc:/srv/mapstory/.coveragerc:cached
+      - ./.git:/srv/mapstory/.git:cached
+      - ./cover:/srv/mapstory/cover:cached
 
   celery:
     image: quay.io/mapstory/django:master
@@ -90,7 +89,7 @@ services:
       - docker/env/dev/db_auth.env
     environment:
       REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
-      CELERY_NUM_WORKERS: 1
+      CELERY_NUM_WORKERS: 2
 
   django_volumes:
     image: quay.io/mapstory/django:master
@@ -117,9 +116,6 @@ services:
       internal:
         aliases:
           - docker
-    ports:
-      - "80:80"
-      - "443:443"
 
 volumes:
   postgres:
