@@ -1,6 +1,12 @@
 # storyscapes test configuration
-version: '3.1'
+version: '3.7'
 services:
+  composer:
+    image: quay.io/mapstory/composer:storyscapes
+    build:
+      args:
+        - DEPLOYMENT=production
+
   postgres:
     image: mdillon/postgis:9.6
     env_file:
@@ -43,9 +49,6 @@ services:
       - env_rabbitmq_auth
       - env_slack_auth
       - env_social_auth
-    volumes:
-      - .:/srv/mapstory/
-      - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   celery:
     image: quay.io/mapstory/django:storyscapes
@@ -60,9 +63,6 @@ services:
       - env_rabbitmq_auth
       - env_slack_auth
       - env_social_auth
-    volumes:
-      - .:/srv/mapstory/
-      - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   django_volumes:
     image: quay.io/mapstory/django:storyscapes
@@ -78,12 +78,12 @@ services:
       - env_geoserver_auth
 
   nginx:
+    build:
+      args:
+        - TAG=storyscapes
     image: quay.io/mapstory/nginx:storyscapes
     env_file:
       - docker/env/storyscapes/public_host.env
-    volumes:
-      - .:/srv/mapstory/:ro # mapstory_static has symlinks to this
-      - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
     secrets:
       - ssl_cert
       - ssl_key
@@ -92,7 +92,6 @@ volumes:
   geoserver:
   mapstory_media:
   postgres:
-  site-packages:
 
 secrets:
   ssl_cert:

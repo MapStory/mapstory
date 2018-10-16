@@ -92,10 +92,53 @@ http {
     #}
     #{% endif %}
 
-    # serve staticfiles
     location /static/ {
-      alias {{ env "STATIC_ROOT" }}/;
+      proxy_pass http://django_endpoint;
+      proxy_redirect off;
+      proxy_http_version 1.1;
+      proxy_pass_header Server;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Scheme $scheme;
+      proxy_set_header X-Forwarded-Proto {{ or (env "PUBLIC_PROTOCOL") "$scheme" }};
+      proxy_set_header Connection "";
+      proxy_connect_timeout 90s;
+      proxy_read_timeout 90s;
+      client_max_body_size 1m;
+
+      {{ if or (env "DEV_DEPLOYMENT") "False" | parseBool }}
+      # Don't cache for developers
+      expires -1;
+      proxy_cache_bypass always;
+      proxy_no_cache always;
+      {{ else }}
+      # Aggressively cache static content in production
+      expires 24h;
+      {{ end }}
     }
+
+    {{ if or (env "DEV_DEPLOYMENT") "False" | parseBool }}
+    # composer proxy for dev
+    location /static/composer {
+      proxy_pass http://composer:9090/;
+      proxy_redirect off;
+      proxy_http_version 1.1;
+      proxy_set_header Host $http_host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto {{ or (env "PUBLIC_PROTOCOL") "$scheme" }};
+      proxy_set_header Connection "";
+      expires -1;
+      proxy_cache_bypass always;
+      proxy_no_cache always;
+    }
+    {{ else }}
+        # composer static files for prod
+    location /static/composer/ {
+      alias {{ env "COMPOSER_ROOT" }}/;
+      expires 24h;
+    }
+    {{ end }}
 
     # serve mediafiles, default 'uploaded' in GeoNode
     location /uploaded/ {
