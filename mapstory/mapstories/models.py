@@ -146,7 +146,8 @@ class MapStory(geonode.base.models.ResourceBase):
         if first_chapter_obj.chapter_index != 0:
             return
 
-        chapter_base = geonode.base.models.ResourceBase.objects.get(id=first_chapter_obj.id)
+        chapter_base = geonode.base.models.ResourceBase.objects.get(
+            id=first_chapter_obj.id)
         geonode.base.models.ResourceBase.objects.filter(id=self.id).update(
             thumbnail_url=chapter_base.thumbnail_url
         )
@@ -154,7 +155,6 @@ class MapStory(geonode.base.models.ResourceBase):
     @property
     def class_name(self):
         return self.__class__.__name__
-
 
     distribution_url_help_text = _(
         'information about on-line sources from which the dataset, specification, or '
@@ -173,7 +173,6 @@ class MapStory(geonode.base.models.ResourceBase):
         help_text=distribution_description_help_text)
     slug = db.models.SlugField(max_length=160, null=True, unique=True)
 
-
     class Meta(geonode.base.models.ResourceBase.Meta):
         verbose_name_plural = 'MapStories'
         db_table = 'maps_mapstory'
@@ -181,10 +180,13 @@ class MapStory(geonode.base.models.ResourceBase):
 
 # Redefining Map Model and adding additional fields
 class Map(geonode.maps.models.Map):
-    story = db.models.ForeignKey(MapStory, related_name='chapter_list', blank=True, null=True)
+    story = db.models.ForeignKey(
+        MapStory, related_name='chapter_list', blank=True, null=True)
 
-    chapter_index = db.models.IntegerField(_('chapter index'), null=True, blank=True)
-    viewer_playbackmode = db.models.CharField(_('Viewer Playback'), max_length=32, blank=True, null=True)
+    chapter_index = db.models.IntegerField(
+        _('chapter index'), null=True, blank=True)
+    viewer_playbackmode = db.models.CharField(
+        _('Viewer Playback'), max_length=32, blank=True, null=True)
     layers_config = db.models.TextField(null=True, blank=True)
 
     def update_from_viewer(self, conf):
@@ -192,7 +194,7 @@ class Map(geonode.maps.models.Map):
         if isinstance(conf, basestring):
             conf = json.loads(conf)
 
-        #super allows us to call base class function implementation from geonode
+        # super allows us to call base class function implementation from geonode
         super(Map, self).update_from_viewer(conf)
 
         self.viewer_playbackmode = conf['viewerPlaybackMode'] or 'Instant'
@@ -205,22 +207,27 @@ class Map(geonode.maps.models.Map):
         self.save()
 
     def viewer_json(self, user, access_token=None, *added_layers):
-        base_config = super(Map, self).viewer_json(user, access_token, *added_layers)
+        base_config = super(Map, self).viewer_json(
+            user, access_token, *added_layers)
         base_config['viewer_playbackmode'] = self.viewer_playbackmode
-        base_config['tools'] = [{'outputConfig': {'playbackMode': self.viewer_playbackmode}, 'ptype': 'gxp_playback'}]
+        base_config['tools'] = [{'outputConfig': {
+            'playbackMode': self.viewer_playbackmode}, 'ptype': 'gxp_playback'}]
 
         return base_config
 
+
 def mapstory_map_post_save(instance, sender, **kwargs):
     # Call basic post save map functionality from geonode
-    geonode.geoserver.signals.geoserver_post_save_map(instance, sender, **kwargs)
+    geonode.geoserver.signals.geoserver_post_save_map(
+        instance, sender, **kwargs)
 
     # Assuming map thumbnail was created successfully, updating Story object here
     if instance.chapter_index == 0:
         instance.story.update_thumbnail(instance)
 
     try:
-        search.utils.update_es_index(MapStory, MapStory.objects.get(id=instance.story.id))
+        search.utils.update_es_index(
+            MapStory, MapStory.objects.get(id=instance.story.id))
     except:
         pass
 
@@ -252,9 +259,9 @@ class StoryFrameManager(models.Manager):
 class StoryFrame(models.Model):
     objects = StoryFrameManager()
 
-    PLAYBACK_RATE = (('seconds', 'Seconds'),('minutes', 'Minutes'),)
-    INTERVAL_RATE = (('minutes', 'Minutes'),('hours', 'Hours'),
-                     ('weeks', 'Weeks'),('months', 'Months'),('years', 'Years'),)
+    PLAYBACK_RATE = (('seconds', 'Seconds'), ('minutes', 'Minutes'),)
+    INTERVAL_RATE = (('minutes', 'Minutes'), ('hours', 'Hours'),
+                     ('weeks', 'Weeks'), ('months', 'Months'), ('years', 'Years'),)
 
     map = models.ForeignKey(Map)
     title = models.CharField(max_length=100)
@@ -265,9 +272,11 @@ class StoryFrame(models.Model):
     data = models.TextField(blank=True, null=True)
     center = models.TextField(blank=True, null=True)
     interval = models.IntegerField(blank=True, null=True)
-    intervalRate = models.CharField(max_length=10, choices=INTERVAL_RATE, blank=True, null=True)
+    intervalRate = models.CharField(
+        max_length=10, choices=INTERVAL_RATE, blank=True, null=True)
     playback = models.IntegerField(blank=True, null=True)
-    playbackRate = models.CharField(max_length=10, choices=PLAYBACK_RATE, blank=True, null=True)
+    playbackRate = models.CharField(
+        max_length=10, choices=PLAYBACK_RATE, blank=True, null=True)
     speed = models.TextField(blank=True, null=True)
     zoom = models.IntegerField(blank=True, null=True)
     layers = models.TextField(blank=True, null=True)

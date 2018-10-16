@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from mapstory.mapstories.models import StoryFrame
-from mapstory.mapstories.models import StoryPin
+from mapstory.mapstories.models import StoryFrame, StoryPin
 
 
 class StoryFrameAdmin(admin.ModelAdmin):
@@ -15,6 +14,6 @@ class StoryPinAdmin(admin.ModelAdmin):
     list_filter = ('map', 'in_map', 'in_timeline',)
     search_fields = ('map__title', 'title', 'content',)
 
- 
+
 admin.site.register(StoryFrame, StoryFrameAdmin)
 admin.site.register(StoryPin, StoryPinAdmin)
