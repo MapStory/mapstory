@@ -1,6 +1,5 @@
 import datetime
 
-
 dateparts = '%Y', '%m', '%d'
 timeparts = '%H', '%M', '%S'
 _patterns = []
