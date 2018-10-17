@@ -1,4 +1,5 @@
 from unittest import skip
+
 from django.test import TestCase
 
 from mapstory.models import ParallaxImage
@@ -8,6 +9,7 @@ class TestParallaxImage(TestCase):
     """
     ParallaxImage model tests
     """
+
     def setUp(self):
         self.parallaxImage = ParallaxImage()
         self.assertIsInstance(self.parallaxImage, ParallaxImage)

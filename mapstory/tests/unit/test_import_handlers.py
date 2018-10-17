@@ -1,6 +1,6 @@
 from mapstory.import_handlers import LayerAppendHandler, TruncatedNameHandler
-from osgeo_importer.handlers import ImportHandlerMixin
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
+from osgeo_importer.handlers import ImportHandlerMixin
 
 
 class ImportHandlerTests(MapStoryTestMixin):
@@ -10,8 +10,9 @@ class ImportHandlerTests(MapStoryTestMixin):
         appendHandler = LayerAppendHandler(handlerMixin)
         badLayer = ""
         badLayerConfig = ""
-        self.assertEqual(appendHandler.can_run(badLayer, badLayerConfig, ""), False)
-        #TODO: Test postivie can_run()
+        self.assertEqual(appendHandler.can_run(
+            badLayer, badLayerConfig, ""), False)
+        # TODO: Test postivie can_run()
         self.assertIsNone(appendHandler.handle(badLayer, badLayerConfig, ""))
 
     def test_truncated_name_handler(self):
@@ -20,6 +21,8 @@ class ImportHandlerTests(MapStoryTestMixin):
         truncatedHandler = TruncatedNameHandler(handlerMixin)
         badLayer = ""
         badLayerConfig = ""
-        self.assertEqual(truncatedHandler.can_run(badLayer, badLayerConfig, ""), False)
-        self.assertIsNone(truncatedHandler.handle(badLayer, badLayerConfig, ""))
-        #TODO: Test postivie can_run()
+        self.assertEqual(truncatedHandler.can_run(
+            badLayer, badLayerConfig, ""), False)
+        self.assertIsNone(truncatedHandler.handle(
+            badLayer, badLayerConfig, ""))
+        # TODO: Test postivie can_run()

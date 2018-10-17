@@ -1,20 +1,12 @@
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
 
-from ...admin import (
-    GetPageAdmin,
-    GetPageChoiceField,
-    GetPageContentForm,
-    GetPageContentAdmin,
-    SponsorAdmin,
-    NewsItemForm,
-    LeaderAdmin,
-    ParallaxImageAdmin,
-    CustomSiteAdmin,
-    content_html
-)
-
 from mapstory.journal.admin import JournalEntryAdmin
+
+from ...admin import (CustomSiteAdmin, GetPageAdmin, GetPageChoiceField,
+                      GetPageContentAdmin, GetPageContentForm, LeaderAdmin,
+                      NewsItemForm, ParallaxImageAdmin, SponsorAdmin,
+                      content_html)
 from ...models import GetPage, GetPageContent
 
 
@@ -28,11 +20,13 @@ class TestAdmin(TestCase):
         self.site = AdminSite()
 
         # GetPage for testing
-        self.getPage = GetPage.objects.create(name='Test name',title='Test title',subtitle='Test subtitle',)
+        self.getPage = GetPage.objects.create(
+            name='Test name', title='Test title', subtitle='Test subtitle',)
         self.assertIsInstance(self.getPage, GetPage)
 
         # Page content for testing
-        self.getPageContent = GetPageContent(title='Test title', main_link='#', page=self.getPage)
+        self.getPageContent = GetPageContent(
+            title='Test title', main_link='#', page=self.getPage)
         self.assertIsInstance(self.getPageContent, GetPageContent)
 
     def test_did_import(self):
@@ -54,7 +48,8 @@ class TestAdmin(TestCase):
         self.assertIsInstance(pageAdmin, GetPageAdmin)
 
     def test_get_page_content_admin(self):
-        getPageContentAdmin = GetPageContentAdmin(self.getPageContent, self.site)
+        getPageContentAdmin = GetPageContentAdmin(
+            self.getPageContent, self.site)
         self.assertIsNotNone(getPageContentAdmin)
         self.assertIsInstance(getPageContentAdmin, GetPageContentAdmin)
 
