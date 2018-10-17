@@ -82,32 +82,10 @@ RUN set -ex \
 WORKDIR $APP_PATH
 RUN pip install celery==4.1.0
 
-# Clone submodules temporarily. They're needed for the install.
-# These will be overwrriten when we load the code volume.
-# We don't use COPY because it will force rebuilds on any changes.
-#USER mapstory
-WORKDIR $APP_PATH/deps
-RUN set -ex \
-    && git clone -b mapstory-2.8.0 --depth 1 https://github.com/MapStory/geonode.git \
-    && sed -i 's/Paver==1.2.1/Paver==1.2.4/' ./geonode/setup.py \
-    && pip install -e ./geonode \
-    && git clone -b feature/composer-wip --depth 1 https://github.com/MapStory/maploom.git \
-    && git clone -b composer --depth 1 https://github.com/MapStory/django-maploom.git \
-    && pip install -e ./django-maploom \
-    && git clone -b master --depth 1 https://github.com/pinax/django-mailer.git \
-    && pip install -e ./django-mailer \
-    && git clone -b master --depth 1 https://github.com/MapStory/icon-commons.git \
-    && pip install -e ./icon-commons \
-    && git clone -b angular-1.6 --depth 1 https://github.com/GeoNode/django-osgeo-importer.git \
-    && pip install -e ./django-osgeo-importer \
-    && git clone -b master --depth 1 https://github.com/MapStory/story-tools.git \
-    && git clone -b master --depth 1 https://github.com/MapStory/story-tools-composer.git \
-    && chown -R mapstory:mapstory .
-
+# Copy in dependencies
+COPY --chown=mapstory:mapstory deps ./deps
 # Install dependencies from requirements.txt
-WORKDIR $APP_PATH
-COPY requirements.txt ./
-#USER root
+COPY --chown=mapstory:mapstory requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY epsg_extra /usr/local/lib/python2.7/dist-packages/pyproj/data/
 # The httplib2 python library uses its own CA certificates.
@@ -119,33 +97,9 @@ RUN cat /etc/ssl/certs/ca-certificates.crt >> /usr/local/lib/python2.7/site-pack
 # The version isn't changed, so it has trouble differentiation from the version in pypy. Thus this manual update.
 RUN pip install --no-cache-dir -U git+git://github.com/dimka665/awesome-slugify@a6563949965bcddd976b7b3fb0babf76e3b490f7#egg=awesome-slugify
 
-# Cache these. Hopefully it will speed up the later steps.
-COPY --chown=mapstory:mapstory mapstory/static $APP_PATH/mapstory/static
-WORKDIR $APP_PATH/mapstory/static
-RUN chown -R mapstory:mapstory .
-USER mapstory
-RUN set -ex \
-    && yarn install \
-    && yarn cache clean \
-    && bower install \
-    && rm -rf ~/.cache/bower
-WORKDIR $APP_PATH/deps/story-tools-composer
-RUN set -ex \
-    && yarn install \
-    && webpack --output-public-path='/static/composer/' \
-    && cp -r . $APP_PATH/mapstory/static/composer \
-    && yarn cache clean \
-    && rm -rf /tmp/phantomjs
-
-USER root
-WORKDIR $APP_PATH
-
-# Copy in dependencies
-COPY --chown=mapstory:mapstory deps ./deps
 # Copy in the code
 COPY --chown=mapstory:mapstory mapstory ./mapstory
 COPY --chown=mapstory:mapstory ./*.py ./
-RUN chown -R mapstory:mapstory $APP_PATH
 
 USER mapstory
 
@@ -160,26 +114,12 @@ RUN set -ex \
     && rm -rf ~/.cache/bower \
     && rm -rf /tmp/phantomjs
 
-WORKDIR $APP_PATH/deps/story-tools-composer
-RUN set -ex \
-    && ./scripts/run.sh --bundle \
-    && mkdir /tmp/story-tools-composer/ \
-    && mv ./node_modules /tmp/story-tools-composer/ \
-    && mkdir /tmp/story-tools/ \
-    && mv ./deps/story-tools/node_modules /tmp/story-tools/ \
-    && rm -rf $APP_PATH/mapstory/static/composer \
-    && cp -r . $APP_PATH/mapstory/static/composer \
-    && yarn cache clean \
-    && rm -rf /tmp/phantomjs
-
 USER root
 RUN set -ex \
     && chown -R mapstory:mapstory $STATIC_ROOT \
     && chown -R mapstory:mapstory $MEDIA_ROOT \
     && mkdir -p $APP_PATH/cover \
-    && chown -R mapstory:mapstory $APP_PATH/cover \
-    && mkdir -p /usr/local/lib/python2.7/site-packages-copy \
-    && chown -R mapstory:mapstory /usr/local/lib/python2.7/site-packages-copy
+    && chown -R mapstory:mapstory $APP_PATH/cover
 
 COPY --chown=mapstory:mapstory docker/django/run.sh $APP_PATH/docker/django/
 RUN ln -s $APP_PATH/docker/django/run.sh /opt/run.sh

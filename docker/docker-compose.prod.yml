@@ -1,6 +1,12 @@
 # mapstory.org configuration
-version: '3.1'
+version: '3.7'
 services:
+  composer:
+    image: quay.io/mapstory/composer:prod
+    build:
+      args:
+        - DEPLOYMENT=production
+
   pgadmin:
     image: quay.io/mapstory/pgadmin:prod
     ports:
@@ -28,9 +34,6 @@ services:
       - env_rabbitmq_auth
       - env_slack_auth
       - env_social_auth
-    volumes:
-      - .:/srv/mapstory/
-      - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   celery:
     image: quay.io/mapstory/django:prod
@@ -45,9 +48,6 @@ services:
       - env_rabbitmq_auth
       - env_slack_auth
       - env_social_auth
-    volumes:
-      - .:/srv/mapstory/
-      - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   django_volumes:
     image: quay.io/mapstory/django:prod
@@ -61,15 +61,15 @@ services:
       - env_geoserver_auth
 
   nginx:
+    build:
+      args:
+        - TAG=prod
     image: quay.io/mapstory/nginx:prod
     env_file:
       - docker/env/prod/public_host.env
     environment:
       - NGINX_NUM_WORKERS=4
       - NGINX_FILE_CACHE_ENABLED=True
-    volumes:
-      - .:/srv/mapstory/:ro # mapstory_static has symlinks to this
-      - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
     secrets:
       - ssl_cert
       - ssl_key
@@ -79,7 +79,6 @@ volumes:
     driver: rexray
   mapstory_media:
     driver: rexray
-  site-packages:
   backups:
     driver: local
     driver_opts:
