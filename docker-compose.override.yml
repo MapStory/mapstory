@@ -1,6 +1,19 @@
 # Dev configuration
-version: '3.1'
+version: '3.7'
 services:
+  composer:
+    image: quay.io/mapstory/composer:master
+    build:
+      args:
+        - DEPLOYMENT=development
+    command: --serve-dev
+    volumes:
+      - ./deps/story-tools-composer:/srv/story-tools-composer:cached
+      - composer_node_modules:/srv/story-tools-composer/node_modules
+      - storytools_node_modules:/srv/story-tools-composer/deps/story-tools/node_modules
+#    ports:
+#      - "9090:9090"
+
   selenium:
     image: selenium/standalone-chrome
     links:
@@ -105,7 +118,6 @@ services:
     volumes:
       - .:/srv/mapstory/:cached
       - ./cover:/srv/mapstory/cover:cached
-      - site-packages:/usr/local/lib/python2.7/site-packages-copy
 #    ports:
 #      - "8000:8000"
     stdin_open: true
@@ -125,7 +137,6 @@ services:
     volumes:
       - .:/srv/mapstory/:cached
       - ./cover:/srv/mapstory/cover:cached
-      - site-packages:/usr/local/lib/python2.7/site-packages-copy
 
   django_volumes:
     image: quay.io/mapstory/django:master
@@ -144,12 +155,16 @@ services:
 #      - "8080:8080"
 
   nginx:
+    build:
+      args:
+        - TAG=master
     image: quay.io/mapstory/nginx:master
     env_file:
       - docker/env/dev/public_host.env
-    volumes:
-      - .:/srv/mapstory/:cached # mapstory_static has symlinks to this
-      - site-packages:/usr/local/lib/python2.7/site-packages:ro # and this
+    environment:
+      - NGINX_NUM_WORKERS=1
+      - NGINX_GZIP_COMP_LEVEL=1
+      - DEV_DEPLOYMENT=True
     networks:
       internal:
         aliases:
@@ -157,4 +172,5 @@ services:
 
 volumes:
   postgres:
-  site-packages:
+  composer_node_modules:
+  storytools_node_modules:

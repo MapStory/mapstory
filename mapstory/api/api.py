@@ -10,8 +10,8 @@ from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
 
 from mapstory.mapstory_profile.models import MapstoryProfile
-from mapstory.apps.organizations.models import Organization
-from mapstory.apps.initiatives.models import Initiative
+from mapstory.organizations.models import Organization
+from mapstory.initiatives.models import Initiative
 
 
 class OwnerProfileSerializer(CountJSONSerializer):
@@ -70,9 +70,8 @@ class MapstoryOwnersResource(TypeFilteredResource):
         return super(MapstoryOwnersResource, self).serialize(
             request, data, format, options)
 
-    def build_filters(self, filters={}):
-
-        orm_filters = super(MapstoryOwnersResource, self).build_filters(filters)
+    def build_filters(self, filters={}, **kwargs):
+        orm_filters = super(MapstoryOwnersResource, self).build_filters(filters, **kwargs)
 
         if 'interests' in filters:
             query = filters['interests']

@@ -12,9 +12,9 @@
                 <h4 class="modal-title" id="myModalLabel">{% trans "Download {{ BRANDING_LAYER_NAME }} as:" %}</h4>
             </div>
             <div class="modal-body download">
-                {% if links %}
+                {% if links_download %}
                     <ul>
-                    {% for link in links %}
+                    {% for link in links_download %}
                         <li class="download-link"><a href="{{ link.url }}" data-extension="{{ link.name }}" data-id="{{ resource.id }}">{% trans link.name %}</a></li>
                     {% endfor %}
                     </ul>

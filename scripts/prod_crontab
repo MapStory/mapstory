@@ -1,0 +1,4 @@
+PATH=/usr/local/bin:/usr/bin:/bin
+
+# daily
+0 7 * * * /home/admin/mapstory/scripts/backup.sh >> /var/log/mapstory/daily.log 2>&1

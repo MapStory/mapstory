@@ -1,59 +1,59 @@
-{% extends "viewer/view_base.html" %}
+{% load classification_banner i18n %}
 
-{% load i18n %}
+<!DOCTYPE html>
+<html ng-app="composer">
+<head>
+  <base href="{{ SITEURL }}{{ STATIC_URL }}composer/" target="_blank">
+  <script>
+    window.mapstory = {}
+    window.mapstory.composer = {}
+    window.mapstory.composerMode = "False";
+    window.mapstory.layerViewerMode = true;
+    window.mapstory.layername = "{{ resource.name }}";
+    window.mapstory.composer.config = {
+      authStatus: {% if user.is_authenticated %} 200{% else %} 401{% endif %},
+      username: {% if user.is_authenticated %} "{{ user.username }}" {% else %} undefined {% endif %},
+      userprofilename: {% if user.is_authenticated %} "{{ user.get_full_name }}" {% else %} undefined {% endif %},
+      userprofileemail: {% if user.is_authenticated %} "{{ user.email }}" {% else %} undefined {% endif %},
+      currentLanguage: "{{language|default:'en'}}",
+      proxy: "{{ PROXY_URL }}",
+      rest: "{% url "maps_browse" %}",
+      ajaxLoginUrl: "{% url "account_ajax_login" %}",
+      homeUrl: "{% url "home" %}",
+      localGeoServerBaseUrl: "{{ GEOSERVER_BASE_URL }}",
+      localCSWBaseUrl: "{{ CATALOGUE_BASE_URL }}",
+      csrfToken: "{{ csrf_token }}",
+    }
+    window.mapstory.composer.config.branding = {
+      siteName: "{{ SITE_NAME }}",
+      storyName: "{{ BRANDING_STORY_NAME }}",
+      storiesName: "{{ BRANDING_STORIES_NAME }}",
+      layerName: "{{ BRANDING_LAYER_NAME }}",
+      layersName: "{{ BRANDING_LAYERS_NAME }}",
+    }
+    window.mapstory.composer.config.classificationBanner = {
+      enabled: {% if CLASSIFICATION_BANNER_ENABLED %} true {% else %} false {% endif %},
+      footerEnabled: {% if CLASSIFICATION_BANNER_FOOTER_ENABLED %} true {% else %} false {% endif %},
+      text: "{{ CLASSIFICATION_TEXT }}",
+      textColor:"{{ CLASSIFICATION_TEXT_COLOR }}",
+      backgroundColor: "{{ CLASSIFICATION_BACKGROUND_COLOR }}",
+      link: "{{ CLASSIFICATION_LINK }}",
+    }
+  </script>
 
-{% block title %} {% trans "Viewer" %} - {{ block.super }} {% endblock %}
+  {% include "head.html" %}
 
-{% block head %}
-    {{ block.super }}
-    <link href="{{ STATIC_URL }}style/themes/{{THEME}}/maps-theme.css" rel="stylesheet" />
-    <style>
-        .map {
-            display: block;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            border: 0px solid #ccc;
-            background-color: white;
-        }
-    </style>
-{% endblock head %}
+</head>
+<body ng-controller="composerController as composer">
+  {% classification_banner %}
+  {% include "_login_warning.html" %}
 
-{% block middle %}
-    <div ng-app="viewer" ng-controller="viewerController as viewer" id="story-viewer">
-        <div class="map" id="mapContainer">
-            <span ng-if="loading">Loading...</span>
-            <div id="map"></div>
-            <div id="footer" class="footer">
-                <div id="time-controls-panel2" ng-show="timeControlsManager.timeControls" class="floating-below">
-                    <div class="navbar" ng-controller="tileProgressController">
-                        <st-playback-controls class="pull-left"  playback-options="playbackOptions"
-                                              time-controls="timeControlsManager.timeControls"></st-playback-controls>
-                        <uib-progressbar animate="false" class="navbar-nav navbar-right" value="tilesLoadedProgress">
-                            <b ng-if="tilesLoaded" ng-bind="tilesLoaded + '/' + tilesToLoad"></b>
-                        </uib-progressbar>
-                    </div>
-                    <div id="playback-settings" class="panel-collapse collapse">
-                        <div class="panel-heading">Playback Options</div>
-                        <st-playback-settings playback-options="playbackOptions"
-                                              time-controls="timeControlsManager.timeControls"></st-playback-settings>
-                    </div>
-                    <div id="timeline" style="display:none;"></div>
-                    <div featureinfobox id="info-box" ng-show="featureInfoService.getSelectedItem() && featureInfoService.getEnabled()"
-                        class="feature-info-box-popup">
-                   </div>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-{% block extra_script %}
-<script src="{{ STATIC_URL }}vendor/jquery/dist/jquery.min.js"></script>
-<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-vendor-all.js"></script>
-<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-core-all.js"></script>
-<script src="{{ STATIC_URL }}vendor/story-tools/dist/story-tools-mapstory.js"></script>
-{% include 'viewer/layer_viewer.js' %}
-{% endblock extra_script %}
+  {% include "body.html" %}
+
+  {% if CLASSIFICATION_BANNER_ENABLED and CLASSIFICATION_FOOTER_ENABLED %}
+    <div class="classification_banner_bottom_padding"></div>
+  {% endif %}
+  {% include "_classification_warning_scripts.html" %}
+  {% include "_login_warning_scripts.html" %}
+</body>
+</html>

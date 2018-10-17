@@ -4,9 +4,11 @@
 **/deps/*/.git/
 .git/
 .vagrant/
+backups/
 docker/*
 !docker/django
 !docker/nginx/ca.crt
+!docker/nginx/cacerts/*
 docker-compose.yml
 Dockerfile
 scripts/misc

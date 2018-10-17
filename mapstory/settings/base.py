@@ -32,6 +32,12 @@ import pyproj
 def str_to_bool(v):
     return v.lower() in ("yes", "true", "t", "1")
 
+def is_valid(v):
+    if v and len(v) > 0:
+        return True
+    else:
+        return False
+
 #
 # General Django development settings
 #
@@ -71,9 +77,11 @@ BRANDING_STORIES_NAME = os.environ.get('BRANDING_STORIES_NAME', 'MapStories')
 BRANDING_LAYER_NAME = os.environ.get('BRANDING_LAYER_NAME', 'StoryLayer')
 BRANDING_LAYERS_NAME = os.environ.get('BRANDING_LAYERS_NAME', 'StoryLayers')
 THEME = os.environ.get('THEME', 'default')
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', '')
 
 # Misc
-REGISTRATION_OPEN = str_to_bool(os.environ.get('REGISTRATION_OPEN', 'True'))
+ACCOUNT_OPEN_SIGNUP = str_to_bool(os.environ.get('REGISTRATION_OPEN', 'True'))
+ENABLE_FORM_LOGIN = str_to_bool(os.environ.get('ENABLE_FORM_LOGIN', 'True'))
 USER_SNAP = str_to_bool(os.environ.get('USER_SNAP', 'False'))
 GOOGLE_ANALYTICS = os.environ.get('GOOGLE_ANALYTICS', '')
 
@@ -105,39 +113,36 @@ INSTALLED_APPS += (
     'solo',
     'coverage',
     'django_classification_banner',
-    'notification',
-    'mapstory.apps.health_check_geoserver',
-    'mapstory.apps.thumbnails',
-    'mapstory.storypins',
-    'mapstory.apps.journal',
-    'mapstory.apps.favorite',
-    'mapstory.apps.teams',
-    'mapstory.apps.organizations',
-    'mapstory.apps.initiatives',
+    'mapstory.thumbnails',
+    'mapstory.journal',
+    'mapstory.favorite',
+    'mapstory.teams',
+    'mapstory.organizations',
+    'mapstory.initiatives',
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
-    'health_check',
-    'health_check.db',
-    'health_check.cache',
-    'health_check.storage',
-    'health_check.contrib.celery',
-    'health_check.contrib.s3boto_storage',
+    'mapstory.storylayers',
 )
-# DO NOT REMOVE (read commment above)
-INSTALLED_APPS += (
-    'mapstory.apps.activities',
-    'actstream',
-)
-# Thanks !
+
+if is_valid(os.getenv("ALLAUTH_GEOAXIS_HOST")):
+    INSTALLED_APPS += (
+        'mapstory.socialaccount.providers.geoaxis',
+    )
 
 MAPSTORY_APPS = (
 
-    'mapstory.apps.storyframes',
-    'mapstory.apps.flag', # - temporarily using this instead of the flag app for django because they need to use AUTH_USER_MODEL
+    'mapstory.flag', # - temporarily using this instead of the flag app for django because they need to use AUTH_USER_MODEL
 
 )
 
 INSTALLED_APPS += MAPSTORY_APPS
+
+# DO NOT REMOVE (read commment above)
+INSTALLED_APPS += (
+    'mapstory.activities',
+    'actstream',
+)
+# Thanks !
 
 #
 # Template Settings
@@ -149,7 +154,7 @@ TEMPLATES = [
             os.path.join(LOCAL_ROOT, 'templates'),
             os.path.join(os.path.dirname(geonode.__file__), 'templates'),
             os.path.join('deps/story-tools-composer', 'partials'),
-            os.path.join(LOCAL_ROOT, 'apps/initiatives'),
+            os.path.join(LOCAL_ROOT, 'initiatives'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -162,16 +167,58 @@ TEMPLATES = [
                 'django.core.context_processors.static',
                 'django.core.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
-                'account.context_processors.account',
                 'geonode.context_processors.resource_urls',
                 'geonode.geoserver.context_processors.geoserver_urls',
                 'mapstory.context_processors.context',
                 'django_classification_banner.context_processors.classification',
-                'user_messages.context_processors.user_messages'
+                'django.template.context_processors.request',
             ],
         },
     },
 ]
+
+#
+# Authentication Settings
+#
+ACCOUNT_ADAPTER = os.environ.get('ACCOUNT_ADAPTER', 'mapstory.mapstory_profile.views.MapStoryAccountAdapter')
+ACCOUNT_FORMS = {'signup': 'mapstory.mapstory_profile.forms.CustomSignupForm'}
+ACCOUNT_EXTRA_PROFILE_FORM = os.environ.get('ACCOUNT_EXTRA_PROFILE_FORM', 'EditMapstoryProfileForm')
+
+AUTHENTICATION_BACKENDS = (
+    'oauth2_provider.backends.OAuth2Backend',
+
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # Required and used by geonode for object permissions
+    'guardian.backends.ObjectPermissionBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+OAUTH2_PROVIDER = {
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope',
+        'groups': 'Access to your groups'
+    },
+
+    'CLIENT_ID_GENERATOR_CLASS': 'oauth2_provider.generators.ClientIdGenerator',
+}
+
+GEOFENCE_SECURITY_ENABLED = True
+
+# authorized exempt urls
+ADDITIONAL_AUTH_EXEMPT_URLS = os.getenv('ADDITIONAL_AUTH_EXEMPT_URLS', ())
+
+if isinstance(ADDITIONAL_AUTH_EXEMPT_URLS, str):
+    ADDITIONAL_AUTH_EXEMPT_URLS = tuple(map(str.strip, ADDITIONAL_AUTH_EXEMPT_URLS.split(',')))
+
+AUTH_EXEMPT_URLS = ('/capabilities', '/complete/*', '/login/*',
+                    '/api/o/*', '/api/roles', '/api/adminRole',
+                    '/api/users', '/o/token/*', '/o/authorize/*',
+                    ) + ADDITIONAL_AUTH_EXEMPT_URLS
 
 #
 # Database Settings
@@ -227,6 +274,11 @@ if DATABASE_PASSWORD:
 GEOSERVER_LOCATION = "%s://%s:%d/geoserver/" % (os.environ['PRIVATE_PROTOCOL'], os.environ['GEOSERVER_HOST_INTERNAL'], int(os.environ['GEOSERVER_PORT_INTERNAL']))
 GEOSERVER_PUBLIC_LOCATION = "%s://%s/geoserver/" % (os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
 
+GEOSERVER_USER = os.environ.get('GEOSERVER_USER', 'admin')
+GEOSERVER_PASSWORD = os.environ.get('GEOSERVER_PASSWORD', 'geoserver')
+GEOSERVER_LOG = '%s/geoserver/data/logs/geoserver.log' % os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))
+GEOGIG_DATASTORE_DIR = '/var/lib/geoserver/data/geogig'
+
 OGC_SERVER = {
     'default': {
         'BACKEND': 'geonode.geoserver',
@@ -237,35 +289,44 @@ OGC_SERVER = {
         # the proxy won't work and the integration tests will fail
         # the entire block has to be overridden in the local_settings
         'PUBLIC_LOCATION': GEOSERVER_PUBLIC_LOCATION,
-        'USER': 'admin',
-        'PASSWORD': os.environ['GEOSERVER_PASSWORD'],
+        'USER': GEOSERVER_USER,
+        'PASSWORD': GEOSERVER_PASSWORD,
         'MAPFISH_PRINT_ENABLED': True,
         'PRINT_NG_ENABLED': True,
         'GEONODE_SECURITY_ENABLED': True,
+        'GEOFENCE_SECURITY_ENABLED' : GEOFENCE_SECURITY_ENABLED,
         'GEOGIG_ENABLED': True,
         'WMST_ENABLED': False,
         'BACKEND_WRITE_ENABLED': True,
         'WPS_ENABLED': True,
-        'LOG_FILE': '%s/geoserver/data/logs/geoserver.log'
-        % os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir)),
+        'LOG_FILE': GEOSERVER_LOG,
         # Set to name of database in DATABASES dictionary to enable
         'DATASTORE': 'geogig',
         'TIMEOUT': 10,  # number of seconds to allow for HTTP requests,
-        'GEOGIG_DATASTORE_DIR': '/var/lib/geoserver/data/geogig',
+        'GEOGIG_DATASTORE_DIR': GEOGIG_DATASTORE_DIR,
         'PG_GEOGIG': True
     }
 }
 
+AUTH_IP_WHITELIST = []
+
+GEOFENCE = {
+    'url': os.environ.get('GEOFENCE_URL', '%s/geofence' % GEOSERVER_LOCATION.strip('/')),
+    'username': os.environ.get('GEOFENCE_USERNAME', GEOSERVER_USER),
+    'password': os.environ.get('GEOFENCE_PASSWORD', GEOSERVER_PASSWORD)
+}
+
+
 #
 # Email Settings
 #
-ACCOUNT_ACTIVATION_DAYS = int(os.environ.get('ACCOUNT_ACTIVATION_DAYS', '0'))
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/'
-ACCOUNT_EMAIL_CONFIRMATION_EMAIL = True
-ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = str_to_bool(os.environ['ACCOUNT_EMAIL_CONFIRMATION_REQUIRED'])
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_EMAIL_VERIFICATION = os.environ.get('ACCOUNT_EMAIL_VERIFICATION', 'none')
 ACCOUNT_LOGIN_REDIRECT_URL = '/'
-ACCOUNT_OPEN_SIGNUP = True
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', '')
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
@@ -478,16 +539,19 @@ AUTO_GENERATE_AVATAR_SIZES = (35, 45, 75, 100)
 #
 # Celery Settings
 #
-BROKER_URL = "amqp://%s:%s@%s/%s" % (os.environ['RABBITMQ_APPLICATION_USER'], os.environ['RABBITMQ_APPLICATION_PASSWORD'], os.environ['RABBITMQ_HOST'], os.environ['RABBITMQ_APPLICATION_VHOST'])
-CELERY_ALWAYS_EAGER = str_to_bool(os.environ.get('CELERY_ALWAYS_EAGER', 'False'))  # False makes tasks run asynchronously
-CELERY_DEFAULT_QUEUE = "default"
-CELERY_DEFAULT_EXCHANGE = "default"
-CELERY_DEFAULT_EXCHANGE_TYPE = "direct"
-CELERY_DEFAULT_ROUTING_KEY = "default"
-CELERY_CREATE_MISSING_QUEUES = True
-CELERY_EAGER_PROPAGATES_EXCEPTIONS = str_to_bool(os.environ.get('CELERY_EAGER_PROPAGATES_EXCEPTIONS', 'False'))
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
-CELERY_IGNORE_RESULT = False
+CELERY_BROKER_URL = "amqp://mapstory:%s@%s/%s" % (os.environ['RABBITMQ_APPLICATION_PASSWORD'], os.environ['RABBITMQ_HOST'], os.environ['RABBITMQ_APPLICATION_VHOST'])
+CELERY_TASK_ALWAYS_EAGER = str_to_bool(os.environ.get('CELERY_TASK_ALWAYS_EAGER', 'False'))  # False makes tasks run asynchronously
+CELERY_TASK_DEFAULT_QUEUE = "default"
+CELERY_TASK_DEFAULT_EXCHANGE = "default"
+CELERY_TASK_DEFAULT_EXCHANGE_TYPE = "direct"
+CELERY_TASK_DEFAULT_ROUTING_KEY = "default"
+CELERY_TASK_CREATE_MISSING_QUEUES = True
+CELERY_TASK_EAGER_PROPAGATES = str_to_bool(os.environ.get('CELERY_TASK_EAGER_PROPAGATES', 'False'))
+CELERY_RESULT_BACKEND = 'db+postgresql://mapstory:%s@%s:%s/mapstory' % (DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT)
+CELERY_TASK_IGNORE_RESULT = False
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_RESULT_SERIALIZER = 'pickle'
+CELERY_ACCEPT_CONTENT = ['pickle']
 
 #
 # Haystack Settings
@@ -506,50 +570,6 @@ HAYSTACK_CONNECTIONS = {
 }
 SKIP_PERMS_FILTER = True
 HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
-
-#
-# Social Authentication Settings
-#
-ENABLE_SOCIAL_LOGIN = str_to_bool(os.environ['ENABLE_SOCIAL_LOGIN'])
-if ENABLE_SOCIAL_LOGIN:
-    SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
-
-    INSTALLED_APPS += (
-        'social.apps.django_app.default',
-        'provider',
-        'provider.oauth2',
-    )
-
-    AUTHENTICATION_BACKENDS = (
-        'social.backends.google.GoogleOAuth2',
-        'social.backends.facebook.FacebookOAuth2',
-    )
-
-DEFAULT_AUTH_PIPELINE = (
-    'social.pipeline.social_auth.social_details',
-    'social.pipeline.social_auth.social_uid',
-    'social.pipeline.social_auth.auth_allowed',
-    'social.pipeline.social_auth.social_user',
-    'social.pipeline.user.get_username',
-    'social.pipeline.mail.mail_validation',
-    'social.pipeline.social_auth.associate_by_email',
-    'social.pipeline.user.create_user',
-    'social.pipeline.social_auth.associate_user',
-    'social.pipeline.social_auth.load_extra_data',
-    'social.pipeline.user.user_details'
-)
-
-SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('FACEBOOK_APP_ID','')
-SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_APP_SECRET','')
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'fields': 'id,name,email',
-}
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_OATH2_CLIENT_ID','')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OATH2_CLIENT_SECRET','')
-
-GEOFENCE_SECURITY_ENABLED = False
 
 #
 # Activity Stream Settings
@@ -619,8 +639,7 @@ NOSE_ARGS = [
 #
 DEBUG_STATIC = True
 DEBUG = str_to_bool(os.environ.get('DEBUG', 'False'))
-if not DEBUG:
-    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split('|')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split('|')
 SESSION_COOKIE_DOMAIN = None
 
 LOGGING = {
@@ -670,6 +689,8 @@ LOGGING = {
             "handlers": ["console"], "level": "ERROR", },
         "pycsw": {
             "handlers": ["console"], "level": "ERROR", },
+        "celery": {
+            "handlers": ["console"], "level": "INFO", },
         "elasticsearch": {
             "handlers": ["console"], "level": "ERROR", },
         "osgeo_importer": {
@@ -696,9 +717,32 @@ LOCAL_CONTENT = False
 # Override number of results per page listed in the GeoNode search pages
 CLIENT_RESULTS_LIMIT = 30
 
-# Download formats available in layer detail download modal
+# Available download formats
+DOWNLOAD_FORMATS_METADATA = [
+    'Atom', 'DIF', 'Dublin Core', 'ebRIM', 'FGDC', 'ISO',
+]
 DOWNLOAD_FORMATS_VECTOR = [
-    'Zipped Shapefile', 'GML 2.0', 'GML 3.1.1', 'CSV', 'GeoJSON', 'KML',
+    'JPEG', 'PDF', 'PNG', 'Zipped Shapefile', 'GML 2.0', 'GML 3.1.1', 'CSV',
+    'Excel', 'GeoJSON', 'KML', 'View in Google Earth', 'Tiles',
+    'QGIS layer file (.qlr)',
+    'QGIS project file (.qgs)',
+]
+DOWNLOAD_FORMATS_RASTER = [
+    'JPEG',
+    'PDF',
+    'PNG',
+    'ArcGrid',
+    'GeoTIFF',
+    'Gtopo30',
+    'ImageMosaic',
+    'KML',
+    'View in Google Earth',
+    'Tiles',
+    'GML',
+    'GZIP',
+    'QGIS layer file (.qlr)',
+    'QGIS project file (.qgs)',
+    'Zipped All Files'
 ]
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
@@ -711,7 +755,7 @@ SCHEMA_DOWNLOAD_EXCLUDE = [
 ]
 
 # Choose thumbnail generator -- this is the delayed phantomjs generator
-THUMBNAIL_GENERATOR = "mapstory.apps.thumbnails.tasks.create_gs_thumbnail_mapstory_tx_aware"
+THUMBNAIL_GENERATOR = "mapstory.thumbnails.tasks.create_gs_thumbnail_mapstory_tx_aware"
 
 #
 # Classification banner
@@ -756,3 +800,18 @@ if LOGIN_WARNING_ENABLED:
 # Feature toggles
 #
 FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
+
+X_FRAME_OPTIONS = 'ALLOWALL'
+
+# audit settings
+AUDIT_ENABLED = str_to_bool(os.getenv('AUDIT_ENABLED', 'False'))
+if AUDIT_ENABLED:
+    INSTALLED_APPS = INSTALLED_APPS + (
+        'mapstory.audit',
+    )
+
+    AUDIT_TO_FILE = str_to_bool(os.getenv('AUDIT_TO_FILE', 'False'))
+    AUDIT_LOGFILE_LOCATION = os.getenv(
+        'AUDIT_LOGFILE_LOCATION',
+        os.path.join(LOCAL_ROOT, 'audit_log.json')
+    )

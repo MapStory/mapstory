@@ -5,21 +5,37 @@
 <div class="homepage">
     <!-- Tagline + Subtitle -->
     <section class="splash">
+        {% if THEME == 'orange' %}
         <div class="splash-backdrop" style="background-image: url('{{ STATIC_URL }}mapstory/img/hero_img_fallback.png');">
-            <video  autoplay="autoplay" loop="loop" muted="">
-                <source src='{{ STATIC_URL }}/mapstory/img/demo.mp4' type="video/mp4" />
+            <video autoplay="autoplay" loop="loop" muted="">
+                <source src="{{ STATIC_URL }}mapstory/img/demo.mp4" type="video/mp4" />
             </video>
         </div>
+        {% endif %}
+
+        {% if THEME == 'blue' %}
+        <div class="splash-backdrop" style="background-image: url('{{ STATIC_URL }}mapstory/img/syria.png');">
+            <video autoplay="autoplay" loop="loop" muted="">
+                <source src="{{ STATIC_URL }}mapstory/img/syria.mp4" type="video/mp4" />
+            </video>
+        </div>
+        {% endif %}
 
         <div class="splash-overlay circle">
             <div class="splash-content">
                 <div layout="column" layout-align="space-around start">
+                    {% if THEME == 'orange' %}
                     <h1 class="homepage-splash">The atlas of change that everyone can edit</h1>
                         {# {{ site.assets.subtitle }} #}
                     <p class="homepage-splash">Working together, we're mapping the world as it evolves geographically, at local, regional and global scales. Join us!</p>
-
+                    {% endif %}
+                    {% if THEME == 'blue' %}
+                    <h1 class="homepage-splash">Where's your story?</h1>
+                        {# {{ site.assets.subtitle }} #}
+                    <p class="homepage-splash">Use StoryScapes to convey mission-critical analysis in space and time.</p>
+                    {% endif %}
                     {% if not user.is_authenticated %}
-                        <a href="#" data-toggle="modal" data-target="#loginModal">
+                        <a href="{% url "account_signup" %}">
                             <button class="button button-solid">
                                 <span>Sign Up</span>
                             </button>
@@ -108,7 +124,7 @@
 
         </div>
         {% if not user.is_authenticated %}
-            <a href="#" data-toggle="modal" data-target="#loginModal" style="text-align: center">
+            <a href="{% url "account_signup" %}" style="text-align: center">
                 <button class="button button-solid">
                     <span>Sign Up</span>
                 </button>
@@ -131,9 +147,17 @@
         {% endif %}
 
         <div layout="column" layout-align="center center">
+            {% if THEME == 'orange' %}
             <h2 class="homepage">Contribute to the global data commons</h2>
 
-            <p style="padding-left: 20px; font-size: 22px"> Put your data in a place where it can live accessible to all, in perpetuity, without being subject to commercial influence. </p>
+            <p style="padding-left: 20px; font-size: 22px">Put your data in a place where it can live accessible to all, in perpetuity, without being subject to commercial influence. </p>
+            {% endif %}
+
+            {% if THEME == 'blue' %}
+            <h2 class="homepage">Upload and create spatio-temporal data layers</h2>
+
+            <p style="padding-left: 20px; font-size: 22px">Click <a href="{% url 'search' %}">Explore</a> to discover {{ BRANDING_LAYERS_NAME }} covering local, regional global scale and stretching into the past, present and future.  Don’t see what you need? Create a new {{ BRANDING_LAYER_NAME }} and share it with others.</p>
+            {% endif %}
 
             <a href="/getstarted">
                 <button class="button accent-button-inverse">
@@ -145,6 +169,7 @@
 
     <!-- Share Expertise -->
     <section class="share-expertise" layout="row" layout-align="center center" layout-xs="column" layout-align-xs="space-around center">
+        {% if THEME == 'orange' %}
         <div layout="column" layout-align="center center">
 
             <h2 class="homepage">Share your expertise through edits</h2>
@@ -157,13 +182,26 @@
                 </button>
             </a>
         </div>
-        {% if THEME == 'orange' %}
+
         <center>
             <img src="{{ STATIC_URL }}mapstory/img/expertise_through_edits.png" class="home-shadow" style="width: 75%; min-width: 350px"/>
         </center>
         {% endif %}
 
         {% if THEME == 'blue' %}
+        <div layout="column" layout-align="center center">
+
+            <h2 class="homepage">Share your expertise</h2>
+
+            <p style="padding-left: 20px; font-size: 22px">Engage your colleagues with ratings, comments, and edits to continuously improve their data.</p>
+
+            <a href="/getstarted">
+                <button class="button accent-button-inverse">
+                    <span>Learn More</span>
+                </button>
+            </a>
+        </div>
+
         <center>
             <img src="{{ STATIC_URL }}mapstory/img/expertise_through_edits_blue.png" class="home-shadow" style="width: 75%; min-width: 350px"/>
         </center>
@@ -189,10 +227,10 @@
     </section>
     <!--#THEMOREYOUKNOW-->
     {% if THEME == 'orange' %}
-    <section class="more-you-know" layout="column" style="background-image: url('{{ STATIC_URL }}/mapstory/img/bg_topography.png');" layout-align="center center">
+    <section class="more-you-know" layout="column" style="background-image: url('{{ STATIC_URL }}mapstory/img/bg_topography.png');" layout-align="center center">
         <p class="more"> The more we all know about the story of our planet, the more likely we are to treat it, and each other well. Sign up, and become a mapstoryteller today. </p>
 
-        <a href="#" data-toggle="modal" data-target="#loginModal">
+        <a href="{% url "account_signup" %}">
             <button class="button button-solid">
                 <span>Sign Up</span>
             </button>

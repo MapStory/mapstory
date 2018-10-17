@@ -1,26 +1,17 @@
 'use strict';
 
 (function() {
+  var module = angular.module("geogig", []);
 
-  var module = angular.module('geogig', []);
-  var http, rootScope;
-  var service_ = null;
-  var q = null;
-
-
-  module.service('geoGigService', function($q, $http) {
+  module.service("geoGigService", function($http) {
     return {
       geogigCommand: function(url) {
-        var deferred = new $q.defer();
         if (url) {
-          var request = url;
-          $http.jsonp(request, {jsonCallbackParam: 'cb'}).then(
-            function(response, status){
-              deferred.resolve(response.data);
-          }, function(error){
-            deferred.reject(error);
+          var req = $http({
+            url: url,
+            method: "GET",
           });
-          return deferred.promise;
+          return req;
         }
       }
     };
@@ -43,45 +34,43 @@
 
     if ($scope.statisticsURL) {
       geoGigService.geogigCommand($scope.statisticsURL).then(
-          function(data) {
-            if (data.response.success) {
-              $scope.stats = data.response.Statistics;
-              $('#geogig-message').hide();
-              $('#geogig-stats').show();
-            }
-          },
-          function(error) {
-            $scope.error = error;
-            $('#geogig-message > h4').text(errorText);
-            console.log(error);
-          });
+        function(data) {
+          if (data) {
+            $scope.stats = data.data.response.Statistics;
+            $('#geogig-message').hide();
+            $('#geogig-stats').show();
+          }
+        },
+        function(error) {
+          $scope.error = error;
+          $('#geogig-message > h4').text(errorText);
+        });
     }
 
     if ($scope.logURL) {
       geoGigService.geogigCommand($scope.logURL).then(
-          function(data) {
-            if (data.response.success) {
-              $('#geogig-message').hide();
-              $('#geogig-stats').show();
-              var response = data.response.commit;
-              if (!Array.isArray(response)) {
-                $scope.commits = [response];
-              } else {
-                $scope.commits = response;
-              }
-              for (var i = 0; i < $scope.commits.length; i++) {
-                var commit = $scope.commits[i];
-                if (commit.author) {
-                  commit.commitTimeSince = moment(commit.author.timestamp).calendar();
-                }
+        function(data) {
+          if (data.data.response) {
+            $('#geogig-message').hide();
+            $('#geogig-stats').show();
+            var response = data.data.response.commit;
+            if (!Array.isArray(response)) {
+              $scope.commits = [response];
+            } else {
+              $scope.commits = response;
+            }
+            for (var i = 0; i < $scope.commits.length; i++) {
+              var commit = $scope.commits[i];
+              if (commit.author) {
+                commit.commitTimeSince = moment(commit.author.timestamp).calendar();
               }
             }
-          },
-          function(error) {
-            $scope.error = error;
-            $('#geogig-message > h4').text(errorText);
-          });
+          }
+        },
+        function(error) {
+          $scope.error = error;
+          $('#geogig-message > h4').text(errorText);
+        });
     }
-
   });
 })();

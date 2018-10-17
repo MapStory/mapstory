@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+BAK_DIR=/backups
+
 # Parent Dockerfile sets this as a VOLUME.
 # We need to set the owndership as root at runtime.
 chown -R pgadmin:pgadmin /var/lib/pgadmin
@@ -44,6 +46,28 @@ for i do # loop over $@
     # Serve the pgadmin application
     if [ "$i" = "--serve" ]; then
         su-exec pgadmin /usr/local/bin/docker-entrypoint.sh pgadmin4
+    fi
+
+    # Dump databases
+    if [ "$i" = "--dump" ]; then
+        echo "Dumping databases"
+        for f in $SCRIPTS/*.sql
+        do
+            dbname=`basename ${f%.*}`
+            echo "Dumping $dbname"
+            pg_dump --host=$DATABASE_HOST --port=$DATABASE_PORT --username=$DATABASE_USER --dbname=$dbname --schema=public --blobs --format=directory --compress=9 --file=$BAK_DIR/$dbname --jobs=4
+        done
+    fi
+
+    # Restore databases
+    if [ "$i" = "--restore" ]; then
+        echo "Restoring databases"
+        for f in $SCRIPTS/*.sql
+        do
+            dbname=`basename ${f%.*}`
+            echo "Restoring $dbname"
+            pg_restore --host=$DATABASE_HOST --port=$DATABASE_PORT --username=$DATABASE_USER --dbname=$dbname --schema=public --format=directory --file=$BAK_DIR/$dbname --jobs=4
+        done
     fi
 
     # Serve the pgadmin application

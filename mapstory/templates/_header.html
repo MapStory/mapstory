@@ -7,7 +7,9 @@
     {% endif %}
     <div class="navigation-wrapper container">
         {% if THEME == 'blue' %}
-            <img src="{{ STATIC_URL }}mapstory/img/storyscapes_banner_logo.png" height="50px"/>
+            <a href="{% url 'home' %}">
+                <img src="{{ STATIC_URL }}mapstory/img/storyscapes_banner_logo.png" height="50px"/>
+            </a>
         {% endif %}
         {% if site.assets.logo %}
             <div class="logo-wrapper">
@@ -39,6 +41,12 @@
                                 <a class="pointer" ng-controller="createLayerCtrl"
                                    ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', '{{ BRANDING_LAYER_NAME }}', '{{ BRANDING_LAYERS_NAME }}')">{% blocktrans %}Create {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a>
                             </li>
+                            {# Remote Services is under the user menu for MapStory #}
+                            {% if THEME == 'blue' %}
+                            <li>
+                                <a href="{% url 'services' %}">{% trans "Remote Services" %}</a>
+                            </li>
+                            {% endif %}
                             <li>
                                 <a href="{% url 'upload' %}">{% trans "Upload Icons" %}</a>
                             </li>
@@ -48,6 +56,9 @@
                         {% else %}
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% blocktrans %}Import {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% blocktrans %}Create {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a></li>
+                            {% if THEME == 'blue' %}
+                            <li><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Remote Services" %}</a></li>
+                            {% endif %}
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% blocktrans %}Upload Icons{% endblocktrans %}</a></li>
                             <li><a href="#" data-toggle="modal" data-target="#loginModal">{% blocktrans %}Compose Story{% endblocktrans %}</a></li>
                         {% endif %}
@@ -69,10 +80,17 @@
                         <ul class="submenu">
                             <li><a href="{% url 'profile_detail' slug=user.username %}">{{ user.username }}</a></li>
                             <li class="divider"></li>
-                            <li><a href="{% url "messages_inbox" %}">{% trans "Messages" %}</a></li>
-                            <li><a href="{% url 'edit_profile' user.username %}">{% trans "Edit Profile" %}</a></li>
-                            <li><a href="{% url 'account_password' %}">{% trans "Change Password" %}</a></li>
-                            <li><a href="{% url 'profile_detail' slug=user.username %}?showNotifications=true">{% trans "Notification Settings" %}</a></li>
+                            {# Remote services are under the Create menu for StoryScapes #}
+                            {% if THEME == 'orange' and user.is_superuser %}
+                            <li><a href="{% url 'services' %}">{% trans "Remote Services" %}</a></li>
+                            {% endif %}
+                            {% if not THEME == 'blue' %}
+                            <li><a href="{% url 'messages_inbox' %}">{% trans "Messages" %}</a></li>
+                            {% endif %}
+                            <li><a href="{% url 'profile_edit' user.username %}">{% trans "Edit Profile" %}</a></li>
+                            {% if not THEME == 'blue' %}
+                            <li><a href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a></li>
+                            {% endif %}
                             <li class="divider"></li>
                             <li><a href="{% url 'getpage' 'started' %}">{% trans "Help" %}</a></li>
                             <li class="divider"></li>
@@ -84,8 +102,7 @@
                             <li><a href="{% url 'announcements_list' %}">{% trans "Announcements" %}</a></li>
                         {% endif %}
                         {% if user.is_superuser %}
-                            <li><a href="{% url 'account_invite_user' %}">{% trans "Invite User" %}</a></li>
-                            <li><a href="{% url 'services' %}">{% trans "Remote Services" %}</a></li>
+                            <li><a href="{% url 'geonode.invitations:geonode-send-invite' %}">{% trans "Invite User" %}</a></li>
                             <li><a href="{{ GEOSERVER_BASE_URL }}">{% trans "GeoServer" %}</a></li>
                             <li class="divider"></li>
                         {% endif %}
@@ -108,7 +125,10 @@
                         </form>
                     </li>
                 {% else %}
-                    <li class="nav-link"><a data-toggle="modal" data-target="#loginModal">{% trans "Log In" %}</a></li>
+                    <li class="nav-link"><a href="#" data-toggle="modal" data-target="#loginModal">{% trans "Log In" %}</a></li>
+                    {% if ACCOUNT_OPEN_SIGNUP and ENABLE_FORM_LOGIN %}
+                        <li class="nav-link"><a href="{% url "account_signup" %}">{% trans "Sign Up" %}</a></li>
+                    {% endif %}
                 {% endif %}
             </ul>
             <div class="navigation-tools">

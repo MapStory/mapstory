@@ -1,10 +1,32 @@
-version: '3.1'
+version: '3.7'
 services:
+  composer:
+    build:
+      context: ./deps/story-tools-composer
+      args:
+        - DEPLOYMENT=production
+    image: quay.io/mapstory/composer
+    command: --no-op
+    networks:
+      internal:
+    expose:
+      - "9090"
+
+  backup-sync:
+    build: ./docker/backup-sync
+    image: quay.io/mapstory/backup-sync:latest
+    volumes:
+      - backups:/backups
+      - geoserver:/var/lib/geoserver
+      - mapstory_media:/var/lib/mapstory/media/
+    networks:
+      internal:
 
   pgadmin:
     build: ./docker/pgadmin
     image: quay.io/mapstory/pgadmin
     volumes:
+      - backups:/backups
       - pgadmin:/var/lib/pgadmin
     networks:
       internal:
@@ -69,9 +91,13 @@ services:
       - mapstory_static:/var/lib/mapstory/static/
 
   geoserver:
-    image: quay.io/mapstory/geoserver:2.11.2-1.1.1
+    image: quay.io/mapstory/geoserver:2.12.4-1.2
     volumes:
       - geoserver:/var/lib/geoserver
+    environment:
+      - GEOSERVER_CONTACT_ORG=MapStory
+      - GEOSERVER_CONTACT_PERSON=MapStory
+      - GEOSERVER_CONTACT_EMAIL=info@mapstory.org
     networks:
       internal:
     expose:
@@ -82,12 +108,18 @@ services:
     image: quay.io/mapstory/nginx
     depends_on:
       - celery
+      - composer
     links:
       - django
       - geoserver
     volumes:
       - mapstory_media:/var/lib/mapstory/media/:ro
       - mapstory_static:/var/lib/mapstory/static/:ro
+    environment:
+      - NGINX_NUM_WORKERS=2
+      - NGINX_GZIP_COMP_LEVEL=4
+      - NGINX_FILE_CACHE_ENABLED=False
+      - NGINX_CLIENT_MAX_BODY_SIZE=500m
     networks:
       internal:
     expose:
@@ -105,3 +137,9 @@ volumes:
   mapstory_static:
   mapstory_media:
   pgadmin:
+  backups:
+    driver: local
+    driver_opts:
+      type: none
+      device: $PWD/backups
+      o: bind

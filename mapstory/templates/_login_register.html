@@ -1,122 +1,77 @@
+{% load socialaccount %}
+{% get_providers as socialaccount_providers %}
 <div class="modal fade" id="loginModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="active"><a href="#login" role="tab" data-toggle="tab">Log In</a></li>
-                    {% if REGISTRATION_OPEN %}
-                    <li><a href="#signup" role="tab" data-toggle="tab">Sign Up</a></li>
-                    {% endif %}
                     <button type="button" class="close pull-right" data-dismiss="modal" aria-hidden="true">&times;</button>
                 </ul>
                 <div class="tab-content">
                     {% comment %} Log In {% endcomment %}
                     <div class="tab-pane active" id="login">
                         <br/>
-                        <form class="form form-horizontal" method="post" action="{% url 'account_login' %}?next={{ request.path }}" accept-charset="UTF-8">
+                        {% if ENABLE_FORM_LOGIN %}
+                        <form class="form form-horizontal" method="post" action="{% url 'account_login' %}?next={{ request.path }}">
                         {% csrf_token %}
                             <div class="form-group">
-                                <label class="col-md-3 control-label label-font-sm" for="username">Username</label>
+                                <label class="col-md-3 control-label label-font-sm" for="id_username">Username</label>
                                 <div class="col-md-8">
-                                    <input class="form-control" style="text-transform: lowercase;" name="username" id="username" placeholder="username" type="text">
+                                    <input class="form-control" name="login" id="id_username" placeholder="username" type="text">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 control-label label-font-sm" for="password">Password</label>
+                                <label class="col-md-3 control-label label-font-sm" for="id_password">Password</label>
                                 <div class="col-md-8">
-                                    <input class="form-control" name="password" id="password" placeholder="password" type="password">
+                                    <input class="form-control" name="password" id="id_password" placeholder="password" type="password" autocomplete="off">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">
-                                    <a href="{% url "account_password_reset" %}">Forgot password?</a>
+                                    <a href="{% url 'account_reset_password' %}">Forgot password?</a>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-md-3 control-label label-font-sm"></label>
                                 <div class="col-md-8">
-                                    <button class="login-auth-btn btn btn-md btn-block">
+                                    <button type="submit" class="login-auth-btn btn btn-md btn-block">
                                         Sign in to {{ SITE_NAME }}
                                     </button>
                                 </div>
                             </div>
                         </form>
-                    </div>
-                    {% comment %} Register {% endcomment %}
-                    <div class="tab-pane" id="signup">
-                        <br/>
-                        <form class="form form-horizontal" method="post" action="{% url 'account_signup' %}" accept-charset="UTF-8">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label class="col-md-3 control-label label-font-sm" for="id_username">Username</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" style="text-transform: lowercase;" name="username" id="id_username" placeholder="username" type="text">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label label-font-sm" for="id_firstname">Name</label>
-                                <div class="col-md-4">
-                                    <input class="form-control" name="first_name" id="id_first_name" placeholder="First" type="text">
-                                </div>
-                                <div class="col-md-4">
-                                    <input class="form-control" id="id_last_name" name="last_name" placeholder="Last" type="text">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label label-font-sm" for="id_email">Email</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" id="id_email" name="email" placeholder="@email.com" type="text">
-                                </div>
-                            </div>
-                            <div class="form-group" ng-init="password = ''">
-                                <label class="col-md-3 control-label label-font-sm" for="id_password">Password</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" id="id_password" name="password" placeholder="(minimum of 8 characters)" type="password" ng-model="password">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label label-font-sm" for="password_confirm">Confirm Password</label>
-                                <div class="col-md-8">
-                                    <input class="form-control" id="password_confirm" name="password_confirm" placeholder="(minimum of 8 characters)" type="password">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-3"></div>
-                                <div class="col-md-8 checkbox under-form-area">
-                                    <p><input type="checkbox" value="" name="digest" checked> Receive the monthly digest of cool projects and community updates.</p>
-                                    <p><input id="id_agreed" type="checkbox" value="" ng-model="agreed">I agree with the <a href="http://wiki.mapstory.org/Terms_of_Service" target="_blank" class="new-tab">Terms and Conditions</a>.</p>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-md-3 control-label label-font-sm"></label>
-                                <div class="col-md-8">
-                                    <button ng-if="agreed && password.length >= 8" id="join-mapstory-button" class="login-auth-btn btn btn-md bg-ms btn-block">Join {{ SITE_NAME }}</button>
-                                    <button ng-if="!agreed || password.length < 8" id="join-mapstory-button" class="btn btn-md bg-ms btn-block" disabled>Join {{ SITE_NAME }}</button>
-                                </div>
-                            </div>
-                        </form>
+                        {% endif %}
                     </div>
                 </div>
-                {% if ENABLE_SOCIAL_LOGIN %}
-                <hr/>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <a href="{% url 'social:begin' 'facebook' %}">
-                                <div class="facebook-btn btn btn-md bg-ms btn-block">
-                                    <i class="fa fa-facebook"></i> Log In with Facebook
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-sm-6">
-                            <a href="{% url 'social:begin' 'google-oauth2' %}">
-                                <div class="google-btn btn btn-md bg-ms btn-block">
-                                    <i class="fa fa-google"></i> Log In with Google
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                {% if ACCOUNT_OPEN_SIGNUP and ENABLE_FORM_LOGIN %}
+                    Don't have an account? <a href="{% url "account_signup" %}">Sign Up.</a>
                 {% endif %}
-            </div>
+                <hr/>
+                <div class="justify-content-center">
+                {% for provider in socialaccount_providers %}
+                    {% if provider.id == "google" %}
+                    <div class="col-sm-4">
+                        <a href="{% provider_login_url "google" %}">
+                                     <div class="login-auth-btn btn btn-md bg-ms btn-block">
+                                         <i class="fa fa-google"></i> Log In with Google
+                                     </div>
+                                 </a>
+                    </div>
+                    {% endif %}
+                    {% if provider.id == "geoaxis" %}
+                    <div class="col-sm-4">
+                        <a href="{% provider_login_url "geoaxis" %}">
+                                     <div class="login-auth-btn btn btn-md bg-ms btn-block">
+                                         <i class="fa fa-lock"></i> Log In with GeoAxis
+                                     </div>
+                                 </a>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                </div>
+
+            </div><!-- /login.modal-body -->
         </div><!-- /login.modal-content -->
     </div><!-- /login.modal-dialog -->
 </div>
