@@ -5,7 +5,12 @@ services:
     image: quay.io/mapstory/composer:lab
     build:
       args:
-        - DEPLOYMENT=production
+        - DEPLOYMENT=development
+    command: --serve-dev
+    volumes:
+      - ./deps/story-tools-composer:/srv/story-tools-composer:cached
+      - /srv/story-tools-composer/node_modules
+      - /srv/story-tools-composer/deps/story-tools/node_modules
 
   postgres:
     image: mdillon/postgis:9.6

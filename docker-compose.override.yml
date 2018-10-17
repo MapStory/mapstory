@@ -6,9 +6,11 @@ services:
     build:
       args:
         - DEPLOYMENT=development
-    command: --bundle-dev --serve-dev
+    command: --serve-dev
     volumes:
       - ./deps/story-tools-composer:/srv/story-tools-composer:cached
+      - /srv/story-tools-composer/node_modules
+      - /srv/story-tools-composer/deps/story-tools/node_modules
 #    ports:
 #      - "9090:9090"
 
