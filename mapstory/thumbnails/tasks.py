@@ -1,45 +1,48 @@
-from PIL import Image
-
-from django.db import connection
-
+import datetime
+import logging
+import math
+import os
 import subprocess
 import traceback
-import os
-
-from geonode.base.models import Link
-from geonode.layers.utils import create_gs_thumbnail_geonode
-from owslib.wms import WebMapService
-from lxml import etree
-from geonode.layers.models import Layer
-from django.conf import settings
 from tempfile import NamedTemporaryFile
-import math
-import logging
-import httplib2
 from urlparse import urlparse
-import numpy
+
 from django.conf import settings
-from mapstory.mapstories.models import MapStory
-from mapstory.mapstories.models import Map
-import datetime
+from django.db import connection
+
+import httplib2
+import numpy
+from geonode.base.models import Link
+from geonode.layers.models import Layer
+from geonode.layers.utils import create_gs_thumbnail_geonode
+from lxml import etree
+############################################################################################
+from mapstory.celery import app
+from mapstory.mapstories.models import Map, MapStory
+from owslib.wms import WebMapService
+from PIL import Image
 
 
 # geonode:layer -> geonode,layer
 # layer -> geonode,layer (geonode workspace assumed)
 def decodeTypeName(typename):
     result = typename.split(":")
-    if len(result)==1:
-        return "geonode",result[0]
+    if len(result) == 1:
+        return "geonode", result[0]
     return result
 
 # Celery-compatible task to create thumbnails using PhantomJS
+
+
 class CreateStoryLayerThumbnailTask:
     """This creates a thumbnail using PhantomJS"""
 
     # location of the phantomJS files
-    phantomjs_file = os.path.join(os.path.dirname(__file__), 'thumbnail_storylayer.js')
+    phantomjs_file = os.path.join(os.path.dirname(
+        __file__), 'thumbnail_storylayer.js')
     # phantomjs_html = os.path.join(os.path.dirname(__file__), 'thumnail_storylayer.html')
-    phantomjs_html = settings.SITEURL + settings.STATIC_URL + "thumbnails/static/thumbnail_storylayer.html"
+    phantomjs_html = settings.SITEURL + settings.STATIC_URL + \
+        "thumbnails/static/thumbnail_storylayer.html"
 
     def run_process(self, args, env={}, timeout=66):
         """Run a process - first arg should be the command name.
@@ -63,7 +66,8 @@ class CreateStoryLayerThumbnailTask:
         process_env = os.environ.copy()
         process_env.update(env)
 
-        p = subprocess.Popen(args, env=process_env, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        p = subprocess.Popen(args, env=process_env,
+                             stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         out, err = p.communicate()
         result = p.poll()
 
@@ -73,7 +77,7 @@ class CreateStoryLayerThumbnailTask:
 
     # add geoserver user/password to a request
     @staticmethod
-    def request_geoserver_with_credentials( url):
+    def request_geoserver_with_credentials(url):
         user = settings.OGC_SERVER['default']["USER"]
         password = settings.OGC_SERVER['default']["PASSWORD"]
 
@@ -95,14 +99,15 @@ class CreateStoryLayerThumbnailTask:
         resp, content = http_client.request(url)
         return content
 
-
     def has_features(self, layer):
         try:
-            workspace,layername = decodeTypeName(layer.typename.encode('utf-8'))
+            workspace, layername = decodeTypeName(
+                layer.typename.encode('utf-8'))
 
-
-            url = settings.OGC_SERVER['default']['LOCATION'] + workspace+"/"  # workspace is hard-coded in the importer
-            url += layername + "/wfs?request=GetFeature&maxfeatures=1&request=GetFeature&typename="+workspace+"%3A" + layername + "&version=1.1.0"
+            # workspace is hard-coded in the importer
+            url = settings.OGC_SERVER['default']['LOCATION'] + workspace+"/"
+            url += layername + "/wfs?request=GetFeature&maxfeatures=1&request=GetFeature&typename=" + \
+                workspace+"%3A" + layername + "&version=1.1.0"
 
             feats = self.request_geoserver_with_credentials(url)
             root = etree.fromstring(feats)
@@ -123,10 +128,12 @@ class CreateStoryLayerThumbnailTask:
     def retreive_WMS_metadata(typename):
         workspace, layername = decodeTypeName(typename)
 
-        url = settings.OGC_SERVER['default']['LOCATION'] + workspace+"/"  # workspace is hard-coded in the importer
+        # workspace is hard-coded in the importer
+        url = settings.OGC_SERVER['default']['LOCATION'] + workspace+"/"
         url += layername + "/wms?request=GetCapabilities&version=1.1.1"
 
-        get_cap_data= CreateStoryLayerThumbnailTask.request_geoserver_with_credentials(url)
+        get_cap_data = CreateStoryLayerThumbnailTask.request_geoserver_with_credentials(
+            url)
         wms = WebMapService(url, xml=get_cap_data)
 
         # I found that some dataset advertise illegal bounds - fix them up
@@ -155,12 +162,12 @@ class CreateStoryLayerThumbnailTask:
 
         workspace, layername = decodeTypeName(typeName)
 
-        wms = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + workspace+"/wms"
+        wms = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + \
+            workspace+"/wms"
         xmin = boundingBoxWGS84[0]
         ymin = boundingBoxWGS84[1]
         xmax = boundingBoxWGS84[2]
         ymax = boundingBoxWGS84[3]
-
 
         args = ["phantomjs",
                 "--ignore-ssl-errors=true",
@@ -180,7 +187,8 @@ class CreateStoryLayerThumbnailTask:
 
     # get a temporary filename (don't forget to delete it when done)
     def create_temp_filename(self, filename_suffix='image'):
-        file = NamedTemporaryFile(delete=False, prefix="temp_thumbnail_", suffix=filename_suffix)
+        file = NamedTemporaryFile(
+            delete=False, prefix="temp_thumbnail_", suffix=filename_suffix)
         fname = file.name
         file.close()
         return fname
@@ -190,10 +198,13 @@ class CreateStoryLayerThumbnailTask:
     def create_screenshot(self, layer):
         fname = self.create_temp_filename()
         try:
-            boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer.typename.encode('utf-8'))
+            boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(
+                layer.typename.encode('utf-8'))
             time = "NONE" if timepositions is None else "ALL"
-            args = self.create_phantomjs_args(layer.typename.encode('utf-8'),boundingBoxWGS84, fname,time)
-            resultCode, _out, _err = self.run_process(args, env={'QT_QPA_PLATFORM': 'minimal'})
+            args = self.create_phantomjs_args(
+                layer.typename.encode('utf-8'), boundingBoxWGS84, fname, time)
+            resultCode, _out, _err = self.run_process(
+                args, env={'QT_QPA_PLATFORM': 'minimal'})
             if (resultCode != 0):
                 raise Exception(
                     'Unknown issue running PhantomJS for thumbnail generation - exit code='
@@ -275,17 +286,17 @@ class CreateStoryLayerThumbnailTask:
             new_url = self.setup_thumbnail(layer, overwrite)
 
             if old_url != new_url:
-                layer.save(update_fields=['thumbnail_url'])  # be explict about what changed
+                # be explict about what changed
+                layer.save(update_fields=['thumbnail_url'])
 
         except Exception as e:
             print "EXCEPTION - thumbnail generation for layer pk="+str(pk)
             print(e)
             print traceback.format_exc()
-            raise e # send forward so actual task can retry()
+            raise e  # send forward so actual task can retry()
 
 
 # ------------------------------------------------------------------------------------------------------------
-
 
 
 # Celery-compatible task to create thumbnails using PhantomJS
@@ -303,7 +314,8 @@ class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
         #   this uses the INDEX
         # ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'] into 4 would be
         #  [array([0, 1, 2]), array([3, 4, 5]), array([6, 7]), array([8, 9])]
-        chunks = numpy.array_split(numpy.array(xrange(0, len(timepositions))), nslices)
+        chunks = numpy.array_split(numpy.array(
+            xrange(0, len(timepositions))), nslices)
         # get the original data for the 1st and last value in the list
         # i.e. (From above) --> ['a/c', 'd/f', 'g/h', 'i/j']
         return [timepositions[x[0]] + "/" + timepositions[x[-1]] for x in chunks]
@@ -316,7 +328,8 @@ class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
             for fname in frame_fnames:
                 images.append(Image.open(fname))
 
-            images[0].save(gif_fname, format="GIF", save_all=True, append_images=images[1:], loop=10000, duration=1000)
+            images[0].save(gif_fname, format="GIF", save_all=True,
+                           append_images=images[1:], loop=10000, duration=1000)
 
             with open(gif_fname, mode='rb') as file:
                 imageData = file.read()
@@ -332,20 +345,25 @@ class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
     # delete all the single-timeslice gifs
     # return the animated GIF
     def create_screenshot(self, layer):
-        boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(layer.typename.encode('utf-8'))
-        if timepositions is None or len(timepositions) == 1:  # cannot animate, call parent implementation
-            return CreateStoryLayerThumbnailTask.create_screenshot(self,layer)
+        boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(
+            layer.typename.encode('utf-8'))
+        # cannot animate, call parent implementation
+        if timepositions is None or len(timepositions) == 1:
+            return CreateStoryLayerThumbnailTask.create_screenshot(self, layer)
 
         try:
             frame_fnames = []
             for timeslice in self.choose_timeslices(timepositions, self.NTIMESLICES):
                 fname = self.create_temp_filename()
                 frame_fnames.append(fname)
-                args = self.create_phantomjs_args(layer.typename.encode('utf-8'), boundingBoxWGS84, fname, timeslice)
-                resultCode, _out, _err = self.run_process(args, env={'QT_QPA_PLATFORM': 'minimal'})
+                args = self.create_phantomjs_args(layer.typename.encode(
+                    'utf-8'), boundingBoxWGS84, fname, timeslice)
+                resultCode, _out, _err = self.run_process(
+                    args, env={'QT_QPA_PLATFORM': 'minimal'})
                 if (resultCode != 0):
                     raise Exception('Unknown issue running PhantomJS for thumbnail generation - exit code='
-                                    + str(resultCode) + " -- args: " + str(args)
+                                    + str(resultCode) +
+                                    " -- args: " + str(args)
                                     + "stdout:" + str(_out) + "stderr:" + str(_err))
             return self.create_animated_GIF(frame_fnames)
         finally:
@@ -362,7 +380,8 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
     @staticmethod
     def tileURL(chapter):
         # look for a visible background layer for the chapter
-        background = [x for x in chapter.layers if x.visibility and x.group == 'background']
+        background = [
+            x for x in chapter.layers if x.visibility and x.group == 'background']
         # if there's no background, use the default
         if len(background) == 0:
             return "https://{a-b}.tiles.mapbox.com/v3/mapbox.world-dark/{z}/{x}/{y}.png"
@@ -370,7 +389,8 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
         config = background[0]
 
         # get from actual settings file (config is slightly different!)
-        config_main = [x for x in settings.MAP_BASELAYERS if "name" in x and x["name"] == config.name][0]
+        config_main = [
+            x for x in settings.MAP_BASELAYERS if "name" in x and x["name"] == config.name][0]
 
         # cf. https://wiki.openstreetmap.org/wiki/Tile_servers
         if config_main["source"]["ptype"] == "gxp_osmsource":
@@ -383,7 +403,8 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
         if config_main["source"]["ptype"] == "gxp_mapboxsource":
             return "https://{a-b}.tiles.mapbox.com/v3/mapbox." + config_main["name"] + "/{z}/{x}/{y}.png"
 
-        raise Exception("unable to determine tile URL for background layer - " + config["name"])
+        raise Exception(
+            "unable to determine tile URL for background layer - " + config["name"])
 
     # returns a list of layers
     # layer -> {name, style_name (might be ""),bounds,timeslices (might be None)}}
@@ -391,21 +412,25 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
     def get_layer_metadata(chapter):
         result = []
         for layer in [x for x in chapter.layers if x.visibility and x.group != 'background']:
-            metadata = CreateStoryLayerThumbnailTask.retreive_WMS_metadata(layer.name)
+            metadata = CreateStoryLayerThumbnailTask.retreive_WMS_metadata(
+                layer.name)
             style = layer.styles if layer.styles is not None else ""
-            result.append({"name": layer.name, "style_name": style, "bounds": metadata[0], "timeslices": metadata[1]})
+            result.append({"name": layer.name, "style_name": style,
+                           "bounds": metadata[0], "timeslices": metadata[1]})
         return result
 
     # we need to parse the timeslices (so we can do comparisons), make a list of all of them, then unique/sort them
     @staticmethod
     def combine_timeslices(layer_metadata_list):
-        list_list_slices = [x["timeslices"] for x in layer_metadata_list if x["timeslices"] is not None]
+        list_list_slices = [x["timeslices"]
+                            for x in layer_metadata_list if x["timeslices"] is not None]
         # flatten list of list
         all_slices = [x for sub_list in list_list_slices for x in sub_list]
         if len(all_slices) == 0:  # all layers don't have times
             return ["NONE"]
         # parse
-        all_slices = [datetime.datetime.strptime(x, "%Y-%m-%dT%H:%M:%S.%fZ") for x in all_slices]
+        all_slices = [datetime.datetime.strptime(
+            x, "%Y-%m-%dT%H:%M:%S.%fZ") for x in all_slices]
         # unique and sort
         all_slices = list(sorted(set(all_slices)))
         # back to strings
@@ -440,10 +465,12 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
                 timeslice_by_layer = ",".join(timeslice)
                 args = self.create_phantomjs_args(layer_names, full_bounds, fname, timeslice_by_layer, tileURL,
                                                   layer_styles)
-                resultCode, _out, _err = self.run_process(args, env={'QT_QPA_PLATFORM': 'minimal'})
+                resultCode, _out, _err = self.run_process(
+                    args, env={'QT_QPA_PLATFORM': 'minimal'})
                 if (resultCode != 0):
                     raise Exception('Unknown issue running PhantomJS for thumbnail generation - exit code='
-                                    + str(resultCode) + " -- args: " + str(args)
+                                    + str(resultCode) +
+                                    " -- args: " + str(args)
                                     + "stdout:" + str(_out) + "stderr:" + str(_err))
             return self.create_animated_GIF(frame_fnames)
         finally:
@@ -481,21 +508,26 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
     # "playback_type" -- unused (UI only allows instant)
     @staticmethod
     def get_all_thumbnail_info(chapter):
-        result = {"playback_type": chapter.viewer_playbackmode}  # note - currently only "Instant" is possible}
-        layer_metadata = CreateStoryAnimatedThumbnailTask.get_layer_metadata(chapter)
+        # note - currently only "Instant" is possible}
+        result = {"playback_type": chapter.viewer_playbackmode}
+        layer_metadata = CreateStoryAnimatedThumbnailTask.get_layer_metadata(
+            chapter)
         if len(layer_metadata) == 0:
             return None  # cannot compute
         result["tile_URL"] = CreateStoryAnimatedThumbnailTask.tileURL(chapter)
 
-        combined_timeslices = CreateStoryAnimatedThumbnailTask.combine_timeslices(layer_metadata)
+        combined_timeslices = CreateStoryAnimatedThumbnailTask.combine_timeslices(
+            layer_metadata)
         intervals = CreateStoryAnimatedThumbnailTask.choose_timeslices(combined_timeslices,
                                                                        CreateStoryAnimatedThumbnailTask.NTIMESLICES)
         result["intervals_by_layer"] = CreateStoryAnimatedThumbnailTask.create_layers_intervals(intervals,
                                                                                                 layer_metadata)
 
-        result["full_bounds"] = CreateStoryAnimatedThumbnailTask.combine_bounds(layer_metadata)
+        result["full_bounds"] = CreateStoryAnimatedThumbnailTask.combine_bounds(
+            layer_metadata)
         result["layer_names"] = ",".join([x["name"] for x in layer_metadata])
-        result["layer_styles"] = ",".join([x["style_name"] for x in layer_metadata])
+        result["layer_styles"] = ",".join(
+            [x["style_name"] for x in layer_metadata])
         return result
 
     # create a thumbnail given the info dictionary (cf get_all_thumbnail_info)
@@ -510,14 +542,16 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
     # update the story's thumbnail
     def update_thumbnail(self, mapstory):
         if len(mapstory.chapters) == 0:
-            self.set_layer_thumbnail_default(mapstory)  # no chapters, no thumbnail
+            self.set_layer_thumbnail_default(
+                mapstory)  # no chapters, no thumbnail
             return None
 
         chapter = mapstory.chapters[0]  # mapstory.mapstories.models.Map
 
         thumbnail_info = self.get_all_thumbnail_info(chapter)
         if thumbnail_info is None:
-            self.set_layer_thumbnail_default(mapstory)  # no active layers, no thumbnail
+            # no active layers, no thumbnail
+            self.set_layer_thumbnail_default(mapstory)
             return None
 
         thumbnail = self.create_thumbnail_from_info(thumbnail_info)
@@ -538,18 +572,14 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
             new_url = self.update_thumbnail(mapstory)
 
             if old_url != new_url:
-                mapstory.save(update_fields=['thumbnail_url'])  # be explict about what changed
-
+                # be explict about what changed
+                mapstory.save(update_fields=['thumbnail_url'])
 
         except Exception as e:
             print "EXCEPTION - thumbnail generation for story pk=" + str(pk)
             print(e)
             print traceback.format_exc()
-            raise e # send forward so actual task can retry()
-
-
-############################################################################################
-from mapstory.celery import app
+            raise e  # send forward so actual task can retry()
 
 
 @app.task(bind=True)
