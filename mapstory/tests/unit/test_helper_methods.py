@@ -1,9 +1,8 @@
 from unittest import skip
+
 from django.test import TestCase
 
-from mapstory.models import _stamp
-from mapstory.models import get_images
-from mapstory.models import get_sponsors
+from mapstory.models import _stamp, get_images, get_sponsors
 
 
 class MockInstance(object):
@@ -17,12 +16,13 @@ class TestHelperMethods(TestCase):
     """
     Model helper methods tests
     """
+
     def test_stamp(self):
         """
         Should return a hash
         """
         self.assertIsNotNone(_stamp("Hola!"))
-        self.assertEqual(_stamp("123"),_stamp("123"))
+        self.assertEqual(_stamp("123"), _stamp("123"))
         self.assertNotEqual(_stamp("123"), _stamp("321"))
 
     def test_stamp_params(self):

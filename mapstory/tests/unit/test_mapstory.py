@@ -1,27 +1,31 @@
 from unittest import skip
-from bs4 import BeautifulSoup
 
-from django.core.urlresolvers import reverse
+from django.contrib.auth import authenticate, get_user_model
 from django.core import mail
-from django.contrib.auth import get_user_model, authenticate
+from django.core.urlresolvers import reverse
 from django.test import Client
 from django.test.utils import override_settings
 
-from ..AdminClient import AdminClient
-from ...version import get_version
+from bs4 import BeautifulSoup
+
 from ... import __version__ as version
-from ..MapStoryTestMixin import MapStoryTestMixin
-from ..utils import get_test_user, create_mapstory
 from ...forms import KeywordsForm, PublishStatusForm
+from ...version import get_version
+from ..AdminClient import AdminClient
+from ..MapStoryTestMixin import MapStoryTestMixin
+from ..utils import create_mapstory, get_test_user
 
 
 class MapStoryTests(MapStoryTestMixin):
     """
     Basic checks to make sure pages load, etc.
     """
+
     def setUp(self):
-        self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
-        self.non_admin_username, self.non_admin_password = self.create_user('non_admin', 'non_admin')
+        self.username, self.password = self.create_user(
+            'admin', 'admin', is_superuser=True)
+        self.non_admin_username, self.non_admin_password = self.create_user(
+            'non_admin', 'non_admin')
 
     @override_settings(GOOGLE_ANALYTICS=True)
     def test_google_analytics(self):
@@ -51,17 +55,22 @@ class MapStoryTests(MapStoryTestMixin):
         # Map section
         self.assertEqual(len(soup.find_all('section', class_='splash')), 1)
         # Featured MapStories
-        self.assertEqual(len(soup.find_all('section', class_='featured-cards')), 1)
+        self.assertEqual(
+            len(soup.find_all('section', class_='featured-cards')), 1)
         # How section
-        self.assertEqual(len(soup.find_all('section', class_='how-homepage')), 1)
+        self.assertEqual(
+            len(soup.find_all('section', class_='how-homepage')), 1)
         # Contribute section
-        self.assertEqual(len(soup.find_all('section', class_='contribute-commons')), 1)
+        self.assertEqual(
+            len(soup.find_all('section', class_='contribute-commons')), 1)
         # Share
-        self.assertEqual(len(soup.find_all('section', class_='share-expertise')), 1)
+        self.assertEqual(
+            len(soup.find_all('section', class_='share-expertise')), 1)
         # To Life
         self.assertEqual(len(soup.find_all('section', class_='to-life')), 1)
         # More
-        self.assertEqual(len(soup.find_all('section', class_='more-you-know')), 1)
+        self.assertEqual(
+            len(soup.find_all('section', class_='more-you-know')), 1)
         # Sponsors
         self.assertEqual(len(soup.find_all('section', class_='sponsors')), 1)
         # Should have a footer

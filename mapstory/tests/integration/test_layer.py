@@ -22,7 +22,8 @@ class LayersCreateTest(MapStoryTestMixin):
                   'port': connection_settings['PORT'],
                   'enabled': "True"}
 
-        store = catalog.create_datastore(connection_settings['NAME'], workspace=self.workspace)
+        store = catalog.create_datastore(
+            connection_settings['NAME'], workspace=self.workspace)
         store.connection_parameters.update(params)
 
         try:
@@ -42,8 +43,10 @@ class LayersCreateTest(MapStoryTestMixin):
             print(e.__dict__)
             self.skipTest('Geoserver must be running for this test.')
 
-        self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
-        self.non_admin, self.non_admin_password = self.create_user('non_admin', 'non_admin', is_superuser=True)
+        self.username, self.password = self.create_user(
+            'admin', 'admin', is_superuser=True)
+        self.non_admin, self.non_admin_password = self.create_user(
+            'non_admin', 'non_admin', is_superuser=True)
         self.layer_name = 'testz'
         self.workspace = 'geonode'
         self.postgis = db.connections['datastore']

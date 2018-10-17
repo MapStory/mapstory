@@ -1,5 +1,4 @@
 import tempfile
-
 from unittest import skip
 
 from django.test import TestCase
@@ -11,14 +10,16 @@ class TestSponsor(TestCase):
     """
     Sponsor model tests
     """
+
     def setUp(self):
         tempdir = tempfile.mkdtemp(dir="/var/lib/mapstory/media")
-        self.testImage = tempfile.NamedTemporaryFile(suffix=".jpg", dir=tempdir).name
-        self.sponsor = Sponsor( name="Test", 
-                                link="http://#", 
-                                icon=self.testImage, 
-                                description="Hola test", 
-                                stamp=_stamp("teststamp") )
+        self.testImage = tempfile.NamedTemporaryFile(
+            suffix=".jpg", dir=tempdir).name
+        self.sponsor = Sponsor(name="Test",
+                               link="http://#",
+                               icon=self.testImage,
+                               description="Hola test",
+                               stamp=_stamp("teststamp"))
         self.assertIsNotNone(self.sponsor)
         self.assertIsInstance(self.sponsor, Sponsor)
 

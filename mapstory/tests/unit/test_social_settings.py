@@ -1,4 +1,5 @@
 from django.test import TestCase
+
 from mapstory.social_settings import flag_handler
 
 
