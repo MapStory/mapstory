@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from .models import Organization, OrganizationMembership, OrganizationURL, OrganizationMapStory, OrganizationLayer, \
-    OrganizationSocialMedia, JoinRequest
+from .models import (JoinRequest, Organization, OrganizationLayer,
+                     OrganizationMapStory, OrganizationMembership,
+                     OrganizationSocialMedia, OrganizationURL)
 
 
 class MembershipInlineAdmin(admin.StackedInline):

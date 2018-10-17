@@ -1,7 +1,7 @@
-from django.db import models
 from django.conf import settings
-from django.core.urlresolvers import reverse
 from django.core.exceptions import SuspiciousOperation
+from django.core.urlresolvers import reverse
+from django.db import models
 from django.utils.text import slugify
 
 from geonode.layers.models import Layer
@@ -39,14 +39,22 @@ class Organization(Team):
 
     """
     image = models.ImageField(null=True, blank=True, upload_to='org_profiles')
-    facebook = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='facebook')
-    twitter = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='twitter')
-    instagram = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='instagram')
-    github = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='github')
-    linkedin = models.ForeignKey(OrganizationSocialMedia, blank=True, null=True, related_name='linkedin')
-    url0 = models.ForeignKey(OrganizationURL, blank=True, null=True, related_name="url0")
-    url1 = models.ForeignKey(OrganizationURL, blank=True, null=True, related_name="url1")
-    url2 = models.ForeignKey(OrganizationURL, blank=True, null=True, related_name="url2")
+    facebook = models.ForeignKey(
+        OrganizationSocialMedia, blank=True, null=True, related_name='facebook')
+    twitter = models.ForeignKey(
+        OrganizationSocialMedia, blank=True, null=True, related_name='twitter')
+    instagram = models.ForeignKey(
+        OrganizationSocialMedia, blank=True, null=True, related_name='instagram')
+    github = models.ForeignKey(
+        OrganizationSocialMedia, blank=True, null=True, related_name='github')
+    linkedin = models.ForeignKey(
+        OrganizationSocialMedia, blank=True, null=True, related_name='linkedin')
+    url0 = models.ForeignKey(OrganizationURL, blank=True,
+                             null=True, related_name="url0")
+    url1 = models.ForeignKey(OrganizationURL, blank=True,
+                             null=True, related_name="url1")
+    url2 = models.ForeignKey(OrganizationURL, blank=True,
+                             null=True, related_name="url2")
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
 
     class Meta:
@@ -96,7 +104,8 @@ class Organization(Team):
         :return: A OrganizationMembership object.
         """
         # Only add members if they are not already one
-        membership_count = OrganizationMembership.objects.filter(user=user, organization=self).count()
+        membership_count = OrganizationMembership.objects.filter(
+            user=user, organization=self).count()
 
         if membership_count > 0:
             raise SuspiciousOperation("Is already a member")
@@ -119,7 +128,8 @@ class Organization(Team):
 
         :param user: The user to be removed from the Organization
         """
-        memberships = OrganizationMembership.objects.filter(user=user, organization=self)
+        memberships = OrganizationMembership.objects.filter(
+            user=user, organization=self)
         if memberships.count() > 0:
             for membership in memberships:
                 membership.is_active = False
@@ -131,7 +141,8 @@ class Organization(Team):
         :param user: The user to be priviledged with admin.
         :return: The OrganizationMembership that was changed.
         """
-        membership = OrganizationMembership.objects.get(user=user, organization=self)
+        membership = OrganizationMembership.objects.get(
+            user=user, organization=self)
         membership.is_admin = True
         membership.save()
         return membership
@@ -238,7 +249,8 @@ class JoinRequest(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     is_open = models.BooleanField(default=True)
-    approved_by = models.ForeignKey(OrganizationMembership, blank=True, null=True)
+    approved_by = models.ForeignKey(
+        OrganizationMembership, blank=True, null=True)
 
     def approve(self, admin_membership):
         """
