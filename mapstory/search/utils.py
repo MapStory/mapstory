@@ -1,5 +1,5 @@
-from mapstory.search.signals import BaseSignalProcessor
 import haystack
+from mapstory.search.signals import BaseSignalProcessor
 
 
 def update_es_index(sender, instance):
