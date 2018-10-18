@@ -72,6 +72,7 @@ script:
   - $DCO up django_volumes
   - $DCO up -d nginx
   - $DCO up django_volumes
+  - $DCO logs -f django
     # Wait for django container to come up
   - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
   - $DCO up django_volumes
