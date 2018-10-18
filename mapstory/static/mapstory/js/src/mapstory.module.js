@@ -3,15 +3,15 @@
  */
 
 (function() {
-	'use strict';
+	
 
 	angular.module('mapstory', [
-    //osgeo-importer
+    // osgeo-importer
     'osgeoImporter.uploader',
     'ui.bootstrap',
-    //maspstory
+    // maspstory
     'mapstory.search'
-  ], function($locationProvider) {
+  ], ($locationProvider) => {
     if (window.navigator.userAgent.indexOf("MSIE") == -1){
       $locationProvider.html5Mode({
         enabled: true,
@@ -25,7 +25,7 @@
     }
   })
 
-	.config(function($httpProvider, $sceDelegateProvider) {
+	.config(($httpProvider, $sceDelegateProvider) => {
     // this makes request.is_ajax() == True in Django
     $httpProvider.defaults.headers.post["X-Requested-With"] = 'XMLHttpRequest';
 
@@ -46,11 +46,9 @@
 	})
 
 	// add filter to decode uri
-	.filter('decodeURIComponent', function() {
-		return window.decodeURIComponent;
-	});
+	.filter('decodeURIComponent', () => window.decodeURIComponent);
 
-	angular.element(document).ready(function() {
+	angular.element(document).ready(() => {
     angular.bootstrap(document, ['mapstory']);
   });
 })();

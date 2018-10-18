@@ -1,10 +1,11 @@
-var page = require('webpage').create();
-var system = require('system');
-var args = system.args;
+const page = require('webpage').create();
+const system = require('system');
+
+const args = system.args;
 
 
 //
-//phantomjs --ignore-ssl-errors=true --web-security=false ol.pj thumnail_storylayer.html "https://docker/geoserver/geonode/wms" US_HistStateTerr_Gen0001_3aa6272c  -179.14736938476562  18.910842895507812 -66.9498291015625 71.38961791992188  ALL github.png
+// phantomjs --ignore-ssl-errors=true --web-security=false ol.pj thumnail_storylayer.html "https://docker/geoserver/geonode/wms" US_HistStateTerr_Gen0001_3aa6272c  -179.14736938476562  18.910842895507812 -66.9498291015625 71.38961791992188  ALL github.png
 //
 
 
@@ -30,18 +31,18 @@ if (args.length != 12) {
     phantom.exit(-1);
 }
 
-//parse from command line
-var htmlFname = args[1]
-var wms = args[2];
-var layerNames = args[3].toLowerCase();
-var xmin = parseFloat(args[4]);
-var ymin = parseFloat(args[5]);
-var xmax = parseFloat(args[6]);
-var ymax = parseFloat(args[7]);
-var timeRange = args[8];
-var outFname = args[9];
-var basemapXYZURL = args[10];
-var styles = args[11];
+// parse from command line
+const htmlFname = args[1]
+const wms = args[2];
+const layerNames = args[3].toLowerCase();
+const xmin = parseFloat(args[4]);
+const ymin = parseFloat(args[5]);
+const xmax = parseFloat(args[6]);
+const ymax = parseFloat(args[7]);
+let timeRange = args[8];
+const outFname = args[9];
+const basemapXYZURL = args[10];
+const styles = args[11];
 
 
 
@@ -49,74 +50,70 @@ if (timeRange.toLowerCase() == "all")
     timeRange = '-99999999999-01-01T00:00:00.0Z/99999999999-01-01T00:00:00.0Z';
 
 
-    system.stdout.writeLine('wms = ' + wms);
-    system.stdout.writeLine('layerNames = ' + layerNames);
-    system.stdout.writeLine('xmin = ' + (xmin));
-    system.stdout.writeLine('ymin = ' + (ymin));
-    system.stdout.writeLine('xmax = ' + (xmax));
-    system.stdout.writeLine('ymax = ' + (ymax));
-    system.stdout.writeLine('timeRange = ' + timeRange);
-    system.stdout.writeLine('outFname = ' + outFname);
-    system.stdout.writeLine('basemapXYZURL = ' + basemapXYZURL);
-    system.stdout.writeLine('styles = ' + styles);
+    system.stdout.writeLine(`wms = ${  wms}`);
+    system.stdout.writeLine(`layerNames = ${  layerNames}`);
+    system.stdout.writeLine(`xmin = ${  xmin}`);
+    system.stdout.writeLine(`ymin = ${  ymin}`);
+    system.stdout.writeLine(`xmax = ${  xmax}`);
+    system.stdout.writeLine(`ymax = ${  ymax}`);
+    system.stdout.writeLine(`timeRange = ${  timeRange}`);
+    system.stdout.writeLine(`outFname = ${  outFname}`);
+    system.stdout.writeLine(`basemapXYZURL = ${  basemapXYZURL}`);
+    system.stdout.writeLine(`styles = ${  styles}`);
     // add some debugging output
     addDebugEvents(page, system);
 
 
 
-//open the HTML file and get ready to screen grab
-page.open(htmlFname, function () {
-    //get the map setup in the OL app
-    page.evaluate(function (wms, layerNames,styles, xmin, ymin, xmax, ymax, time,basemapXYZURL) {
+// open the HTML file and get ready to screen grab
+page.open(htmlFname, () => {
+    // get the map setup in the OL app
+    page.evaluate((wms, layerNames,styles, xmin, ymin, xmax, ymax, time,basemapXYZURL) => {
         setup(wms, layerNames,styles, xmin, ymin, xmax, ymax, time,basemapXYZURL);
     }, wms, layerNames,styles, xmin, ymin, xmax, ymax, timeRange,basemapXYZURL);
 
     // if it takes too long, hard close
-    setTimeout(function () {
+    setTimeout(() => {
         phantom.exit(2);
     }, 60000);
 
-    //keep checking for ready_for_screenshot to be 1
-    setInterval(function () {
-            //wait for ol to be ready to take a screen shot
-            var ready_for_screenshot = page.evaluate(function () {
-                return window.ready_for_screenshot || window.error_occured != '';
-            });
+    // keep checking for ready_for_screenshot to be 1
+    setInterval(() => {
+            // wait for ol to be ready to take a screen shot
+            const ready_for_screenshot = page.evaluate(() => window.ready_for_screenshot || window.error_occured != '');
             // need to keep waiting?
             if (!ready_for_screenshot)
                 return;
-            //page is up!
-            var error_text = page.evaluate(function () {
-                return  window.error_occured;
-            });
+            // page is up!
+            const error_text = page.evaluate(() => window.error_occured);
             if (error_text != ''){
-                system.stdout.writeLine('phantomjs - error occured - '+error_text);
+                system.stdout.writeLine(`phantomjs - error occured - ${error_text}`);
                 phantom.exit(1);
             }
 
             queueTakingSnapshot();
         }
-        , 100);  //re-try every 100ms
+        , 100);  // re-try every 100ms
 
-    //unfortunately, OL does not have an easy way to determine
+    // unfortunately, OL does not have an easy way to determine
     // if the map is completely drawn.
     // when ready_for_screenshot become True, then the map is mostly
     // drawn -- but, there might be more rendering occuring if there is wrapping occuring
     // (i.e. 180/+180).  We wait 1 second for this rendering to occur.
     // NOTE: all the data is local, so this should just be drawing images - no remote data movement.
     function queueTakingSnapshot() {
-        setTimeout(function () {
+        setTimeout(() => {
             takescreenshot();
         }, 1000);
 
     }
 
-    //take screenshot - determine the size/location of the map div and then take the screenshot
+    // take screenshot - determine the size/location of the map div and then take the screenshot
     function takescreenshot() {
 
         system.stdout.writeLine('taking screenshot...');
-        var clipRect = page.evaluate(function () {
-            var cr = document.querySelector("#map").getBoundingClientRect();
+        const clipRect = page.evaluate(() => {
+            const cr = document.querySelector("#map").getBoundingClientRect();
             return cr;
         });
 
@@ -129,7 +126,7 @@ page.open(htmlFname, function () {
 
         page.render(outFname, {format: 'png'});
         system.stdout.writeLine('done screenshot...');
-        phantom.exit(0);//all done - quit with OK
+        phantom.exit(0);// all done - quit with OK
     }
 
 });
@@ -140,45 +137,45 @@ function addDebugEvents(page, system) {
 
     page.onResourceRequested = function (request) {
         system.stdout.writeLine('onResourceRequested');
-        system.stdout.writeLine('  +  url: ' + request.url);
+        system.stdout.writeLine(`  +  url: ${  request.url}`);
     };
 
     page.onResourceReceived = function (response) {
         system.stdout.writeLine('onResourceReceived');
-        system.stdout.writeLine('  url: ' + response.url);
+        system.stdout.writeLine(`  url: ${  response.url}`);
     };
 
 
     page.onNavigationRequested = function (url, type, willNavigate, main) {
         system.stdout.writeLine('onNavigationRequested');
-        system.stdout.writeLine('  url: ' + url);
+        system.stdout.writeLine(`  url: ${  url}`);
     };
 
     page.onConsoleMessage = function (msg) {
-        system.stdout.writeLine('CONSOLE: ' + msg);
+        system.stdout.writeLine(`CONSOLE: ${  msg}`);
     };
 
     page.onResourceError = function (resourceError) {
         system.stdout.writeLine('onResourceError');
-        system.stdout.writeLine('  error: ' + resourceError.errorString);
-        system.stdout.writeLine('  url: ' + resourceError.url);
+        system.stdout.writeLine(`  error: ${  resourceError.errorString}`);
+        system.stdout.writeLine(`  url: ${  resourceError.url}`);
     };
 
     page.onResourceError = function (resourceError) {
         system.stdout.writeLine('onResourceError');
-        system.stdout.writeLine('  - url: ' + resourceError.url);
-        system.stdout.writeLine('  - errorCode: ' + resourceError.errorCode);
-        system.stdout.writeLine('  - errorString: ' + resourceError.errorString);
+        system.stdout.writeLine(`  - url: ${  resourceError.url}`);
+        system.stdout.writeLine(`  - errorCode: ${  resourceError.errorCode}`);
+        system.stdout.writeLine(`  - errorString: ${  resourceError.errorString}`);
     };
 
     // from http://phantomjs.org/api/phantom/handler/on-error.html
     page.onError = function (msg, trace) {
-        var msgStack = ['PHANTOM ERROR: ' + msg];
+        const msgStack = [`PHANTOM ERROR: ${  msg}`];
 
         if (trace && trace.length) {
             msgStack.push('TRACE:');
-            trace.forEach(function (t) {
-                msgStack.push(' -> ' + (t.file || t.sourceURL) + ': ' + t.line + (t.function ? ' (in function ' + t.function + ')' : ''));
+            trace.forEach((t) => {
+                msgStack.push(` -> ${  t.file || t.sourceURL  }: ${  t.line  }${t.function ? ` (in function ${  t.function  })` : ''}`);
             });
         }
         system.stdout.writeLine(msgStack.join('\n'));

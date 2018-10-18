@@ -4,12 +4,13 @@
  *
  * Describes the explore page for e2e testing
  */
-"use strict";
+
+
 
 require("../tools/waitReady.js");
-let constants = require("../tools/constants");
+const constants = require("../tools/constants");
 
-let ExplorePageObject = function () {
+const ExplorePageObject = function () {
   this.title = "Explore - MapStory";
   this.content_search_tab = $("#content-search");
   this.storyteller_search_tab = $("#user-search");
@@ -22,7 +23,7 @@ let ExplorePageObject = function () {
   this.sort_newest = element(by.linkText("Newest"));
 
   this.get = function () {
-    browser.get(constants.baseURL + "/search");
+    browser.get(`${constants.baseURL  }/search`);
     browser.waitForAngular();
   };
 };
