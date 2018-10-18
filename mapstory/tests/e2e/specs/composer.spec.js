@@ -2,27 +2,28 @@
  * Composer E2E Tests
  * ==================
  */
-"use strict";
 
-let page = require("../pages/composer.po.js");
-let home = require("../pages/home.po.js");
+
+
+const page = require("../pages/composer.po.js");
+const home = require("../pages/home.po.js");
 const auth = require("../pages/auth.po");
-let wait_times = require("../tools/wait_times.js");
-let constants = require("../tools/constants");
+const wait_times = require("../tools/wait_times.js");
+const constants = require("../tools/constants");
 
-describe("Composer", function () {
+describe("Composer", () => {
   // Our home page object
-  beforeEach(function () {
+  beforeEach(() => {
     // Fetch Home
     browser.ignoreSynchronization = true;
   });
 
-  it("> should start logged in", function () {
+  it("> should start logged in", () => {
     browser.get(constants.baseURL);
     auth.login("admin", "admin");
   });
 
-  it("> should begin creating", function () {
+  it("> should begin creating", () => {
     page.get();
     expect(page.compose_story.waitReady()).toBeTruthy();
     page.compose_story.click();
