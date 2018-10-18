@@ -26,11 +26,13 @@ import os
 import sys
 
 import geonode
-from geonode.settings import *
 import pyproj
+from geonode.settings import *
+
 
 def str_to_bool(v):
     return v.lower() in ("yes", "true", "t", "1")
+
 
 def is_valid(v):
     if v and len(v) > 0:
@@ -38,11 +40,13 @@ def is_valid(v):
     else:
         return False
 
+
 #
 # General Django development settings
 #
 SITENAME = os.environ.get('SITE_NAME', 'MapStory')
-SITEURL = "%s://%s" % (os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
+SITEURL = "%s://%s" % (os.environ['PUBLIC_PROTOCOL'],
+                       os.environ['PUBLIC_HOST'])
 
 # Defines the directory that contains the settings file as the LOCAL_ROOT
 # It is used for relative settings elsewhere.
@@ -51,8 +55,8 @@ LOCAL_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 WSGI_APPLICATION = "mapstory.wsgi.application"
 
 STATICFILES_DIRS = [
-                       os.path.join(LOCAL_ROOT, "static"),
-                   ] + STATICFILES_DIRS
+    os.path.join(LOCAL_ROOT, "static"),
+] + STATICFILES_DIRS
 
 MEDIA_ROOT = os.environ['MEDIA_ROOT']
 STATIC_ROOT = os.environ['STATIC_ROOT']
@@ -63,8 +67,8 @@ ROOT_URLCONF = 'mapstory.urls'
 
 # Location of locale files
 LOCALE_PATHS = (
-                   os.path.join(LOCAL_ROOT, 'locale'),
-               ) + LOCALE_PATHS
+    os.path.join(LOCAL_ROOT, 'locale'),
+) + LOCALE_PATHS
 
 #
 # Site Customizations
@@ -131,7 +135,7 @@ if is_valid(os.getenv("ALLAUTH_GEOAXIS_HOST")):
 
 MAPSTORY_APPS = (
 
-    'mapstory.flag', # - temporarily using this instead of the flag app for django because they need to use AUTH_USER_MODEL
+    'mapstory.flag',  # - temporarily using this instead of the flag app for django because they need to use AUTH_USER_MODEL
 
 )
 
@@ -180,9 +184,11 @@ TEMPLATES = [
 #
 # Authentication Settings
 #
-ACCOUNT_ADAPTER = os.environ.get('ACCOUNT_ADAPTER', 'mapstory.mapstory_profile.views.MapStoryAccountAdapter')
+ACCOUNT_ADAPTER = os.environ.get(
+    'ACCOUNT_ADAPTER', 'mapstory.mapstory_profile.views.MapStoryAccountAdapter')
 ACCOUNT_FORMS = {'signup': 'mapstory.mapstory_profile.forms.CustomSignupForm'}
-ACCOUNT_EXTRA_PROFILE_FORM = os.environ.get('ACCOUNT_EXTRA_PROFILE_FORM', 'EditMapstoryProfileForm')
+ACCOUNT_EXTRA_PROFILE_FORM = os.environ.get(
+    'ACCOUNT_EXTRA_PROFILE_FORM', 'EditMapstoryProfileForm')
 
 AUTHENTICATION_BACKENDS = (
     'oauth2_provider.backends.OAuth2Backend',
@@ -213,7 +219,8 @@ GEOFENCE_SECURITY_ENABLED = True
 ADDITIONAL_AUTH_EXEMPT_URLS = os.getenv('ADDITIONAL_AUTH_EXEMPT_URLS', ())
 
 if isinstance(ADDITIONAL_AUTH_EXEMPT_URLS, str):
-    ADDITIONAL_AUTH_EXEMPT_URLS = tuple(map(str.strip, ADDITIONAL_AUTH_EXEMPT_URLS.split(',')))
+    ADDITIONAL_AUTH_EXEMPT_URLS = tuple(
+        map(str.strip, ADDITIONAL_AUTH_EXEMPT_URLS.split(',')))
 
 AUTH_EXEMPT_URLS = ('/capabilities', '/complete/*', '/login/*',
                     '/api/o/*', '/api/roles', '/api/adminRole',
@@ -230,7 +237,7 @@ DATABASE_PORT = '5432'
 if DATABASE_PASSWORD:
     DATABASES = {
         'default': {
-                    # we use transaction_hooks so we can attach on_commit actions
+            # we use transaction_hooks so we can attach on_commit actions
             'ENGINE': 'transaction_hooks.backends.postgresql_psycopg2',
             'NAME': 'mapstory',
             'USER': 'mapstory',
@@ -271,12 +278,15 @@ if DATABASE_PASSWORD:
 #
 # Geoserver Settings
 #
-GEOSERVER_LOCATION = "%s://%s:%d/geoserver/" % (os.environ['PRIVATE_PROTOCOL'], os.environ['GEOSERVER_HOST_INTERNAL'], int(os.environ['GEOSERVER_PORT_INTERNAL']))
-GEOSERVER_PUBLIC_LOCATION = "%s://%s/geoserver/" % (os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
+GEOSERVER_LOCATION = "%s://%s:%d/geoserver/" % (
+    os.environ['PRIVATE_PROTOCOL'], os.environ['GEOSERVER_HOST_INTERNAL'], int(os.environ['GEOSERVER_PORT_INTERNAL']))
+GEOSERVER_PUBLIC_LOCATION = "%s://%s/geoserver/" % (
+    os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
 
 GEOSERVER_USER = os.environ.get('GEOSERVER_USER', 'admin')
 GEOSERVER_PASSWORD = os.environ.get('GEOSERVER_PASSWORD', 'geoserver')
-GEOSERVER_LOG = '%s/geoserver/data/logs/geoserver.log' % os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))
+GEOSERVER_LOG = '%s/geoserver/data/logs/geoserver.log' % os.path.abspath(
+    os.path.join(PROJECT_ROOT, os.pardir))
 GEOGIG_DATASTORE_DIR = '/var/lib/geoserver/data/geogig'
 
 OGC_SERVER = {
@@ -294,7 +304,7 @@ OGC_SERVER = {
         'MAPFISH_PRINT_ENABLED': True,
         'PRINT_NG_ENABLED': True,
         'GEONODE_SECURITY_ENABLED': True,
-        'GEOFENCE_SECURITY_ENABLED' : GEOFENCE_SECURITY_ENABLED,
+        'GEOFENCE_SECURITY_ENABLED': GEOFENCE_SECURITY_ENABLED,
         'GEOGIG_ENABLED': True,
         'WMST_ENABLED': False,
         'BACKEND_WRITE_ENABLED': True,
@@ -325,10 +335,12 @@ ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/'
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
-ACCOUNT_EMAIL_VERIFICATION = os.environ.get('ACCOUNT_EMAIL_VERIFICATION', 'none')
+ACCOUNT_EMAIL_VERIFICATION = os.environ.get(
+    'ACCOUNT_EMAIL_VERIFICATION', 'none')
 ACCOUNT_LOGIN_REDIRECT_URL = '/'
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', '')
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_BACKEND = os.environ.get(
+    'EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
@@ -339,10 +351,10 @@ THEME_ACCOUNT_CONTACT_EMAIL = os.environ.get('EMAIL_HOST_USER', '')
 #
 # AWS S3 Settings
 #
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID','')
-AWS_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME' ,'')
-AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME','')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY','')
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', '')
+AWS_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', '')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', '')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', '')
 AWS_S3_BUCKET_DOMAIN = '%s.s3.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,)
 USE_AWS_S3_STATIC = False
 USE_AWS_S3_MEDIA = False
@@ -350,7 +362,8 @@ USE_AWS_S3_MEDIA = False
 if USE_AWS_S3_STATIC:
     STATICFILES_LOCATION = 'static'
     STATICFILES_STORAGE = 'mapstory.s3_storages.StaticStorage'
-    STATIC_URL = "https://%s/%s/" % (AWS_S3_BUCKET_DOMAIN, STATICFILES_LOCATION)
+    STATIC_URL = "https://%s/%s/" % (AWS_S3_BUCKET_DOMAIN,
+                                     STATICFILES_LOCATION)
     REMOTE_CONTENT_URL = STATIC_URL + 'assets'
 
 if USE_AWS_S3_MEDIA:
@@ -384,7 +397,7 @@ DEFAULT_IMPORTER_CONFIG = {
     'convert_to_date': [],
     'always_geogig': True,
     'index': 0,
-    'permissions': {'users':{'AnonymousUser':['change_layer_data', 'download_resourcebase', 'view_resourcebase']}, 'groups':{'registered':['change_layer_style']}}
+    'permissions': {'users': {'AnonymousUser': ['change_layer_data', 'download_resourcebase', 'view_resourcebase']}, 'groups': {'registered': ['change_layer_style']}}
 }
 
 # Append only needs to import to temporarily store changes, so we turn off editable and the geogig history.
@@ -442,7 +455,7 @@ MAP_BASELAYERS = [
             "//b.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png",
             "//c.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png"
         ], {"tileOptions": {"crossOriginKeyword": None}}
-                 ],
+        ],
         'title': 'Humanitarian OpenStreetMap',
         'name': "hot",
         "visibility": False,
@@ -539,15 +552,19 @@ AUTO_GENERATE_AVATAR_SIZES = (35, 45, 75, 100)
 #
 # Celery Settings
 #
-CELERY_BROKER_URL = "amqp://mapstory:%s@%s/%s" % (os.environ['RABBITMQ_APPLICATION_PASSWORD'], os.environ['RABBITMQ_HOST'], os.environ['RABBITMQ_APPLICATION_VHOST'])
-CELERY_TASK_ALWAYS_EAGER = str_to_bool(os.environ.get('CELERY_TASK_ALWAYS_EAGER', 'False'))  # False makes tasks run asynchronously
+CELERY_BROKER_URL = "amqp://mapstory:%s@%s/%s" % (
+    os.environ['RABBITMQ_APPLICATION_PASSWORD'], os.environ['RABBITMQ_HOST'], os.environ['RABBITMQ_APPLICATION_VHOST'])
+CELERY_TASK_ALWAYS_EAGER = str_to_bool(os.environ.get(
+    'CELERY_TASK_ALWAYS_EAGER', 'False'))  # False makes tasks run asynchronously
 CELERY_TASK_DEFAULT_QUEUE = "default"
 CELERY_TASK_DEFAULT_EXCHANGE = "default"
 CELERY_TASK_DEFAULT_EXCHANGE_TYPE = "direct"
 CELERY_TASK_DEFAULT_ROUTING_KEY = "default"
 CELERY_TASK_CREATE_MISSING_QUEUES = True
-CELERY_TASK_EAGER_PROPAGATES = str_to_bool(os.environ.get('CELERY_TASK_EAGER_PROPAGATES', 'False'))
-CELERY_RESULT_BACKEND = 'db+postgresql://mapstory:%s@%s:%s/mapstory' % (DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT)
+CELERY_TASK_EAGER_PROPAGATES = str_to_bool(
+    os.environ.get('CELERY_TASK_EAGER_PROPAGATES', 'False'))
+CELERY_RESULT_BACKEND = 'db+postgresql://mapstory:%s@%s:%s/mapstory' % (
+    DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT)
 CELERY_TASK_IGNORE_RESULT = False
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_RESULT_SERIALIZER = 'pickle'
@@ -559,7 +576,8 @@ CELERY_ACCEPT_CONTENT = ['pickle']
 HAYSTACK_SEARCH = True
 # Update facet counts from Haystack
 HAYSTACK_FACET_COUNTS = False
-HAYSTACK_URL = "%s://%s:%d" % (os.environ['PRIVATE_PROTOCOL'], os.environ['ELASTIC_HOST'], int(os.environ['ELASTIC_PORT']))
+HAYSTACK_URL = "%s://%s:%d" % (os.environ['PRIVATE_PROTOCOL'],
+                               os.environ['ELASTIC_HOST'], int(os.environ['ELASTIC_PORT']))
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'mapstory.search.elasticsearch_backend.MapStoryElasticsearchSearchEngine',
@@ -590,6 +608,8 @@ COMMENTS_APP = 'fluent_comments'
 #
 # Automated Testing Settings
 #
+
+
 class DisableMigrations(object):
     def __contains__(self, item):
         return True
@@ -701,7 +721,8 @@ LOGGING = {
 #
 # Slack Settings
 #
-SLACK_BACKEND = os.environ.get('SLACK_BACKEND', 'django_slack.backends.RequestsBackend')
+SLACK_BACKEND = os.environ.get(
+    'SLACK_BACKEND', 'django_slack.backends.RequestsBackend')
 SLACK_TOKEN = os.environ.get('SLACK_TOKEN', '')
 SLACK_CHANNEL = os.environ.get('SLACK_CHANNEL', '')
 SLACK_ICON_EMOJI = os.environ.get('SLACK_ICON_EMOJI', '')
@@ -760,17 +781,21 @@ THUMBNAIL_GENERATOR = "mapstory.thumbnails.tasks.create_gs_thumbnail_mapstory_tx
 #
 # Classification banner
 #
-CLASSIFICATION_BANNER_ENABLED = str_to_bool(os.getenv('CLASSIFICATION_BANNER_ENABLED', 'False'))
-CLASSIFICATION_FOOTER_ENABLED = str_to_bool(os.getenv('CLASSIFICATION_FOOTER_ENABLED', 'False'))
+CLASSIFICATION_BANNER_ENABLED = str_to_bool(
+    os.getenv('CLASSIFICATION_BANNER_ENABLED', 'False'))
+CLASSIFICATION_FOOTER_ENABLED = str_to_bool(
+    os.getenv('CLASSIFICATION_FOOTER_ENABLED', 'False'))
 CLASSIFICATION_TEXT = os.getenv('CLASSIFICATION_TEXT', 'UNCLASSIFIED//FOUO')
 CLASSIFICATION_TEXT_COLOR = os.getenv('CLASSIFICATION_TEXT_COLOR', 'white')
-CLASSIFICATION_BACKGROUND_COLOR = os.getenv('CLASSIFICATION_BACKGROUND_COLOR', 'green')
+CLASSIFICATION_BACKGROUND_COLOR = os.getenv(
+    'CLASSIFICATION_BACKGROUND_COLOR', 'green')
 CLASSIFICATION_LINK = os.getenv('CLASSIFICATION_LINK', None)
 
 #
 # Login warning
 #
-LOGIN_WARNING_ENABLED = str_to_bool(os.getenv('LOGIN_WARNING_ENABLED', 'False'))
+LOGIN_WARNING_ENABLED = str_to_bool(
+    os.getenv('LOGIN_WARNING_ENABLED', 'False'))
 if LOGIN_WARNING_ENABLED:
     LOGIN_WARNING_TEXT = os.getenv(
         'LOGIN_WARNING_TEXT',
@@ -799,7 +824,8 @@ if LOGIN_WARNING_ENABLED:
 #
 # Feature toggles
 #
-FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
+FEATURE_MULTIPLE_STORY_CHAPTERS = str_to_bool(
+    os.environ.get('FEATURE_MULTIPLE_STORY_CHAPTERS', 'False'))
 
 X_FRAME_OPTIONS = 'ALLOWALL'
 

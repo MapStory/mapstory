@@ -2,11 +2,11 @@ from datetime import datetime
 from unittest import skip
 
 from django.core.urlresolvers import reverse
-from django.test import TestCase, Client
+from django.test import Client, TestCase
 from django.test.utils import override_settings
 
-from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 from mapstory.context_processors_favorite import get_object_of_interest
+from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 
 
 class MockLayerRequest(object):
@@ -30,10 +30,10 @@ class TestContextProcessors(MapStoryTestMixin):
         pass
 
     def test_layer_request(self):
-       get_object_of_interest(MockLayerRequest())
+        get_object_of_interest(MockLayerRequest())
 
     def test_map_request(self):
-       get_object_of_interest(MockMapRequest())
+        get_object_of_interest(MockMapRequest())
 
     def test_story_request(self):
-       get_object_of_interest(MockStoryRequest())
+        get_object_of_interest(MockStoryRequest())

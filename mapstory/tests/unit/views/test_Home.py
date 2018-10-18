@@ -1,5 +1,5 @@
-from django.test import TestCase, Client
-from django.core.urlresolvers import reverse, resolve
+from django.core.urlresolvers import resolve, reverse
+from django.test import Client, TestCase
 
 from mapstory.views import IndexView
 
@@ -24,7 +24,10 @@ class TestHomeView(TestCase):
         homeView = IndexView()
         context = homeView.get_context_data()
         self.assertIsNotNone(context, "Should have a context")
-        self.assertIsNotNone(context['sponsors'], "Should have Sponsors context")
-        self.assertIsNotNone(context['news_items'], "Should have news_items context")
+        self.assertIsNotNone(context['sponsors'],
+                             "Should have Sponsors context")
+        self.assertIsNotNone(context['news_items'],
+                             "Should have news_items context")
         self.assertIsNotNone(context['images'], "Shoudl have Images context")
-        self.assertIsNotNone(context['journal_entries'], "Should have Journal context")
+        self.assertIsNotNone(
+            context['journal_entries'], "Should have Journal context")

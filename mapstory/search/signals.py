@@ -1,6 +1,9 @@
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
 from django.db import models
+
 from haystack.exceptions import NotHandled
 from polymorphic.models import PolymorphicModel
 
@@ -11,6 +14,7 @@ class BaseSignalProcessor(object):
     index.
     By default, does nothing with signals but provides underlying functionality.
     """
+
     def __init__(self, connections, connection_router):
         self.connections = connections
         self.connection_router = connection_router
@@ -49,7 +53,8 @@ class BaseSignalProcessor(object):
                     sender = instance.get_real_instance_class()
                     instance = instance.get_real_instance()
 
-                index = self.connections[using].get_unified_index().get_index(sender)
+                index = self.connections[using].get_unified_index(
+                ).get_index(sender)
                 index.update_object(instance, using=using)
 
             except NotHandled:
@@ -65,12 +70,12 @@ class BaseSignalProcessor(object):
 
         for using in using_backends:
             try:
-                index = self.connections[using].get_unified_index().get_index(sender)
+                index = self.connections[using].get_unified_index(
+                ).get_index(sender)
                 index.remove_object(instance, using=using)
             except NotHandled:
                 # TODO: Maybe log it or let the exception bubble?
                 pass
-
 
 
 class RealtimeSignalProcessor(BaseSignalProcessor):
@@ -78,6 +83,7 @@ class RealtimeSignalProcessor(BaseSignalProcessor):
     Allows for observing when saves/deletes fire & automatically updates the
     search engine appropriately.
     """
+
     def setup(self):
         # Naive (listen to all model saves).
         models.signals.post_save.connect(self.handle_save)
@@ -91,4 +97,3 @@ class RealtimeSignalProcessor(BaseSignalProcessor):
         models.signals.post_delete.disconnect(self.handle_delete)
         # Efficient would be going through all backends & collecting all models
         # being used, then disconnecting signals only for those.
-

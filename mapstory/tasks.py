@@ -1,23 +1,25 @@
-from celery import app
-from geonode.geoserver.helpers import ogc_server_settings
 import requests
 
+from celery import app
+from geonode.geoserver.helpers import ogc_server_settings
 from mapstory.mapstories.models import MapStory
-from mapstory.utils import parse_wfst_response, has_exception, error_response, print_exception
+from mapstory.utils import (error_response, has_exception, parse_wfst_response,
+                            print_exception)
 
 
 @app.task(name="tasks.append_feature_chunks")
-def append_feature_chunks(features, wfst_insert_template,get_features_request,target):
+def append_feature_chunks(features, wfst_insert_template, get_features_request, target):
     summary = None
-    handle = 'added {0} features to {1} via append'.format(len(features),target)
+    handle = 'added {0} features to {1} via append'.format(
+        len(features), target)
     wfs_transaction_payload = wfst_insert_template.format(features=''.join(features), workspace='geonode',
                                                           workspace_uri='http://www.geonode.org/', handle=handle)
 
     insert_features_request = requests.post(
-            '{}/wfs/WfsDispatcher'.format(ogc_server_settings.LOCATION),
-            auth=ogc_server_settings.credentials,
-            headers={'Content-Type': 'application/xml'},
-            data=wfs_transaction_payload
+        '{}/wfs/WfsDispatcher'.format(ogc_server_settings.LOCATION),
+        auth=ogc_server_settings.credentials,
+        headers={'Content-Type': 'application/xml'},
+        data=wfs_transaction_payload
     )
     if has_exception(insert_features_request.content) is False:
         print_exception(insert_features_request.content)

@@ -1,7 +1,7 @@
-from django.db import models
 from django.conf import settings
 from django.core.exceptions import SuspiciousOperation
 from django.core.urlresolvers import reverse
+from django.db import models
 from django.utils.text import slugify
 
 from geonode.layers.models import Layer
@@ -33,16 +33,24 @@ class Initiative(Team):
     image = models.ImageField(null=True, blank=True, upload_to='initiatives')
 
     # Social Media
-    facebook = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='facebook')
-    twitter = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='twitter')
-    instagram = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='instagram')
-    github = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='github')
-    linkedin = models.ForeignKey(InitiativeSocialMedia, blank=True, null=True, related_name='linkedin')
+    facebook = models.ForeignKey(
+        InitiativeSocialMedia, blank=True, null=True, related_name='facebook')
+    twitter = models.ForeignKey(
+        InitiativeSocialMedia, blank=True, null=True, related_name='twitter')
+    instagram = models.ForeignKey(
+        InitiativeSocialMedia, blank=True, null=True, related_name='instagram')
+    github = models.ForeignKey(
+        InitiativeSocialMedia, blank=True, null=True, related_name='github')
+    linkedin = models.ForeignKey(
+        InitiativeSocialMedia, blank=True, null=True, related_name='linkedin')
 
     # Links
-    url0 = models.ForeignKey(InitiativeURL, blank=True, null=True, related_name="url0")
-    url1 = models.ForeignKey(InitiativeURL, blank=True, null=True, related_name="url1")
-    url2 = models.ForeignKey(InitiativeURL, blank=True, null=True, related_name="url2")
+    url0 = models.ForeignKey(InitiativeURL, blank=True,
+                             null=True, related_name="url0")
+    url1 = models.ForeignKey(InitiativeURL, blank=True,
+                             null=True, related_name="url1")
+    url2 = models.ForeignKey(InitiativeURL, blank=True,
+                             null=True, related_name="url2")
 
     def __unicode__(self):
         return self.name
@@ -88,7 +96,8 @@ class Initiative(Team):
         :return: A InitiativeMembership object.
         """
         # Only add members if they are not already one
-        membership_count = InitiativeMembership.objects.filter(user=user, initiative=self).count()
+        membership_count = InitiativeMembership.objects.filter(
+            user=user, initiative=self).count()
 
         if membership_count > 0:
             raise SuspiciousOperation("Is already a member")
@@ -152,11 +161,13 @@ class JoinRequest(models.Model):
     Must be approved by an admin.
     """
     initiative = models.ForeignKey(Initiative)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='initiatives_request')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             related_name='initiatives_request')
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     is_open = models.BooleanField(default=True)
-    approved_by = models.ForeignKey(InitiativeMembership, blank=True, null=True)
+    approved_by = models.ForeignKey(
+        InitiativeMembership, blank=True, null=True)
 
     def approve(self, admin_membership):
         """

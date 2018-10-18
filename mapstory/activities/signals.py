@@ -1,7 +1,7 @@
+from django.db.models import signals
+
 from actstream import action
 from icon_commons.models import Icon
-
-from django.db.models import signals
 
 
 def post_save_mapstory_actstream_handler(sender, instance, created, **kwargs):

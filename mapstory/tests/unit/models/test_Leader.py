@@ -1,4 +1,5 @@
 from unittest import skip
+
 from django.test import TestCase
 
 from mapstory.models import Leader
@@ -8,6 +9,7 @@ class TestLeader(TestCase):
     """
     Leader model tests
     """
+
     def setUp(self):
         self.leader = Leader()
         self.assertIsInstance(self.leader, Leader)

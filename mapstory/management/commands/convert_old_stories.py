@@ -1,6 +1,9 @@
-from django.core.management.base import BaseCommand
-from mapstory.mapstories.models import Map,MapStory
 import re
+
+from django.core.management.base import BaseCommand
+
+from mapstory.mapstories.models import Map, MapStory
+
 
 class Command(BaseCommand):
     help = 'This command looks for Map objects that are missing a associated MapStory and creates/links the new model'
@@ -36,7 +39,8 @@ class Command(BaseCommand):
                     new_story.save()
                     new_story.set_default_permissions()
                 else:
-                    self.stdout.write('New Mapstory Object: {0}'.format(new_story_print))
+                    self.stdout.write(
+                        'New Mapstory Object: {0}'.format(new_story_print))
                     self.stdout.write('Title: {0}'.format(new_story_print))
 
                 # create the foreign key link to the new story and set it to the first chapter
@@ -45,14 +49,16 @@ class Command(BaseCommand):
                 if options['dry-run'] is False:
                     old_story.save()
 
-
                 stories_updated += 1
                 if options['dry-run'] is False:
-                    self.stdout.write('Converted old mapstory: {0}'.format(new_story_print))
+                    self.stdout.write(
+                        'Converted old mapstory: {0}'.format(new_story_print))
                 else:
-                    self.stdout.write('Converted old mapstory: {0}, but did not save'.format(new_story_print))
+                    self.stdout.write(
+                        'Converted old mapstory: {0}, but did not save'.format(new_story_print))
 
-            self.stdout.write('{0} stories converted to new model'.format(stories_updated))
+            self.stdout.write(
+                '{0} stories converted to new model'.format(stories_updated))
 
         else:
             self.stdout.write('No Chapters found without a Mapstory')

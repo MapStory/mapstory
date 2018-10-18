@@ -1,8 +1,11 @@
+import os
+
 from django.conf import settings
+
 from allauth.account.models import EmailAddress
 from allauth.socialaccount.providers.base import AuthAction, ProviderAccount
 from allauth.socialaccount.providers.oauth2.provider import OAuth2Provider
-import os
+
 
 class GeoAxisAccount(ProviderAccount):
 
@@ -30,8 +33,9 @@ class GeoAxisProvider(OAuth2Provider):
     def extract_email_addresses(self, data):
         ret = []
         ret.append(EmailAddress(email=data.get('email'),
-                       verified=True,
-                       primary=True))
+                                verified=True,
+                                primary=True))
         return ret
+
 
 provider_classes = [GeoAxisProvider]

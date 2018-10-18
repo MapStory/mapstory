@@ -1,32 +1,24 @@
 import re
 
-from django.db.models import Q
-from django.http import HttpResponse
 from django.conf import settings
+from django.conf.urls import url
+from django.core.paginator import InvalidPage, Paginator
+from django.db.models import Q
+from django.http import Http404, HttpResponse
 
+from geonode.api.api import (FILTER_TYPES, ProfileResource, RegionResource,
+                             TagResource, TopicCategoryResource)
+from geonode.api.authorization import GeoNodeAuthorization
+from geonode.base.models import ResourceBase
+from geonode.documents.models import Document
+from geonode.layers.models import Layer
+from guardian.shortcuts import get_objects_for_user
+from mapstory.mapstories.models import Map, MapStory
+from tastypie import fields
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
-from tastypie import fields
 from tastypie.utils import trailing_slash
-
-from guardian.shortcuts import get_objects_for_user
-
-from django.conf.urls import url
-from django.core.paginator import Paginator, InvalidPage
-from django.http import Http404
-
 from tastypie.utils.mime import build_content_type
-
-from geonode.layers.models import Layer
-from mapstory.mapstories.models import Map, MapStory
-from geonode.documents.models import Document
-from geonode.base.models import ResourceBase
-
-from geonode.api.authorization import GeoNodeAuthorization
-
-from geonode.api.api import TagResource, RegionResource, ProfileResource, \
-    TopicCategoryResource, \
-    FILTER_TYPES
 
 if settings.HAYSTACK_SEARCH:
     from haystack.query import SearchQuerySet  # noqa
@@ -66,7 +58,8 @@ class CommonModelApi(ModelResource):
     owner = fields.ToOneField(ProfileResource, 'owner', full=True)
 
     def build_filters(self, filters={}, **kwargs):
-        orm_filters = super(CommonModelApi, self).build_filters(filters, **kwargs)
+        orm_filters = super(CommonModelApi, self).build_filters(
+            filters, **kwargs)
         if 'type__in' in filters and filters[
                 'type__in'] in FILTER_TYPES.keys():
             orm_filters.update({'type': filters.getlist('type__in')})
@@ -273,13 +266,13 @@ class CommonModelApi(ModelResource):
         if published:
             sqs = (SearchQuerySet() if sqs is None else sqs).filter(
                 SQ(is_published=published)
-                )
+            )
 
         # filter by featured status
         if featured:
             sqs = (SearchQuerySet() if sqs is None else sqs).filter(
                 SQ(featured=featured)
-                )
+            )
 
         # filter by date
         if date_start:
@@ -335,7 +328,8 @@ class CommonModelApi(ModelResource):
 
         if not settings.SKIP_PERMS_FILTER:
             # Get the list of objects the user has access to
-            filter_set = get_objects_for_user(request.user, 'base.view_resourcebase')
+            filter_set = get_objects_for_user(
+                request.user, 'base.view_resourcebase')
             if settings.RESOURCE_PUBLISHING:
                 filter_set = filter_set.filter(is_published=True)
 
@@ -368,7 +362,7 @@ class CommonModelApi(ModelResource):
                     int(request.GET.get('limit', 1)) + 1)
             except InvalidPage:
                 raise Http404("Sorry, no results on that page.")
-            
+
             current_page = page.number
             start_index = page.start_index()
             end_index = page.end_index()
@@ -386,15 +380,15 @@ class CommonModelApi(ModelResource):
             objects = []
 
         object_list = {
-           "meta": {"end_index": end_index,
-                    "limit": settings.CLIENT_RESULTS_LIMIT,
-                    "num_pages": num_pages,
-                    "offset": int(getattr(request.GET, 'offset', 0)),
-                    "current_page": current_page,
-                    "start_index": start_index,
-                    "total_count": total_count,
-                    "facets": facets,
-                    },
+            "meta": {"end_index": end_index,
+                     "limit": settings.CLIENT_RESULTS_LIMIT,
+                     "num_pages": num_pages,
+                     "offset": int(getattr(request.GET, 'offset', 0)),
+                     "current_page": current_page,
+                     "start_index": start_index,
+                     "total_count": total_count,
+                     "facets": facets,
+                     },
             'objects': map(lambda x: self.get_haystack_api_fields(x), objects),
         }
         self.log_throttled_access(request)
@@ -489,7 +483,7 @@ class CommonModelApi(ModelResource):
             return [
                 url(r"^(?P<resource_name>%s)/search%s$" % (
                     self._meta.resource_name, trailing_slash()
-                    ),
+                ),
                     self.wrap_view('get_search'), name="api_get_search"),
             ]
         else:
@@ -539,7 +533,8 @@ class MapStoryResource(CommonModelApi):
 
     def prepend_urls(self):
         return [
-            url(r"^(?P<resource_name>%s)/slug/(?P<slug>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
+            url(r"^(?P<resource_name>%s)/slug/(?P<slug>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view(
+                'dispatch_detail'), name="api_dispatch_detail"),
         ]
 
     class Meta(CommonMetaApi):
@@ -551,6 +546,7 @@ class MapStoryResource(CommonModelApi):
             'id': ALL,
             'slug': ALL
         }
+
 
 class MapResource(CommonModelApi):
 

@@ -3,15 +3,14 @@ import re
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 
-from geonode.api.api import TypeFilteredResource, CountJSONSerializer
+from geonode.api.api import CountJSONSerializer, TypeFilteredResource
+from mapstory.initiatives.models import Initiative
+from mapstory.mapstory_profile.models import MapstoryProfile
+from mapstory.organizations.models import Organization
 from taggit.models import Tag
 from tastypie import fields
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource
-
-from mapstory.mapstory_profile.models import MapstoryProfile
-from mapstory.organizations.models import Organization
-from mapstory.initiatives.models import Initiative
 
 
 class OwnerProfileSerializer(CountJSONSerializer):
@@ -71,7 +70,8 @@ class MapstoryOwnersResource(TypeFilteredResource):
             request, data, format, options)
 
     def build_filters(self, filters={}, **kwargs):
-        orm_filters = super(MapstoryOwnersResource, self).build_filters(filters, **kwargs)
+        orm_filters = super(MapstoryOwnersResource,
+                            self).build_filters(filters, **kwargs)
 
         if 'interests' in filters:
             query = filters['interests']
@@ -116,7 +116,8 @@ class MapstoryOwnersResource(TypeFilteredResource):
         return semi_filtered
 
     class Meta:
-        queryset = get_user_model().objects.exclude(username='AnonymousUser').exclude(is_active=False)
+        queryset = get_user_model().objects.exclude(
+            username='AnonymousUser').exclude(is_active=False)
 
         resource_name = 'owners'
         allowed_methods = ['get']

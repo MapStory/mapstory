@@ -1,9 +1,10 @@
 
-from django.test import Client
-from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
+from django.test import Client
 
 from mapstory.export import export_via_model
+
 from ..MapStoryTestMixin import MapStoryTestMixin
 
 User = get_user_model()
@@ -17,5 +18,6 @@ class MapStoryAdminTests(MapStoryTestMixin):
         """
         c = Client()
         request = c.get(reverse('index_view'))
-        response = export_via_model(User, request, User.objects.all(), exclude=['password'])
+        response = export_via_model(
+            User, request, User.objects.all(), exclude=['password'])
         self.assertEqual(response['Content-Type'], 'text/csv')

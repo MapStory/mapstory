@@ -1,15 +1,15 @@
 import re
 
-from tastypie import fields
-from tastypie.resources import ModelResource
-from tastypie.constants import ALL
-
 from django.db.models import Q
 
 from mapstory.initiatives.api import InitiativeResource
 from mapstory.initiatives.models import Initiative
 from mapstory.organizations.api import OrganizationResource
 from mapstory.organizations.models import Organization
+from tastypie import fields
+from tastypie.constants import ALL
+from tastypie.resources import ModelResource
+
 from .models import Team
 
 
@@ -39,13 +39,15 @@ class TeamResource(ModelResource):
         if isinstance(bundle.obj, Organization):
             # Converts to a Organization
             resource = OrganizationResource()
-            bundle = resource.build_bundle(obj=bundle.obj, request=bundle.request)
+            bundle = resource.build_bundle(
+                obj=bundle.obj, request=bundle.request)
             bundle.data = resource.full_dehydrate(bundle).data
 
         elif isinstance(bundle.obj, Initiative):
             # Converts to an Initiative
             resource = InitiativeResource()
-            bundle = resource.build_bundle(obj=bundle.obj, request=bundle.request)
+            bundle = resource.build_bundle(
+                obj=bundle.obj, request=bundle.request)
             bundle.data = resource.full_dehydrate(bundle).data
 
         return bundle
@@ -53,7 +55,8 @@ class TeamResource(ModelResource):
     def build_filters(self, filters=None, **kwargs):
         if filters is None:
             filters = {}
-        orm_filters = super(TeamResource, self).build_filters(filters, **kwargs)
+        orm_filters = super(TeamResource, self).build_filters(
+            filters, **kwargs)
 
         # Handle city filters
         if 'city' in filters:
@@ -106,7 +109,8 @@ class TeamResource(ModelResource):
             qfilter = None
 
         # Apply the filters
-        semi_filtered = super(TeamResource, self).apply_filters(request, applicable_filters)
+        semi_filtered = super(TeamResource, self).apply_filters(
+            request, applicable_filters)
         if city is not None:
             semi_filtered = semi_filtered.filter(city)
         if group_type is not None:
