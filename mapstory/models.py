@@ -2,13 +2,12 @@ import datetime
 import hashlib
 import os
 
-from django import conf, db, contrib, template
+from django import conf, contrib, db, template
 from django.contrib.sites.models import Site
 
 import geonode
 import textile
-
-from mapstory.mapstories.models import MapStory, Map
+from mapstory.mapstories.models import Map, MapStory
 
 
 class CustomSite(db.models.Model):
@@ -81,7 +80,7 @@ class ContentMixin(db.models.Model):
         ordering = ['-date']
 
 
-class NewsItem(ContentMixin ):
+class NewsItem(ContentMixin):
     title = db.models.CharField(max_length=64)
 
     @property
@@ -91,7 +90,7 @@ class NewsItem(ContentMixin ):
 
 class GetPage(db.models.Model):
     name = db.models.SlugField(max_length=32, unique=True,
-                            help_text='Do NOT include the "get" prefix')
+                               help_text='Do NOT include the "get" prefix')
     title = db.models.CharField(max_length=32)
     subtitle = db.models.CharField(max_length=32, blank=True)
 
@@ -108,7 +107,8 @@ class GetPageContent(ContentMixin):
     example_map = db.models.ForeignKey(Map, null=True, blank=True)
     main_link = db.models.URLField(blank=False)
     external_link = db.models.URLField(blank=True)
-    external_link_title = db.models.CharField(max_length=64, blank=True, null=True)
+    external_link_title = db.models.CharField(
+        max_length=64, blank=True, null=True)
     page = db.models.ForeignKey(GetPage, related_name='contents')
     order = db.models.IntegerField(blank=True, default=0)
     video = db.models.FileField(upload_to='getpage', blank=True)
@@ -147,4 +147,6 @@ def get_images():
 def get_sponsors():
     return Sponsor.objects.filter(order__gte=0)
 
-db.models.signals.post_save.connect(geonode.base.models.resourcebase_post_save, sender=MapStory)
+
+db.models.signals.post_save.connect(
+    geonode.base.models.resourcebase_post_save, sender=MapStory)
