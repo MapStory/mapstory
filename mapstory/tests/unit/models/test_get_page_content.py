@@ -1,4 +1,5 @@
 from unittest import skip
+
 from django.test import TestCase
 
 from mapstory.models import GetPageContent
@@ -8,6 +9,7 @@ class TestGetPageContent(TestCase):
     """
     GetPageContent model tests
     """
+
     def setUp(self):
         self.getPageContent = GetPageContent()
         self.assertIsInstance(self.getPageContent, GetPageContent)

@@ -2,7 +2,6 @@ from django.conf.urls import patterns, url
 
 from .views import ProfileDetail, profile_delete, profile_edit
 
-
 urlpatterns = patterns("",
                        url(r"^storyteller/(?P<slug>[^/]*)/$",
                            ProfileDetail.as_view(), name="profile_detail"),

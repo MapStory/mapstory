@@ -4,11 +4,12 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.test import TestCase
 
-from ...tests.MapStoryTestMixin import MapStoryTestMixin
-from ...tests.AdminClient import AdminClient
-from ...utils import parse_schema, error_response, Link
-from mapstory.tests import utils
 from geonode.maps.models import Layer
+from mapstory.tests import utils
+
+from ...tests.AdminClient import AdminClient
+from ...tests.MapStoryTestMixin import MapStoryTestMixin
+from ...utils import Link, error_response, parse_schema
 
 
 class TestUtils(MapStoryTestMixin):
@@ -53,7 +54,8 @@ class TestLinkUtil(TestCase):
         link = Link(url, name)
         self.assertIsInstance(link, Link)
         self.assertEqual(link.name, name)
-        self.assertEqual(link.render(), '<a target="_" href="%s">%s</a>' % (url, name))
+        self.assertEqual(
+            link.render(), '<a target="_" href="%s">%s</a>' % (url, name))
         self.assertFalse(link.is_image())
 
     def test_image_link(self):
@@ -61,14 +63,16 @@ class TestLinkUtil(TestCase):
         name = "An Image Of Queso"
         link = Link(image_url, name)
         self.assertTrue(link.is_image())
-        self.assertEqual(link.render(), '<img class="None" src="%s" title="%s"></img>' % (image_url, name))
+        self.assertEqual(
+            link.render(), '<img class="None" src="%s" title="%s"></img>' % (image_url, name))
         self.assertEqual(link.name, name)
 
     def test_facebook_link(self):
         fb_url = "https://www.facebook.com/RaspberryPiPuebla"
         name = "Raspberry Pi Puebla"
         link = Link(fb_url, name)
-        self.assertEqual(link.render(), '<a target="_" href="%s"><img src="/static/img/facebook.png" border=0></a>' % (fb_url,))
+        self.assertEqual(link.render(
+        ), '<a target="_" href="%s"><img src="/static/img/facebook.png" border=0></a>' % (fb_url,))
 
     def test_youtube_link(self):
         video_id = "8np2I_gQgcY"

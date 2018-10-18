@@ -1,24 +1,19 @@
 from django import forms
 from django.contrib import admin
 
-from geonode.people.admin import ProfileAdmin as UserAdmin
-from geonode.layers.models import Layer
 from geonode.layers.admin import LayerAdmin
-
+from geonode.layers.models import Layer
+from geonode.people.admin import ProfileAdmin as UserAdmin
 from mapstory.export import export_via_model
 from mapstory.flag import admin as flag_admin
-from mapstory.models import CustomSite
-from mapstory.models import GetPage
-from mapstory.models import GetPageContent
-from mapstory.models import Leader
-from mapstory.models import MapStory
-from mapstory.models import NewsItem
-from mapstory.models import ParallaxImage
-from mapstory.models import Sponsor
+from mapstory.models import (CustomSite, GetPage, GetPageContent, Leader,
+                             MapStory, NewsItem, ParallaxImage, Sponsor)
 
 
 def content_html(obj):
     return obj.html()
+
+
 content_html.allow_tags = True
 content_html.short_description = 'Content'
 
@@ -127,6 +122,7 @@ class ParallaxImageAdmin(admin.ModelAdmin):
     model = ParallaxImage
     list_display = 'name',
 
+
 flag_admin.register_group_to_flag_types(
     ('dev_moderator', 'broken'),
     ('content_moderator', 'inappropriate')
@@ -148,6 +144,7 @@ class MapStoryAdmin(admin.ModelAdmin):
     list_editable = ('title', 'owner', 'category')
     list_filter = ('featured', )
 
+
 class ExtendedLayerAdmin(LayerAdmin):
     list_display_links = ('id',)
     list_display = (
@@ -158,6 +155,7 @@ class ExtendedLayerAdmin(LayerAdmin):
         'category')
     list_editable = ('title', 'owner', 'category')
     list_filter = ('featured', )
+
 
 admin.site.unregister(Layer)
 admin.site.register(Layer, ExtendedLayerAdmin)

@@ -56,9 +56,11 @@ def save_mapstory(request):
         config['chapters'][index]['storyID'] = mapstory.id
 
         if config['chapters'][index]['mapId']:
-            currentChapter = Map.objects.get(pk=config['chapters'][index]['mapId'])
+            currentChapter = Map.objects.get(
+                pk=config['chapters'][index]['mapId'])
         else:
-            currentChapter = Map(owner=request.user, zoom=0, center_x=0, center_y=0)
+            currentChapter = Map(owner=request.user,
+                                 zoom=0, center_x=0, center_y=0)
 
         currentChapter.save()
         currentChapter.update_from_viewer(conf=chapter)
@@ -74,8 +76,10 @@ def save_mapstory(request):
 
                     currentFrame.map_id = chapter['mapId']
 
-                    start_time = datetime_to_seconds(parse_date_time(frame['properties']['start_time']))
-                    end_time = datetime_to_seconds(parse_date_time(frame['properties']['end_time']))
+                    start_time = datetime_to_seconds(
+                        parse_date_time(frame['properties']['start_time']))
+                    end_time = datetime_to_seconds(
+                        parse_date_time(frame['properties']['end_time']))
 
                     currentFrame.center = frame['properties']['center']
                     currentFrame.end_time = end_time
@@ -100,8 +104,10 @@ def save_mapstory(request):
 
                 currentPin.map_id = chapter['mapId']
 
-                start_time = datetime_to_seconds(parse_date_time(pin['properties']['start_time']))
-                end_time = datetime_to_seconds(parse_date_time(pin['properties']['end_time']))
+                start_time = datetime_to_seconds(
+                    parse_date_time(pin['properties']['start_time']))
+                end_time = datetime_to_seconds(
+                    parse_date_time(pin['properties']['end_time']))
 
                 currentPin.content = pin['properties']['content']
                 currentPin.end_time = end_time
@@ -126,6 +132,7 @@ def save_mapstory(request):
 
     return HttpResponse(json.dumps(config))
 
+
 @transaction.atomic
 def delete_mapstory(request, story_id):
     mapstory = MapStory.objects.get(pk=story_id)
@@ -135,13 +142,15 @@ def delete_mapstory(request, story_id):
     else:
         return HttpResponse("Not allowed", status=403)
 
+
 def mapstory_view(request, slug, snapshot=None, template='composer_new/composer.html'):
     """
     The view that returns the map viewer opened to
     the mapstory with the given ID.
     """
 
-    story_obj = _resolve_map(request, slug, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
+    story_obj = _resolve_map(
+        request, slug, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
 
     if 'access_token' in request.session:
         access_token = request.session['access_token']
@@ -176,33 +185,38 @@ def _resolve_story(request, id, permission='base.change_resourcebase',
 
 # request a (future) story thumbnail to be created
 # we only allow  PUT/POST since this modifies data
+
+
 @require_http_methods(["PUT", "POST"])
 @csrf_exempt
 def story_generate_thumbnail(request, storyid):
     if not request.user.is_authenticated():
         return HttpResponse(
-                _PERMISSION_MSG_LOGIN,
-                status=401,
-                content_type="text/plain"
+            _PERMISSION_MSG_LOGIN,
+            status=401,
+            content_type="text/plain"
         )
 
     story_obj = MapStory.objects.get(id=storyid)
     if not request.user.has_perm('change_resourcebase', story_obj.get_self_resource()):
         return HttpResponse(
-                _PERMISSION_MSG_SAVE,
-                status=401,
-                content_type="text/plain"
+            _PERMISSION_MSG_SAVE,
+            status=401,
+            content_type="text/plain"
         )
-    create_mapstory_thumbnail_tx_aware(story_obj,True)
+    create_mapstory_thumbnail_tx_aware(story_obj, True)
     return HttpResponse("create story thumbnail task was scheduled for story id="+str(story_obj.id)+", with uuid="+str(story_obj.uuid))
 
+
 def composer_new_view(request, slug, template='composer_new/composer.html'):
-    story_obj = _resolve_story(request, slug, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
+    story_obj = _resolve_story(
+        request, slug, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
     config = story_obj.viewer_json(request.user)
     return render_to_response(template, RequestContext(request, {
         'config': json.dumps(config),
         'story': story_obj
     }))
+
 
 def _resolve_map(request, id, permission='base.change_resourcebase',
                  msg=_PERMISSION_MSG_GENERIC, **kwargs):
@@ -214,7 +228,7 @@ def _resolve_map(request, id, permission='base.change_resourcebase',
     else:
         key = 'slug'
     map_obj = resolve_object(request, MapStory, {key: id}, permission=permission,
-                          permission_msg=msg, **kwargs)
+                             permission_msg=msg, **kwargs)
     return map_obj
 
 
@@ -223,7 +237,8 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
     The view that show details of each map
     '''
     # MapStory specific change from mapid parameter to slug parameter
-    map_obj = _resolve_map(request, slug, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
+    map_obj = _resolve_map(
+        request, slug, 'base.view_resourcebase', _PERMISSION_MSG_VIEW)
 
     # Update count for popularity ranking,
     # but do not includes admins or resource owners
@@ -301,7 +316,8 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
 
     # Check if user is admin in one of those organizations
     org_admin_memberships = []
-    memberships = OrganizationMembership.objects.filter(user_id=request.user.pk)
+    memberships = OrganizationMembership.objects.filter(
+        user_id=request.user.pk)
     for membership in memberships.all():
         if membership.is_admin:
             org_admin_memberships.append(membership)
@@ -309,7 +325,8 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
     if len(org_admin_memberships) < 1:
         org_admin_memberships = None
 
-    ini_memberships = InitiativeMembership.objects.filter(user_id=request.user.pk)
+    ini_memberships = InitiativeMembership.objects.filter(
+        user_id=request.user.pk)
     ini_admin_memberships = []
     for m in ini_memberships.all():
         if m.is_admin:
@@ -357,6 +374,7 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
 
     # Favorites
     if request.user.is_authenticated():
-        context_dict["favorite_info"] = get_favorite_info(request.user, map_obj)
+        context_dict["favorite_info"] = get_favorite_info(
+            request.user, map_obj)
 
     return render(request, template, context=context_dict)

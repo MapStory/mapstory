@@ -1,21 +1,21 @@
 import json
 
-from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
 
-from tastypie.resources import ModelResource
-from tastypie.authorization import Authorization
+from geonode.api.api import ProfileResource
+from geonode.api.resourcebase_api import (DocumentResource, LayerResource,
+                                          MapResource)
+from geonode.base.models import ResourceBase
+from geonode.documents.models import Document
+from geonode.layers.models import Layer
+from geonode.people.models import Profile
+from mapstory.mapstories.models import Map
 from tastypie import fields
+from tastypie.authorization import Authorization
 from tastypie.constants import ALL
 from tastypie.contrib.contenttypes.fields import GenericForeignKeyField
-
-from geonode.layers.models import Layer
-from mapstory.mapstories.models import Map
-from geonode.documents.models import Document
-from geonode.people.models import Profile
-from geonode.api.resourcebase_api import LayerResource, MapResource, DocumentResource
-from geonode.api.api import ProfileResource
-from geonode.base.models import ResourceBase
+from tastypie.resources import ModelResource
 
 from .models import Favorite
 
@@ -32,7 +32,7 @@ class FavoriteResource(ModelResource):
     }, 'content_object', full=True)
 
     def dehydrate_content_type(self, bundle):
-      return str(bundle.obj.content_type)
+        return str(bundle.obj.content_type)
 
     def serialize(self, request, data, format, options={}):
         return super(FavoriteResource, self).serialize(request, data, format, options)
@@ -88,12 +88,15 @@ class FavoriteResource(ModelResource):
         if title:
             semi_filtered = self.exclude_profiles(semi_filtered)
             filtered_resources = ResourceBase.objects.filter(title__in=title)
-            semi_filtered = semi_filtered.filter(object_id__in=filtered_resources)
+            semi_filtered = semi_filtered.filter(
+                object_id__in=filtered_resources)
 
         if keywords:
             semi_filtered = self.exclude_profiles(semi_filtered)
-            filtered_resources = ResourceBase.objects.filter(keywords__slug__in=keywords)
-            semi_filtered = semi_filtered.filter(object_id__in=filtered_resources)
+            filtered_resources = ResourceBase.objects.filter(
+                keywords__slug__in=keywords)
+            semi_filtered = semi_filtered.filter(
+                object_id__in=filtered_resources)
 
         return semi_filtered
 

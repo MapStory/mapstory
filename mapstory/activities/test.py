@@ -1,22 +1,19 @@
-from actstream import registry, action
-from actstream.models import Action, actor_stream
-from dialogos.models import Comment
 from unittest import skip
 
-from django.core.urlresolvers import reverse
-from django.contrib.auth import get_user_model
-from django.test import TestCase
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
+from django.test import TestCase
 
+from actstream import action, registry
+from actstream.models import Action, actor_stream
+from dialogos.models import Comment
 from geonode.maps.models import Layer
 from geonode.people.models import Profile
-
-from icon_commons.models import Icon
-from icon_commons.models import Collection
-
-from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
-from mapstory.tests.AdminClient import AdminClient
+from icon_commons.models import Collection, Icon
 from mapstory.tests import utils as test_utils
+from mapstory.tests.AdminClient import AdminClient
+from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 from mapstory.tests.populate_test_data import create_models
 
 
@@ -36,17 +33,22 @@ class SocialTests(MapStoryTestMixin):
     """
     Tests for Social Activity Streams
     """
+
     def setUp(self):
-        self.username, self.password = self.create_user('admin', 'admin', is_superuser=True)
+        self.username, self.password = self.create_user(
+            'admin', 'admin', is_superuser=True)
         self.user = get_user_model().objects.filter(username='admin')[0]
 
-    def test_social_page_renders(self):
+        self.username, self.password = self.create_user(
+            'admin', 'admin', is_superuser=True)
         admin_client = AdminClient()
         admin_client.login_as_admin()
-        response = admin_client.get(reverse('profile_detail', args=[self.username]))
+        response = admin_client.get(
+            reverse('profile_detail', args=[self.username]))
 
         # Test for final status code = HTTP OK
-        self.assertEqual(response.status_code, 200)
+        response = admin_client.get(
+            reverse('profile_detail', args=[self.username]))
         self.assertTemplateUsed(response, 'people/profile_detail.html')
 
         # Should have all the tab names shown

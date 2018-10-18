@@ -1,11 +1,12 @@
-from django.test import TestCase
 from django.core.urlresolvers import reverse
-
-from tastypie.test import ResourceTestCaseMixin
+from django.test import TestCase
 
 from mapstory.initiatives.models import Initiative
 from mapstory.organizations.models import Organization
-from mapstory.tests.utils import get_test_user, create_mapstory, create_layer, create_user
+from mapstory.tests.utils import (create_layer, create_mapstory, create_user,
+                                  get_test_user)
+from tastypie.test import ResourceTestCaseMixin
+
 from .models import Team
 
 
@@ -30,7 +31,8 @@ class TeamTests(ResourceTestCaseMixin, TestCase):
         self.assertHttpOK(self.api_client.get(self.api_url, format='json'))
 
     def test_name_query(self):
-        org = Organization.objects.create(name='test', slogan='123', about='456')
+        org = Organization.objects.create(
+            name='test', slogan='123', about='456')
         ini = Initiative.objects.create(
             name='Testing Initiative', about='Testing 123', slogan='The test is strong with this one'
         )
@@ -51,7 +53,8 @@ class TeamTests(ResourceTestCaseMixin, TestCase):
         Initiative.objects.create(
             name='Testing Initiative', about='Testing 123', slogan='The test is strong with this one'
         )
-        resp = self.api_client.get(self.api_url, format='json', authentication=self.get_credentials())
+        resp = self.api_client.get(
+            self.api_url, format='json', authentication=self.get_credentials())
         self.assertValidJSONResponse(resp)
 
         # Should have 2 Organizations and 2 Initaitives:
@@ -67,7 +70,8 @@ class TeamTests(ResourceTestCaseMixin, TestCase):
             name='TestingTeam', about='About this team', slogan='Testing teams team'
         )
 
-        resp = self.api_client.get(self.api_url + '?name=TestingTeam', format='json')
+        resp = self.api_client.get(
+            self.api_url + '?name=TestingTeam', format='json')
         self.assertValidJSONResponse(resp)
         self.assertEqual(len(self.deserialize(resp)['objects']), 1)
         self.assertContains(resp, team.name)

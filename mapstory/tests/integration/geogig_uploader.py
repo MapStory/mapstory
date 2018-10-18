@@ -1,22 +1,21 @@
-import uuid
-
+import json
 import os
-
 import shutil
+import uuid
 from urlparse import urlparse
 
-import httplib2
+from django import db
+from django.contrib.auth import get_user_model
+from django.contrib.gis.gdal import DataSource
 from django.test.utils import setup_test_environment
+
+import httplib2
 from geonode.geoserver.helpers import ogc_server_settings
 from geonode.layers.models import Layer
 from geoserver.catalog import Catalog
 from osgeo_importer.importers import OGRImport
 from osgeo_importer.tests.tests_original import setUpModule
 from osgeo_importer.utils import ImportHelper
-from django.contrib.gis.gdal import DataSource
-from django.contrib.auth import get_user_model
-import json
-from django import db
 
 # This is code mostly taken from the django-osgeo-importer's tests_original.py.
 # Its been modified to make mapstory-like integration testing easy plus use
@@ -33,7 +32,6 @@ from django import db
 #
 # NOTE: data is destroyed at the end of each test method (teardown deletes from
 #       geoserver and GeoNode).
-
 
 
 # User/setUpModule -- taken from django-osgeo-importer's tests_original.py -- see there for details
@@ -76,7 +74,8 @@ class GeoGigUploaderBase(ImportHelper):
         """
         # delete stores (will cascade to delete layers)
         for store_name in self.datastoreNames:
-            self.catalog.delete(self.catalog.get_store(store_name), recurse=True)
+            self.catalog.delete(
+                self.catalog.get_store(store_name), recurse=True)
 
         # delete repository reference in geoserver
         for store_name in self.datastoreNames:
@@ -111,11 +110,13 @@ class GeoGigUploaderBase(ImportHelper):
                 None,
                 http
             ))
-        rest_url = ogc_server_settings.LOCATION + "geogig/repos/" + ref_name + "/delete.json"
+        rest_url = ogc_server_settings.LOCATION + \
+            "geogig/repos/" + ref_name + "/delete.json"
         resp, content = http.request(rest_url, 'GET')
         response = json.loads(content)
         token = response["response"]["token"]
-        rest_url = ogc_server_settings.LOCATION + "geogig/repos/" + ref_name + "?token=" + token
+        rest_url = ogc_server_settings.LOCATION + \
+            "geogig/repos/" + ref_name + "?token=" + token
         resp, content = http.request(rest_url, 'DELETE')
 
     # convenience method to load in the test dataset
@@ -204,7 +205,8 @@ class GeoGigUploaderBase(ImportHelper):
         files = [of]
         uploaded_data = self.upload(files, self.admin_user)
         self.configure_upload(uploaded_data, files)
-        configs = [{'index': l.index, 'upload_layer_id': l.id} for l in uploaded_data.uploadlayer_set.all()]
+        configs = [{'index': l.index, 'upload_layer_id': l.id}
+                   for l in uploaded_data.uploadlayer_set.all()]
         return configs
 
     def create_user(self, username, password, **kwargs):

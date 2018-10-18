@@ -77,7 +77,7 @@ class TestSignupView(MapStoryTestMixin):
         self.assertTrue(user)
         self.assertEqual(user.username, data['username'])
         self.assertEqual(user.name_long, data['first_name'] +
-                            ' ' + data['last_name'] + ' (' + data['username'] + ')')
+                         ' ' + data['last_name'] + ' (' + data['username'] + ')')
         self.assertEqual(user.first_name, data['first_name'])
         self.assertEqual(user.last_name, data['last_name'])
         self.assertEqual(user.email, data['email'])

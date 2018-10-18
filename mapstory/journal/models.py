@@ -1,8 +1,11 @@
-from django.db import models
+from datetime import datetime
+
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from datetime import datetime
+from django.db import models
+
 import textile
+
 
 class ContentMixin(models.Model):
     content = models.TextField(

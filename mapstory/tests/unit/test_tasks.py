@@ -4,11 +4,11 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.test import TestCase
 
-from ...tests.MapStoryTestMixin import MapStoryTestMixin
-from ...tests.AdminClient import AdminClient
-from ...utils import parse_schema, error_response, Link
-
 from mapstory.tasks import append_feature_chunks
+
+from ...tests.AdminClient import AdminClient
+from ...tests.MapStoryTestMixin import MapStoryTestMixin
+from ...utils import Link, error_response, parse_schema
 
 
 class WFST_Template(object):
@@ -24,4 +24,4 @@ class TestTasks(MapStoryTestMixin):
         pass
 
     def test_append_feature_chunks(self):
-        append_feature_chunks(['a','b','c'], WFST_Template(), "A", "B")
+        append_feature_chunks(['a', 'b', 'c'], WFST_Template(), "A", "B")

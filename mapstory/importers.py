@@ -1,16 +1,16 @@
-import time
 import json
-import requests
+import time
 
+import requests
 from django.conf import settings
 from django.http import HttpResponseForbidden
 from django.utils.text import slugify
 
 from geonode.geoserver.helpers import ogc_server_settings
 from geonode.upload.utils import create_geoserver_db_featurestore
+from osgeo_importer.api import UploadedLayerResource
 from osgeo_importer.importers import Import
 from osgeo_importer.utils import UploadError, launder
-from osgeo_importer.api import UploadedLayerResource
 
 
 class UploadedLayerResource(UploadedLayerResource):
@@ -22,8 +22,10 @@ class UploadedLayerResource(UploadedLayerResource):
             if store.get('type', str).lower() == 'geogig':
                 store.setdefault('branch', 'master')
                 store.setdefault('create', 'true')
-                store.setdefault('name', slugify(configuration_options.get('name')))
-                store['geogig_repository'] = ("geoserver://%s" % store.get('name'))
+                store.setdefault('name', slugify(
+                    configuration_options.get('name')))
+                store['geogig_repository'] = (
+                    "geoserver://%s" % store.get('name'))
 
         if not configuration_options.get('layer_owner'):
             configuration_options['layer_owner'] = obj.upload.user.username
@@ -92,11 +94,13 @@ class GeoServerLayerCreator(Import):
                 store_name = name
 
             feature_type['title'] = feature_type['name']
-            feature_type['name'] = launder(slugify(unicode(feature_type['name'])))
+            feature_type['name'] = launder(
+                slugify(unicode(feature_type['name'])))
 
             # Without this check, the bounding box will default to 0, 0, -1, -1
             if 'nativeBoundingBox' not in feature_type:
-                feature_type['nativeBoundingBox'] = {'minx': -180, 'maxx': 180, 'miny': -90, 'maxy': 90, 'crs': 'EPSG:4326'}
+                feature_type['nativeBoundingBox'] = {
+                    'minx': -180, 'maxx': 180, 'miny': -90, 'maxy': 90, 'crs': 'EPSG:4326'}
 
             if store_create_geogig and store_create_geogig != 'false':
                 store_created = create_geoserver_db_featurestore(store_type='geogig', store_name=store_name, author_name=username,
@@ -108,8 +112,10 @@ class GeoServerLayerCreator(Import):
 
             for x in range(0, 50):
                 post_request = requests.post(
-                    '{}/workspaces/{}/datastores/{}/featuretypes.json'.format(ogc_server_settings.rest, feature_type['namespace']['name'], store_name),
-                    data='{{"featureType":{}}}'.format(json.dumps(feature_type)),
+                    '{}/workspaces/{}/datastores/{}/featuretypes.json'.format(
+                        ogc_server_settings.rest, feature_type['namespace']['name'], store_name),
+                    data='{{"featureType":{}}}'.format(
+                        json.dumps(feature_type)),
                     auth=ogc_server_settings.credentials,
                     headers={'content-type': 'application/json'}
                 )
@@ -122,10 +128,12 @@ class GeoServerLayerCreator(Import):
             if post_request.ok:
                 self.completed_layers.append([feature_type['name'], layer])
             else:
-                message = 'Unable to create layer: {0}, an unhandled exception occurred.'.format(feature_type['name'])
+                message = 'Unable to create layer: {0}, an unhandled exception occurred.'.format(
+                    feature_type['name'])
 
                 if 'already exists in' in post_request.content:
-                    message = 'A layer named {0} already exists.  Please choose another name.'.format(feature_type['name'])
+                    message = 'A layer named {0} already exists.  Please choose another name.'.format(
+                        feature_type['name'])
                 print post_request.content
                 raise UploadError(message)
 

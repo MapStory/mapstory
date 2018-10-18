@@ -1,12 +1,11 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, HttpResponseForbidden
-from django.core.urlresolvers import reverse
-from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse, HttpResponseForbidden
+from django.shortcuts import get_object_or_404, redirect, render
 
-from . import models
-from . import forms
+from . import forms, models
 
 User = get_user_model()
 
@@ -25,54 +24,62 @@ def organization_detail(request, slug):
         # Handle form data
         if request.POST.get("add_featured_layer"):
             layer_pk = request.POST.get("layer_pk")
-            found_layer = get_object_or_404(models.OrganizationLayer, organization=org, layer__pk=layer_pk)
+            found_layer = get_object_or_404(
+                models.OrganizationLayer, organization=org, layer__pk=layer_pk)
             found_layer.is_featured = True
             found_layer.save()
             messages.success(request, "Added Layer to Featured")
 
         elif request.POST.get("remove_layer"):
             layer_pk = request.POST.get("layer_pk")
-            found_layer = get_object_or_404(models.OrganizationLayer, organization=org, layer__pk=layer_pk)
+            found_layer = get_object_or_404(
+                models.OrganizationLayer, organization=org, layer__pk=layer_pk)
             found_layer.delete()
             messages.success(request, "Removed Layer from Organization")
 
         elif request.POST.get("remove_featured_layer"):
             layer_pk = request.POST.get("layer_pk")
-            found_layer = get_object_or_404(models.OrganizationLayer, organization=org, layer__pk=layer_pk)
+            found_layer = get_object_or_404(
+                models.OrganizationLayer, organization=org, layer__pk=layer_pk)
             found_layer.is_featured = False
             found_layer.save()
             messages.success(request, "Removed Layer from Featured")
 
         elif request.POST.get("remove_mapstory"):
             mapstory_pk = request.POST.get("mapstory_pk")
-            found_mapstory = get_object_or_404(models.OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
+            found_mapstory = get_object_or_404(
+                models.OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
             found_mapstory.delete()
             messages.success(request, "Removed MapStory from Organization")
 
         elif request.POST.get("remove_featured_mapstory"):
             mapstory_pk = request.POST.get("mapstory_pk")
-            found_mapstory = get_object_or_404(models.OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
+            found_mapstory = get_object_or_404(
+                models.OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
             found_mapstory.is_featured = False
             found_mapstory.save()
             messages.success(request, "Removed MapStory from Featured")
 
         elif request.POST.get("add_featured_mapstory"):
             mapstory_pk = request.POST.get("mapstory_pk")
-            found_mapstory = get_object_or_404(models.OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
+            found_mapstory = get_object_or_404(
+                models.OrganizationMapStory, organization=org, mapstory__pk=mapstory_pk)
             found_mapstory.is_featured = True
             found_mapstory.save()
             messages.success(request, "Added MapStory to Featured")
 
     members = models.OrganizationMembership.objects.filter(organization=org)
     org_layers = models.OrganizationLayer.objects.filter(organization=org)
-    org_mapstories = models.OrganizationMapStory.objects.filter(organization=org)
+    org_mapstories = models.OrganizationMapStory.objects.filter(
+        organization=org)
 
     layers = []
     mapstories = []
 
     # Check membership
     membership = None
-    memberships = models.OrganizationMembership.objects.filter(organization=org, user__pk=request.user.pk)
+    memberships = models.OrganizationMembership.objects.filter(
+        organization=org, user__pk=request.user.pk)
     if memberships.count() > 0:
         membership = memberships.first()
 
@@ -94,15 +101,20 @@ def organization_detail(request, slug):
 
     social_icons = []
     if org.facebook:
-        social_icons.append(models.OrganizationSocialMedia.objects.get(pk=org.facebook.pk))
+        social_icons.append(
+            models.OrganizationSocialMedia.objects.get(pk=org.facebook.pk))
     if org.twitter:
-        social_icons.append(models.OrganizationSocialMedia.objects.get(pk=org.twitter.pk))
+        social_icons.append(
+            models.OrganizationSocialMedia.objects.get(pk=org.twitter.pk))
     if org.instagram:
-        social_icons.append(models.OrganizationSocialMedia.objects.get(pk=org.instagram.pk))
+        social_icons.append(
+            models.OrganizationSocialMedia.objects.get(pk=org.instagram.pk))
     if org.linkedin:
-        social_icons.append(models.OrganizationSocialMedia.objects.get(pk=org.linkedin.pk))
+        social_icons.append(
+            models.OrganizationSocialMedia.objects.get(pk=org.linkedin.pk))
     if org.github:
-        social_icons.append(models.OrganizationSocialMedia.objects.get(pk=org.github.pk))
+        social_icons.append(
+            models.OrganizationSocialMedia.objects.get(pk=org.github.pk))
 
     org_urls = []
 
@@ -151,7 +163,8 @@ def add_layer(request, slug, layer_pk):
     :return: An HTTPResponse
     """
     org = get_object_or_404(models.Organization, slug=slug)
-    membership = get_object_or_404(models.OrganizationMembership, user_id=request.user.pk, organization=org)
+    membership = get_object_or_404(
+        models.OrganizationMembership, user_id=request.user.pk, organization=org)
 
     if membership.is_admin or membership.is_active:
         pass
@@ -162,11 +175,13 @@ def add_layer(request, slug, layer_pk):
     if request.POST:
         # Check if not already added
         org = get_object_or_404(models.Organization, slug=slug)
-        found = models.OrganizationLayer.objects.filter(organization=org, layer_id=layer_pk)
+        found = models.OrganizationLayer.objects.filter(
+            organization=org, layer_id=layer_pk)
 
         if found.count() > 0:
             # Duplicate Layer
-            messages.warning(request, "This layer has already been added to this Organization.")
+            messages.warning(
+                request, "This layer has already been added to this Organization.")
         else:
             # Add the Layer
             obj = models.OrganizationLayer()
@@ -203,11 +218,13 @@ def add_mapstory(request, slug, mapstory_pk):
 
     if request.POST:
         # Check if not already added
-        found = models.OrganizationMapStory.objects.filter(organization=org, mapstory__pk=mapstory_pk)
+        found = models.OrganizationMapStory.objects.filter(
+            organization=org, mapstory__pk=mapstory_pk)
 
         if found.count() > 0:
             # Give a warning to the user
-            messages.warning(request, "This Mapstory has already been added to this Organization.")
+            messages.warning(
+                request, "This Mapstory has already been added to this Organization.")
         else:
             # Add it to the Organization
             obj = models.OrganizationMapStory()
@@ -357,7 +374,8 @@ def manager(request, slug):
     """
     # Check that we are admins
     organization = get_object_or_404(models.Organization, slug=slug)
-    membership = get_object_or_404(models.OrganizationMembership, organization=organization, user=request.user)
+    membership = get_object_or_404(
+        models.OrganizationMembership, organization=organization, user=request.user)
     if not membership.is_admin:
         # User is NOT AUTHORIZED!
         # TODO: Send the user somewhere else
@@ -371,8 +389,10 @@ def manager(request, slug):
     linkedin = organization.linkedin
     github = organization.github
     instagram = organization.instagram
-    join_requests = models.JoinRequest.objects.filter(organization=organization, is_open=True)
-    memberships = models.OrganizationMembership.objects.filter(organization=organization)
+    join_requests = models.JoinRequest.objects.filter(
+        organization=organization, is_open=True)
+    memberships = models.OrganizationMembership.objects.filter(
+        organization=organization)
     org_image = organization.image
     info = {
         'name': organization.name,
@@ -403,7 +423,8 @@ def manager(request, slug):
         # Check for valid forms
         if basic_info_form.is_valid() and links_form.is_valid():
             # All forms are valid
-            _edit_organization_with_forms(organization, basic_info_form, links_form)
+            _edit_organization_with_forms(
+                organization, basic_info_form, links_form)
 
             messages.success(request, "Saved changes to Organization.")
 
@@ -436,12 +457,14 @@ def request_membership(request, slug):
     """
     if not request.user.is_authenticated():
         # TODO: Show the login popup.
-        messages.warning(request, 'Please Log In or Sign Up before joining an Organization.')
+        messages.warning(
+            request, 'Please Log In or Sign Up before joining an Organization.')
         return redirect(reverse("index_view"))
 
     # Make sure the Request doesnt exist yet.
     org = get_object_or_404(models.Organization, slug=slug)
-    found = models.JoinRequest.objects.filter(organization=org, user=request.user.pk)
+    found = models.JoinRequest.objects.filter(
+        organization=org, user=request.user.pk)
     if found.count() > 0:
         messages.warning(request, 'A request to join has already been made.')
         return redirect(reverse("organizations:detail", kwargs={'slug': slug}))
@@ -451,7 +474,8 @@ def request_membership(request, slug):
         request_to_join = models.JoinRequest()
         request_to_join.user_id = request.user.pk
         request_to_join.is_open = True
-        request_to_join.organization = get_object_or_404(models.Organization, slug=slug)
+        request_to_join.organization = get_object_or_404(
+            models.Organization, slug=slug)
         request_to_join.save()
         messages.success(request, 'A request to join has been made')
 
@@ -479,7 +503,8 @@ def approve_membership(request, slug):
 
         if not admin_membership.is_admin:
             # No permission
-            messages.warning(request, "You do not have permissions to do this.")
+            messages.warning(
+                request, "You do not have permissions to do this.")
             return redirect(reverse("organizations:detail", kwargs={'slug': slug}))
         else:
             # We have permission, continue

@@ -1,5 +1,7 @@
 from django.core.management.base import BaseCommand
+
 from geonode.people.models import Profile
+
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
@@ -21,8 +23,9 @@ class Command(BaseCommand):
             user = Profile.objects.get(username=options['username'])
             print("User {} already exists.".format(user))
         except Profile.DoesNotExist:
-            print("User {} does not exist, creating user.".format(options['username']))
-            p,_ = Profile.objects.get_or_create(username=options['username'])
-            p.is_staff=p.is_superuser=True
+            print("User {} does not exist, creating user.".format(
+                options['username']))
+            p, _ = Profile.objects.get_or_create(username=options['username'])
+            p.is_staff = p.is_superuser = True
             p.set_password(options['password'])
             p.save()

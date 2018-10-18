@@ -1,4 +1,5 @@
 from unittest import skip
+
 from django.test import TestCase
 
 from mapstory.models import NewsItem
@@ -8,6 +9,7 @@ class TestNewsItem(TestCase):
     """
     NewsItem model tests
     """
+
     def setUp(self):
         self.newsItem = NewsItem()
         self.newsItem.item = "Test Item"

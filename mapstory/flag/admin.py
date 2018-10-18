@@ -1,13 +1,13 @@
+from datetime import datetime
+
 from django import forms
+from django.conf import settings
 from django.contrib import admin
 from django.core import urlresolvers
 from django.utils.safestring import mark_safe
-from django.conf import settings
+
 from geonode.people.models import Profile
-
 from mapstory.flag.models import FlaggedContent, FlagInstance
-
-from datetime import datetime
 
 _absolute_url_resolvers = {}
 _group_to_flag_type = {}
@@ -29,8 +29,11 @@ def flagged_object_link(model):
         resolver = _absolute_url_resolvers.get(type(obj), None)
         if resolver:
             url = resolver(obj)
-    if not url: return ''
+    if not url:
+        return ''
     return "<a href='%s'>%s</a>" % (url, obj._meta.verbose_name)
+
+
 flagged_object_link.short_description = 'The Flagged Item'
 flagged_object_link.allow_tags = True
 
@@ -38,36 +41,44 @@ flagged_object_link.allow_tags = True
 def user_link(flag_instance):
     user = flag_instance.user
     return "<a href='%s'>%s</a>" % (user.get_absolute_url(), user.username)
+
+
 user_link.short_description = 'User'
 user_link.allow_tags = True
 
 
 def flagged_content_link(flag_instance):
     url = urlresolvers.reverse("admin:flag_flaggedcontent_change",
-                    args=(flag_instance.flagged_content.id,))
+                               args=(flag_instance.flagged_content.id,))
     return "<a href='%s'>%s</a>" % (url, 'Admin Link')
+
+
 flagged_content_link.short_description = 'Flagged Content'
 flagged_content_link.allow_tags = True
 
 
 def flag_link(flag_instance):
     url = urlresolvers.reverse("admin:flag_flaginstance_change",
-                    args=(flag_instance.id,))
+                               args=(flag_instance.id,))
     return "<a href='%s'>%s</a>" % (url, 'Admin Link')
+
+
 flag_link.short_description = 'Link to Flag'
 flag_link.allow_tags = True
 
 
 class InlineFlagInstance(admin.TabularInline):
-    readonly_fields = ('user', 'flag_type', 'comment', 'when_added', 'when_recalled', flag_link)
+    readonly_fields = ('user', 'flag_type', 'comment',
+                       'when_added', 'when_recalled', flag_link)
     model = FlagInstance
     extra = 0
 
 
 class FlaggedContentForm(forms.ModelForm):
     flagged_object = forms.CharField(label='Link to Flagged Item')
-    moderator = forms.ModelChoiceField(queryset=
-        Profile.objects.filter(groups__name__in=_group_to_flag_type.keys()))
+    moderator = forms.ModelChoiceField(queryset=Profile.objects.filter(
+        groups__name__in=_group_to_flag_type.keys()))
+
     class Meta:
         model = FlaggedContent
         fields = '__all__'
@@ -75,7 +86,7 @@ class FlaggedContentForm(forms.ModelForm):
     def __init__(self, *args, **kw):
         super(FlaggedContentForm, self).__init__(*args, **kw)
         link = mark_safe(unicode(flagged_object_link(self.instance)))
-        self.fields['flagged_object'].widget.render = lambda *a,**kw: link
+        self.fields['flagged_object'].widget.render = lambda *a, **kw: link
 
 
 class FlaggedContentAdmin(admin.ModelAdmin):
@@ -98,7 +109,7 @@ class ActiveFilter(admin.SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
-        val =  self.value()
+        val = self.value()
         if val == 'active':
             queryset = queryset.filter(when_recalled__isnull=True)
         elif val == 'resolved':
@@ -117,7 +128,7 @@ class FlagInstanceAdmin(admin.ModelAdmin):
 
     def recall_flag(self, req, qs):
         # filter any already recalled flags
-        qs = qs.filter(when_recalled__isnull = True)
+        qs = qs.filter(when_recalled__isnull=True)
         qs.update(when_recalled=datetime.now())
 
     def queryset(self, request):

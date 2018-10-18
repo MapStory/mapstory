@@ -1,9 +1,10 @@
-from django.core.urlresolvers import reverse
-from django.test import TestCase, Client
-from django.contrib.auth import get_user_model
 from unittest import skip
-from models import JournalEntry, get_group_journals
 
+from django.contrib.auth import get_user_model
+from django.core.urlresolvers import reverse
+from django.test import Client, TestCase
+
+from models import JournalEntry, get_group_journals
 
 User = get_user_model()
 
@@ -17,12 +18,13 @@ def get_test_user():
         TYPE: User
     """
     allUsers = User.objects.all()
-    if allUsers.count() > 0 :
+    if allUsers.count() > 0:
         return allUsers[0]
-    else :
+    else:
         return User.objects.create_user(username='modeltester',
-                                 email='modeltester@models.com',
-                                 password='glassonion232123')
+                                        email='modeltester@models.com',
+                                        password='glassonion232123')
+
 
 # Get a user for testing
 testUser = get_test_user()
@@ -40,6 +42,7 @@ class AdminClient(Client):
         Convenience method to login a non-admin.
         """
         return self.login(**{'username': username, 'password': password})
+
 
 @skip("TODO: Fix this test")
 def test_journal_renders(self):
@@ -62,7 +65,8 @@ def test_journal_renders(self):
     response = c.get(reverse('journal-detail', args=[1]))
     self.assertEqual(response.status_code, 404)
 
-    data = {'title': 'testing a new journal', 'content': 'This is test content'}
+    data = {'title': 'testing a new journal',
+            'content': 'This is test content'}
     response = c.post(reverse('journal-create'), data=data, follow=True)
     self.assertEqual(response.status_code, 200)
     self.assertHasGoogleAnalytics(response)
@@ -76,7 +80,8 @@ def test_journal_renders(self):
     data['publish'] = True
     data['show_on_main'] = True
 
-    response = c.post(reverse('journal-update', args=[journal.id]), data=data, follow=True)
+    response = c.post(
+        reverse('journal-update', args=[journal.id]), data=data, follow=True)
     self.assertEqual(response.status_code, 200)
     journal = JournalEntry.objects.get(title=data['title'])
     self.assertTrue(journal.publish)
@@ -90,6 +95,7 @@ class TestJournalEntry(TestCase):
     """
     JournalEntry model tests
     """
+
     def setUp(self):
         self.journalEntry = JournalEntry()
         self.journalEntry.title = "Test title"
@@ -103,30 +109,33 @@ class TestJournalEntry(TestCase):
         self.assertIsNotNone(JournalEntry)
         self.assertIsNotNone(get_group_journals)
 
-
     def test_unicode(self):
         """
         Should return unicode value
         """
         self.assertIsNotNone(unicode(self.journalEntry))
-        self.assertTrue(unicode(self.journalEntry).endswith(self.journalEntry.title))
+        self.assertTrue(unicode(self.journalEntry).endswith(
+            self.journalEntry.title))
 
     @skip("TODO: Fix this test")
     def test_save_and_retrieve(self):
         """
         Should save and retrieve
         """
-        self.assertEqual(0, JournalEntry.objects.all().count(), "Should be empty")
+        self.assertEqual(
+            0, JournalEntry.objects.all().count(), "Should be empty")
         self.journalEntry.save()
 
         allEntries = JournalEntry.objects.all()
         self.assertEqual(1, allEntries.count(), "Should have 1 entry")
 
         entry = allEntries[0]
-        self.assertIsInstance(entry, JournalEntry, "Should be an instance of JournalEntry")
+        self.assertIsInstance(entry, JournalEntry,
+                              "Should be an instance of JournalEntry")
 
         # Make sure the correct values have been saved
-        self.assertEqual(entry.title, self.journalEntry.title, "Should have same title")
+        self.assertEqual(entry.title, self.journalEntry.title,
+                         "Should have same title")
         self.assertEqual(entry.author.name,
                          self.journalEntry.author.name,
                          "Should have same authors")

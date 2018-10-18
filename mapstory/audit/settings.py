@@ -20,7 +20,6 @@
 
 from django.conf import settings
 
-
 AUDIT_TO_FILE = getattr(
     settings,
     'AUDIT_TO_FILE',

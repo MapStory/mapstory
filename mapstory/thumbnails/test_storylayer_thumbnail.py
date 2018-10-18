@@ -1,18 +1,20 @@
 from __future__ import division
 
-from mapstory.tests.integration.geogig_uploader import GeoGigUploaderBase
-from django.test import TestCase
 import os
+import uuid
+from StringIO import StringIO
+from unittest import skip
+
+from django.test import TestCase
 
 from geonode.layers.models import Layer
-from mapstory.thumbnails.tasks import CreateStoryLayerThumbnailTask, CreateStoryLayerAnimatedThumbnailTask, \
-    CreateStoryAnimatedThumbnailTask
-from PIL import Image, ImageChops
-from StringIO import StringIO
-from mapstory.mapstories.models import Map, MapStory
 from geonode.maps.models import MapLayer
-from unittest import skip
-import uuid
+from mapstory.mapstories.models import Map, MapStory
+from mapstory.tests.integration.geogig_uploader import GeoGigUploaderBase
+from mapstory.thumbnails.tasks import (CreateStoryAnimatedThumbnailTask,
+                                       CreateStoryLayerAnimatedThumbnailTask,
+                                       CreateStoryLayerThumbnailTask)
+from PIL import Image, ImageChops
 
 
 def compare_images(img1, img2, rgb_difference=1):
