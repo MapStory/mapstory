@@ -19,7 +19,8 @@ def parse_schema(schema_xml_str):
     for ns in root.nsmap:
         xpath_ns = etree.FunctionNamespace(root.nsmap[ns])
         xpath_ns.prefix = ns
-    sequences = tree.xpath('//xsd:schema/xsd:complexType/xsd:complexContent/xsd:extension/xsd:sequence/xsd:element')
+    sequences = tree.xpath(
+        '//xsd:schema/xsd:complexType/xsd:complexContent/xsd:extension/xsd:sequence/xsd:element')
     schema_source = {}
     for element in sequences:
         schema_source[element.attrib['name']] = element.attrib['type']
@@ -46,9 +47,10 @@ def print_exception(response_xml):
     xml = etree.XML(response_xml)
     tree = etree.ElementTree(xml)
     root = tree.getroot()
-    exceptions = root.findall('.//ows:Exception',root.nsmap)
+    exceptions = root.findall('.//ows:Exception', root.nsmap)
     for exception in exceptions:
-        logger.warning('Insert exception {0}: {1}'.format(exception.tag, exception.text))
+        logger.warning('Insert exception {0}: {1}'.format(
+            exception.tag, exception.text))
 
 
 def parse_wfst_response(schema_xml_str):
@@ -58,7 +60,8 @@ def parse_wfst_response(schema_xml_str):
     for ns in root.nsmap:
         xpath_ns = etree.FunctionNamespace(root.nsmap[ns])
         xpath_ns.prefix = ns
-    summary_element = tree.xpath('//wfs:TransactionResponse/wfs:TransactionSummary')
+    summary_element = tree.xpath(
+        '//wfs:TransactionResponse/wfs:TransactionSummary')
     summary = {}
     for child in summary_element[0].getchildren():
         summary[child.tag.split('}')[1]] = child.text
@@ -73,7 +76,7 @@ class Link(object):
 
     def is_image(self):
         ext = os.path.splitext(self.href)[1][1:].lower()
-        return ext in ('gif','jpg','jpeg','png')
+        return ext in ('gif', 'jpg', 'jpeg', 'png')
 
     def _get_link(self, *paths):
         prefix = 'https?://(?:w{3}\.)?'
@@ -98,7 +101,8 @@ class Link(object):
     def render(self, width=None, height=None, css_class=None):
         '''width and height are just hints - ignored for images'''
 
-        ctx = dict(href=self.href, link_content=self.name or self.href, css_class=css_class, width='', height='')
+        ctx = dict(href=self.href, link_content=self.name or self.href,
+                   css_class=css_class, width='', height='')
         if self.is_image():
             return '<img class="%(css_class)s" src="%(href)s" title="%(link_content)s"></img>' % ctx
 

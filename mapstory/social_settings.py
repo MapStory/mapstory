@@ -2,7 +2,6 @@ from django.db.models import Q
 
 from geonode.people.models import Profile
 from mailer import send_html_mail
-
 from mapstory.flag.signals import content_flagged
 
 
@@ -32,5 +31,6 @@ def flag_handler(flagged_instance, flagged_content, **kw):
                    message_html=message,
                    from_email="do-not-reply@mapstory.org",
                    recipient_list=[u.email for u in recps])
+
 
 content_flagged.connect(flag_handler)

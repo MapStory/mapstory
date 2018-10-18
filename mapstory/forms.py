@@ -1,8 +1,7 @@
 from django import forms
 
-from geonode.base.models import ResourceBase
 import taggit
-
+from geonode.base.models import ResourceBase
 from mapstory.mapstories.models import MapStory
 
 
