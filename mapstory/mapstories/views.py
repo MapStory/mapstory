@@ -77,9 +77,9 @@ def save_mapstory(request):
                     currentFrame.map_id = chapter['mapId']
 
                     start_time = datetime_to_seconds(
-                        parse_date_time(frame['properties']['start_time']))
+                        parse_date_time(frame['properties']['startTime']))
                     end_time = datetime_to_seconds(
-                        parse_date_time(frame['properties']['end_time']))
+                        parse_date_time(frame['properties']['endTime']))
 
                     currentFrame.center = frame['properties']['center']
                     currentFrame.end_time = end_time
@@ -105,9 +105,9 @@ def save_mapstory(request):
                 currentPin.map_id = chapter['mapId']
 
                 start_time = datetime_to_seconds(
-                    parse_date_time(pin['properties']['start_time']))
+                    parse_date_time(pin['properties']['startTime']))
                 end_time = datetime_to_seconds(
-                    parse_date_time(pin['properties']['end_time']))
+                    parse_date_time(pin['properties']['endTime']))
 
                 currentPin.content = pin['properties']['content']
                 currentPin.end_time = end_time
@@ -117,9 +117,9 @@ def save_mapstory(request):
                 currentPin.start_time = start_time
                 currentPin.the_geom = json.dumps(pin['geometry'])
                 currentPin.title = pin['properties']['title']
-                currentPin.auto_play = pin['properties']['auto_play']
+                currentPin.auto_play = pin['properties']['autoPlay']
                 currentPin.offset = pin['properties']['offset']
-                currentPin.play_length = pin['properties']['play_length']
+                currentPin.play_length = pin['properties']['playLength']
 
                 currentPin.save()
                 pin['id'] = currentPin.id

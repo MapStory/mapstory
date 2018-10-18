@@ -41,7 +41,7 @@ let composer = function () {
   // this.table_of_contents = $('.sidebar-toc-content');
   this.chapter_binds = $(".sidebar-toc-content").all(by.binding("chapter"));
   this.storypins_button = $("[ng-click=\"updateSelected('pins')\"]");
-  this.add_storypin_button = $("[ng-click=\"on_add_storypin()\"]");
+  this.add_storypin_button = $("[ng-click=\"onAddStoryPin()\"]");
   this.storypin_binds = $("#pin-list").all(by.binding("pin"));
   this.bulk_upload_button = element(by.buttonText("Bulk Upload"));
   this.upload_modal = $("#modal-body");
