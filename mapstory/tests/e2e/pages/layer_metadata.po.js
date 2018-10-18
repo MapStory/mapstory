@@ -2,11 +2,12 @@
  * Layer Metadata Wizard Page Object
  * ===============================
  */
-"use strict";
+
+
 
 require("../tools/waitReady.js");
 
-let layer_metadata_wizard = function () {
+const layer_metadata_wizard = function () {
   this.titleInput = element(by.css("#id_title"));
   this.categoryDropdown = element(by.css("#id_category"));
   this.summaryText = element(by.css("#id_abstract"));
