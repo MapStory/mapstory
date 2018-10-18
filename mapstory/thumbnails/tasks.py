@@ -187,11 +187,10 @@ class CreateStoryLayerThumbnailTask:
 
     # get a temporary filename (don't forget to delete it when done)
     def create_temp_filename(self, filename_suffix='image'):
-        file = NamedTemporaryFile(
-            delete=False, prefix="temp_thumbnail_", suffix=filename_suffix)
-        fname = file.name
-        file.close()
-        return fname
+        with NamedTemporaryFile(
+            delete=False, prefix="temp_thumbnail_",
+            suffix=filename_suffix) as f:
+            return f.name
 
     # call phantomjs and save the thumbnail
     # return - image data
