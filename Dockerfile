@@ -32,7 +32,11 @@ RUN set -ex \
     && pip install --no-cache-dir \
         coveralls \
         gunicorn \
-        paver
+        paver \
+        pycodestyle \
+        "pylint>=1.9,<2" \
+        "pylint-django>=0.11.1,<2" \
+        ;
 
 # Install misc libs
 RUN set -ex \
