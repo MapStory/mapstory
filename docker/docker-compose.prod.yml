@@ -1,6 +1,16 @@
 # mapstory.org configuration
 version: '3.7'
 services:
+  backup-sync:
+    build: ./docker/backup-sync
+    image: quay.io/mapstory/backup-sync:latest
+    volumes:
+      - backups:/backups
+      - geoserver:/var/lib/geoserver
+      - mapstory_media:/var/lib/mapstory/media/
+    networks:
+      internal:
+
   composer:
     image: quay.io/mapstory/composer:prod
     build:
@@ -13,6 +23,8 @@ services:
       - "5050:5050"
     secrets:
       - env_db_auth
+    volumes:
+      - backups:/backups
 
   elasticsearch:
 

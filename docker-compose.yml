@@ -12,21 +12,10 @@ services:
     expose:
       - "9090"
 
-  backup-sync:
-    build: ./docker/backup-sync
-    image: quay.io/mapstory/backup-sync:latest
-    volumes:
-      - backups:/backups
-      - geoserver:/var/lib/geoserver
-      - mapstory_media:/var/lib/mapstory/media/
-    networks:
-      internal:
-
   pgadmin:
     build: ./docker/pgadmin
     image: quay.io/mapstory/pgadmin
     volumes:
-      - backups:/backups
       - pgadmin:/var/lib/pgadmin
     networks:
       internal:
@@ -137,9 +126,3 @@ volumes:
   mapstory_static:
   mapstory_media:
   pgadmin:
-  backups:
-    driver: local
-    driver_opts:
-      type: none
-      device: $PWD/backups
-      o: bind
