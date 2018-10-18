@@ -1,11 +1,11 @@
-"use strict";
+
 require("../tools/waitReady.js");
 
 // This is an example of how to use image-diff tests
-let PixDiff = require("pix-diff");
-let homePage = require("../pages/home.po");
-let images_page = require("../pages/images.po");
-let constants = require("../tools/constants");
+const PixDiff = require("pix-diff");
+const homePage = require("../pages/home.po");
+const images_page = require("../pages/images.po");
+const constants = require("../tools/constants");
 
 describe("Home page image check", () => {
 
@@ -25,7 +25,7 @@ describe("Home page image check", () => {
     homePage.logout();
 
 
-    browser.executeScript("window.scrollTo(0,0);").then(function () {
+    browser.executeScript("window.scrollTo(0,0);").then(() => {
       browser.pixDiff.checkPage("homePage").then(
         result => {
           // 5 means identical!
@@ -34,7 +34,7 @@ describe("Home page image check", () => {
       );
     });
 
-    browser.executeScript("window.scrollTo(0,0);").then(function () {
+    browser.executeScript("window.scrollTo(0,0);").then(() => {
       browser.sleep(1200);
       browser.pixDiff.checkRegion(images_page.navbar, "navbar").then(
         result => {
@@ -51,7 +51,7 @@ describe("Home page image check", () => {
     browser.sleep(1000);
 
     // Scroll to top
-    browser.executeScript("window.scrollTo(0,0);").then(function () {
+    browser.executeScript("window.scrollTo(0,0);").then(() => {
       browser.pixDiff.checkRegion(images_page.loginModal, "loginModal").then(
         result => {
           expect(result.code).toEqual(PixDiff.RESULT_IDENTICAL);

@@ -2,7 +2,7 @@
  *  Collections Controller
  */
 (function() {
-  'use strict';
+  
 
   angular
     .module('mapstory')
@@ -10,10 +10,10 @@
 
   function collectionController($http, $scope) {
     $scope.query = function(group_id) {
-      $http.get('/api/collections/').then(function(response) {
+      $http.get('/api/collections/').then((response) => {
         // Determine which collection this is by using the group id
-        var collections = response.data.objects;
-        var data;
+        const collections = response.data.objects;
+        let data;
         for (var i = 0; i < collections.length; i++) {
           if (collections[i].group.id == group_id) {
             data = collections[i];
@@ -35,7 +35,7 @@
         $scope.layers = [];
         $scope.maps = [];
         for (var i = 0; i < data.resources.length; i++) {
-          var resource_type = data.resources[i].detail_url.split('/')[1];
+          const resource_type = data.resources[i].detail_url.split('/')[1];
           if (resource_type == 'layers') {
             $scope.layers.push(data.resources[i]);
           } else if (resource_type == 'maps') {
@@ -45,16 +45,16 @@
         $scope.storytellers = data.users;
 
         // Create api query
-        var api_query = '/api/base/?owner__username__in=';
+        let api_query = '/api/base/?owner__username__in=';
         for (var i = 0; i < data.users.length; i++) {
-          api_query += data.users[i].username + ',';
+          api_query += `${data.users[i].username  },`;
         }
         // For organizations, need to grab the MapStories and StoryLayers created by all its users
         $scope.org_layers = [];
         $scope.org_maps = [];
-        $http.get(api_query).then(function(response) {
-          var results = response.data.objects;
-          for (var i = 0; i < results.length; i++) {
+        $http.get(api_query).then((response) => {
+          const results = response.data.objects;
+          for (let i = 0; i < results.length; i++) {
             if (results[i].detail_url) {
               // Checks the type if it's a layer or map
               if (results[i].detail_url.indexOf('layers') > -1) {
@@ -66,7 +66,7 @@
           }
         });
 
-        var keywords_list = data.group.keywords;
+        const keywords_list = data.group.keywords;
 
         // var MAX_TOKENS = 10;
         // $('#tokenfield-interests').val(keywords_list);

@@ -7,7 +7,7 @@ module.exports = function(grunt) {
       files: ['mapstory/js/src/**/*.js', 'mapstory/js/spec/*.js'],
       options: {
         force: true,
-        //Bypass`'$' is not defined` errors
+        // Bypass`'$' is not defined` errors
         '-W117': true,
         globals: {
           jQuery: true,
@@ -78,7 +78,7 @@ module.exports = function(grunt) {
         },
         files: [
           {
-            //font-awesome.css must be in a niece directory from its files due to vendor code
+            // font-awesome.css must be in a niece directory from its files due to vendor code
             'style/site/font-awesome.css':'vendor/fontawesome/css/font-awesome.css',
             'style/fonts/lato_font.css':'vendor/lato-font/css/lato-font.css'
           },
@@ -91,7 +91,7 @@ module.exports = function(grunt) {
           }
         ]
       }
-      //TODO, PRODUCTION, minification, less linting
+      // TODO, PRODUCTION, minification, less linting
     },
 
     copy: {

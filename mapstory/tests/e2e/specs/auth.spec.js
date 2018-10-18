@@ -1,4 +1,4 @@
-"use strict";
+
 
 /**
  * User auth tests
@@ -6,15 +6,15 @@
  */
 
 
-let EC = protractor.ExpectedConditions;
+const EC = protractor.ExpectedConditions;
 require("../tools/waitReady.js");
-let constants = require("../tools/constants");
+const constants = require("../tools/constants");
 
-describe("User auth", function () {
+describe("User auth", () => {
 
-  let auth = require("../pages/auth.po");
+  const auth = require("../pages/auth.po");
 
-  beforeEach(function () {
+  beforeEach(() => {
     // Fetch Home
     browser.get(constants.baseURL);
     browser.waitForAngular();
@@ -23,9 +23,9 @@ describe("User auth", function () {
   /**
    * Login Button
    */
-  it("Should display a Login Form", function (done) {
+  it("Should display a Login Form", (done) => {
 
-    auth.loginIcon.isDisplayed().then(function (displayed) {
+    auth.loginIcon.isDisplayed().then((displayed) => {
 
       if (displayed === false) {
         auth.logout();
@@ -44,12 +44,12 @@ describe("User auth", function () {
   /**
    * The Auth Form
    */
-  describe("The \"Login Form\"", function () {
+  describe("The \"Login Form\"", () => {
 
-    beforeEach(function () {
+    beforeEach(() => {
     });
 
-    it("should have \"Log In\" and \"Sign up\" tabs", function () {
+    it("should have \"Log In\" and \"Sign up\" tabs", () => {
       expect(auth.loginIcon.isDisplayed()).toBeTruthy();
       expect(auth.loginIcon.waitReady()).toBeTruthy();
 
@@ -63,23 +63,23 @@ describe("User auth", function () {
     /**
      * The Log in Form
      */
-    describe("> The \"Log In\" tab", function () {
+    describe("> The \"Log In\" tab", () => {
 
-      beforeEach(function () {
+      beforeEach(() => {
       });
 
-      it("should be shown by default", function () {
+      it("should be shown by default", () => {
         expect(auth.loginIcon.isDisplayed()).toBeTruthy();
 
         // Click Login
         auth.loginIcon.click();
         expect(auth.loginForm.waitReady()).toBeTruthy();
 
-        let usernameLabel = element(by.css("label[for=\"username\"]"));
+        const usernameLabel = element(by.css("label[for=\"username\"]"));
         expect(usernameLabel.waitReady()).toBeTruthy();
       });
 
-      it("> should have a close button", function () {
+      it("> should have a close button", () => {
 
         expect(auth.loginIcon.waitReady()).toBeTruthy();
 
@@ -92,7 +92,7 @@ describe("User auth", function () {
         auth.login_close_button.click();
       });
 
-      it("> should require a username and password", function () {
+      it("> should require a username and password", () => {
 
         expect(auth.loginIcon.waitReady()).toBeTruthy();
 
@@ -104,7 +104,7 @@ describe("User auth", function () {
         element(by.css(".login-auth-btn.btn.btn-md.btn-block")).click();
 
         // Expect error messages
-        let username_error = element(by.css("#error_id_username_1"));
+        const username_error = element(by.css("#error_id_username_1"));
         expect(username_error.waitReady()).toBeTruthy();
         expect(username_error.isDisplayed()).toBeTruthy();
         expect(element(by.css("#error_id_password_1")).isDisplayed()).toBeTruthy();
@@ -115,27 +115,27 @@ describe("User auth", function () {
     /**
      * The Sign up Form
      */
-    describe("> The \"Sign up\" tab", function () {
-      beforeEach(function () {
+    describe("> The \"Sign up\" tab", () => {
+      beforeEach(() => {
       });
 
-      it("> should register a new user", function () {
+      it("> should register a new user", () => {
         expect(auth.loginIcon.isDisplayed()).toBeTruthy();
         // Click login
         auth.loginIcon.click();
         expect(auth.loginForm.waitReady()).toBeTruthy();
 
         // Click signup
-        let button = element(by.linkText("Sign Up"));
+        const button = element(by.linkText("Sign Up"));
         expect(button.waitReady()).toBeTruthy();
         button.click();
-        let userid = "tester_" + auth.makeid(7);
-        let usernameInput = element(by.css("#id_username"));
-        let nameInput = element(by.css("#id_first_name"));
-        let lastNameInput = element(by.css("#id_last_name"));
-        let emailInput = element(by.css("#id_email"));
-        let passwordInput = element(by.css("#id_password"));
-        let confirmPasswordInput = element(by.css("#password_confirm"));
+        const userid = `tester_${  auth.makeid(7)}`;
+        const usernameInput = element(by.css("#id_username"));
+        const nameInput = element(by.css("#id_first_name"));
+        const lastNameInput = element(by.css("#id_last_name"));
+        const emailInput = element(by.css("#id_email"));
+        const passwordInput = element(by.css("#id_password"));
+        const confirmPasswordInput = element(by.css("#password_confirm"));
         // Set username
         expect(usernameInput.waitReady()).toBeTruthy();
         usernameInput.sendKeys(userid);
@@ -150,14 +150,14 @@ describe("User auth", function () {
         // Confirm password
         confirmPasswordInput.sendKeys(auth.getPassword());
         // Accept terms
-        let termsCheckbox = element(by.model("agreed"));
+        const termsCheckbox = element(by.model("agreed"));
         termsCheckbox.click();
         // Click Join
         auth.signUpButton.click();
       });
     });
 
-    xit("> should log in admin", function () {
+    xit("> should log in admin", () => {
       if (auth.userAvatar.isPresent() == true) {
         auth.logout();
       }
