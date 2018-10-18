@@ -2,10 +2,11 @@
  * Icon Upload Wizard Page Object
  * ==============================
  */
-"use strict";
+
+
 
 require("../tools/waitReady.js");
-let path = require("path");
+const path = require("path");
 
 const testPNGRelative = "../../sampledata/icon.png";
 const testPNGFile = path.resolve(__dirname, testPNGRelative);
@@ -13,7 +14,7 @@ const testPNGFile = path.resolve(__dirname, testPNGRelative);
 const testSVGRelative = "../../sampledata/icon-github.svg";
 const testSVGFile = path.resolve(__dirname, testSVGRelative);
 
-let iconUploadWizard = function () {
+const iconUploadWizard = function () {
   this.getPNGPath = function () {
     return testPNGFile;
   };
