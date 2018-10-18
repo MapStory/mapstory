@@ -3,14 +3,14 @@
   */
 
   (function() {
-  'use strict';
+  
 
   angular
     .module('mapstory.search')
     .controller('exploreController', exploreController);
 
   function exploreController($injector, $scope, $location, $http, $q, Configs, page, queryService) {
-    var vm = this;
+    const vm = this;
 
     $scope.query = $location.search();
     $scope.SITE_NAME = SITE_NAME;
@@ -28,7 +28,7 @@
 
     if (!Configs.hasOwnProperty("disableQuerySync")) {
       // Keep in sync the page location with the query object
-      $scope.$watch('query', function(newValue, oldValue){
+      $scope.$watch('query', (newValue, oldValue) => {
         $location.search($scope.query);
         $scope.$broadcast('updateSelection');
       }, true);
@@ -43,12 +43,12 @@
       return $http.get($scope.apiEndpoint, {params: $scope.query || {}})
         .then(
           /* success */
-          function(response) {
+          (response) => {
             $scope.cards = response.data.objects;
             page.paginate(response, vm, $scope);
           },
           /* failure */
-          function(error) {
+          (error) => {
             if( error.data.error_message === "Sorry, no results on that page." ){
               console.log("Setting offset to 0 and searching again.");
               queryService.resetOffset($scope);
@@ -59,7 +59,7 @@
         )
     };
     
-    ////////////////////////////
+    // //////////////////////////
     /*  Query Methods */
     // add, remove, checkbox( aka, toggle), and clear
     // activation of checkboxes on refresh
@@ -69,15 +69,15 @@
     vm.removeQuery = queryService.removeQuery.bind($scope);
 
     vm.checkboxQuery = function($event){
-      var element = $($event.target);
-      var filter = element.attr('data-filter');
-      var value = element.attr('data-value');
+      const element = $($event.target);
+      const filter = element.attr('data-filter');
+      const value = element.attr('data-value');
 
       // toggle this filter:value on/off on the query
       queryService.toggleQuery.apply($scope, [filter, value]);
     };
 
-    //Checkbox selection syncing with query
+    // Checkbox selection syncing with query
     $scope.isActivated = function (item, list, filter) {
       if(list[filter]){
         return list[filter].indexOf(item) > -1;
@@ -89,11 +89,11 @@
       $scope.search();
     };
 
-    //////////////
+    // ////////////
     /* ORDERING */
-    //expose additional sorting to the dropdown "sort by"
+    // expose additional sorting to the dropdown "sort by"
     $scope.orderingOptions = {
-      //select order_by options from the Resource API
+      // select order_by options from the Resource API
       resource:
         [
           { name:'Popular', 
@@ -103,7 +103,7 @@
             sort:'-date'
           }
         ], 
-      //seclect order_by options from the Owners API
+      // seclect order_by options from the Owners API
       owner:
         [
           { name: 'Username Z-A',
@@ -126,13 +126,13 @@
         ]
     };
 
-    //set up a quick watch to re-pull results from API when ordering is changed
+    // set up a quick watch to re-pull results from API when ordering is changed
     // todo: sync this up in other watches if we can for performance 
-    $scope.$watch('query["order_by"]', function (newValue, oldValue, scope) {
+    $scope.$watch('query["order_by"]', (newValue, oldValue, scope) => {
       $scope.search();
     });
 
-    /////////////////////
+    // ///////////////////
     /* USER VS CONTENT */
     // Persisting content and storyteller view & queries through page refresh 
 
@@ -172,9 +172,9 @@
       $scope.search();
     };
     
-    //// Default settings upon landing (without clicking topbar/switch) ///
+    // // Default settings upon landing (without clicking topbar/switch) ///
     if ($scope.query.storyteller) {
-      //storyteller explore
+      // storyteller explore
       $scope.apiEndpoint = '/api/owners/';
     }
     else if ($scope.query.groups) {
@@ -182,14 +182,14 @@
       $scope.query.is_active = true;
     }
     else {
-      //set it to content
+      // set it to content
       $scope.query.content = true;
 
-      //default to content explore
+      // default to content explore
       $scope.apiEndpoint = SEARCH_URL;
 
-      //add is_published even if they've removed it,
-      //but persist all other filters
+      // add is_published even if they've removed it,
+      // but persist all other filters
       $scope.query.is_published = true;
       // default order method for content
       $scope.query.order_by='-popular_count';
