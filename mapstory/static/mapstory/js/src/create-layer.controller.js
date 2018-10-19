@@ -2,7 +2,7 @@
  *  CreateLayer & CreateLayerModal
  */
 (function() {
-  
+  'use strict';
 
   angular
     .module('mapstory')
@@ -11,30 +11,30 @@
 
   function createLayerCtrl($scope, $uibModal) {
     $scope.open = function (templateUrl, modalImage, staticUrl, brandingLayerName, brandingLayersName) {
-      const modalInstance = $uibModal.open({
+      var modalInstance = $uibModal.open({
         animation: true,
         templateUrl: templateUrl || 'importWizard.html',
         controller:  'createLayerModalCtrl',
         resolve: {
-          modalImage () {
+          modalImage: function () {
             return modalImage;
           },
-          staticUrl () {
+          staticUrl: function () {
             return staticUrl;
           },
-          brandingLayerName () {
+          brandingLayerName: function () {
             return brandingLayerName;
           },
-          brandingLayersName () {
+          brandingLayersName: function () {
             return brandingLayersName;
           }
         }
       });
 
-      modalInstance.result.then((selectedItem) => {
+      modalInstance.result.then(function (selectedItem) {
         $scope.selected = selectedItem;
-      }, () => {
-        console.log(`Modal dismissed at: ${  new Date()}`);
+      }, function () {
+        console.log('Modal dismissed at: ' + new Date());
       });
     };
   }
@@ -92,13 +92,13 @@
       $scope.processing = true;
       $scope.errors = [];
       $scope.setDefaultPermissions($scope.layer.configuration_options.editable);
-      $http.post('/layers/create', {'featureType': $scope.layer.configuration_options}).then((response) => {
+      $http.post('/layers/create', {'featureType': $scope.layer.configuration_options}).then(function(response){
         $scope.processing = false;
         $scope.success = true;
-        $scope.created_layers = response.data.layers;
-      }, (response) => {
+        $scope.created_layers = response['data']['layers'];
+      }, function(response){
         $scope.processing = false;
-        $scope.errors = response.data.errors;
+        $scope.errors = response['data']['errors'];
       })
      };
 
@@ -122,7 +122,7 @@
     };
 
     $scope.remove = function(item) {
-      const index = $scope.layer.configuration_options.attributes.attribute.indexOf(item);
+      var index = $scope.layer.configuration_options.attributes.attribute.indexOf(item);
       $scope.layer.configuration_options.attributes.attribute.splice(index, 1);
     };
 

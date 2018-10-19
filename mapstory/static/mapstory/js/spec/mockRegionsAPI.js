@@ -1,4 +1,4 @@
-const mockRegions = 
+var mockRegions = 
  {data:
     {
     meta: {

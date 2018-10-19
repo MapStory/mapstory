@@ -1,19 +1,19 @@
-
+"use strict";
 require("../tools/waitReady.js");
 
-const path = require("path");
-const auth = require("../pages/auth.po");
-const wait_times = require("../tools/wait_times");
-const home_page = require("../pages/home.po");
-const layer_metadata = require("../pages/layer_metadata.po");
-const screenshot_helper = require("../tools/screenshot_helper");
-const constants = require("../tools/constants");
+let auth = require("../pages/auth.po");
+let wait_times = require("../tools/wait_times");
+let home_page = require("../pages/home.po");
+let layer_metadata = require("../pages/layer_metadata.po");
+let path = require("path");
+let screenshot_helper = require("../tools/screenshot_helper");
+let constants = require("../tools/constants");
 
 /**
  * Tester object
  * @type {Object}
  */
-const tester = {
+let tester = {
   name: null,
   email: null,
   timestamp: null,
@@ -29,94 +29,94 @@ screenshot_helper.setup();
  *
  * These tests are mapped to the survey tests here: https://rey52.typeform.com/to/IpjcXD
  */
-describe("[Survey Tests] |", () => {
-  beforeEach(() => {
+describe("[Survey Tests] |", function () {
+  beforeEach(function () {
     // Fetch Home
     browser.get(constants.baseURL);
     browser.waitForAngular();
   });
 
   // Take a screenshot automatically after each failing test.
-  afterEach(() => {
+  afterEach(function () {
     // let passed = jasmine.getEnv().currentSpec.results().passed();
     // if (!passed) {
     //
     // }
   });
 
-  describe("<<1>> Tester Info |", () => {
-    const randomId = auth.makeid(7);
+  describe("<<1>> Tester Info |", function () {
+    let randomId = auth.makeid(7);
 
-    describe("<a> Tester name", () => {
-      it(": should set a test name", () => {
-        tester.name = `tester_${  randomId}`;
+    describe("<a> Tester name", function () {
+      it(": should set a test name", function () {
+        tester.name = "tester_" + randomId;
         expect(tester.name).toBeTruthy("Tester name is expected");
       });
     });
 
-    describe("<b> Your email |", () => {
-      it("should set a test email", () => {
-        tester.email = `test_${  randomId  }@testing.com`;
+    describe("<b> Your email |", function () {
+      it("should set a test email", function () {
+        tester.email = "test_" + randomId + "@testing.com";
         expect(tester.email).toBeTruthy("Tester email is expected");
       });
     });
 
-    describe("<c> Date of testing |", () => {
-      it("should set testing timestamp", () => {
+    describe("<c> Date of testing |", function () {
+      it("should set testing timestamp", function () {
         tester.timestamp = Date.now();
         expect(tester.timestamp).toBeTruthy("Testing date is expected");
       });
     });
 
-    describe("<d> Browser |", () => {
-      it("> should set browser type", () => {
+    describe("<d> Browser |", function () {
+      it("> should set browser type", function () {
         // Get the browser name
-        browser.getCapabilities().then((cap) => {
-          const version = cap.get("version");
-          const browserString = `${cap.get("browserName")  }_${  version}`;
+        browser.getCapabilities().then(function (cap) {
+          var version = cap.get("version");
+          var browserString = cap.get("browserName") + "_" + version;
           tester.browser = browserString;
           expect(tester.browser).toBeTruthy("Browser name is expected");
         });
       });
 
-      it("> should set browser size", () => {
+      it("> should set browser size", function () {
         tester.resolution = browser.driver.manage().window().getSize();
         expect(tester.resolution).toBeTruthy("Browser size is expected");
       });
     });
   });
 
-  describe("<<2>> User Profile |", () => {
-    describe("<a> Create an account |", () => {
-      it("> should start by logging out", () => {
+  describe("<<2>> User Profile |", function () {
+    describe("<a> Create an account |", function () {
+      it("> should start by logging out", function () {
         home_page.logout();
         expect(auth.loginIcon.waitReady()).toBeTruthy("Failed to logout!");
       });
 
-      it("> should create a new account", () => {
+      it("> should create a new account", function () {
         expect(auth.loginIcon.isDisplayed()).toBeTruthy("Should log out first!");
 
         // Click login
         auth.loginIcon.click();
         browser.sleep(1000);
 
-        const loginForm = element(by.css("form.form[action=\"/account/login/?next=/\"]"));
+        var loginForm = element(by.css("form.form[action=\"/account/login/?next=/\"]"));
         expect(loginForm.waitReady()).toBeTruthy("Could not find Login Form");
 
         // Click signup
-        const button = element(by.linkText("Sign Up"));
+        var button = element(by.linkText("Sign Up"));
         expect(button.waitReady()).toBeTruthy("Could not find Sign up button");
         button.click();
 
-        const modalWindow = element(by.css("#loginModal"));
+        var modalWindow = element(by.css("#loginModal"));
 
         // Create a username
-        const usernameInput = modalWindow.element(by.css("#id_username"));
-        const nameInput = modalWindow.element(by.css("#id_first_name"));
-        const lastNameInput = modalWindow.element(by.css("#id_last_name"));
-        const emailInput = element(by.css("#id_email"));
-        const passwordInput = element(by.css("#id_password"));
-        const confirmPasswordInput = element(by.css("#password_confirm"));
+        var usernameInput = modalWindow.element(by.css("#id_username"));
+        var nameInput = modalWindow.element(by.css("#id_first_name"));
+        var lastNameInput = modalWindow.element(by.css("#id_last_name"));
+        var emailInput = element(by.css("#id_email"));
+        var passwordInput = element(by.css("#id_password"));
+        var confirmPasswordInput = element(by.css("#password_confirm"));
         // Set username
         expect(usernameInput.waitReady()).toBeTruthy();
         usernameInput.sendKeys(tester.name);
@@ -131,15 +131,15 @@ describe("[Survey Tests] |", () => {
         // Confirm password
         confirmPasswordInput.sendKeys(auth.getPassword());
         // Accept terms
-        const termsCheckbox = element(by.model("agreed"));
+        var termsCheckbox = element(by.model("agreed"));
         termsCheckbox.click();
         // Click Join
         auth.signUpButton.click();
       });
 
 
-      xit("> should login with new account", () => {
-        const loginIcon = element(by.partialLinkText(tester.name));
+      xit("> should login with new account", function () {
+        var loginIcon = element(by.partialLinkText(tester.name));
         expect(loginIcon.waitReady()).toBeTruthy("Did not find login icon");
         loginIcon.click();
 
@@ -161,50 +161,50 @@ describe("[Survey Tests] |", () => {
       });
     });
 
-    xdescribe("<b> Check your email |", () => {
-      it("> should receive confirmation email", () => {
+    xdescribe("<b> Check your email |", function () {
+      it("> should receive confirmation email", function () {
 
       });
     });
 
-    xdescribe("<c> Confirm email |", () => {
-      it("> should confirm email", () => {
+    xdescribe("<c> Confirm email |", function () {
+      it("> should confirm email", function () {
 
       });
     });
 
-    xdescribe("<d> Did receive Welcome email |", () => {
-      it("> should receive welcome email", () => {
+    xdescribe("<d> Did receive Welcome email |", function () {
+      it("> should receive welcome email", function () {
 
       });
     });
 
-    describe("<e> Update profile info |", () => {
-      it("> should update profile info", () => {
+    describe("<e> Update profile info |", function () {
+      it("> should update profile info", function () {
         // Click on your name
 
-        const userIcon = $(".nav-avatar");
+        var userIcon = $(".nav-avatar");
         expect(userIcon.waitReady()).toBeTruthy("Did not find the user icon");
 
         userIcon.click();
 
-        const editProfileLink = element(by.partialLinkText("Edit Profile"));
+        var editProfileLink = element(by.partialLinkText("Edit Profile"));
         expect(editProfileLink.waitReady()).toBeTruthy();
         editProfileLink.click();
 
-        const lastnameDiv = element(by.css("#div_id_last_name"));
+        var lastnameDiv = element(by.css("#div_id_last_name"));
 
-        const lastNameInput = lastnameDiv.element(by.css("#id_last_name"));
+        var lastNameInput = lastnameDiv.element(by.css("#id_last_name"));
         expect(lastNameInput.waitReady()).toBeTruthy();
 
         lastNameInput.sendKeys("t_123");
 
-        const updateProfileButton = element(by.css("[value=\"Update profile\"]"));
+        var updateProfileButton = element(by.css("[value=\"Update profile\"]"));
         updateProfileButton.click();
 
-        const userinfos = element(by.css(".user-info"));
-        const usertitle = userinfos.all(by.css("h1"));
-        usertitle.first().getText().then((text) => {
+        var userinfos = element(by.css(".user-info"));
+        var usertitle = userinfos.all(by.css("h1"));
+        usertitle.first().getText().then(function (text) {
           expect(text.includes("t_123")).toBeTruthy();
         });
       });
@@ -215,10 +215,10 @@ describe("[Survey Tests] |", () => {
   /**
    3. Uploading Datasets
    ======================
-   * */
-  describe("<<3>> Uploading Datasets |", () => {
+   **/
+  describe("<<3>> Uploading Datasets |", function () {
 
-    const testUpload = {
+    var testUpload = {
       filetype: "CSV",
 
     };
@@ -230,21 +230,21 @@ describe("[Survey Tests] |", () => {
      - KML
      - JSON
 
-     * */
-    describe("<a> Set data format |", () => {
-      it("> should use CSV", () => {
+     **/
+    describe("<a> Set data format |", function () {
+      it("> should use CSV", function () {
         expect(testUpload.filetype).toEqual("CSV");
       });
 
-      xit("> should use SHP", () => {
+      xit("> should use SHP", function () {
 
       });
 
-      xit("> should use KML", () => {
+      xit("> should use KML", function () {
 
       });
 
-      xit("> should use JSON", () => {
+      xit("> should use JSON", function () {
 
       });
     });
@@ -255,8 +255,8 @@ describe("[Survey Tests] |", () => {
      - Points
      - Lines
      - Polygons
-     * */
-    xdescribe("<b> Set Geometry type |", () => {
+     **/
+    xdescribe("<b> Set Geometry type |", function () {
 
 
     });
@@ -265,57 +265,57 @@ describe("[Survey Tests] |", () => {
      - 4.5 Billion Years
      - 650 Million years
      - Present time
-     * */
-    xdescribe("<c> Set Timescale", () => {
+     **/
+    xdescribe("<c> Set Timescale", function () {
 
     });
     /**
      d. Uploading:
      Were you able to upload succesfully?
-     * */
-    xdescribe("<d> Uploading", () => {
-      beforeEach(() => {
+     **/
+    xdescribe("<d> Uploading", function () {
+      beforeEach(function () {
         element(by.linkText("Create")).click();
         home_page.importLayerLink.click();
       });
 
-      it("> has a \"Close button\"", () => {
-        const closeButton = element(by.css("i.fa.fa-times.pointer.import-wizard-icon"));
+      it("> has a \"Close button\"", function () {
+        let closeButton = element(by.css("i.fa.fa-times.pointer.import-wizard-icon"));
         expect(closeButton.isDisplayed()).toBe(true);
         closeButton.click();
       });
 
-      describe("> Step 1", () => {
-        it("> should complete step 1", () => {
+      describe("> Step 1", function () {
+        it("> should complete step 1", function () {
           home_page.uploadLayer_Step1();
         });
 
-        xit("> can close the form", () => {
+        xit("> can close the form", function () {
 
         });
 
-        xit("> highlights the correct step", () => {
+        xit("> highlights the correct step", function () {
 
         });
       });
 
-      describe("> Step 2", () => {
-        it("should complete step 2", () => {
+      describe("> Step 2", function () {
+        it("should complete step 2", function () {
           home_page.uploadLayer_Step1();
           home_page.uploadLayer_Step2();
         });
       });
 
-      describe("> Step 3", () => {
-        it("> should complete step 3", () => {
+      describe("> Step 3", function () {
+        it("> should complete step 3", function () {
           home_page.uploadLayer_Step1();
           home_page.uploadLayer_Step2();
           home_page.uploadLayer_Step3();
         });
       });
 
-      describe("> Step 4", () => {
-        it("should complete step 4", () => {
+      describe("> Step 4", function () {
+        it("should complete step 4", function () {
           home_page.uploadLayer_Step1();
           home_page.uploadLayer_Step2();
           home_page.uploadLayer_Step3();
@@ -323,8 +323,8 @@ describe("[Survey Tests] |", () => {
         });
       });
 
-      describe("> Step 5", () => {
-        it("> should complete step 5", () => {
+      describe("> Step 5", function () {
+        it("> should complete step 5", function () {
           home_page.uploadLayer_Step1();
           home_page.uploadLayer_Step2();
           home_page.uploadLayer_Step3();
@@ -334,8 +334,8 @@ describe("[Survey Tests] |", () => {
 
       });
 
-      describe("> Step 6", () => {
-        it("> should complete step 6", () => {
+      describe("> Step 6", function () {
+        it("> should complete step 6", function () {
           home_page.uploadLayer_Step1();
           home_page.uploadLayer_Step2();
           home_page.uploadLayer_Step3();
@@ -348,9 +348,9 @@ describe("[Survey Tests] |", () => {
 
     /**
      e. Click 'Update Metadata' and add responses to questions. Does it display correctly?
-     * */
-    xdescribe("<e> Update Metadata", () => {
-      beforeEach(() => {
+     **/
+    xdescribe("<e> Update Metadata", function () {
+      beforeEach(function () {
         element(by.linkText("Create")).click();
         home_page.importLayerLink.click();
         home_page.uploadLayer_Step1();
@@ -360,9 +360,9 @@ describe("[Survey Tests] |", () => {
         home_page.uploadLayer_Step5();
       });
 
-      it("> Can edit metadata", () => {
+      it("> Can edit metadata", function () {
         home_page.uploadLayer_Step6();
-        browser.sleep(wait_times.metadata_load);
+        browser.sleep(wait_times["metadata_load"]);
         expect(layer_metadata.titleInput.waitReady()).toBeTruthy();
         expect(layer_metadata.categoryDropdown.waitReady()).toBeTruthy();
         expect(layer_metadata.summaryText.waitReady()).toBeTruthy();
@@ -381,9 +381,9 @@ describe("[Survey Tests] |", () => {
 
     /**
      f. Click update layer settings again and make sure that "Is published" is checked and save. Go to explore and find your update layer. Did you find it?
-     * */
-    xdescribe("<f> Set is published", () => {
-      beforeEach(() => {
+     **/
+    xdescribe("<f> Set is published", function () {
+      beforeEach(function () {
         element(by.linkText("Create")).click();
         home_page.importLayerLink.click();
         home_page.uploadLayer_Step1();
@@ -393,9 +393,9 @@ describe("[Survey Tests] |", () => {
         home_page.uploadLayer_Step5();
       });
 
-      it("should set published checkbox", () => {
+      it("should set published checkbox", function () {
         home_page.uploadLayer_Step6();
-        browser.sleep(wait_times.metadata_load);
+        browser.sleep(wait_times["metadata_load"]);
 
         expect(layer_metadata.isPublishedCheckbox.waitReady()).toBeTruthy();
         layer_metadata.isPublishedCheckbox.click();
@@ -409,9 +409,9 @@ describe("[Survey Tests] |", () => {
 
     /**
      g. Click Download. Try to download the filetypes . No errors?
-     * */
-    xdescribe("<g> Download filetypes", () => {
-      beforeEach(() => {
+     **/
+    xdescribe("<g> Download filetypes", function () {
+      beforeEach(function () {
         element(by.linkText("Create")).click();
         home_page.importLayerLink.click();
         home_page.uploadLayer_Step1();
@@ -421,7 +421,7 @@ describe("[Survey Tests] |", () => {
         home_page.uploadLayer_Step5();
         home_page.uploadLayer_Step6();
 
-        browser.sleep(wait_times.metadata_load);
+        browser.sleep(wait_times["metadata_load"]);
 
         // Mark as published
         expect(layer_metadata.isPublishedCheckbox.waitReady()).toBeTruthy();
@@ -433,15 +433,15 @@ describe("[Survey Tests] |", () => {
         browser.sleep(1000);
       });
 
-      it("should download CSV", () => {
+      it("should download CSV", function () {
         browser.sleep(2000);
-        const downloadLink = element(by.linkText("Download"));
+        let downloadLink = element(by.linkText("Download"));
         expect(downloadLink.waitReady()).toBeTruthy();
 
         downloadLink.click();
         browser.sleep(1000);
 
-        const CSVlink = element(by.linkText("CSV"));
+        let CSVlink = element(by.linkText("CSV"));
         expect(CSVlink.waitReady()).toBeTruthy();
 
         CSVlink.click();
@@ -449,179 +449,179 @@ describe("[Survey Tests] |", () => {
     });
     /**
      h. Add tags to storylayer. Go to explore page and search for your storylayer using these tags.
-     * */
-    describe("<h> Add Tags to storylayer", () => {
+     **/
+    describe("<h> Add Tags to storylayer", function () {
 
     });
     /**
      i. Go to comments tab and leave a comment. Success?
-     * */
-    describe("<i> Comments section", () => {
+     **/
+    describe("<i> Comments section", function () {
 
     });
     /**
      j. Click "Mark as favorite" . The link should toggle. Check the favorites tab in your profile. Does it display under favorites?
      */
-    describe("<j> Mark as favorite", () => {
+    describe("<j> Mark as favorite", function () {
 
     });
   });
 
-  describe("<< 4 >> Editing StoryLayer Features -", () => {
+  describe("<< 4 >> Editing StoryLayer Features -", function () {
 
     /**
      4. Editing StoryLayer Features
      ===============================
 
      a. Go to the storylayer detail page. Click "edit this story layer" button. Does the layer appear on the map display? Complete with time and info?
-     * */
-    describe("<a> Edit Story layer", () => {
+     **/
+    describe("<a> Edit Story layer", function () {
 
     });
     /**
      b. Click "Add Feature" and create new feature geometry and add attrib values. Were you able to add new features without encountering errors?
-     * */
-    describe("<b> Add Feature geometry", () => {
+     **/
+    describe("<b> Add Feature geometry", function () {
 
     });
     /**
      c. Click "Edit Feature" and update the geometry a random feature. Did it update?
-     * */
-    describe("<c> Edit and update geometry", () => {
+     **/
+    describe("<c> Edit and update geometry", function () {
 
     });
     /**
      d. Click "Edit feature" and update the attribute values of a reandom feature. Did it update?
-     * */
-    describe("<d> Update attribute values", () => {
+     **/
+    describe("<d> Update attribute values", function () {
 
     });
     /**
      e. Click on a feature and try to remove a feature. Where you able to delete an existing feature from storylayer?
-     * */
-    describe("<e> Remove a feature", () => {
+     **/
+    describe("<e> Remove a feature", function () {
 
     });
     /**
      f. Do the edits from step 5.2 to step 5.3 appear in the history log (4 edits total)? Does the name/username appear on it?
-     * */
-    describe("<f> History logs", () => {
+     **/
+    describe("<f> History logs", function () {
 
     });
     /**
      g. Undo the deletion you made in Step 5.5 Check if theres a new green history log in view history. Were you able to revert back?
      */
-    describe("<g> Undo deletion", () => {
+    describe("<g> Undo deletion", function () {
 
     });
 
   });
 
-  describe("<< 5 >> Managing Chapters -", () => {
+  describe("<< 5 >> Managing Chapters -", function () {
     /**
      5. Managing Chapters
      ====================
 
      a. Launch the Composer. Start composing by choosing "Compose Mapstory". After provinding basic info about mapstory, did "Save Sucesful" appear?
-     * */
-    describe("<a>", () => {
+     **/
+    describe("<a>", function () {
 
     });
     /**
      b. Update the chapter information of chapter 1. Were you able to save without errors?
-     * */
-    describe("<b>", () => {
+     **/
+    describe("<b>", function () {
 
     });
     /**
      c. Create a new chapter and update its chapter info. Were you able to do this step without encountering any error messages?
-     * */
-    describe("<c>", () => {
+     **/
+    describe("<c>", function () {
 
     });
     /**
      d. Go back to the chapter info of the first chapter. Are the contests in step 7.2 still displayed?
-     * */
-    describe("<d>", () => {
+     **/
+    describe("<d>", function () {
 
     });
     /**
      e. Let's delete Chapter 2. Did it delete withour error?
      */
-    describe("<e>", () => {
+    describe("<e>", function () {
 
     });
 
   });
 
-  describe("<< 6 >> Adding StoryLayers -", () => {
+  describe("<< 6 >> Adding StoryLayers -", function () {
     /**
      6. Adding StoryLayers
      =====================
 
      a. Load the "add a storylayer" wizard, perform a quick search of any random storylayer. Click view storylayer. Did it load in a new tab that displays ok?
-     * */
-    describe("<a>", () => {
+     **/
+    describe("<a>", function () {
 
     });
     /**
      b. 8.2 Load the "add a storylayer" window. Perform a quick search and then click "Use". Did the story load on composer OK? Example keyworkds: "USA, Africa, street, river"
-     * */
-    describe("<b>", () => {
+     **/
+    describe("<b>", function () {
 
     });
     /**
      c. Add the layer you uploaded earlier as a storylayer to your mapstory. Did it find it in the epxlore storylayers pop-up window under the My storylayers tab?
-     * */
-    describe("<c>", () => {
+     **/
+    describe("<c>", function () {
 
     });
     /**
      d. Click Use storylayer. Did it load on composer?
-     * */
-    describe("<d>", () => {
+     **/
+    describe("<d>", function () {
 
     });
     /**
      e. Does the timeline below the map display OK?
-     * */
-    describe("<e>", () => {
+     **/
+    describe("<e>", function () {
 
     });
     /**
      f. Click play. Do all of the features on the map appear as that you expect?
-     * */
-    describe("<f>", () => {
+     **/
+    describe("<f>", function () {
 
     });
     /**
      g. Click on the layer's title on the sidebar. Click 'Masking' button. Change the "Layer Alias" ckick and hit save settings. Does the lengend display the updated title?
-     * */
-    describe("<g>", () => {
+     **/
+    describe("<g>", function () {
 
     });
     /**
      h. Rename the attributes of you storylayer on the "Masking" panel. Click on a feature on the map. Does the infobox display the updated attribute names you just set?
-     * */
-    describe("<h>", () => {
+     **/
+    describe("<h>", function () {
 
     });
     /**
      i. Exit Masking and test the layer reordering by dragging the layers up and down the list. Does the reordering reflect on the map display?
-     * */
-    describe("<i>", () => {
+     **/
+    describe("<i>", function () {
 
     });
     /**
      j. Remove a storylayer from a chapter. Were you able to remove the storylayer you added in step 2 withour errors?
      */
-    describe("<j>", () => {
+    describe("<j>", function () {
 
     });
 
   });
 
-  describe("<< 7 >> Appending data -", () => {
+  describe("<< 7 >> Appending data -", function () {
     /**
      7. Appending data
      =================
@@ -648,7 +648,7 @@ describe("[Survey Tests] |", () => {
      Does it show up in the Edit History?
      */
 
-    describe("How many data records?", () => {
+    describe("How many data records?", function () {
 
     });
   });

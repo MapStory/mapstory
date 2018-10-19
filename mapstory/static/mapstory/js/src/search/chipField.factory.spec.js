@@ -1,26 +1,26 @@
-describe('Chip Field Factory', () => {
+describe('Chip Field Factory', function() {
 
-  let Autocomplete;
+  var Autocomplete;
   beforeEach(module('mapstory.search'));
-  beforeEach(inject(($injector) => {
+  beforeEach(inject(function($injector) {
     ChipField = $injector.get('chipFieldFactory');
   }));
 
-  describe('Chip Field:', () => {
-  	let exampleField;
+  describe('Chip Field:', function() {
+  	var exampleField;
 
-  		 beforeEach(() => {
+  		 beforeEach(function(){
 	      exampleField = new ChipField('example__in', 'example');
 	    });
 
-	  it('should should be an object with tidy() and transform() methods', () => {
+	  it('should should be an object with tidy() and transform() methods', function () {
 	    expect(exampleField).to.be.a('object');
 	    expect(exampleField.tidy).to.be.a('function');
 	    expect(exampleField.transform).to.be.a('function');
 	  });
 
-	  describe('results for autocomplte via ._modify()', () => {
-	    let mockResult;
+	  describe('results for autocomplte via ._modify()', function(){
+	    var mockResult;
 
 
 	 	});

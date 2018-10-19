@@ -5,7 +5,7 @@
 */
 
 (function() {
-
+'use strict';
 
   angular
     .module('mapstory.search')
@@ -25,27 +25,29 @@
 
     return ChipField;
 
-    // /////////////
+    ///////////////
 
     // query string or array is returned as an array for chip generation
     function tidyQuery(filter, query) {
-      return typeof(query[filter]) === 'string' ? [query[filter]] : query[filter];
+      return typeof(query[filter]) == 'string' ? [query[filter]] : query[filter];
     }
 
-    // returns an object with chip information under a given property name
+    //returns an object with chip information under a given property name
     function newChip(key, chip) {  
       if (chip[key]){
         return chip
-      }
-        const newChip = {};
+      }else{
+        var newChip = {};
         newChip[key] = chip;
         return newChip
-      
+      }
     }
 
-    // parses query from url into chips for angular material chip directive
+    //parses query from url into chips for angular material chip directive
     function transform(chipKey, currentQuery){     
-      return _.map(currentQuery, (item) => newChip(chipKey, item)) || [];
+      return _.map(currentQuery, function (item) {
+         return newChip(chipKey, item);
+      }) || [];
     }
   }
 })();

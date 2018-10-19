@@ -2,17 +2,16 @@
  * Composer E2E Tests
  * ==================
  */
-
-
+"use strict";
 
 require("../tools/waitReady.js");
-const gif_upload = require("../pages/gif_upload.po");
-const composer = require("../pages/composer.po");
-const make_new_id = require("../tools/make_id");
+let gif_upload = require("../pages/gif_upload.po");
+let composer = require("../pages/composer.po");
+let make_new_id = require("../tools/make_id");
 
-describe("Composer", () => {
+describe("Composer", function () {
   // Our home page object
-  beforeEach(() => {
+  beforeEach(function () {
     // Fetch Home
     browser.ignoreSynchronization = true;
   });
@@ -26,7 +25,7 @@ describe("Composer", () => {
 
     // Setup the story properties
     expect(composer.map_properties_title_text.waitReady()).toBeTruthy();
-    composer.map_properties_title_text.sendKeys(`Testing Title${  make_new_id(5)}`);
+    composer.map_properties_title_text.sendKeys("Testing Title" + make_new_id(5));
     composer.map_properties_summary_text.sendKeys("Some test summary here");
 
     // Click save

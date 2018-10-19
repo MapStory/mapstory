@@ -1,8 +1,8 @@
-const path = require("path");
 const auth = require("../pages/auth.po");
 const home = require("../pages/home.po");
 const composer = require("../pages/composer.po");
 const makeid = require("../tools/make_id");
+const path = require("path");
 
 const EC = protractor.ExpectedConditions;
 
@@ -41,7 +41,7 @@ describe("Composer Survey", () => {
 
         // Change the 'Title'
         expect(composer.edit_story_title.waitReady()).toBe(true);
-        const title = `Test #${  makeid(5)}`;
+        const title = "Test #" + makeid(5);
         composer.edit_story_title.clear().sendKeys(title);
 
         // Change the 'Summary'

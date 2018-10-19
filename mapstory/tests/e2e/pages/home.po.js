@@ -4,26 +4,24 @@
  *
  * Describes the homepage object and its elements
  */
-
-
+"use strict";
 
 require("../tools/waitReady.js");
-const path = require("path");
+let path = require("path");
 // Upload paths need to be absolute or error.
 const testLayerFileRelative = "../../sampledata/lewisandclarktrail.csv";
 const testLayerFile = path.resolve(__dirname, testLayerFileRelative);
-const remote = require("selenium-webdriver/remote");
-
+let remote = require("selenium-webdriver/remote");
 browser.setFileDetector(new remote.FileDetector());
-const wait_times = require("../tools/wait_times");
-const auth = require("./auth.po");
-const constants = require("../tools/constants");
+let wait_times = require("../tools/wait_times");
+let auth = require("./auth.po");
+let constants = require("../tools/constants");
 
 
 /**
  * Home Page Object
  */
-const home_page = function () {
+let home_page = function () {
   this.loginIcon = element(by.linkText("Log In"));
   this.loginModal = element(by.css(".modal-content"));
   this.navigationTabs = element(by.css(".nav.nav-tabs"));
@@ -67,24 +65,24 @@ const home_page = function () {
     if (this.loginForm.isDisplayed() === true) {
 
       // Sets username
-      const usernameInput = this.loginForm.element(by.css("input.form-control[name=\"username\"]"));
+      let usernameInput = this.loginForm.element(by.css("input.form-control[name=\"username\"]"));
       usernameInput.sendKeys(user);
 
       // Sets password
-      const passwordInput = this.loginForm.element(by.css("input.form-control[name=\"password\"]"));
+      let passwordInput = this.loginForm.element(by.css("input.form-control[name=\"password\"]"));
       passwordInput.sendKeys(password);
 
       // Push login button
-      const loginButton = this.loginForm.element(by.partialButtonText("Sign in"));
+      let loginButton = this.loginForm.element(by.partialButtonText("Sign in"));
       loginButton.click();
 
       return true;
 
-    } 
+    } else {
 
       // Failed to Login
       return false;
-    
+    }
   };
 
 
@@ -92,9 +90,9 @@ const home_page = function () {
    * Logs out the user
    */
   this.logout = function () {
-    const myself = this;
+    let myself = this;
     // Only log out if necesary
-    this.isLoggedIn().then((loggedIn) => {
+    this.isLoggedIn().then(function (loggedIn) {
       // Click the login button
       if (loggedIn) {
         // Click the admin button
@@ -167,12 +165,12 @@ const home_page = function () {
   this.uploadLayer_Step1 = function () {
     expect(this.step1.waitReady()).toBeTruthy();
 
-    const title = this.step1.element(by.css(".step-title"));
-    title.getText().then((text) => {
+    let title = this.step1.element(by.css(".step-title"));
+    title.getText().then(function (text) {
       expect(text).toEqual("Before we begin");
     });
 
-    const button = this.step1.element(by.buttonText("Let's Begin!"));
+    let button = this.step1.element(by.buttonText("Let's Begin!"));
     expect(button.isDisplayed()).toBeTruthy();
     button.click();
   };
@@ -182,11 +180,11 @@ const home_page = function () {
    * Completes Upload Layer - Step 2
    */
   this.uploadLayer_Step2 = function () {
-    const selectFileButton = element(by.css("[for=\"my-file-selector\"]"));
+    let selectFileButton = element(by.css("[for=\"my-file-selector\"]"));
     expect(selectFileButton.waitReady()).toBeTruthy();
 
     // Firefox needs the element to be visible for interaction with the element to work
-    browser.executeAsyncScript((callback) => {
+    browser.executeAsyncScript(function (callback) {
       document.querySelectorAll("#my-file-selector")[0].style.display = "inline";
       callback();
     });
@@ -194,14 +192,14 @@ const home_page = function () {
     // Now you can upload.
     element(by.css("#my-file-selector")).sendKeys(testLayerFile);
 
-    const status = element(by.css("[ng-show=\"layer.state\"]"));
+    let status = element(by.css("[ng-show=\"layer.state\"]"));
     expect(status.waitReady()).toBeTruthy();
 
-    status.getText().then((text) => {
+    status.getText().then(function (text) {
       expect(text).toEqual("Status: UPLOADED");
     });
 
-    const nextButton = this.step2.element(by.css("[value=\"Next Step\"]"));
+    let nextButton = this.step2.element(by.css("[value=\"Next Step\"]"));
     expect(nextButton.waitReady()).toBeTruthy();
     nextButton.click();
   };
@@ -211,7 +209,7 @@ const home_page = function () {
    * Completes Upload Layer - Step 3
    */
   this.uploadLayer_Step3 = function () {
-    const nextButton3 = this.step3.element(by.css("[value=\"Next Step\"]"));
+    let nextButton3 = this.step3.element(by.css("[value=\"Next Step\"]"));
     expect(nextButton3.waitReady()).toBeTruthy();
     nextButton3.click();
   };
@@ -221,16 +219,16 @@ const home_page = function () {
    * Completes Upload Layer - Step 4
    */
   this.uploadLayer_Step4 = function () {
-    const steps = element(by.css("[class=\"steps\"]"))
-    const step = steps.element(by.xpath("section[8]"));
-    const startTimeDropdown = step.element(by.id("start_date"));
+    let steps = element(by.css("[class=\"steps\"]"))
+    let step = steps.element(by.xpath("section[8]"));
+    let startTimeDropdown = step.element(by.id("start_date"));
     expect(startTimeDropdown.waitReady()).toBeTruthy();
     // startTimeDropdown.click();
     startTimeDropdown.$("[value=\"e_date\"]").click();
     // startTimeDropdown.$('[value="e_date"]').click();
     startTimeDropdown.sendKeys(protractor.Key.ENTER);
 
-    const nextButton4 = this.step4.element(by.css("button[value=\"Next Step\"]"));
+    let nextButton4 = this.step4.element(by.css("button[value=\"Next Step\"]"));
     expect(nextButton4.waitReady()).toBeTruthy();
     nextButton4.click();
   };
@@ -241,7 +239,7 @@ const home_page = function () {
    */
   this.uploadLayer_Step5 = function () {
     // Step 5
-    const nextButton5 = this.step5.element(by.css("button[value=\"Next Step\"]"));
+    let nextButton5 = this.step5.element(by.css("button[value=\"Next Step\"]"));
     expect(nextButton5.waitReady()).toBeTruthy();
     nextButton5.click();
   };
@@ -251,17 +249,17 @@ const home_page = function () {
    * Completes Upload Layer - Step 6
    */
   this.uploadLayer_Step6 = function () {
-    const importButton = this.step6.element(by.buttonText("Import Layer"));
+    let importButton = this.step6.element(by.buttonText("Import Layer"));
     expect(importButton.waitReady()).toBeTruthy();
     importButton.click();
 
-    browser.driver.sleep(wait_times.layerUpload);
+    browser.driver.sleep(wait_times["layerUpload"]);
 
-    const finishButton = this.step6.element(by.buttonText("View Layer"));
+    let finishButton = this.step6.element(by.buttonText("View Layer"));
     expect(finishButton.waitReady()).toBeTruthy();
 
-    const stepTitle = this.step6.$$(".step-title").first();
-    stepTitle.getText((text) => {
+    let stepTitle = this.step6.$$(".step-title").first();
+    stepTitle.getText(function (text) {
       expect(text).toEqual("Congratulations! Click below to view your new Layer.");
     });
 
@@ -273,15 +271,15 @@ const home_page = function () {
    * Create Layer - Step 1
    */
   this.createLayer_Step1 = function () {
-    const layerName = element(by.css("#layerName"));
+    let layerName = element(by.css("#layerName"));
     expect(layerName.waitReady()).toBeTruthy();
 
     // This creates a random id to avoid name collision
-    const randomId = this.makeid(12);
-    const layerStringName = `testLayer_${  randomId}`;
+    let randomId = this.makeid(12);
+    let layerStringName = "testLayer_" + randomId;
     layerName.sendKeys(layerStringName).then(() => {
-      const currentSection = element(by.css("section.step.ng-isolate-scope.current"));
-      const continueButton = currentSection.$(".import-wizard-button").element(by.css("button.btn"));
+      let currentSection = element(by.css("section.step.ng-isolate-scope.current"));
+      let continueButton = currentSection.$(".import-wizard-button").element(by.css("button.btn"));
       // Continue to Step 2
       continueButton.click();
     });
@@ -292,7 +290,7 @@ const home_page = function () {
    * Create Layer - Step 2
    */
   this.createLayer_Step2 = function () {
-    const geometryTypeDropdown = element(by.css("#geometry_type"));
+    let geometryTypeDropdown = element(by.css("#geometry_type"));
     expect(geometryTypeDropdown.waitReady()).toBeTruthy();
 
     /*
@@ -305,7 +303,7 @@ const home_page = function () {
     geometryTypeDropdown.$("[value=\"com.vividsolutions.jts.geom.Point\"]").click();
 
     // Referesh current section var
-    const currentSection = element(by.css("section.step.ng-isolate-scope.current"));
+    let currentSection = element(by.css("section.step.ng-isolate-scope.current"));
     currentSection.$(".btn[value=\"Continue\"]").click();
   };
 
@@ -314,9 +312,9 @@ const home_page = function () {
    * Create Layer - Step 3
    */
   this.createLayer_Step3 = function () {
-    const requiredCheck = element(by.css("#fieldNillable-0"));
+    let requiredCheck = element(by.css("#fieldNillable-0"));
     expect(requiredCheck.waitReady());
-    const currentSection = element(by.css("section.step.ng-isolate-scope.current"));
+    let currentSection = element(by.css("section.step.ng-isolate-scope.current"));
     currentSection.$(".btn[value=\"Continue\"]").click();
   };
 
@@ -325,12 +323,12 @@ const home_page = function () {
    * Create Layer - Step 4
    */
   this.createLayer_Step4 = function () {
-    const startTimeDropdown = element(by.model("layer.configuration_options.start_date"));
+    let startTimeDropdown = element(by.model("layer.configuration_options.start_date"));
     expect(startTimeDropdown.waitReady()).toBeTruthy();
     startTimeDropdown.$("[value=\"time\"]").click();
 
-    const currentSection = element(by.css("section.step.ng-isolate-scope.current"));
-    const button = currentSection.$(".btn[value=\"Next Step\"]");
+    let currentSection = element(by.css("section.step.ng-isolate-scope.current"));
+    let button = currentSection.$(".btn[value=\"Next Step\"]");
     button.click();
   };
 
@@ -339,10 +337,10 @@ const home_page = function () {
    * Create Layer - Step 5
    */
   this.createLayer_Step5 = function () {
-    const shareButton = element.all(by.css(".btn.ng-pristine.ng-untouched.ng-valid")).first();
+    let shareButton = element.all(by.css(".btn.ng-pristine.ng-untouched.ng-valid")).first();
     expect(shareButton.waitReady()).toBeTruthy();
 
-    const currentSection = element(by.css("section.step.ng-isolate-scope.current"));
+    let currentSection = element(by.css("section.step.ng-isolate-scope.current"));
     currentSection.$(".btn[type=\"submit\"]").click();
   };
 
@@ -351,15 +349,15 @@ const home_page = function () {
    * Create Layer - Step 6
    */
   this.createLayer_Step6 = function () {
-    const currentSection = element(by.css("section[title=\"Create\"]"));
-    const continueButton = currentSection.$(".btn[type=\"submit\"]");
+    let currentSection = element(by.css("section[title=\"Create\"]"));
+    let continueButton = currentSection.$(".btn[type=\"submit\"]");
     expect(continueButton.waitReady()).toBeTruthy();
     continueButton.click();
 
     // Wait x seconds
     browser.driver.sleep(wait_times.layerCreate);
 
-    const doneButton = element(by.partialLinkText("StoryLayer"));
+    let doneButton = element(by.partialLinkText("StoryLayer"));
     expect(doneButton.waitReady()).toBeTruthy();
 
     // doneButton.click();
@@ -382,7 +380,7 @@ const home_page = function () {
     this.createLayer_Step3();
     this.createLayer_Step4();
     // Temporarily disabled
-    // this.createLayer_Step5();
+    //this.createLayer_Step5();
     this.createLayer_Step6();
   };
 };

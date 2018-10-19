@@ -1,7 +1,7 @@
  /*
   */
 (function() {
-
+'use strict';
 
   angular
     .module('mapstory.search')
@@ -11,41 +11,47 @@
 
   function dataService($http) {
     return {
-      getKeywords,
-      getOwners,
-      getInterests,
-      getRegions,
+      getKeywords: getKeywords,
+      getOwners: getOwners,
+      getInterests: getInterests,
+      getRegions: getRegions,
       _modify: regionsForAutocomplete
     };
 
-    // //////////////////////
+    ////////////////////////
     function getInterests(query) {
       return $http.get(INTERESTS_ENDPOINT,  {params: query || {}})
-           .then((response) => response.data.objects);
+           .then(function(response){
+              return response.data.objects;
+          });
     }
 
     function getKeywords(query) {
       return $http.get(KEYWORDS_ENDPOINT,  {params: query || {}})
-           .then((response) => response.data.objects);
+           .then(function(response){
+              return response.data.objects;
+          });
     }
 
     function getOwners(query){
       return $http.get('/api/owners/', {params: query || {}})
-          .then((response) => response.data.objects);
+          .then(function(response){
+              return response.data.objects;
+          });
     }
 
-    // / regions needs to be updated to async
+    /// regions needs to be updated to async
 
     function getRegions(){
-      return $http.get(`${REGIONS_ENDPOINT  }?limit=500`)
+      return $http.get(REGIONS_ENDPOINT + '?limit=500')
               .then(regionsForAutocomplete);
     }
 
     function regionsForAutocomplete(response) {
-      const results = response.data.objects;
-      const codes = {};
+      var results = response.data.objects;
+      var codes = {};
 
-      const countryResults = _.map(results, (region) => {
+      var countryResults = _.map(results, function (region) {
           region._lower = [ region.name.toLowerCase() , region.code.toLowerCase() ];
           codes[region.code] = region;
           return region;

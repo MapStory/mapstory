@@ -11,26 +11,26 @@
  * expect($('.some-html-class').waitReady()).toBeTruthy();
  */
 
-
+'use strict';
 
 // Config
-const specTimeoutMs = 60000; // 60 seconds
+let specTimeoutMs = 60000; // 60 seconds
 
 /**
  * Current workaround until https://github.com/angular/protractor/issues/1102
  * @type {Function}
  */
-const ElementFinder = $('').constructor;
+let ElementFinder = $('').constructor;
 
 ElementFinder.prototype.waitReady = function(opt_optStr) {
-	const self = this;
+	let self = this;
 	let driverWaitIterations = 0;
 	let lastWebdriverError;
 	function _throwError() {
-		throw new Error(`Expected '${  self.locator().toString() 
-			}' to be present and visible. ` +
-			`After ${  driverWaitIterations  } driverWaitIterations. ` +
-			`Last webdriver error: ${  lastWebdriverError}`);
+		throw new Error('Expected \'' + self.locator().toString() +
+			'\' to be present and visible. ' +
+			'After ' + driverWaitIterations + ' driverWaitIterations. ' +
+			'Last webdriver error: ' + lastWebdriverError);
 	}
 
 	function _isPresentError(err) {
@@ -38,7 +38,7 @@ ElementFinder.prototype.waitReady = function(opt_optStr) {
 		return false;
 	}
 
-	return browser.driver.wait(() => {
+	return browser.driver.wait(function() {
 		driverWaitIterations++;
 		if (opt_optStr === 'withRefresh') {
 			// Refresh page after more than some retries
@@ -46,21 +46,21 @@ ElementFinder.prototype.waitReady = function(opt_optStr) {
 				_refreshPage();
 			}
 		}
-		return self.isPresent().then((present) => {
+		return self.isPresent().then(function(present) {
 			if (present) {
-				return self.isDisplayed().then((visible) => {
-					lastWebdriverError = `visible:${  visible}`;
+				return self.isDisplayed().then(function(visible) {
+					lastWebdriverError = 'visible:' + visible;
 					return visible;
 				}, _isPresentError);
-			} 
-				lastWebdriverError = `present:${  present}`;
+			} else {
+				lastWebdriverError = 'present:' + present;
 				return false;
-			
+			}
 		}, _isPresentError);
-	}, specTimeoutMs).then((waitResult) => {
+	}, specTimeoutMs).then(function(waitResult) {
 		if (!waitResult) { _throwError(); }
 		return waitResult;
-	}, (err) => {
+	}, function(err) {
 		_isPresentError(err);
 		_throwError();
 		return false;
@@ -70,5 +70,5 @@ ElementFinder.prototype.waitReady = function(opt_optStr) {
 // Helpers
 function _refreshPage() {
 	// Swallow useless refresh page webdriver errors
-	browser.navigate().refresh().then(() => {}, (e) => {});
+	browser.navigate().refresh().then(function(){}, function(e){});
 }

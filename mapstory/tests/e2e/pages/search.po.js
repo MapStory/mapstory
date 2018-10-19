@@ -3,12 +3,12 @@
  * =========================
  */
 
-
+"use strict";
 
 require("../tools/waitReady.js");
-const wait_times = require("../tools/wait_times");
+let wait_times = require("../tools/wait_times");
 
-const Search = function () {
+let Search = function () {
   this.searchForm = element(by.css(".search-bar"));
   this.textInput = element(by.css("[placeholder=\"Quick Search\"]"));
   this.searchButton = element(by.css("button[type=\"submit\"]"));
@@ -23,10 +23,10 @@ const Search = function () {
     this.textInput.sendKeys(searchString);
 
     this.searchButton.click();
-    browser.sleep(wait_times.search);
+    browser.sleep(wait_times["search"]);
 
     // Expect the url to change to search api
-    browser.getCurrentUrl().then((newURL) => {
+    browser.getCurrentUrl().then(function (newURL) {
       expect(newURL.indexOf("/search/") >= 0).toBeTruthy();
     });
   };

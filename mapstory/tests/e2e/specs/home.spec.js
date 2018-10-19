@@ -14,34 +14,33 @@
  * You can use this tool for finding the right selectors: https://github.com/andresdominguez/elementor
  * After install run: `elementor http://192.168.56.151` to start the tool
  */
-
-
+"use strict";
 
 require("../tools/waitReady.js");
 const wait_times = require("../tools/wait_times");
-const constants = require("../tools/constants");
+let constants = require("../tools/constants");
 
 /**
  * Mapstory Home Page
  */
-describe("Mapstory Home", () => {
+describe("Mapstory Home", function () {
   // Our home page object
-  const page = require("../pages/home.po");
-  const auth = require("../pages/auth.po");
-  const explore_page = require("../pages/explore.po");
+  let page = require("../pages/home.po");
+  let auth = require("../pages/auth.po");
+  let explore_page = require("../pages/explore.po");
 
-  beforeEach(() => {
+  beforeEach(function () {
     // Fetch the site
     browser.get(constants.baseURL);
     browser.waitForAngular();
   });
 
-  it("> should have a title", () => {
+  it("> should have a title", function () {
     expect(browser.getTitle()).toEqual("MapStory");
   });
 
-  xit("> should be authorized", () => {
-    auth.isLoggedIn().then((isLogged) => {
+  xit("> should be authorized", function () {
+    auth.isLoggedIn().then(function (isLogged) {
       expect(isLogged).toBeTruthy();
     });
   });
@@ -49,8 +48,8 @@ describe("Mapstory Home", () => {
   /**
    * Navigation Bar
    */
-  describe("> The \"Navigation Menu\"", () => {
-    it("> should navigate to \"Explore\"", () => {
+  describe("> The \"Navigation Menu\"", function () {
+    it("> should navigate to \"Explore\"", function () {
       // Click the link
       expect(page.menu_explore.waitReady()).toBeTruthy();
       page.menu_explore.click();
@@ -59,22 +58,22 @@ describe("Mapstory Home", () => {
       expect(browser.getTitle()).toEqual(explore_page.title);
     });
 
-    it("> should navigate to \"Get Started\"", () => {
+    it("> should navigate to \"Get Started\"", function () {
       expect(element(by.linkText("Get Started")).isDisplayed()).toBe(true);
     });
 
-    it("> should navigate to \"Journal\"", () => {
+    it("> should navigate to \"Journal\"", function () {
       expect(element(by.linkText("Journal")).isDisplayed()).toBe(true);
     });
 
     /**
      * Create
      */
-    xdescribe("> \"Create\" menu option", () => {
-      beforeEach(() => {
+    xdescribe("> \"Create\" menu option", function () {
+      beforeEach(function () {
       });
 
-      it("> has a dropdown", () => {
+      it("> has a dropdown", function () {
         expect(page.isLoggedIn()).toBeTruthy();
         expect(page.navBar.isDisplayed()).toBe(true);
         page.menuCreate.click();
@@ -86,7 +85,7 @@ describe("Mapstory Home", () => {
         expect(page.composeStoryLink.waitReady()).toBe(true);
       });
 
-      it("> should show \"Create Layer\"", () => {
+      it("> should show \"Create Layer\"", function () {
         expect(page.isLoggedIn()).toBeTruthy();
         expect(page.navBar.isDisplayed()).toBe(true);
         page.menuCreate.click();
@@ -95,8 +94,8 @@ describe("Mapstory Home", () => {
         page.createLayerLink.click();
       });
 
-      xdescribe("> Create Layer Wizard", () => {
-        it("> All steps", (done) => {
+      xdescribe("> Create Layer Wizard", function () {
+        it("> All steps", function (done) {
           // Open the Create menu
           expect(page.isLoggedIn()).toBeTruthy();
           expect(page.menuCreate.isDisplayed()).toBe(true);
@@ -111,14 +110,14 @@ describe("Mapstory Home", () => {
           page.createLayer_Step3();
           page.createLayer_Step4();
           // Temporarily disabled
-          // page.createLayer_Step5();
+          //page.createLayer_Step5();
           page.createLayer_Step6();
 
           done();
         });
       });
 
-      it("> should create layer", () => {
+      it("> should create layer", function () {
         // Open the Create menu
         expect(page.isLoggedIn()).toBeTruthy();
         expect(page.menuCreate.waitReady())
@@ -134,7 +133,7 @@ describe("Mapstory Home", () => {
       });
 
 
-      it("> should show \"Upload Icons\"", () => {
+      it("> should show \"Upload Icons\"", function () {
         expect(page.isLoggedIn()).toBeTruthy();
 
         expect(page.navBar.isDisplayed()).toBe(true);
@@ -145,7 +144,7 @@ describe("Mapstory Home", () => {
       });
 
 
-      it("> should show \"Compose Story\"", () => {
+      it("> should show \"Compose Story\"", function () {
         expect(page.isLoggedIn()).toBeTruthy();
         expect(page.navBar.isDisplayed()).toBe(true);
         page.menuCreate.click();
@@ -157,15 +156,15 @@ describe("Mapstory Home", () => {
       /**
        * Import Layer Form
        */
-      describe("> Import Layer form", () => {
+      describe("> Import Layer form", function () {
 
-        beforeEach(() => {
+        beforeEach(function () {
           element(by.linkText("Create")).click();
           page.importLayerLink.click();
         });
 
-        it("> has a \"Close button\"", () => {
-          const closeButton = element(by.css("i.fa.fa-times.pointer.import-wizard-icon"));
+        it("> has a \"Close button\"", function () {
+          let closeButton = element(by.css("i.fa.fa-times.pointer.import-wizard-icon"));
           expect(closeButton.waitReady()).toBeTruthy();
           closeButton.click();
         });
@@ -173,8 +172,8 @@ describe("Mapstory Home", () => {
         /**
          * Step 1
          */
-        describe("> Step 1", () => {
-          it("> should complete step 1", () => {
+        describe("> Step 1", function () {
+          it("> should complete step 1", function () {
             page.uploadLayer_Step1();
           });
         });
@@ -182,8 +181,8 @@ describe("Mapstory Home", () => {
         /**
          * Step 2
          */
-        describe("> Step 2", () => {
-          it("should complete step 2", () => {
+        describe("> Step 2", function () {
+          it("should complete step 2", function () {
             page.uploadLayer_Step1();
             page.uploadLayer_Step2();
           });
@@ -192,8 +191,8 @@ describe("Mapstory Home", () => {
         /**
          * Step 3
          */
-        describe("> Step 3", () => {
-          it("> should complete step 3", () => {
+        describe("> Step 3", function () {
+          it("> should complete step 3", function () {
             page.uploadLayer_Step1();
             page.uploadLayer_Step2();
             page.uploadLayer_Step3();
@@ -203,8 +202,8 @@ describe("Mapstory Home", () => {
         /**
          * Step 4
          */
-        describe("> Step 4", () => {
-          it("should complete step 4", () => {
+        describe("> Step 4", function () {
+          it("should complete step 4", function () {
             page.uploadLayer_Step1();
             page.uploadLayer_Step2();
             page.uploadLayer_Step3();
@@ -215,8 +214,8 @@ describe("Mapstory Home", () => {
         /**
          * Step 5
          */
-        describe("> Step 5", () => {
-          it("> should complete step 5", () => {
+        describe("> Step 5", function () {
+          it("> should complete step 5", function () {
             page.uploadLayer_Step1();
             page.uploadLayer_Step2();
             page.uploadLayer_Step3();
@@ -229,8 +228,8 @@ describe("Mapstory Home", () => {
         /**
          * Step 6
          */
-        describe("> Step 6", () => {
-          it("> should complete step 6", () => {
+        describe("> Step 6", function () {
+          it("> should complete step 6", function () {
             page.uploadLayer_Step1();
             page.uploadLayer_Step2();
             page.uploadLayer_Step3();
@@ -242,8 +241,8 @@ describe("Mapstory Home", () => {
 
       });
 
-      describe("> Layer Edit Metadata", () => {
-        beforeEach(() => {
+      describe("> Layer Edit Metadata", function () {
+        beforeEach(function () {
           element(by.linkText("Create")).click();
           page.importLayerLink.click();
           page.uploadLayer_Step1();
@@ -253,26 +252,26 @@ describe("Mapstory Home", () => {
           page.uploadLayer_Step5();
         });
 
-        it("> Can edit metadata", () => {
+        it("> Can edit metadata", function () {
           // Complete last step
           page.uploadLayer_Step6();
-          browser.sleep(wait_times.metadata_load);
+          browser.sleep(wait_times["metadata_load"]);
 
           // Click 'Update Metadata'
-          const update_metadata_button = element(by.partialButtonText("Update Metadata"));
+          let update_metadata_button = element(by.partialButtonText("Update Metadata"));
           expect(update_metadata_button.waitReady()).toBeTruthy();
           update_metadata_button.click();
           browser.sleep(2000);
 
-          // Expect things to show up on metadata edit
-          const titleInput = element(by.css("#id_title"));
-          const categoryDropdown = element(by.css("#id_category"));
-          const summaryText = element(by.css("#id_abstract"));
-          const languageDropdown = element(by.css("#id_language"));
-          const dataSourceText = element(by.css("#id_distribution_url"));
-          const dataQualityText = element(by.css("#id_data_quality_statement"));
-          const purposeText = element(by.css("#id_purpose"));
-          const isPublishedCheckbox = element(by.css("#id_is_published"));
+          //Expect things to show up on metadata edit
+          let titleInput = element(by.css("#id_title"));
+          let categoryDropdown = element(by.css("#id_category"));
+          let summaryText = element(by.css("#id_abstract"));
+          let languageDropdown = element(by.css("#id_language"));
+          let dataSourceText = element(by.css("#id_distribution_url"));
+          let dataQualityText = element(by.css("#id_data_quality_statement"));
+          let purposeText = element(by.css("#id_purpose"));
+          let isPublishedCheckbox = element(by.css("#id_is_published"));
 
           expect(titleInput.waitReady()).toBeTruthy();
           expect(categoryDropdown.waitReady()).toBeTruthy();
@@ -284,12 +283,12 @@ describe("Mapstory Home", () => {
           expect(isPublishedCheckbox.waitReady()).toBeTruthy();
 
           // Click 'Is Published'
-          const is_published_checkbox = element(by.css("#id_is_published"));
+          let is_published_checkbox = element(by.css("#id_is_published"));
           expect(is_published_checkbox.waitReady()).toBeTruthy();
           is_published_checkbox.click();
 
           // Click 'Save'
-          const saveButton = element(by.partialButtonText("Save"));
+          let saveButton = element(by.partialButtonText("Save"));
           saveButton.click();
         });
       });

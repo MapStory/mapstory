@@ -3,19 +3,19 @@
  * =========================
  */
 
-
+"use strict";
 
 const defaultTestUser = "Moofasa";
 const defaultLastName = "Test";
 const defaultEmail = "testing@testmail.com";
 const defaullTestPassword = "testPassword2001!";
 
-const EC = protractor.ExpectedConditions;
+let EC = protractor.ExpectedConditions;
 
 require("../tools/waitReady.js");
-const constants = require("../tools/constants");
+let constants = require("../tools/constants");
 
-const AuthWizard = function () {
+let AuthWizard = function () {
 
   this.loginIcon = element(by.linkText("Log In"));
   this.loginModal = element(by.css(".modal-content"));
@@ -53,10 +53,10 @@ const AuthWizard = function () {
     browser.get(constants.baseURL);
     browser.waitForAngular();
 
-    const myself = this;
+    let myself = this;
 
     // Logout if we are already authorized
-    this.isLoggedIn().then((isAuth) => {
+    this.isLoggedIn().then(function (isAuth) {
       if (isAuth == true) {
         myself.logout();
       }
@@ -149,8 +149,8 @@ const AuthWizard = function () {
    * Logs out. Assumes this is called from the Home Page.
    */
   this.logout = function () {
-    const myself = this;
-    this.isLoggedIn().then((loggedIn) => {
+    let myself = this;
+    this.isLoggedIn().then(function (loggedIn) {
       if (loggedIn === true) {
         // Click the login button
         myself.adminLink.click();
@@ -174,11 +174,11 @@ const AuthWizard = function () {
    */
   this.signUp = function (userData) {
     if (userData.name === null) {
-      userData.name = `${defaultTestUser  }_${  this.makeid(7)}`;
+      userData.name = defaultTestUser + "_" + this.makeid(7);
     }
 
     if (userData.email === null) {
-      userData.email = `${userData.name  }@testing.com`;
+      userData.email = userData.name + "@testing.com";
     }
 
     if (userData.password === null) {

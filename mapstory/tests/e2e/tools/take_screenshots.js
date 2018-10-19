@@ -1,10 +1,10 @@
+'use strict';
 
+let homePage = require('../pages/home.po');
+let images_page = require('../pages/images.po');
 
-const homePage = require('../pages/home.po');
-const images_page = require('../pages/images.po');
-
-const enabled = false;
-const constants = require("../tools/constants");
+let enabled = false;
+let constants = require("../tools/constants");
 
 /**
  * A tool for generating screenshots
@@ -23,7 +23,7 @@ if(enabled) {
 
 		it('saves the homepage', () => {
 			// Scroll to top
-			browser.executeScript('window.scrollTo(0,0);').then(() => {
+			browser.executeScript('window.scrollTo(0,0);').then(function () {
 				browser.sleep(1500);
 				browser.pixDiff.savePage('homePage');
 			});
@@ -32,7 +32,7 @@ if(enabled) {
 		it('saves all the little pieces', () => {
 
 			// Scroll to top
-			browser.executeScript('window.scrollTo(0,0);').then(() => {
+			browser.executeScript('window.scrollTo(0,0);').then(function () {
 				browser.pixDiff.saveRegion(images_page.navbar, 'navbar');
 			});
 
@@ -43,7 +43,7 @@ if(enabled) {
 			images_page.loginModal.waitReady();
 			browser.sleep(1000);
 			// Scroll to top
-			browser.executeScript('window.scrollTo(0,0);').then(() => {
+			browser.executeScript('window.scrollTo(0,0);').then(function () {
 				browser.pixDiff.saveRegion(images_page.loginModal, 'loginModal');
 			});
 		});

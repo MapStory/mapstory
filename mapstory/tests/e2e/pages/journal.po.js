@@ -3,16 +3,16 @@
  * ===================
  */
 
-
+"use strict";
 
 require("../tools/waitReady.js");
-const auth = require("./auth.po");
-const home_page = require("./home.po");
-const constants = require("../tools/constants");
+let auth = require("./auth.po");
+let home_page = require("./home.po");
+let constants = require("../tools/constants");
 
 /* global element, by, browser */
 
-const JournalPageObject = function () {
+let JournalPageObject = function () {
   this.title = "MapStory";
   this.banner = $(".parallax");
   this.h1 = this.banner.$("h1");
@@ -24,11 +24,11 @@ const JournalPageObject = function () {
   this.new_save_button = element(by.buttonText("Save"));
   this.comment_box = $("#id_comment");
   this.get = function () {
-    browser.get(`${constants.baseURL  }/journal`);
+    browser.get(constants.baseURL + "/journal");
     browser.waitForAngular();
   };
   this.make_new_entry = function (title, content, published) {
-    const userAvatar = element(by.css(".nav-avatar"));
+    let userAvatar = element(by.css(".nav-avatar"));
 
     userAvatar.isPresent().then((present) => {
       if (present === false) {

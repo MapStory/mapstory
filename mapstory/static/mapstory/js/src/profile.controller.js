@@ -2,7 +2,7 @@
  *  Profile Controller
  */
 (function() {
-  
+  'use strict';
 
   angular
     .module('mapstory')
@@ -20,20 +20,20 @@
       offset: 0
     };
 
-    // if not the owner, don't retrieve unpublished resources
+    //if not the owner, don't retrieve unpublished resources
     // needs better permissions management for superusers/admin
     if (USER != PROFILE_USERNAME && USER != 'admin'){
       $scope.query.is_published = true;
     }
   
-    // Get data from apis and make them available to the page
+    //Get data from apis and make them available to the page
     function getResourceCounts() {
       return $http.get(SEARCH_URL, {params: $scope.query || {}})
       .then(
         /* success */
-        (response) => {
-          const facets = response.data.meta.facets;
-          let layerCount; let storyCount;
+        function(response) {
+          var facets = response.data.meta.facets;
+          var layerCount, storyCount;
 
           // if type facets are present, store them
           if (facets.type){
@@ -47,7 +47,7 @@
           $scope.counts.maps = storyCount || 0;
         },
         /* failure */
-        (error) => {
+        function(error) {
           console.log("The request failed: ", error);
         }
       )
@@ -57,21 +57,21 @@
   };
 
   function layersController($injector, $scope, $http, page) { 
-    const vm = this;
+    var vm = this;
 
     vm.search = function() {
       // use profile query, but also only get layers
-      const query = _.extend({type__in: 'layer'}, $scope.query);
+      var query = _.extend({type__in: 'layer'}, $scope.query);
 
       return $http.get(SEARCH_URL, {params: query || {}})
       .then(
         /* success */
-        (response) => {
+        function(response) {
           vm.cards = response.data.objects;
           page.paginate(response, vm, $scope);
         },
         /* failure */
-        (error) => {
+        function(error) {
           console.log("The request failed: ", error);
         }
       )
@@ -84,22 +84,22 @@
   };
 
   function storiesController($injector, $scope, $http, page) {  
-    const vm = this;
+    var vm = this;
     
-    // Get data from apis and make them available to the page
+    //Get data from apis and make them available to the page
     vm.search = function() {
       // use profile query, but also only get mapstories
-      const query = _.extend({type__in: 'mapstory'}, $scope.query);
+      var query = _.extend({type__in: 'mapstory'}, $scope.query);
 
       return $http.get(SEARCH_URL, {params: query || {}})
       .then(
         /* success */
-        (response) => {
+        function(response) {
           vm.cards = response.data.objects;
           page.paginate(response, vm, $scope);
         },
         /* failure */
-        (error) => {
+        function(error) {
           console.log("The request failed: ", error);
         }
       )

@@ -1,7 +1,7 @@
 /*
   */
 (function() {
-
+'use strict';
 
   angular
     .module('mapstory.search')
@@ -9,21 +9,21 @@
   
   function queryService() {
     return {
-      addQuery,
-      removeQuery,
-      toggleQuery,
+      addQuery: addQuery,
+      removeQuery: removeQuery,
+      toggleQuery: toggleQuery,
 
-      validateOffset,
-      validateLimit,
+      validateOffset: validateOffset,
+      validateLimit: validateLimit,
 
-      resetOffset,
-      roundOffset,
+      resetOffset: resetOffset,
+      roundOffset: roundOffset,
     }
   
-    // ////////////////////
+    //////////////////////
 
     function addQuery(filter, value) {
-     const query = existingQuery(this, filter);
+     var query = existingQuery(this, filter);
 
       if (query.indexOf(value) == -1) {
         query.push(value);
@@ -33,7 +33,7 @@
     };
 
     function removeQuery(filter, value) {
-      const query = existingQuery(this, filter);
+      var query = existingQuery(this, filter);
       // First check if this even exists to remove
       if(query.indexOf(value) > -1){
         query.splice(query.indexOf(value), 1);
@@ -44,7 +44,7 @@
     };
 
     function toggleQuery(filter, value){
-      const query = existingQuery(this, filter);
+      var query = existingQuery(this, filter);
       // this is a toggle,
       // if its not there add it, if it is, remove it
       if (query.indexOf(value) == -1){
@@ -58,15 +58,15 @@
     };
 
     function existingQuery(scope, filter){
-      const query = scope.query[filter] ? [scope.query[filter]] : [];
+      var query = scope.query[filter] ? [scope.query[filter]] : [];
       return _.flatten(query);
     };
     
-    // ///////
+    /////////
 
     function validateOffset(scope){
-      const limit = scope.query.limit;
-      const offset = scope.query.offset;
+      var limit = scope.query.limit;
+      var offset = scope.query.offset;
 
       if(limit != 0 && offset % limit != 0) {
         scope.query.offset = roundOffset(scope);
@@ -81,7 +81,7 @@
       }
     };
 
-    // ////////
+    //////////
 
     function resetOffset(scope){
       // this function resets the offset to 0 and searches again
@@ -92,7 +92,7 @@
     // roundOffset rounds offset down to nearest multiple of limit
     // ex: limit: 30, offset: 122 -> sets offset to 120
     function roundOffset(scope){
-      const round = function(value, roundTo) {
+      var round = function(value, roundTo) {
         return Math.floor(value / roundTo) * roundTo;
       }
       return round(scope.query.offset, scope.query.limit); 

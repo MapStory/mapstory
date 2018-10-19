@@ -1,11 +1,11 @@
-
+'use strict';
 
 /**
  * Makes a random stirng to be used as an ID
  * @param length The length of the string
  * @returns {string} An alpha-numeric string
  */
-const make_id = function(length) {
+let make_id = function(length) {
 	let text = '';
 	const possible_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 

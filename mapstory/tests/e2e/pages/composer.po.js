@@ -2,19 +2,18 @@
  * Composer Page Object
  * ====================
  */
-
-
+"use strict";
 
 require("../tools/waitReady.js");
 
-const make_id = require("../tools/make_id.js");
-const wait_times = require("../tools/wait_times.js");
-const constants = require("../tools/constants");
+let make_id = require("../tools/make_id.js");
+let wait_times = require("../tools/wait_times.js");
+let constants = require("../tools/constants");
 
 /**
  * Composer Page Object
  */
-const composer = function () {
+let composer = function () {
 
 
   this.startComposingLink = $("#start-composing");
@@ -60,9 +59,9 @@ const composer = function () {
   this.get = function () {
     // Angular sync fails on Composer. So we need to turn it off
     browser.ignoreSynchronization = true;
-    const url = `${constants.baseURL  }/story/new?tour`;
+    let url = constants.baseURL + "/story/new?tour";
     browser.get(url);
-    browser.sleep(wait_times.composer_tour_modal);
+    browser.sleep(wait_times["composer_tour_modal"]);
   };
 
   /**
@@ -71,7 +70,7 @@ const composer = function () {
    * @return {String}        A random story title
    */
   this.makeRandomTitle = function (length) {
-    return `test_story_${  make_id(length)}`;
+    return "test_story_" + make_id(length);
   };
 
 };
