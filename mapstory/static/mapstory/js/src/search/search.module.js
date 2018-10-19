@@ -3,9 +3,9 @@
  */
 
 (function() {
-	'use strict';
+	
 
-	angular.module('mapstory.search', ['ngMaterial', 'mapstory'], function($locationProvider) {
+	angular.module('mapstory.search', ['ngMaterial', 'mapstory'], ($locationProvider) => {
     if (window.navigator.userAgent.indexOf("MSIE") == -1){
       $locationProvider.html5Mode({
         enabled: true,
@@ -21,19 +21,19 @@
 	  url: SEARCH_URL
 	})
 
-  .run(function($http, $rootScope, $location){    
-    var params = typeof FILTER_TYPE == 'undefined' ? {} : {'type': FILTER_TYPE};
+  .run(($http, $rootScope, $location) => {    
+    const params = typeof FILTER_TYPE === 'undefined' ? {} : {'type': FILTER_TYPE};
     
     function getCategories(){
-      $http.get(CATEGORIES_ENDPOINT, {params: params})
+      $http.get(CATEGORIES_ENDPOINT, {params})
       .then(
         /* success */
-        function(response) {
-         $rootScope['categories'] = response.data.objects
-         //populates homepage carousel categories and explore sidebar categories
+        (response) => {
+         $rootScope.categories = response.data.objects
+         // populates homepage carousel categories and explore sidebar categories
         },
         /* failure */
-        function(error) {
+        (error) => {
           console.log("The request failed: ", error);
         }
       )
@@ -43,8 +43,6 @@
   })
 
     // add filter to decode uri
-  .filter('decodeURIComponent', function() {
-    return window.decodeURIComponent;
-  })
+  .filter('decodeURIComponent', () => window.decodeURIComponent)
 
 })();

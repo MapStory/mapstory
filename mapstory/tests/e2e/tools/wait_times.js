@@ -1,11 +1,11 @@
-'use strict';
+
 
 // Change this to a larger number if you want to wait longer.
-let waitFactor = 2.1;
+const waitFactor = 2.1;
 
 
 // The wait times in milliseconds
-let timings =  {
+const timings =  {
 	layerUpload : 4500 * waitFactor,
 	layerCreate : 5000 * waitFactor,
 	newLayer: 4500 * waitFactor,

@@ -1,14 +1,14 @@
 
-var CATEGORIES_ENDPOINT = '/api/categories/';
-var KEYWORDS_ENDPOINT = '/api/keywords/';
-var REGIONS_ENDPOINT = '/api/regions/';
-var INTERESTS_ENDPOINT = '/api/interests';
-var HAYSTACK_SEARCH = "True".toLowerCase() === "true";
-var HAYSTACK_FACET_COUNTS = "False".toLowerCase() === "true";
-var CLIENT_RESULTS_LIMIT = 30;
-var AUTOCOMPLETE_URL_RESOURCEBASE = '/autocomplete/ResourceBaseAutocomplete/';
-var AUTOCOMPLETE_URL_REGION = '/autocomplete/RegionAutocomplete/';
-var AUTOCOMPLETE_URL_KEYWORD = '/autocomplete/TagAutocomplete/';
-var SEARCH_URL = '/api/base/search/';
-var SITE_NAME = "MapStory";
-var USER = "admin";
+const CATEGORIES_ENDPOINT = '/api/categories/';
+const KEYWORDS_ENDPOINT = '/api/keywords/';
+const REGIONS_ENDPOINT = '/api/regions/';
+const INTERESTS_ENDPOINT = '/api/interests';
+const HAYSTACK_SEARCH = "True".toLowerCase() === "true";
+const HAYSTACK_FACET_COUNTS = "False".toLowerCase() === "true";
+const CLIENT_RESULTS_LIMIT = 30;
+const AUTOCOMPLETE_URL_RESOURCEBASE = '/autocomplete/ResourceBaseAutocomplete/';
+const AUTOCOMPLETE_URL_REGION = '/autocomplete/RegionAutocomplete/';
+const AUTOCOMPLETE_URL_KEYWORD = '/autocomplete/TagAutocomplete/';
+const SEARCH_URL = '/api/base/search/';
+const SITE_NAME = "MapStory";
+const USER = "admin";

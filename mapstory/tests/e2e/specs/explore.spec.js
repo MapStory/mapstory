@@ -1,18 +1,19 @@
 /**
  * Explore Page e2e Tests
  */
-"use strict";
+
+
 
 require("../tools/waitReady.js");
 
-describe("Explore page", function () {
-  let explorePage = require("../pages/explore.po");
+describe("Explore page", () => {
+  const explorePage = require("../pages/explore.po");
 
-  beforeEach(function () {
+  beforeEach(() => {
     explorePage.get();
   });
 
-  xit("> loads correctly", function () {
+  xit("> loads correctly", () => {
     // TODO: Dynamically check for the title
     expect(browser.getTitle()).toEqual(explorePage.title);
     // expect(explorePage.storyteller_search_tab.waitReady()).toBeTruthy();

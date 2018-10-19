@@ -1,12 +1,12 @@
-"use strict";
 
-let home_page = require("../pages/home.po");
-let wizard = require("../pages/icon_upload.po");
+
+const home_page = require("../pages/home.po");
+const wizard = require("../pages/icon_upload.po");
 
 // var screenHelper = require('./screenHelper');
 
-xdescribe("Icon Upload Wizard", function () {
-  beforeEach(function () {
+xdescribe("Icon Upload Wizard", () => {
+  beforeEach(() => {
   });
 
   // // Take a screenshot automatically after each failing test.
@@ -17,7 +17,7 @@ xdescribe("Icon Upload Wizard", function () {
   // 	}
   // });
 
-  it("> should be available to the user from the home page", function () {
+  it("> should be available to the user from the home page", () => {
     expect(home_page.isLoggedIn()).toBeTruthy();
     expect(home_page.navBar.isDisplayed()).toBe(true);
     home_page.menuCreate.click();
@@ -25,7 +25,7 @@ xdescribe("Icon Upload Wizard", function () {
     home_page.uploadIconsLink.click();
   });
 
-  it("> should upload svg icons", function () {
+  it("> should upload svg icons", () => {
     expect(home_page.isLoggedIn()).toBeTruthy();
     expect(home_page.navBar.isDisplayed()).toBe(true);
     home_page.menuCreate.click();
@@ -33,35 +33,35 @@ xdescribe("Icon Upload Wizard", function () {
     expect(home_page.uploadIconsLink.waitReady()).toBeTruthy();
     home_page.uploadIconsLink.click();
 
-    let tagsInput = element(by.css("#id_tags"));
+    const tagsInput = element(by.css("#id_tags"));
     expect(tagsInput.waitReady()).toBeTruthy();
 
     tagsInput.sendKeys("testtag01");
 
     // Send the file
-    let filePath = wizard.getSVGPath();
+    const filePath = wizard.getSVGPath();
 
-    let fileInput = element(by.css("#id_svg"));
+    const fileInput = element(by.css("#id_svg"));
     expect(fileInput.waitReady()).toBeTruthy();
 
     fileInput.sendKeys(filePath);
 
     // Press send
-    let uploadButton = element(by.css("#icon_submit_btn"));
+    const uploadButton = element(by.css("#icon_submit_btn"));
     expect(uploadButton.waitReady()).toBeTruthy();
 
     uploadButton.click();
 
     // Expect success:
-    let successAlert = element(by.css(".alert.alert-success"));
+    const successAlert = element(by.css(".alert.alert-success"));
     expect(successAlert.waitReady()).toBeTruthy();
 
-    successAlert.getText(function (text) {
+    successAlert.getText((text) => {
       expect(text).toEqual(wizard.getSuccessText());
     });
   });
 
-  it("> should reject non svg files", function () {
+  it("> should reject non svg files", () => {
     expect(home_page.isLoggedIn()).toBeTruthy();
     expect(home_page.navBar.isDisplayed()).toBe(true);
     home_page.menuCreate.click();
@@ -69,28 +69,28 @@ xdescribe("Icon Upload Wizard", function () {
     expect(home_page.uploadIconsLink.waitReady()).toBeTruthy();
     home_page.uploadIconsLink.click();
 
-    var tagsInput = element(by.css("#id_tags"));
+    const tagsInput = element(by.css("#id_tags"));
     expect(tagsInput.waitReady()).toBeTruthy();
 
     tagsInput.sendKeys("testtag00");
 
     // Send the file
-    var filePath = wizard.getPNGPath();
+    const filePath = wizard.getPNGPath();
 
-    var fileInput = element(by.css("#id_svg"));
+    const fileInput = element(by.css("#id_svg"));
     expect(fileInput.waitReady()).toBeTruthy();
 
     fileInput.sendKeys(filePath);
 
     // Press send
-    var uploadButton = element(by.css("#icon_submit_btn"));
+    const uploadButton = element(by.css("#icon_submit_btn"));
     expect(uploadButton.waitReady()).toBeTruthy();
 
     uploadButton.click();
 
     // Expect no success:
-    var successAlert = element(by.css(".alert.alert-success"));
-    successAlert.isPresent(function (visible) {
+    const successAlert = element(by.css(".alert.alert-success"));
+    successAlert.isPresent((visible) => {
       expect(visible).toBe(false);
     });
   });
