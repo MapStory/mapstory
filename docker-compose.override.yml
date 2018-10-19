@@ -9,8 +9,9 @@ services:
     command: --serve-dev
     volumes:
       - ./deps/story-tools-composer:/srv/story-tools-composer:cached
-      - composer_node_modules:/srv/story-tools-composer/node_modules
-      - storytools_node_modules:/srv/story-tools-composer/deps/story-tools/node_modules
+      - composer_node_modules:/srv/story-tools-composer/node_modules:cached
+      - storytools_node_modules:/srv/story-tools-composer/deps/story-tools/node_modules:cached
+      - composer_yarn:/usr/local/share/.config/yarn:cached
 #    ports:
 #      - "9090:9090"
 
@@ -174,3 +175,4 @@ volumes:
   postgres:
   composer_node_modules:
   storytools_node_modules:
+  composer_yarn:
