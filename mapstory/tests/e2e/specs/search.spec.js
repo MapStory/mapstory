@@ -2,7 +2,7 @@
 
 require("../tools/waitReady.js");
 
-const wait_times = require("../tools/wait_times");
+const waitTimes = require("../tools/wait_times").default;
 
 const deafaultWindowHeight = 900;
 const defaultWindoWidth = 1400;
@@ -38,7 +38,7 @@ describe("Search", () => {
   it("> should search", () => {
     expect(search.searchButton.waitReady()).toBeTruthy();
     search.searchButton.click();
-    browser.sleep(wait_times.search);
+    browser.sleep(waitTimes.search);
 
     // Expect the url to change to search api
     browser.getCurrentUrl().then((newURL) => {
@@ -59,7 +59,7 @@ describe("Search", () => {
     expect(search.storyTellerTab.waitReady()).toBeTruthy();
     search.storyTellerTab.click();
 
-    browser.sleep(wait_times.search);
+    browser.sleep(waitTimes.search);
     expect(search.resultsContainer.waitReady()).toBeTruthy();
 
     // Refresh search objects
@@ -71,7 +71,7 @@ describe("Search", () => {
   xit("> should search for admin", () => {
     search.searchFor("admin");
 
-    browser.sleep(wait_times.search);
+    browser.sleep(waitTimes.search);
     expect(search.resultsContainer.waitReady()).toBeTruthy();
 
     // Refresh search objects
@@ -88,7 +88,7 @@ describe("Search", () => {
     expect(search.storyTellerTab.waitReady()).toBeTruthy();
     search.storyTellerTab.click();
 
-    browser.sleep(wait_times.search);
+    browser.sleep(waitTimes.search);
     expect(search.resultsContainer.waitReady()).toBeTruthy();
 
     // Refresh search objects
