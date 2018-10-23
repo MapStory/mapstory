@@ -1,12 +1,11 @@
 
 require("../tools/waitReady.js");
 
-const path = require("path");
 const auth = require("../pages/auth.po");
-const wait_times = require("../tools/wait_times");
-const home_page = require("../pages/home.po");
-const layer_metadata = require("../pages/layer_metadata.po");
-const screenshot_helper = require("../tools/screenshot_helper");
+const waitTimes = require("../tools/wait_times");
+const homePage = require("../pages/home.po").default;
+const layerMetadata = require("../pages/layer_metadata.po");
+const screenshotHelper = require("../tools/screenshot_helper");
 const constants = require("../tools/constants");
 
 /**
@@ -22,7 +21,7 @@ const tester = {
 };
 
 // Setup the screenshot on error feature
-screenshot_helper.setup();
+screenshotHelper.setup();
 
 /**
  * Automated Survey tests
@@ -45,7 +44,7 @@ describe("[Survey Tests] |", () => {
   });
 
   describe("<<1>> Tester Info |", () => {
-    const randomId = auth.makeid(7);
+    const randomId = auth.makeID(7);
 
     describe("<a> Tester name", () => {
       it(": should set a test name", () => {
@@ -89,7 +88,7 @@ describe("[Survey Tests] |", () => {
   describe("<<2>> User Profile |", () => {
     describe("<a> Create an account |", () => {
       it("> should start by logging out", () => {
-        home_page.logout();
+        homePage.logout();
         expect(auth.loginIcon.waitReady()).toBeTruthy("Failed to logout!");
       });
 
@@ -276,7 +275,7 @@ describe("[Survey Tests] |", () => {
     xdescribe("<d> Uploading", () => {
       beforeEach(() => {
         element(by.linkText("Create")).click();
-        home_page.importLayerLink.click();
+        homePage.importLayerLink.click();
       });
 
       it("> has a \"Close button\"", () => {
@@ -287,7 +286,7 @@ describe("[Survey Tests] |", () => {
 
       describe("> Step 1", () => {
         it("> should complete step 1", () => {
-          home_page.uploadLayer_Step1();
+          homePage.uploadLayer_Step1();
         });
 
         xit("> can close the form", () => {
@@ -301,47 +300,47 @@ describe("[Survey Tests] |", () => {
 
       describe("> Step 2", () => {
         it("should complete step 2", () => {
-          home_page.uploadLayer_Step1();
-          home_page.uploadLayer_Step2();
+          homePage.uploadLayer_Step1();
+          homePage.uploadLayer_Step2();
         });
       });
 
       describe("> Step 3", () => {
         it("> should complete step 3", () => {
-          home_page.uploadLayer_Step1();
-          home_page.uploadLayer_Step2();
-          home_page.uploadLayer_Step3();
+          homePage.uploadLayer_Step1();
+          homePage.uploadLayer_Step2();
+          homePage.uploadLayer_Step3();
         });
       });
 
       describe("> Step 4", () => {
         it("should complete step 4", () => {
-          home_page.uploadLayer_Step1();
-          home_page.uploadLayer_Step2();
-          home_page.uploadLayer_Step3();
-          home_page.uploadLayer_Step4();
+          homePage.uploadLayer_Step1();
+          homePage.uploadLayer_Step2();
+          homePage.uploadLayer_Step3();
+          homePage.uploadLayer_Step4();
         });
       });
 
       describe("> Step 5", () => {
         it("> should complete step 5", () => {
-          home_page.uploadLayer_Step1();
-          home_page.uploadLayer_Step2();
-          home_page.uploadLayer_Step3();
-          home_page.uploadLayer_Step4();
-          home_page.uploadLayer_Step5();
+          homePage.uploadLayer_Step1();
+          homePage.uploadLayer_Step2();
+          homePage.uploadLayer_Step3();
+          homePage.uploadLayer_Step4();
+          homePage.uploadLayer_Step5();
         });
 
       });
 
       describe("> Step 6", () => {
         it("> should complete step 6", () => {
-          home_page.uploadLayer_Step1();
-          home_page.uploadLayer_Step2();
-          home_page.uploadLayer_Step3();
-          home_page.uploadLayer_Step4();
-          home_page.uploadLayer_Step5();
-          home_page.uploadLayer_Step6();
+          homePage.uploadLayer_Step1();
+          homePage.uploadLayer_Step2();
+          homePage.uploadLayer_Step3();
+          homePage.uploadLayer_Step4();
+          homePage.uploadLayer_Step5();
+          homePage.uploadLayer_Step6();
         });
       });
     });
@@ -352,29 +351,29 @@ describe("[Survey Tests] |", () => {
     xdescribe("<e> Update Metadata", () => {
       beforeEach(() => {
         element(by.linkText("Create")).click();
-        home_page.importLayerLink.click();
-        home_page.uploadLayer_Step1();
-        home_page.uploadLayer_Step2();
-        home_page.uploadLayer_Step3();
-        home_page.uploadLayer_Step4();
-        home_page.uploadLayer_Step5();
+        homePage.importLayerLink.click();
+        homePage.uploadLayer_Step1();
+        homePage.uploadLayer_Step2();
+        homePage.uploadLayer_Step3();
+        homePage.uploadLayer_Step4();
+        homePage.uploadLayer_Step5();
       });
 
       it("> Can edit metadata", () => {
-        home_page.uploadLayer_Step6();
-        browser.sleep(wait_times.metadata_load);
-        expect(layer_metadata.titleInput.waitReady()).toBeTruthy();
-        expect(layer_metadata.categoryDropdown.waitReady()).toBeTruthy();
-        expect(layer_metadata.summaryText.waitReady()).toBeTruthy();
-        expect(layer_metadata.languageDropdown.waitReady()).toBeTruthy();
-        expect(layer_metadata.dataSourceText.waitReady()).toBeTruthy();
-        expect(layer_metadata.dataQualityText.waitReady()).toBeTruthy();
-        expect(layer_metadata.purposeText.waitReady()).toBeTruthy();
-        expect(layer_metadata.isPublishedCheckbox.waitReady()).toBeTruthy();
+        homePage.uploadLayer_Step6();
+        browser.sleep(waitTimes.metadataLoad);
+        expect(layerMetadata.titleInput.waitReady()).toBeTruthy();
+        expect(layerMetadata.categoryDropdown.waitReady()).toBeTruthy();
+        expect(layerMetadata.summaryText.waitReady()).toBeTruthy();
+        expect(layerMetadata.languageDropdown.waitReady()).toBeTruthy();
+        expect(layerMetadata.dataSourceText.waitReady()).toBeTruthy();
+        expect(layerMetadata.dataQualityText.waitReady()).toBeTruthy();
+        expect(layerMetadata.purposeText.waitReady()).toBeTruthy();
+        expect(layerMetadata.isPublishedCheckbox.waitReady()).toBeTruthy();
 
 
         // Save
-        layer_metadata.saveButton.click();
+        layerMetadata.saveButton.click();
       });
     });
 
@@ -385,23 +384,23 @@ describe("[Survey Tests] |", () => {
     xdescribe("<f> Set is published", () => {
       beforeEach(() => {
         element(by.linkText("Create")).click();
-        home_page.importLayerLink.click();
-        home_page.uploadLayer_Step1();
-        home_page.uploadLayer_Step2();
-        home_page.uploadLayer_Step3();
-        home_page.uploadLayer_Step4();
-        home_page.uploadLayer_Step5();
+        homePage.importLayerLink.click();
+        homePage.uploadLayer_Step1();
+        homePage.uploadLayer_Step2();
+        homePage.uploadLayer_Step3();
+        homePage.uploadLayer_Step4();
+        homePage.uploadLayer_Step5();
       });
 
       it("should set published checkbox", () => {
-        home_page.uploadLayer_Step6();
-        browser.sleep(wait_times.metadata_load);
+        homePage.uploadLayer_Step6();
+        browser.sleep(waitTimes.metadataLoad);
 
-        expect(layer_metadata.isPublishedCheckbox.waitReady()).toBeTruthy();
-        layer_metadata.isPublishedCheckbox.click();
+        expect(layerMetadata.isPublishedCheckbox.waitReady()).toBeTruthy();
+        layerMetadata.isPublishedCheckbox.click();
 
         // Save
-        layer_metadata.saveButton.click();
+        layerMetadata.saveButton.click();
       });
 
     });
@@ -413,22 +412,22 @@ describe("[Survey Tests] |", () => {
     xdescribe("<g> Download filetypes", () => {
       beforeEach(() => {
         element(by.linkText("Create")).click();
-        home_page.importLayerLink.click();
-        home_page.uploadLayer_Step1();
-        home_page.uploadLayer_Step2();
-        home_page.uploadLayer_Step3();
-        home_page.uploadLayer_Step4();
-        home_page.uploadLayer_Step5();
-        home_page.uploadLayer_Step6();
+        homePage.importLayerLink.click();
+        homePage.uploadLayer_Step1();
+        homePage.uploadLayer_Step2();
+        homePage.uploadLayer_Step3();
+        homePage.uploadLayer_Step4();
+        homePage.uploadLayer_Step5();
+        homePage.uploadLayer_Step6();
 
-        browser.sleep(wait_times.metadata_load);
+        browser.sleep(waitTimes.metadataLoad);
 
         // Mark as published
-        expect(layer_metadata.isPublishedCheckbox.waitReady()).toBeTruthy();
-        layer_metadata.isPublishedCheckbox.click();
+        expect(layerMetadata.isPublishedCheckbox.waitReady()).toBeTruthy();
+        layerMetadata.isPublishedCheckbox.click();
 
         // Save
-        layer_metadata.saveButton.click();
+        layerMetadata.saveButton.click();
 
         browser.sleep(1000);
       });

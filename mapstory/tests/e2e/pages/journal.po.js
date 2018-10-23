@@ -5,49 +5,49 @@
 
 
 
-require("../tools/waitReady.js");
-const auth = require("./auth.po");
-const home_page = require("./home.po");
-const constants = require("../tools/constants");
+import "../tools/waitReady";
+import { login } from "./auth.po";
+import { get } from "./home.po";
+import { baseURL } from "../tools/constants";
 
 /* global element, by, browser */
 
-const JournalPageObject = function () {
+const JournalPageObject = () => {
   this.title = "MapStory";
   this.banner = $(".parallax");
   this.h1 = this.banner.$("h1");
-  this.new_entry_button = element(by.partialButtonText("write an entry"));
+  this.newEntryButton = element(by.partialButtonText("write an entry"));
   this.pageCurrent = $(".page-current");
-  this.new_title_input = $("#id_title");
-  this.new_content_input = $("#id_content");
-  this.new_publish_option = $("#id_publish");
-  this.new_save_button = element(by.buttonText("Save"));
-  this.comment_box = $("#id_comment");
-  this.get = function () {
-    browser.get(`${constants.baseURL  }/journal`);
+  this.newTitleInput = $("#id_title");
+  this.newContentInput = $("#id_content");
+  this.newPublishOption = $("#id_publish");
+  this.newSaveButton = element(by.buttonText("Save"));
+  this.commentBox = $("#id_comment");
+  this.get = () => {
+    browser.get(`${baseURL  }/journal`);
     browser.waitForAngular();
   };
-  this.make_new_entry = function (title, content, published) {
+  this.makeNewEntry = (title, content, published) => {
     const userAvatar = element(by.css(".nav-avatar"));
 
     userAvatar.isPresent().then((present) => {
       if (present === false) {
-        home_page.get();
-        auth.login("admin", "admin");
+        get();
+        login("admin", "admin");
       }
     });
 
 
     this.get();
-    this.new_entry_button.click();
+    this.newEntryButton.click();
     browser.waitForAngular();
-    this.new_title_input.sendKeys(title);
-    this.new_content_input.sendKeys(content);
+    this.newTitleInput.sendKeys(title);
+    this.newContentInput.sendKeys(content);
     if (published === true) {
-      this.new_publish_option.click();
+      this.newPublishOption.click();
     }
-    this.new_save_button.click();
+    this.newSaveButton.click();
   };
 };
 
-module.exports = new JournalPageObject();
+export default new JournalPageObject();

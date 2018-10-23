@@ -5,50 +5,51 @@
 
 
 require("../tools/waitReady.js");
-const make_id = require("../tools/make_id");
-const screenshot_help = require("../tools/screenshot_helper.js");
+const makeID = require("../tools/make_id");
+const screenshotHelper = require("../tools/screenshot_helper.js");
+const journalPage = require("../pages/journal.po");
 
 // Take screenshots on error
-screenshot_help.setup();
+screenshotHelper.setup();
 
 describe("Journal Page", () => {
-  const journal_page = require("../pages/journal.po");
 
   beforeEach(() => {
-    journal_page.get();
+    journalPage.get();
   });
 
   it("should load correctly", () => {
-    expect(browser.getTitle()).toEqual(journal_page.title);
-    expect(journal_page.new_entry_button.waitReady()).toBeTruthy();
+    expect(browser.getTitle()).toEqual(journalPage.title);
+    expect(journalPage.newEntryButton.waitReady()).toBeTruthy();
   });
 
   xit("can write a new entry", () => {
     // Create a new entry
-    const entry_title = `Testing journal post ${  make_id(4)}`;
-    const content_id = make_id(12);
-    const entry_content = `Some random content to test: ${  content_id}`;
-    journal_page.make_new_entry(entry_title, entry_content, true);
+    const entryTitle = `Testing journal post ${  makeID(4)}`;
+    const contentID = makeID(12);
+    const entryContent = `Some random content to test: ${  contentID}`;
+    journalPage.makeNewEntry(entryTitle, entryContent, true);
 
     // The entry should now be displayed
-    journal_page.get();
+    journalPage.get();
     let foundTitle = false;
-    // Searches all the jorunal titles for the test title
+    // Searches all the journal titles for the test title
     element.all(by.css("h1.blog-title")).each((element) => {
       element.getText().then((text) => {
-        if (text == entry_title) {
+        if (text === entryTitle) {
           foundTitle = true;
           return true;
         }
+        return false;
       });
     }).then(() => {
       expect(foundTitle).toBe(true);
     });
 
     // The correct content should be displayed
-    element.all(by.partialLinkText(entry_title)).each((element) => {
+    element.all(by.partialLinkText(entryTitle)).each((element) => {
       element.getText().then((text) => {
-        if (text == entry_title) {
+        if (text === entryTitle) {
           // Click the link
           element.click();
         }
@@ -59,16 +60,16 @@ describe("Journal Page", () => {
 
       const content = element(by.css(".col-lg-10.col-xs-6.blog-content.bl"));
       content.getText().then((text) => {
-        expect(text).toContain(content_id);
+        expect(text).toContain(contentID);
       });
 
       // Should be able to comment
-      const comment_id = make_id(3);
-      const test_comment = `This is a test comment: ${  comment_id}`;
-      journal_page.comment_box.sendKeys(test_comment);
+      const commentID = makeID(3);
+      const testComment = `This is a test comment: ${  commentID}`;
+      journalPage.commentBox.sendKeys(testComment);
 
-      const post_comment_button = element(by.buttonText("Post"));
-      post_comment_button.click();
+      const postCommentButton = element(by.buttonText("Post"));
+      postCommentButton.click();
     });
   });
 });

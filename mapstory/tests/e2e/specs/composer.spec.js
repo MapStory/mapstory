@@ -6,9 +6,7 @@
 
 
 const page = require("../pages/composer.po.js");
-const home = require("../pages/home.po.js");
 const auth = require("../pages/auth.po");
-const wait_times = require("../tools/wait_times.js");
 const constants = require("../tools/constants");
 
 describe("Composer", () => {
@@ -25,8 +23,8 @@ describe("Composer", () => {
 
   it("> should begin creating", () => {
     page.get();
-    expect(page.compose_story.waitReady()).toBeTruthy();
-    page.compose_story.click();
-    expect(page.map_properties.waitReady()).toBeTruthy();
+    expect(page.composeStory.waitReady()).toBeTruthy();
+    page.composeStory.click();
+    expect(page.mapProperties.waitReady()).toBeTruthy();
   });
 });

@@ -2,7 +2,7 @@ const path = require("path");
 const auth = require("../pages/auth.po");
 const home = require("../pages/home.po");
 const composer = require("../pages/composer.po");
-const makeid = require("../tools/make_id");
+const makeID = require("../tools/make_id");
 
 const EC = protractor.ExpectedConditions;
 
@@ -36,22 +36,22 @@ describe("Composer Survey", () => {
       it("should edit the story title and summary", () => {
 
         // Click on 'Edit Story Info
-        expect(composer.edit_story.waitReady()).toBe(true);
-        composer.edit_story.click();
+        expect(composer.editStory.waitReady()).toBe(true);
+        composer.editStory.click();
 
         // Change the 'Title'
-        expect(composer.edit_story_title.waitReady()).toBe(true);
-        const title = `Test #${  makeid(5)}`;
-        composer.edit_story_title.clear().sendKeys(title);
+        expect(composer.editStoryTitle.waitReady()).toBe(true);
+        const title = `Test #${  makeID(5)}`;
+        composer.editStoryTitle.clear().sendKeys(title);
 
         // Change the 'Summary'
-        composer.edit_story_summary.clear().sendKeys("This is a test summary. This is only a test!");
+        composer.editStorySummary.clear().sendKeys("This is a test summary. This is only a test!");
 
         // Select a Category
-        composer.edit_category.element(by.cssContainingText("option", "Geopolitics")).click();
+        composer.editCategory.element(by.cssContainingText("option", "Geopolitics")).click();
 
         // Click 'Save'
-        composer.edit_save_button.click();
+        composer.editSaveButton.click();
 
         // Wait for page reload
         browser.wait(EC.urlContains("draft"), 10000);
@@ -81,13 +81,13 @@ describe("Composer Survey", () => {
     describe("(c) Create a new chapter and update its chapter info", () => {
       it("should create a new chapter", () => {
         // Click on 'Table of Contents'
-        composer.table_of_contents_button.click();
+        composer.tableOfContentsButton.click();
 
         // Click 'Add New Chapter' button
-        expect(composer.new_chapter_button.waitReady()).toBe(true);
-        expect(composer.chapter_binds.count()).toBe(3);
-        composer.new_chapter_button.click();
-        expect(composer.chapter_binds.count()).toBe(6);
+        expect(composer.newChapterButton.waitReady()).toBe(true);
+        expect(composer.chapterBinds.count()).toBe(3);
+        composer.newChapterButton.click();
+        expect(composer.chapterBinds.count()).toBe(6);
       });
 
       it("should edit the newly created chapter", () => {
@@ -184,15 +184,15 @@ describe("Composer Survey", () => {
 
   describe("6. Creating, updating and bulk uploading storypins", () => {
     it("should open storypins sidebar", () => {
-      expect(composer.storypins_button.waitReady()).toBe(true);
-      composer.storypins_button.click();
+      expect(composer.storyPinsButton.waitReady()).toBe(true);
+      composer.storyPinsButton.click();
     });
 
     describe("(a) Create a new storypin.", () => {
       it("creates a new pin", () => {
-        expect(composer.add_storypin_button.waitReady()).toBe(true);
-        composer.add_storypin_button.click();
-        expect(composer.storypin_binds.count()).toBe(2);
+        expect(composer.addStoryPinButton.waitReady()).toBe(true);
+        composer.addStoryPinButton.click();
+        expect(composer.storyPinBinds.count()).toBe(2);
       });
 
       // The Pin
@@ -249,9 +249,9 @@ describe("Composer Survey", () => {
         nextChapterArrow.click();
 
         // Create new pin
-        expect(composer.add_storypin_button.waitReady()).toBe(true);
-        composer.add_storypin_button.click();
-        expect(composer.storypin_binds.count()).toBe(2);
+        expect(composer.addStoryPinButton.waitReady()).toBe(true);
+        composer.addStoryPinButton.click();
+        expect(composer.storyPinBinds.count()).toBe(2);
 
         // Should have created a new pin.
         expect(pin0.$(".heading").getText()).toBe("A StoryPin");
@@ -269,13 +269,13 @@ describe("Composer Survey", () => {
 
     describe("(b) Upload multiple storypins using Bulk Upload. After upload, click Play.", () => {
       it("should create new storypins from a CSV upload", () => {
-        composer.bulk_upload_button.click();
-        expect(composer.upload_modal.waitReady()).toBeTruthy();
-        // composer.csv_button.click();
-        const input = composer.upload_modal.$("#bulk_pin_csv_file");
+        composer.bulkUploadButton.click();
+        expect(composer.uploadModal.waitReady()).toBeTruthy();
+        // composer.csvButton.click();
+        const input = composer.uploadModal.$("#bulk_pin_csv_file");
         expect(input.waitReady()).toBeTruthy();
         input.sendKeys(path.resolve(__dirname, "../../sampledata/storypins.csv"));
-        composer.upload_modal.$("#ok-btn-modal-bulk").click();
+        composer.uploadModal.$("#ok-btn-modal-bulk").click();
       });
     }).pend("Fix this");
 
