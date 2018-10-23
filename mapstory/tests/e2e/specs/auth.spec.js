@@ -5,18 +5,17 @@
  * ================
  */
 
+import "../tools/waitReady";
+import { baseURL } from "../tools/constants";
+import { loginIcon, logout, loginForm, loginModal, loginCloseButton, makeID, getUsername, getLastName, getEmail, getPassword, signUpButton, userAvatar, usernameInput as _usernameInput, passwordInput as _passwordInput, loginButton } from "../pages/auth.po";
 
 const EC = protractor.ExpectedConditions;
-require("../tools/waitReady.js");
-const constants = require("../tools/constants");
 
 describe("User auth", () => {
 
-  const auth = require("../pages/auth.po");
-
   beforeEach(() => {
     // Fetch Home
-    browser.get(constants.baseURL);
+    browser.get(baseURL);
     browser.waitForAngular();
   });
 
@@ -25,16 +24,16 @@ describe("User auth", () => {
    */
   it("Should display a Login Form", (done) => {
 
-    auth.loginIcon.isDisplayed().then((displayed) => {
+    loginIcon.isDisplayed().then((displayed) => {
 
       if (displayed === false) {
-        auth.logout();
+        logout();
       }
 
-      expect(auth.loginIcon.waitReady()).toBeTruthy();
+      expect(loginIcon.waitReady()).toBeTruthy();
 
-      auth.loginIcon.click();
-      expect(auth.loginForm.waitReady()).toBeTruthy();
+      loginIcon.click();
+      expect(loginForm.waitReady()).toBeTruthy();
 
       // Jasmine has problems with async. Need to manually specify were done here.
       done();
@@ -50,12 +49,12 @@ describe("User auth", () => {
     });
 
     it("should have \"Log In\" and \"Sign up\" tabs", () => {
-      expect(auth.loginIcon.isDisplayed()).toBeTruthy();
-      expect(auth.loginIcon.waitReady()).toBeTruthy();
+      expect(loginIcon.isDisplayed()).toBeTruthy();
+      expect(loginIcon.waitReady()).toBeTruthy();
 
       // Click login
-      auth.loginIcon.click();
-      expect(auth.loginModal.waitReady()).toBe(true);
+      loginIcon.click();
+      expect(loginModal.waitReady()).toBe(true);
       expect(element(by.linkText("Log In")).isPresent()).toBe(true);
       expect(element(by.linkText("Sign Up")).isPresent()).toBe(true);
     });
@@ -69,11 +68,11 @@ describe("User auth", () => {
       });
 
       it("should be shown by default", () => {
-        expect(auth.loginIcon.isDisplayed()).toBeTruthy();
+        expect(loginIcon.isDisplayed()).toBeTruthy();
 
         // Click Login
-        auth.loginIcon.click();
-        expect(auth.loginForm.waitReady()).toBeTruthy();
+        loginIcon.click();
+        expect(loginForm.waitReady()).toBeTruthy();
 
         const usernameLabel = element(by.css("label[for=\"username\"]"));
         expect(usernameLabel.waitReady()).toBeTruthy();
@@ -81,32 +80,32 @@ describe("User auth", () => {
 
       it("> should have a close button", () => {
 
-        expect(auth.loginIcon.waitReady()).toBeTruthy();
+        expect(loginIcon.waitReady()).toBeTruthy();
 
         // Click Login
-        auth.loginIcon.click();
-        expect(auth.loginForm.waitReady()).toBeTruthy();
-        expect(auth.login_close_button.isDisplayed).toBeTruthy();
+        loginIcon.click();
+        expect(loginForm.waitReady()).toBeTruthy();
+        expect(loginCloseButton.isDisplayed).toBeTruthy();
 
         // Click close
-        auth.login_close_button.click();
+        loginCloseButton.click();
       });
 
       it("> should require a username and password", () => {
 
-        expect(auth.loginIcon.waitReady()).toBeTruthy();
+        expect(loginIcon.waitReady()).toBeTruthy();
 
         // Click login
-        auth.loginIcon.click();
-        expect(auth.loginForm.waitReady()).toBeTruthy();
+        loginIcon.click();
+        expect(loginForm.waitReady()).toBeTruthy();
 
         // Click submit
         element(by.css(".login-auth-btn.btn.btn-md.btn-block")).click();
 
         // Expect error messages
-        const username_error = element(by.css("#error_id_username_1"));
-        expect(username_error.waitReady()).toBeTruthy();
-        expect(username_error.isDisplayed()).toBeTruthy();
+        const usernameError = element(by.css("#error_id_username_1"));
+        expect(usernameError.waitReady()).toBeTruthy();
+        expect(usernameError.isDisplayed()).toBeTruthy();
         expect(element(by.css("#error_id_password_1")).isDisplayed()).toBeTruthy();
 
       });
@@ -120,16 +119,16 @@ describe("User auth", () => {
       });
 
       it("> should register a new user", () => {
-        expect(auth.loginIcon.isDisplayed()).toBeTruthy();
+        expect(loginIcon.isDisplayed()).toBeTruthy();
         // Click login
-        auth.loginIcon.click();
-        expect(auth.loginForm.waitReady()).toBeTruthy();
+        loginIcon.click();
+        expect(loginForm.waitReady()).toBeTruthy();
 
         // Click signup
         const button = element(by.linkText("Sign Up"));
         expect(button.waitReady()).toBeTruthy();
         button.click();
-        const userid = `tester_${  auth.makeid(7)}`;
+        const userid = `tester_${  makeID(7)}`;
         const usernameInput = element(by.css("#id_username"));
         const nameInput = element(by.css("#id_first_name"));
         const lastNameInput = element(by.css("#id_last_name"));
@@ -140,49 +139,49 @@ describe("User auth", () => {
         expect(usernameInput.waitReady()).toBeTruthy();
         usernameInput.sendKeys(userid);
         // Set First Name
-        nameInput.sendKeys(auth.getUsername());
+        nameInput.sendKeys(getUsername());
         // Set Last name
-        lastNameInput.sendKeys(auth.getLastName());
+        lastNameInput.sendKeys(getLastName());
         // Set email
-        emailInput.sendKeys(auth.getEmail());
+        emailInput.sendKeys(getEmail());
         // Set password
-        passwordInput.sendKeys(auth.getPassword());
+        passwordInput.sendKeys(getPassword());
         // Confirm password
-        confirmPasswordInput.sendKeys(auth.getPassword());
+        confirmPasswordInput.sendKeys(getPassword());
         // Accept terms
         const termsCheckbox = element(by.model("agreed"));
         termsCheckbox.click();
         // Click Join
-        auth.signUpButton.click();
+        signUpButton.click();
       });
     });
 
     xit("> should log in admin", () => {
-      if (auth.userAvatar.isPresent() == true) {
-        auth.logout();
+      if (userAvatar.isPresent() === true) {
+        logout();
       }
-      expect(auth.loginIcon.waitReady()).toBeTruthy();
-      auth.loginIcon.click();
+      expect(loginIcon.waitReady()).toBeTruthy();
+      loginIcon.click();
 
-      expect(auth.loginForm.isPresent()).toBe(true);
-      browser.wait(EC.visibilityOf(auth.loginForm), 5000);
-      expect(auth.loginForm.isDisplayed()).toBeTruthy();
+      expect(loginForm.isPresent()).toBe(true);
+      browser.wait(EC.visibilityOf(loginForm), 5000);
+      expect(loginForm.isDisplayed()).toBeTruthy();
 
       // Input username
-      expect(auth.usernameInput.isPresent()).toBe(true);
-      auth.usernameInput.sendKeys("admin");
+      expect(_usernameInput.isPresent()).toBe(true);
+      _usernameInput.sendKeys("admin");
 
       // Input password
-      expect(auth.passwordInput.isPresent()).toBe(true);
-      auth.passwordInput.sendKeys("admin");
+      expect(_passwordInput.isPresent()).toBe(true);
+      _passwordInput.sendKeys("admin");
 
       // Press the login button
-      expect(auth.loginButton.isPresent()).toBe(true);
-      auth.loginButton.click();
+      expect(loginButton.isPresent()).toBe(true);
+      loginButton.click();
 
       // Should show the avatar after login
-      browser.get(constants.baseURL);
-      expect(auth.userAvatar.waitReady()).toBeTruthy();
+      browser.get(baseURL);
+      expect(userAvatar.waitReady()).toBeTruthy();
     });
   });
 });

@@ -6,13 +6,13 @@ const waitFactor = 2.1;
 
 // The wait times in milliseconds
 const timings =  {
-	layerUpload : 4500 * waitFactor,
-	layerCreate : 5000 * waitFactor,
-	newLayer: 4500 * waitFactor,
-	metadata_load: 3000 * waitFactor,
-	search: 1000 * waitFactor,
-	composer_tour_modal: 1000 * waitFactor,
-	text_input: 1000 * waitFactor
+  layerUpload : 4500 * waitFactor,
+  layerCreate : 5000 * waitFactor,
+  newLayer: 4500 * waitFactor,
+  metadataLoad: 3000 * waitFactor,
+  search: 1000 * waitFactor,
+  composerTourModal: 1000 * waitFactor,
+  textInput: 1000 * waitFactor
 };
 
-module.exports = timings;
+export default timings;

@@ -6,9 +6,9 @@
 
 
 require("../tools/waitReady.js");
-const gif_upload = require("../pages/gif_upload.po");
+const gifUpload = require("../pages/gif_upload.po");
 const composer = require("../pages/composer.po");
-const make_new_id = require("../tools/make_id");
+const makeNewID = require("../tools/make_id");
 
 describe("Composer", () => {
   // Our home page object
@@ -18,22 +18,22 @@ describe("Composer", () => {
   });
 
   xit("should upload a gif as a thumbnail", () => {
-    gif_upload.get();
+    gifUpload.get();
 
     // Click compose story
-    expect(composer.compose_story.waitReady()).toBeTruthy();
-    composer.compose_story.click();
+    expect(composer.composeStory.waitReady()).toBeTruthy();
+    composer.composeStory.click();
 
     // Setup the story properties
-    expect(composer.map_properties_title_text.waitReady()).toBeTruthy();
-    composer.map_properties_title_text.sendKeys(`Testing Title${  make_new_id(5)}`);
-    composer.map_properties_summary_text.sendKeys("Some test summary here");
+    expect(composer.mapPropertiesTitleText.waitReady()).toBeTruthy();
+    composer.mapPropertiesTitleText.sendKeys(`Testing Title${  makeNewID(5)}`);
+    composer.mapPropertiesSummaryText.sendKeys("Some test summary here");
 
     // Click save
-    composer.map_properties_save_button.click();
+    composer.mapPropertiesSaveButton.click();
 
-    expect(composer.publish_link.waitReady()).toBeTruthy();
-    composer.publish_link.click();
+    expect(composer.publishLink.waitReady()).toBeTruthy();
+    composer.publishLink.click();
 
 
   });

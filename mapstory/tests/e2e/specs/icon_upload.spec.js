@@ -1,6 +1,6 @@
 
 
-const home_page = require("../pages/home.po");
+const homePage = require("../pages/home.po");
 const wizard = require("../pages/icon_upload.po");
 
 // var screenHelper = require('./screenHelper');
@@ -18,20 +18,20 @@ xdescribe("Icon Upload Wizard", () => {
   // });
 
   it("> should be available to the user from the home page", () => {
-    expect(home_page.isLoggedIn()).toBeTruthy();
-    expect(home_page.navBar.isDisplayed()).toBe(true);
-    home_page.menuCreate.click();
-    expect(home_page.uploadIconsLink.waitReady()).toBeTruthy();
-    home_page.uploadIconsLink.click();
+    expect(homePage.isLoggedIn()).toBeTruthy();
+    expect(homePage.navBar.isDisplayed()).toBe(true);
+    homePage.menuCreate.click();
+    expect(homePage.uploadIconsLink.waitReady()).toBeTruthy();
+    homePage.uploadIconsLink.click();
   });
 
   it("> should upload svg icons", () => {
-    expect(home_page.isLoggedIn()).toBeTruthy();
-    expect(home_page.navBar.isDisplayed()).toBe(true);
-    home_page.menuCreate.click();
+    expect(homePage.isLoggedIn()).toBeTruthy();
+    expect(homePage.navBar.isDisplayed()).toBe(true);
+    homePage.menuCreate.click();
 
-    expect(home_page.uploadIconsLink.waitReady()).toBeTruthy();
-    home_page.uploadIconsLink.click();
+    expect(homePage.uploadIconsLink.waitReady()).toBeTruthy();
+    homePage.uploadIconsLink.click();
 
     const tagsInput = element(by.css("#id_tags"));
     expect(tagsInput.waitReady()).toBeTruthy();
@@ -62,12 +62,12 @@ xdescribe("Icon Upload Wizard", () => {
   });
 
   it("> should reject non svg files", () => {
-    expect(home_page.isLoggedIn()).toBeTruthy();
-    expect(home_page.navBar.isDisplayed()).toBe(true);
-    home_page.menuCreate.click();
+    expect(homePage.isLoggedIn()).toBeTruthy();
+    expect(homePage.navBar.isDisplayed()).toBe(true);
+    homePage.menuCreate.click();
 
-    expect(home_page.uploadIconsLink.waitReady()).toBeTruthy();
-    home_page.uploadIconsLink.click();
+    expect(homePage.uploadIconsLink.waitReady()).toBeTruthy();
+    homePage.uploadIconsLink.click();
 
     const tagsInput = element(by.css("#id_tags"));
     expect(tagsInput.waitReady()).toBeTruthy();

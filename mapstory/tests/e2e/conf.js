@@ -9,7 +9,7 @@
  * For multiple-browser testing uncomment browsers inside `multiCapabilities`
  *
  */
-const PixDiff = require("pix-diff");
+import PixDiff from "pix-diff";
 
 //----------------------
 // Variable settings
@@ -88,7 +88,7 @@ let settings = {
     });
 
     // Workaround for pending:
-    jasmine.Suite.prototype.pend = function (message) {
+    jasmine.Suite.prototype.pend = (message) => {
       this.markedPending = true;
       this.children.forEach(spec => spec.pend(message));
     };
@@ -199,4 +199,4 @@ if (process.env.TRAVIS) {
   };
 }
 
-exports.config = settings;
+export default settings;

@@ -4,10 +4,11 @@
 
 
 
-require("../tools/waitReady.js");
+import "../tools/waitReady";
+
+const explorePage = require("../pages/explore.po");
 
 describe("Explore page", () => {
-  const explorePage = require("../pages/explore.po");
 
   beforeEach(() => {
     explorePage.get();
@@ -16,10 +17,10 @@ describe("Explore page", () => {
   xit("> loads correctly", () => {
     // TODO: Dynamically check for the title
     expect(browser.getTitle()).toEqual(explorePage.title);
-    // expect(explorePage.storyteller_search_tab.waitReady()).toBeTruthy();
-    // expect(explorePage.search_bar.waitReady()).toBeTruthy();
-    // expect(explorePage.search_button.waitReady()).toBeTruthy();
-    // expect(explorePage.filter_all.waitReady()).toBeTruthy();
-    // expect(explorePage.filter_mapstory.waitReady()).toBeTruthy();
+    // expect(explorePage.storytellerSearchTab.waitReady()).toBeTruthy();
+    // expect(explorePage.searchBar.waitReady()).toBeTruthy();
+    // expect(explorePage.searchButton.waitReady()).toBeTruthy();
+    // expect(explorePage.filterAll.waitReady()).toBeTruthy();
+    // expect(explorePage.filterMapStory.waitReady()).toBeTruthy();
   });
 });

@@ -7,25 +7,25 @@
 
 
 
-require("../tools/waitReady.js");
-const constants = require("../tools/constants");
+import "../tools/waitReady";
+import { baseURL } from "../tools/constants";
 
-const ExplorePageObject = function () {
+const ExplorePageObject = () => {
   this.title = "Explore - MapStory";
-  this.content_search_tab = $("#content-search");
-  this.storyteller_search_tab = $("#user-search");
-  this.search_bar = $("#text_search_input");
-  this.search_button = $("#text_search_btn");
-  this.filter_all = element(by.linkText("All"));
-  this.filter_mapstory = element(by.partialLinkText("MapStory"));
-  this.filter_layer = element(by.partialLinkText("StoryLayer"));
-  this.sort_popular = element(by.linkText("Popular"));
-  this.sort_newest = element(by.linkText("Newest"));
+  this.contentSearchTab = $("#content-search");
+  this.storytellerSearchTab = $("#user-search");
+  this.searchBar = $("#text_search_input");
+  this.searchButton = $("#text_search_btn");
+  this.filterAll = element(by.linkText("All"));
+  this.filterMapStory = element(by.partialLinkText("MapStory"));
+  this.filterLayer = element(by.partialLinkText("StoryLayer"));
+  this.sortPopular = element(by.linkText("Popular"));
+  this.sortNewest = element(by.linkText("Newest"));
 
-  this.get = function () {
-    browser.get(`${constants.baseURL  }/search`);
+  this.get = () => {
+    browser.get(`${baseURL  }/search`);
     browser.waitForAngular();
   };
 };
 
-module.exports = new ExplorePageObject();
+export default new ExplorePageObject();
