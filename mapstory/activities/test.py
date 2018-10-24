@@ -85,7 +85,7 @@ class SocialTests(MapStoryTestMixin):
         initial_action_count = actions_list.count()
 
         # Create a test layer here
-        create_models(type='layer', user=self.user)
+        create_models(type='layer')
 
         actions_list = get_actions_for_model('layer')
         final_action_count = actions_list.count()
