@@ -158,7 +158,7 @@ def mapstory_view(request, slug, snapshot=None, template='composer_new/composer.
         access_token = None
 
     if snapshot is None:
-        config = story_obj.viewer_json(request.user, access_token)
+        config = story_obj.viewer_json(request, access_token)
     else:
         config = snapshot_config(snapshot, story_obj, request.user)
 
@@ -211,7 +211,7 @@ def story_generate_thumbnail(request, storyid):
 def composer_new_view(request, slug, template='composer_new/composer.html'):
     story_obj = _resolve_story(
         request, slug, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
-    config = story_obj.viewer_json(request.user)
+    config = story_obj.viewer_json(request)
     return render_to_response(template, RequestContext(request, {
         'config': json.dumps(config),
         'story': story_obj
@@ -253,7 +253,7 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
         access_token = None
 
     if snapshot is None:
-        config = map_obj.viewer_json(request.user, access_token)
+        config = map_obj.viewer_json(request, access_token)
     else:
         config = snapshot_config(snapshot, map_obj, request.user, access_token)
 

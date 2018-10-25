@@ -195,7 +195,7 @@ class Map(geonode.maps.models.Map):
             conf = json.loads(conf)
 
         # super allows us to call base class function implementation from geonode
-        super(Map, self).update_from_viewer(conf)
+        super(Map, self).update_from_viewer(conf, context={})
 
         self.viewer_playbackmode = conf['viewerPlaybackMode'] or 'Instant'
 
@@ -208,7 +208,7 @@ class Map(geonode.maps.models.Map):
 
     def viewer_json(self, user, access_token=None, *added_layers):
         base_config = super(Map, self).viewer_json(
-            user, access_token, *added_layers)
+            user, *added_layers)
         base_config['viewer_playbackmode'] = self.viewer_playbackmode
         base_config['tools'] = [{'outputConfig': {
             'playbackMode': self.viewer_playbackmode}, 'ptype': 'gxp_playback'}]
@@ -357,4 +357,4 @@ class StoryPin(models.Model):
 
 signals.post_init.connect(default_is_published, sender=MapStory)
 signals.post_init.connect(default_is_published, sender=Map)
-db.models.signals.post_save.connect(mapstory_map_post_save, sender=Map)
+# db.models.signals.post_save.connect(mapstory_map_post_save, sender=Map)
