@@ -124,7 +124,7 @@ def save_mapstory(request):
                 currentPin.save()
                 pin['id'] = currentPin.id
 
-        removed_pin_ids = config['removedPins']
+        removed_pin_ids = chapter['removedPins']
         if removed_pin_ids is not None:
             for pin_id in removed_pin_ids:
                 pin_obj = StoryPin.objects.get(id=pin_id)
