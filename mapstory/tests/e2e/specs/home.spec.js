@@ -14,33 +14,33 @@
  * You can use this tool for finding the right selectors: https://github.com/andresdominguez/elementor
  * After install run: `elementor http://192.168.56.151` to start the tool
  */
-"use strict";
 
-require("../tools/waitReady.js");
-const wait_times = require("../tools/wait_times");
-let constants = require("../tools/constants");
+
+
+import "../tools/waitReady";
+import { metadataLoad } from "../tools/wait_times";
+import { baseURL } from "../tools/constants";
+import { menuExplore, isLoggedIn, navBar, menuCreate, importLayerLink, createLayerLink, uploadIconsLink, composeStoryLink, createLayerStep1, createLayerStep2, createLayerStep3, createLayerStep4, createLayerStep6, createStoryLayer, uploadLayerStep1, uploadLayerStep2, uploadLayerStep3, uploadLayerStep4, uploadLayerStep5, uploadLayerStep6 } from "../pages/home.po";
+import { isLoggedIn as _isLoggedIn } from "../pages/auth.po";
+import { title } from "../pages/explore.po";
 
 /**
  * Mapstory Home Page
  */
-describe("Mapstory Home", function () {
-  // Our home page object
-  let page = require("../pages/home.po");
-  let auth = require("../pages/auth.po");
-  let explore_page = require("../pages/explore.po");
+describe("Mapstory Home", () => {
 
-  beforeEach(function () {
+  beforeEach(() => {
     // Fetch the site
-    browser.get(constants.baseURL);
+    browser.get(baseURL);
     browser.waitForAngular();
   });
 
-  it("> should have a title", function () {
+  it("> should have a title", () => {
     expect(browser.getTitle()).toEqual("MapStory");
   });
 
-  xit("> should be authorized", function () {
-    auth.isLoggedIn().then(function (isLogged) {
+  xit("> should be authorized", () => {
+    _isLoggedIn().then((isLogged) => {
       expect(isLogged).toBeTruthy();
     });
   });
@@ -48,123 +48,123 @@ describe("Mapstory Home", function () {
   /**
    * Navigation Bar
    */
-  describe("> The \"Navigation Menu\"", function () {
-    it("> should navigate to \"Explore\"", function () {
+  describe("> The \"Navigation Menu\"", () => {
+    it("> should navigate to \"Explore\"", () => {
       // Click the link
-      expect(page.menu_explore.waitReady()).toBeTruthy();
-      page.menu_explore.click();
+      expect(menuExplore.waitReady()).toBeTruthy();
+      menuExplore.click();
 
       // Title should be explore
-      expect(browser.getTitle()).toEqual(explore_page.title);
+      expect(browser.getTitle()).toEqual(title);
     });
 
-    it("> should navigate to \"Get Started\"", function () {
+    it("> should navigate to \"Get Started\"", () => {
       expect(element(by.linkText("Get Started")).isDisplayed()).toBe(true);
     });
 
-    it("> should navigate to \"Journal\"", function () {
+    it("> should navigate to \"Journal\"", () => {
       expect(element(by.linkText("Journal")).isDisplayed()).toBe(true);
     });
 
     /**
      * Create
      */
-    xdescribe("> \"Create\" menu option", function () {
-      beforeEach(function () {
+    xdescribe("> \"Create\" menu option", () => {
+      beforeEach(() => {
       });
 
-      it("> has a dropdown", function () {
-        expect(page.isLoggedIn()).toBeTruthy();
-        expect(page.navBar.isDisplayed()).toBe(true);
-        page.menuCreate.click();
+      it("> has a dropdown", () => {
+        expect(isLoggedIn()).toBeTruthy();
+        expect(navBar.isDisplayed()).toBe(true);
+        menuCreate.click();
 
         // The links inside the dropdown
-        expect(page.importLayerLink.waitReady()).toBe(true);
-        expect(page.createLayerLink.waitReady()).toBe(true);
-        expect(page.uploadIconsLink.waitReady()).toBe(true);
-        expect(page.composeStoryLink.waitReady()).toBe(true);
+        expect(importLayerLink.waitReady()).toBe(true);
+        expect(createLayerLink.waitReady()).toBe(true);
+        expect(uploadIconsLink.waitReady()).toBe(true);
+        expect(composeStoryLink.waitReady()).toBe(true);
       });
 
-      it("> should show \"Create Layer\"", function () {
-        expect(page.isLoggedIn()).toBeTruthy();
-        expect(page.navBar.isDisplayed()).toBe(true);
-        page.menuCreate.click();
+      it("> should show \"Create Layer\"", () => {
+        expect(isLoggedIn()).toBeTruthy();
+        expect(navBar.isDisplayed()).toBe(true);
+        menuCreate.click();
 
-        expect(page.createLayerLink.waitReady()).toBeTruthy();
-        page.createLayerLink.click();
+        expect(createLayerLink.waitReady()).toBeTruthy();
+        createLayerLink.click();
       });
 
-      xdescribe("> Create Layer Wizard", function () {
-        it("> All steps", function (done) {
+      xdescribe("> Create Layer Wizard", () => {
+        it("> All steps", (done) => {
           // Open the Create menu
-          expect(page.isLoggedIn()).toBeTruthy();
-          expect(page.menuCreate.isDisplayed()).toBe(true);
-          page.menuCreate.click();
+          expect(isLoggedIn()).toBeTruthy();
+          expect(menuCreate.isDisplayed()).toBe(true);
+          menuCreate.click();
 
           // Click the create story layer link
-          expect(page.createLayerLink.waitReady()).toBeTruthy();
-          page.createLayerLink.click();
+          expect(createLayerLink.waitReady()).toBeTruthy();
+          createLayerLink.click();
 
-          page.createLayer_Step1();
-          page.createLayer_Step2();
-          page.createLayer_Step3();
-          page.createLayer_Step4();
+          createLayerStep1();
+          createLayerStep2();
+          createLayerStep3();
+          createLayerStep4();
           // Temporarily disabled
-          //page.createLayer_Step5();
-          page.createLayer_Step6();
+          // page.createLayer_Step5();
+          createLayerStep6();
 
           done();
         });
       });
 
-      it("> should create layer", function () {
+      it("> should create layer", () => {
         // Open the Create menu
-        expect(page.isLoggedIn()).toBeTruthy();
-        expect(page.menuCreate.waitReady())
+        expect(isLoggedIn()).toBeTruthy();
+        expect(menuCreate.waitReady())
           .toBeTruthy("\"Create\" was not found in navigation menu");
-        page.menuCreate.click();
+        menuCreate.click();
 
         // Click the create story layer link
-        expect(page.createLayerLink.waitReady()).toBeTruthy();
-        page.createLayerLink.click();
+        expect(createLayerLink.waitReady()).toBeTruthy();
+        createLayerLink.click();
 
         // Do the thing
-        page.createStoryLayer();
+        createStoryLayer();
       });
 
 
-      it("> should show \"Upload Icons\"", function () {
-        expect(page.isLoggedIn()).toBeTruthy();
+      it("> should show \"Upload Icons\"", () => {
+        expect(isLoggedIn()).toBeTruthy();
 
-        expect(page.navBar.isDisplayed()).toBe(true);
-        page.menuCreate.click();
+        expect(navBar.isDisplayed()).toBe(true);
+        menuCreate.click();
 
-        expect(page.uploadIconsLink.waitReady()).toBeTruthy();
-        page.uploadIconsLink.click();
+        expect(uploadIconsLink.waitReady()).toBeTruthy();
+        uploadIconsLink.click();
       });
 
 
-      it("> should show \"Compose Story\"", function () {
-        expect(page.isLoggedIn()).toBeTruthy();
-        expect(page.navBar.isDisplayed()).toBe(true);
-        page.menuCreate.click();
+      it("> should show \"Compose Story\"", () => {
+        expect(isLoggedIn()).toBeTruthy();
+        expect(navBar.isDisplayed()).toBe(true);
+        menuCreate.click();
 
-        expect(page.composeStoryLink.waitReady()).toBeTruthy();
-        page.composeStoryLink.click();
+        expect(composeStoryLink.waitReady()).toBeTruthy();
+        composeStoryLink.click();
       });
 
       /**
        * Import Layer Form
        */
-      describe("> Import Layer form", function () {
+      describe("> Import Layer form", () => {
 
-        beforeEach(function () {
+        beforeEach(() => {
           element(by.linkText("Create")).click();
-          page.importLayerLink.click();
+          importLayerLink.click();
         });
 
-        it("> has a \"Close button\"", function () {
-          let closeButton = element(by.css("i.fa.fa-times.pointer.import-wizard-icon"));
+        it("> has a \"Close button\"", () => {
+          const closeButton = element(by.css("i.fa.fa-times.pointer.import-wizard-icon"));
           expect(closeButton.waitReady()).toBeTruthy();
           closeButton.click();
         });
@@ -172,55 +172,55 @@ describe("Mapstory Home", function () {
         /**
          * Step 1
          */
-        describe("> Step 1", function () {
-          it("> should complete step 1", function () {
-            page.uploadLayer_Step1();
+        describe("> Step 1", () => {
+          it("> should complete step 1", () => {
+            uploadLayerStep1();
           });
         });
 
         /**
          * Step 2
          */
-        describe("> Step 2", function () {
-          it("should complete step 2", function () {
-            page.uploadLayer_Step1();
-            page.uploadLayer_Step2();
+        describe("> Step 2", () => {
+          it("should complete step 2", () => {
+            uploadLayerStep1();
+            uploadLayerStep2();
           });
         });
 
         /**
          * Step 3
          */
-        describe("> Step 3", function () {
-          it("> should complete step 3", function () {
-            page.uploadLayer_Step1();
-            page.uploadLayer_Step2();
-            page.uploadLayer_Step3();
+        describe("> Step 3", () => {
+          it("> should complete step 3", () => {
+            uploadLayerStep1();
+            uploadLayerStep2();
+            uploadLayerStep3();
           });
         });
 
         /**
          * Step 4
          */
-        describe("> Step 4", function () {
-          it("should complete step 4", function () {
-            page.uploadLayer_Step1();
-            page.uploadLayer_Step2();
-            page.uploadLayer_Step3();
-            page.uploadLayer_Step4();
+        describe("> Step 4", () => {
+          it("should complete step 4", () => {
+            uploadLayerStep1();
+            uploadLayerStep2();
+            uploadLayerStep3();
+            uploadLayerStep4();
           });
         });
 
         /**
          * Step 5
          */
-        describe("> Step 5", function () {
-          it("> should complete step 5", function () {
-            page.uploadLayer_Step1();
-            page.uploadLayer_Step2();
-            page.uploadLayer_Step3();
-            page.uploadLayer_Step4();
-            page.uploadLayer_Step5();
+        describe("> Step 5", () => {
+          it("> should complete step 5", () => {
+            uploadLayerStep1();
+            uploadLayerStep2();
+            uploadLayerStep3();
+            uploadLayerStep4();
+            uploadLayerStep5();
           });
 
         });
@@ -228,49 +228,49 @@ describe("Mapstory Home", function () {
         /**
          * Step 6
          */
-        describe("> Step 6", function () {
-          it("> should complete step 6", function () {
-            page.uploadLayer_Step1();
-            page.uploadLayer_Step2();
-            page.uploadLayer_Step3();
-            page.uploadLayer_Step4();
-            page.uploadLayer_Step5();
-            page.uploadLayer_Step6();
+        describe("> Step 6", () => {
+          it("> should complete step 6", () => {
+            uploadLayerStep1();
+            uploadLayerStep2();
+            uploadLayerStep3();
+            uploadLayerStep4();
+            uploadLayerStep5();
+            uploadLayerStep6();
           });
         });
 
       });
 
-      describe("> Layer Edit Metadata", function () {
-        beforeEach(function () {
+      describe("> Layer Edit Metadata", () => {
+        beforeEach(() => {
           element(by.linkText("Create")).click();
-          page.importLayerLink.click();
-          page.uploadLayer_Step1();
-          page.uploadLayer_Step2();
-          page.uploadLayer_Step3();
-          page.uploadLayer_Step4();
-          page.uploadLayer_Step5();
+          importLayerLink.click();
+          uploadLayerStep1();
+          uploadLayerStep2();
+          uploadLayerStep3();
+          uploadLayerStep4();
+          uploadLayerStep5();
         });
 
-        it("> Can edit metadata", function () {
+        it("> Can edit metadata", () => {
           // Complete last step
-          page.uploadLayer_Step6();
-          browser.sleep(wait_times["metadata_load"]);
+          uploadLayerStep6();
+          browser.sleep(metadataLoad);
 
           // Click 'Update Metadata'
-          let update_metadata_button = element(by.partialButtonText("Update Metadata"));
-          expect(update_metadata_button.waitReady()).toBeTruthy();
-          update_metadata_button.click();
+          const updateMetadataButton = element(by.partialButtonText("Update Metadata"));
+          expect(updateMetadataButton.waitReady()).toBeTruthy();
+          updateMetadataButton.click();
           browser.sleep(2000);
 
-          //Expect things to show up on metadata edit
-          let titleInput = element(by.css("#id_title"));
-          let categoryDropdown = element(by.css("#id_category"));
-          let summaryText = element(by.css("#id_abstract"));
-          let languageDropdown = element(by.css("#id_language"));
-          let dataSourceText = element(by.css("#id_distribution_url"));
-          let dataQualityText = element(by.css("#id_data_quality_statement"));
-          let purposeText = element(by.css("#id_purpose"));
+          // Expect things to show up on metadata edit
+          const titleInput = element(by.css("#id_title"));
+          const categoryDropdown = element(by.css("#id_category"));
+          const summaryText = element(by.css("#id_abstract"));
+          const languageDropdown = element(by.css("#id_language"));
+          const dataSourceText = element(by.css("#id_distribution_url"));
+          const dataQualityText = element(by.css("#id_data_quality_statement"));
+          const purposeText = element(by.css("#id_purpose"));
           let isPublishedCheckbox = element(by.css("#id_is_published"));
 
           expect(titleInput.waitReady()).toBeTruthy();
@@ -283,12 +283,12 @@ describe("Mapstory Home", function () {
           expect(isPublishedCheckbox.waitReady()).toBeTruthy();
 
           // Click 'Is Published'
-          let is_published_checkbox = element(by.css("#id_is_published"));
-          expect(is_published_checkbox.waitReady()).toBeTruthy();
-          is_published_checkbox.click();
+          isPublishedCheckbox = element(by.css("#id_is_published"));
+          expect(isPublishedCheckbox.waitReady()).toBeTruthy();
+          isPublishedCheckbox.click();
 
           // Click 'Save'
-          let saveButton = element(by.partialButtonText("Save"));
+          const saveButton = element(by.partialButtonText("Save"));
           saveButton.click();
         });
       });

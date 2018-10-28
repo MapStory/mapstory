@@ -11,64 +11,65 @@
  * expect($('.some-html-class').waitReady()).toBeTruthy();
  */
 
-'use strict';
+
 
 // Config
-let specTimeoutMs = 60000; // 60 seconds
+const specTimeoutMs = 60000; // 60 seconds
 
 /**
  * Current workaround until https://github.com/angular/protractor/issues/1102
  * @type {Function}
  */
-let ElementFinder = $('').constructor;
-
-ElementFinder.prototype.waitReady = function(opt_optStr) {
-	let self = this;
-	let driverWaitIterations = 0;
-	let lastWebdriverError;
-	function _throwError() {
-		throw new Error('Expected \'' + self.locator().toString() +
-			'\' to be present and visible. ' +
-			'After ' + driverWaitIterations + ' driverWaitIterations. ' +
-			'Last webdriver error: ' + lastWebdriverError);
-	}
-
-	function _isPresentError(err) {
-		lastWebdriverError = (err != null) ? err.toString() : err;
-		return false;
-	}
-
-	return browser.driver.wait(function() {
-		driverWaitIterations++;
-		if (opt_optStr === 'withRefresh') {
-			// Refresh page after more than some retries
-			if (driverWaitIterations > 7) {
-				_refreshPage();
-			}
-		}
-		return self.isPresent().then(function(present) {
-			if (present) {
-				return self.isDisplayed().then(function(visible) {
-					lastWebdriverError = 'visible:' + visible;
-					return visible;
-				}, _isPresentError);
-			} else {
-				lastWebdriverError = 'present:' + present;
-				return false;
-			}
-		}, _isPresentError);
-	}, specTimeoutMs).then(function(waitResult) {
-		if (!waitResult) { _throwError(); }
-		return waitResult;
-	}, function(err) {
-		_isPresentError(err);
-		_throwError();
-		return false;
-	});
-};
+const ElementFinder = $("").constructor;
 
 // Helpers
-function _refreshPage() {
-	// Swallow useless refresh page webdriver errors
-	browser.navigate().refresh().then(function(){}, function(e){});
+function refreshPage() {
+  // Swallow useless refresh page webdriver errors
+  browser.navigate().refresh().then(() => {}, (e) => {});
 }
+
+ElementFinder.prototype.waitReady = (optOptStr) => {
+  const self = this;
+  let driverWaitIterations = 0;
+  let lastWebdriverError;
+  function throwError() {
+    throw new Error(`Expected '${  self.locator().toString() 
+    }' to be present and visible. ` +
+			`After ${  driverWaitIterations  } driverWaitIterations. ` +
+			`Last webdriver error: ${  lastWebdriverError}`);
+  }
+
+  function isPresentError(err) {
+    lastWebdriverError = (err != null) ? err.toString() : err;
+    return false;
+  }
+
+  return browser.driver.wait(() => {
+    driverWaitIterations += 1;
+    if (optOptStr === "withRefresh") {
+      // Refresh page after more than some retries
+      if (driverWaitIterations > 7) {
+        refreshPage();
+      }
+    }
+    return self.isPresent().then((present) => {
+      if (present) {
+        return self.isDisplayed().then((visible) => {
+          lastWebdriverError = `visible:${  visible}`;
+          return visible;
+        }, isPresentError);
+      } 
+      lastWebdriverError = `present:${  present}`;
+      return false;
+			
+    }, isPresentError);
+  }, specTimeoutMs).then((waitResult) => {
+    if (!waitResult) { throwError(); }
+    return waitResult;
+  }, (err) => {
+    isPresentError(err);
+    throwError();
+    return false;
+  });
+};
+

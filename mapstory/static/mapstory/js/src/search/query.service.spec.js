@@ -1,42 +1,42 @@
-describe('Query Validation Service', function() {
+describe('Query Validation Service', () => {
 
-  var queryService;
+  let queryService;
   beforeEach(module('mapstory.search'));
-  beforeEach(inject(function($injector) {
+  beforeEach(inject(($injector) => {
     queryService = $injector.get('queryService');
   }));
 
-  it('should exist', function () {
+  it('should exist', () => {
     should.exist(queryService);
   });
 
-  it('should should be an object with these methods', function () {
+  it('should should be an object with these methods', () => {
     expect(queryService.roundOffset).to.be.a('function');
     expect(queryService.resetOffset).to.be.a('function');
   });
 
-	xdescribe('resetOffset', function() {
-  	var scope;
+	xdescribe('resetOffset', () => {
+  	let scope;
 
-    beforeEach(function(){
+    beforeEach(() => {
       
     });
 
-  	it('should reset the offset to 0', function(){
+  	it('should reset the offset to 0', () => {
   		
   	});
 
-  	it('should search again after reseting the offset', function(){
+  	it('should search again after reseting the offset', () => {
   		
   	});
 
 	});
 
-  describe('roundOffset', function() {
-  	var scope1 = {};
-  	var scope2 = {};
+  describe('roundOffset', () => {
+  	const scope1 = {};
+  	const scope2 = {};
 
-    beforeEach(function(){
+    beforeEach(() => {
       scope1.query = {
       	limit: 30,
       	offset: 122
@@ -48,11 +48,11 @@ describe('Query Validation Service', function() {
       }
     });
 
-  	it('should should be a method', function () {
+  	it('should should be a method', () => {
     	expect(queryService.roundOffset).to.be.a('function');
   	});
 
-  	it('should round down to the nearest multiple of the limit', function(){
+  	it('should round down to the nearest multiple of the limit', () => {
   		expect(queryService.roundOffset(scope1)).to.equal(120);
   		expect(queryService.roundOffset(scope2)).to.equal(3);
   	});

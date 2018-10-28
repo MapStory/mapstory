@@ -1,24 +1,26 @@
 /**
  * Explore Page e2e Tests
  */
-"use strict";
 
-require("../tools/waitReady.js");
 
-describe("Explore page", function () {
-  let explorePage = require("../pages/explore.po");
 
-  beforeEach(function () {
+import "../tools/waitReady";
+
+const explorePage = require("../pages/explore.po");
+
+describe("Explore page", () => {
+
+  beforeEach(() => {
     explorePage.get();
   });
 
-  xit("> loads correctly", function () {
+  xit("> loads correctly", () => {
     // TODO: Dynamically check for the title
     expect(browser.getTitle()).toEqual(explorePage.title);
-    // expect(explorePage.storyteller_search_tab.waitReady()).toBeTruthy();
-    // expect(explorePage.search_bar.waitReady()).toBeTruthy();
-    // expect(explorePage.search_button.waitReady()).toBeTruthy();
-    // expect(explorePage.filter_all.waitReady()).toBeTruthy();
-    // expect(explorePage.filter_mapstory.waitReady()).toBeTruthy();
+    // expect(explorePage.storytellerSearchTab.waitReady()).toBeTruthy();
+    // expect(explorePage.searchBar.waitReady()).toBeTruthy();
+    // expect(explorePage.searchButton.waitReady()).toBeTruthy();
+    // expect(explorePage.filterAll.waitReady()).toBeTruthy();
+    // expect(explorePage.filterMapStory.waitReady()).toBeTruthy();
   });
 });

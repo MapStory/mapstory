@@ -1,5 +1,7 @@
 #/bin/sh
 
+echo "Starting"
+
 # Fallback to self signed cert if a real one doesn't exist
 if [ -e /run/secrets/ssl_cert ]; then
     export SSL_CERT=/run/secrets/ssl_cert

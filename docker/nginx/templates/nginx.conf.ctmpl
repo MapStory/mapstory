@@ -133,7 +133,7 @@ http {
       proxy_no_cache always;
     }
     {{ else }}
-        # composer static files for prod
+    # composer static files for prod
     location /static/composer/ {
       alias {{ env "COMPOSER_ROOT" }}/;
       expires 24h;
