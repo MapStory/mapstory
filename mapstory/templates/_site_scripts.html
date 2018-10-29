@@ -103,5 +103,9 @@
     new Clipboard('.copyclip');
 </script>
 
+{% if site.assets.analytics_code %}
+{{ site.assets.analytics_code | safe }}
+{% endif %}
+
 {% include '_classification_warning_scripts.html' %}
 {% include '_login_warning_scripts.html' %}
