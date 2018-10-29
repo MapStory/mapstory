@@ -386,18 +386,15 @@ def style_view(request, story_id, style_id):
         layer_style = LayerStyle.objects.filter(map_story=map_story, style_id=style_id)
         if layer_style.exists():
             return HttpResponse(layer_style[0].style)
-        else:
-            return HttpResponseNotFound()
-    else:
-        layer_style = LayerStyle.objects.filter(map_story=map_story, style_id=style_id)
-        if not layer_style.exists():
-            LayerStyle(style_id=style_id, map_story=map_story, style=request.body).save()
-            return HttpResponse(json.dumps({'success': True}))
-        else:
-            layer_style = layer_style[0]
-            layer_style.style = request.body
-            layer_style.save()
-            return HttpResponse(json.dumps({'success': True}))
 
+        return HttpResponseNotFound()
 
+    layer_style = LayerStyle.objects.filter(map_story=map_story, style_id=style_id)
+    if not layer_style.exists():
+        LayerStyle(style_id=style_id, map_story=map_story, style=request.body).save()
+        return HttpResponse(json.dumps({'success': True}))
 
+    layer_style = layer_style[0]
+    layer_style.style = request.body
+    layer_style.save()
+    return HttpResponse(json.dumps({'success': True}))

@@ -367,4 +367,3 @@ class LayerStyle(models.Model):
     style_id = models.TextField()
     map_story = models.ForeignKey(MapStory, on_delete=models.CASCADE)
     style = models.TextField()
-
