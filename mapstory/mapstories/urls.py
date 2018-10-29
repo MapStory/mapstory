@@ -3,7 +3,7 @@ from django.conf.urls import url
 from geonode.maps.views import new_map
 
 from .views import (composer_new_view, delete_mapstory, map_detail,
-                    mapstory_view, save_mapstory, story_generate_thumbnail)
+                    mapstory_view, save_mapstory, story_generate_thumbnail, style_view)
 
 urlpatterns = [
     url(r'^mapstories/save$', save_mapstory, name='save_mapstory'),
@@ -19,6 +19,11 @@ urlpatterns = [
         mapstory_view, name='mapstory_view'),
     url(r'^story/(?P<slug>[-\w]+)/embed$',
         mapstory_view, name='mapstory_view'),
+
+    # Style
+    url(r'^style/(?P<story_id>[^/]+)/(?P<style_id>[^/]+)$',
+        style_view, name='style_view'),
+
 
     # Composer
     url(r'^story/(?P<slug>[-\w]+)/draft$',

@@ -358,3 +358,12 @@ class StoryPin(models.Model):
 signals.post_init.connect(default_is_published, sender=MapStory)
 signals.post_init.connect(default_is_published, sender=Map)
 db.models.signals.post_save.connect(mapstory_map_post_save, sender=Map)
+
+
+class LayerStyle(models.Model):
+    class Meta:
+        unique_together = (("style_id", "map_story"),)
+
+    style_id = models.TextField()
+    map_story = models.ForeignKey(MapStory, on_delete=models.CASCADE)
+    style = models.TextField()
