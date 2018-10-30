@@ -10,7 +10,7 @@
 import "../tools/waitReady";
 import { resolve } from "path";
 import { FileDetector } from "selenium-webdriver/remote";
-import { layerUpload, layerCreate } from "../tools/wait_times";
+import timings from "../tools/wait_times";
 import { baseURL } from "../tools/constants";
 // Upload paths need to be absolute or error.
 const testLayerFileRelative = "../../sampledata/lewisandclarktrail.csv";
@@ -207,7 +207,7 @@ class HomePage {
       const importButton = this.step6.element(by.buttonText("Import Layer"));
       expect(importButton.waitReady()).toBeTruthy();
       importButton.click();
-      browser.driver.sleep(layerUpload);
+      browser.driver.sleep(timings.layerUpload);
       const finishButton = this.step6.element(by.buttonText("View Layer"));
       expect(finishButton.waitReady()).toBeTruthy();
       const stepTitle = this.step6.$$(".step-title").first();
@@ -288,7 +288,7 @@ class HomePage {
       expect(continueButton.waitReady()).toBeTruthy();
       continueButton.click();
       // Wait x seconds
-      browser.driver.sleep(layerCreate);
+      browser.driver.sleep(timings.layerCreate);
       const doneButton = element(by.partialLinkText("StoryLayer"));
       expect(doneButton.waitReady()).toBeTruthy();
       // doneButton.click();

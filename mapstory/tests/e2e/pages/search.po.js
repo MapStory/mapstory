@@ -6,7 +6,7 @@
 
 
 import "../tools/waitReady";
-import { search } from "../tools/wait_times";
+import timings from "../tools/wait_times";
 
 const Search = () => {
   this.searchForm = element(by.css(".search-bar"));
@@ -23,7 +23,7 @@ const Search = () => {
     this.textInput.sendKeys(searchString);
 
     this.searchButton.click();
-    browser.sleep(search);
+    browser.sleep(timings.search);
 
     // Expect the url to change to search api
     browser.getCurrentUrl().then((newURL) => {
