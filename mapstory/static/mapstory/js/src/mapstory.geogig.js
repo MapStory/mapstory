@@ -1,29 +1,30 @@
-'use strict';
+(() => {
+  const module = angular.module("geogig", []);
 
-(function() {
-  var module = angular.module("geogig", []);
-
-  module.service("geoGigService", function($http) {
+  function geoGigServiceModule($http) {
     return {
-      geogigCommand: function(url) {
+      geogigCommand: url => {
         if (url) {
-          var req = $http({
-            url: url,
-            method: "GET",
+          const req = $http({
+            url,
+            method: "GET"
           });
           return req;
         }
+        return false;
       }
     };
-  });
+  }
+
+  module.service("geoGigService", geoGigServiceModule);
 
   /*
   * Main search controller
   * Load data from api and defines the multiple and single choice handlers
   * Syncs the browser url with the selections
   */
-  module.controller('geogigController', function($scope, geogigConfig, geoGigService) {
-    var errorText = 'There was an error receiving the latest GeoGig stats.';
+  function geogigControllerModule($scope, geogigConfig, geoGigService) {
+    const errorText = "There was an error receiving the latest GeoGig stats.";
     $scope.geoserverURL = geogigConfig.geoserverURL;
     $scope.workspace = geogigConfig.workspace;
     $scope.typename = geogigConfig.typename;
@@ -34,43 +35,48 @@
 
     if ($scope.statisticsURL) {
       geoGigService.geogigCommand($scope.statisticsURL).then(
-        function(data) {
+        data => {
           if (data) {
             $scope.stats = data.data.response.Statistics;
-            $('#geogig-message').hide();
-            $('#geogig-stats').show();
+            $("#geogig-message").hide();
+            $("#geogig-stats").show();
           }
         },
-        function(error) {
+        error => {
           $scope.error = error;
-          $('#geogig-message > h4').text(errorText);
-        });
+          $("#geogig-message > h4").text(errorText);
+        }
+      );
     }
 
     if ($scope.logURL) {
       geoGigService.geogigCommand($scope.logURL).then(
-        function(data) {
+        data => {
           if (data.data.response) {
-            $('#geogig-message').hide();
-            $('#geogig-stats').show();
-            var response = data.data.response.commit;
+            $("#geogig-message").hide();
+            $("#geogig-stats").show();
+            const response = data.data.response.commit;
             if (!Array.isArray(response)) {
               $scope.commits = [response];
             } else {
               $scope.commits = response;
             }
-            for (var i = 0; i < $scope.commits.length; i++) {
-              var commit = $scope.commits[i];
+            for (let i = 0; i < $scope.commits.length; i++) {
+              const commit = $scope.commits[i];
               if (commit.author) {
-                commit.commitTimeSince = moment(commit.author.timestamp).calendar();
+                commit.commitTimeSince = window
+                  .moment(commit.author.timestamp)
+                  .calendar();
               }
             }
           }
         },
-        function(error) {
+        error => {
           $scope.error = error;
-          $('#geogig-message > h4').text(errorText);
-        });
+          $("#geogig-message > h4").text(errorText);
+        }
+      );
     }
-  });
+  }
+  module.controller("geogigController", geogigControllerModule);
 })();
