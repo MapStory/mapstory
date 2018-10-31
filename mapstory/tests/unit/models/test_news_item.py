@@ -21,10 +21,10 @@ class TestNewsItem(TestCase):
     def test_unicode(self):
         self.assertIsNotNone(unicode(self.newsItem))
 
-    @skip("TODO")
+    @skip
     def test_save_and_retrieve(self):
         self.newsItem.save()
 
-    @skip("TODO")
+    @skip
     def test_publication_time(self):
         self.assertIsNotNone(self.newsItem.publication_time())

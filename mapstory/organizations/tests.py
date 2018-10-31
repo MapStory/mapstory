@@ -1,11 +1,9 @@
-from django.contrib.auth import authenticate, get_user, get_user_model
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import Client, TestCase
 
-from geonode.layers.models import Layer
 from mapstory.tests.AdminClient import AdminClient
-from mapstory.tests.utils import (create_layer, create_mapstory, create_user,
-                                  get_test_user)
+from mapstory.tests.utils import create_layer, create_mapstory, get_test_user
 
 from . import models
 
@@ -228,7 +226,6 @@ class TestOrganizations(TestCase):
         self.assertTemplateUsed("organization_detail")
 
         initial_request_count = models.JoinRequest.objects.all().count()
-        user = get_test_user()
         # Login
         self.assertTrue(self.client.login(
             username='modeltester', password='glassonion232123'))
@@ -247,7 +244,6 @@ class TestOrganizations(TestCase):
         organization = get_test_organization()
         # Should not create another
         initial_request_count = models.JoinRequest.objects.all().count()
-        user = get_test_user()
         # Login
         self.assertTrue(self.client.login(
             username='modeltester', password='glassonion232123'))

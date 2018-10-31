@@ -12,7 +12,7 @@ class TestContentMixin(TestCase):
     def test_import(self):
         self.assertIsNotNone(ContentMixin)
 
-    @skip("Fix this")
+    @skip
     def test_save_and_retrieve(self):
         self.contentMixin.save()
         saved = ContentMixin.objects.all()

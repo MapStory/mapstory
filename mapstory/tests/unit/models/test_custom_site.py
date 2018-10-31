@@ -58,7 +58,7 @@ class TestCustomSite(TestCase):
         self.assertEqual(CustomSite._meta.verbose_name_plural,
                          "Custom Site Properties")
 
-    @skip("TODO: Set the domain for the site")
+    @skip
     def test_unicode(self):
         """
         Unicode method tests
