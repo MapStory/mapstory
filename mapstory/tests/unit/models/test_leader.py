@@ -17,6 +17,6 @@ class TestLeader(TestCase):
     def test_unicode(self):
         self.assertIsNotNone(unicode(self.leader))
 
-    @skip("TODO")
+    @skip
     def test_save_and_retrieve(self):
         pass

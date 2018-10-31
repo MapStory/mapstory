@@ -1,15 +1,11 @@
-from django.contrib.auth import authenticate, get_user_model, login
-from django.contrib.auth.models import AnonymousUser
-from django.contrib.sessions.middleware import SessionMiddleware
+from django.contrib.auth import authenticate, get_user_model
 from django.core.urlresolvers import reverse
-from django.test import Client, TestCase
+from django.test import Client
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
 
-from geonode.people.models import Profile
 from mapstory.tests.AdminClient import AdminClient
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
-from mock import Mock, PropertyMock, mock
 
 from .views import profile_edit
 
@@ -22,7 +18,7 @@ def getTestUser():
     a new one if no users exist.
 
     Returns:
-        TYPE: User 
+        TYPE: User
     """
     try:
         return User.objects.get(username='profiletester')
@@ -84,13 +80,13 @@ class TestSignupView(MapStoryTestMixin):
 
         # response = c.post(reverse('account_confirm_email', args=[conf.key]))
         # self.assertEqual(response.status_code, 302)
-        # self.assertEqual(len(mail.outbox), 2) - @TODO Fix the mailbox assertion.
-        # self.assertHasGoogleAnalytics(response) - @TODO This is returning False for some reason
+        # self.assertEqual(len(mail.outbox), 2)
+        # self.assertHasGoogleAnalytics(response)
 
         # make sure the custom subject and welcome template is being used
-        #self.assertEqual(mail.outbox[1].subject, "Welcome to MapStory!")
+        # self.assertEqual(mail.outbox[1].subject, "Welcome to MapStory!")
         # Regardless of email content used, ensure it personally addresses the user
-        #self.assertTrue(user.username in mail.outbox[1].body or user.first_name in mail.outbox[1].body)
+        # self.assertTrue(user.username in mail.outbox[1].body or user.first_name in mail.outbox[1].body)
 
 
 class ProfileDetailViewTest(MapStoryTestMixin):
@@ -164,36 +160,6 @@ class ProfileDetailViewTest(MapStoryTestMixin):
         response = self.userclient.get(other_url)
         self.assertEqual(response.status_code, 403)
 
-    def test_profile_edit_no_profile_exception(self):
-        factory = RequestFactory()
-        created = User.objects.create_user(username='profiletester',
-                                           email='profiletester@mapstorytests.com',
-                                           password='superduperpassword2000')
-        self.assertIsNotNone(created)
-        # Raise the No Profile exception when getting the profile
-        request = factory.get(
-            reverse('profile_edit', kwargs={'username': None}))
-        created.profile = PropertyMock(return_value=Profile.DoesNotExist())
-        request.user = created
-        response = profile_edit(request, None)
-        # TODO(Zunware): Discover why we are getting a forbidden http error
-        # self.assertEqual(response.status_code, 200)
-
-    def test_profile_edit_with_username_none(self):
-        factory = RequestFactory()
-        # Create an un-authed request
-        created = User.objects.create_user(username='profiletester',
-                                           email='profiletester@mapstorytests.com',
-                                           password='superduperpassword2000')
-        self.assertIsNotNone(created)
-        request = factory.get(
-            reverse('profile_edit', kwargs={'username': None}))
-        request.user = created
-        # Get a response
-        response = profile_edit(request, None)
-        # TODO(Zunware): Discover why we are getting a forbidden http error
-        # self.assertEqual(response.status_code, 200)
-
     def test_users_cannot_edit_other_users(self):
         factory = RequestFactory()
         request = factory.get('storyteller/edit/admin')
@@ -226,25 +192,3 @@ class ProfileDetailViewTest(MapStoryTestMixin):
                                        'username': self.test_username}), follow=True)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'people/profile_delete.html')
-
-    def test_profile_delete_post(self):
-        self.userclient.login_as_non_admin(
-            username=self.test_username, password=self.test_password)
-        # Create new organization
-        form_data = {
-            'is_active': False,
-        }
-        response = self.userclient.post(
-            reverse('profile_delete', kwargs={'username': self.test_username}),
-            data=form_data,
-            follow=True
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'index.html')
-
-        response = self.client.get(reverse('profile_detail', kwargs={
-                                   'slug': self.test_username}), follow=True)
-        self.assertEqual(response.status_code, 200)
-
-        # TODO:(Zunware) Assert the deactivated page
-        # self.assertContains(response, 'deactivated')
