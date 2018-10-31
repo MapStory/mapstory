@@ -226,6 +226,7 @@ class TestOrganizations(TestCase):
         self.assertTemplateUsed("organization_detail")
 
         initial_request_count = models.JoinRequest.objects.all().count()
+        get_test_user()
         # Login
         self.assertTrue(self.client.login(
             username='modeltester', password='glassonion232123'))
@@ -244,6 +245,7 @@ class TestOrganizations(TestCase):
         organization = get_test_organization()
         # Should not create another
         initial_request_count = models.JoinRequest.objects.all().count()
+        get_test_user()
         # Login
         self.assertTrue(self.client.login(
             username='modeltester', password='glassonion232123'))
