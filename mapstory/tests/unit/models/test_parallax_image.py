@@ -14,10 +14,10 @@ class TestParallaxImage(TestCase):
         self.parallaxImage = ParallaxImage()
         self.assertIsInstance(self.parallaxImage, ParallaxImage)
 
-    @skip("TODO")
+    @skip
     def test_unicode(self):
         self.assertIsNotNone(unicode(self.parallaxImage))
 
-    @skip("TODO")
+    @skip
     def test_save_and_retrieve(self):
         pass

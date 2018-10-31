@@ -1,13 +1,12 @@
 from unittest import skip
 
+from bs4 import BeautifulSoup
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
-from django.test import Client, TestCase
+from django.test import TestCase
 
-from bs4 import BeautifulSoup
 from mapstory.forms import KeywordsForm, PublishStatusForm
 from mapstory.mapstories.models import Map, MapStory
-from mapstory.tests.AdminClient import AdminClient
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 from mapstory.tests.utils import create_mapstory
 
@@ -51,11 +50,11 @@ class TestMapstory(TestCase):
         MapStory.objects.filter(id=self.mapstory.id).delete()
         self.assertEqual(0, MapStory.objects.all().count())
 
-    @skip("TODO: Fix")
+    @skip
     def test_get_abosolute_url(self):
         self.assertIsNotNone(self.mapstory.get_absolute_url())
 
-    @skip("TODO: Fix this test")
+    @skip
     def test_update_from_viewer(self):
         conf = {}
         conf.title = "Test"

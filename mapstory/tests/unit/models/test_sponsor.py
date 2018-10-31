@@ -29,7 +29,7 @@ class TestSponsor(TestCase):
         """
         self.assertIsNotNone(Sponsor)
 
-    @skip("Fix this")
+    @skip
     def test_save_and_retrieve(self):
         """
         Should save and retrieve
