@@ -15,7 +15,7 @@
     <div class="st-legend"></div>
     <div class="sidebar" id="sidebar">
         <div class="viewer-nav">
-            <a target="_blank" href="{% url "home" %}">
+            <a target="_blank" rel="noopener" href="{% url "home" %}">
                 {% if site.assets.favicon %}
                     <img src="/uploaded/{{ site.assets.favicon.name }}" width="35px" height="35px"/>
                     {% comment %}<img src="https://res.cloudinary.com/dw1zyrzc5/image/upload/v1461606100/ms_logo_white_pot8b9.png" id="sidebarDropdown" width="35px" height="35px"/>{% endcomment %}
@@ -31,8 +31,8 @@
         </div>
         <div class="content">
             {% verbatim %}
-            <a target="_blank" href="/story/{{ mapManager.detail_url }}/view" class="viewer-story-title" ng-bind="mapManager.title"></a>
-            <a target="_blank" href="/storyteller/{{ mapManager.username }}" class="viewer-author">{{ BRANDING_STORY_NAME }} by {{ mapManager.owner }}</a>
+            <a target="_blank" rel="noopener" href="/story/{{ mapManager.detail_url }}/view" class="viewer-story-title" ng-bind="mapManager.title"></a>
+            <a target="_blank" rel="noopener" href="/storyteller/{{ mapManager.username }}" class="viewer-author">{{ BRANDING_STORY_NAME }} by {{ mapManager.owner }}</a>
             <div class="viewer-chapter-number">Chapter {{ mapManager.storyChapter}}</div>
             <div class="viewer-chapter-title" ng-bind="mapManager.storyMap.getStoryTitle()"></div>
             <p ng-bind="mapManager.storyMap.getStoryAbstract()"></p>
