@@ -36,7 +36,7 @@
             <div class="side-column-header">Edit this Layer</div>
             <!-- Only shows if not a remoteStore feature -->
             {% if resource.storeType != "remoteStore" %}
-            <a href='{% url "map-edit" %}?layer={{ resource.service_typename }}&mode=edit' target="_blank">
+            <a href='{% url "map-edit" %}?layer={{ resource.service_typename }}&mode=edit' target="_blank" rel="noopener">
                 <button class="btn btn-block btn-detailpage">
                     {% trans "Edit Features" %}
                 </button>
@@ -58,7 +58,7 @@
         {% endif %}
 
         <div class="side-column-header">Use this Layer</div>
-        <a href="{% url "new-story" %}?layer={{ resource.service_typename }}" target="_blank">
+        <a href="{% url "new-story" %}?layer={{ resource.service_typename }}" target="_blank" rel="noopener">
             <button class="btn btn-block btn-detailpage">{% trans "Compose Story" %}</button>
         </a>
         {% if resource.storeType != "remoteStore" and "download_resourcebase" in perms %}
