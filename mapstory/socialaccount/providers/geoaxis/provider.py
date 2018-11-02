@@ -27,8 +27,9 @@ class GeoAxisProvider(OAuth2Provider):
 
     def extract_common_fields(self, data):
         return dict(email=data.get('email'),
-                    last_name=data.get('lastnamename'),
-                    first_name=data.get('firstname'))
+                    last_name=data.get('lastname'),
+                    first_name=data.get('firstname'),
+                    username=data.get('uid'))
 
     def extract_email_addresses(self, data):
         ret = []
