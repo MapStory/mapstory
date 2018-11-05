@@ -17,7 +17,7 @@
     $scope.BRANDING_LAYER_NAME = brandingLayerName;
     $scope.BRANDING_LAYERS_NAME = brandingLayersName;
     $scope.layer = {
-      configurationOptions: {
+      configuration_options: {
         attributes: {
           attribute: [
             {
@@ -78,10 +78,10 @@
     $scope.createLayer = () => {
       $scope.processing = true;
       $scope.errors = [];
-      $scope.setDefaultPermissions($scope.layer.configurationOptions.editable);
+      $scope.setDefaultPermissions($scope.layer.configuration_options.editable);
       $http
         .post("/layers/create", {
-          featureType: $scope.layer.configurationOptions
+          featureType: $scope.layer.configuration_options
         })
         .then(
           response => {
@@ -97,7 +97,7 @@
     };
 
     $scope.setDefaultPermissions = edit => {
-      $scope.layer.configurationOptions.permissions = {
+      $scope.layer.configuration_options.permissions = {
         users: {
           AnonymousUser: [
             "change_layer_data",
@@ -115,33 +115,33 @@
       };
 
       if (edit === false) {
-        $scope.layer.configurationOptions.permissions = {
+        $scope.layer.configuration_options.permissions = {
           users: {
             AnonymousUser: ["download_resourcebase", "view_resourcebase"]
           },
           groups: { registered: ["download_resourcebase", "view_resourcebase"] }
         };
       }
-      $scope.layer.configurationOptions.storeCreateGeogig = true;
+      $scope.layer.configuration_options.storeCreateGeogig = true;
     };
 
     $scope.addDefaultAttribute = () => {
-      $scope.layer.configurationOptions.attributes.attribute.push(
+      $scope.layer.configuration_options.attributes.attribute.push(
         angular.copy($scope.defaultAttribute)
       );
     };
 
     $scope.remove = item => {
-      const index = $scope.layer.configurationOptions.attributes.attribute.indexOf(
+      const index = $scope.layer.configuration_options.attributes.attribute.indexOf(
         item
       );
-      $scope.layer.configurationOptions.attributes.attribute.splice(index, 1);
+      $scope.layer.configuration_options.attributes.attribute.splice(index, 1);
     };
 
     $scope.nameValid = () => {
       if (
         !Object.prototype.hasOwnProperty.call(
-          !$scope.layer.configurationOptions,
+          !$scope.layer.configuration_options,
           "name"
         )
       ) {
