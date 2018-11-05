@@ -62,31 +62,31 @@
                                             <br/>
                                             <div class="form-group">
                                                 <label for="layerName" class="col-sm-3 col-xs-3 col-md-3 control-label">Layer Name:</label>
-                                                <input id="layerName" type="text" class="col-md-5" ng-model="layer.configurationOptions.name" placeholder="{{layer.name}}">
+                                                <input id="layerName" type="text" class="col-md-5" ng-model="layer.configuration_options.name" placeholder="{{layer.name}}">
                                             </div>
                                             <div class="form-group">
                                                 <label for="configureTime" class="col-sm-3 col-xs-3 col-md-3 control-label">Enable time:</label>
-                                                <input id="configureTime" type="checkbox" ng-model="layer.configurationOptions.configureTime" checked>
+                                                <input id="configureTime" type="checkbox" ng-model="layer.configuration_options.configureTime" checked>
                                             </div>
-                                                <div ng-show="layer.configurationOptions.configureTime">
+                                                <div ng-show="layer.configuration_options.configureTime">
                                                         <div class="form-group">
                                                             <label for="start_date" class="col-sm-3 col-xs-3 col-md-3 control-label">Start date:</label>
-                                                            <select ng-model="layer.configurationOptions.start_date" class="col-md-5 col-xs-5 col-sm-5" id="start_date" ng-required='layer.configurationOptions'>
-                                                                <option value="" ng-selected="'' == layer.configurationOptions.start_date">--Please select a field--</option>
-                                                                <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configurationOptions.start_date" value="{{option.name}}">{{option.name}}</option>
+                                                            <select ng-model="layer.configuration_options.start_date" class="col-md-5 col-xs-5 col-sm-5" id="start_date" ng-required='layer.configuration_options'>
+                                                                <option value="" ng-selected="'' == layer.configuration_options.start_date">--Please select a field--</option>
+                                                                <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.start_date" value="{{option.name}}">{{option.name}}</option>
                                                             </select>
                                                         </div>
                                                         <div class="form-group">
                                                             <label for="end_date" class="col-sm-3 col-xs-3 col-md-3 control-label">End date:</label>
-                                                            <select ng-model="layer.configurationOptions.end_date" class="col-md-5 col-xs-5 col-sm-5" id="end_date">
-                                                                <option value="" ng-selected="'' == layer.configurationOptions.end_date">--Please select a field--</option>
-                                                                <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configurationOptions.end_date" value="{{option.name}}">{{option.name}}</option>
+                                                            <select ng-model="layer.configuration_options.end_date" class="col-md-5 col-xs-5 col-sm-5" id="end_date">
+                                                                <option value="" ng-selected="'' == layer.configuration_options.end_date">--Please select a field--</option>
+                                                                <option ng-repeat="option in layer.fields" ng-selected="option.name == layer.configuration_options.end_date" value="{{option.name}}">{{option.name}}</option>
                                                             </select>
                                                         </div>
                                                 </div>
                                             <div class="form-group">
                                                 <label for="editable" class="col-sm-3 control-label">Editable:</label>
-                                                <input id="editable" type="checkbox" ng-model="layer.configurationOptions.editable" checked>
+                                                <input id="editable" type="checkbox" ng-model="layer.configuration_options.editable" checked>
                                             </div>
                                             <div class="col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-md-8 col-lg-8" style="padding: 10px; display: table-cell; text-align: center">
                                                 <span style="color:#FF4136;" ng-show="hasFailure()">This import has failed.  Adjust configuration above.</span>
