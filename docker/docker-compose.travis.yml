@@ -2,7 +2,6 @@
 version: '3.7'
 services:
   composer:
-    image: quay.io/mapstory/composer:master
     build:
       args:
         - DEPLOYMENT=production
@@ -43,7 +42,6 @@ services:
       - "5432"
 
   pgadmin:
-    image: quay.io/mapstory/pgadmin:master
     command: --init-db
     links:
       - postgres
@@ -55,14 +53,12 @@ services:
       - "9200:9200"
 
   rabbitmq:
-    image: quay.io/mapstory/rabbitmq:master
     environment:
       - RABBITMQ_DEFAULT_USER=mapstory
       - RABBITMQ_DEFAULT_PASS=password
       - RABBITMQ_DEFAULT_VHOST=mapstory
 
   django:
-    image: quay.io/mapstory/django:master
     links:
       - postgres
     env_file:
@@ -79,7 +75,6 @@ services:
       - ./cover:/srv/mapstory/cover:cached
 
   celery:
-    image: quay.io/mapstory/django:master
     links:
       - postgres
     env_file:
@@ -92,7 +87,6 @@ services:
       CELERY_NUM_WORKERS: 2
 
   django_volumes:
-    image: quay.io/mapstory/django:master
     entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory && chown -R mapstory:mapstory /srv/mapstory/cover"
     volumes:
       - ./cover:/srv/mapstory/cover
@@ -106,10 +100,6 @@ services:
       - docker/env/dev/db_auth.env
 
   nginx:
-    build:
-      args:
-        - TAG=master
-    image: quay.io/mapstory/nginx:master
     env_file:
       - docker/env/dev/public_host.env
     networks:
