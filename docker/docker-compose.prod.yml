@@ -12,13 +12,11 @@ services:
       internal:
 
   composer:
-    image: quay.io/mapstory/composer:prod
     build:
       args:
         - DEPLOYMENT=production
 
   pgadmin:
-    image: quay.io/mapstory/pgadmin:prod
     ports:
       - "5050:5050"
     secrets:
@@ -29,12 +27,10 @@ services:
   elasticsearch:
 
   rabbitmq:
-    image: quay.io/mapstory/rabbitmq:prod
     secrets:
       - env_rabbitmq_auth
 
   django:
-    image: quay.io/mapstory/django:prod
     env_file:
       - docker/env/prod/public_host.env
       - docker/env/prod/geoserver.env
@@ -48,7 +44,6 @@ services:
       - env_social_auth
 
   celery:
-    image: quay.io/mapstory/django:prod
     env_file:
       - docker/env/prod/public_host.env
       - docker/env/prod/geoserver.env
@@ -62,7 +57,6 @@ services:
       - env_social_auth
 
   django_volumes:
-    image: quay.io/mapstory/django:prod
 
   geoserver:
     env_file:
@@ -73,10 +67,6 @@ services:
       - env_geoserver_auth
 
   nginx:
-    build:
-      args:
-        - TAG=prod
-    image: quay.io/mapstory/nginx:prod
     env_file:
       - docker/env/prod/public_host.env
     environment:

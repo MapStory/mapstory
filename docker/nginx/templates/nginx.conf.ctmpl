@@ -92,6 +92,7 @@ http {
     #}
     #{% endif %}
 
+    {{ if or (env "DEV_DEPLOYMENT") "False" | parseBool }}
     location /static/ {
       proxy_pass http://django_endpoint;
       proxy_redirect off;
@@ -116,6 +117,13 @@ http {
       expires 24h;
       {{ end }}
     }
+    {{ else }}
+    # django static files for prod
+    location /static/ {
+      alias {{ env "DJANGO_STATIC_ROOT" }}/;
+      expires 24h;
+    }
+    {{ end }}
 
     {{ if or (env "DEV_DEPLOYMENT") "False" | parseBool }}
     # composer proxy for dev

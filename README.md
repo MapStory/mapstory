@@ -22,6 +22,7 @@ This guide assumes you are using a UNIX based operating system such as Linux or 
 git
 docker
 docker-compose
+gmake
 ```
 ### Setup a Development Environment
 
@@ -37,12 +38,12 @@ Add the following to your `/etc/hosts` file
 ::1             docker
 ```
 
-Run the following commands to start up the docker containers.
+Run the following commands in the checked out git repo to start up the docker containers.
 
 ```
 git submodule update --init --recursive
-docker-compose pull
-docker-compose up -d
+make pull
+make up
 ```
 
 Your local site should now be available at `http://docker/`.

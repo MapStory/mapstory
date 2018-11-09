@@ -2,7 +2,6 @@
 version: '3.7'
 services:
   composer:
-    image: quay.io/mapstory/composer:lab
     build:
       args:
         - DEPLOYMENT=development
@@ -27,7 +26,6 @@ services:
       - "5432:5432"
 
   pgadmin:
-    image: quay.io/mapstory/pgadmin:lab
     env_file:
       - docker/env/lab/db_auth.env
     ports:
@@ -38,7 +36,6 @@ services:
       - "9200:9200"
 
   rabbitmq:
-    image: quay.io/mapstory/rabbitmq:lab
     secrets:
       - env_rabbitmq_auth
     ports:
@@ -47,7 +44,7 @@ services:
 
   maploom-build:
     build: ./deps/maploom
-    image: quay.io/mapstory/maploom-build
+    image: quay.io/mapstory/maploom-build:$TAG
     environment:
       GIT_DIR: /git
     volumes:
@@ -56,7 +53,7 @@ services:
 
   django-maploom-build:
     build: ./deps/django-maploom
-    image: quay.io/mapstory/django-maploom-build
+    image: quay.io/mapstory/django-maploom-build:$TAG
     environment:
       GIT_DIR: /git
     depends_on:
@@ -68,7 +65,7 @@ services:
 
   story-tools-build:
     build: ./deps/story-tools
-    image: quay.io/mapstory/story-tools-build
+    image: quay.io/mapstory/story-tools-build:$TAG
     environment:
       GIT_DIR: /git
     volumes:
@@ -76,7 +73,6 @@ services:
       - .git:/git
 
   django:
-    image: quay.io/mapstory/django:lab
     env_file:
       - docker/env/lab/db_auth.env
       - docker/env/lab/public_host.env
@@ -97,7 +93,6 @@ services:
       - "8000:8000"
 
   celery:
-    image: quay.io/mapstory/django:lab
     env_file:
       - docker/env/lab/db_auth.env
       - docker/env/lab/public_host.env
@@ -115,7 +110,6 @@ services:
       - .:/srv/mapstory/
 
   django_volumes:
-    image: quay.io/mapstory/django:lab
 
   geoserver:
     env_file:
@@ -130,10 +124,6 @@ services:
       - "8080:8080"
 
   nginx:
-    build:
-      args:
-        - TAG=lab
-    image: quay.io/mapstory/nginx:lab
     env_file:
       - docker/env/lab/public_host.env
     secrets:
