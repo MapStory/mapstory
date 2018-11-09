@@ -11,18 +11,21 @@ help:
 build:
 	./scripts/build.sh
 
+init:
+	${dco} up django_volumes
+
 down:
 	${dco} down --remove-orphans
 
-up:
-	${dco} up -d
+up: init
+	${dco} up -d nginx
 
 restart: down up
 
 purge: down
 	docker volume prune -f
 
-recreate: purge build
+recreate: purge build init
 	${dco} up -d --force-recreate
 
 logs:
@@ -33,5 +36,5 @@ test:
 	${dco} run --rm composer --test
 
 lint:
-	${dco} run --rm django --lint
 	${dco} run --rm composer --lint
+	${dco} run --rm django --lint
