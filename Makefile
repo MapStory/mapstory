@@ -20,6 +20,12 @@ down:
 up: init
 	${dco} up -d nginx
 
+pull:
+	${dco} pull
+
+ps:
+	${dco} ps
+
 restart: down up
 
 purge: down
