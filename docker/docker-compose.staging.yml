@@ -2,13 +2,11 @@
 version: '3.7'
 services:
   composer:
-    image: quay.io/mapstory/composer:staging
     build:
       args:
         - DEPLOYMENT=production
 
   pgadmin:
-    image: quay.io/mapstory/pgadmin:staging
     ports:
       - "5050:5050"
     secrets:
@@ -17,12 +15,10 @@ services:
   elasticsearch:
 
   rabbitmq:
-    image: quay.io/mapstory/rabbitmq:staging
     secrets:
       - env_rabbitmq_auth
 
   django:
-    image: quay.io/mapstory/django:staging
     env_file:
       - docker/env/staging/public_host.env
       - docker/env/staging/geoserver.env
@@ -36,7 +32,6 @@ services:
       - env_social_auth
 
   celery:
-    image: quay.io/mapstory/django:staging
     env_file:
       - docker/env/staging/public_host.env
       - docker/env/staging/geoserver.env
@@ -50,7 +45,6 @@ services:
       - env_social_auth
 
   django_volumes:
-    image: quay.io/mapstory/django:staging
 
   geoserver:
     env_file:
@@ -61,10 +55,6 @@ services:
       - env_geoserver_auth
 
   nginx:
-    build:
-      args:
-        - TAG=staging
-    image: quay.io/mapstory/nginx:staging
     env_file:
       - docker/env/staging/public_host.env
     environment:
