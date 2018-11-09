@@ -2,7 +2,6 @@
 version: '3.7'
 services:
   composer:
-    image: quay.io/mapstory/composer:master
     build:
       args:
         - DEPLOYMENT=development
@@ -28,7 +27,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.protractor
-    image: quay.io/mapstory/protractor:master
+    image: quay.io/mapstory/protractor:$TAG
     links:
       - selenium
       - nginx
@@ -52,7 +51,6 @@ services:
 #      - "5432:5432"
 
   pgadmin:
-    image: quay.io/mapstory/pgadmin:master
     links:
       - postgres
     env_file:
@@ -65,7 +63,6 @@ services:
       - "9200:9200"
 
   rabbitmq:
-    image: quay.io/mapstory/rabbitmq:master
     environment:
       - RABBITMQ_DEFAULT_USER=mapstory
       - RABBITMQ_DEFAULT_PASS=password
@@ -76,7 +73,7 @@ services:
 
   maploom-build:
     build: ./deps/maploom
-    image: quay.io/mapstory/maploom-build
+    image: quay.io/mapstory/maploom-build:$TAG
     environment:
       GIT_DIR: /git
     volumes:
@@ -85,7 +82,7 @@ services:
 
   django-maploom-build:
     build: ./deps/django-maploom
-    image: quay.io/mapstory/django-maploom-build
+    image: quay.io/mapstory/django-maploom-build:$TAG
     environment:
       GIT_DIR: /git
     depends_on:
@@ -97,7 +94,7 @@ services:
 
   story-tools-build:
     build: ./deps/story-tools
-    image: quay.io/mapstory/story-tools-build
+    image: quay.io/mapstory/story-tools-build:$TAG
     environment:
       GIT_DIR: /git
     volumes:
@@ -105,7 +102,6 @@ services:
       - .git:/git
 
   django:
-    image: quay.io/mapstory/django:master
     links:
       - postgres
     env_file:
@@ -125,7 +121,6 @@ services:
     tty: true
 
   celery:
-    image: quay.io/mapstory/django:master
     links:
       - postgres
     env_file:
@@ -140,7 +135,6 @@ services:
       - ./cover:/srv/mapstory/cover:cached
 
   django_volumes:
-    image: quay.io/mapstory/django:master
     entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory && chown -R mapstory:mapstory /srv/mapstory/cover"
     volumes:
       - ./cover:/srv/mapstory/cover
@@ -156,10 +150,6 @@ services:
 #      - "8080:8080"
 
   nginx:
-    build:
-      args:
-        - TAG=master
-    image: quay.io/mapstory/nginx:master
     env_file:
       - docker/env/storyscapes-dev/public_host.env
     environment:

@@ -2,7 +2,6 @@
 version: '3.7'
 services:
   composer:
-    image: quay.io/mapstory/composer:storyscapes
     build:
       args:
         - DEPLOYMENT=production
@@ -23,19 +22,16 @@ services:
       - "5432"
 
   pgadmin:
-    image: quay.io/mapstory/pgadmin:storyscapes
     secrets:
       - env_db_auth
 
   elasticsearch:
 
   rabbitmq:
-    image: quay.io/mapstory/rabbitmq:storyscapes
     secrets:
       - env_rabbitmq_auth
 
   django:
-    image: quay.io/mapstory/django:storyscapes
     env_file:
       - docker/env/storyscapes/public_host.env
       - docker/env/storyscapes/geoserver.env
@@ -51,7 +47,6 @@ services:
       - env_social_auth
 
   celery:
-    image: quay.io/mapstory/django:storyscapes
     env_file:
       - docker/env/storyscapes/public_host.env
       - docker/env/storyscapes/geoserver.env
@@ -65,7 +60,6 @@ services:
       - env_social_auth
 
   django_volumes:
-    image: quay.io/mapstory/django:storyscapes
 
   geoserver:
     env_file:
@@ -78,10 +72,6 @@ services:
       - env_geoserver_auth
 
   nginx:
-    build:
-      args:
-        - TAG=storyscapes
-    image: quay.io/mapstory/nginx:storyscapes
     env_file:
       - docker/env/storyscapes/public_host.env
     secrets:
