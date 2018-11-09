@@ -7,20 +7,20 @@ import traceback
 from tempfile import NamedTemporaryFile
 from urlparse import urlparse
 
-from django.conf import settings
-from django.db import connection
-
 import httplib2
 import numpy
+from django.conf import settings
+from django.db import connection
+from lxml import etree
+from owslib.wms import WebMapService
+from PIL import Image
+
 from geonode.base.models import Link
 from geonode.layers.models import Layer
 from geonode.layers.utils import create_gs_thumbnail_geonode
-from lxml import etree
 ############################################################################################
 from mapstory.celery import app
 from mapstory.mapstories.models import Map, MapStory
-from owslib.wms import WebMapService
-from PIL import Image
 
 
 # geonode:layer -> geonode,layer
@@ -157,7 +157,7 @@ class CreateStoryLayerThumbnailTask:
 
     # phantomJSFile htmlFile wms layerName xmin ymin xmax ymax time output.fname
     def create_phantomjs_args(self, typeName, boundingBoxWGS84, tempfname, time="ALL",
-                              basemapXYZURL='https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              basemapXYZURL='https://{a-b}.tiles.mapbox.com/v3/mapbox.world-dark/{z}/{x}/{y}.png',
                               styles=""):
 
         workspace, layername = decodeTypeName(typeName)
@@ -188,8 +188,8 @@ class CreateStoryLayerThumbnailTask:
     # get a temporary filename (don't forget to delete it when done)
     def create_temp_filename(self, filename_suffix='image'):
         with NamedTemporaryFile(
-            delete=False, prefix="temp_thumbnail_",
-            suffix=filename_suffix) as f:
+                delete=False, prefix="temp_thumbnail_",
+                suffix=filename_suffix) as f:
             return f.name
 
     # call phantomjs and save the thumbnail
