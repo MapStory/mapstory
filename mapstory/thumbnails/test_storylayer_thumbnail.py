@@ -82,6 +82,10 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
         map.zoom = 4
         map.center_x = 0
         map.center_y = 0
+        map.set_bounds_from_center_and_zoom(
+            map.center_x,
+            map.center_y,
+            map.zoom)
         map.save()
 
         mapstory.chapter_list.add(map)
