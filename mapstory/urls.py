@@ -6,7 +6,6 @@ from tastypie.api import Api
 
 from geonode.maps.views import map_view, new_map
 from geonode.urls import urlpatterns as geonode_urls
-from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstories.urls import urlpatterns as mapstories_urls
 from mapstory.api.urls import api as mapstory_api
 from mapstory.favorite.urls import api as favorites_api
@@ -68,8 +67,6 @@ urlpatterns += geonode_urls
 urlpatterns += mapstories_urls
 
 urlpatterns += mapstory_profile_urls
-
-urlpatterns += maploom_urls
 
 urlpatterns += patterns("", url(r'', include(importer_api.urls)))
 
