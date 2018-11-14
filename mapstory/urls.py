@@ -2,14 +2,12 @@ from django.conf import settings
 from django.conf.urls import include, patterns, url
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from tastypie.api import Api
 
-from geonode.api.urls import api as geonode_api
 from geonode.maps.views import map_view, new_map
 from geonode.urls import urlpatterns as geonode_urls
 from maploom.geonode.urls import urlpatterns as maploom_urls
 from mapstories.urls import urlpatterns as mapstories_urls
-from mapstory.api.api import InterestsResource, MapstoryOwnersResource
-from mapstory.api.resourcebase_api import ResourceBaseResource
 from mapstory.api.urls import api as mapstory_api
 from mapstory.favorite.urls import api as favorites_api
 from mapstory.importers import UploadedLayerResource
@@ -17,13 +15,6 @@ from mapstory.mapstory_profile.urls import urlpatterns as mapstory_profile_urls
 from mapstory.storylayers.urls import urlpatterns as layers_urls
 from mapstory.views import GetPageView, IndexView, LeaderListView, SearchView
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
-from tastypie.api import Api
-
-geonode_api.unregister('owners')
-geonode_api.unregister('base')
-geonode_api.register(ResourceBaseResource())
-geonode_api.register(MapstoryOwnersResource())
-geonode_api.register(InterestsResource())
 
 importer_api = Api(api_name='importer-api')
 # Overwrite Importer URL Routes
@@ -68,6 +59,8 @@ urlpatterns = patterns('',
                            template_name='robots.txt', content_type="text/plain"), name='robots'),
                        )
 
+urlpatterns += patterns("", url(r'', include(mapstory_api.urls)))
+
 urlpatterns += layers_urls
 
 urlpatterns += geonode_urls
@@ -77,8 +70,6 @@ urlpatterns += mapstories_urls
 urlpatterns += mapstory_profile_urls
 
 urlpatterns += maploom_urls
-
-urlpatterns += patterns("", url(r'', include(mapstory_api.urls)))
 
 urlpatterns += patterns("", url(r'', include(importer_api.urls)))
 

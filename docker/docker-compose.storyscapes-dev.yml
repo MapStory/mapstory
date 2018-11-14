@@ -1,0 +1,168 @@
+# Dev configuration
+version: '3.7'
+services:
+  composer:
+    build:
+      args:
+        - DEPLOYMENT=development
+    command: --serve-dev
+    volumes:
+      - ./deps/story-tools-composer:/srv/story-tools-composer:cached
+      - composer_node_modules:/srv/story-tools-composer/node_modules:cached
+      - storytools_node_modules:/srv/story-tools-composer/deps/story-tools/node_modules:cached
+      - composer_yarn:/usr/local/share/.config/yarn:cached
+#    ports:
+#      - "9090:9090"
+
+  selenium:
+    image: selenium/standalone-chrome
+    links:
+      - nginx
+    networks:
+      internal:
+    expose:
+      - "4444"
+
+  protractor:
+    build:
+      context: .
+      dockerfile: Dockerfile.protractor
+    image: quay.io/mapstory/protractor:$TAG
+    links:
+      - selenium
+      - nginx
+    volumes:
+      - ./mapstory/tests:/opt/mapstory/tests:cached
+    networks:
+      internal:
+
+  postgres:
+    image: mdillon/postgis:9.6-alpine
+    env_file:
+      - docker/env/storyscapes-dev/db_auth.env
+      - docker/env/storyscapes-dev/postgres.env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      internal:
+    expose:
+      - "5432"
+#    ports:
+#      - "5432:5432"
+
+  pgadmin:
+    links:
+      - postgres
+    env_file:
+      - docker/env/storyscapes-dev/db_auth.env
+#    ports:
+#      - "5050:5050"
+
+  elasticsearch:
+    ports:
+      - "9200:9200"
+
+  rabbitmq:
+    environment:
+      - RABBITMQ_DEFAULT_USER=mapstory
+      - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_DEFAULT_VHOST=mapstory
+#    ports:
+#      - "15671:15671"
+#      - "15672:15672"
+
+  maploom-build:
+    build: ./deps/maploom
+    image: quay.io/mapstory/maploom-build:$TAG
+    environment:
+      GIT_DIR: /git
+    volumes:
+      - ./deps/maploom:/usr/src/app:cached
+      - .git:/git
+
+  django-maploom-build:
+    build: ./deps/django-maploom
+    image: quay.io/mapstory/django-maploom-build:$TAG
+    environment:
+      GIT_DIR: /git
+    depends_on:
+      - maploom-build
+    volumes:
+      - ./deps/django-maploom:/django-maploom:cached
+      - ./deps/maploom:/maploom:cached
+      - .git:/git
+
+  story-tools-build:
+    build: ./deps/story-tools
+    image: quay.io/mapstory/story-tools-build:$TAG
+    environment:
+      GIT_DIR: /git
+    volumes:
+      - ./deps/story-tools:/usr/src/app:cached
+      - .git:/git
+
+  django:
+    links:
+      - postgres
+    env_file:
+      - docker/env/storyscapes-dev/public_host.env
+      - docker/env/storyscapes-dev/geoserver.env
+      - docker/env/storyscapes-dev/mapstory.env
+      - docker/env/storyscapes-dev/db_auth.env
+    environment:
+      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
+    command: [--collect-static-dev, --init-db, --reindex, --serve-dev]
+    volumes:
+      - .:/srv/mapstory/:cached
+      - ./cover:/srv/mapstory/cover:cached
+#    ports:
+#      - "8000:8000"
+    stdin_open: true
+    tty: true
+
+  celery:
+    links:
+      - postgres
+    env_file:
+      - docker/env/storyscapes-dev/public_host.env
+      - docker/env/storyscapes-dev/geoserver.env
+      - docker/env/storyscapes-dev/mapstory.env
+      - docker/env/storyscapes-dev/db_auth.env
+    environment:
+      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
+    volumes:
+      - .:/srv/mapstory/:cached
+      - ./cover:/srv/mapstory/cover:cached
+
+  django_volumes:
+    entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory && chown -R mapstory:mapstory /srv/mapstory/cover"
+    volumes:
+      - ./cover:/srv/mapstory/cover
+
+  geoserver:
+    links:
+      - postgres
+    env_file:
+      - docker/env/storyscapes-dev/public_host.env
+      - docker/env/storyscapes-dev/geoserver.env
+      - docker/env/storyscapes-dev/db_auth.env
+#    ports:
+#      - "8080:8080"
+
+  nginx:
+    env_file:
+      - docker/env/storyscapes-dev/public_host.env
+    environment:
+      - NGINX_NUM_WORKERS=1
+      - NGINX_GZIP_COMP_LEVEL=1
+      - DEV_DEPLOYMENT=True
+    networks:
+      internal:
+        aliases:
+          - storyscapes.system.pde.east.paas.geointservices.io
+
+volumes:
+  postgres:
+  composer_node_modules:
+  storytools_node_modules:
+  composer_yarn:

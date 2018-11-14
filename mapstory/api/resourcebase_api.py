@@ -5,6 +5,12 @@ from django.conf.urls import url
 from django.core.paginator import InvalidPage, Paginator
 from django.db.models import Q
 from django.http import Http404, HttpResponse
+from guardian.shortcuts import get_objects_for_user
+from tastypie import fields
+from tastypie.constants import ALL, ALL_WITH_RELATIONS
+from tastypie.resources import ModelResource
+from tastypie.utils import trailing_slash
+from tastypie.utils.mime import build_content_type
 
 from geonode.api.api import (FILTER_TYPES, ProfileResource, RegionResource,
                              TagResource, TopicCategoryResource)
@@ -12,13 +18,7 @@ from geonode.api.authorization import GeoNodeAuthorization
 from geonode.base.models import ResourceBase
 from geonode.documents.models import Document
 from geonode.layers.models import Layer
-from guardian.shortcuts import get_objects_for_user
 from mapstory.mapstories.models import Map, MapStory
-from tastypie import fields
-from tastypie.constants import ALL, ALL_WITH_RELATIONS
-from tastypie.resources import ModelResource
-from tastypie.utils import trailing_slash
-from tastypie.utils.mime import build_content_type
 
 if settings.HAYSTACK_SEARCH:
     from haystack.query import SearchQuerySet  # noqa
@@ -514,18 +514,6 @@ class FeaturedResourceBaseResource(CommonModelApi):
         resource_name = 'featured'
 
 
-class LayerResource(CommonModelApi):
-
-    """Layer API"""
-
-    class Meta(CommonMetaApi):
-        queryset = Layer.objects.distinct().order_by('-date')
-        if settings.RESOURCE_PUBLISHING:
-            queryset = queryset.filter(is_published=True)
-        resource_name = 'layers'
-        excludes = ['csw_anytext', 'metadata_xml']
-
-
 class MapStoryResource(CommonModelApi):
     """MapStory API"""
 
@@ -546,27 +534,3 @@ class MapStoryResource(CommonModelApi):
             'id': ALL,
             'slug': ALL
         }
-
-
-class MapResource(CommonModelApi):
-
-    """Maps API"""
-
-    class Meta(CommonMetaApi):
-        queryset = Map.objects.distinct().order_by('-date')
-        if settings.RESOURCE_PUBLISHING:
-            queryset = queryset.filter(is_published=True)
-        resource_name = 'maps'
-
-
-class DocumentResource(CommonModelApi):
-
-    """Maps API"""
-
-    class Meta(CommonMetaApi):
-        filtering = CommonMetaApi.filtering
-        filtering.update({'doc_type': ALL})
-        queryset = Document.objects.distinct().order_by('-date')
-        if settings.RESOURCE_PUBLISHING:
-            queryset = queryset.filter(is_published=True)
-        resource_name = 'documents'

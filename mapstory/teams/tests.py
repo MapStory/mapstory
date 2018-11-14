@@ -1,11 +1,9 @@
-from django.core.urlresolvers import reverse
 from django.test import TestCase
+from tastypie.test import ResourceTestCaseMixin
 
 from mapstory.initiatives.models import Initiative
 from mapstory.organizations.models import Organization
-from mapstory.tests.utils import (create_layer, create_mapstory, create_user,
-                                  get_test_user)
-from tastypie.test import ResourceTestCaseMixin
+from mapstory.tests.utils import get_test_user
 
 from .models import Team
 
@@ -31,9 +29,9 @@ class TeamTests(ResourceTestCaseMixin, TestCase):
         self.assertHttpOK(self.api_client.get(self.api_url, format='json'))
 
     def test_name_query(self):
-        org = Organization.objects.create(
+        Organization.objects.create(
             name='test', slogan='123', about='456')
-        ini = Initiative.objects.create(
+        Initiative.objects.create(
             name='Testing Initiative', about='Testing 123', slogan='The test is strong with this one'
         )
         response = self.client.get('/search/?groups&limit=30&offset=0&q=test')

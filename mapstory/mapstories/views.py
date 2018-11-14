@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models import F
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render, render_to_response
 from django.template import RequestContext
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -31,7 +31,7 @@ from mapstory.organizations.models import (OrganizationMapStory,
 from mapstory.search.utils import update_es_index
 from mapstory.thumbnails.tasks import create_mapstory_thumbnail_tx_aware
 
-from .models import Map, MapStory, StoryFrame, StoryPin
+from .models import Map, MapStory, StoryFrame, StoryPin, LayerStyle
 from .utils import datetime_to_seconds, parse_date_time
 
 
@@ -89,12 +89,6 @@ def save_mapstory(request):
                     currentFrame.save()
                     frame['id'] = currentFrame.id
 
-        removed_frame_ids = config['removedFrames']
-        if removed_frame_ids is not None:
-            for frame_id in removed_frame_ids:
-                frame_obj = StoryFrame.objects.get(id=frame_id)
-                frame_obj.delete()
-
         if chapter['pins']['features']:
             for index, pin in enumerate(chapter['pins']['features']):
                 if pin['id']:
@@ -124,11 +118,17 @@ def save_mapstory(request):
                 currentPin.save()
                 pin['id'] = currentPin.id
 
-        removed_pin_ids = config['removedPins']
+        removed_pin_ids = chapter['removedPins']
         if removed_pin_ids is not None:
             for pin_id in removed_pin_ids:
                 pin_obj = StoryPin.objects.get(id=pin_id)
                 pin_obj.delete()
+
+    removed_frame_ids = config['removedFrames']
+    if removed_frame_ids is not None:
+        for frame_id in removed_frame_ids:
+            frame_obj = StoryFrame.objects.get(id=frame_id)
+            frame_obj.delete()
 
     return HttpResponse(json.dumps(config))
 
@@ -378,3 +378,23 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
             request.user, map_obj)
 
     return render(request, template, context=context_dict)
+
+
+def style_view(request, story_id, style_id):
+    map_story = MapStory.objects.get(pk=story_id)
+    if request.method == 'GET':
+        layer_style = LayerStyle.objects.filter(map_story=map_story, style_id=style_id)
+        if layer_style.exists():
+            return HttpResponse(layer_style[0].style)
+
+        return HttpResponseNotFound()
+
+    layer_style = LayerStyle.objects.filter(map_story=map_story, style_id=style_id)
+    if not layer_style.exists():
+        LayerStyle(style_id=style_id, map_story=map_story, style=request.body).save()
+        return HttpResponse(json.dumps({'success': True}))
+
+    layer_style = layer_style[0]
+    layer_style.style = request.body
+    layer_style.save()
+    return HttpResponse(json.dumps({'success': True}))

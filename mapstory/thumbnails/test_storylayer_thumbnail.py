@@ -407,7 +407,7 @@ class TestAnimatedStoryLayerThumbnailTask(GeoGigUploaderBase, TestCase):
     # we create an animated GIF and then verify it
     # this is testing the thumb_generator.create_animated_GIF(fnames) method.
     #
-    @skip("Fix this test")
+    @skip
     def test_animated_GIF_creation(self):
         thumb_generator = CreateStoryLayerAnimatedThumbnailTask()
         fnames = [

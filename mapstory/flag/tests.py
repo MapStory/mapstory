@@ -5,14 +5,13 @@ from django.test import Client
 
 from geonode.base.models import TopicCategory
 from geonode.layers.models import Layer
+from mapstory.mapstories.models import Map
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 from mapstory.tests.populate_test_data import create_models
 
 from .models import FlaggedContent
 
 User = get_user_model()
-
-# @TODO Replace this with something better that doesn't specify a username and password.
 
 
 class AdminClient(Client):

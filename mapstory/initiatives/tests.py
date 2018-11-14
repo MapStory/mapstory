@@ -2,8 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from mapstory.tests.utils import (create_layer, create_mapstory, create_user,
-                                  get_test_user)
+from mapstory.tests.utils import create_layer, create_mapstory, get_test_user
 
 from . import models
 
@@ -205,7 +204,6 @@ class TestInitiativesAPI(TestCase):
 
     def test_request_membership_without_auth(self):
         ini = get_initiative()
-        usr = get_test_user()
         response = self.client.post(
             reverse('initiatives:request_membership', kwargs={
                 'slug': ini.slug,
@@ -216,15 +214,10 @@ class TestInitiativesAPI(TestCase):
         self.assertTrue(200 == response.status_code)
         self.assertTemplateNotUsed('initiatives/detail.html')
 
-    def test_manager_unauthorized(self):
-        ini = get_initiative()
-        response = self.client.get(reverse('initiatives:manage', kwargs={
-                                   'slug': ini.slug}), follow=True)
-
     def test_manager_post_form(self):
         ini = get_initiative()
         usr = get_test_user()
-        admin_membership = ini.add_member(usr, is_admin=True)
+        ini.add_member(usr, is_admin=True)
         self.assertTrue(
             self.client.login(username=usr.username,
                               password='glassonion232123')

@@ -8,7 +8,7 @@
 import "../tools/waitReady";
 
 import makeID from "../tools/make_id";
-import { composerTourModal } from "../tools/wait_times";
+import timings from "../tools/wait_times";
 import { baseURL } from "../tools/constants";
 
 /**
@@ -60,7 +60,7 @@ class Composer {
       browser.ignoreSynchronization = true;
       const url = `${baseURL}/story/new?tour`;
       browser.get(url);
-      browser.sleep(composerTourModal);
+      browser.sleep(timings.composerTourModal);
     };
     /**
      * Generates a random story title

@@ -1,13 +1,7 @@
 /*
  *  HomePage Featured Controller
  */
-(function() {
-  
-
-  angular
-    .module('mapstory')
-    .controller('featuredController', featuredController);
-
+(() => {
   function featuredController($injector, $scope, $http) {
     const vm = this;
 
@@ -22,19 +16,21 @@
       // note to self: check on map types, they should be excluded
     };
 
-    function getFeatured(){
-      return $http.get(SEARCH_URL, {params: query || {}})
-        .then(
-          /* success */
-          (response) => {
-            vm.cards = response.data.objects;
-          },
-          /* failure */
-          (error) => {
-            console.log("The request failed: ", error);
-          }
-        )
+    function getFeatured() {
+      return $http.get(window.SEARCH_URL, { params: query || {} }).then(
+        /* success */
+        response => {
+          vm.cards = response.data.objects;
+        },
+        /* failure */
+        error => {
+          console.log("The request failed: ", error);
+        }
+      );
     }
     getFeatured();
-  };
+  }
+  angular
+    .module("mapstory")
+    .controller("featuredController", featuredController);
 })();

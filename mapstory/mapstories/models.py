@@ -73,6 +73,7 @@ class MapStory(geonode.base.models.ResourceBase):
             chapter_dict = {
                 'story_id': self.id,
                 'map_id': chapter.id,
+                'chapter_index': chapter.chapter_index,
                 'title': chapter.title,
                 'abstract': chapter.abstract,
                 'layers': chapter.layers,
@@ -199,7 +200,7 @@ class Map(geonode.maps.models.Map):
 
         self.viewer_playbackmode = conf['viewerPlaybackMode'] or 'Instant'
 
-        self.chapter_index = conf.get('id') or conf.get('chapter_index')
+        self.chapter_index = conf.get('index')
         story_id = conf.get('storyID', 0)
         story_obj = MapStory.objects.get(id=story_id)
         self.layers_config = json.dumps(conf["layers"])
@@ -357,4 +358,13 @@ class StoryPin(models.Model):
 
 signals.post_init.connect(default_is_published, sender=MapStory)
 signals.post_init.connect(default_is_published, sender=Map)
-# db.models.signals.post_save.connect(mapstory_map_post_save, sender=Map)
+db.models.signals.post_save.connect(mapstory_map_post_save, sender=Map)
+
+
+class LayerStyle(models.Model):
+    class Meta:
+        unique_together = (("style_id", "map_story"),)
+
+    style_id = models.TextField()
+    map_story = models.ForeignKey(MapStory, on_delete=models.CASCADE)
+    style = models.TextField()

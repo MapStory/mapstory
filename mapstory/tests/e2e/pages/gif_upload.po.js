@@ -11,7 +11,7 @@
 
 import "../tools/waitReady";
 import makeID from "../tools/make_id";
-import { composerTourModal } from "../tools/wait_times";
+import timings from "../tools/wait_times";
 import { baseURL } from "../tools/constants";
 
 /**
@@ -27,7 +27,7 @@ const GifUploader = () => {
     // Angular sync fails on Composer. So we need to turn it off
     browser.ignoreSynchronization = true;
     browser.get(composerURL);
-    browser.sleep(composerTourModal);
+    browser.sleep(timings.composerTourModal);
   };
 
   /**

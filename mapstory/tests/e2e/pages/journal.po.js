@@ -6,8 +6,8 @@
 
 
 import "../tools/waitReady";
-import { login } from "./auth.po";
-import { get } from "./home.po";
+import AuthWizard from "./auth.po";
+import HomePage from "./home.po";
 import { baseURL } from "../tools/constants";
 
 /* global element, by, browser */
@@ -32,8 +32,8 @@ const JournalPageObject = () => {
 
     userAvatar.isPresent().then((present) => {
       if (present === false) {
-        get();
-        login("admin", "admin");
+        HomePage.get();
+        AuthWizard.login("admin", "admin");
       }
     });
 

@@ -26,11 +26,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.db.models import Max
 from django.test import TestCase
+from tastypie.test import ResourceTestCaseMixin, TestApiClient
 
-from geonode.base.models import TopicCategory
 from geonode.documents.models import Document
 from mapstory.tests.populate_test_data import create_models
-from tastypie.test import ResourceTestCaseMixin, TestApiClient
 
 from .models import Favorite
 
@@ -216,7 +215,7 @@ class FavoriteTest(ResourceTestCaseMixin, TestCase):
         response = self._get_response("delete_favorite", ("1",))
         self.assertEqual(response.status_code, 302)
 
-    @skip("TODO: resolve conflict between FavoriteManager and TaggableManager")
+    @skip
     def test_api_filtering(self):
         """Test api filtering and searching"""
 
