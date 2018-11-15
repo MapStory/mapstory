@@ -44,7 +44,7 @@ class AdminClient(Client):
         return self.login(**{'username': username, 'password': password})
 
 
-@skip("TODO: Fix this test")
+@skip
 def test_journal_renders(self):
     """
     Ensure the journal functionality works.
@@ -117,7 +117,7 @@ class TestJournalEntry(TestCase):
         self.assertTrue(unicode(self.journalEntry).endswith(
             self.journalEntry.title))
 
-    @skip("TODO: Fix this test")
+    @skip
     def test_save_and_retrieve(self):
         """
         Should save and retrieve
@@ -142,7 +142,7 @@ class TestJournalEntry(TestCase):
 
         self.assertEqual(entry.show_on_main, False)
 
-    @skip("TODO")
+    @skip
     def test_get_absolute_url(self):
         self.assertIsNotNone(self.journalEntry.get_absolute_url())
 

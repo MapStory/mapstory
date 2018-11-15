@@ -1,10 +1,10 @@
-describe('exploreController', function() {
+describe('exploreController', () => {
   beforeEach(module('mapstory.search'));
 
-  var $controller;
-  var $scope, $rootScope, $location, createController, $http, $q, Configs, page;
+  let $controller;
+  let $scope; let $rootScope; let $location; let createController; let $http; let $q; let Configs; let page;
 
- beforeEach(inject(function ($injector) {
+ beforeEach(inject(($injector) => {
 
     // mock out our dependencies
     $rootScope = $injector.get('$rootScope');
@@ -21,18 +21,18 @@ describe('exploreController', function() {
 
     createController = function () {
       return $controller('exploreController', {
-        $scope: $scope,
-        $location: $location,
-        $http: $http, 
-        $q: $q, 
-        Configs: Configs, 
+        $scope,
+        $location,
+        $http, 
+        $q, 
+        Configs, 
       });
     };
 
     createController();
   }));
 
-  it('should have a default order method of Popular', function () {
+  it('should have a default order method of Popular', () => {
     expect($scope.orderMethodContent).to.equal('-popular_count');
   });
 });

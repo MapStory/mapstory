@@ -2,7 +2,6 @@
 MapStory Docker Deployment
 ================
 
-
 Local developer build
 ----------
 
@@ -10,57 +9,70 @@ Run all commands from the repository root.
 The dev deployment uses the `master` tagged docker images.
 
 Add the following to your `/etc/hosts` file
-```
+
+```raw
 127.0.0.1       docker
 ::1             docker
 ```
 
-
-```
+```sh
 git submodule update --init --recursive
-docker-compose pull
-docker-compose up -d
+make pull
+make up
 ```
 
 Some modifications will require rebuilding the containers. We're working on minimizing this.
-```
-docker-compose pull
-docker-compose build --pull
+
+```sh
+make build
 ```
 
 To list the containers:
+
+```sh
+make ps
 ```
-docker-compose ps
+
+To view all logs:
+
+```sh
+make logs #this tails the logs, as though using -f
 ```
 
 To view the logs of a container:
-```
+
+```sh
 docker-compose logs <container>
 docker-compose logs -f <container> #follow the log file
 ```
 
 To view your interactive debug statements: (use ctrl+p ctrl+q to exit)
-```
+
+```sh
 docker attach mapstory_django_1
 ```
 
 To gain a shell in a container:
-```
+
+```sh
 docker-compose exec <container> /bin/sh
 ```
 
-To do refresh your deployment (this will wipe existing data):
+To do wipeout your deployment (this will wipe existing data):
+
+```sh
+make purge
 ```
-docker-compose kill
-docker-compose rm -f
-docker volume ls -q | grep mapstory_ | xargs docker volume rm
-docker network prune -f
-docker-compose up django_volumes
-docker-compose up -d
+
+To do refresh your deployment (this will wipe existing data, then rebuild and launch):
+
+```sh
+make recreate
 ```
 
 If you are running into a Permission Denied error:
-```
-docker-compose up django_volumes
-docker-compose up -d
+
+```sh
+make init
+make up
 ```

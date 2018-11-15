@@ -16,6 +16,7 @@ class CustomSite(db.models.Model):
     logo = db.models.ImageField(blank=False, upload_to='customsite')
     favicon = db.models.ImageField(blank=False, upload_to='customsite')
     footer_text = db.models.TextField()
+    analytics_code = db.models.TextField(blank=True)
 
     class Meta:
         verbose_name = "Custom Site Property"

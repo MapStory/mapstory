@@ -81,7 +81,7 @@
                                     <img class="img-circle avi-45-backup" src="{% avatar_url resource.owner 45 %}"/>
                                 </a>
                                 <a ng-href="{% url 'profile_detail' slug=resource.owner.username %}" target="_blank"
-                                   style="font-size: larger;">
+                                   rel="noopener" style="font-size: larger;">
                                     {% if resource.owner.first_name != '' %}
                                         {{ resource.owner.first_name }} {{ resource.owner.last_name }}
                                     {% else %}

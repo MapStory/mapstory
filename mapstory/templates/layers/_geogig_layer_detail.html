@@ -26,7 +26,7 @@
           <span class="label label-primary pull-right">{{ commit.id | limitTo: 10 }}</span> 
           <div class="commit-message">{{ commit.message }}</div>
           <div class="commit-byline">
-            <a ng-href="/storyteller/{{ commit.author.name }}" target="_blank">
+            <a ng-href="/storyteller/{{ commit.author.name }}" target="_blank" rel="noopener">
                 <span class="commit-author">{{commit.author.name || 'Unknown'}}</span>
                 <span class="commit-timestamp">{{ commit.commitTimeSince }}</span>
               </a>

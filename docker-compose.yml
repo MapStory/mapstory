@@ -5,28 +5,18 @@ services:
       context: ./deps/story-tools-composer
       args:
         - DEPLOYMENT=production
-    image: quay.io/mapstory/composer
+    image: quay.io/mapstory/composer:$TAG
     command: --no-op
     networks:
       internal:
     expose:
       - "9090"
 
-  backup-sync:
-    build: ./docker/backup-sync
-    image: quay.io/mapstory/backup-sync:latest
-    volumes:
-      - backups:/backups
-      - geoserver:/var/lib/geoserver
-      - mapstory_media:/var/lib/mapstory/media/
-    networks:
-      internal:
-
   pgadmin:
-    build: ./docker/pgadmin
-    image: quay.io/mapstory/pgadmin
+    build:
+      context: ./docker/pgadmin
+    image: quay.io/mapstory/pgadmin:$TAG
     volumes:
-      - backups:/backups
       - pgadmin:/var/lib/pgadmin
     networks:
       internal:
@@ -41,8 +31,9 @@ services:
       - "9200"
 
   rabbitmq:
-    build: ./docker/rabbitmq
-    image: quay.io/mapstory/rabbitmq
+    build:
+      context: ./docker/rabbitmq
+    image: quay.io/mapstory/rabbitmq:$TAG
     networks:
       internal:
     expose:
@@ -50,8 +41,9 @@ services:
       - "15672"
 
   django:
-    build: .
-    image: quay.io/mapstory/django
+    build:
+      context: .
+    image: quay.io/mapstory/django:$TAG
     depends_on:
       - django_volumes
       - pgadmin
@@ -67,7 +59,7 @@ services:
       - "8000"
 
   celery:
-    image: quay.io/mapstory/django
+    image: quay.io/mapstory/django:$TAG
     depends_on:
       - django_volumes
     links:
@@ -83,7 +75,7 @@ services:
       - "8000"
 
   django_volumes:
-    image: quay.io/mapstory/django
+    image: quay.io/mapstory/django:$TAG
     user: root
     entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory"
     volumes:
@@ -104,8 +96,11 @@ services:
       - "8080"
 
   nginx:
-    build: ./docker/nginx
-    image: quay.io/mapstory/nginx
+    build:
+      context: ./docker/nginx
+      args:
+        - TAG
+    image: quay.io/mapstory/nginx:$TAG
     depends_on:
       - celery
       - composer
@@ -137,9 +132,3 @@ volumes:
   mapstory_static:
   mapstory_media:
   pgadmin:
-  backups:
-    driver: local
-    driver_opts:
-      type: none
-      device: $PWD/backups
-      o: bind

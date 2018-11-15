@@ -2,15 +2,15 @@
 version: '3.7'
 services:
   composer:
-    image: quay.io/mapstory/composer:master
     build:
       args:
         - DEPLOYMENT=development
     command: --serve-dev
     volumes:
       - ./deps/story-tools-composer:/srv/story-tools-composer:cached
-      - composer_node_modules:/srv/story-tools-composer/node_modules
-      - storytools_node_modules:/srv/story-tools-composer/deps/story-tools/node_modules
+      - composer_node_modules:/srv/story-tools-composer/node_modules:cached
+      - storytools_node_modules:/srv/story-tools-composer/deps/story-tools/node_modules:cached
+      - composer_yarn:/usr/local/share/.config/yarn:cached
 #    ports:
 #      - "9090:9090"
 
@@ -27,7 +27,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.protractor
-    image: quay.io/mapstory/protractor:master
+    image: quay.io/mapstory/protractor:$TAG
     links:
       - selenium
       - nginx
@@ -51,7 +51,6 @@ services:
 #      - "5432:5432"
 
   pgadmin:
-    image: quay.io/mapstory/pgadmin:master
     links:
       - postgres
     env_file:
@@ -64,7 +63,6 @@ services:
       - "9200:9200"
 
   rabbitmq:
-    image: quay.io/mapstory/rabbitmq:master
     environment:
       - RABBITMQ_DEFAULT_USER=mapstory
       - RABBITMQ_DEFAULT_PASS=password
@@ -74,8 +72,9 @@ services:
 #      - "15672:15672"
 
   maploom-build:
-    build: ./deps/maploom
-    image: quay.io/mapstory/maploom-build
+    build:
+      context: ./deps/maploom
+    image: quay.io/mapstory/maploom-build:$TAG
     environment:
       GIT_DIR: /git
     volumes:
@@ -83,8 +82,9 @@ services:
       - .git:/git
 
   django-maploom-build:
-    build: ./deps/django-maploom
-    image: quay.io/mapstory/django-maploom-build
+    build:
+      context: ./deps/django-maploom
+    image: quay.io/mapstory/django-maploom-build:$TAG
     environment:
       GIT_DIR: /git
     depends_on:
@@ -95,8 +95,9 @@ services:
       - .git:/git
 
   story-tools-build:
-    build: ./deps/story-tools
-    image: quay.io/mapstory/story-tools-build
+    build:
+      context: ./deps/story-tools
+    image: quay.io/mapstory/story-tools-build:$TAG
     environment:
       GIT_DIR: /git
     volumes:
@@ -104,7 +105,6 @@ services:
       - .git:/git
 
   django:
-    image: quay.io/mapstory/django:master
     links:
       - postgres
     env_file:
@@ -124,7 +124,6 @@ services:
     tty: true
 
   celery:
-    image: quay.io/mapstory/django:master
     links:
       - postgres
     env_file:
@@ -139,7 +138,6 @@ services:
       - ./cover:/srv/mapstory/cover:cached
 
   django_volumes:
-    image: quay.io/mapstory/django:master
     entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory && chown -R mapstory:mapstory /srv/mapstory/cover"
     volumes:
       - ./cover:/srv/mapstory/cover
@@ -155,10 +153,6 @@ services:
 #      - "8080:8080"
 
   nginx:
-    build:
-      args:
-        - TAG=master
-    image: quay.io/mapstory/nginx:master
     env_file:
       - docker/env/dev/public_host.env
     environment:
@@ -174,3 +168,4 @@ volumes:
   postgres:
   composer_node_modules:
   storytools_node_modules:
+  composer_yarn:

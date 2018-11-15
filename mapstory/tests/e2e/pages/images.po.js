@@ -1,10 +1,12 @@
-"use strict";
 
-require("../tools/waitReady.js");
 
-let images_page = function () {
-  this.navbar = element(By.css(".navigation"));
-  this.loginModal = element(By.id("loginModal"));
-};
+import "../tools/waitReady";
 
-module.exports = new images_page();
+class ImagesPage {
+  constructor() {
+    this.navbar = element(By.css(".navigation"));
+    this.loginModal = element(By.id("loginModal"));
+  }
+}
+
+export default new ImagesPage();

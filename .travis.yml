@@ -45,7 +45,7 @@ before_install:
   - sudo curl -L "https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   - sudo chmod +x /usr/local/bin/docker-compose
   - docker-compose --version
-  - DCO="docker-compose -f docker-compose.yml -f docker/docker-compose.travis.yml"
+  - export DCO="docker-compose -f docker-compose.yml -f docker/docker-compose.travis.yml"
 
   # Install test tools
   - pip install coveralls
@@ -54,29 +54,28 @@ before_install:
   - npm install pix-diff
 
   # Ensure a clean environment
-  - $DCO kill
-  - $DCO rm -f
+  - make purge
   - docker volume list -q | xargs --no-run-if-empty docker volume rm -f
 
   - mkdir -p cover
   - chmod a+rwx cover
 
 install:
-  - $DCO build
-  - $DCO up -d postgres elasticsearch rabbitmq
-  - $DCO up pgadmin
+  - make build
+  - $DCO up -d elasticsearch postgres pgadmin rabbitmq
   - if [ ! -z "$SAUCE_ACCESS_KEY" ]; then npm install -g protractor pix-diff; fi
   - sudo cp scripts/accept.sh /usr/local/bin/accept
 
 script:
-  - $DCO up django_volumes
-  - $DCO up -d nginx
-  - $DCO up django_volumes
+  - make init
+  - make up
+  - make init
   - $DCO logs -f django
     # Wait for django container to come up
   - while [[ "$(curl -skL -o /dev/null -w ''%{http_code}'' docker)" != "200" ]]; do (echo "Waiting for webserver ($(curl -skL -o /dev/null -w ''%{http_code}'' docker))"; sleep 5); done
-  - $DCO up django_volumes
-  - $DCO run -e TRAVIS=$TRAVIS -e TRAVIS_BRANCH=$TRAVIS_BRANCH -e TRAVIS_JOB_ID=$TRAVIS_JOB_ID django --test
+  - make init
+  - make test
+#  - make lint
   ### Commenting out everything below because currently the e2e tests are not being run.
   #- $DCO up -d django
   # Use the docker selenium setup if running on a fork's PR because Sauce credentials aren't available
@@ -102,8 +101,7 @@ script:
 #     fi
 
 after_script:
-  - $DCO kill
-  - $DCO rm -f
+  - make purge
 
 notifications:
   slack: mapstory:E2W57xKNNOKDDqRmtQHNUlBK

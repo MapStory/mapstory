@@ -130,10 +130,10 @@
                 <h3><strong>Ok, we're ready to create the {{ BRANDING_LAYER_NAME }}!</strong></h3>
                 <p>Click below to create your {{ BRANDING_LAYER_NAME }}</p>
                 <div>
-                    <div class="clrs-green fnt-weight-400" ng-show="success">Your new {{ BRANDING_LAYER_NAME }}<span ng-show="created_layers.length > 1">s are</span><span
-                            ng-show="created_layers.length > 1"> is</span> ready.
+                    <div class="clrs-green fnt-weight-400" ng-show="success">Your new {{ BRANDING_LAYER_NAME }}<span ng-show="createdLayers.length > 1">s are</span><span
+                            ng-show="createdLayers.length > 1"> is</span> ready.
                     </div>
-                    <div class="clrs-green fnt-weight-400" ng-repeat="created_layer in created_layers" ng-show="success">View the <a
+                    <div class="clrs-green fnt-weight-400" ng-repeat="created_layer in createdLayers" ng-show="success">View the <a
                             href="{{ created_layer.url }}?showMetadata=true" class="fnt-weight-600" target="_self">{{ BRANDING_LAYER_NAME }}</a>.
                     </div>
                     <div class="clrs-red fnt-weight-400" ng-show="errors.length">{{ BRANDING_LAYER_NAME }} creation has failed.</div>
@@ -157,5 +157,5 @@
 </div>
 <div class="modal-footer">
     <span class="pull-left modal-footer-help"><button class="btn btn-primary" type="button" ng-click="ok()">Close</button></span>
-    <span class="pull-right modal-footer-help">Learn more about<a href="/getstarted" target="_blank">creating data.</a></span>
+    <span class="pull-right modal-footer-help">Learn more about<a href="/getstarted" target="_blank" rel="noopener">creating data.</a></span>
 </div>
