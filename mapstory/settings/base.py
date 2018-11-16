@@ -542,6 +542,39 @@ MAP_BASELAYERS = [
     }
 ]
 
+DEFAULT_BASEMAP = os.environ.get('DEFAULT_BASEMAP', 'world-dark')
+
+if str_to_bool(os.environ.get('GEOINT_SERVICES', 'False')):
+    MAP_BASELAYERS = [
+        {
+            "source": {
+                "ptype": "gxp_wmscsource",
+                # Setting lazy=True will prevent MapLoom from making a getCapabilities request until
+                # the user tries to add a layer.
+                # See https://github.com/ROGUE-JCTD/MapLoom/commit/d7ea83d17b4e17150f02a0c9e94a79c3592297c2.
+                "lazy": True,
+                "url": OGC_SERVER['default']['PUBLIC_LOCATION'] + "wms",
+                "restUrl": "/gs/rest",
+                "name": "local geoserver"
+            }
+        },
+        {
+            "source": {"ptype": "gxp_osmsource"},
+            "type": "OpenLayers.Layer.OSM",
+            "args": ["GEOINT Services OpenStreetMap", [
+                "//osm.gs.mil/tiles/default/{z}/{x}/{y}.png"
+            ], {"tileOptions": {"crossOriginKeyword": None}}
+            ],
+            "title": "GEOINT Services OpenStreetMap",
+            "name": "geoint-services-osm",
+            "visibility": True,
+            "fixed": True,
+            "group": "background"
+        }
+    ]
+
+    DEFAULT_BASEMAP = "geoint-services-osm"
+
 #
 # Avatar Settings
 #
