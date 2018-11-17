@@ -1,7 +1,7 @@
 dco = $(or ${DCO}, docker-compose)
 
 help:
-	@echo "  make up    - start containers"
+	@echo "  make up       - start containers"
 	@echo "  make down     - stop containers"
 	@echo "  make purge    - stop containers and prune volumes"
 	@echo "  make recreate - stop containers, prune volumes and recreate/build containers"
@@ -33,6 +33,14 @@ purge: down
 
 recreate: purge build init
 	${dco} up -d --force-recreate
+
+refresh_repo: # This is destructive. It will delete any modifications in ./deps and ./mapstory.
+	git pull
+	rm -r deps mapstory
+	git checkout -- mapstory
+	git submodule update --init --recursive
+
+refresh_deploy: refresh_repo make down up # This is also destructive.
 
 logs:
 	${dco} logs -f
