@@ -40,7 +40,7 @@ refresh_repo: # This is destructive. It will delete any modifications in ./deps 
 	git checkout -- mapstory
 	git submodule update --init --recursive
 
-refresh_deploy: refresh_repo make down up # This is also destructive.
+refresh_deploy: refresh_repo build down up # This is also destructive.
 
 logs:
 	${dco} logs -f
