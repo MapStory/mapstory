@@ -77,7 +77,7 @@ services:
   django_volumes:
     image: quay.io/mapstory/django:$TAG
     user: root
-    entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory"
+    entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory && chmod -R a+x /var/lib/mapstory"
     volumes:
       - mapstory_media:/var/lib/mapstory/media/
       - mapstory_static:/var/lib/mapstory/static/
