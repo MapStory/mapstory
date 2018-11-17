@@ -408,7 +408,7 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
 
         config = background[0]
 
-        return tileURLFromLayerName(config.name)
+        return CreateStoryLayerAnimatedThumbnailTask.tileURLFromLayerName(config.name)
 
     # returns a list of layers
     # layer -> {name, style_name (might be ""),bounds,timeslices (might be None)}}
