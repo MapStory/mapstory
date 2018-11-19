@@ -155,9 +155,30 @@ class CreateStoryLayerThumbnailTask:
 
         return [xmin, ymin, xmax, ymax], wms[layername].timepositions
 
+    @staticmethod
+    def tileURLFromLayerName(layer_name):
+        # get from actual settings file (config is slightly different!)
+        config_main = [
+            x for x in settings.MAP_BASELAYERS if "name" in x and x["name"] == layer_name][0]
+
+        # cf. https://wiki.openstreetmap.org/wiki/Tile_servers
+        if config_main["source"]["ptype"] == "gxp_osmsource":
+            if layer_name == "mapnik":
+                return 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+            if layer_name == "hot":
+                return 'https://{a-b}.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png'
+            return "https:{}".format(config_main["args"][1][0])
+
+        # cf. https://api.tiles.mapbox.com/v3/mapbox.world-dark.jsonp?secure=1
+        if config_main["source"]["ptype"] == "gxp_mapboxsource":
+            return "https://{a-b}.tiles.mapbox.com/v3/mapbox." + config_main["name"] + "/{z}/{x}/{y}.png"
+
+        raise Exception(
+            "unable to determine tile URL for background layer - {}".format(layer_name))
+
     # phantomJSFile htmlFile wms layerName xmin ymin xmax ymax time output.fname
     def create_phantomjs_args(self, typeName, boundingBoxWGS84, tempfname, time="ALL",
-                              basemapXYZURL='https://{a-b}.tiles.mapbox.com/v3/mapbox.world-dark/{z}/{x}/{y}.png',
+                              basemapXYZURL=tileURLFromLayerName.__func__(settings.DEFAULT_BASEMAP),
                               styles=""):
 
         workspace, layername = decodeTypeName(typeName)
@@ -387,23 +408,7 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
 
         config = background[0]
 
-        # get from actual settings file (config is slightly different!)
-        config_main = [
-            x for x in settings.MAP_BASELAYERS if "name" in x and x["name"] == config.name][0]
-
-        # cf. https://wiki.openstreetmap.org/wiki/Tile_servers
-        if config_main["source"]["ptype"] == "gxp_osmsource":
-            if config.name == "mapnik":
-                return 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-            if config.name == "hot":
-                return 'https://{a-b}.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png'
-
-        # cf. https://api.tiles.mapbox.com/v3/mapbox.world-dark.jsonp?secure=1
-        if config_main["source"]["ptype"] == "gxp_mapboxsource":
-            return "https://{a-b}.tiles.mapbox.com/v3/mapbox." + config_main["name"] + "/{z}/{x}/{y}.png"
-
-        raise Exception(
-            "unable to determine tile URL for background layer - " + config["name"])
+        return CreateStoryLayerAnimatedThumbnailTask.tileURLFromLayerName(config.name)
 
     # returns a list of layers
     # layer -> {name, style_name (might be ""),bounds,timeslices (might be None)}}
