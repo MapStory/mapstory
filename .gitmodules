@@ -5,7 +5,7 @@
 [submodule "deps/django-osgeo-importer"]
 	path = deps/django-osgeo-importer
 	url = https://github.com/GeoNode/django-osgeo-importer.git
-	branch = master
+	branch = angular-1.6.5
 [submodule "deps/django-maploom"]
 	path = deps/django-maploom
 	url = https://github.com/MapStory/django-maploom.git
@@ -13,7 +13,7 @@
 [submodule "deps/geonode"]
 	path = deps/geonode
 	url = https://github.com/MapStory/geonode.git
-	branch = 2.8.0
+	branch = 2.8.x
 [submodule "deps/icon-commons"]
 	path = deps/icon-commons
 	url = https://github.com/MapStory/icon-commons.git

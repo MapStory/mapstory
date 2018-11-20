@@ -103,7 +103,6 @@ INSTALLED_APPS += (
     'django_nose',
     'mapstory',
     'django.contrib.webdesign',
-    'geonode',
     'geonode.contrib.geogig',
     'icon_commons',
     'maploom',
@@ -600,9 +599,9 @@ CELERY_TASK_EAGER_PROPAGATES = str_to_bool(
 CELERY_RESULT_BACKEND = 'db+postgresql://mapstory:%s@%s:%s/mapstory' % (
     DATABASE_PASSWORD, DATABASE_HOST, DATABASE_PORT)
 CELERY_TASK_IGNORE_RESULT = False
-CELERY_TASK_SERIALIZER = 'pickle'
-CELERY_RESULT_SERIALIZER = 'pickle'
-CELERY_ACCEPT_CONTENT = ['pickle']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
 
 #
 # Haystack Settings

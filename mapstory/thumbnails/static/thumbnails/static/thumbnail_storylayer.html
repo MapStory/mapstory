@@ -183,7 +183,14 @@
     // time='none' --> do not make a &TIME=... request
     // time='...' --> add a &TIME=... request
     function create_WMS_layer(baseurl, layerNames,styles, time) {
-        var params = {'LAYERS':  layerNames,'STYLES':styles}
+
+        // Don't pass in an empty styles array, doing so will cause the thumbnail generation to fail
+        if (!Array.isArray(styles) || !styles.length) {
+            var params = {'LAYERS':  layerNames}
+        } else {
+            var params = {'LAYERS':  layerNames,'STYLES':styles}
+        }
+        
         if (time != 'NONE')
             params['TIME'] = time;
 

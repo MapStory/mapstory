@@ -1,4 +1,4 @@
-{% load i18n avatar_tags classification_banner maploom_tags %}
+{% load i18n avatar_tags classification_banner django_maploom_tags %}
 
 <!DOCTYPE html>
 <html ng-app="MapLoom" ng-controller="AppCtrl">
@@ -11,7 +11,7 @@
   var CLOSURE_NO_DEPS = true;
 </script>
 
-{% maploom_js %}
+{% django_maploom_js %}
 
 <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}style/themes/{{THEME}}/maps-theme.css"/>
 
@@ -73,7 +73,7 @@
     <div class="classification_banner_top_padding"></div>
     {% endif %}
 
-    {% maploom_html %}
+    {% django_maploom_html %}
 
     {% if CLASSIFICATION_BANNER_ENABLED and CLASSIFICATION_FOOTER_ENABLED %}
         <div class="classification_banner_bottom_padding"></div>

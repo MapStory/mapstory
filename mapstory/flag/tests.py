@@ -3,6 +3,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 from django.test import Client
 
+from geonode.base.models import TopicCategory
+from geonode.layers.models import Layer
 from mapstory.mapstories.models import Map
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 from mapstory.tests.populate_test_data import create_models
@@ -29,14 +31,14 @@ class AdminClient(Client):
 class FlagsTest(MapStoryTestMixin):
     def setUp(self):
 
-        create_models(type='map')
+        create_models(model_type='layer')
 
     def test_flag_view(self):
         """
         Tests the flag view.
         """
-        m = Map.objects.first()
-        ct = ContentType.objects.get_for_model(m)
+        layer = Layer.objects.first()
+        ct = ContentType.objects.get_for_model(layer)
         c = AdminClient()
         response = c.get(reverse('flag'))
         self.assertLoginRequired(response)
@@ -45,7 +47,7 @@ class FlagsTest(MapStoryTestMixin):
         response = c.get(reverse('flag'))
         self.assertEqual(response.status_code, 405)
 
-        data = dict(content_type=ct.id, object_id=m.id,
+        data = dict(content_type=ct.id, object_id=layer.id,
                     comment="what is this?", creator_field='owner')
 
         response = c.post(reverse('flag'), data=data)
