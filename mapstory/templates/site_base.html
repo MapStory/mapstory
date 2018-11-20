@@ -1,53 +1,16 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% block twitter-cards %}
-    {% endblock twitter-cards %}
-        <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
-    {% block head %}
-        <link rel="stylesheet" href="{{ STATIC_URL }}vendor/bootstrap/dist/css/bootstrap.min.css"/>
-        <link rel="stylesheet" href="{{ STATIC_URL }}vendor/angular-material/angular-material.min.css"/>
-        {% include "osgeo_importer/_importer_styles.html" %}
-        {% if site.assets.favicon %}
-        <link rel="shortcut icon" href="{{ MEDIA_URL }}{{ site.assets.favicon.name }}">
-        {% endif %}
-        {% if GOOGLE_ANALYTICS %}{% include "mapstory/_google_analytics.html" %}{% endif %}
-        {% block extra_head %}{% endblock %}
-        <link rel="stylesheet" href="{{ STATIC_URL }}style/themes/{{ THEME }}/site-theme.css"/>
-    {% endblock head %}
-    </head>
-    <body class="{% block body_class %}{% endblock %}" ng-cloak>
-        {% block header %}
-        {% include '_header.html' %}
-        {% block extra_tab %}{% endblock %}
-        {% endblock header %}
-        <div class="alert alert-danger alert-dismissible" role="alert" id="ieflag" style="display:none">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h1>You are using an outdated browser that is not supported by GeoNode.</h1>
-            <p>Please use a <strong>modern browser</strong> like Mozilla Firefox, Google Chrome or Safari.</p>
-        </div>
-        {% block middle %}
-            <div class="container">
-                {% include "_status_message.html" %}
-                {% include "_announcements.html" %}
-                {% include "_messages.html" %}
-                {% block body_outer %}
-                    <div class="row">
-                        <div class="col-md-8">
-                            {% block body %}{% endblock %}
-                        </div>
-                        <div class="col-md-4">
-                            {% block sidebar %}{% endblock %}
-                        </div>
-                    </div>
-                {% endblock %}
-            </div>
-        {% endblock middle %}
-        {% block footer %}{% include '_footer.html' %}{% endblock footer%}
-        {% include "_site_scripts.html" %}
-        {% block extra_script %}{% endblock extra_script %}
-    </body>
-</html>
+{% extends "base.html" %}
+{% block twitter-cards %}
+{% endblock twitter-cards %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}vendor/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}vendor/angular-material/angular-material.min.css"/>
+    {% include "osgeo_importer/_importer_styles.html" %}
+    {% if site.assets.favicon %}
+    <link rel="shortcut icon" href="{{ MEDIA_URL }}{{ site.assets.favicon.name }}">
+    {% endif %}
+    {% if GOOGLE_ANALYTICS %}{% include "mapstory/_google_analytics.html" %}{% endif %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}style/themes/{{ THEME }}/site-theme.css"/>
+{% endblock %}
+{% block header %}{% include '_header.html' %}{% endblock header %}
+{% block footer %}{% include '_footer.html' %}{% endblock footer%}
+{% block extra_script %}{% include "_site_scripts.html" %}{% endblock extra_script %}
