@@ -31,7 +31,7 @@ class AdminClient(Client):
 class FlagsTest(MapStoryTestMixin):
     def setUp(self):
 
-        create_models(type='layer')
+        create_models(model_type='layer')
 
     def test_flag_view(self):
         """

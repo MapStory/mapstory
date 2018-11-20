@@ -44,7 +44,7 @@ class FavoriteTest(ResourceTestCaseMixin, TestCase):
         super(FavoriteTest, self).setUp()
         self.adm_un = "admin"
         self.adm_pw = "admin"
-        create_models(type="document")
+        create_models(model_type="document")
         self.list_url = reverse(
             'api_dispatch_list',
             kwargs={

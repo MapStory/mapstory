@@ -1,13 +1,13 @@
 from unittest import skip
 
+from actstream import action, registry
+from actstream.models import Action, actor_stream
+from dialogos.models import Comment
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from actstream import action, registry
-from actstream.models import Action, actor_stream
-from dialogos.models import Comment
 from geonode.maps.models import Layer
 from geonode.people.models import Profile
 from icon_commons.models import Collection, Icon
@@ -85,7 +85,7 @@ class SocialTests(MapStoryTestMixin):
         initial_action_count = actions_list.count()
 
         # Create a test layer here
-        create_models(type='layer')
+        create_models(model_type='layer')
 
         actions_list = get_actions_for_model('layer')
         final_action_count = actions_list.count()

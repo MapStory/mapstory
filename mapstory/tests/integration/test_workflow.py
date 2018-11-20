@@ -41,7 +41,7 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         TopicCategory.objects.create(identifier='location')
         TopicCategory.objects.create(identifier='elevation')
 
-        create_models(type='layer')
+        create_models(model_type='layer')
 
     def test_layer(self):
         layer = Layer.objects.first()
