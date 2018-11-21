@@ -1,0 +1,55 @@
+[
+  {
+    "fields": {
+      "opacity": "1.00",
+      "group": "",
+      "name": "",
+      "title": "",
+      "source_hidden": false,
+      "is_virtual_service": false,
+      "args": "",
+      "visibility": true,
+      "source_url": "${OGC_SERVER['default']['PUBLIC_LOCATION']}wms",
+      "source_rest_url": "/gs/rest",
+      "source_ptype": "gxp_wmscsource",
+      "proj": "",
+      "always_anonymous": false,
+      "source_name": "local geoserver",
+      "fixed": false,
+      "type": "",
+      "source_lazy": true
+    },
+    "model": "mapstory.baselayer",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "opacity": "1.00",
+      "group": "background",
+      "name": "geoint-services-osm",
+      "title": "GEOINT Services OpenStreetMap",
+      "source_hidden": false,
+      "is_virtual_service": false,
+      "args": "[\"GEOINT Services OpenStreetMap\", [\"//osm.gs.mil/tiles/default/{z}/{x}/{y}.png\"], {\"tileOptions\": {\"crossOriginKeyword\": None}}]",
+      "visibility": true,
+      "source_url": "",
+      "source_rest_url": "",
+      "source_ptype": "gxp_osmsource",
+      "proj": "",
+      "always_anonymous": false,
+      "source_name": "",
+      "fixed": true,
+      "type": "OpenLayers.Layer.OSM",
+      "source_lazy": false
+    },
+    "model": "mapstory.baselayer",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "name": 1
+    },
+    "model": "mapstory.defaultbaselayer",
+    "pk": 1
+  }
+]
