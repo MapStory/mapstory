@@ -142,6 +142,13 @@ class ParallaxImage(db.models.Model):
 
 
 class Baselayer(db.models.Model):
+    def __str__(self):
+        if self.title:
+            return self.title
+        elif self.name:
+            return self.name
+        return str(self.id)
+
     name = db.models.TextField(blank=True)
     type = db.models.TextField(blank=True)
     # This is a json array
@@ -168,6 +175,9 @@ class Baselayer(db.models.Model):
 
 
 class DefaultBaselayer(db.models.Model):
+    def __str__(self):
+        return self.name.name
+
     name = db.models.OneToOneField(Baselayer, on_delete=db.models.CASCADE, primary_key=True)
 
 

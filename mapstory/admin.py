@@ -163,6 +163,9 @@ class BaselayerAdmin(admin.ModelAdmin):
 
 
 class DefaultBaselayerAdmin(admin.ModelAdmin):
+    class Meta:
+        verbose_name = 'Default Baselayer'
+        verbose_name_plural = 'Default Baselayer'
     model = DefaultBaselayer
 
 

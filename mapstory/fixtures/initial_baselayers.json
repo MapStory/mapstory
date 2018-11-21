@@ -251,5 +251,12 @@
     },
     "model": "mapstory.baselayer",
     "pk": 11
+  },
+  {
+    "fields": {
+      "name": 10
+    },
+    "model": "mapstory.defaultbaselayer",
+    "pk": 1
   }
 ]
