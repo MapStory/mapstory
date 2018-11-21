@@ -424,6 +424,7 @@ MAP_BASELAYERS = [
             # the user tries to add a layer.
             # See https://github.com/ROGUE-JCTD/MapLoom/commit/d7ea83d17b4e17150f02a0c9e94a79c3592297c2.
             "lazy": True,
+            # TODO: Need to treat this specially
             "url": OGC_SERVER['default']['PUBLIC_LOCATION'] + "wms",
             "restUrl": "/gs/rest",
             "name": "local geoserver"

@@ -6,7 +6,8 @@ from geonode.layers.models import Layer
 from geonode.people.admin import ProfileAdmin as UserAdmin
 from mapstory.export import export_via_model
 from mapstory.flag import admin as flag_admin
-from mapstory.models import (CustomSite, GetPage, GetPageContent, Leader,
+from mapstory.models import (Baselayer, CustomSite, DefaultBaselayer,
+                             GetPage, GetPageContent, Leader,
                              MapStory, NewsItem, ParallaxImage, Sponsor)
 
 
@@ -157,6 +158,14 @@ class ExtendedLayerAdmin(LayerAdmin):
     list_filter = ('featured', )
 
 
+class BaselayerAdmin(admin.ModelAdmin):
+    model = Baselayer
+
+
+class DefaultBaselayerAdmin(admin.ModelAdmin):
+    model = DefaultBaselayer
+
+
 admin.site.unregister(Layer)
 admin.site.register(Layer, ExtendedLayerAdmin)
 admin.site.register(MapStory, MapStoryAdmin)
@@ -167,3 +176,5 @@ admin.site.register(NewsItem, NewsItemAdmin)
 admin.site.register(Leader, LeaderAdmin)
 admin.site.register(ParallaxImage, ParallaxImageAdmin)
 admin.site.register(CustomSite, CustomSiteAdmin)
+admin.site.register(Baselayer, BaselayerAdmin)
+admin.site.register(DefaultBaselayer, DefaultBaselayerAdmin)
