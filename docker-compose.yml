@@ -52,7 +52,6 @@ services:
       - rabbitmq
     volumes:
       - mapstory_media:/var/lib/mapstory/media/
-      - mapstory_static:/var/lib/mapstory/static/
     networks:
       internal:
     expose:
@@ -68,7 +67,6 @@ services:
     command: --celery
     volumes:
       - mapstory_media:/var/lib/mapstory/media/
-      - mapstory_static:/var/lib/mapstory/static/
     networks:
       internal:
     expose:
@@ -80,7 +78,6 @@ services:
     entrypoint: /bin/sh -c "chown -R mapstory:mapstory /var/lib/mapstory && chmod -R a+x /var/lib/mapstory"
     volumes:
       - mapstory_media:/var/lib/mapstory/media/
-      - mapstory_static:/var/lib/mapstory/static/
 
   geoserver:
     image: quay.io/mapstory/geoserver:2.12.4-1.2
@@ -109,7 +106,6 @@ services:
       - geoserver
     volumes:
       - mapstory_media:/var/lib/mapstory/media/:ro
-      - mapstory_static:/var/lib/mapstory/static/:ro
     environment:
       - NGINX_NUM_WORKERS=2
       - NGINX_GZIP_COMP_LEVEL=4
@@ -129,6 +125,5 @@ networks:
 
 volumes:
   geoserver:
-  mapstory_static:
   mapstory_media:
   pgadmin:

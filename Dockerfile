@@ -104,35 +104,28 @@ RUN pip install --no-cache-dir -U git+git://github.com/dimka665/awesome-slugify@
 # Copy in the code
 COPY --chown=mapstory:mapstory mapstory ./mapstory
 COPY --chown=mapstory:mapstory ./*.py ./
+COPY --chown=mapstory:mapstory docker/django/run.sh $APP_PATH/docker/django/
+RUN ln -s $APP_PATH/docker/django/run.sh /opt/run.sh
 
-USER mapstory
-
-WORKDIR $APP_PATH/mapstory/static
-RUN set -ex \
-    && yarn install \
-    && bower install \
-    && grunt concat \
-    && grunt less:development \
-    && grunt copy:development \
-    && yarn cache clean \
-    && rm -rf ~/.cache/bower \
-    && rm -rf /tmp/phantomjs
-
-USER root
 RUN set -ex \
     && chown -R mapstory:mapstory $STATIC_ROOT \
     && chown -R mapstory:mapstory $MEDIA_ROOT \
     && mkdir -p $APP_PATH/cover \
     && chown -R mapstory:mapstory $APP_PATH/cover
 
-COPY --chown=mapstory:mapstory docker/django/run.sh $APP_PATH/docker/django/
-RUN ln -s $APP_PATH/docker/django/run.sh /opt/run.sh
-
 USER mapstory
+
+WORKDIR $APP_PATH/mapstory/static
+RUN set -ex \
+    && /opt/run.sh --collect-static \
+    && yarn cache clean \
+    && rm -rf ~/.cache/bower \
+    && rm -rf /tmp/phantomjs
+
+WORKDIR $APP_PATH
 VOLUME $STATIC_ROOT
 VOLUME $MEDIA_ROOT
 VOLUME $APP_PATH/cover
-WORKDIR $APP_PATH
 EXPOSE $DJANGO_PORT
 ENTRYPOINT ["/opt/run.sh"]
-CMD ["--collect-static", "--init-db", "--reindex", "--serve"]
+CMD ["--init-db", "--reindex", "--serve"]
