@@ -45,8 +45,8 @@ def is_valid(v):
 # General Django development settings
 #
 SITENAME = os.environ.get('SITE_NAME', 'MapStory')
-SITEURL = "%s://%s" % (os.environ['PUBLIC_PROTOCOL'],
-                       os.environ['PUBLIC_HOST'])
+SITEURL = "%s://%s" % (os.environ.get('PUBLIC_PROTOCOL', 'https'),
+                       os.environ.get('PUBLIC_HOST', 'ERROR'))
 
 # Defines the directory that contains the settings file as the LOCAL_ROOT
 # It is used for relative settings elsewhere.
@@ -231,8 +231,8 @@ AUTH_EXEMPT_URLS = ('/capabilities', '/complete/*', '/login/*',
 #
 # Database Settings
 #
-DATABASE_HOST = os.environ['DATABASE_HOST']
-DATABASE_PASSWORD = os.environ['DATABASE_PASSWORD']
+DATABASE_HOST = os.environ.get('DATABASE_HOST', 'ERROR')
+DATABASE_PASSWORD = os.environ.get('DATABASE_PASSWORD', 'ERROR')
 DATABASE_PORT = '5432'
 
 if DATABASE_PASSWORD:
@@ -280,9 +280,9 @@ if DATABASE_PASSWORD:
 # Geoserver Settings
 #
 GEOSERVER_LOCATION = "%s://%s:%d/geoserver/" % (
-    os.environ['PRIVATE_PROTOCOL'], os.environ['GEOSERVER_HOST_INTERNAL'], int(os.environ['GEOSERVER_PORT_INTERNAL']))
+    os.environ.get('PRIVATE_PROTOCOL', 'http'), os.environ.get('GEOSERVER_HOST_INTERNAL', 'ERROR'), int(os.environ.get('GEOSERVER_PORT_INTERNAL', '8000')))
 GEOSERVER_PUBLIC_LOCATION = "%s://%s/geoserver/" % (
-    os.environ['PUBLIC_PROTOCOL'], os.environ['PUBLIC_HOST'])
+    os.environ.get('PUBLIC_PROTOCOL', 'https'), os.environ.get('PUBLIC_HOST', 'ERROR'))
 
 GEOSERVER_USER = os.environ.get('GEOSERVER_USER', 'admin')
 GEOSERVER_PASSWORD = os.environ.get('GEOSERVER_PASSWORD', 'geoserver')
@@ -587,7 +587,7 @@ AUTO_GENERATE_AVATAR_SIZES = (35, 45, 75, 100)
 # Celery Settings
 #
 CELERY_BROKER_URL = "amqp://mapstory:%s@%s/%s" % (
-    os.environ['RABBITMQ_APPLICATION_PASSWORD'], os.environ['RABBITMQ_HOST'], os.environ['RABBITMQ_APPLICATION_VHOST'])
+    os.environ.get('RABBITMQ_APPLICATION_PASSWORD', 'ERROR'), os.environ.get('RABBITMQ_HOST', 'ERROR'), os.environ.get('RABBITMQ_APPLICATION_VHOST', 'ERROR'))
 CELERY_TASK_ALWAYS_EAGER = str_to_bool(os.environ.get(
     'CELERY_TASK_ALWAYS_EAGER', 'False'))  # False makes tasks run asynchronously
 CELERY_TASK_DEFAULT_QUEUE = "default"
@@ -610,8 +610,8 @@ CELERY_ACCEPT_CONTENT = ['pickle']
 HAYSTACK_SEARCH = True
 # Update facet counts from Haystack
 HAYSTACK_FACET_COUNTS = False
-HAYSTACK_URL = "%s://%s:%d" % (os.environ['PRIVATE_PROTOCOL'],
-                               os.environ['ELASTIC_HOST'], int(os.environ['ELASTIC_PORT']))
+HAYSTACK_URL = "%s://%s:%d" % (os.environ.get('PRIVATE_PROTOCOL', 'http'),
+                               os.environ.get('ELASTIC_HOST', 'ERROR'), int(os.environ.get('ELASTIC_PORT', '9200')))
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'mapstory.search.elasticsearch_backend.MapStoryElasticsearchSearchEngine',
