@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
@@ -6,7 +7,8 @@ from django.views.generic.list import ListView
 
 from geonode.base.models import Region
 from mapstory.journal.models import JournalEntry
-from mapstory.models import GetPage, Leader, NewsItem, get_images, get_sponsors
+from mapstory.models import Baselayer, GetPage, Leader, NewsItem, get_images, get_sponsors
+from django.http import HttpResponse
 
 
 class IndexView(TemplateView):
@@ -43,3 +45,8 @@ class SearchView(TemplateView):
 class LeaderListView(ListView):
     context_object_name = 'leaders'
     model = Leader
+
+
+def baselayer_view(request):
+    return HttpResponse(json.dumps({"layers":  map(lambda x: x.to_object(), Baselayer.objects.all())}))
+

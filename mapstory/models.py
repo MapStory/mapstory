@@ -1,9 +1,12 @@
 import datetime
 import hashlib
 import os
+import re
+import json
 
 from django import conf, contrib, db, template
 from django.contrib.sites.models import Site
+from django.conf import settings
 
 import geonode
 import textile
@@ -148,6 +151,50 @@ class Baselayer(db.models.Model):
         elif self.name:
             return self.name
         return str(self.id)
+
+    def to_object(self):
+        def string_or_none(field):
+            if field:
+                return field
+            else:
+                return None
+
+        args = None
+        if self.args:
+            # TODO: Get decode working properly
+            args = self.args
+        else:
+            args = []
+
+        url = self.source_url
+
+        if url:
+            pattern = r"\${OGC_SERVER}"
+            match = re.search(pattern, url)
+            if match:
+                url = re.sub(pattern, settings.OGC_SERVER['default']['PUBLIC_LOCATION'], url)
+
+        return {
+            "source": {
+                "ptype": string_or_none(self.source_ptype),
+                "lazy": self.source_lazy,
+                "url": string_or_none(url),
+                "restUrl": string_or_none(self.source_rest_url),
+                "name": string_or_none(self.source_name),
+                "hidden": self.source_hidden
+            },
+            "name": string_or_none(self.name),
+            "type": string_or_none(self.type),
+            "args": args,
+            "title": string_or_none(self.title),
+            "visibility": self.visibility,
+            "fixed": self.fixed,
+            "group": string_or_none(self.fixed),
+            "isVirtualService": self.is_virtual_service,
+            "alwaysAnonymous": self.always_anonymous,
+            "proj": string_or_none(self.proj),
+            "opacity": float(self.opacity)
+        }
 
     name = db.models.TextField(blank=True)
     type = db.models.TextField(blank=True)

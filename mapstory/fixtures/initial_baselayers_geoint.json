@@ -9,7 +9,7 @@
       "is_virtual_service": false,
       "args": "",
       "visibility": true,
-      "source_url": "${OGC_SERVER['default']['PUBLIC_LOCATION']}wms",
+      "source_url": "${OGC_SERVER}wms",
       "source_rest_url": "/gs/rest",
       "source_ptype": "gxp_wmscsource",
       "proj": "EPSG:4326",
