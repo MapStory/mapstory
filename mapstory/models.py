@@ -176,9 +176,9 @@ class Baselayer(db.models.Model):
 
 class DefaultBaselayer(db.models.Model):
     def __str__(self):
-        return self.name.name
+        return self.layer.name
 
-    name = db.models.OneToOneField(Baselayer, on_delete=db.models.CASCADE, primary_key=True)
+    layer = db.models.OneToOneField(Baselayer, on_delete=db.models.CASCADE, primary_key=True)
 
 
 def get_images():

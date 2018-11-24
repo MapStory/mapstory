@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='DefaultBaselayer',
             fields=[
-                ('name', models.OneToOneField(primary_key=True, serialize=False, to='mapstory.Baselayer')),
+                ('layer', models.OneToOneField(primary_key=True, serialize=False, to='mapstory.Baselayer')),
             ],
         ),
     ]

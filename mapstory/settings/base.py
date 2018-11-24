@@ -28,6 +28,7 @@ import sys
 import geonode
 import pyproj
 from geonode.settings import *
+# from mapstory.models import Baselayer, DefaultBaselayer
 
 
 def str_to_bool(v):
@@ -542,7 +543,6 @@ MAP_BASELAYERS = [
     }
 ]
 
-DEFAULT_BASEMAP = os.environ.get('DEFAULT_BASEMAP', 'world-dark')
 
 if str_to_bool(os.environ.get('GEOINT_SERVICES', 'False')):
     MAP_BASELAYERS = [
@@ -572,8 +572,6 @@ if str_to_bool(os.environ.get('GEOINT_SERVICES', 'False')):
             "group": "background"
         }
     ]
-
-    DEFAULT_BASEMAP = "geoint-services-osm"
 
 #
 # Avatar Settings
