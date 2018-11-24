@@ -162,7 +162,7 @@ class Baselayer(db.models.Model):
         args = None
         if self.args:
             # TODO: Get decode working properly
-            args = self.args
+            args = eval(self.args)
         else:
             args = []
 
