@@ -586,6 +586,7 @@
       {% endif %}
     </li>
     {% endif %}
+    {% comment %} 
     <li class="list-group-item">
       <h4>{% trans "Maps using this layer" %}</h4>
       {% if resource.maps %}
@@ -598,12 +599,14 @@
             <li>{% trans "This layer is not currently used in any maps." %}</li>
           {% endfor %}
         </ul>
-    </li>
+    </li> 
+    {% endcomment %}
     <li class="list-group-item">
-      <h4>{% trans "Create a map using this layer" %}</h4>
-      <p>{% trans "Click the button below to generate a new map based on this layer." %}</p>
-        <a href="{% url "new_map" %}?layer={{resource.service_typename}}" class="btn btn-primary btn-block">{% trans "Create a Map" %}</a>
+      <h4>{% trans "Create a story using this layer" %}</h4>
+      <p>{% trans "Click the button below to generate a new story based on this layer." %}</p>
+        <a href="{% url "new-story" %}?layer={{ resource.service_typename }}" class="btn btn-primary btn-block" target="_blank" rel="noopener">{% trans "Compose Story" %}</a>
     </li>
+    {% comment %} 
     {% if maps %}
         <li class="list-group-item">
             <h4>{% trans "Add the layer to an existing map" %}</h4>
@@ -619,7 +622,8 @@
                 <input type="submit" class="btn btn-primary btn-block" value="{% trans "Add to Map" %}">
             </form>
         </li>
-    {% endif %}
+    {% endif %} 
+    {% endcomment %}
 
     {% if documents.count > 0 %}
     <li class="list-group-item">
@@ -633,6 +637,7 @@
     </li>
     {% endif %}
 
+    {% comment %} 
     {% if user.is_authenticated %}
     <li class="list-group-item">
       <h4>{% trans "Styles" %}</h4>
@@ -669,7 +674,8 @@
         {% endif %}
       </ul>
     </li>
-    {% endif %}
+    {% endif %} 
+    {% endcomment %}
 
     {% if OGC_SERVER.default.BACKEND == 'geonode.geoserver' %}
         {% if "change_resourcebase" in perms_list %}
