@@ -32,8 +32,9 @@ for secret in /run/secrets/env_*; do
     set +a
 done
 
-
-export ALLOWED_HOSTS="$PUBLIC_HOST|$ALLOWED_HOSTS"
+if ! [ -z "$PUBLIC_HOST" ]; then
+    export ALLOWED_HOSTS="$PUBLIC_HOST|$ALLOWED_HOSTS"
+fi
 
 for i do # loop over $@
 
