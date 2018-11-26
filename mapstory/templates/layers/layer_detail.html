@@ -12,7 +12,6 @@
 {% block title %}{{ resource.title|default:resource.alternate }} — {{ block.super }}{% endblock %}
 
 {% block head %}
-
   {% if TWITTER_CARD %}
     {% include "base/_resourcebase_twittercard.html" %}
   {% endif %}
@@ -41,11 +40,12 @@
 </div>
 
 <div class="row">
-  <div class="col-md-8">
-
-    <div id="embedded_map" class="mrg-btm">
+  <div class="col-md-9">
+    <div id="layer_map" style="height: 440px"></div>
+    <!--TODO: check to ensure this doesn't impact auth-->
+    <!--div id="embedded_map" class="mrg-btm">
       <div id="preview_map"></div>
-    </div>
+    </div-->
 
     <div class="layer-actions">
       {% include "_actions.html" %}
@@ -100,38 +100,52 @@
                         <a class="btn btn-xs" href="#" onclick="doPreview('{{ resource.service_typename }}', '{{ feature.id }}', '{{ granules.crs.properties.name }}', '{{ feature.geometry.coordinates }}', {% if feature.properties.time %}'{{ feature.properties.time }}'{% else %}null{% endif %});"><img alt="Granule Preview" title="Granule Preview" src="/static/lib/img/map_go.png"/></a>
                         <a class="btn btn-xs" href="{% url "layer_granule_remove" feature.id resource.service_typename %}"><img alt="Granule Remove" title="Granule Remove" src="/static/lib/img/cancel-on.png"/></a>
                         <script language="Javascript">
-                            function doPreview(layer_name, feature_id, srs, the_geom, time) {
-                                var map = app.mapPanel.map;
-                                for (var ll = 0; ll < app.map.layers.length; ll++) {
-                                    var layer = app.map.layers[ll];
-                                    if (layer.name == layer_name) {
-                                        if (time) {
-                                            var re = new RegExp("(\\+[0-9]{4})", "gm");
-                                            var timePosition = time;
-                                            if (re.test(time)) timePosition = time.replace(re, 'Z');
-                                            map.layers[ll].mergeNewParams({"TIME" : timePosition, "CQL_FILTER" : "IN ('" + feature_id + "')"});
-                                        }
-                                        else {
-                                            map.layers[ll].mergeNewParams({"CQL_FILTER" : "IN ('" + feature_id + "')"});
-                                        }
+                        function doPreview(layer_name, feature_id, srs, the_geom, time) {
+  var map = app.mapPanel.map;
+  for (var ll = 0; ll < app.map.layers.length; ll++) {
+    var layer = app.map.layers[ll];
+    if (layer.name == layer_name) {
+      if (time) {
+        var re = new RegExp("(\\+[0-9]{4})", "gm");
+        var timePosition = time;
+        if (re.test(time)) timePosition = time.replace(re, "Z");
+        map.layers[ll].mergeNewParams({
+          TIME: timePosition,
+          CQL_FILTER: "IN ('" + feature_id + "')"
+        });
+      } else {
+        map.layers[ll].mergeNewParams({
+          CQL_FILTER: "IN ('" + feature_id + "')"
+        });
+      }
 
-                                        map.layers[ll].addOptions({
-                                            singleTile: true
-                                        });
+      map.layers[ll].addOptions({
+        singleTile: true
+      });
 
-                                        bbox = JSON.parse(the_geom);
-                                        bbox = new OpenLayers.Bounds(bbox[0][0][0],bbox[0][0][1],bbox[0][2][0],bbox[0][2][1]).transform(srs, map.projection);
+      bbox = JSON.parse(the_geom);
+      bbox = new OpenLayers.Bounds(
+        bbox[0][0][0],
+        bbox[0][0][1],
+        bbox[0][2][0],
+        bbox[0][2][1]
+      ).transform(srs, map.projection);
 
-                                        //map.maxExtent = bbox;
-                                        //map.restrictedExtent = bbox;
-                                        map.maxExtent = new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34);
-                                        map.restrictedExtent = map.maxExtent;
+      //map.maxExtent = bbox;
+      //map.restrictedExtent = bbox;
+      map.maxExtent = new OpenLayers.Bounds(
+        -20037508.34,
+        -20037508.34,
+        20037508.34,
+        20037508.34
+      );
+      map.restrictedExtent = map.maxExtent;
 
-                                        map.zoomToExtent(bbox);
-                                    }
-                                }
-                            }
-                        </script>
+      map.zoomToExtent(bbox);
+    }
+  }
+}
+</script>
                     </td>
                   </tr>
                 {% endfor %}
@@ -252,7 +266,7 @@
     </div>
 
   </div>
-  <div class="col-md-4">
+  <div class="col-md-3">
 
     <ul class="list-group">
       {% if resource.storeType != "remoteStore" %}
@@ -973,6 +987,16 @@
       {% if show_popup %}
         $('#download-layer').modal('toggle');
       {% endif %}
+        $(document).ready(function () {
+            $('<iframe>', {
+                src: '{%  url 'layer_viewer' resource.typename %}',
+                id: 'myFrame',
+                allowfullscreen: 'true',
+                frameborder: 0,
+                style: 'width: 100%; height: 100%;',
+                scrolling: 'no'
+            }).appendTo('#layer_map');
+        });
     </script>
 
     {% if GEONODE_SECURITY_ENABLED %}
