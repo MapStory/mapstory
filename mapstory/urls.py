@@ -38,7 +38,7 @@ urlpatterns = patterns('',
 
                        url(r'^get(?P<slug>\w+)$',
                            GetPageView.as_view(), name='getpage'),
-                       url(r'^search/$', SearchView.as_view(), name='search'),
+                       #url(r'^search/$', SearchView.as_view(), name='search'),
                        url(r'^about/leadership$', LeaderListView.as_view(
                            template_name='mapstory/leaders.html'), name='about-leaders'),
                        url(r'^icons/', include('icon_commons.urls')),
