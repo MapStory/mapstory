@@ -7,7 +7,6 @@ module.exports = function(config) {
     browsers: ['PhantomJS'],
     files: [
       // angular source
-      'vendor/jquery/dist/jquery.min.js',
       'vendor/angular/angular.js',
       'vendor/angular-animate/angular-animate.min.js',
       'vendor/angular-aria/angular-aria.min.js',
