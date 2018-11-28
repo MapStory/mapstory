@@ -2,20 +2,23 @@
   "name": "mapstory",
   "version": "0.0.1",
   "devDependencies": {
-    "angular-mocks": "1.4.0"
+    "angular-mocks": "1.6.5"
   },
   "dependencies": {
     "jquery": ">=1.8.0",
-    "angular": "1.4.0",
+    "angular": "1.6.5",
     "bootstrap": "3.1.1",
     "story-tools": "../../deps/story-tools",
     "fontawesome": "https://github.com/FortAwesome/Font-Awesome.git#~4.6.0",
     "lato-font": "1.1.0",
     "clipboard": "^1.5.12",
+    "angular-material": "1.1.4",
+    "angular-aria": "1.6.5",
+    "angular-animate": "1.6.5",
     "underscore": "1.8.3",
     "OpenLayers" : "https://github.com/openlayers/openlayers/releases/download/v4.6.4/v4.6.4-dist.zip"
   },
   "resolutions": {
-    "angular": "1.4.0"
+    "angular": "1.6.5"
   }
 }

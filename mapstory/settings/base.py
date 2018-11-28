@@ -25,9 +25,8 @@ import logging
 import os
 import sys
 
-import pyproj
-
 import geonode
+import pyproj
 from geonode.settings import *
 
 
@@ -89,8 +88,7 @@ ACCOUNT_OPEN_SIGNUP = str_to_bool(os.environ.get('REGISTRATION_OPEN', 'True'))
 ENABLE_FORM_LOGIN = str_to_bool(os.environ.get('ENABLE_FORM_LOGIN', 'True'))
 USER_SNAP = str_to_bool(os.environ.get('USER_SNAP', 'False'))
 GOOGLE_ANALYTICS = os.environ.get('GOOGLE_ANALYTICS', '')
-SESSION_EXPIRE_AT_BROWSER_CLOSE = os.environ.get(
-    'SESSION_EXPIRE_AT_BROWSER_CLOSE', 'False')
+SESSION_EXPIRE_AT_BROWSER_CLOSE = os.environ.get('SESSION_EXPIRE_AT_BROWSER_CLOSE', 'False')
 
 #
 # Application Settings
@@ -608,7 +606,7 @@ CELERY_ACCEPT_CONTENT = ['json']
 #
 # Haystack Settings
 #
-HAYSTACK_SEARCH = False
+HAYSTACK_SEARCH = True
 # Update facet counts from Haystack
 HAYSTACK_FACET_COUNTS = False
 HAYSTACK_URL = "%s://%s:%d" % (os.environ['PRIVATE_PROTOCOL'],
