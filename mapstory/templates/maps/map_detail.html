@@ -23,6 +23,7 @@
 {% include "maps/_story_details.html" %}
 {% endblock %}
 {% block extra_script %}
+{{ block.super }}
 <script type="text/javascript">
   var app;
   $(document).ready(function() {
