@@ -12,7 +12,7 @@ services:
       - /srv/story-tools-composer/deps/story-tools/node_modules
 
   postgres:
-    image: mdillon/postgis:9.6
+    image: quay.io/mapstory/postgis:9.6.10-alpine
     env_file:
       - docker/env/lab/db_auth.env
       - docker/env/lab/postgres.env
