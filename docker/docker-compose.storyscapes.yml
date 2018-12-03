@@ -7,7 +7,7 @@ services:
         - DEPLOYMENT=production
 
   postgres:
-    image: mdillon/postgis:9.6
+    image: quay.io/mapstory/postgis:9.6.10-alpine
     env_file:
       - docker/env/storyscapes/postgres.env
     secrets:

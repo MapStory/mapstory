@@ -30,7 +30,7 @@ services:
       internal:
 
   postgres:
-    image: mdillon/postgis:9.6-alpine
+    image: quay.io/mapstory/postgis:9.6.10-alpine
     env_file:
       - docker/env/dev/db_auth.env
       - docker/env/dev/postgres.env
@@ -68,7 +68,6 @@ services:
       - docker/env/dev/db_auth.env
     environment:
       REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
-    command: [--collect-static, --init-db, --reindex, --serve]
     volumes:
       - ./.coveragerc:/srv/mapstory/.coveragerc:cached
       - ./.git:/srv/mapstory/.git:cached
