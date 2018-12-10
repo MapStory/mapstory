@@ -29,6 +29,7 @@ addons:
     tunnel_domains: docker
 
 before_install:
+  - python -c "import fcntl; fcntl.fcntl(1, fcntl.F_SETFL, 0)"
   - echo "Travis PR repo $TRAVIS_PULL_REQUEST_SLUG";
     echo "Travis PR branch $TRAVIS_PULL_REQUEST_BRANCH";
     echo "Travis target repo $TRAVIS_REPO_SLUG";
