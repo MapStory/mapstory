@@ -24,8 +24,6 @@
 </script>
 
 <script src="{{ STATIC_URL }}mapstory/js/dist/vendor-assets-min.js"></script>
-<script src="{{ STATIC_URL }}lib/js/moment-with-locales.min.js"></script>
-
 <script src="{{ STATIC_URL }}mapstory/js/dist/mapstory.js"></script>
 
 <!-- Script for animating navigation submenus -->
@@ -80,7 +78,6 @@
 </script>
 
 {% include "osgeo_importer/_importer_scripts.html" %}
-{% include 'autocomplete_light/static.html' %}
 {% include "favorite/_favorite_js.html" %}
 
 <script src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
