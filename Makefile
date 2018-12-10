@@ -18,7 +18,7 @@ down:
 	${dco} down --remove-orphans
 
 up: init
-	${dco} up -d nginx
+	until ${dco} up -d nginx; do sleep 30; done;
 
 pull:
 	${dco} pull
