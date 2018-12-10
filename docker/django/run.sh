@@ -51,8 +51,13 @@ for i do # loop over $@
         python manage.py migrate --noinput
         echo '    load initial data'
         python manage.py loaddata --app mapstory initial_data
-        echo '    load initial baselayers'
-        python manage.py loaddata --app mapstory initial_baselayers
+        if [ "$GEOINT_SERVICES" ]; then
+            echo '    load initial geoint baselayers'
+            python manage.py loaddata --app mapstory initial_baselayers_geoint
+        else
+            echo '    load initial geoint baselayers'
+            python manage.py loaddata --app mapstory initial_baselayers
+        fi
         echo '    set initial user id at 1000'
         python manage.py loaddata --app mapstory initial_user_id
         echo '    create admin user'
