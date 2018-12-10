@@ -1,8 +1,8 @@
+import ast
 import datetime
 import hashlib
 import os
 import re
-import json
 
 from django import conf, contrib, db, template
 from django.contrib.sites.models import Site
@@ -156,13 +156,11 @@ class Baselayer(db.models.Model):
         def string_or_none(field):
             if field:
                 return field
-            else:
-                return None
+            return None
 
         args = None
         if self.args:
-            # TODO: Get decode working properly
-            args = eval(self.args)
+            args = ast.literal_eval(self.args)
         else:
             args = []
 

@@ -50,4 +50,3 @@ class LeaderListView(ListView):
 def baselayer_view(request):
     return HttpResponse(json.dumps({"defaultLayer": DefaultBaselayer.objects.first().layer.name,
                                     "layers":  map(lambda x: x.to_object(), Baselayer.objects.all())}))
-
