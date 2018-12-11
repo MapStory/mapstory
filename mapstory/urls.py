@@ -12,7 +12,7 @@ from mapstory.favorite.urls import api as favorites_api
 from mapstory.importers import UploadedLayerResource
 from mapstory.mapstory_profile.urls import urlpatterns as mapstory_profile_urls
 from mapstory.storylayers.urls import urlpatterns as layers_urls
-from mapstory.views import GetPageView, IndexView, LeaderListView, SearchView
+from mapstory.views import baselayer_view, GetPageView, IndexView, LeaderListView, SearchView
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
 
 importer_api = Api(api_name='importer-api')
@@ -56,6 +56,8 @@ urlpatterns = patterns('',
                                                      namespace='initiatives')),
                        url(r'^robots\.txt$', TemplateView.as_view(
                            template_name='robots.txt', content_type="text/plain"), name='robots'),
+                       url(r'^baselayers$',
+                           baselayer_view, name='baselayer_view'),
                        )
 
 urlpatterns += patterns("", url(r'', include(mapstory_api.urls)))

@@ -21,7 +21,7 @@ from geonode.layers.utils import create_gs_thumbnail_geonode
 ############################################################################################
 from mapstory.celery import app
 from mapstory.mapstories.models import Map, MapStory
-
+from mapstory.models import Baselayer, DefaultBaselayer
 
 # geonode:layer -> geonode,layer
 # layer -> geonode,layer (geonode workspace assumed)
@@ -157,9 +157,7 @@ class CreateStoryLayerThumbnailTask:
 
     @staticmethod
     def tileURLFromLayerName(layer_name):
-        # get from actual settings file (config is slightly different!)
-        config_main = [
-            x for x in settings.MAP_BASELAYERS if "name" in x and x["name"] == layer_name][0]
+        config_main = Baselayer.objects.get(name=layer_name).to_object()
 
         # cf. https://wiki.openstreetmap.org/wiki/Tile_servers
         if config_main["source"]["ptype"] == "gxp_osmsource":
@@ -178,7 +176,7 @@ class CreateStoryLayerThumbnailTask:
 
     # phantomJSFile htmlFile wms layerName xmin ymin xmax ymax time output.fname
     def create_phantomjs_args(self, typeName, boundingBoxWGS84, tempfname, time="ALL",
-                              basemapXYZURL=tileURLFromLayerName.__func__(settings.DEFAULT_BASEMAP),
+                              basemapXYZURL=tileURLFromLayerName.__func__(DefaultBaselayer.objects.first().layer.name),
                               styles=""):
 
         workspace, layername = decodeTypeName(typeName)

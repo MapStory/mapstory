@@ -1,9 +1,12 @@
+import ast
 import datetime
 import hashlib
 import os
+import re
 
 from django import conf, contrib, db, template
 from django.contrib.sites.models import Site
+from django.conf import settings
 
 import geonode
 import textile
@@ -139,6 +142,88 @@ class ParallaxImage(db.models.Model):
 
     def __unicode__(self):
         return self.image.url
+
+
+class Baselayer(db.models.Model):
+    def __str__(self):
+        if self.title:
+            return self.title
+        elif self.name:
+            return self.name
+        return str(self.id)
+
+    def to_object(self):
+        def string_or_none(field):
+            if field:
+                return field
+            return None
+
+        args = None
+        if self.args:
+            args = ast.literal_eval(self.args)
+        else:
+            args = []
+
+        url = self.source_url
+
+        if url:
+            pattern = r"\${OGC_SERVER}"
+            match = re.search(pattern, url)
+            if match:
+                url = re.sub(pattern, settings.OGC_SERVER['default']['PUBLIC_LOCATION'], url)
+
+        return {
+            "source": {
+                "ptype": string_or_none(self.source_ptype),
+                "lazy": self.source_lazy,
+                "url": string_or_none(url),
+                "restUrl": string_or_none(self.source_rest_url),
+                "name": string_or_none(self.source_name),
+                "hidden": self.source_hidden
+            },
+            "name": string_or_none(self.name),
+            "type": string_or_none(self.type),
+            "args": args,
+            "title": string_or_none(self.title),
+            "visibility": self.visibility,
+            "fixed": self.fixed,
+            "group": string_or_none(self.fixed),
+            "isVirtualService": self.is_virtual_service,
+            "alwaysAnonymous": self.always_anonymous,
+            "proj": string_or_none(self.proj),
+            "opacity": float(self.opacity)
+        }
+
+    name = db.models.TextField(blank=True)
+    type = db.models.TextField(blank=True)
+    # This is a json array
+    args = db.models.TextField(blank=True)
+    title = db.models.TextField(blank=True)
+    visibility = db.models.BooleanField(default=True)
+    fixed = db.models.BooleanField(default=False)
+    group = db.models.TextField(blank=True)
+
+    # Layer Source related things:
+    source_ptype = db.models.TextField(blank=False)
+    source_lazy = db.models.BooleanField(default=False)
+    source_url = db.models.TextField(blank=True)
+    source_rest_url = db.models.TextField(blank=True)
+    source_name = db.models.TextField(blank=True)
+    source_hidden = db.models.BooleanField(default=False)
+    # Frontend
+    is_virtual_service = db.models.BooleanField(default=False)
+    always_anonymous = db.models.BooleanField(default=False)
+    proj = db.models.TextField(blank=True)
+
+    # these are things needed on the frontend:
+    opacity = db.models.DecimalField(default=1, max_digits=3, decimal_places=2)
+
+
+class DefaultBaselayer(db.models.Model):
+    def __str__(self):
+        return self.layer.name
+
+    layer = db.models.OneToOneField(Baselayer, on_delete=db.models.CASCADE, primary_key=True)
 
 
 def get_images():
