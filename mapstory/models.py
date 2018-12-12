@@ -187,7 +187,7 @@ class Baselayer(db.models.Model):
             "title": string_or_none(self.title),
             "visibility": self.visibility,
             "fixed": self.fixed,
-            "group": string_or_none(self.fixed),
+            "group": string_or_none(self.group),
             "isVirtualService": self.is_virtual_service,
             "alwaysAnonymous": self.always_anonymous,
             "proj": string_or_none(self.proj),

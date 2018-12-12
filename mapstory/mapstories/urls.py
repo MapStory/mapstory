@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from geonode.maps.views import new_map
 
-from .views import (composer_new_view, delete_mapstory, map_detail,
+from .views import (composer_new_view, composer_view, delete_mapstory, map_detail,
                     mapstory_view, save_mapstory, story_generate_thumbnail, style_view)
 
 urlpatterns = [
@@ -27,7 +27,7 @@ urlpatterns = [
 
     # Composer
     url(r'^story/(?P<slug>[-\w]+)/draft$',
-        composer_new_view, {'template': 'composer_new/composer.html'}, name='composer-view'),
-    url(r'^story/new$', new_map,
+        composer_view, {'template': 'composer_new/composer.html'}, name='composer-view'),
+    url(r'^story/new$', composer_new_view,
         {'template': 'composer_new/composer.html'}, name='new-story'),
 ]
