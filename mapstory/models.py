@@ -219,12 +219,11 @@ class Baselayer(db.models.Model):
     opacity = db.models.DecimalField(default=1, max_digits=3, decimal_places=2)
 
 
-class DefaultBaselayer(db.models.Model):
+class BaselayerDefault(db.models.Model):
     def __str__(self):
         return self.layer.name
 
-    layer = db.models.OneToOneField(Baselayer, on_delete=db.models.CASCADE, primary_key=True)
-
+    layer = db.models.OneToOneField(Baselayer, on_delete=db.models.CASCADE, primary_key=False)
 
 def get_images():
     return ParallaxImage.objects.all()

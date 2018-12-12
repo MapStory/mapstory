@@ -256,7 +256,7 @@
     "fields": {
       "layer": 10
     },
-    "model": "mapstory.defaultbaselayer",
+    "model": "mapstory.baselayerdefault",
     "pk": 1
   }
 ]

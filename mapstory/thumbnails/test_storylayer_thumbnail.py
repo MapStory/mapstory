@@ -15,7 +15,7 @@ from mapstory.tests.integration.geogig_uploader import GeoGigUploaderBase
 from mapstory.thumbnails.tasks import (CreateStoryAnimatedThumbnailTask,
                                        CreateStoryLayerAnimatedThumbnailTask,
                                        CreateStoryLayerThumbnailTask)
-from mapstory.models import Baselayer, DefaultBaselayer
+from mapstory.models import Baselayer, BaselayerDefault
 
 
 def compare_images(img1, img2, rgb_difference=1):
@@ -78,7 +78,7 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
             Baselayer(name="mapnik", args="[\"OpenStreetMap\"]", source_ptype="gxp_osmsource").save()
             Baselayer(name="hot", source_ptype="gxp_osmsource", args= "[\"Humanitarian OpenStreetMap\", [\"//a.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png\",\"//b.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png\",\"//c.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png\"], {\"tileOptions\": {\"crossOriginKeyword\": None}}]").save()
             Baselayer(name="geography-class", source_ptype="gxp_mapboxsource").save()
-            DefaultBaselayer(layer=layer).save()
+            BaselayerDefault(layer=layer).save()
         GeoGigUploaderBase.setUp(self)
 
     # make a Mapstory object, with basemap layer

@@ -49,7 +49,7 @@
     "fields": {
       "layer": 1
     },
-    "model": "mapstory.defaultbaselayer",
+    "model": "mapstory.baselayerdefault",
     "pk": 1
   }
 ]
