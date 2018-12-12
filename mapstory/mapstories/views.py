@@ -26,10 +26,13 @@ from guardian.shortcuts import get_perms
 from mapstory.favorite.utils import get_favorite_info
 from mapstory.forms import KeywordsForm, PublishStatusForm
 from mapstory.initiatives.models import InitiativeMembership
+from mapstory.models import Baselayer, DefaultBaselayer
 from mapstory.organizations.models import (OrganizationMapStory,
                                            OrganizationMembership)
 from mapstory.search.utils import update_es_index
 from mapstory.thumbnails.tasks import create_mapstory_thumbnail_tx_aware
+
+from geonode.maps.views import new_map_config
 
 from .models import Map, MapStory, StoryFrame, StoryPin, LayerStyle
 from .utils import datetime_to_seconds, parse_date_time
@@ -164,9 +167,13 @@ def mapstory_view(request, slug, snapshot=None, template='composer_new/composer.
 
     config['about']['detail_url'] = slug
 
+    layers = json.dumps({"defaultLayer": DefaultBaselayer.objects.first().layer.name,
+                                    "layers":  map(lambda x: x.to_object(), Baselayer.objects.all())})
+
     return render_to_response(template, RequestContext(request, {
         'config': json.dumps(config),
         'composerMode': False,
+        'layers': layers
     }))
 
 
@@ -208,13 +215,29 @@ def story_generate_thumbnail(request, storyid):
     return HttpResponse("create story thumbnail task was scheduled for story id="+str(story_obj.id)+", with uuid="+str(story_obj.uuid))
 
 
-def composer_new_view(request, slug, template='composer_new/composer.html'):
+def composer_new_view(request, template='composer_new/composer.html'):
+    map_obj, config = new_map_config(request)
+    layers = json.dumps({"defaultLayer": DefaultBaselayer.objects.first().layer.name,
+                                    "layers":  map(lambda x: x.to_object(), Baselayer.objects.all())})
+
+    return render_to_response(template, RequestContext(request, {
+        'layers': layers,
+        'config': config,
+        'map': map
+    }))
+
+def composer_view(request, slug, template='composer_new/composer.html'):
     story_obj = _resolve_story(
         request, slug, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
     config = story_obj.viewer_json(request)
+
+    layers = json.dumps({"defaultLayer": DefaultBaselayer.objects.first().layer.name,
+                                    "layers":  map(lambda x: x.to_object(), Baselayer.objects.all())})
+
     return render_to_response(template, RequestContext(request, {
         'config': json.dumps(config),
-        'story': story_obj
+        'story': story_obj,
+        'layers': layers
     }))
 
 
