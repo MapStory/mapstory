@@ -6,7 +6,7 @@ from geonode.layers.models import Layer
 from geonode.people.admin import ProfileAdmin as UserAdmin
 from mapstory.export import export_via_model
 from mapstory.flag import admin as flag_admin
-from mapstory.models import (Baselayer, CustomSite, DefaultBaselayer,
+from mapstory.models import (Baselayer, BaselayerDefault, CustomSite,
                              GetPage, GetPageContent, Leader,
                              MapStory, NewsItem, ParallaxImage, Sponsor)
 
@@ -162,11 +162,19 @@ class BaselayerAdmin(admin.ModelAdmin):
     model = Baselayer
 
 
-class DefaultBaselayerAdmin(admin.ModelAdmin):
-    class Meta:
-        verbose_name = 'Default Baselayer'
-        verbose_name_plural = 'Default Baselayer'
-    model = DefaultBaselayer
+class BaselayerDefaultAdmin(admin.ModelAdmin):
+    def get_actions(self, request):
+        actions = super(BaselayerDefaultAdmin, self).get_actions(request)
+        del actions['delete_selected']
+        return actions
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    model = BaselayerDefault
 
 
 admin.site.unregister(Layer)
@@ -180,4 +188,4 @@ admin.site.register(Leader, LeaderAdmin)
 admin.site.register(ParallaxImage, ParallaxImageAdmin)
 admin.site.register(CustomSite, CustomSiteAdmin)
 admin.site.register(Baselayer, BaselayerAdmin)
-admin.site.register(DefaultBaselayer, DefaultBaselayerAdmin)
+admin.site.register(BaselayerDefault, BaselayerDefaultAdmin)

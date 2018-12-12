@@ -7,7 +7,7 @@ from django.views.generic.list import ListView
 
 from geonode.base.models import Region
 from mapstory.journal.models import JournalEntry
-from mapstory.models import Baselayer, DefaultBaselayer, GetPage, Leader, NewsItem, get_images, get_sponsors
+from mapstory.models import Baselayer, BaselayerDefault, GetPage, Leader, NewsItem, get_images, get_sponsors
 from django.http import HttpResponse
 
 
@@ -48,5 +48,5 @@ class LeaderListView(ListView):
 
 
 def baselayer_view(request):
-    return HttpResponse(json.dumps({"defaultLayer": DefaultBaselayer.objects.first().layer.name,
+    return HttpResponse(json.dumps({"defaultLayer": BaselayerDefault.objects.first().layer.name,
                                     "layers":  map(lambda x: x.to_object(), Baselayer.objects.all())}))

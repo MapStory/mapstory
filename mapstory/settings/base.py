@@ -28,7 +28,6 @@ import sys
 import geonode
 import pyproj
 from geonode.settings import *
-# from mapstory.models import Baselayer, DefaultBaselayer
 
 
 def str_to_bool(v):

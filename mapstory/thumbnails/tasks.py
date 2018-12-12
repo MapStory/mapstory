@@ -21,7 +21,7 @@ from geonode.layers.utils import create_gs_thumbnail_geonode
 ############################################################################################
 from mapstory.celery import app
 from mapstory.mapstories.models import Map, MapStory
-from mapstory.models import Baselayer, DefaultBaselayer
+from mapstory.models import Baselayer, BaselayerDefault
 
 # geonode:layer -> geonode,layer
 # layer -> geonode,layer (geonode workspace assumed)
@@ -176,7 +176,7 @@ class CreateStoryLayerThumbnailTask:
 
     # phantomJSFile htmlFile wms layerName xmin ymin xmax ymax time output.fname
     def create_phantomjs_args(self, typeName, boundingBoxWGS84, tempfname, time="ALL",
-                              basemapXYZURL=tileURLFromLayerName.__func__(DefaultBaselayer.objects.first().layer.name),
+                              basemapXYZURL=tileURLFromLayerName.__func__(BaselayerDefault.objects.first().layer.name),
                               styles=""):
 
         workspace, layername = decodeTypeName(typeName)
