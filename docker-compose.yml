@@ -80,7 +80,7 @@ services:
       - mapstory_media:/var/lib/mapstory/media/
 
   geoserver:
-    image: quay.io/mapstory/geoserver:2.12.4-1.2
+    image: quay.io/mapstory/geoserver:2.12.x-1.2.x
     volumes:
       - geoserver:/var/lib/geoserver
     environment:
