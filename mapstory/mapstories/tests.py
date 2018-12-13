@@ -167,7 +167,7 @@ class MapViewsTest(MapStoryTestMixin):
         self.assertTrue(
             test_mapstory.abstract in description[0]['content'].encode('utf-8'))
         self.assertIsNotNone(image[0]['content'].encode('utf-8'))
-        self.assertEqual(site[0]['content'].encode('utf-8'), "@mapstory")
+        self.assertEqual(site[0]['content'].encode('utf-8'), "@MapStory")
 
     def test_mapstory_details_share_buttons(self):
         test_mapstory = create_mapstory(testUser, 'Testing Map 05')

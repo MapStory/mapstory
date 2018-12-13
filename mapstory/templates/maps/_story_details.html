@@ -8,6 +8,9 @@
 {% load guardian_tags %}
 {% load flag_tags %}
 {% load avatar_tags %}
+{% if TWITTER_CARD %}
+  {% include "base/_resourcebase_twittercard.html" %}
+{% endif %}
 {% get_comment_count for resource as num_comments %}
 <div ng-controller="detailController">
     <section class="slice" id="dashboard">

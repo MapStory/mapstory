@@ -713,3 +713,8 @@ if AUDIT_ENABLED:
         'AUDIT_LOGFILE_LOCATION',
         os.path.join(LOCAL_ROOT, 'audit_log.json')
     )
+
+# Setting TWITTER_CARD to True will enable Twitter Cards
+TWITTER_CARD = strtobool(os.getenv('TWITTER_CARD', 'True'))
+TWITTER_SITE = '@MapStory'
+TWITTER_HASHTAGS = ['mapstory']

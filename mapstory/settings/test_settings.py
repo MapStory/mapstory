@@ -18,3 +18,5 @@ HAYSTACK_SIGNAL_PROCESSOR = 'mapstory.search.signals.RealtimeSignalProcessor'
 ENABLE_SOCIAL_LOGIN = False
 USE_AWS_S3 = False
 GOOGLE_ANALYTICS = 'None'
+TWITTER_CARD=True
+
