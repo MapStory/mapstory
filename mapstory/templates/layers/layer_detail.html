@@ -633,6 +633,32 @@
     {% endif %} 
     {% endcomment %}
 
+    {% comment %} MapStory Specific Change {% endcomment %}
+    {% if request.user.is_authenticated %}
+      {% if organizations.count > 0 %}
+        <li class="list-group-item">
+          <h4 class="list-group-item-heading">Use on Organization Page</h4>
+          {% for org in organizations %}
+              <form action='{% url "organizations:add_layer" slug=org.organization.slug layer_pk=resource.pk%}' method="post">
+                  {% csrf_token %}
+                  <input class="btn btn-primary btn-block" type="submit" name="add_to_layers" value="{{ org.organization }}" />
+              </form>
+          {% endfor %}
+        </li>
+      {% endif %}
+      {% if initiatives.count > 0 %}
+        <li class="list-group-item">
+          <h4 class="list-group-item-heading">Use on Initiative Page</h4>
+          {% for ini in initiatives %}
+              <form action='{% url "initiatives:add_layer" slug=ini.initiative.slug layer_pk=resource.pk%}' method="post">
+                  {% csrf_token %}
+                  <input class="btn btn-primary btn-block" type="submit" name="add_to_layers" value="{{ ini.initiative }}" />
+              </form>
+          {% endfor %}
+        </li>
+      {% endif %}
+    {% endif %}
+    {% comment %} End MapStory Specific Change {% endcomment %}
     {% if documents.count > 0 %}
     <li class="list-group-item">
       <h4>{% trans "Documents related to this layer" %}</h4>
