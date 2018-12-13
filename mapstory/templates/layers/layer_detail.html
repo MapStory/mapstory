@@ -1,5 +1,9 @@
 {% extends "layers/layer_base.html" %}
 {% load i18n %}
+{% comment %} MapStory Specific Change {% endcomment %}
+{% load threadedcomments_tags %}
+{% load fluent_comments_tags %}
+{% comment %} End MapStory Specific Change {% endcomment %}
 {% load staticfiles %}
 {% load dialogos_tags %}
 {% load agon_ratings_tags %}
@@ -19,6 +23,12 @@
   {% if OPENGRAPH_ENABLED %}
     {% include "base/_resourcebase_opengraph.html" %}
   {% endif %}
+
+  {% comment %} MapStory Specific Change Add Threaded Comments {% endcomment %}
+  {% if DISPLAY_COMMENTS %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}fluent_comments/css/ajaxcomments.css"/>
+  {% endif %}
+  {% comment %} End MapStory Specific Change Add Threaded Comments {% endcomment %}
 
   {% get_layer_detail %}
 {{ block.super }}
@@ -232,9 +242,12 @@
 
       {% if DISPLAY_COMMENTS %}
       <article id="comments" class="tab-pane">
-        {% with resource as obj %}
-          {% include "_comments.html" %}
-        {% endwith %}
+      {% comment %} MapStory Specific Change Add Threaded Comments {% endcomment %}
+        {% render_comment_list for resource %}
+        {% if user.is_authenticated %}
+            {% render_comment_form for resource %}
+        {% endif %}
+      {% comment %} End MapStory Specific Change Add Threaded Comments {% endcomment %}
       </article>
       {% endif %}
 
@@ -1046,4 +1059,10 @@
     {% if GEONODE_SECURITY_ENABLED %}
     {% include "_permissions_form_js.html" %}
     {% endif %}
+
+    {% comment %} MapStory Specific Change Add Threaded Comments {% endcomment %}
+    {% if DISPLAY_COMMENTS %}
+      <script src="{{ STATIC_URL }}fluent_comments/js/ajaxcomments.js"></script>
+    {% endif %}
+    {% comment %} End MapStory Specific Change Add Threaded Comments {% endcomment %}
 {% endblock extra_script %}
