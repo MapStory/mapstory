@@ -23,6 +23,7 @@
       localGeoServerBaseUrl: "{{ GEOSERVER_BASE_URL }}",
       localCSWBaseUrl: "{{ CATALOGUE_BASE_URL }}",
       csrfToken: "{{ csrf_token }}",
+      baselayersConfig: {{ layers | safe }},
     }
     window.mapstory.composer.config.branding = {
       siteName: "{{ SITE_NAME }}",

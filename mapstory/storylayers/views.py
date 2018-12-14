@@ -43,6 +43,7 @@ from geonode.utils import (GXPLayer, GXPMap, bbox_to_projection,
                            default_map_config)
 from guardian.shortcuts import get_perms
 from lxml import etree
+from mapstory.models import Baselayer, BaselayerDefault
 from mapstory.forms import DistributionUrlForm, KeywordsForm, MetadataForm
 from mapstory.importers import GeoServerLayerCreator
 from mapstory.initiatives.models import InitiativeMembership
@@ -715,7 +716,9 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "share_title": share_title,
         "share_description": share_description,
         "organizations": admin_memberships,
-        "initiatives": ini_memberships
+        "initiatives": ini_memberships,
+        "layers": json.dumps({"defaultLayer": BaselayerDefault.objects.first().layer.name,
+                              "layers":  map(lambda x: x.to_object(), Baselayer.objects.all())})
         # "online": (layer.remote_service.probe == 200) if layer.storeType == "remoteStore" else True
     }
 
