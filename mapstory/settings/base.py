@@ -718,3 +718,18 @@ if AUDIT_ENABLED:
 TWITTER_CARD = strtobool(os.getenv('TWITTER_CARD', 'True'))
 TWITTER_SITE = '@MapStory'
 TWITTER_HASHTAGS = ['mapstory']
+
+AGON_RATINGS_CATEGORY_CHOICES = {
+    "maps.Map": {
+        "map": "How good is this map?"
+    },
+    "layers.Layer": {
+        "layer": "How good is this layer?"
+    },
+    "documents.Document": {
+        "document": "How good is this document?"
+    },
+    "mapstories.MapStory": {
+        "mapstory": "How good is this mapstory?"
+    }
+}

@@ -4,6 +4,8 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 
 from mapstory.version import get_version
+from mapstory.mapstories.models import MapStory
+from django.contrib.contenttypes.models import ContentType
 
 from .context_processors_favorite import get_favorite_info
 
@@ -12,6 +14,7 @@ def context(req):
     default_config = getattr(settings, 'DEFAULT_IMPORTER_CONFIG')
     append_config = getattr(settings, 'DEFAULT_APPEND_CONFIG')
     return dict(
+        MAPSTORY_CONTENT_TYPE=ContentType.objects.get_for_model(MapStory).id,
         AUTOCOMPLETE_QUICK_SEARCH=getattr(
             settings, 'AUTOCOMPLETE_QUICK_SEARCH', False),
         ENABLE_FORM_LOGIN=getattr(settings, 'ENABLE_FORM_LOGIN', True),
