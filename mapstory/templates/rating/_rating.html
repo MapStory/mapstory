@@ -1,13 +1,15 @@
 {% load i18n %}
-{{ style1 }}
-{% if user.is_authenticated %}
-    <a class="pointer" id="userRating">
-        <i data="1" class="fa fa-star"></i>
-        <i data="2" class="fa fa-star"></i>
-        <i data="3" class="fa fa-star"></i>
-        <i data="4" class="fa fa-star"></i>
-        <i data="5" class="fa fa-star"></i>
-    </a>
-{% else %}
-    <a class="pointer" title="{% trans 'Log in to rate.' %}"><span>{% trans 'Log in to rate.' %}</span>
+
+{% if DISPLAY_RATINGS %}
+    {% if user.is_authenticated %}
+        <a class="pointer" id="userRating">
+            <i data="1" class="fa fa-star"></i>
+            <i data="2" class="fa fa-star"></i>
+            <i data="3" class="fa fa-star"></i>
+            <i data="4" class="fa fa-star"></i>
+            <i data="5" class="fa fa-star"></i>
+        </a>
+    {% else %}
+        <a class="pointer" title="{% trans 'Log in to rate.' %}"><span>{% trans 'Log in to rate.' %}</span>
+    {% endif %}
 {% endif %}
