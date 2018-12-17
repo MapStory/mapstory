@@ -34,15 +34,20 @@
                         <li>
                             <i class="fa fa-star"></i>
                             {% if resource.rating %}
-                                {{ resource.rating }} of 5 stars
+                                <span id="overall-rating">
+                                    {{ resource.rating }} of 5 stars
+                                </span>
                             {% else %}
-                                Not yet rated
+                                <span id="overall-rating">
+                                    Not yet rated
+                                </span>
                             {% endif %}
                         </li>
                         <li><i class="fa fa-eye"></i> {{ resource.popular_count }} {% trans 'views' %}</li>
                     </ul>
                     {% if request.user.is_authenticated %}
                         <ul class="layer-sidebar">
+                            <li>{% include "rating/_rating.html" %}</li>
                             <!-- Favorite -->
                             <li>{% include "favorite/_favorite.html" %}</li>
                             <!-- Flag -->
@@ -350,7 +355,3 @@
                 </div>
     </section>
 </div>
-
-{% block extra_script %}
-    {% include "favorite/_favorite_js.html" %}
-{% endblock %}
