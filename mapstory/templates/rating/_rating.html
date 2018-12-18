@@ -1,8 +1,9 @@
 {% load i18n %}
 
+
 {% if DISPLAY_RATINGS %}
     {% if user.is_authenticated %}
-        <a class="pointer" id="userRating">
+        <a class="pointer" id="userRating" data="{{ user_mapstory_rating }}">
             <i data="1" class="fa fa-star"></i>
             <i data="2" class="fa fa-star"></i>
             <i data="3" class="fa fa-star"></i>

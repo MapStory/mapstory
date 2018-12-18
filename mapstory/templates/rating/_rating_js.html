@@ -4,12 +4,11 @@
 
 
 {% if request.user.is_authenticated and DISPLAY_RATINGS %}
-{#    {% user_rating request.user resource "mapstory" as user_mapstory_rating %}#}
     <script type="text/javascript">
         var mapstoryContentType = "{{MAPSTORY_CONTENT_TYPE}}";
         var mapstoryId = "{{ resource.id }}";
         var setRatingUrl = "/ratings/" + mapstoryContentType + "/" + mapstoryId + "/rate/";
-        var currentUserRating = "{{ user_mapstory_rating }}";
+        var currentUserRating = +$("#userRating").attr("data");
 
         if (currentUserRating) {
             setUIRate(+currentUserRating);
@@ -24,6 +23,7 @@
         });
 
         function setUIRate(rate) {
+           $("#userRating").attr("data", rate);
            $("#userRating i").each(function() {
                var elem = $(this);
 
