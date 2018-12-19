@@ -2,29 +2,6 @@
   {
     "fields": {
       "opacity": "1.00",
-      "group": "",
-      "name": "",
-      "title": "",
-      "source_hidden": false,
-      "is_virtual_service": false,
-      "args": "",
-      "visibility": true,
-      "source_url": "${OGC_SERVER}wms",
-      "source_rest_url": "/gs/rest",
-      "source_ptype": "gxp_wmscsource",
-      "proj": "EPSG:4326",
-      "always_anonymous": false,
-      "source_name": "local geoserver",
-      "fixed": false,
-      "type": "",
-      "source_lazy": true
-    },
-    "model": "mapstory.baselayer",
-    "pk": 1
-  },
-  {
-    "fields": {
-      "opacity": "1.00",
       "group": "background",
       "name": "geoint-services-osm",
       "title": "GEOINT Services OpenStreetMap",
