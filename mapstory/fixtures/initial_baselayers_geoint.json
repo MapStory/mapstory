@@ -24,7 +24,7 @@
   },
   {
     "fields": {
-      "layer": 1
+      "layer": 2
     },
     "model": "mapstory.baselayerdefault",
     "pk": 1
