@@ -1,5 +1,5 @@
 # mapstory.org configuration
-version: '3.7'
+version: '3.1'
 services:
   composer:
     build:
