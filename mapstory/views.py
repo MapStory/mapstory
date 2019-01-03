@@ -1,5 +1,6 @@
 import datetime
 import json
+from geonode.maps.views import new_map_config
 
 from django.views.generic import TemplateView
 from django.views.generic.detail import DetailView
@@ -9,6 +10,8 @@ from geonode.base.models import Region
 from mapstory.journal.models import JournalEntry
 from mapstory.models import Baselayer, BaselayerDefault, GetPage, Leader, NewsItem, get_images, get_sponsors
 from django.http import HttpResponse
+from django.shortcuts import render
+from django.conf import settings
 
 
 class IndexView(TemplateView):
@@ -50,3 +53,65 @@ class LeaderListView(ListView):
 def baselayer_view(request):
     return HttpResponse(json.dumps({"defaultLayer": BaselayerDefault.objects.first().layer.name,
                                     "layers":  map(lambda x: x.to_object(), Baselayer.objects.all())}))
+
+
+def maploom_new_map(request, template='maps/map_new.html'):
+    map_obj, config = new_map_config(request)
+
+    config_obj = json.loads(config)
+
+    sources_array = []
+    layers = []
+
+    for layer in Baselayer.objects.all():
+        layer_obj = layer.to_object()
+        try:
+            source_index = sources_array.index(layer_obj["source"])
+        except ValueError:
+            sources_array.append(layer_obj["source"])
+            source_index = len(sources_array) - 1
+
+        layer_obj["source"] = str(source_index)
+        layers.append(layer_obj)
+
+    sources_array.append({
+        "title": "GeoServer - Public Layers",
+        # "attribution": "&copy; %s" % SITEURL,
+        "attribution": "&copy; %s",
+        "ptype": "gxp_wmscsource",
+        # "url": OGC_SERVER['default']['PUBLIC_LOCATION'] + "wws",
+        "url": "https://docker/geoserver/wms",
+        "restUrl": "/gs/rest"
+    })
+    viewed_layer = config_obj["map"]["layers"][-1]
+    viewed_layer["source"] = str(len(sources_array) - 1)
+
+    layers.append(viewed_layer)
+
+    sources = {}
+    for idx, source in enumerate(sources_array):
+        sources[str(idx)] = source
+
+    # print(sources)
+
+    config_obj["map"]["layers"] = layers
+    config_obj["sources"] = sources
+
+    context_dict = {
+        "config": json.dumps(config_obj),
+        "map": map_obj
+    }
+
+    context_dict["preview"] = getattr(
+        settings,
+        'GEONODE_CLIENT_LAYER_PREVIEW_LIBRARY',
+        'geoext')
+    if isinstance(config, HttpResponse):
+        return config
+    else:
+        return render(
+            request,
+            template,
+            context=context_dict)
+
+

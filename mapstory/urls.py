@@ -12,7 +12,7 @@ from mapstory.favorite.urls import api as favorites_api
 from mapstory.importers import UploadedLayerResource
 from mapstory.mapstory_profile.urls import urlpatterns as mapstory_profile_urls
 from mapstory.storylayers.urls import urlpatterns as layers_urls
-from mapstory.views import baselayer_view, GetPageView, IndexView, LeaderListView, SearchView
+from mapstory.views import baselayer_view, GetPageView, IndexView, LeaderListView, SearchView, maploom_new_map
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
 
 importer_api = Api(api_name='importer-api')
@@ -31,7 +31,7 @@ urlpatterns = patterns('',
                        url(r'^blog/comments/', include('fluent_comments.urls')),
 
                        # Editor
-                       url(r'^maps/edit$', new_map,
+                       url(r'^maps/edit$', maploom_new_map,
                            {'template': 'composer/maploom.html'}, name='map-edit'),
                        url(r'^maps/(?P<mapid>\d+)/view$', map_view,
                            {'template': 'composer/maploom.html'}, name='map-view'),
