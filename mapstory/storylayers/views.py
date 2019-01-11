@@ -7,6 +7,7 @@ import re
 import shutil
 import StringIO
 import tempfile
+import traceback
 import uuid
 import zipfile
 
@@ -17,9 +18,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.gis.geos import GEOSGeometry
 from django.core.urlresolvers import reverse
+from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404, render, render_to_response
 from django.template import RequestContext
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext as _
@@ -27,6 +29,7 @@ from requests import Request
 
 import ogr
 import pandas
+from celery.exceptions import TimeoutError
 from geonode import geoserver
 from geonode.base.models import TopicCategory
 from geonode.documents.models import get_related_documents
@@ -43,11 +46,11 @@ from geonode.utils import (GXPLayer, GXPMap, bbox_to_projection,
                            default_map_config)
 from guardian.shortcuts import get_perms
 from lxml import etree
-from mapstory.models import Baselayer, BaselayerDefault
 from mapstory.forms import DistributionUrlForm, KeywordsForm, MetadataForm
 from mapstory.importers import GeoServerLayerCreator
 from mapstory.initiatives.models import InitiativeMembership
 from mapstory.mapstories.models import Map
+from mapstory.models import Baselayer, BaselayerDefault
 from mapstory.organizations.models import OrganizationMembership
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
 from osgeo_importer.utils import UploadError, launder
@@ -857,23 +860,42 @@ def layer_remove(request, layername, template='layers/layer_remove.html'):
         _PERMISSION_MSG_DELETE)
 
     if (request.method == 'GET'):
-        return render_to_response(template, RequestContext(request, {
+        return render(request, template, context={
             "layer": layer
-        }))
+        })
     if (request.method == 'POST'):
         try:
-            delete_layer(object_id=layer.id)
+            with transaction.atomic():
+                # Using Tastypie
+                # from geonode.api.resourcebase_api import LayerResource
+                # res = LayerResource()
+                # request_bundle = res.build_bundle(request=request)
+                # layer_bundle = res.build_bundle(request=request, obj=layer)
+                # layer_json = res.serialize(None,
+                #                            res.full_dehydrate(layer_bundle),
+                #                            "application/json")
+                # delete_layer.delay(instance=layer_json)
+                result = delete_layer.delay(layer_id=layer.id)
+                result.wait(10)
+        except TimeoutError:
+            # traceback.print_exc()
+            pass
         except Exception as e:
+            traceback.print_exc()
             message = '{0}: {1}.'.format(
-                _('Unable to delete layer'), layer.typename)
+                _('Unable to delete layer'), layer.alternate)
 
             if 'referenced by layer group' in getattr(e, 'message', ''):
-                message = _('This layer is a member of a layer group, you must remove the layer from the group '
-                            'before deleting.')
+                message = _(
+                    'This layer is a member of a layer group, you must remove the layer from the group '
+                    'before deleting.')
 
             messages.error(request, message)
-            return render_to_response(template, RequestContext(request, {"layer": layer}))
+            return render(
+                request, template, context={"layer": layer})
+        # MapStory Specific Change
         return HttpResponseRedirect(reverse("profile_detail", kwargs={'slug': layer.owner}))
+        # End MapStory Specific Change
     else:
         return HttpResponse("Not allowed", status=403)
 
