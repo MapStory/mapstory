@@ -1,7 +1,6 @@
 backups/
 development.db
 downloaded
-geoserver
 **/m2
 mapstory/static/maploom
 mapstory/static/mapstory/js/dist/
