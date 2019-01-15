@@ -79,8 +79,6 @@ def http_request(url, data=None, method='get', headers={}, access_token=None):
 @csrf_exempt
 def geoserver_rest_proxy(request, proxy_path, downstream_path):
 
-    print("HELLO WE HIT GEOSERVER REST PROXY")
-
     if not request.user.is_authenticated():
         return HttpResponse(
             "You must be logged in to access GeoServer",
