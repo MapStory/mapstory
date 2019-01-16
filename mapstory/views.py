@@ -76,11 +76,9 @@ def maploom_new_map(request, template='maps/map_new.html'):
 
     sources_array.append({
         "title": "GeoServer - Public Layers",
-        # "attribution": "&copy; %s" % SITEURL,
         "attribution": "&copy; %s",
         "ptype": "gxp_wmscsource",
-        # "url": OGC_SERVER['default']['PUBLIC_LOCATION'] + "wws",
-        "url": "https://docker/geoserver/wms",
+        "url": settings.SITEURL + "/geoserver/wms",
         "restUrl": "/gs/rest"
     })
     viewed_layer = config_obj["map"]["layers"][-1]
