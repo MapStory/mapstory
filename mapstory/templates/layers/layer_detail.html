@@ -273,6 +273,13 @@
         {% overall_rating resource "layer" as layer_rating %}
         {% num_ratings resource as num_votes %}
         <div class="overall_rating" data-score="{{ layer_rating }}"></div> ({{num_votes}})
+        {% comment %} MapStory Specific Change Add Favorite and Flag {% endcomment %}
+        {% if request.user.is_authenticated %}
+        <h4>{% include "favorite/_favorite.html" %}</h4>
+        <h4><i class="fa fa-flag"></i><a href="#flag" role="button" data-toggle="modal">Flag</a></h4>
+        {% include '_flag_content.html' %}
+        {% endif %}
+        {% comment %} End MapStory Specific Change Add Favorite and Flag {% endcomment %}
       </article>
       {% endif %}
 
