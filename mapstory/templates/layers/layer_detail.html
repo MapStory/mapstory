@@ -234,11 +234,51 @@
         {% endif %}
       </article>
 
+      {% comment %} MapStory Specific Change Share Tab {% endcomment %}
+      <article class="tab-pane" id="share">
+      <header>
+          <h3>{% trans "Share This" %} {% trans resource.class_name %} </h3>
+      </header>
       {% block social_links %}
       {% if DISPLAY_SOCIAL %}
-        {% include "social_links.html" %}
+        {% include "share_icons.html" %}
       {% endif %}
       {% endblock %}
+      <h3>Map Services</h3>
+        <div class="embed">WMS
+            <i class="fa fa-question-circle ng-scope">
+                <md-tooltip>OpenGIS® Web Map Service Interface Standard</md-tooltip>
+            </i>
+            <input id="shareWMS"
+                    aria-label="WMS"
+                    value ="https://{{ request.get_host }}/geoserver/geonode/{{ resource.name }}/wms?REQUEST=GetCapabilities&SERVICE=WMS&TILED=true&VERSION=1.1.1">
+
+            <button class="copyclip btn" data-clipboard-target="#shareWMS">
+                <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="embed"> WFS
+            <i class="fa fa-question-circle ng-scope">
+                <md-tooltip>OGC® Web Feature Service</md-tooltip>
+            </i>
+            <input id="shareWFS"
+                    aria-label="WFS"
+                    value ="https://{{ request.get_host }}/geoserver/geonode/{{ resource.name }}/wfs?REQUEST=GetCapabilities&SERVICE=WFS&VERSION=2.0.0">
+
+            <button class="copyclip btn" data-clipboard-target="#shareWFS">
+                <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="embed"> Embed
+            <input id="embedLayer"
+                    aria-label="Embed"
+                    value="<iframe style='border: none;' height='400' width='600' src='https://{{ request.get_host }}/layers/{{ resource.service_typename }}/embed'></iframe>">
+            <button class="copyclip btn" data-clipboard-target="#embedLayer">
+                <i class="fa fa-clipboard" aria-hidden="true"></i>
+            </button>
+        </div>
+      </article>
+      {% comment %} EndMapStory Specific Change Share Tab {% endcomment %}
 
       {% if DISPLAY_COMMENTS %}
       <article id="comments" class="tab-pane">
