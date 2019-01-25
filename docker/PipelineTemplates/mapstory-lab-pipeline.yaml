@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
     This CloudFormation template will deploy a full CI/CD pipeline for Mapstory. It
-    includes docker image building with AWS CodeBuild and application deployment via AWS
-    CloudFormation onto an already created EC2 instance. It will create an AWS
-    CodePipeline for orchastrating builds, testing and deployments. Use with separate
-    configuration file to specific environment parameters.
+    includes building with AWS CodeBuild and infrastructure deployment.
+    It will create an AWS CodePipeline for orchastrating builds, testing and deployments
+    as well initiating a EC2 cloudformation stack to host the Mapstory docker micro
+    service containers in the lab environment.
 
 Parameters:
 
@@ -45,14 +45,7 @@ Parameters:
     QUAYioPASSWORD:
         Type: String
 
-    DeploymentTagKey:
-        Type: String
-
-    DeploymentTagValue:
-        Type: String
-
 Metadata:
-
     AWS::CloudFormation::Interface:
         ParameterGroups:
             -
@@ -71,7 +64,6 @@ Metadata:
                     - GitHubBranch
 
 Resources:
-
     CodePipeline:
         Type: AWS::CodePipeline::Pipeline
         Properties:
@@ -101,7 +93,7 @@ Resources:
                                 Branch: !Ref GitHubBranch
                                 OAuthToken: !Ref GitHubOAuthToken
                         -
-                            Name: PipelineArtifact
+                            Name: PipelineConfigs
                             RunOrder: 1
                             ActionTypeId:
                                 Category: Source
@@ -109,17 +101,16 @@ Resources:
                                 Version: 1
                                 Provider: S3
                             OutputArtifacts:
-                                -  Name: mapstory-codedeploy
+                                -  Name: pipelineconfigs
                             Configuration:
                                 S3Bucket: mapstory-pipeline
                                 PollForSourceChanges: 'false'
-                                S3ObjectKey: mapstory-codedeploy.zip
+                                S3ObjectKey: mapstory-configs.zip
                 -
                     Name: Build
                     Actions:
                         -
                             Name: CodeBuild
-                            RunOrder: 1
                             InputArtifacts:
                                 - Name: Source
                             ActionTypeId:
@@ -131,40 +122,43 @@ Resources:
                                 - Name: Built
                             Configuration:
                                 ProjectName: !Ref CodeBuild
+                            RunOrder: 1
                 -
-                    Name: Deploy
+                    Name: Delete
                     Actions:
                         -
-                            Name: Deploy
+                            Name: Delete
                             RunOrder: 1
-                            InputArtifacts:
-                                - Name: mapstory-codedeploy
                             ActionTypeId:
                                 Category: Deploy
                                 Owner: AWS
                                 Version: '1'
-                                Provider: CodeDeploy
+                                Provider: CloudFormation
                             Configuration:
-                                ApplicationName: !Sub ${ApplicationName}
-                                DeploymentGroupName: !Ref DeploymentGroup
-    DeploymentGroup:
-        Type: AWS::CodeDeploy::DeploymentGroup
-        Properties:
-            ApplicationName: !Sub ${ApplicationName}
-            Ec2TagFilters:
-              -
-                Key: !Sub ${DeploymentTagKey}
-                Value: !Sub ${DeploymentTagValue}
-                Type: KEY_AND_VALUE
-            ServiceRoleArn: !GetAtt CodeDeployServiceRole.Arn
-            DeploymentConfigName: CodeDeployDefault.OneAtATime
-            AutoRollbackConfiguration:
-              Enabled: true
-              Events:
-              - DEPLOYMENT_FAILURE
-            DeploymentStyle:
-              DeploymentType: IN_PLACE
-              DeploymentOption: WITHOUT_TRAFFIC_CONTROL
+                                StackName: !Sub ${ApplicationName}-EC2
+                                ActionMode: DELETE_ONLY
+                                RoleArn: !Sub ${CodePipelineCloudFormationRole.Arn}
+                -
+                    Name: Deploy
+                    Actions:
+                        -
+                            Name: DeployInfrastructure
+                            RunOrder: 1
+                            InputArtifacts:
+                                - Name: pipelineconfigs
+                                - Name: Source
+                            ActionTypeId:
+                                Category: Deploy
+                                Owner: AWS
+                                Version: 1
+                                Provider: CloudFormation
+                            Configuration:
+                                ActionMode: CREATE_UPDATE
+                                RoleArn: !Sub ${CodePipelineCloudFormationRole.Arn}
+                                StackName: !Sub ${ApplicationName}-EC2
+                                Capabilities: CAPABILITY_NAMED_IAM
+                                TemplatePath: Source::docker/PipelineTemplates/mapstory-ec2.yaml
+                                TemplateConfiguration: pipelineconfigs::mapstory-lab-ec2-configuration.json
     CodeBuild:
         Type: AWS::CodeBuild::Project
         Properties:
@@ -189,8 +183,6 @@ Resources:
                               - docker login -u ${QUAYioUSERNAME} -p ${QUAYioPASSWORD} quay.io
                           build:
                             commands:
-                              - mkdir -p secrets/postgres
-                              - touch secrets/postgres/postgres_secrets
                               - rm -rf mapstory
                               - git clone https://github.com/MapStory/mapstory.git
                               - cd mapstory
@@ -207,10 +199,18 @@ Resources:
                 GitCloneDepth: 1
                 Type: GITHUB
                 ReportBuildStatus: true
-    CodeDeployApplication:
-        Type: AWS::CodeDeploy::Application
+    CloudwatchRule:
+        Type: AWS::Events::Rule
         Properties:
-            ApplicationName: !Sub ${ApplicationName}
+          Description: Initiates mapstory lab pipeline for code build and docker container deploy
+          Name: MapStory-Lab-Kickoff
+          ScheduleExpression: cron(0 8 * * ? *)
+          State: ENABLED
+          Targets:
+              - Arn: arn:aws:codepipeline:us-east-1:291063631982:mapstory-lab
+                RoleArn: arn:aws:iam::291063631982:role/service-role/AWS_Events_Invoke_CodePipeline_1904271097
+                Id: Id2261477771633
+
     CodePipelineRole:
         Type: AWS::IAM::Role
         Properties:
@@ -271,6 +271,7 @@ Resources:
                                         "cloudformation:ExecuteChangeSet",
                                         "cloudformation:SetStackPolicy",
                                         "cloudformation:ValidateTemplate",
+                                        "sns:Publish",
                                         "iam:PassRole"
                                     ],
                                     "Resource": "*",
@@ -380,7 +381,8 @@ Resources:
                                     "Action": [
                                         "logs:CreateLogGroup",
                                         "logs:CreateLogStream",
-                                        "logs:PutLogEvents"
+                                        "logs:PutLogEvents",
+                                        "sns:Publish"
                                     ]
                                 },
                                 {
@@ -396,24 +398,15 @@ Resources:
                                 }
                             ]
                         }
+
 Outputs:
 
     CodePipelineURL:
         Description: The URL for the created pipeline
         Value: !Sub https://${AWS::Region}.console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${ApplicationName}
 
-    CodeDeployApplication:
-        Description: The CodeDeploy application used across all environments
-        Value: !Ref CodeDeployApplication
-        Export:
-            Name: !Sub CodeDeployApplication-${ApplicationName}
-
     CodeDeployServiceRoleArn:
         Description: The CodeDeploy service role used across all environments
         Value: !GetAtt CodeDeployServiceRole.Arn
         Export:
             Name: !Sub CodeDeployServiceRoleArn-${ApplicationName}
-
-    WebsiteURL:
-        Description: MapStory Website
-        Value: !Sub "https://${ENVIRONMENT}.mapstory.org"

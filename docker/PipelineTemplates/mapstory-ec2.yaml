@@ -150,11 +150,21 @@ Resources:
               group: root
               mode: '000644'
               owner: root
-            /root/secrets/postgres/postgres_secrets:
+            /root/secrets/postgres/POSTGRES_PASSWORD:
               content: !Sub |
-                POSTGRES_USER=mapstory
-                POSTGRES_DB=mapstory
-                POSTGRES_PASSWORD=${DBpassword}
+                ${DBpassword}
+              group: root
+              mode: '000644'
+              owner: root
+            /root/secrets/postgres/POSTGRES_USER:
+              content: !Sub |
+                mapstory
+              group: root
+              mode: '000644'
+              owner: root
+            /root/secrets/postgres/POSTGRES_DB:
+              content: !Sub |
+                mapstory
               group: root
               mode: '000644'
               owner: root

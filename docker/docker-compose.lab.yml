@@ -10,13 +10,16 @@ services:
     image: quay.io/mapstory/postgis:9.6.10-alpine
     env_file:
       - docker/env/lab/postgres.env
-      - ../secrets/postgres/postgres_secrets
     volumes:
       - postgres:/var/lib/postgresql/data
     networks:
       internal:
     expose:
       - "5432"
+    secrets:
+      - postgres_user
+      - postgres_password
+      - postgres_db
 
   pgadmin:
     ports:
@@ -106,3 +109,9 @@ secrets:
     file: ../secrets/env/slack_auth
   env_social_auth:
     file: ../secrets/env/social_auth
+  postgres_password:
+    file: ../secrets/postgres/POSTGRES_PASSWORD
+  postgres_db:
+    file: ../secrets/postgres/POSTGRES_DB
+  postgres_user:
+    file: ../secrets/postgres/POSTGRES_USER
