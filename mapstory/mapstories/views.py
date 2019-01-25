@@ -53,6 +53,7 @@ def save_mapstory(request):
     mapstory.save()
     config['storyID'] = mapstory.id
     mapstory.update_from_viewer(conf=config)
+    config['about']['slug'] = mapstory.slug
 
     for index, chapter in enumerate(config['chapters']):
 
