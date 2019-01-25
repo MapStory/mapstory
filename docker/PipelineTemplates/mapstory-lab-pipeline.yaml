@@ -156,7 +156,6 @@ Resources:
                                 ActionMode: CREATE_UPDATE
                                 RoleArn: !Sub ${CodePipelineCloudFormationRole.Arn}
                                 StackName: !Sub ${ApplicationName}-EC2
-                                Capabilities: CAPABILITY_NAMED_IAM
                                 TemplatePath: Source::docker/PipelineTemplates/mapstory-ec2.yaml
                                 TemplateConfiguration: pipelineconfigs::mapstory-lab-ec2-configuration.json
     CodeBuild:
