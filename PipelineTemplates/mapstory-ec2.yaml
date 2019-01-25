@@ -1,9 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
-  AWS CloudFormation Template for the MapStory application and infrastructure 
-  deployment. This template builds a EC2 instance and deploys the latest 
+  AWS CloudFormation Template for the MapStory application and infrastructure
+  deployment. This template builds a EC2 instance and deploys the latest
   tagged MapStory docker micro services images.
-  
+
 Parameters:
   MapStoryNIC:
     Type: String
@@ -20,7 +20,7 @@ Parameters:
   QUAYioUSERNAME:
     Type: String
 
-  QUAYioPASSWORD: 
+  QUAYioPASSWORD:
     Type: String
 
   TAG:
@@ -30,11 +30,11 @@ Parameters:
     Type: String
 
   DBpassword:
-    Type: String  
+    Type: String
 
   MapstorySSLkey:
     Type: String
-    
+
 Mappings:
   AWSInstanceType2Arch:
     m4.xlarge:
@@ -42,7 +42,7 @@ Mappings:
   AWSRegionArch2AMI:
     us-east-1:
       HVM64: ami-0080e4c5bc078760e
-      
+
 Resources:
   MapStory:
     Type: AWS::EC2::Instance
@@ -76,7 +76,7 @@ Resources:
                 action=/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource MapStory --configsets mapstory_update --url https://stackbuilder.amazonaws.com
               group: root
               mode: '000400'
-              owner: root       
+              owner: root
         configure_mapstory:
           packages:
             yum:
@@ -96,7 +96,7 @@ Resources:
                 EMAIL_HOST_USER=info@mapstory.org
                 EMAIL_HOST_PASSWORD=mapstory!1
                 EMAIL_PORT=587
-                EMAIL_USE_TLS=True              
+                EMAIL_USE_TLS=True
               group: root
               mode: '000644'
               owner: root
@@ -105,7 +105,7 @@ Resources:
                 GEOSERVER_PASSWORD=geoserver
 
                 OAUTH_CLIENT_ID=asdf
-                OAUTH_CLIENT_SECRET=qwerty                
+                OAUTH_CLIENT_SECRET=qwerty
               group: root
               mode: '000644'
               owner: root
@@ -121,14 +121,14 @@ Resources:
                 RABBITMQ_ADMIN_PASSWORD=password
                 RABBITMQ_APPLICATION_USER=mapstory
                 RABBITMQ_APPLICATION_PASSWORD=password
-                RABBITMQ_APPLICATION_VHOST=mapstory               
+                RABBITMQ_APPLICATION_VHOST=mapstory
               group: root
               mode: '000644'
               owner: root
             /root/secrets/env/slack_auth:
               content: !Sub |
                 SLACK_USERNAME=devbot
-                SLACK_TOKEN=xoxb-12430531412-FM7uCNWQMYoXddOHTMa1Jcat         
+                SLACK_TOKEN=xoxb-12430531412-FM7uCNWQMYoXddOHTMa1Jcat
               group: root
               mode: '000644'
               owner: root
@@ -137,7 +137,7 @@ Resources:
                 FACEBOOK_APP_ID=1857859231115901
                 FACEBOOK_API_SECRET=fafdbf516ec37821c22849c8198ee5b8
                 GOOGLE_OATH2_CLIENT_ID=916422263761-uoujth78so2jochuhhfrsuil357755eo.apps.googleusercontent.com
-                GOOGLE_OATH2_CLIENT_SECRET=uomHGt4-d9_mRSI5wwCK4waZ                   
+                GOOGLE_OATH2_CLIENT_SECRET=uomHGt4-d9_mRSI5wwCK4waZ
               group: root
               mode: '000644'
               owner: root
@@ -282,7 +282,7 @@ Resources:
                 HmyW74cNxA9hi63ugyuV+I6ShHI56yDqg+2DzZduCLzrTia2cyvk0/ZM/iZx4mER
                 dEr/VxqHD3VILs9RaRegAhJhldXRQLIQTO7ErBBDpqWeCtWVYpoNz4iCxTIM5Cuf
                 ReYNnyicsbkqWletNw+vHX/bvZ8=
-                -----END CERTIFICATE-----               
+                -----END CERTIFICATE-----
               group: root
               mode: '000644'
               owner: root
@@ -291,7 +291,7 @@ Resources:
               command: usermod -a -G docker ec2-user
             02_install_mapstory:
               command: !Sub |
-                docker login -u '${QUAYioUSERNAME}' -p '${QUAYioPASSWORD}' quay.io        
+                docker login -u '${QUAYioUSERNAME}' -p '${QUAYioPASSWORD}' quay.io
             03_install_mapstory:
               command: git clone https://github.com/MapStory/mapstory.git
               cwd: /root
@@ -315,7 +315,7 @@ Resources:
           commands:
             01_update_mapstory:
               command: !Sub |
-                docker login -u '${QUAYioUSERNAME}' -p '${QUAYioPASSWORD}' quay.io        
+                docker login -u '${QUAYioUSERNAME}' -p '${QUAYioPASSWORD}' quay.io
             02_update_mapstory:
               command: !Sub |
                 DCO="/usr/local/bin/docker-compose -f docker-compose.yml -f docker/docker-compose.${ENVIRONMENT}.yml" TAG="${TAG}" make down
@@ -334,7 +334,7 @@ Resources:
       ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, Arch]]
       RoleARN: RoleArn: !Sub ${CodePipelineCloudFormationRole.Arn}
       NetworkInterfaces:
-        - NetworkInterfaceId: 
+        - NetworkInterfaceId:
             Ref: MapStoryNIC
           DeleteOnTermination: "false"
           DeviceIndex: "0"
@@ -342,7 +342,7 @@ Resources:
         Ref: InstanceType
       KeyName:
         Ref: KeyName
-      BlockDeviceMappings: 
+      BlockDeviceMappings:
           - DeviceName: "/dev/xvda"
             Ebs:
               DeleteOnTermination: "true"
@@ -358,7 +358,7 @@ Resources:
            /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource MapStory --region ${AWS::Region}
   CodePipelineCloudFormationRole:
       Type: AWS::IAM::Role
-      Properties: 
+      Properties:
           Path: /
           RoleName: !Sub ${ENVIRONMENT}-CloudFormation-EC2-${AWS::Region}
           AssumeRolePolicyDocument: |
@@ -366,15 +366,15 @@ Resources:
                       "Statement": [{
                           "Action": "sts:AssumeRole",
                           "Effect": "Allow",
-                          "Principal": { 
-                              "Service": "cloudformation.amazonaws.com" 
+                          "Principal": {
+                              "Service": "cloudformation.amazonaws.com"
                           }
                       }]
                   }
-          Policies: 
-              - 
+          Policies:
+              -
                   PolicyName: !Sub ${ENVIRONMENT}-CloudFormation-EC2-${AWS::Region}
-                  PolicyDocument: !Sub |                    
+                  PolicyDocument: !Sub |
                       {
                           "Statement": [{
                                   "Effect": "Allow",
