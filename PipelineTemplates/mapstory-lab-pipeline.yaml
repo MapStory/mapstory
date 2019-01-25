@@ -1,18 +1,18 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
-    This CloudFormation template will deploy a full CI/CD pipeline for Mapstory. It 
-    includes building with AWS CodeBuild and infrastructure deployment. 
-    It will create an AWS CodePipeline for orchastrating builds, testing and deployments 
-    as well initiating a EC2 cloudformation stack to host the Mapstory docker micro 
-    service containers in the lab environment. 
-    
+    This CloudFormation template will deploy a full CI/CD pipeline for Mapstory. It
+    includes building with AWS CodeBuild and infrastructure deployment.
+    It will create an AWS CodePipeline for orchastrating builds, testing and deployments
+    as well initiating a EC2 cloudformation stack to host the Mapstory docker micro
+    service containers in the lab environment.
+
 Parameters:
-    
-    ApplicationName: 
+
+    ApplicationName:
         Description: This will be used to name the pipeline and build resources
         Type: String
         AllowedPattern: '[A-Za-z0-9-]+'
-        
+
     TAG:
         Type: String
 
@@ -23,7 +23,7 @@ Parameters:
         Description: An existing S3 bucket within this AWS account
         Type: String
 
-    GitHubOAuthToken: 
+    GitHubOAuthToken:
         Description: Create a token with 'repo' and 'admin:repo_hook' permissions here https://github.com/settings/tokens
         Type: String
 
@@ -38,23 +38,23 @@ Parameters:
     GitHubBranch:
         Description: Enter the GitHub branch to monitored
         Type: String
-        
+
     QUAYioUSERNAME:
         Type: String
 
-    QUAYioPASSWORD: 
+    QUAYioPASSWORD:
         Type: String
 
 Metadata:
     AWS::CloudFormation::Interface:
         ParameterGroups:
-            - 
-                Label: 
+            -
+                Label:
                     default: Application Configuration
                 Parameters:
                     - ApplicationName
                     - ArtifactS3Bucket
-            - 
+            -
                 Label:
                     default: GitHub Configuration
                 Parameters:
@@ -63,17 +63,17 @@ Metadata:
                     - GitHubRepository
                     - GitHubBranch
 
-Resources:   
+Resources:
     CodePipeline:
         Type: AWS::CodePipeline::Pipeline
         Properties:
             Name: !Ref ApplicationName
             RoleArn: !Sub ${CodePipelineRole.Arn}
-            ArtifactStore: 
+            ArtifactStore:
                 Type: S3
                 Location: !Ref ArtifactS3Bucket
             Stages:
-                - 
+                -
                     Name: Source
                     Actions:
                         -
@@ -91,7 +91,7 @@ Resources:
                                 Repo: !Ref GitHubRepository
                                 PollForSourceChanges: 'false'
                                 Branch: !Ref GitHubBranch
-                                OAuthToken: !Ref GitHubOAuthToken 
+                                OAuthToken: !Ref GitHubOAuthToken
                         -
                             Name: PipelineConfigs
                             RunOrder: 1
@@ -113,17 +113,17 @@ Resources:
                             Name: CodeBuild
                             InputArtifacts:
                                 - Name: Source
-                            ActionTypeId: 
+                            ActionTypeId:
                                 Category: Build
                                 Owner: AWS
                                 Version: 1
                                 Provider: CodeBuild
                             OutputArtifacts:
                                 - Name: Built
-                            Configuration: 
+                            Configuration:
                                 ProjectName: !Ref CodeBuild
                             RunOrder: 1
-                - 
+                -
                     Name: Delete
                     Actions:
                         -
@@ -137,11 +137,11 @@ Resources:
                             Configuration:
                                 StackName: !Sub ${ApplicationName}-EC2
                                 ActionMode: DELETE_ONLY
-                                RoleArn: !Sub ${CodePipelineCloudFormationRole.Arn}                                       
+                                RoleArn: !Sub ${CodePipelineCloudFormationRole.Arn}
                 -
                     Name: Deploy
                     Actions:
-                        - 
+                        -
                             Name: DeployInfrastructure
                             RunOrder: 1
                             InputArtifacts:
@@ -201,9 +201,9 @@ Resources:
                 GitCloneDepth: 1
                 Type: GITHUB
                 ReportBuildStatus: true
-    CloudwatchRule:        
+    CloudwatchRule:
         Type: AWS::Events::Rule
-        Properties: 
+        Properties:
           Description: Initiates mapstory lab pipeline for code build and docker container deploy
           Name: MapStory-Lab-Kickoff
           ScheduleExpression: cron(0 8 * * ? *)
@@ -215,7 +215,7 @@ Resources:
 
     CodePipelineRole:
         Type: AWS::IAM::Role
-        Properties: 
+        Properties:
             Path: /
             RoleName: !Sub ${ApplicationName}-CodePipeline-${AWS::Region}
             AssumeRolePolicyDocument: |
@@ -223,15 +223,15 @@ Resources:
                     "Statement": [{
                         "Action": "sts:AssumeRole",
                         "Effect": "Allow",
-                        "Principal": { 
-                            "Service": "codepipeline.amazonaws.com" 
+                        "Principal": {
+                            "Service": "codepipeline.amazonaws.com"
                         }
                     }]
                 }
-            Policies: 
-                - 
+            Policies:
+                -
                     PolicyName: !Sub ${ApplicationName}-CodePipeline-${AWS::Region}
-                    PolicyDocument: !Sub |                    
+                    PolicyDocument: !Sub |
                         {
                             "Statement": [
                                 {
@@ -291,7 +291,7 @@ Resources:
                         }
     CodePipelineCloudFormationRole:
         Type: AWS::IAM::Role
-        Properties: 
+        Properties:
             Path: /
             RoleName: !Sub ${ApplicationName}-CloudFormation-${AWS::Region}
             AssumeRolePolicyDocument: |
@@ -299,15 +299,15 @@ Resources:
                         "Statement": [{
                             "Action": "sts:AssumeRole",
                             "Effect": "Allow",
-                            "Principal": { 
-                                "Service": "cloudformation.amazonaws.com" 
+                            "Principal": {
+                                "Service": "cloudformation.amazonaws.com"
                             }
                         }]
                     }
-            Policies: 
-                - 
+            Policies:
+                -
                     PolicyName: !Sub ${ApplicationName}-CloudFormation-${AWS::Region}
-                    PolicyDocument: !Sub |                    
+                    PolicyDocument: !Sub |
                         {
                             "Statement": [{
                                     "Effect": "Allow",
@@ -317,7 +317,7 @@ Resources:
                         }
     CodeDeployServiceRole:
         Type: AWS::IAM::Role
-        Properties: 
+        Properties:
             Path: /
             RoleName: !Sub ${ApplicationName}-CodeDeploy-${AWS::Region}
             AssumeRolePolicyDocument: |
@@ -325,12 +325,12 @@ Resources:
                     "Statement": [{
                         "Action": "sts:AssumeRole",
                         "Effect": "Allow",
-                        "Principal": { 
-                            "Service": "codedeploy.amazonaws.com" 
+                        "Principal": {
+                            "Service": "codedeploy.amazonaws.com"
                         }
                     }]
                 }
-            Policies: 
+            Policies:
                 - PolicyName: !Sub ${AWS::StackName}-CodeDeploy-${AWS::Region}
                   PolicyDocument: !Sub |
                     {
@@ -358,7 +358,7 @@ Resources:
                     }
     CodeBuildRole:
         Type: AWS::IAM::Role
-        Properties: 
+        Properties:
             Path: /
             RoleName: !Sub ${ApplicationName}-CodeBuild-${AWS::Region}
             AssumeRolePolicyDocument: |
@@ -366,17 +366,17 @@ Resources:
                         "Statement": [{
                             "Action": "sts:AssumeRole",
                             "Effect": "Allow",
-                            "Principal": { 
-                                "Service": "codebuild.amazonaws.com" 
+                            "Principal": {
+                                "Service": "codebuild.amazonaws.com"
                             }
                         }]
                     }
-            Policies: 
-                - 
+            Policies:
+                -
                     PolicyName: !Sub ${ApplicationName}-CodeBuild-${AWS::Region}
-                    PolicyDocument: !Sub |      
+                    PolicyDocument: !Sub |
                         {
-                            "Statement": [              
+                            "Statement": [
                                 {
                                     "Effect": "Allow",
                                     "Resource": [ "*" ],
@@ -405,8 +405,8 @@ Outputs:
 
     CodePipelineURL:
         Description: The URL for the created pipeline
-        Value: !Sub https://${AWS::Region}.console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${ApplicationName}   
-        
+        Value: !Sub https://${AWS::Region}.console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${ApplicationName}
+
     CodeDeployServiceRoleArn:
         Description: The CodeDeploy service role used across all environments
         Value: !GetAtt CodeDeployServiceRole.Arn
