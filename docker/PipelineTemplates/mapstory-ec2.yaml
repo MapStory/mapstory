@@ -342,7 +342,6 @@ Resources:
               cwd: /root/mapstory
     Properties:
       ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, Arch]]
-      RoleARN: RoleArn: !Sub ${CodePipelineCloudFormationRole.Arn}
       NetworkInterfaces:
         - NetworkInterfaceId:
             Ref: MapStoryNIC
@@ -366,32 +365,6 @@ Resources:
            chmod +x /usr/local/bin/docker-compose
            /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource MapStory --configsets mapstory_install --region ${AWS::Region}
            /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource MapStory --region ${AWS::Region}
-  CodePipelineCloudFormationRole:
-      Type: AWS::IAM::Role
-      Properties:
-          Path: /
-          RoleName: !Sub ${ENVIRONMENT}-CloudFormation-EC2-${AWS::Region}
-          AssumeRolePolicyDocument: |
-                  {
-                      "Statement": [{
-                          "Action": "sts:AssumeRole",
-                          "Effect": "Allow",
-                          "Principal": {
-                              "Service": "cloudformation.amazonaws.com"
-                          }
-                      }]
-                  }
-          Policies:
-              -
-                  PolicyName: !Sub ${ENVIRONMENT}-CloudFormation-EC2-${AWS::Region}
-                  PolicyDocument: !Sub |
-                      {
-                          "Statement": [{
-                                  "Effect": "Allow",
-                                  "Action": [ "*" ],
-                                  "Resource": "*"
-                          }]
-                      }
 
 Outputs:
   PublicIP:
