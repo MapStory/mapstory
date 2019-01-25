@@ -4,17 +4,11 @@ services:
   composer:
     build:
       args:
-        - DEPLOYMENT=development
-    command: --serve-dev
-    volumes:
-      - ./deps/story-tools-composer:/srv/story-tools-composer:cached
-      - /srv/story-tools-composer/node_modules
-      - /srv/story-tools-composer/deps/story-tools/node_modules
-
+        - DEPLOYMENT=production
+  
   postgres:
     image: quay.io/mapstory/postgis:9.6.10-alpine
     env_file:
-      - docker/env/lab/db_auth.env
       - docker/env/lab/postgres.env
     volumes:
       - postgres:/var/lib/postgresql/data
@@ -22,124 +16,89 @@ services:
       internal:
     expose:
       - "5432"
-    ports:
-      - "5432:5432"
+    secrets:
+      - postgres_user
+      - postgres_password
+      - postgres_db
 
   pgadmin:
-    env_file:
-      - docker/env/lab/db_auth.env
     ports:
       - "5050:5050"
+    links:
+      - postgres
+    secrets:
+      - env_db_auth
 
   elasticsearch:
-    ports:
-      - "9200:9200"
 
   rabbitmq:
     secrets:
       - env_rabbitmq_auth
-    ports:
-      - "15671:15671"
-      - "15672:15672"
-
-  maploom-build:
-    build: ./deps/maploom
-    image: quay.io/mapstory/maploom-build:$TAG
-    environment:
-      GIT_DIR: /git
-    volumes:
-      - ./deps/maploom:/usr/src/app
-      - .git:/git
-
-  django-maploom-build:
-    build: ./deps/django-maploom
-    image: quay.io/mapstory/django-maploom-build:$TAG
-    environment:
-      GIT_DIR: /git
-    depends_on:
-      - maploom-build
-    volumes:
-      - ./deps/django-maploom:/django-maploom
-      - ./deps/maploom:/maploom
-      - .git:/git
-
-  story-tools-build:
-    build: ./deps/story-tools
-    image: quay.io/mapstory/story-tools-build:$TAG
-    environment:
-      GIT_DIR: /git
-    volumes:
-      - ./deps/story-tools:/usr/src/app
-      - .git:/git
 
   django:
     env_file:
-      - docker/env/lab/db_auth.env
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
       - docker/env/lab/mapstory.env
-    environment:
-      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
-    command: [--collect-static, --init-db, --reindex, --serve]
+    links:
+      - postgres
     secrets:
+      - env_db_auth
       - env_email_auth
       - env_geoserver_auth
       - env_rabbitmq_auth
       - env_slack_auth
       - env_social_auth
-    volumes:
-      - .:/srv/mapstory/
-    ports:
-      - "8000:8000"
 
   celery:
     env_file:
-      - docker/env/lab/db_auth.env
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
       - docker/env/lab/mapstory.env
-    environment:
-      REQUESTS_CA_BUNDLE: /etc/ssl/certs/ca-certificates.crt
+    links: 
+      - postgres
     secrets:
+      - env_db_auth
       - env_email_auth
       - env_geoserver_auth
       - env_rabbitmq_auth
       - env_slack_auth
       - env_social_auth
-    volumes:
-      - .:/srv/mapstory/
 
   django_volumes:
 
   geoserver:
     env_file:
-      - docker/env/lab/db_auth.env
       - docker/env/lab/public_host.env
       - docker/env/lab/geoserver.env
-    volumes:
-      - geoserver:/var/lib/geoserver
+    links:
+      - postgres
     secrets:
+      - env_db_auth
       - env_geoserver_auth
-    ports:
-      - "8080:8080"
 
   nginx:
     env_file:
       - docker/env/lab/public_host.env
+    environment:
+      - NGINX_NUM_WORKERS=2
+      - NGINX_FILE_CACHE_ENABLED=True
     secrets:
       - ssl_cert
       - ssl_key
 
 volumes:
+  postgres:
   geoserver:
   mapstory_media:
-  postgres:
 
 secrets:
   ssl_cert:
     file: ../secrets/ssl_cert
   ssl_key:
     file: ../secrets/ssl_key
+  env_db_auth:
+    file: ../secrets/env/db_auth
   env_email_auth:
     file: ../secrets/env/email_auth
   env_geoserver_auth:
@@ -150,3 +109,9 @@ secrets:
     file: ../secrets/env/slack_auth
   env_social_auth:
     file: ../secrets/env/social_auth
+  postgres_password:
+    file: ../secrets/postgres/POSTGRES_PASSWORD
+  postgres_db:
+    file: ../secrets/postgres/POSTGRES_DB
+  postgres_user:
+    file: ../secrets/postgres/POSTGRES_USER

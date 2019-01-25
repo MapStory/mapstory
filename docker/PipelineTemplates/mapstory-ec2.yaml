@@ -1,0 +1,376 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  AWS CloudFormation Template for the MapStory application and infrastructure
+  deployment. This template builds a EC2 instance and deploys the latest
+  tagged MapStory docker micro services images.
+
+Parameters:
+  MapStoryNIC:
+    Type: String
+
+  InstanceType:
+    ConstraintDescription: must be a valid EC2 instance type.
+    Type: String
+
+  KeyName:
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instances
+    Type: AWS::EC2::KeyPair::KeyName
+
+  QUAYioUSERNAME:
+    Type: String
+
+  QUAYioPASSWORD:
+    Type: String
+
+  TAG:
+    Type: String
+
+  ENVIRONMENT:
+    Type: String
+
+  DBpassword:
+    Type: String
+
+  MapstorySSLkey:
+    Type: String
+
+Mappings:
+  AWSInstanceType2Arch:
+    m4.xlarge:
+      Arch: HVM64
+  AWSRegionArch2AMI:
+    us-east-1:
+      HVM64: ami-0080e4c5bc078760e
+
+Resources:
+  MapStory:
+    Type: AWS::EC2::Instance
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT30M
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          mapstory_install:
+          - install_cfn
+          - configure_mapstory
+          - install_mapstory
+          mapstory_update:
+          - update_mapstory
+        install_cfn:
+          files:
+            /etc/cfn/cfn-hup.conf:
+              content: !Sub |
+                [main]
+                stack=${AWS::StackId}
+                region=${AWS::Region}
+              group: root
+              mode: '000400'
+              owner: root
+            /etc/cfn/hooks.d/cfn-auto-reloader.conf:
+              content: !Sub |
+                [cfn-auto-reloader-hook]
+                triggers=post.update
+                path=Resources.MapStory.Metadata.AWS::CloudFormation::Init
+                action=/opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource MapStory --configsets mapstory_update --url https://stackbuilder.amazonaws.com
+              group: root
+              mode: '000400'
+              owner: root
+        configure_mapstory:
+          packages:
+            yum:
+              docker: []
+              make: []
+              git: []
+          services:
+            sysvinit:
+              docker:
+                enabled: "true"
+                ensureRunning: "true"
+        install_mapstory:
+          files:
+            /root/secrets/env/email_auth:
+              content: !Sub |
+                EMAIL_HOST=smtp.googlemail.com
+                EMAIL_HOST_USER=info@mapstory.org
+                EMAIL_HOST_PASSWORD=mapstory!1
+                EMAIL_PORT=587
+                EMAIL_USE_TLS=True
+              group: root
+              mode: '000644'
+              owner: root
+            /root/secrets/env/geoserver_auth:
+              content: !Sub |
+                GEOSERVER_PASSWORD=geoserver
+
+                OAUTH_CLIENT_ID=asdf
+                OAUTH_CLIENT_SECRET=qwerty
+              group: root
+              mode: '000644'
+              owner: root
+            /root/secrets/env/rabbitmq_auth:
+              content: !Sub |
+                # For Rabbitmq
+                RABBITMQ_DEFAULT_USER=mapstory
+                RABBITMQ_DEFAULT_PASS=password
+                RABBITMQ_DEFAULT_VHOST=mapstory
+
+                # For Django
+                RABBITMQ_ADMIN_USER=admin
+                RABBITMQ_ADMIN_PASSWORD=password
+                RABBITMQ_APPLICATION_USER=mapstory
+                RABBITMQ_APPLICATION_PASSWORD=password
+                RABBITMQ_APPLICATION_VHOST=mapstory
+              group: root
+              mode: '000644'
+              owner: root
+            /root/secrets/env/slack_auth:
+              content: !Sub |
+                SLACK_USERNAME=devbot
+                SLACK_TOKEN=xoxb-12430531412-FM7uCNWQMYoXddOHTMa1Jcat
+              group: root
+              mode: '000644'
+              owner: root
+            /root/secrets/env/social_auth:
+              content: !Sub |
+                FACEBOOK_APP_ID=1857859231115901
+                FACEBOOK_API_SECRET=fafdbf516ec37821c22849c8198ee5b8
+                GOOGLE_OATH2_CLIENT_ID=916422263761-uoujth78so2jochuhhfrsuil357755eo.apps.googleusercontent.com
+                GOOGLE_OATH2_CLIENT_SECRET=uomHGt4-d9_mRSI5wwCK4waZ
+              group: root
+              mode: '000644'
+              owner: root
+            /root/secrets/env/db_auth:
+              content: !Sub |
+                DATABASE_HOST=postgres
+                DATABASE_USER=mapstory
+                DATABASE_PASSWORD=${DBpassword}
+                DATABASE_PORT=5432
+              group: root
+              mode: '000644'
+              owner: root
+            /root/secrets/postgres/POSTGRES_PASSWORD:
+              content: !Sub |
+                ${DBpassword}
+              group: root
+              mode: '000644'
+              owner: root
+            /root/secrets/postgres/POSTGRES_USER:
+              content: !Sub |
+                mapstory
+              group: root
+              mode: '000644'
+              owner: root
+            /root/secrets/postgres/POSTGRES_DB:
+              content: !Sub |
+                mapstory
+              group: root
+              mode: '000644'
+              owner: root
+            /root/secrets/ssl_key:
+              content: !Sub |
+                ${MapstorySSLkey}
+              group: root
+              mode: '000644'
+              owner: root
+            /root/secrets/ssl_cert:
+              content: !Sub |
+                -----BEGIN CERTIFICATE-----
+                MIIGsTCCBZmgAwIBAgIJAKOKMxnURx2jMA0GCSqGSIb3DQEBCwUAMIG0MQswCQYD
+                VQQGEwJVUzEQMA4GA1UECBMHQXJpem9uYTETMBEGA1UEBxMKU2NvdHRzZGFsZTEa
+                MBgGA1UEChMRR29EYWRkeS5jb20sIEluYy4xLTArBgNVBAsTJGh0dHA6Ly9jZXJ0
+                cy5nb2RhZGR5LmNvbS9yZXBvc2l0b3J5LzEzMDEGA1UEAxMqR28gRGFkZHkgU2Vj
+                dXJlIENlcnRpZmljYXRlIEF1dGhvcml0eSAtIEcyMB4XDTE4MDYwODIwNTQyN1oX
+                DTIwMDYwMzE5MDYzOFowPDEhMB8GA1UECxMYRG9tYWluIENvbnRyb2wgVmFsaWRh
+                dGVkMRcwFQYDVQQDDA4qLm1hcHN0b3J5Lm9yZzCCASIwDQYJKoZIhvcNAQEBBQAD
+                ggEPADCCAQoCggEBANn+cJSG1bHE/M0QUf0m1hYvEyXkXnBMhUiX90elaqkai5D3
+                8HUmGm3eMMqQkikAH2b4aURWk12e9a+gWRGenBl3KFnWgTDG0JS58LVYRvgnKN51
+                iGWat9jS1C71UMioGupsRqbmbONZxY+Lo7t4mpj9893RyvHEDYrGN2u8fKU3tbiO
+                R5wzCSkvdDMdSz0LdEkPigntiZyiDywNQwVlPohfbMsew2cRd76QSWd4kc56hSyn
+                N+eKEzUKzWPMbH4gRZO2RoD1U3KBhp1nF7JmDWSTl2+jabi0XDo+KSyINw3yOE8f
+                sMuEKUq1w7Ocr4FiHeQUPM58pY0DhpEB9sY72VMCAwEAAaOCAzswggM3MAwGA1Ud
+                EwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMA4GA1UdDwEB
+                /wQEAwIFoDA3BgNVHR8EMDAuMCygKqAohiZodHRwOi8vY3JsLmdvZGFkZHkuY29t
+                L2dkaWcyczEtODM2LmNybDBdBgNVHSAEVjBUMEgGC2CGSAGG/W0BBxcBMDkwNwYI
+                KwYBBQUHAgEWK2h0dHA6Ly9jZXJ0aWZpY2F0ZXMuZ29kYWRkeS5jb20vcmVwb3Np
+                dG9yeS8wCAYGZ4EMAQIBMHYGCCsGAQUFBwEBBGowaDAkBggrBgEFBQcwAYYYaHR0
+                cDovL29jc3AuZ29kYWRkeS5jb20vMEAGCCsGAQUFBzAChjRodHRwOi8vY2VydGlm
+                aWNhdGVzLmdvZGFkZHkuY29tL3JlcG9zaXRvcnkvZ2RpZzIuY3J0MB8GA1UdIwQY
+                MBaAFEDCvSeOzDSDMKIz1/tss/C0LIDOMCcGA1UdEQQgMB6CDioubWFwc3Rvcnku
+                b3JnggxtYXBzdG9yeS5vcmcwHQYDVR0OBBYEFBWsz9bRqDvnP5FWlN++vfSsWG/o
+                MIIBfQYKKwYBBAHWeQIEAgSCAW0EggFpAWcAdQCkuQmQtBhYFIe7E6LMZ3AKPDWY
+                BPkb37jjd80OyA3cEAAAAWPhLoFZAAAEAwBGMEQCIGWSklL2YqlBQPOhMIng6B8k
+                EDDQFh+hqxcr1O6U4HKgAiAN7n9BYS+YwFgk9nPte8Tmi1g2GzHp6GojfMIkdeZR
+                jgB1AO5Lvbd1zmC64UJpH6vhnmajD35fsHLYgwDEe4l6qP3LAAABY+EuhiMAAAQD
+                AEYwRAIgESQHIzWozfDQfrCuLH15F/UvBHEopYe44ev3FzGZMH8CIH5shAs6oWZM
+                0ocLWsshPR4ZGsMx1klotpinoqWX/wg9AHcAXqdz+d9WwOe1Nkh90EngMnqRmgyE
+                oRIShBh1loFxRVgAAAFj4S6HGwAABAMASDBGAiEAxoX3PGkH+9MGPowuPJ5kGmom
+                MvTygPlQ3venoYtP2SMCIQC1S5ZuOxeTXug47Ap/3Dk684YLjKHGqHzKp/w70rZw
+                UTANBgkqhkiG9w0BAQsFAAOCAQEAFdbEql9Prvl7nC/pVVvh6J0M1mFoGMsovHJg
+                HeWh/dRl8WKBL5WwvZ2veMqFfZR2D20aVHija++yujGDm9fZzThM2ftPADeZf8ZY
+                fvkEbqdkMkeNJCTHA4NOYIL6wTRGa5pdSV0r7Am0B2vUhmfppSN6IGlGo3Gexk1e
+                fGpSHRgWjxcCB1UUoOpXciTjLBc9nou74wrxOXREtv8JnrrWYBbRx0oUroINEFWf
+                +z9epQJtIH7TKPkRkcToTJYBP/fiM9BoQH7rOjvEr9C4y+qFZsd+qyYH0qx9wNKv
+                zi+kguqfCpIB74vIsW87T0Pgya71YxDmvQsYOaegbFZ8gwy2yQ==
+                -----END CERTIFICATE-----
+                -----BEGIN CERTIFICATE-----
+                MIIE0DCCA7igAwIBAgIBBzANBgkqhkiG9w0BAQsFADCBgzELMAkGA1UEBhMCVVMx
+                EDAOBgNVBAgTB0FyaXpvbmExEzARBgNVBAcTClNjb3R0c2RhbGUxGjAYBgNVBAoT
+                EUdvRGFkZHkuY29tLCBJbmMuMTEwLwYDVQQDEyhHbyBEYWRkeSBSb290IENlcnRp
+                ZmljYXRlIEF1dGhvcml0eSAtIEcyMB4XDTExMDUwMzA3MDAwMFoXDTMxMDUwMzA3
+                MDAwMFowgbQxCzAJBgNVBAYTAlVTMRAwDgYDVQQIEwdBcml6b25hMRMwEQYDVQQH
+                EwpTY290dHNkYWxlMRowGAYDVQQKExFHb0RhZGR5LmNvbSwgSW5jLjEtMCsGA1UE
+                CxMkaHR0cDovL2NlcnRzLmdvZGFkZHkuY29tL3JlcG9zaXRvcnkvMTMwMQYDVQQD
+                EypHbyBEYWRkeSBTZWN1cmUgQ2VydGlmaWNhdGUgQXV0aG9yaXR5IC0gRzIwggEi
+                MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC54MsQ1K92vdSTYuswZLiBCGzD
+                BNliF44v/z5lz4/OYuY8UhzaFkVLVat4a2ODYpDOD2lsmcgaFItMzEUz6ojcnqOv
+                K/6AYZ15V8TPLvQ/MDxdR/yaFrzDN5ZBUY4RS1T4KL7QjL7wMDge87Am+GZHY23e
+                cSZHjzhHU9FGHbTj3ADqRay9vHHZqm8A29vNMDp5T19MR/gd71vCxJ1gO7GyQ5HY
+                pDNO6rPWJ0+tJYqlxvTV0KaudAVkV4i1RFXULSo6Pvi4vekyCgKUZMQWOlDxSq7n
+                eTOvDCAHf+jfBDnCaQJsY1L6d8EbyHSHyLmTGFBUNUtpTrw700kuH9zB0lL7AgMB
+                AAGjggEaMIIBFjAPBgNVHRMBAf8EBTADAQH/MA4GA1UdDwEB/wQEAwIBBjAdBgNV
+                HQ4EFgQUQMK9J47MNIMwojPX+2yz8LQsgM4wHwYDVR0jBBgwFoAUOpqFBxBnKLbv
+                9r0FQW4gwZTaD94wNAYIKwYBBQUHAQEEKDAmMCQGCCsGAQUFBzABhhhodHRwOi8v
+                b2NzcC5nb2RhZGR5LmNvbS8wNQYDVR0fBC4wLDAqoCigJoYkaHR0cDovL2NybC5n
+                b2RhZGR5LmNvbS9nZHJvb3QtZzIuY3JsMEYGA1UdIAQ/MD0wOwYEVR0gADAzMDEG
+                CCsGAQUFBwIBFiVodHRwczovL2NlcnRzLmdvZGFkZHkuY29tL3JlcG9zaXRvcnkv
+                MA0GCSqGSIb3DQEBCwUAA4IBAQAIfmyTEMg4uJapkEv/oV9PBO9sPpyIBslQj6Zz
+                91cxG7685C/b+LrTW+C05+Z5Yg4MotdqY3MxtfWoSKQ7CC2iXZDXtHwlTxFWMMS2
+                RJ17LJ3lXubvDGGqv+QqG+6EnriDfcFDzkSnE3ANkR/0yBOtg2DZ2HKocyQetawi
+                DsoXiWJYRBuriSUBAA/NxBti21G00w9RKpv0vHP8ds42pM3Z2Czqrpv1KrKQ0U11
+                GIo/ikGQI31bS/6kA1ibRrLDYGCD+H1QQc7CoZDDu+8CL9IVVO5EFdkKrqeKM+2x
+                LXY2JtwE65/3YR8V3Idv7kaWKK2hJn0KCacuBKONvPi8BDAB
+                -----END CERTIFICATE-----
+                -----BEGIN CERTIFICATE-----
+                MIIEfTCCA2WgAwIBAgIDG+cVMA0GCSqGSIb3DQEBCwUAMGMxCzAJBgNVBAYTAlVT
+                MSEwHwYDVQQKExhUaGUgR28gRGFkZHkgR3JvdXAsIEluYy4xMTAvBgNVBAsTKEdv
+                IERhZGR5IENsYXNzIDIgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkwHhcNMTQwMTAx
+                MDcwMDAwWhcNMzEwNTMwMDcwMDAwWjCBgzELMAkGA1UEBhMCVVMxEDAOBgNVBAgT
+                B0FyaXpvbmExEzARBgNVBAcTClNjb3R0c2RhbGUxGjAYBgNVBAoTEUdvRGFkZHku
+                Y29tLCBJbmMuMTEwLwYDVQQDEyhHbyBEYWRkeSBSb290IENlcnRpZmljYXRlIEF1
+                dGhvcml0eSAtIEcyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv3Fi
+                CPH6WTT3G8kYo/eASVjpIoMTpsUgQwE7hPHmhUmfJ+r2hBtOoLTbcJjHMgGxBT4H
+                Tu70+k8vWTAi56sZVmvigAf88xZ1gDlRe+X5NbZ0TqmNghPktj+pA4P6or6KFWp/
+                3gvDthkUBcrqw6gElDtGfDIN8wBmIsiNaW02jBEYt9OyHGC0OPoCjM7T3UYH3go+
+                6118yHz7sCtTpJJiaVElBWEaRIGMLKlDliPfrDqBmg4pxRyp6V0etp6eMAo5zvGI
+                gPtLXcwy7IViQyU0AlYnAZG0O3AqP26x6JyIAX2f1PnbU21gnb8s51iruF9G/M7E
+                GwM8CetJMVxpRrPgRwIDAQABo4IBFzCCARMwDwYDVR0TAQH/BAUwAwEB/zAOBgNV
+                HQ8BAf8EBAMCAQYwHQYDVR0OBBYEFDqahQcQZyi27/a9BUFuIMGU2g/eMB8GA1Ud
+                IwQYMBaAFNLEsNKR1EwRcbNhyz2h/t2oatTjMDQGCCsGAQUFBwEBBCgwJjAkBggr
+                BgEFBQcwAYYYaHR0cDovL29jc3AuZ29kYWRkeS5jb20vMDIGA1UdHwQrMCkwJ6Al
+                oCOGIWh0dHA6Ly9jcmwuZ29kYWRkeS5jb20vZ2Ryb290LmNybDBGBgNVHSAEPzA9
+                MDsGBFUdIAAwMzAxBggrBgEFBQcCARYlaHR0cHM6Ly9jZXJ0cy5nb2RhZGR5LmNv
+                bS9yZXBvc2l0b3J5LzANBgkqhkiG9w0BAQsFAAOCAQEAWQtTvZKGEacke+1bMc8d
+                H2xwxbhuvk679r6XUOEwf7ooXGKUwuN+M/f7QnaF25UcjCJYdQkMiGVnOQoWCcWg
+                OJekxSOTP7QYpgEGRJHjp2kntFolfzq3Ms3dhP8qOCkzpN1nsoX+oYggHFCJyNwq
+                9kIDN0zmiN/VryTyscPfzLXs4Jlet0lUIDyUGAzHHFIYSaRt4bNYC8nY7NmuHDKO
+                KHAN4v6mF56ED71XcLNa6R+ghlO773z/aQvgSMO3kwvIClTErF0UZzdsyqUvMQg3
+                qm5vjLyb4lddJIGvl5echK1srDdMZvNhkREg5L4wn3qkKQmw4TRfZHcYQFHfjDCm
+                rw==
+                -----END CERTIFICATE-----
+                -----BEGIN CERTIFICATE-----
+                MIIEADCCAuigAwIBAgIBADANBgkqhkiG9w0BAQUFADBjMQswCQYDVQQGEwJVUzEh
+                MB8GA1UEChMYVGhlIEdvIERhZGR5IEdyb3VwLCBJbmMuMTEwLwYDVQQLEyhHbyBE
+                YWRkeSBDbGFzcyAyIENlcnRpZmljYXRpb24gQXV0aG9yaXR5MB4XDTA0MDYyOTE3
+                MDYyMFoXDTM0MDYyOTE3MDYyMFowYzELMAkGA1UEBhMCVVMxITAfBgNVBAoTGFRo
+                ZSBHbyBEYWRkeSBHcm91cCwgSW5jLjExMC8GA1UECxMoR28gRGFkZHkgQ2xhc3Mg
+                MiBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eTCCASAwDQYJKoZIhvcNAQEBBQADggEN
+                ADCCAQgCggEBAN6d1+pXGEmhW+vXX0iG6r7d/+TvZxz0ZWizV3GgXne77ZtJ6XCA
+                PVYYYwhv2vLM0D9/AlQiVBDYsoHUwHU9S3/Hd8M+eKsaA7Ugay9qK7HFiH7Eux6w
+                wdhFJ2+qN1j3hybX2C32qRe3H3I2TqYXP2WYktsqbl2i/ojgC95/5Y0V4evLOtXi
+                EqITLdiOr18SPaAIBQi2XKVlOARFmR6jYGB0xUGlcmIbYsUfb18aQr4CUWWoriMY
+                avx4A6lNf4DD+qta/KFApMoZFv6yyO9ecw3ud72a9nmYvLEHZ6IVDd2gWMZEewo+
+                YihfukEHU1jPEX44dMX4/7VpkI+EdOqXG68CAQOjgcAwgb0wHQYDVR0OBBYEFNLE
+                sNKR1EwRcbNhyz2h/t2oatTjMIGNBgNVHSMEgYUwgYKAFNLEsNKR1EwRcbNhyz2h
+                /t2oatTjoWekZTBjMQswCQYDVQQGEwJVUzEhMB8GA1UEChMYVGhlIEdvIERhZGR5
+                IEdyb3VwLCBJbmMuMTEwLwYDVQQLEyhHbyBEYWRkeSBDbGFzcyAyIENlcnRpZmlj
+                YXRpb24gQXV0aG9yaXR5ggEAMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQAD
+                ggEBADJL87LKPpH8EsahB4yOd6AzBhRckB4Y9wimPQoZ+YeAEW5p5JYXMP80kWNy
+                OO7MHAGjHZQopDH2esRU1/blMVgDoszOYtuURXO1v0XJJLXVggKtI3lpjbi2Tc7P
+                TMozI+gciKqdi0FuFskg5YmezTvacPd+mSYgFFQlq25zheabIZ0KbIIOqPjCDPoQ
+                HmyW74cNxA9hi63ugyuV+I6ShHI56yDqg+2DzZduCLzrTia2cyvk0/ZM/iZx4mER
+                dEr/VxqHD3VILs9RaRegAhJhldXRQLIQTO7ErBBDpqWeCtWVYpoNz4iCxTIM5Cuf
+                ReYNnyicsbkqWletNw+vHX/bvZ8=
+                -----END CERTIFICATE-----
+              group: root
+              mode: '000644'
+              owner: root
+          commands:
+            01_install_mapstory:
+              command: usermod -a -G docker ec2-user
+            02_install_mapstory:
+              command: !Sub |
+                docker login -u '${QUAYioUSERNAME}' -p '${QUAYioPASSWORD}' quay.io
+            03_install_mapstory:
+              command: git clone https://github.com/MapStory/mapstory.git
+              cwd: /root
+            04_install_mapstory:
+              command: !Sub |
+                DCO="/usr/local/bin/docker-compose -f docker-compose.yml -f docker/docker-compose.${ENVIRONMENT}.yml" TAG="${TAG}" make refresh_repo
+              cwd: /root/mapstory
+            05_install_mapstory:
+              command: !Sub |
+                DCO="/usr/local/bin/docker-compose -f docker-compose.yml -f docker/docker-compose.${ENVIRONMENT}.yml" TAG="${TAG}" make up
+              cwd: /root/mapstory
+            06_install_mapstory:
+              command: !Sub |
+                /usr/local/bin/docker-compose kill
+              cwd: /root/mapstory
+            07_install_mapstory:
+              command: !Sub |
+                DCO="/usr/local/bin/docker-compose -f docker-compose.yml -f docker/docker-compose.${ENVIRONMENT}.yml" TAG="${TAG}" make up
+              cwd: /root/mapstory
+        update_mapstory:
+          commands:
+            01_update_mapstory:
+              command: !Sub |
+                docker login -u '${QUAYioUSERNAME}' -p '${QUAYioPASSWORD}' quay.io
+            02_update_mapstory:
+              command: !Sub |
+                DCO="/usr/local/bin/docker-compose -f docker-compose.yml -f docker/docker-compose.${ENVIRONMENT}.yml" TAG="${TAG}" make down
+              cwd: /root/mapstory
+            03_update_mapstory:
+              command: !Sub |
+                DCO="/usr/local/bin/docker-compose -f docker-compose.yml -f docker/docker-compose.${ENVIRONMENT}.yml" TAG="${TAG}" make refresh_repo
+              cwd: /root/mapstory
+            04_update_mapstory:
+              command: docker system prune -a -f
+            05_udpate_mapstory:
+              command: !Sub |
+                DCO="/usr/local/bin/docker-compose -f docker-compose.yml -f docker/docker-compose.${ENVIRONMENT}.yml" TAG="${TAG}" make up
+              cwd: /root/mapstory
+    Properties:
+      ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, Arch]]
+      NetworkInterfaces:
+        - NetworkInterfaceId:
+            Ref: MapStoryNIC
+          DeleteOnTermination: "false"
+          DeviceIndex: "0"
+      InstanceType:
+        Ref: InstanceType
+      KeyName:
+        Ref: KeyName
+      BlockDeviceMappings:
+          - DeviceName: "/dev/xvda"
+            Ebs:
+              DeleteOnTermination: "true"
+              VolumeSize: "80"
+      UserData:
+        Fn::Base64: !Sub |
+           #!/bin/bash -xe
+           yum update -y
+           hostname ${ENVIRONMENT}
+           curl -L "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+           chmod +x /usr/local/bin/docker-compose
+           /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource MapStory --configsets mapstory_install --region ${AWS::Region}
+           /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource MapStory --region ${AWS::Region}
+
+Outputs:
+  PublicIP:
+    Description: EC2 public IP
+    Value: !GetAtt MapStory.PublicIp
+
+  WebsiteURL:
+    Description: MapStory Website
+    Value: "https://${ENVIRONMENT}.mapstory.org"
