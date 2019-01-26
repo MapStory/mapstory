@@ -110,8 +110,8 @@ secrets:
   env_social_auth:
     file: ../secrets/env/social_auth
   postgres_password:
-    file: ../secrets/postgres/POSTGRES_PASSWORD
+    file: ../secrets/postgres/postgres_password
   postgres_db:
-    file: ../secrets/postgres/POSTGRES_DB
+    file: ../secrets/postgres/postgres_db
   postgres_user:
-    file: ../secrets/postgres/POSTGRES_USER
+    file: ../secrets/postgres/postgres_user
