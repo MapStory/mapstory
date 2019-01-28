@@ -86,8 +86,8 @@ Resources:
           services:
             sysvinit:
               docker:
-                enabled: "true"
-                ensureRunning: "true"
+                enabled: true
+                ensureRunning: true
         install_mapstory:
           files:
             /root/secrets/env/email_auth:
@@ -150,19 +150,19 @@ Resources:
               group: root
               mode: '000644'
               owner: root
-            /root/secrets/postgres/POSTGRES_PASSWORD:
+            /root/secrets/postgres/postgres_password:
               content: !Sub |
                 ${DBpassword}
               group: root
               mode: '000644'
               owner: root
-            /root/secrets/postgres/POSTGRES_USER:
+            /root/secrets/postgres/postgres_user:
               content: !Sub |
                 mapstory
               group: root
               mode: '000644'
               owner: root
-            /root/secrets/postgres/POSTGRES_DB:
+            /root/secrets/postgres/postgres_db:
               content: !Sub |
                 mapstory
               group: root
@@ -345,7 +345,7 @@ Resources:
       NetworkInterfaces:
         - NetworkInterfaceId:
             Ref: MapStoryNIC
-          DeleteOnTermination: "false"
+          DeleteOnTermination: false
           DeviceIndex: "0"
       InstanceType:
         Ref: InstanceType
@@ -354,7 +354,7 @@ Resources:
       BlockDeviceMappings:
           - DeviceName: "/dev/xvda"
             Ebs:
-              DeleteOnTermination: "true"
+              DeleteOnTermination: true
               VolumeSize: "80"
       UserData:
         Fn::Base64: !Sub |

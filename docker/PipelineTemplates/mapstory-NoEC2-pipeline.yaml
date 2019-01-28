@@ -97,7 +97,7 @@ Resources:
                             Configuration:
                                 Owner: !Ref GitHubUser
                                 Repo: !Ref GitHubRepository
-                                PollForSourceChanges: 'false'
+                                PollForSourceChanges: false
                                 Branch: !Ref GitHubBranch
                                 OAuthToken: !Ref GitHubOAuthToken
                         -
@@ -112,7 +112,7 @@ Resources:
                                 -  Name: mapstory-codedeploy
                             Configuration:
                                 S3Bucket: mapstory-pipeline
-                                PollForSourceChanges: 'false'
+                                PollForSourceChanges: false
                                 S3ObjectKey: mapstory-codedeploy.zip
                 -
                     Name: Build
