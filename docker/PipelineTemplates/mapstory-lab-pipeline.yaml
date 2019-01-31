@@ -89,7 +89,7 @@ Resources:
                             Configuration:
                                 Owner: !Ref GitHubUser
                                 Repo: !Ref GitHubRepository
-                                PollForSourceChanges: false
+                                PollForSourceChanges: "false"
                                 Branch: !Ref GitHubBranch
                                 OAuthToken: !Ref GitHubOAuthToken
                         -
@@ -104,13 +104,14 @@ Resources:
                                 -  Name: pipelineconfigs
                             Configuration:
                                 S3Bucket: mapstory-pipeline
-                                PollForSourceChanges: false
+                                PollForSourceChanges: "false"
                                 S3ObjectKey: mapstory-configs.zip
                 -
                     Name: Build
                     Actions:
                         -
                             Name: CodeBuild
+                            RunOrder: 1
                             InputArtifacts:
                                 - Name: Source
                             ActionTypeId:
@@ -122,7 +123,6 @@ Resources:
                                 - Name: Built
                             Configuration:
                                 ProjectName: !Ref CodeBuild
-                            RunOrder: 1
                 -
                     Name: Delete
                     Actions:
@@ -271,6 +271,8 @@ Resources:
                                         "cloudformation:SetStackPolicy",
                                         "cloudformation:ValidateTemplate",
                                         "sns:Publish",
+                                        "lambda:ListFunctions",
+                                        "lambda:InvokeFunction",
                                         "iam:PassRole"
                                     ],
                                     "Resource": "*",
