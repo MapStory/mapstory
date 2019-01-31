@@ -97,7 +97,7 @@ Resources:
                             Configuration:
                                 Owner: !Ref GitHubUser
                                 Repo: !Ref GitHubRepository
-                                PollForSourceChanges: false
+                                PollForSourceChanges: "false"
                                 Branch: !Ref GitHubBranch
                                 OAuthToken: !Ref GitHubOAuthToken
                         -
@@ -112,7 +112,7 @@ Resources:
                                 -  Name: mapstory-codedeploy
                             Configuration:
                                 S3Bucket: mapstory-pipeline
-                                PollForSourceChanges: false
+                                PollForSourceChanges: "false"
                                 S3ObjectKey: mapstory-codedeploy.zip
                 -
                     Name: Build
@@ -269,6 +269,9 @@ Resources:
                                         "cloudformation:ExecuteChangeSet",
                                         "cloudformation:SetStackPolicy",
                                         "cloudformation:ValidateTemplate",
+                                        "sns:Publish",
+                                        "lambda:ListFunctions",
+                                        "lambda:InvokeFunction",
                                         "iam:PassRole"
                                     ],
                                     "Resource": "*",
@@ -283,32 +286,6 @@ Resources:
                                     "Effect": "Allow"
                                 }
                             ]
-                        }
-    CodePipelineCloudFormationRole:
-        Type: AWS::IAM::Role
-        Properties:
-            Path: /
-            RoleName: !Sub ${ApplicationName}-CloudFormation-${AWS::Region}
-            AssumeRolePolicyDocument: |
-                    {
-                        "Statement": [{
-                            "Action": "sts:AssumeRole",
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": "cloudformation.amazonaws.com"
-                            }
-                        }]
-                    }
-            Policies:
-                -
-                    PolicyName: !Sub ${ApplicationName}-CloudFormation-${AWS::Region}
-                    PolicyDocument: !Sub |
-                        {
-                            "Statement": [{
-                                    "Effect": "Allow",
-                                    "Action": [ "*" ],
-                                    "Resource": "*"
-                            }]
                         }
     CodeDeployServiceRole:
         Type: AWS::IAM::Role
@@ -344,7 +321,6 @@ Resources:
                                 "ec2:DescribeInstanceStatus",
                                 "tag:GetTags",
                                 "tag:GetResources",
-                                "sns:Publish",
                                 "cloudwatch:DescribeAlarms"
                             ],
                             "Resource": "*"
