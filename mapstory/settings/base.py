@@ -89,6 +89,7 @@ ENABLE_FORM_LOGIN = str_to_bool(os.environ.get('ENABLE_FORM_LOGIN', 'True'))
 USER_SNAP = str_to_bool(os.environ.get('USER_SNAP', 'False'))
 GOOGLE_ANALYTICS = os.environ.get('GOOGLE_ANALYTICS', '')
 SESSION_EXPIRE_AT_BROWSER_CLOSE = os.environ.get('SESSION_EXPIRE_AT_BROWSER_CLOSE', 'False')
+SOCIALACCOUNT_AUTO_SIGNUP = True
 
 #
 # Application Settings
