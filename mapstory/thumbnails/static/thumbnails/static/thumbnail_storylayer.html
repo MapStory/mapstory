@@ -91,8 +91,10 @@
            layers = [create_XYZ_layer(basemapXYZURL)]; //basemap
 
         for (t=0;t<layerNames_list.length;t++) {
-            var layer =  create_WMS_layer(wms, layerNames_list[t],styles_list[t], time_bounds_list[t]);
-            layers.push(layer);
+            if (layerNames_list[t] !== "") {
+                var layer =  create_WMS_layer(wms, layerNames_list[t],styles_list[t], time_bounds_list[t]);
+                layers.push(layer);
+            }
         }
         map = create_map(layers, extent_map, view_options);
     }
