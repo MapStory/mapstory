@@ -57,7 +57,7 @@
                     </li>
                 </ul>
             </div>
-            <a href="{% url 'search' %}">
+            <a href="{% url 'search' %}?limit=30&offset=0&content&is_published&order_by=-popular_count&type__in=mapstory">
                 <button class="button accent-button-inverse">
                     <span>See More</span>
                 </button>
@@ -159,11 +159,10 @@
             <p style="padding-left: 20px; font-size: 22px">Click <a href="{% url 'search' %}">Explore</a> to discover {{ BRANDING_LAYERS_NAME }} covering local, regional global scale and stretching into the past, present and future.  Don’t see what you need? Create a new {{ BRANDING_LAYER_NAME }} and share it with others.</p>
             {% endif %}
 
-            <a href="/getstarted">
-                <button class="button accent-button-inverse">
-                    <span>Learn More</span>
-                </button>
-            </a>
+
+            <button class="button accent-button-inverse">
+                <a class="pointer ng-scope" ng-controller="ImportController" ng-click="open(null, '/static/mapstory/partials/uploadWizard.html', '/uploaded/', '/static/', '{&quot;index&quot;: 0, &quot;editable&quot;: true, &quot;convert_to_date&quot;: [], &quot;always_geogig&quot;: true, &quot;configureTime&quot;: true, &quot;permissions&quot;: {&quot;users&quot;: {&quot;AnonymousUser&quot;: [&quot;change_layer_data&quot;, &quot;download_resourcebase&quot;, &quot;view_resourcebase&quot;]}, &quot;groups&quot;: {&quot;registered&quot;: [&quot;change_layer_style&quot;]}}}', null, null, null)" target="_self">Get Started</a>
+            </button>
         </div>
     </section>
 
@@ -199,9 +198,9 @@
 
             <p style="padding-left: 20px; font-size: 22px">Combine {{ BRANDING_LAYERS_NAME }} with narrative elements like images, text and video to compose {{ BRANDING_STORIES_NAME }} that explain how and why change occurs. No coding required.</p>
 
-            <a href="/getstarted">
+            <a href="/story/new?tour">
                 <button class="button accent-button-inverse">
-                    <span>Learn More</span>
+                    <span>Get Started</span>
                 </button>
             </a>
         </div>
