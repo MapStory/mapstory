@@ -1,5 +1,6 @@
 {% load i18n %}
 <script type="text/javascript">
+    SEARCH_DATA_ENDPOINT = '/api/base/search/?content=true&is_published=true&limit=30&offset=0'
     CATEGORIES_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='categories' %}';
     KEYWORDS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='keywords' %}';
     INTERESTS_ENDPOINT = '{% url 'api_dispatch_list' api_name='api' resource_name='interests' %}';

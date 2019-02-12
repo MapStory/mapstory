@@ -43,6 +43,7 @@
     const vm = this;
     vm.field = new chipFieldFactory("keywords__slug__in", "slug");
     vm.async = function(searchText) {
+      console.log(dataService.getKeywords({ slug__icontains: searchText }));
       return dataService.getKeywords({ slug__icontains: searchText });
     };
 
@@ -87,8 +88,9 @@
    */
   function searchController($injector, $scope, chipFieldFactory, dataService) {
     const vm = this;
-    vm.search = new chipFieldFactory("title__icontains", "title");
+    vm.search = new chipFieldFactory("q", "title");
     vm.async = function(searchText) {
+      console.log(dataService.getSearchData({ q: searchText }));
       return dataService.getSearchData({ q: searchText });
     };
 
@@ -97,7 +99,7 @@
       vm.searchChips = vm.search.transform(currentQuery);
       vm.placeholder =
         vm.searchChips.length > 0
-          ? "Search for layers or stories..."
+          ? "Expand search for layers or stories..."
           : "Search for layers or stories...";
     }
 
@@ -120,6 +122,7 @@
     const vm = this;
     vm.author = new chipFieldFactory("owner__username__in", "username");
     vm.async = function(searchText) {
+      console.log(dataService.getOwners({ q: searchText }));
       return dataService.getOwners({ q: searchText });
     };
 
