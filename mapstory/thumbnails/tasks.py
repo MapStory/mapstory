@@ -11,6 +11,7 @@ import httplib2
 import numpy
 from django.conf import settings
 from django.db import connection
+from django.core.exceptions import ObjectDoesNotExist
 from lxml import etree
 from owslib.wms import WebMapService
 from PIL import Image
@@ -308,9 +309,9 @@ class CreateStoryLayerThumbnailTask:
                 layer.save(update_fields=['thumbnail_url'])
 
         except Exception as e:
-            print "EXCEPTION - thumbnail generation for layer pk="+str(pk)
+            print("EXCEPTION - thumbnail generation for layer pk="+str(pk))
             print(e)
-            print traceback.format_exc()
+            print(traceback.format_exc())
             raise e  # send forward so actual task can retry()
 
 
@@ -365,6 +366,9 @@ class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
     def create_screenshot(self, layer):
         boundingBoxWGS84, timepositions = self.retreive_WMS_metadata(
             layer.typename.encode('utf-8'))
+
+        if layer is None or layer.typename is None:
+            return
         # cannot animate, call parent implementation
         if timepositions is None or len(timepositions) == 1:
             return CreateStoryLayerThumbnailTask.create_screenshot(self, layer)
@@ -514,8 +518,15 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
         result = {"playback_type": chapter.viewer_playbackmode}
         layer_metadata = CreateStoryAnimatedThumbnailTask.get_layer_metadata(
             chapter)
+
         if len(layer_metadata) == 0:
-            return None  # cannot compute
+            result["tile_URL"] = CreateStoryAnimatedThumbnailTask.tileURL(chapter)
+            result["layer_names"] = ""
+            result["layer_styles"] = []
+            result["intervals_by_layer"] = [[]]
+            result["full_bounds"] = chapter.bbox[0:4]
+            return result
+
         result["tile_URL"] = CreateStoryAnimatedThumbnailTask.tileURL(chapter)
 
         combined_timeslices = CreateStoryAnimatedThumbnailTask.combine_timeslices(
@@ -552,9 +563,8 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
 
         thumbnail_info = self.get_all_thumbnail_info(chapter)
         if thumbnail_info is None:
-            # no active layers, no thumbnail
-            self.set_layer_thumbnail_default(mapstory)
-            return None
+            self.get_official_thumbnail_name(mapstory)
+            return mapstory.thumbnail_url
 
         thumbnail = self.create_thumbnail_from_info(thumbnail_info)
 
@@ -591,7 +601,7 @@ def task_CreateStoryLayerAnimatedThumbnailTask(self, pk, overwrite=False):
         worker.run(pk, overwrite)
         return "pk=" + str(pk)
     except Exception:
-        self.retry(max_retries=5, countdown=31)
+        self.retry(max_retries=5, countdown=31, retry_backoff=30)
 
 
 @app.task(bind=True)
@@ -600,8 +610,9 @@ def task_CreateStoryAnimatedThumbnailTask(self, pk, overwrite=False):
         worker = CreateStoryAnimatedThumbnailTask()
         worker.run(pk, overwrite)
         return "pk=" + str(pk)
-    except Exception:
-        self.retry(max_retries=5, countdown=31)
+    except Exception as e:
+        print(e)
+        self.retry(max_retries=5, countdown=31, retry_backoff=30)
 
 
 ############################################################################################
@@ -611,11 +622,11 @@ def task_CreateStoryAnimatedThumbnailTask(self, pk, overwrite=False):
 # this version is transaction aware -- it will schedule when the
 # current transaction is committed...
 def create_gs_thumbnail_mapstory_tx_aware(instance, overwrite):
-    # if this is a map (i.e. multiple layers), handoff to original implementation
-    if instance.class_name == 'Map':
+    if instance.class_name == "Map":
         return create_gs_thumbnail_geonode(instance, overwrite)
+
     # because layer hasn't actually been committed yet, we don't create the thumbnail until the transaction commits
-    # if the task were to run now, it wouldnt be able to retreive layer from the database
+    # if the task were to run now, it wouldnt be able to retrieve layer from the database
     connection.on_commit(lambda: run_task(instance.pk, overwrite))
     # if you get an error here, it probably means you aren't using the transaction_hooks proxy DB type
     # cf https://django-transaction-hooks.readthedocs.io/en/latest/
