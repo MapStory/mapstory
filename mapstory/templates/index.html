@@ -168,8 +168,8 @@
     </section>
 
     <!-- Share Expertise -->
+    {% if THEME == 'orange' %}
     <section class="share-expertise" layout="row" layout-align="center center" layout-xs="column" layout-align-xs="space-around center">
-        {% if THEME == 'orange' %}
         <div layout="column" layout-align="center center">
 
             <h2 class="homepage">Share your expertise through edits</h2>
@@ -186,27 +186,8 @@
         <center>
             <img src="{{ STATIC_URL }}mapstory/img/expertise_through_edits.png" class="home-shadow" style="width: 75%; min-width: 350px"/>
         </center>
-        {% endif %}
-
-        {% if THEME == 'blue' %}
-        <div layout="column" layout-align="center center">
-
-            <h2 class="homepage">Share your expertise</h2>
-
-            <p style="padding-left: 20px; font-size: 22px">Engage your colleagues with ratings, comments, and edits to continuously improve their data.</p>
-
-            <a href="/getstarted">
-                <button class="button accent-button-inverse">
-                    <span>Learn More</span>
-                </button>
-            </a>
-        </div>
-
-        <center>
-            <img src="{{ STATIC_URL }}mapstory/img/expertise_through_edits_blue.png" class="home-shadow" style="width: 75%; min-width: 350px"/>
-        </center>
-        {% endif %}
     </section>
+    {% endif %}
 
     <!-- Bring to Life -->
     <section class="to-life" layout="row" layout-align="center center" layout-xs="column" layout-align-xs="space-around center">
