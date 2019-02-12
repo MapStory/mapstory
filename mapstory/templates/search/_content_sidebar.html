@@ -13,13 +13,13 @@
         {% verbatim %}
         <h3 class="bold-caps">Search</h3>
         <div class="clear-filters">
-            <a href="" ng-click="explore.clear('title__icontains')">Clear</a>
+            <a href="" ng-click="explore.clear('q')">Clear</a>
         </div>
         <div class="filter-content">
             <md-content class="md-padding" layout="column">
-                <md-chips ng-model="searchResources.searchChips" md-autocomplete-snap md-require-match="true"
-                    md-on-add="explore.addQuery('title__icontains', $chip.title)"
-                    md-on-remove="explore.removeQuery('title__icontains', $chip.title)">
+                <md-chips ng-model="searchResources.searchChips" md-autocomplete-snap
+                    md-on-add="explore.addQuery('q', $chip)"
+                    md-on-remove="explore.removeQuery('q', $chip)">
                     <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" md-delay="400"
                         md-items="item in searchResources.async(searchText)" md-item-text="item.title"
                         placeholder={{searchResources.placeholder}}>

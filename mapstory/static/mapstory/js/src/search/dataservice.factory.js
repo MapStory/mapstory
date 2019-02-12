@@ -30,7 +30,7 @@
 
     function getSearchData(query) {
       return $http
-        .get("/api/base/search", { params: query || {} })
+        .get(SEARCH_DATA_ENDPOINT, { params: query || {} })
         .then(response => response.data.objects);
     }
 
