@@ -161,7 +161,7 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
         thumb_generator = CreateStoryAnimatedThumbnailTask()
 
         info = thumb_generator.get_all_thumbnail_info(chapter)
-        self.assertIsNone(info)
+        self.assertIsNotNone(info)
 
     # mapstory with just the railway data - verify that its going to call the phantom stuff with the correct info
     def _test_rail(self):
