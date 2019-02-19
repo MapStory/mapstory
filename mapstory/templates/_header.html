@@ -135,7 +135,7 @@
                 <div class="search-bar">
                     <form action="{% url 'search' %}" role="search">
                         <div>
-                            <input type="search"
+                            <input id="search_input" type="search"
                                 placeholder="Quick Search"
                                 {% if HAYSTACK_SEARCH %} name="q"
                                 {% else %} name="keywords__slug__in"
