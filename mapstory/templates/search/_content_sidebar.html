@@ -9,34 +9,35 @@
         </div>
     </section>
 
-    <section>
-        <h3 class="bold-caps">Search         
-            <i class="fa fa-info-circle">
-                <md-tooltip md-direction="right">use keywords 'AND' or 'OR' to narrow or expand your search</md-tooltip>
-            </i>
-        </h3>
+    <section ng-controller="searchController as searchResources">
+        {% verbatim %}
+        <h3 class="bold-caps">Search</h3>
         <div class="clear-filters">
             <a href="" ng-click="explore.clear('q')">Clear</a>
         </div>
         <div class="filter-content">
-            <div class="search-bar">
-                <form role="search">
-                    <div>
-                        <input name="text_search_input"
-                               id="text_search_input"
-                               ng-model="query.q"
-                               type="search"
-                               class="form-control"
-                               ng-enter="search()"
-                               placeholder="Filter by content...">
-                         <button class="btn" type="submit" ng-click="search()">
-                             <i class="fa fa-search"></i>
-                         </button>
-                    </div>
-                </form>
-            </div>
+            <md-content class="md-padding" layout="column">
+                <md-chips ng-model="searchResources.searchChips" md-autocomplete-snap
+                    md-on-add="explore.addQuery('q', $chip)"
+                    md-on-remove="explore.removeQuery('q', $chip)">
+                    <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" md-delay="400"
+                        md-items="item in searchResources.async(searchText)" md-item-text="item.title"
+                        placeholder={{searchResources.placeholder}}>
+                        <span class="autocomplete-dropdown-text" md-highlight-text="searchText">{{item.title}}</span>
+                        <md-not-found>No matching data found.</md-not-found>
+                    </md-autocomplete>
+                    <md-chip-template>
+                        <span>
+                            {{$chip.title}}
+                        </span>
+                    </md-chip-template>
+                </md-chips>
+                <button class="btn" type="submit" ng-click="search()">
+                    <i class="fa fa-search"></i>
+                </button>
+            </md-content>
         </div>
-
+        {% endverbatim %}
     </section>
     <section>
     {% verbatim %}
