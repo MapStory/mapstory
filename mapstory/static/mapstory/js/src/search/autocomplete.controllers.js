@@ -99,7 +99,7 @@
       vm.searchChips = vm.search.transform(currentQuery);
       vm.placeholder =
         vm.searchChips.length > 0
-          ? "Expand search for layers or stories..."
+          ? "Narrow search for layers or stories..."
           : "Search for layers or stories...";
     }
 
