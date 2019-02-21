@@ -182,9 +182,6 @@ Resources:
                               - docker login -u ${QUAYioUSERNAME} -p ${QUAYioPASSWORD} quay.io
                           build:
                             commands:
-                              - rm -rf mapstory
-                              - git clone https://github.com/MapStory/mapstory.git
-                              - cd mapstory
                               - git submodule update --recursive --init
                               - docker system prune -a -f
                               - export DCO="docker-compose -f docker-compose.yml -f docker/docker-compose.${ENVIRONMENT}.yml"
