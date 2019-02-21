@@ -37,10 +37,10 @@
                                 <a class="pointer" ng-controller="ImportController"
                                    ng-click="open(null, '{{ STATIC_URL }}mapstory/partials/uploadWizard.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', '{{ default_layer_config }}', null, null, null)">{% blocktrans %}Import {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a>
                             </li>
-                            <li>
+                            <!--<li>
                                 <a class="pointer" ng-controller="createLayerCtrl"
                                    ng-click="open('{{ STATIC_URL }}mapstory/partials/createLayerModal.html', '/uploaded/{{ site.assets.logo.name }}', '{{ STATIC_URL }}', '{{ BRANDING_LAYER_NAME }}', '{{ BRANDING_LAYERS_NAME }}')">{% blocktrans %}Create {{ BRANDING_LAYER_NAME }}{% endblocktrans %}</a>
-                            </li>
+                            </li>-->
                             {# Remote Services is under the user menu for MapStory #}
                             {% if THEME == 'blue' %}
                             <li>
