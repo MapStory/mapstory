@@ -1,4 +1,4 @@
-__version__ = (2, 1, 1, 'rc', 3)
+__version__ = (2, 1, 1)
 
 
 def get_version():
