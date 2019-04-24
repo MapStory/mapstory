@@ -10,29 +10,36 @@
                     </div>
                 </section>
 
-                <section>
+                <section ng-controller="storytellerController as author">
+                    {% verbatim %}
                     <h3 class="bold-caps">StoryTeller</h3>
                     <div class="clear-filters">
-                        <a href="" ng-click="explore.clear('q')">Clear</a>
+                        <a href="" ng-click="explore.clear('username')">Clear</a>
                     </div>
                     <div class="filter-content">
-                        <div class="search-bar">
-                            <form role="search">
-                                <div>
-                                    <input name="user_search_input"
-                                           id="user_search_input"
-                                           ng-model="query.q"
-                                           type="search"
-                                           class="form-control"
-                                           ng-enter="search()"
-                                           placeholder="Filter by StoryTeller...">
-                                    <button class="btn" type="submit" ng-click="search()">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                        <md-content class="md-padding" layout="column">
+                            <md-chips ng-model="author.userChips" md-autocomplete-snap md-require-match="true"
+                                md-on-add="explore.clear('username'); explore.addQuery('username', $chip.username)"
+                                md-on-remove="explore.removeQuery('username', $chip.username)">
+                                <md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" md-delay="400"
+                                    md-items="item in author.async(searchText)" md-item-text="item.username"
+                                    placeholder={{author.placeholder}}>
+                                    <span class="autocomplete-dropdown-text" md-highlight-text="searchText">{{item.first_name}}
+                                        {{item.last_name}} ({{item.username}})</span>
+                                    <md-not-found>No matching users found.</md-not-found>
+                                </md-autocomplete>
+                                <md-chip-template>
+                                    <span>
+                                        {{$chip.username}}
+                                    </span>
+                                </md-chip-template>
+                            </md-chips>
+                            <button class="btn" type="submit" ng-click="search()">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </md-content>
                     </div>
+                    {% endverbatim %}
                 </section>
                 <section ng-controller="citiesController as cit">
                     <h3 class="bold-caps">City</h3>
