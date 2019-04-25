@@ -106,11 +106,19 @@
       // seclect order_by options from the Owners API
       owner:
         [
-          { name: 'Username Z-A',
-            sort: '-username'
+          {
+            name: 'First Name A-Z',
+            sort: 'first_name'
           },
-          { name: 'Username A-Z',
-            sort: 'username'
+          {
+            name: 'First Name Z-A',
+            sort: '-first_name'
+          },
+          { name: 'Last Name A-Z',
+            sort: 'last_name'
+          },
+          { name: 'Last Name Z-A',
+            sort: '-last_name'
           }
         ],
       name:
@@ -143,7 +151,7 @@
         storyteller: true, 
         limit: CLIENT_RESULTS_LIMIT, 
         offset: 0,
-        order_by: 'username'
+        order_by: 'last_name'
       };
      $scope.search();
     };

@@ -121,7 +121,7 @@ class MapstoryOwnersResource(TypeFilteredResource):
 
         resource_name = 'owners'
         allowed_methods = ['get']
-        ordering = ['username', 'date_joined']
+        ordering = ['username', 'date_joined', 'first_name', 'last_name']
         excludes = ['is_staff', 'password', 'is_superuser',
                     'last_login']
 
