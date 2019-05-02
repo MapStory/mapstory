@@ -1,5 +1,4 @@
-FROM quay.io/mapstory/python-gdal:2.7.x-2.2.x
-LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
+FROM python:2.7-stretch
 
 ENV MEDIA_ROOT /var/lib/mapstory/media
 ENV STATIC_ROOT /var/lib/mapstory/static
@@ -50,7 +49,7 @@ RUN set -ex \
 # Install phantomjs
 ENV QT_QPA_PLATFORM minimal
 RUN set -ex \
-    && echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list \
+    && echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
         phantomjs \
@@ -88,9 +87,12 @@ RUN pip install celery==4.1.0
 
 # Copy in dependencies
 COPY --chown=mapstory:mapstory deps ./deps
+
 # Install dependencies from requirements.txt
 COPY --chown=mapstory:mapstory requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN echo "https://s3.amazonaws.com/nga-exchange/GDAL-2.3.1-cp27-cp27mu-manylinux1_x86_64.whl" >> requirements.txt \
+    && echo "https://s3.amazonaws.com/nga-exchange/pyproj-1.9.5.1-cp27-cp27mu-manylinux1_x86_64.whl" >> requirements.txt \
+    && pip install --no-cache-dir -r requirements.txt
 COPY epsg_extra /usr/local/lib/python2.7/dist-packages/pyproj/data/
 # The httplib2 python library uses its own CA certificates.
 # Add the system and self-signed CAs.
