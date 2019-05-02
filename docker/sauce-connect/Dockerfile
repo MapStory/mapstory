@@ -1,4 +1,4 @@
-FROM bitnami/minideb:jessie AS downloader
+FROM bitnami/minideb:stretch AS downloader
 LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 
 ENV SC_VERSION 4.4.9
@@ -11,7 +11,7 @@ RUN wget https://saucelabs.com/downloads/sc-$SC_VERSION-linux.tar.gz -O - | tar 
     && mv sc-$SC_VERSION-linux sc-linux
 
 
-FROM bitnami/minideb:jessie AS runner
+FROM bitnami/minideb:stretch AS runner
 LABEL maintainer="Tyler Battle <tbattle@boundlessgeo.com>"
 
 # Expects:
