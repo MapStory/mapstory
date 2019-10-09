@@ -1,5 +1,5 @@
 celery==4.1.0
-sqlalchemy==1.2.8
+sqlalchemy==1.3.9
 
 -e ./deps/geonode
 -e ./deps/django-mailer
