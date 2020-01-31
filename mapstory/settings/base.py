@@ -127,7 +127,35 @@ INSTALLED_APPS += (
     'mapstory.mapstory_profile',
     'mapstory.mapstories',
     'mapstory.storylayers',
+    'mapstory.remoteservices',
 )
+
+# ssl_pki
+SSL_PKI_ENABLED = str_to_bool(os.getenv('SSL_PKI_ENABLED', 'False'))
+if SSL_PKI_ENABLED:
+    INSTALLED_APPS += (
+        'ordered_model',
+        'ssl_pki',
+        'mapstory.sslpki',  # for connecting ssl_pki signals to geonode models
+    )
+
+    # Force max length validation on encrypted password fields
+    ENFORCE_MAX_LENGTH = 1
+
+    # IMPORTANT: this directory should not be within application or www roots
+    PKI_DIRECTORY = os.getenv('PKI_DIRECTORY', '/usr/local/mapstory-pki')
+
+    # ssl_pki app expects a generic setting for SITE_LOCAL_URL
+    try:
+        SITE_LOCAL_URL = 'http://docker'  # SITE_LOCAL_URL
+    except NameError:
+        SITE_LOCAL_URL = os.getenv('SITE_LOCAL_URL', 'http://docker')
+
+    PROXY_URL = os.getenv(
+        'PROXY_URL',
+        '/proxy/?url='
+    )
+
 
 if is_valid(os.getenv("ALLAUTH_GEOAXIS_HOST")):
     INSTALLED_APPS += (
