@@ -13,7 +13,7 @@ from mapstory.importers import UploadedLayerResource
 from mapstory.mapstory_profile.urls import urlpatterns as mapstory_profile_urls
 from mapstory.storylayers.urls import urlpatterns as layers_urls
 from mapstory.views import (GetPageView, IndexView, LeaderListView, SearchView,
-                            baselayer_view, maploom_new_map)
+                            baselayer_view, maploom_new_map, proxy)
 from osgeo_importer.urls import urlpatterns as importer_urlpatterns
 from tastypie.api import Api
 
@@ -60,6 +60,11 @@ urlpatterns = patterns('',
                            template_name='robots.txt', content_type="text/plain"), name='robots'),
                        url(r'^baselayers$',
                            baselayer_view, name='baselayer_view'),
+
+                       # pki overrides
+                       url(r'^proxy/', proxy),
+                       url(r'^services/',
+                           include('mapstory.remoteservices.urls')),
                        )
 
 urlpatterns += patterns("", url(r'', include(mapstory_api.urls)))
@@ -87,3 +92,7 @@ if settings.LOCAL_CONTENT:
 urlpatterns += patterns('',
                         url(r'^accounts/', include('allauth.urls')),
                         )
+
+if 'ssl_pki' in settings.INSTALLED_APPS:
+    from ssl_pki.urls import urlpatterns as ssl_pki_urls
+    urlpatterns += ssl_pki_urls

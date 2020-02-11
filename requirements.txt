@@ -42,3 +42,12 @@ django-model-utils==3.0.0
 elasticsearch==1.6.0
 lxml==3.6.2
 Pillow==5.1.0
+
+# PKI dependencies
+urllib3==1.23
+requests==2.20.0
+# for user-ordering of wildcard hostname:port mappings
+django-ordered-model==1.4.3
+git+https://github.com/planetfederal/django-ssl-pki
+# Override of ArcREST-Package which will allow headers
+git+https://github.com/planetfederal/ArcREST.git@4945fd1b3325a5f1b3e7215833fd8fb1cebeb0b2#subdirectory=src
