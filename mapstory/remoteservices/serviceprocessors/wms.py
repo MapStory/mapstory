@@ -62,18 +62,24 @@ class MapstoryWmsServiceHandler(WmsServiceHandler):
 
         self.proxy_base = urljoin(
             settings.SITEURL, reverse('proxy'))
-        (self.url, self.parsed_service) = WebMapService(
-            url, proxy_base=None, headers=headers)
-        self.indexing_method = (
-            INDEXED if self._offers_geonode_projection() else CASCADED)
-        self.url = self.parsed_service.url
         self.pki_proxy_url = None
         self.pki_url = None
-        if callable(has_pki_prefix) and has_pki_prefix(self.url):
+        if callable(has_pki_prefix) and has_pki_prefix(url):
+            (self.url, self.parsed_service) = WebMapService(
+                url, proxy_base=None, headers=headers)
+            self.url = self.parsed_service.url
             self.pki_url = self.url
             self.pki_proxy_url = pki_to_proxy_route(self.url)
             self.url = pki_route_reverse(self.url)
+        else:
+            # internal auth headers will cause failures in WMS
+            # must be consumed by internal proxy, so don't use it otherwise
+            (self.url, self.parsed_service) = WebMapService(
+                url, proxy_base=None)
+            self.url = self.parsed_service.url
         # TODO: Check if the name already esists
+        self.indexing_method = (
+            INDEXED if self._offers_geonode_projection() else CASCADED)
         self.name = slugify(self.url)[:255]
 
     def _create_layer_thumbnail(self, geonode_layer):
@@ -89,7 +95,8 @@ class MapstoryWmsServiceHandler(WmsServiceHandler):
             "height": "150",
             "format": "image/png",
         }
-        service_meta = "&".join("{}={}".format(*item) for item in params.items())
+        service_meta = "&".join("{}={}".format(*item) for item in
+                                params.items())
         thumbnail_remote_url = "{}?{}".format(
             geonode_layer.remote_service.service_url, service_meta)
         logger.debug("thumbnail_remote_url: {}".format(thumbnail_remote_url))
@@ -125,7 +132,8 @@ class MapstoryWmsServiceHandler(WmsServiceHandler):
         if self.pki_url is not None:
             # ArcREST WMS request parser doesn't cope with : or ;
             params["legend_options"] = quote(params["legend_options"])
-        service_meta = "&".join("{}={}".format(*item) for item in params.items())
+        service_meta = "&".join("{}={}".format(*item) for item in
+                                params.items())
         legend_url = "{}?{}".format(
             geonode_layer.remote_service.service_url, service_meta)
         if self.pki_url is not None:
@@ -155,15 +163,19 @@ class MapstoryServiceHandler(GeoNodeServiceHandler):
         self.proxy_base = urljoin(
             settings.SITEURL, reverse('proxy'))
         url = self._probe_geonode_wms(url)
-        (self.url, self.parsed_service) = WebMapService(
-            url, proxy_base=self.proxy_base, headers=headers)
-        self.indexing_method = (
-            INDEXED if self._offers_geonode_projection() else CASCADED)
-        self.url = self.parsed_service.url
         self.pki_proxy_url = None
         self.pki_url = None
-        if callable(has_pki_prefix) and has_pki_prefix(self.url):
+        if callable(has_pki_prefix) and has_pki_prefix(url):
+            (self.url, self.parsed_service) = WebMapService(
+                url, proxy_base=self.proxy_base, headers=headers)
+            self.url = self.parsed_service.url
             self.pki_url = self.url
             self.pki_proxy_url = pki_to_proxy_route(self.url)
             self.url = pki_route_reverse(self.url)
+        else:
+            (self.url, self.parsed_service) = WebMapService(
+                url, proxy_base=self.proxy_base)
+            self.url = self.parsed_service.url
+        self.indexing_method = (
+            INDEXED if self._offers_geonode_projection() else CASCADED)
         self.name = slugify(self.url)[:255]
