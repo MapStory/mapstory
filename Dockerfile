@@ -19,6 +19,9 @@ COPY docker/nginx/cacerts/comodorsadomainvalidationsecureserverca.crt /usr/local
 RUN set -ex \
     && update-ca-certificates
 
+# Newer versions of pip break the build until the dependencies are updated.
+RUN python -m pip install pip==9.0.3
+
 # Install tools
 RUN set -ex \
     && apt-get update \
@@ -57,7 +60,7 @@ RUN set -ex \
 
 # Install Node and related tools
 RUN set -ex \
-    && curl -sL https://deb.nodesource.com/setup_6.x | /bin/bash - \
+    && curl -sL https://deb.nodesource.com/setup_lts.x | /bin/bash - \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update \
