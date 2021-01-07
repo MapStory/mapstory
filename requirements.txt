@@ -40,5 +40,5 @@ beautifulsoup4==4.6.0
 django-autocomplete-light==2.3.3
 django-model-utils==3.0.0
 elasticsearch==1.6.0
-lxml==3.6.2
+lxml==4.6.2
 Pillow==5.1.0
