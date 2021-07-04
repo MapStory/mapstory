@@ -3,10 +3,10 @@ import datetime
 dateparts = '%Y', '%m', '%d'
 timeparts = '%H', '%M', '%S'
 _patterns = []
-for i in xrange(len(dateparts)):
+for i in range(len(dateparts)):
     _patterns.append('/'.join(dateparts[0:i + 1]))
     _patterns.append('-'.join(dateparts[0:i + 1]))
-for i in xrange(len(timeparts)):
+for i in range(len(timeparts)):
     time = ':'.join(timeparts[0:i + 1])
     _patterns.append('/'.join(dateparts) + 'T' + time)
     _patterns.append('-'.join(dateparts) + 'T' + time)

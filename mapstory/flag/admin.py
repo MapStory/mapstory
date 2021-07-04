@@ -1,9 +1,8 @@
 from datetime import datetime
 
 from django import forms
-from django.conf import settings
 from django.contrib import admin
-from django.core import urlresolvers
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from geonode.people.models import Profile
@@ -48,7 +47,7 @@ user_link.allow_tags = True
 
 
 def flagged_content_link(flag_instance):
-    url = urlresolvers.reverse("admin:flag_flaggedcontent_change",
+    url = reverse("admin:flag_flaggedcontent_change",
                                args=(flag_instance.flagged_content.id,))
     return "<a href='%s'>%s</a>" % (url, 'Admin Link')
 
@@ -58,7 +57,7 @@ flagged_content_link.allow_tags = True
 
 
 def flag_link(flag_instance):
-    url = urlresolvers.reverse("admin:flag_flaginstance_change",
+    url = reverse("admin:flag_flaginstance_change",
                                args=(flag_instance.id,))
     return "<a href='%s'>%s</a>" % (url, 'Admin Link')
 

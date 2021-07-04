@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import TestCase
 
 from mapstory.tests.utils import create_layer, create_mapstory, get_test_user

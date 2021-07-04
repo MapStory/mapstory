@@ -103,8 +103,8 @@ INSTALLED_APPS = tuple(installed_apps_list)
 INSTALLED_APPS += (
     'django_nose',
     'mapstory',
-    'django.contrib.webdesign',
-    'geonode.contrib.geogig',
+    # TODO: Fix these.
+    # 'geonode.contrib.geogig',
     'icon_commons',
     'maploom',
     'haystack',
@@ -114,13 +114,15 @@ INSTALLED_APPS += (
     'crispy_forms',
     'threadedcomments',
     'django_comments',
-    'osgeo_importer',
+    # TODO: Fix django-osgeo-importer code and add this back.
+    # 'osgeo_importer',
     'solo',
     'coverage',
     'django_classification_banner',
     'mapstory.thumbnails',
     'mapstory.journal',
-    'mapstory.favorite',
+    # TODO: Check if this is in Geonode now.
+    # 'mapstory.favorite',
     'mapstory.teams',
     'mapstory.organizations',
     'mapstory.initiatives',
@@ -554,7 +556,7 @@ LOGGING = {
     'handlers': {
         'null': {
             'level': 'ERROR',
-            'class': 'django.utils.log.NullHandler',
+            'class': 'logging.NullHandler',
         },
         'console': {
             'level': 'DEBUG',

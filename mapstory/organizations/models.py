@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import SuspiciousOperation
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import models
 from django.utils.text import slugify
 
@@ -40,21 +40,21 @@ class Organization(Team):
     """
     image = models.ImageField(null=True, blank=True, upload_to='org_profiles')
     facebook = models.ForeignKey(
-        OrganizationSocialMedia, blank=True, null=True, related_name='facebook')
+        OrganizationSocialMedia, blank=True, null=True, related_name='facebook', on_delete=models.CASCADE)
     twitter = models.ForeignKey(
-        OrganizationSocialMedia, blank=True, null=True, related_name='twitter')
+        OrganizationSocialMedia, blank=True, null=True, related_name='twitter', on_delete=models.CASCADE)
     instagram = models.ForeignKey(
-        OrganizationSocialMedia, blank=True, null=True, related_name='instagram')
+        OrganizationSocialMedia, blank=True, null=True, related_name='instagram', on_delete=models.CASCADE)
     github = models.ForeignKey(
-        OrganizationSocialMedia, blank=True, null=True, related_name='github')
+        OrganizationSocialMedia, blank=True, null=True, related_name='github', on_delete=models.CASCADE)
     linkedin = models.ForeignKey(
-        OrganizationSocialMedia, blank=True, null=True, related_name='linkedin')
+        OrganizationSocialMedia, blank=True, null=True, related_name='linkedin', on_delete=models.CASCADE)
     url0 = models.ForeignKey(OrganizationURL, blank=True,
-                             null=True, related_name="url0")
+                             null=True, related_name="url0", on_delete=models.CASCADE)
     url1 = models.ForeignKey(OrganizationURL, blank=True,
-                             null=True, related_name="url1")
+                             null=True, related_name="url1", on_delete=models.CASCADE)
     url2 = models.ForeignKey(OrganizationURL, blank=True,
-                             null=True, related_name="url2")
+                             null=True, related_name="url2", on_delete=models.CASCADE)
     slug = models.SlugField(max_length=255, unique=True, null=True, blank=True)
 
     class Meta:
@@ -197,8 +197,8 @@ class OrganizationMembership(models.Model):
     the Organizaion (Add layers, Post journals, etc).
     A member can also act as an admin to an Organization, which is indicated by his Membership `is_admin` field.
     """
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    organization = models.ForeignKey(Organization)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     member_since = models.DateTimeField(auto_now=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -214,9 +214,9 @@ class OrganizationMembership(models.Model):
 
 class OrganizationLayer(models.Model):
     """Represents a Layer that is sponsored by an Organization"""
-    membership = models.ForeignKey(OrganizationMembership)
-    organization = models.ForeignKey(Organization)
-    layer = models.ForeignKey(Layer)
+    membership = models.ForeignKey(OrganizationMembership, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    layer = models.ForeignKey(Layer, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     is_featured = models.BooleanField(default=False)
@@ -229,9 +229,9 @@ class OrganizationMapStory(models.Model):
     """
     Represents a Mapstory that is sponsored by an Organization
     """
-    mapstory = models.ForeignKey(MapStory)
-    organization = models.ForeignKey(Organization)
-    membership = models.ForeignKey(OrganizationMembership)
+    mapstory = models.ForeignKey(MapStory, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    membership = models.ForeignKey(OrganizationMembership, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     is_featured = models.BooleanField(default=False)
@@ -244,13 +244,13 @@ class JoinRequest(models.Model):
     """
     Represents a request from a user to join the Organization. Must be approved by an admin.
     """
-    organization = models.ForeignKey(Organization)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     is_open = models.BooleanField(default=True)
     approved_by = models.ForeignKey(
-        OrganizationMembership, blank=True, null=True)
+        OrganizationMembership, blank=True, null=True, on_delete=models.CASCADE)
 
     def approve(self, admin_membership):
         """

@@ -2,7 +2,7 @@ import json
 
 import requests
 from django.conf import settings
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import transaction
 from django.db.models import F
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound

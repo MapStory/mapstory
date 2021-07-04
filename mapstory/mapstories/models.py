@@ -182,7 +182,7 @@ class MapStory(geonode.base.models.ResourceBase):
 # Redefining Map Model and adding additional fields
 class Map(geonode.maps.models.Map):
     story = db.models.ForeignKey(
-        MapStory, related_name='chapter_list', blank=True, null=True)
+        MapStory, related_name='chapter_list', blank=True, null=True, on_delete=models.CASCADE)
 
     chapter_index = db.models.IntegerField(
         _('chapter index'), null=True, blank=True)
@@ -264,7 +264,7 @@ class StoryFrame(models.Model):
     INTERVAL_RATE = (('minutes', 'Minutes'), ('hours', 'Hours'),
                      ('weeks', 'Weeks'), ('months', 'Months'), ('years', 'Years'),)
 
-    map = models.ForeignKey(Map)
+    map = models.ForeignKey(Map, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     the_geom = models.TextField(blank=True, null=True)
@@ -319,7 +319,7 @@ class StoryPinManager(models.Manager):
 class StoryPin(models.Model):
     objects = StoryPinManager()
 
-    map = models.ForeignKey(Map)
+    map = models.ForeignKey(Map, on_delete=models.CASCADE)
     title = models.TextField()
     content = models.TextField(blank=True, null=True)
     media = models.TextField(blank=True, null=True)

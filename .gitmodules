@@ -12,8 +12,8 @@
 	branch = composer
 [submodule "deps/geonode"]
 	path = deps/geonode
-	url = https://github.com/MapStory/geonode.git
-	branch = 2.8.x
+	url = https://github.com/geonode/geonode.git
+	branch = 3.2.0
 [submodule "deps/icon-commons"]
 	path = deps/icon-commons
 	url = https://github.com/MapStory/icon-commons.git

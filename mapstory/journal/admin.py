@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from models import JournalEntry
+from mapstory.journal.models import JournalEntry
 
 
 class JournalEntryAdmin(admin.ModelAdmin):
