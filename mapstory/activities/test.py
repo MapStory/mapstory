@@ -5,7 +5,7 @@ from actstream.models import Action, actor_stream
 from dialogos.models import Comment
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import TestCase
 
 from geonode.maps.models import Layer

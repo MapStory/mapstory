@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import SuspiciousOperation
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import models
 from django.utils.text import slugify
 
@@ -34,23 +34,23 @@ class Initiative(Team):
 
     # Social Media
     facebook = models.ForeignKey(
-        InitiativeSocialMedia, blank=True, null=True, related_name='facebook')
+        InitiativeSocialMedia, blank=True, null=True, related_name='facebook', on_delete=models.CASCADE)
     twitter = models.ForeignKey(
-        InitiativeSocialMedia, blank=True, null=True, related_name='twitter')
+        InitiativeSocialMedia, blank=True, null=True, related_name='twitter', on_delete=models.CASCADE)
     instagram = models.ForeignKey(
-        InitiativeSocialMedia, blank=True, null=True, related_name='instagram')
+        InitiativeSocialMedia, blank=True, null=True, related_name='instagram', on_delete=models.CASCADE)
     github = models.ForeignKey(
-        InitiativeSocialMedia, blank=True, null=True, related_name='github')
+        InitiativeSocialMedia, blank=True, null=True, related_name='github', on_delete=models.CASCADE)
     linkedin = models.ForeignKey(
-        InitiativeSocialMedia, blank=True, null=True, related_name='linkedin')
+        InitiativeSocialMedia, blank=True, null=True, related_name='linkedin', on_delete=models.CASCADE)
 
     # Links
     url0 = models.ForeignKey(InitiativeURL, blank=True,
-                             null=True, related_name="url0")
+                             null=True, related_name="url0", on_delete=models.CASCADE)
     url1 = models.ForeignKey(InitiativeURL, blank=True,
-                             null=True, related_name="url1")
+                             null=True, related_name="url1", on_delete=models.CASCADE)
     url2 = models.ForeignKey(InitiativeURL, blank=True,
-                             null=True, related_name="url2")
+                             null=True, related_name="url2", on_delete=models.CASCADE)
 
     def __unicode__(self):
         return self.name
@@ -140,8 +140,8 @@ class InitiativeMembership(models.Model):
     the Initiative (Add layers, Post journals, etc).
     A member can also act as an admin to an initiative, which is indicated by his Membership `is_admin` field.
     """
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    initiative = models.ForeignKey(Initiative)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    initiative = models.ForeignKey(Initiative, on_delete=models.CASCADE)
     member_since = models.DateTimeField(auto_now=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -160,14 +160,14 @@ class JoinRequest(models.Model):
     Represents a request from a user to join the initiative.
     Must be approved by an admin.
     """
-    initiative = models.ForeignKey(Initiative)
+    initiative = models.ForeignKey(Initiative, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             related_name='initiatives_request')
+                             related_name='initiatives_request', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     is_open = models.BooleanField(default=True)
     approved_by = models.ForeignKey(
-        InitiativeMembership, blank=True, null=True)
+        InitiativeMembership, blank=True, null=True, on_delete=models.CASCADE)
 
     def approve(self, admin_membership):
         """
@@ -206,9 +206,9 @@ class InitiativeLayer(models.Model):
     """
     Represents a Layer that is sponsored by an Initiative
     """
-    membership = models.ForeignKey(InitiativeMembership)
-    initiative = models.ForeignKey(Initiative)
-    layer = models.ForeignKey(Layer)
+    membership = models.ForeignKey(InitiativeMembership, on_delete=models.CASCADE)
+    initiative = models.ForeignKey(Initiative, on_delete=models.CASCADE)
+    layer = models.ForeignKey(Layer, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     is_featured = models.BooleanField(default=False)
@@ -221,9 +221,9 @@ class InitiativeMapStory(models.Model):
     """
     Represents a Mapstory that is sponsored by an Initiative
     """
-    mapstory = models.ForeignKey(MapStory)
-    initiative = models.ForeignKey(Initiative)
-    membership = models.ForeignKey(InitiativeMembership)
+    mapstory = models.ForeignKey(MapStory, on_delete=models.CASCADE)
+    initiative = models.ForeignKey(Initiative, on_delete=models.CASCADE)
+    membership = models.ForeignKey(InitiativeMembership, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     is_featured = models.BooleanField(default=False)

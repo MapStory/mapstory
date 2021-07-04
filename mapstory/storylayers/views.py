@@ -17,7 +17,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.contrib.gis.geos import GEOSGeometry
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
@@ -120,7 +120,7 @@ def layer_append_minimal(source, target, request_cookies):
 
     def chunk_list(list, chunk_size):
         """Yield successive chunk_size chunks from list."""
-        for i in xrange(0, len(list), chunk_size):
+        for i in range(0, len(list), chunk_size):
             yield list[i:i+chunk_size]
 
     # TODO: use the provided column to decide which features should be updated and which should be created
@@ -838,11 +838,6 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     except BaseException:
         logger.error(
             "Possible error with OWSLib. Turning all available properties to string")
-
-    if settings.GEOTIFF_IO_ENABLED:
-        from geonode.contrib.geotiffio import create_geotiff_io_url
-        context_dict["link_geotiff_io"] = create_geotiff_io_url(
-            layer, access_token)
 
     # maps owned by user needed to fill the "add to existing map section" in template
     if request.user.is_authenticated():

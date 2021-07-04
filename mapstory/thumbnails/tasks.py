@@ -334,7 +334,7 @@ class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
         # ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'] into 4 would be
         #  [array([0, 1, 2]), array([3, 4, 5]), array([6, 7]), array([8, 9])]
         chunks = numpy.array_split(numpy.array(
-            xrange(0, len(timepositions))), nslices)
+            range(0, len(timepositions))), nslices)
         # get the original data for the 1st and last value in the list
         # i.e. (From above) --> ['a/c', 'd/f', 'g/h', 'i/j']
         return [timepositions[x[0]] + "/" + timepositions[x[-1]] for x in chunks]

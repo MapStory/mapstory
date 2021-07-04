@@ -14,7 +14,7 @@ from mapstory.mapstories.models import Map, MapStory
 
 
 class CustomSite(db.models.Model):
-    site = db.models.OneToOneField(Site, null=True, related_name='assets')
+    site = db.models.OneToOneField(Site, null=True, related_name='assets', on_delete=db.models.CASCADE)
     subtitle = db.models.CharField(max_length=100)
     logo = db.models.ImageField(blank=False, upload_to='customsite')
     favicon = db.models.ImageField(blank=False, upload_to='customsite')
@@ -108,12 +108,12 @@ class GetPage(db.models.Model):
 class GetPageContent(ContentMixin):
     title = db.models.CharField(max_length=64)
     subtitle = db.models.CharField(max_length=64, blank=True)
-    example_map = db.models.ForeignKey(Map, null=True, blank=True)
+    example_map = db.models.ForeignKey(Map, null=True, blank=True, on_delete=db.models.CASCADE)
     main_link = db.models.URLField(blank=False)
     external_link = db.models.URLField(blank=True)
     external_link_title = db.models.CharField(
         max_length=64, blank=True, null=True)
-    page = db.models.ForeignKey(GetPage, related_name='contents')
+    page = db.models.ForeignKey(GetPage, related_name='contents', on_delete=db.models.CASCADE)
     order = db.models.IntegerField(blank=True, default=0)
     video = db.models.FileField(upload_to='getpage', blank=True)
     video_embed_link = db.models.URLField(blank=True)
@@ -129,7 +129,7 @@ class GetPageContent(ContentMixin):
 
 
 class Leader(db.models.Model):
-    user = db.models.ForeignKey(conf.settings.AUTH_USER_MODEL)
+    user = db.models.ForeignKey(conf.settings.AUTH_USER_MODEL, on_delete=db.models.CASCADE)
     content = db.models.TextField()
 
     def html(self):

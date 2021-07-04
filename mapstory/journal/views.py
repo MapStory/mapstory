@@ -1,5 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, ModelFormMixin, UpdateView
 from django.views.generic.list import ListView

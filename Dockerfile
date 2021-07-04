@@ -1,4 +1,4 @@
-FROM python:2.7-stretch
+FROM python:3.8.11
 
 ENV MEDIA_ROOT /var/lib/mapstory/media
 ENV STATIC_ROOT /var/lib/mapstory/static
@@ -19,9 +19,6 @@ COPY docker/nginx/cacerts/comodorsadomainvalidationsecureserverca.crt /usr/local
 RUN set -ex \
     && update-ca-certificates
 
-# Newer versions of pip break the build until the dependencies are updated.
-RUN python -m pip install pip==9.0.3
-
 # Install tools
 RUN set -ex \
     && apt-get update \
@@ -36,8 +33,8 @@ RUN set -ex \
         gunicorn \
         paver \
         pycodestyle \
-        "pylint>=1.9,<2" \
-        "pylint-django>=0.11.1,<2" \
+        pylint \
+        pylint-django \
         ;
 
 # Install misc libs
@@ -47,6 +44,7 @@ RUN set -ex \
         libgeos-dev \
         libjpeg-dev \
         libxml2-dev \
+        libgdal-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install phantomjs
@@ -71,12 +69,9 @@ RUN set -ex \
         bower \
         grunt \
         gulp-cli \
-        webpack@^3.10.0 \
+        webpack \
     && yarn cache clean \
     && rm -rf /var/lib/apt/lists/*
-
-#RUN mkdir -p $MEDIA_ROOT && chown www-data $MEDIA_ROOT
-#RUN mkdir -p $STATIC_ROOT && chown www-data $STATIC_ROOT
 
 # Setup user and paths
 RUN set -ex \
@@ -86,25 +81,17 @@ RUN set -ex \
     && mkdir -p $STATIC_ROOT && chown mapstory $STATIC_ROOT
 
 WORKDIR $APP_PATH
-RUN pip install celery==4.1.0
 
 # Copy in dependencies
 COPY --chown=mapstory:mapstory deps ./deps
 
 # Install dependencies from requirements.txt
 COPY --chown=mapstory:mapstory requirements.txt ./
-RUN echo "https://s3.amazonaws.com/nga-exchange/GDAL-2.3.1-cp27-cp27mu-manylinux1_x86_64.whl" >> requirements.txt \
-    && echo "https://s3.amazonaws.com/nga-exchange/pyproj-1.9.5.1-cp27-cp27mu-manylinux1_x86_64.whl" >> requirements.txt \
-    && pip install --no-cache-dir -r requirements.txt
-COPY epsg_extra /usr/local/lib/python2.7/dist-packages/pyproj/data/
+RUN pip install --no-cache-dir -r requirements.txt
+COPY epsg_extra /usr/local/lib/python3.8/dist-packages/pyproj/data/
 # The httplib2 python library uses its own CA certificates.
 # Add the system and self-signed CAs.
-RUN cat /etc/ssl/certs/ca-certificates.crt >> /usr/local/lib/python2.7/site-packages/httplib2/cacerts.txt
-
-# Override the version of awesome-slugify
-# Using HEAD as of 2018-01-09
-# The version isn't changed, so it has trouble differentiation from the version in pypy. Thus this manual update.
-RUN pip install --no-cache-dir -U git+git://github.com/dimka665/awesome-slugify@a6563949965bcddd976b7b3fb0babf76e3b490f7#egg=awesome-slugify
+RUN cat /etc/ssl/certs/ca-certificates.crt >> /usr/local/lib/python3.8/site-packages/httplib2/cacerts.txt
 
 # Copy in the code
 COPY --chown=mapstory:mapstory mapstory ./mapstory

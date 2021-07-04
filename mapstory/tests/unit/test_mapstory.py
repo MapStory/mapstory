@@ -2,7 +2,7 @@ from unittest import skip
 
 from django.contrib.auth import authenticate, get_user_model
 from django.core import mail
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test import Client
 from django.test.utils import override_settings
 

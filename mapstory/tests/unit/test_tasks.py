@@ -1,6 +1,6 @@
 from unittest import skip
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponse
 from django.test import TestCase
 
