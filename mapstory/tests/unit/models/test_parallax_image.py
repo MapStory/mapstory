@@ -16,7 +16,7 @@ class TestParallaxImage(TestCase):
 
     @skip
     def test_unicode(self):
-        self.assertIsNotNone(unicode(self.parallaxImage))
+        self.assertIsNotNone(str(self.parallaxImage))
 
     @skip
     def test_save_and_retrieve(self):

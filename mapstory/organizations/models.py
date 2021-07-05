@@ -16,7 +16,7 @@ class OrganizationSocialMedia(models.Model):
     url = models.URLField()
 
     def __unicode__(self):
-        return u'%s' % self.url
+        return '%s' % self.url
 
 
 class OrganizationURL(models.Model):
@@ -24,7 +24,7 @@ class OrganizationURL(models.Model):
     url = models.URLField(max_length=255)
 
     def __unicode__(self):
-        return u'%s' % self.url
+        return '%s' % self.url
 
 
 class Organization(Team):
@@ -61,7 +61,7 @@ class Organization(Team):
         verbose_name_plural = 'Organizations'
 
     def __unicode__(self):
-        return u'%s' % self.name
+        return '%s' % self.name
 
     def save(self, *args, **kwargs):
         """
@@ -206,7 +206,7 @@ class OrganizationMembership(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u'%s - %s' % (self.organization, self.user)
+        return '%s - %s' % (self.organization, self.user)
 
     class Meta:
         verbose_name_plural = 'Memberships'
@@ -222,7 +222,7 @@ class OrganizationLayer(models.Model):
     is_featured = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return u'%s' % self.layer
+        return '%s' % self.layer
 
 
 class OrganizationMapStory(models.Model):
@@ -237,7 +237,7 @@ class OrganizationMapStory(models.Model):
     is_featured = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return u'%s' % self.mapstory
+        return '%s' % self.mapstory
 
 
 class JoinRequest(models.Model):

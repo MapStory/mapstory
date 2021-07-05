@@ -103,7 +103,7 @@ INSTALLED_APPS = tuple(installed_apps_list)
 INSTALLED_APPS += (
     'django_nose',
     'mapstory',
-    # TODO: Fix these.
+    # TODO: Fix this.
     # 'geonode.contrib.geogig',
     'icon_commons',
     'maploom',
@@ -114,15 +114,12 @@ INSTALLED_APPS += (
     'crispy_forms',
     'threadedcomments',
     'django_comments',
-    # TODO: Fix django-osgeo-importer code and add this back.
-    # 'osgeo_importer',
+    'osgeo_importer',
     'solo',
     'coverage',
     'django_classification_banner',
     'mapstory.thumbnails',
     'mapstory.journal',
-    # TODO: Check if this is in Geonode now.
-    # 'mapstory.favorite',
     'mapstory.teams',
     'mapstory.organizations',
     'mapstory.initiatives',
@@ -240,8 +237,7 @@ DATABASE_PORT = '5432'
 if DATABASE_PASSWORD:
     DATABASES = {
         'default': {
-            # we use transaction_hooks so we can attach on_commit actions
-            'ENGINE': 'transaction_hooks.backends.postgresql_psycopg2',
+            'ENGINE': 'django.contrib.gis.db.backends.postgis',
             'NAME': 'mapstory',
             'USER': 'mapstory',
             'PASSWORD': DATABASE_PASSWORD,

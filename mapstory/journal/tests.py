@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import Client, TestCase
 
-from models import JournalEntry, get_group_journals
+from .models import JournalEntry, get_group_journals
 
 User = get_user_model()
 
@@ -113,8 +113,8 @@ class TestJournalEntry(TestCase):
         """
         Should return unicode value
         """
-        self.assertIsNotNone(unicode(self.journalEntry))
-        self.assertTrue(unicode(self.journalEntry).endswith(
+        self.assertIsNotNone(str(self.journalEntry))
+        self.assertTrue(str(self.journalEntry).endswith(
             self.journalEntry.title))
 
     @skip

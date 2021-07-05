@@ -14,7 +14,7 @@ from actstream.models import actor_stream
 from allauth.account.adapter import DefaultAccountAdapter
 from geonode.people.models import Profile
 from icon_commons.models import Icon
-from mapstory.favorite.models import Favorite
+from geonode.favorite.models import Favorite
 from mapstory.journal.models import JournalEntry
 from osgeo_importer.forms import UploadFileForm
 

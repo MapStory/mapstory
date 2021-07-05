@@ -18,7 +18,7 @@ class TestGetPage(TestCase):
         self.assertIsNotNone(GetPage)
 
     def test_unicode(self):
-        self.assertIsNotNone(unicode(self.getPage))
+        self.assertIsNotNone(str(self.getPage))
 
     @skip
     def test_save_and_retrieve(self):

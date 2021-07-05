@@ -27,7 +27,6 @@ django-nose==1.4.7
 
 pandas==1.2.5
 
-django-transaction-hooks==0.3
 django-model-utils==4.1.1
 
 # CLI library used by some management commands

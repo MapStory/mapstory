@@ -7,7 +7,7 @@ from haystack.utils import get_identifier
 
 try:
     import elasticsearch
-    from elasticsearch.helpers import bulk_index
+    from elasticsearch.helpers import bulk
     from elasticsearch.exceptions import NotFoundError
 except ImportError:
     raise MissingDependency(

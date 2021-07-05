@@ -85,12 +85,12 @@ class MapViewsTest(MapStoryTestMixin):
 
         # Should exist in the database
         found = MapStory.objects.get(id=test_mapstory.id)
-        self.assertEquals(found.title, test_mapstory.title)
+        self.assertEqual(found.title, test_mapstory.title)
         self.client.login(username=testUser.username, password="admin")
         # Should get a 200 response from the URL
         response = self.client.get(
             reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         # Should use the correct template
         self.assertTemplateUsed(response, 'maps/map_detail.html')
@@ -102,13 +102,13 @@ class MapViewsTest(MapStoryTestMixin):
         self.client.login(username=testUser.username, password="admin")
         response = self.client.post(reverse('mapstory_detail', kwargs={
                                     "slug": test_mapstory.slug}), {'add_keyword': 'test_keyword'})
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         # Should remove the keyword
         response = self.client.post(reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}),
                                     {'remove_keyword': 'test_keyword'})
 
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         # Should handle Keywords form post
         form_data = {'keywords': ['testKeyword01',
@@ -117,7 +117,7 @@ class MapViewsTest(MapStoryTestMixin):
         self.assertTrue(form.is_valid())
         response = self.client.post(reverse('mapstory_detail', kwargs={
                                     "slug": test_mapstory.slug}), form_data)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_mapstory_detail_publish_status_form(self):
         # Should not be published yet
@@ -131,7 +131,7 @@ class MapViewsTest(MapStoryTestMixin):
         self.client.login(username=testUser.username, password="admin")
         response = self.client.post(reverse('mapstory_detail',
                                             kwargs={"slug": test_mapstory.slug}), form_data)
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         # Should be published
         test_mapstory = MapStory.objects.get(id=test_mapstory.id)
@@ -146,7 +146,7 @@ class MapViewsTest(MapStoryTestMixin):
         self.client.login(username=testUser.username, password="admin")
         response = self.client.get(
             reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         # Should use the correct template
         self.assertTemplateUsed(response, 'maps/map_detail.html')
@@ -178,7 +178,7 @@ class MapViewsTest(MapStoryTestMixin):
         self.client.login(username=testUser.username, password="admin")
         response = self.client.get(
             reverse('mapstory_detail', kwargs={"slug": test_mapstory.slug}))
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         # Should have the meta tags included
         soup = BeautifulSoup(response.content, "html.parser")

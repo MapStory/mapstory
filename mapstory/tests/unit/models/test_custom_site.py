@@ -63,5 +63,5 @@ class TestCustomSite(TestCase):
         """
         Unicode method tests
         """
-        self.assertIsNotNone(unicode(self.customSite),
+        self.assertIsNotNone(str(self.customSite),
                              "Should have unicode representation")

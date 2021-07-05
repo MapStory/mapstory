@@ -15,14 +15,14 @@ class InitiativeSocialMedia(models.Model):
     url = models.URLField()
 
     def __unicode__(self):
-        return u'%s' % self.url
+        return '%s' % self.url
 
 
 class InitiativeURL(models.Model):
     url = models.URLField(max_length=255)
 
     def __unicode__(self):
-        return u'%s' % self.url
+        return '%s' % self.url
 
 
 class Initiative(Team):
@@ -149,7 +149,7 @@ class InitiativeMembership(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     def __unicode__(self):
-        return u'%s - %s' % (self.initiative, self.user)
+        return '%s - %s' % (self.initiative, self.user)
 
     class Meta:
         verbose_name_plural = 'Memberships'
@@ -214,7 +214,7 @@ class InitiativeLayer(models.Model):
     is_featured = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return u'%s' % self.layer
+        return '%s' % self.layer
 
 
 class InitiativeMapStory(models.Model):
@@ -229,4 +229,4 @@ class InitiativeMapStory(models.Model):
     is_featured = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return u'%s' % self.mapstory
+        return '%s' % self.mapstory

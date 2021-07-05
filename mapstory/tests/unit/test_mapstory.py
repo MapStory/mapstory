@@ -50,7 +50,7 @@ class MapStoryTests(MapStoryTestMixin):
         # Use the soup:
         soup = BeautifulSoup(response.content, 'html.parser')
         self.assertIsNotNone(soup)
-        self.assertEquals(soup.title.string, u'MapStory')
+        self.assertEqual(soup.title.string, 'MapStory')
         # Our homepage should have 8 sections
         # Map section
         self.assertEqual(len(soup.find_all('section', class_='splash')), 1)

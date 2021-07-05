@@ -281,7 +281,7 @@ def create_layer(title, abstract, owner):
         elevation
     )
 
-    year, month, day = map(int, (dt[:4], dt[4:6], dt[6:]))
+    year, month, day = list(map(int, (dt[:4], dt[4:6], dt[6:])))
     start = datetime(year, month, day)
     end = start + timedelta(days=365)
     layer = Layer(

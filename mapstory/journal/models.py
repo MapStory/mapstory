@@ -29,7 +29,7 @@ class JournalEntry(ContentMixin):
     show_on_main = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return u'%s' % (self.title)
+        return '%s' % (self.title)
 
     def get_absolute_url(self):
         return reverse('journal-detail', args=[self.pk])

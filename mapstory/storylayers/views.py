@@ -5,7 +5,7 @@ import logging
 import os
 import re
 import shutil
-import StringIO
+import io
 import tempfile
 import traceback
 import uuid
@@ -70,7 +70,7 @@ def layer_create(request, template='upload/layer_create.html'):
         else:
             configuration_options = request.POST
             if isinstance(configuration_options.get('featureType', {}), str) \
-                    or isinstance(configuration_options.get('featureType', {}), unicode):
+                    or isinstance(configuration_options.get('featureType', {}), str):
                 configuration_options['featureType'] = json.loads(
                     configuration_options['featureType'])
 
@@ -103,8 +103,7 @@ def layer_create(request, template='upload/layer_create.html'):
                 return HttpResponse(json.dumps({'status': 'failure', 'errors': error_messages}), status=400,
                                     content_type='application/json')
             if layers:
-                layer_names = map(lambda layer: {'name': layer.name, 'url': layer.get_absolute_url()},
-                                  Layer.objects.filter(name__in=[n[0] for n in layers]))
+                layer_names = [{'name': layer.name, 'url': layer.get_absolute_url()} for layer in Layer.objects.filter(name__in=[n[0] for n in layers])]
 
                 return HttpResponse(json.dumps({'status': 'success', 'layers': layer_names}), status=201,
                                     content_type='application/json')
@@ -309,7 +308,7 @@ def download_append_shp(request):
                 'ALTER TABLE {} DROP COLUMN fid'.format(table_name))
 
         # Open StringIO to grab in-memory ZIP contents and write the new zipfile.
-        in_memory_contents = StringIO.StringIO()
+        in_memory_contents = io.StringIO()
 
         new_zipfile = zipfile.ZipFile(
             in_memory_contents, "w", compression=zipfile.ZIP_DEFLATED)
@@ -358,7 +357,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         return [_bbox[0], _bbox[2], _bbox[1], _bbox[3]]
 
     def sld_definition(style):
-        from urllib import quote
+        from urllib.parse import quote
         _sld = {
             "title": style.sld_title or style.name,
             "legend": {
@@ -721,7 +720,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "organizations": admin_memberships,
         "initiatives": ini_memberships,
         "layers": json.dumps({"defaultLayer": BaselayerDefault.objects.first().layer.name,
-                              "layers":  map(lambda x: x.to_object(), Baselayer.objects.all())})
+                              "layers":  [x.to_object() for x in Baselayer.objects.all()]})
         # "online": (layer.remote_service.probe == 200) if layer.storeType == "remoteStore" else True
     }
 
@@ -828,7 +827,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
             # filter the schema dict based on the values of layers_attributes
             layer_attributes_schema = []
-            for key in schema['properties'].keys():
+            for key in list(schema['properties'].keys()):
                 layer_attributes_schema.append(key)
 
             filtered_attributes = layer_attributes_schema

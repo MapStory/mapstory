@@ -58,8 +58,8 @@ class TestSponsor(TestCase):
         """
         Should return unicode
         """
-        self.assertIsNotNone(unicode(self.sponsor))
-        self.assertTrue(unicode(self.sponsor).endswith(self.sponsor.name))
+        self.assertIsNotNone(str(self.sponsor))
+        self.assertTrue(str(self.sponsor).endswith(self.sponsor.name))
 
     def test_image_tag(self):
         """
@@ -70,4 +70,4 @@ class TestSponsor(TestCase):
 
     def test_sponsor_name(self):
         sponsor = Sponsor(name='My Sponsor Name')
-        self.assertEqual(unicode(sponsor), 'Sponsor - ' + sponsor.name)
+        self.assertEqual(str(sponsor), 'Sponsor - ' + sponsor.name)

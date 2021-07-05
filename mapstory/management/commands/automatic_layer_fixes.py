@@ -55,7 +55,7 @@ class Command(BaseCommand):
 
         def add_valid(layer_name, logged_attributes):
             valid_layer = {'name': layer_name}
-            for key, value in logged_attributes.items():
+            for key, value in list(logged_attributes.items()):
                 valid_layer[key] = value
             valid.append(valid_layer)
 

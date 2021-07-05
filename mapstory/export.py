@@ -16,7 +16,7 @@ def export_via_model(model, request, queryset, fields=None, exclude=None):
     response = HttpResponse(content_type='text/csv')
 
     response['Content-Disposition'] = \
-        'attachment; filename=%s.csv' % unicode(opts).replace('.', '_')
+        'attachment; filename=%s.csv' % str(opts).replace('.', '_')
 
     field_names = list(field_names)
     writer = csv.DictWriter(response, field_names)
@@ -25,11 +25,11 @@ def export_via_model(model, request, queryset, fields=None, exclude=None):
     for obj in queryset:
         writer.writerow(
             dict(
-                zip(
+                list(zip(
                     field_names,
-                    [unicode(getattr(obj, field)).encode("utf-8", "replace")
+                    [str(getattr(obj, field)).encode("utf-8", "replace")
                      for field in field_names]
-                )
+                ))
             )
         )
     return response

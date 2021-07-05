@@ -15,7 +15,7 @@ class TestLeader(TestCase):
         self.assertIsInstance(self.leader, Leader)
 
     def test_unicode(self):
-        self.assertIsNotNone(unicode(self.leader))
+        self.assertIsNotNone(str(self.leader))
 
     @skip
     def test_save_and_retrieve(self):

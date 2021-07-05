@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import migrations, models
 from django.conf import settings
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Initiative',
             fields=[
-                ('team_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='teams.Team')),
+                ('team_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='teams.Team', on_delete=models.CASCADE)),
                 ('slug', models.SlugField(max_length=255, null=True, blank=True)),
                 ('image', models.ImageField(null=True, upload_to=b'initiatives', blank=True)),
             ],
@@ -31,8 +31,8 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('last_updated', models.DateTimeField(auto_now=True)),
                 ('is_featured', models.BooleanField(default=False)),
-                ('initiative', models.ForeignKey(to='initiatives.Initiative')),
-                ('layer', models.ForeignKey(to='layers.Layer')),
+                ('initiative', models.ForeignKey(to='initiatives.Initiative', on_delete=models.CASCADE)),
+                ('layer', models.ForeignKey(to='layers.Layer', on_delete=models.CASCADE)),
             ],
         ),
         migrations.CreateModel(
@@ -42,8 +42,8 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('last_updated', models.DateTimeField(auto_now=True)),
                 ('is_featured', models.BooleanField(default=False)),
-                ('initiative', models.ForeignKey(to='initiatives.Initiative')),
-                ('mapstory', models.ForeignKey(to='mapstories.MapStory')),
+                ('initiative', models.ForeignKey(to='initiatives.Initiative', on_delete=models.CASCADE)),
+                ('mapstory', models.ForeignKey(to='mapstories.MapStory', on_delete=models.CASCADE)),
             ],
         ),
         migrations.CreateModel(
@@ -55,8 +55,8 @@ class Migration(migrations.Migration):
                 ('is_active', models.BooleanField(default=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('last_updated', models.DateTimeField(auto_now=True)),
-                ('initiative', models.ForeignKey(to='initiatives.Initiative')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('initiative', models.ForeignKey(to='initiatives.Initiative', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Memberships',
@@ -69,19 +69,19 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('last_updated', models.DateTimeField(auto_now=True)),
                 ('is_open', models.BooleanField(default=True)),
-                ('approved_by', models.ForeignKey(blank=True, to='initiatives.InitiativeMembership', null=True)),
-                ('initiative', models.ForeignKey(to='initiatives.Initiative')),
-                ('user', models.ForeignKey(related_name='initiatives_request', to=settings.AUTH_USER_MODEL)),
+                ('approved_by', models.ForeignKey(blank=True, to='initiatives.InitiativeMembership', null=True, on_delete=models.CASCADE)),
+                ('initiative', models.ForeignKey(to='initiatives.Initiative', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(related_name='initiatives_request', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
         ),
         migrations.AddField(
             model_name='initiativemapstory',
             name='membership',
-            field=models.ForeignKey(to='initiatives.InitiativeMembership'),
+            field=models.ForeignKey(to='initiatives.InitiativeMembership', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='initiativelayer',
             name='membership',
-            field=models.ForeignKey(to='initiatives.InitiativeMembership'),
+            field=models.ForeignKey(to='initiatives.InitiativeMembership', on_delete=models.CASCADE),
         ),
     ]

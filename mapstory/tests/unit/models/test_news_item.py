@@ -19,7 +19,7 @@ class TestNewsItem(TestCase):
         self.assertIsNotNone(NewsItem)
 
     def test_unicode(self):
-        self.assertIsNotNone(unicode(self.newsItem))
+        self.assertIsNotNone(str(self.newsItem))
 
     @skip
     def test_save_and_retrieve(self):

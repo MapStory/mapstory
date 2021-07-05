@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import migrations, models
 from django.conf import settings
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ('expertise', models.TextField(help_text='Provide some details about your Expertise', null=True, verbose_name='Expertise', blank=True)),
                 ('digest', models.BooleanField(default=False, help_text='Subscribe to MapStory monthly email digest', verbose_name='Monthly email digest')),
                 ('avatar_100', models.CharField(max_length=512, null=True, blank=True)),
-                ('user_profile', models.OneToOneField(to=settings.AUTH_USER_MODEL)),
+                ('user_profile', models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
                 ('interests', taggit.managers.TaggableManager(to='taggit.Tag', through='taggit.TaggedItem', blank=True, help_text='A list of personal interests (separate each interest with a comma)', verbose_name='interests')),
             ],
         ),

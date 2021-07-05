@@ -4,7 +4,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, ModelFormMixin, UpdateView
 from django.views.generic.list import ListView
 
-from models import JournalEntry
+from .models import JournalEntry
 
 
 class JournalListView(ListView):
