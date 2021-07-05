@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import migrations, models
 
@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Map',
             fields=[
-                ('map_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='maps.Map')),
+                ('map_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='maps.Map', on_delete=models.CASCADE)),
                 ('chapter_index', models.IntegerField(null=True, verbose_name='chapter index', blank=True)),
                 ('viewer_playbackmode', models.CharField(max_length=32, null=True, verbose_name='Viewer Playback', blank=True)),
             ],
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='MapStory',
             fields=[
-                ('resourcebase_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='base.ResourceBase')),
+                ('resourcebase_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='base.ResourceBase', on_delete=models.CASCADE)),
                 ('distribution_url', models.TextField(help_text='information about on-line sources from which the dataset, specification, or community profile name and extended metadata elements can be obtained', null=True, verbose_name='distribution URL', blank=True)),
                 ('distribution_description', models.TextField(help_text='detailed text description of what the online resource is/does', null=True, verbose_name='distribution description', blank=True)),
             ],
@@ -41,6 +41,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='map',
             name='story',
-            field=models.ForeignKey(related_name='chapter_list', blank=True, to='mapstories.MapStory', null=True),
+            field=models.ForeignKey(related_name='chapter_list', blank=True, to='mapstories.MapStory', null=True, on_delete=models.CASCADE),
         ),
     ]

@@ -1,8 +1,8 @@
-from __future__ import division
+
 
 import os
 import uuid
-from StringIO import StringIO
+from io import StringIO
 from unittest import skip
 
 from django.test import TestCase
@@ -116,7 +116,7 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
         maplayer_background.opacity = 1.0
         maplayer_background.fixed = False
         maplayer_background.visibility = True
-        maplayer_background.source_params = u'{"hidden": true, "ptype": "gxp_mapboxsource"}'
+        maplayer_background.source_params = '{"hidden": true, "ptype": "gxp_mapboxsource"}'
         maplayer_background.layer_config = ""
         maplayer_background.group = "background"
         maplayer_background.save()
@@ -137,7 +137,7 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
         maplayer.opacity = 1.0
         maplayer.fixed = False
         maplayer.visibility = True
-        maplayer.source_params = u'{"lazy": true, "name": "local geoserver", "title": "Local Geoserver", "ptype": "gxp_wmscsource", "restUrl": "/gs/rest", "isVirtualService": false, "mapLayerRequiresServer": true}'
+        maplayer.source_params = '{"lazy": true, "name": "local geoserver", "title": "Local Geoserver", "ptype": "gxp_wmscsource", "restUrl": "/gs/rest", "isVirtualService": false, "mapLayerRequiresServer": true}'
         maplayer.layer_config = ""
         maplayer.styles = style
         maplayer.save()
@@ -147,7 +147,7 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
         image_file = StringIO(gif_data)
         gif_image = Image.open(image_file)
 
-        self.assertEquals(gif_image.format, "GIF")
+        self.assertEqual(gif_image.format, "GIF")
         self.assertEqual(gif_image.size[0], 200)
         self.assertEqual(gif_image.size[1], 150)
         if nframes > 1:
@@ -180,23 +180,23 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
         self.assertTrue(abs(info["full_bounds"][3] -
                             46.011295318603516) < 0.0000001)
 
-        self.assertEquals(len(info["intervals_by_layer"]), 6)
+        self.assertEqual(len(info["intervals_by_layer"]), 6)
         # should all a [6][1] matrix
-        self.assertEquals(len(info["intervals_by_layer"][0]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][1]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][2]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][3]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][4]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][5]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][0]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][1]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][2]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][3]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][4]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][5]), 1)
 
-        self.assertEquals(info["intervals_by_layer"][0]
+        self.assertEqual(info["intervals_by_layer"][0]
                           [0], "1840-01-01T00:00:00Z")
-        self.assertEquals(info["intervals_by_layer"][5]
+        self.assertEqual(info["intervals_by_layer"][5]
                           [0], "1870-01-01T00:00:00Z")
 
-        self.assertEquals(info["layer_styles"], "")
-        self.assertEquals(info["layer_names"], self.layer_rail.name)
-        self.assertEquals(
+        self.assertEqual(info["layer_styles"], "")
+        self.assertEqual(info["layer_names"], self.layer_rail.name)
+        self.assertEqual(
             info["tile_URL"], "https://{a-b}.tiles.mapbox.com/v3/mapbox.control-room/{z}/{x}/{y}.png")
         img = thumb_generator.create_thumbnail_from_info(info)
         self.assertGIF(img, 6)
@@ -213,7 +213,7 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
 
         thumb_generator = CreateStoryAnimatedThumbnailTask()
         info = thumb_generator.get_all_thumbnail_info(chapter)
-        self.assertEquals(info["layer_styles"], "style_a,style_b,style_c")
+        self.assertEqual(info["layer_styles"], "style_a,style_b,style_c")
 
     # mapstory with the 3 datasets (empy, prison, railways)
     # verify that its going to call the phantom stuff with the correct info
@@ -227,17 +227,17 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
         thumb_generator = CreateStoryAnimatedThumbnailTask()
         info = thumb_generator.get_all_thumbnail_info(chapter)
 
-        self.assertEquals(len(info["intervals_by_layer"]), 10)
+        self.assertEqual(len(info["intervals_by_layer"]), 10)
         # should all a [10][3] matrix
-        self.assertEquals(len(info["intervals_by_layer"][0]), 3)
-        self.assertEquals(len(info["intervals_by_layer"][1]), 3)
-        self.assertEquals(len(info["intervals_by_layer"][2]), 3)
-        self.assertEquals(len(info["intervals_by_layer"][3]), 3)
-        self.assertEquals(len(info["intervals_by_layer"][4]), 3)
-        self.assertEquals(len(info["intervals_by_layer"][5]), 3)
-        self.assertEquals(len(info["intervals_by_layer"][6]), 3)
-        self.assertEquals(len(info["intervals_by_layer"][8]), 3)
-        self.assertEquals(len(info["intervals_by_layer"][9]), 3)
+        self.assertEqual(len(info["intervals_by_layer"][0]), 3)
+        self.assertEqual(len(info["intervals_by_layer"][1]), 3)
+        self.assertEqual(len(info["intervals_by_layer"][2]), 3)
+        self.assertEqual(len(info["intervals_by_layer"][3]), 3)
+        self.assertEqual(len(info["intervals_by_layer"][4]), 3)
+        self.assertEqual(len(info["intervals_by_layer"][5]), 3)
+        self.assertEqual(len(info["intervals_by_layer"][6]), 3)
+        self.assertEqual(len(info["intervals_by_layer"][8]), 3)
+        self.assertEqual(len(info["intervals_by_layer"][9]), 3)
 
         self.assertTrue(
             abs(info["full_bounds"][0] - -165.288543701) < 0.0000001)
@@ -248,22 +248,22 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
         self.assertTrue(
             abs(info["full_bounds"][3] - 71.2739944458) < 0.0000001)
 
-        self.assertEquals(info["intervals_by_layer"][0][0], 'NONE')
-        self.assertEquals(info["intervals_by_layer"][0][1],
+        self.assertEqual(info["intervals_by_layer"][0][0], 'NONE')
+        self.assertEqual(info["intervals_by_layer"][0][1],
                           '1811-01-01T00:00:00Z/1869-01-01T00:00:00Z')
-        self.assertEquals(info["intervals_by_layer"][0][2],
+        self.assertEqual(info["intervals_by_layer"][0][2],
                           '1811-01-01T00:00:00Z/1869-01-01T00:00:00Z')
 
-        self.assertEquals(info["intervals_by_layer"][9][0], 'NONE')
-        self.assertEquals(info["intervals_by_layer"][9][1],
+        self.assertEqual(info["intervals_by_layer"][9][0], 'NONE')
+        self.assertEqual(info["intervals_by_layer"][9][1],
                           '1992-01-01T00:00:00Z/9999-01-01T00:00:00Z')
-        self.assertEquals(info["intervals_by_layer"][9][2],
+        self.assertEqual(info["intervals_by_layer"][9][2],
                           '1992-01-01T00:00:00Z/9999-01-01T00:00:00Z')
 
-        self.assertEquals(info["layer_styles"], ",,")
-        self.assertEquals(info["layer_names"],
+        self.assertEqual(info["layer_styles"], ",,")
+        self.assertEqual(info["layer_names"],
                           self.layer_empty.name + "," + self.layer_prison.name + "," + self.layer_rail.name)
-        self.assertEquals(
+        self.assertEqual(
             info["tile_URL"], "https://{a-b}.tiles.mapbox.com/v3/mapbox.control-room/{z}/{x}/{y}.png")
         img = thumb_generator.create_thumbnail_from_info(info)
         self.assertGIF(img, 10)
@@ -277,26 +277,26 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
         thumb_generator = CreateStoryAnimatedThumbnailTask()
         info = thumb_generator.get_all_thumbnail_info(chapter)
 
-        self.assertEquals(len(info["intervals_by_layer"]), 10)
+        self.assertEqual(len(info["intervals_by_layer"]), 10)
         # should all a [10][1] matrix
-        self.assertEquals(len(info["intervals_by_layer"][0]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][1]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][2]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][3]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][4]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][5]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][6]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][8]), 1)
-        self.assertEquals(len(info["intervals_by_layer"][9]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][0]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][1]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][2]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][3]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][4]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][5]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][6]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][8]), 1)
+        self.assertEqual(len(info["intervals_by_layer"][9]), 1)
 
-        self.assertEquals(info["intervals_by_layer"][0][0],
+        self.assertEqual(info["intervals_by_layer"][0][0],
                           "1811-01-01T00:00:00Z/1872-01-01T00:00:00Z")
-        self.assertEquals(info["intervals_by_layer"][9][0],
+        self.assertEqual(info["intervals_by_layer"][9][0],
                           '1993-01-01T00:00:00Z/9999-01-01T00:00:00Z')
 
-        self.assertEquals(info["layer_styles"], "")
-        self.assertEquals(info["layer_names"], self.layer_prison.name)
-        self.assertEquals(
+        self.assertEqual(info["layer_styles"], "")
+        self.assertEqual(info["layer_names"], self.layer_prison.name)
+        self.assertEqual(
             info["tile_URL"], "https://{a-b}.tiles.mapbox.com/v3/mapbox.control-room/{z}/{x}/{y}.png")
         img = thumb_generator.create_thumbnail_from_info(info)
         self.assertGIF(img, 10)
@@ -309,11 +309,11 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
 
         thumb_generator = CreateStoryAnimatedThumbnailTask()
         info = thumb_generator.get_all_thumbnail_info(chapter)
-        self.assertEquals(info["full_bounds"], [-180, -90, 180, 90])
-        self.assertEquals(info["intervals_by_layer"][0], ['NONE'])
-        self.assertEquals(info["layer_styles"], "")
-        self.assertEquals(info["layer_names"], self.layer_empty.name)
-        self.assertEquals(
+        self.assertEqual(info["full_bounds"], [-180, -90, 180, 90])
+        self.assertEqual(info["intervals_by_layer"][0], ['NONE'])
+        self.assertEqual(info["layer_styles"], "")
+        self.assertEqual(info["layer_names"], self.layer_empty.name)
+        self.assertEqual(
             info["tile_URL"], "https://{a-b}.tiles.mapbox.com/v3/mapbox.control-room/{z}/{x}/{y}.png")
         img = thumb_generator.create_thumbnail_from_info(info)
         self.assertGIF(img, 1)
@@ -345,26 +345,26 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
     def test_combine_bounds(self):
         metadata = [{"bounds": None}]
         full_bounds = CreateStoryAnimatedThumbnailTask.combine_bounds(metadata)
-        self.assertEquals(full_bounds, [-180, -90, 180, 90])
+        self.assertEqual(full_bounds, [-180, -90, 180, 90])
 
         metadata = [{"bounds": [0, 0, -1, -1]}]  # this is null bounds
         full_bounds = CreateStoryAnimatedThumbnailTask.combine_bounds(metadata)
-        self.assertEquals(full_bounds, [-180, -90, 180, 90])
+        self.assertEqual(full_bounds, [-180, -90, 180, 90])
 
         metadata = [{"bounds": [0, 0, -1, -1]},
                     {"bounds": [-100, -101, -98, -99]}, {"bounds": None}]
         full_bounds = CreateStoryAnimatedThumbnailTask.combine_bounds(metadata)
-        self.assertEquals(full_bounds, [-100, -101, -98, -99])
+        self.assertEqual(full_bounds, [-100, -101, -98, -99])
 
         metadata = [{"bounds": [-6, 0, 10, 20]},
                     {"bounds": [5, 5, 15, 15]}, {"bounds": [-5, -5, -1, -1]}]
         full_bounds = CreateStoryAnimatedThumbnailTask.combine_bounds(metadata)
-        self.assertEquals(full_bounds, [-6, -5, 15, 20])
+        self.assertEqual(full_bounds, [-6, -5, 15, 20])
 
         metadata = [{"bounds": [-6, 0, 10, 20]}, {"bounds": [5, 5, 15, 15]}, {"bounds": [-5, -5, -1, -1]},
                     {"bounds": [0, 0, -1, -1]}, {"bounds": None}]
         full_bounds = CreateStoryAnimatedThumbnailTask.combine_bounds(metadata)
-        self.assertEquals(full_bounds, [-6, -5, 15, 20])
+        self.assertEqual(full_bounds, [-6, -5, 15, 20])
 
     # test that the timeslice computer is working
     def test_combine_timeslices(self):
@@ -372,35 +372,35 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
                                     '1889-01-01T00:00:00.0Z', '1892-01-01T00:00:00.0Z']}]
         full_timeslices = CreateStoryAnimatedThumbnailTask.combine_timeslices(
             metadata)
-        self.assertEquals(full_timeslices, [
+        self.assertEqual(full_timeslices, [
                           '1889-01-01T00:00:00Z', '1890-01-01T00:00:00Z', '1892-01-01T00:00:00Z'])
 
         metadata = [{"timeslices": ['1889-01-01T00:00:00.0Z', '1890-01-01T00:00:00.0Z', '1892-01-01T00:00:00.0Z',
                                     '1889-01-01T00:00:00.0Z', '1890-01-01T00:00:00.0Z', '1892-01-01T00:00:00.0Z']}]
         full_timeslices = CreateStoryAnimatedThumbnailTask.combine_timeslices(
             metadata)
-        self.assertEquals(full_timeslices, [
+        self.assertEqual(full_timeslices, [
                           '1889-01-01T00:00:00Z', '1890-01-01T00:00:00Z', '1892-01-01T00:00:00Z'])
 
         metadata = [{"timeslices": ['1890-01-01T00:00:00.0Z', '1889-01-01T00:00:00.0Z', '1892-01-01T00:00:00.0Z']},
                     {"timeslices": ['1890-01-01T00:00:00.0Z', '1889-01-01T00:00:00.0Z', '1892-01-01T00:00:00.0Z']}]
         full_timeslices = CreateStoryAnimatedThumbnailTask.combine_timeslices(
             metadata)
-        self.assertEquals(full_timeslices, [
+        self.assertEqual(full_timeslices, [
                           '1889-01-01T00:00:00Z', '1890-01-01T00:00:00Z', '1892-01-01T00:00:00Z'])
 
         metadata = [{"timeslices": ['1890-01-01T00:00:00.0Z', '1889-01-01T00:00:00.0Z', '1892-01-01T00:00:00.0Z']},
                     {"timeslices": None}]
         full_timeslices = CreateStoryAnimatedThumbnailTask.combine_timeslices(
             metadata)
-        self.assertEquals(full_timeslices, [
+        self.assertEqual(full_timeslices, [
                           '1889-01-01T00:00:00Z', '1890-01-01T00:00:00Z', '1892-01-01T00:00:00Z'])
 
         metadata = [{"timeslices": ['1890-01-01T00:00:00.0Z', '1889-01-01T00:00:00.0Z', '1892-01-01T00:00:00.0Z']},
                     {"timeslices": []}]
         full_timeslices = CreateStoryAnimatedThumbnailTask.combine_timeslices(
             metadata)
-        self.assertEquals(full_timeslices, [
+        self.assertEqual(full_timeslices, [
                           '1889-01-01T00:00:00Z', '1890-01-01T00:00:00Z', '1892-01-01T00:00:00Z'])
 
     # verify that its choosing the right basemap info
@@ -413,17 +413,17 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
         chapter.layers = [layer]
 
         url = CreateStoryAnimatedThumbnailTask.tileURL(chapter)
-        self.assertEquals(
+        self.assertEqual(
             url, 'https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png')
 
         layer.name = "hot"
         url = CreateStoryAnimatedThumbnailTask.tileURL(chapter)
-        self.assertEquals(
+        self.assertEqual(
             url, 'https://{a-b}.tile.openstreetmap.fr/hot/${z}/${x}/${y}.png')
 
         layer.name = "geography-class"
         url = CreateStoryAnimatedThumbnailTask.tileURL(chapter)
-        self.assertEquals(
+        self.assertEqual(
             url, 'https://{a-b}.tiles.mapbox.com/v3/mapbox.geography-class/{z}/{x}/{y}.png')
 
     # verify that the frame/layer timeslices are being correctly calculated
@@ -433,17 +433,17 @@ class TestAStoryThumbnailTask(GeoGigUploaderBase, TestCase):
             'timeslices': []}, {'timeslices': []}]
         combined_intervals = CreateStoryAnimatedThumbnailTask.create_layers_intervals(
             intervals, layer_metadatas)
-        self.assertEquals(len(combined_intervals), 2)
-        self.assertEquals(combined_intervals[0], ['a/b', 'a/b', 'a/b'])
-        self.assertEquals(combined_intervals[1], ['c/d', 'c/d', 'c/d'])
+        self.assertEqual(len(combined_intervals), 2)
+        self.assertEqual(combined_intervals[0], ['a/b', 'a/b', 'a/b'])
+        self.assertEqual(combined_intervals[1], ['c/d', 'c/d', 'c/d'])
 
         layer_metadatas = [{'timeslices': []}, {
             'timeslices': None}, {'timeslices': []}]
         combined_intervals = CreateStoryAnimatedThumbnailTask.create_layers_intervals(
             intervals, layer_metadatas)
-        self.assertEquals(len(combined_intervals), 2)
-        self.assertEquals(combined_intervals[0], ['a/b', 'NONE', 'a/b'])
-        self.assertEquals(combined_intervals[1], ['c/d', 'NONE', 'c/d'])
+        self.assertEqual(len(combined_intervals), 2)
+        self.assertEqual(combined_intervals[0], ['a/b', 'NONE', 'a/b'])
+        self.assertEqual(combined_intervals[1], ['c/d', 'NONE', 'c/d'])
 
 
 class mock_Map(object):

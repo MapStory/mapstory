@@ -1,7 +1,6 @@
 import logging
 import traceback
-from urllib import urlencode
-from urlparse import parse_qsl, urlparse
+from urllib.parse import urlencode, parse_qsl, urlparse
 
 import requests
 from django.conf import settings

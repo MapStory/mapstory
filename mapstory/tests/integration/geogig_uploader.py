@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 import uuid
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 from django import db
 from django.contrib.auth import get_user_model

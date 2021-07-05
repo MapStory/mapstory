@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import migrations, models
 
@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('zoom', models.IntegerField(null=True, blank=True)),
                 ('layers', models.TextField(null=True, blank=True)),
                 ('resolution', models.TextField(null=True, blank=True)),
-                ('map', models.ForeignKey(to='mapstories.Map')),
+                ('map', models.ForeignKey(to='mapstories.Map', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'StoryFrames',
@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 ('appearance', models.TextField(null=True, blank=True)),
                 ('auto_show', models.BooleanField(default=False)),
                 ('pause_playback', models.BooleanField(default=False)),
-                ('map', models.ForeignKey(to='mapstories.Map')),
+                ('map', models.ForeignKey(to='mapstories.Map', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'StoryPins',

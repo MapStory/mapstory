@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('mapstory', '0002_customsite_analytics_code'),
     ]
@@ -37,7 +36,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='DefaultBaselayer',
             fields=[
-                ('layer', models.OneToOneField(primary_key=True, serialize=False, to='mapstory.Baselayer')),
+                ('layer', models.OneToOneField(primary_key=True, serialize=False, to='mapstory.Baselayer',
+                                               on_delete=models.CASCADE)),
             ],
         ),
     ]

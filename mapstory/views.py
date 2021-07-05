@@ -51,7 +51,7 @@ class LeaderListView(ListView):
 
 def baselayer_view(request):
     return HttpResponse(json.dumps({"defaultLayer": BaselayerDefault.objects.first().layer.name,
-                                    "layers":  map(lambda x: x.to_object(), Baselayer.objects.all())}))
+                                    "layers":  [x.to_object() for x in Baselayer.objects.all()]}))
 
 
 def maploom_new_map(request, template='maps/map_new.html'):

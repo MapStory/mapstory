@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import migrations, models
 import datetime
@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('publish', models.BooleanField(default=False)),
                 ('title', models.CharField(max_length=255)),
                 ('show_on_main', models.BooleanField(default=False)),
-                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'JournalEntries',

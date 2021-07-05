@@ -1,6 +1,6 @@
 import requests
 
-from celery import app
+from .celery import app
 from geonode.geoserver.helpers import ogc_server_settings
 from mapstory.mapstories.models import MapStory
 from mapstory.utils import (error_response, has_exception, parse_wfst_response,

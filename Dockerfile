@@ -45,6 +45,7 @@ RUN set -ex \
         libjpeg-dev \
         libxml2-dev \
         libgdal-dev \
+        libspatialite-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install phantomjs

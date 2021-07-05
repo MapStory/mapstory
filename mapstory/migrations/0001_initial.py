@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import migrations, models
 from django.conf import settings
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('logo', models.ImageField(upload_to=b'customsite')),
                 ('favicon', models.ImageField(upload_to=b'customsite')),
                 ('footer_text', models.TextField()),
-                ('site', models.OneToOneField(related_name='assets', null=True, to='sites.Site')),
+                ('site', models.OneToOneField(related_name='assets', null=True, to='sites.Site', on_delete=models.CASCADE)),
             ],
             options={
                 'verbose_name': 'Custom Site Property',
@@ -56,8 +56,8 @@ class Migration(migrations.Migration):
                 ('order', models.IntegerField(default=0, blank=True)),
                 ('video', models.FileField(upload_to=b'getpage', blank=True)),
                 ('video_embed_link', models.URLField(blank=True)),
-                ('example_map', models.ForeignKey(blank=True, to='mapstories.Map', null=True)),
-                ('page', models.ForeignKey(related_name='contents', to='mapstory.GetPage')),
+                ('example_map', models.ForeignKey(blank=True, to='mapstories.Map', null=True, on_delete=models.CASCADE)),
+                ('page', models.ForeignKey(related_name='contents', to='mapstory.GetPage', on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['order'],
@@ -68,7 +68,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('content', models.TextField()),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
         ),
         migrations.CreateModel(

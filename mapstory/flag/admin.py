@@ -76,7 +76,7 @@ class InlineFlagInstance(admin.TabularInline):
 class FlaggedContentForm(forms.ModelForm):
     flagged_object = forms.CharField(label='Link to Flagged Item')
     moderator = forms.ModelChoiceField(queryset=Profile.objects.filter(
-        groups__name__in=_group_to_flag_type.keys()))
+        groups__name__in=list(_group_to_flag_type.keys())))
 
     class Meta:
         model = FlaggedContent
@@ -84,7 +84,7 @@ class FlaggedContentForm(forms.ModelForm):
 
     def __init__(self, *args, **kw):
         super(FlaggedContentForm, self).__init__(*args, **kw)
-        link = mark_safe(unicode(flagged_object_link(self.instance)))
+        link = mark_safe(str(flagged_object_link(self.instance)))
         self.fields['flagged_object'].widget.render = lambda *a, **kw: link
 
 
@@ -133,7 +133,7 @@ class FlagInstanceAdmin(admin.ModelAdmin):
     def queryset(self, request):
         qs = super(FlagInstanceAdmin, self).queryset(request)
         groups = request.user.groups.values_list('name', flat=True)
-        for group, flag_type in _group_to_flag_type.items():
+        for group, flag_type in list(_group_to_flag_type.items()):
             if group in groups:
                 qs = qs.filter(flag_type=flag_type)
         return qs

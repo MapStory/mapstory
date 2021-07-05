@@ -35,7 +35,7 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
             self.skipTest('Geoserver should not be running for this test.')
         except socket_error as e:
             # gs_config.about() will throw a socket error if geoserver is not running (which is good in this case)
-            print(e.__dict__)
+            print((e.__dict__))
 
         TopicCategory.objects.create(identifier='biota')
         TopicCategory.objects.create(identifier='location')
@@ -85,7 +85,7 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         perms = layer.get_all_level_info()
         perms['users']['AnonymousUser'] = ['change_layer_data']
         layer.set_permissions(perms)
-        print layer.get_all_level_info()
+        print(layer.get_all_level_info())
         self.assertEqual(geonode_authorize_layer(
             'AnonymousUser', layer.typename), 'lo-rw')
 
@@ -122,9 +122,9 @@ class MapStoryTestsWorkFlowTests(MapStoryTestMixin):
         form_data = {'title': 'New title', 'category': '1', 'language': 'fra', 'distribution_url': layer.distribution_url,
                      'data_quality_statement': 'This is quality', 'purpose': 'To educate', 'is_published': 'on'}
         # The submitted data as it will appear in the model is slightly different
-        submitted_data = {'title': unicode('New title'), 'category': TopicCategory.objects.first(), 'language': unicode('fra'),
-                          'distribution_url': unicode(layer.distribution_url), 'data_quality_statement': unicode('This is quality'),
-                          'purpose': unicode('To educate'), 'is_published': True}
+        submitted_data = {'title': str('New title'), 'category': TopicCategory.objects.first(), 'language': str('fra'),
+                          'distribution_url': str(layer.distribution_url), 'data_quality_statement': str('This is quality'),
+                          'purpose': str('To educate'), 'is_published': True}
 
         response = c.post(reverse('layer_detail', args=[
                           layer.typename]), data=form_data)

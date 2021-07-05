@@ -39,8 +39,7 @@ class GeoServerLayerCreator(Import):
 
     def _initialize_handlers(self):
         super(GeoServerLayerCreator, self)._initialize_handlers()
-        self._import_handlers = filter(lambda handler: type(handler).__name__ not in self.handlers_to_ignore,
-                                       self._import_handlers)
+        self._import_handlers = [handler for handler in self._import_handlers if type(handler).__name__ not in self.handlers_to_ignore]
 
     def import_file(self, *args, **kwargs):
         """
@@ -77,7 +76,7 @@ class GeoServerLayerCreator(Import):
         for layer in configuration_options:
             feature_type = layer.get('featureType')
             store_name = feature_type['store']['name']
-            store_create_geogig = layer.get(u'storeCreateGeogig', 'false')
+            store_create_geogig = layer.get('storeCreateGeogig', 'false')
             owner = layer.get('layer_owner')
             username = owner.username
             email = owner.email
@@ -95,7 +94,7 @@ class GeoServerLayerCreator(Import):
 
             feature_type['title'] = feature_type['name']
             feature_type['name'] = launder(
-                slugify(unicode(feature_type['name'])))
+                slugify(str(feature_type['name'])))
 
             # Without this check, the bounding box will default to 0, 0, -1, -1
             if 'nativeBoundingBox' not in feature_type:
@@ -134,7 +133,7 @@ class GeoServerLayerCreator(Import):
                 if 'already exists in' in post_request.content:
                     message = 'A layer named {0} already exists.  Please choose another name.'.format(
                         feature_type['name'])
-                print post_request.content
+                print(post_request.content)
                 raise UploadError(message)
 
         return self.completed_layers

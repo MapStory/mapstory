@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import migrations, models
 
@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('style_id', models.TextField()),
                 ('style', models.TextField()),
-                ('map_story', models.ForeignKey(to='mapstories.MapStory')),
+                ('map_story', models.ForeignKey(to='mapstories.MapStory', on_delete=models.CASCADE)),
             ],
         ),
         migrations.AlterUniqueTogether(

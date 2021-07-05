@@ -86,7 +86,7 @@ class MapStory(geonode.base.models.ResourceBase):
 
     def update_from_viewer(self, conf):
 
-        if isinstance(conf, basestring):
+        if isinstance(conf, str):
             conf = json.loads(conf)
 
         self.title = conf['about']['title']
@@ -192,7 +192,7 @@ class Map(geonode.maps.models.Map):
 
     def update_from_viewer(self, conf):
 
-        if isinstance(conf, basestring):
+        if isinstance(conf, str):
             conf = json.loads(conf)
 
         # super allows us to call base class function implementation from geonode

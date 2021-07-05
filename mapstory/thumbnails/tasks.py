@@ -5,20 +5,19 @@ import os
 import subprocess
 import traceback
 from tempfile import NamedTemporaryFile
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 import httplib2
 import numpy
 from django.conf import settings
 from django.db import connection
-from django.core.exceptions import ObjectDoesNotExist
 from lxml import etree
 from owslib.wms import WebMapService
 from PIL import Image
 
 from geonode.base.models import Link
 from geonode.layers.models import Layer
-from geonode.layers.utils import create_gs_thumbnail_geonode
+from geonode.thumbs.thumbnails import create_gs_thumbnail_geonode
 ############################################################################################
 from mapstory.celery import app
 from mapstory.mapstories.models import Map, MapStory
@@ -116,9 +115,9 @@ class CreateStoryLayerThumbnailTask:
             nfeatures = root.attrib['numberOfFeatures']
             return nfeatures == "1"
         except Exception as e:
-            print "ERROR occurred communicating with WFS, url="+url
+            print(("ERROR occurred communicating with WFS, url="+url))
             if feats is not None:
-                print "server response: "+str(feats)
+                print(("server response: "+str(feats)))
             raise e
 
     # returns:
@@ -175,35 +174,38 @@ class CreateStoryLayerThumbnailTask:
         raise Exception(
             "unable to determine tile URL for background layer - {}".format(layer_name))
 
-    # phantomJSFile htmlFile wms layerName xmin ymin xmax ymax time output.fname
-    def create_phantomjs_args(self, typeName, boundingBoxWGS84, tempfname, time="ALL",
-                              basemapXYZURL=tileURLFromLayerName.__func__(BaselayerDefault.objects.first().layer.name),
-                              styles=""):
-
-        workspace, layername = decodeTypeName(typeName)
-
-        wms = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + \
-            workspace+"/wms"
-        xmin = boundingBoxWGS84[0]
-        ymin = boundingBoxWGS84[1]
-        xmax = boundingBoxWGS84[2]
-        ymax = boundingBoxWGS84[3]
-
-        args = ["phantomjs",
-                "--ignore-ssl-errors=true",
-                "--web-security=false",
-                CreateStoryLayerThumbnailTask.phantomjs_file,
-                CreateStoryLayerThumbnailTask.phantomjs_html,
-                wms,
-                layername,
-                xmin, ymin, xmax, ymax,
-                time,
-                tempfname,
-                basemapXYZURL,
-                styles]
-        args = [str(arg) for arg in args]  # convert numbers to string
-
-        return args
+    # TODO: This function is causing errors during migrations because it's trying
+    #   to access .first() prior to the mapstory_baselayerdefault relation existing.
+    #   How do we fix this without commenting out the function?
+    # # phantomJSFile htmlFile wms layerName xmin ymin xmax ymax time output.fname
+    # def create_phantomjs_args(self, typeName, boundingBoxWGS84, tempfname, time="ALL",
+    #                           basemapXYZURL=tileURLFromLayerName.__func__(BaselayerDefault.objects.first().layer.name),
+    #                           styles=""):
+    #
+    #     workspace, layername = decodeTypeName(typeName)
+    #
+    #     wms = settings.OGC_SERVER['default']['PUBLIC_LOCATION'] + \
+    #         workspace+"/wms"
+    #     xmin = boundingBoxWGS84[0]
+    #     ymin = boundingBoxWGS84[1]
+    #     xmax = boundingBoxWGS84[2]
+    #     ymax = boundingBoxWGS84[3]
+    #
+    #     args = ["phantomjs",
+    #             "--ignore-ssl-errors=true",
+    #             "--web-security=false",
+    #             CreateStoryLayerThumbnailTask.phantomjs_file,
+    #             CreateStoryLayerThumbnailTask.phantomjs_html,
+    #             wms,
+    #             layername,
+    #             xmin, ymin, xmax, ymax,
+    #             time,
+    #             tempfname,
+    #             basemapXYZURL,
+    #             styles]
+    #     args = [str(arg) for arg in args]  # convert numbers to string
+    #
+    #     return args
 
     # get a temporary filename (don't forget to delete it when done)
     def create_temp_filename(self, filename_suffix='image'):
@@ -309,9 +311,9 @@ class CreateStoryLayerThumbnailTask:
                 layer.save(update_fields=['thumbnail_url'])
 
         except Exception as e:
-            print("EXCEPTION - thumbnail generation for layer pk="+str(pk))
+            print(("EXCEPTION - thumbnail generation for layer pk="+str(pk)))
             print(e)
-            print(traceback.format_exc())
+            print((traceback.format_exc()))
             raise e  # send forward so actual task can retry()
 
 
@@ -334,7 +336,7 @@ class CreateStoryLayerAnimatedThumbnailTask(CreateStoryLayerThumbnailTask):
         # ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'] into 4 would be
         #  [array([0, 1, 2]), array([3, 4, 5]), array([6, 7]), array([8, 9])]
         chunks = numpy.array_split(numpy.array(
-            range(0, len(timepositions))), nslices)
+            list(range(0, len(timepositions)))), nslices)
         # get the original data for the 1st and last value in the list
         # i.e. (From above) --> ['a/c', 'd/f', 'g/h', 'i/j']
         return [timepositions[x[0]] + "/" + timepositions[x[-1]] for x in chunks]
@@ -588,9 +590,9 @@ class CreateStoryAnimatedThumbnailTask(CreateStoryLayerAnimatedThumbnailTask):
                 mapstory.save(update_fields=['thumbnail_url'])
 
         except Exception as e:
-            print "EXCEPTION - thumbnail generation for story pk=" + str(pk)
+            print(("EXCEPTION - thumbnail generation for story pk=" + str(pk)))
             print(e)
-            print traceback.format_exc()
+            print((traceback.format_exc()))
             raise e  # send forward so actual task can retry()
 
 
@@ -628,8 +630,6 @@ def create_gs_thumbnail_mapstory_tx_aware(instance, overwrite):
     # because layer hasn't actually been committed yet, we don't create the thumbnail until the transaction commits
     # if the task were to run now, it wouldnt be able to retrieve layer from the database
     connection.on_commit(lambda: run_task(instance.pk, overwrite))
-    # if you get an error here, it probably means you aren't using the transaction_hooks proxy DB type
-    # cf https://django-transaction-hooks.readthedocs.io/en/latest/
 
 
 # run the actual task

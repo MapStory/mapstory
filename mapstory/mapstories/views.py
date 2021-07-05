@@ -17,18 +17,15 @@ from geonode.groups.models import GroupProfile
 from geonode.layers.views import _PERMISSION_MSG_GENERIC
 from geonode.maps.models import MapLayer
 from geonode.maps.views import (_PERMISSION_MSG_LOGIN, _PERMISSION_MSG_SAVE,
-                                _PERMISSION_MSG_VIEW, add_layers_to_map_config,
-                                snapshot_config)
-from geonode.people.models import Profile
+                                _PERMISSION_MSG_VIEW, add_layers_to_map_config)
 from geonode.security.views import _perms_info_json
 from geonode.utils import build_social_links, resolve_object
 from guardian.shortcuts import get_perms
-from mapstory.favorite.utils import get_favorite_info
+from geonode.favorite.utils import get_favorite_info
 from mapstory.forms import KeywordsForm, PublishStatusForm
 from mapstory.initiatives.models import InitiativeMembership
 from mapstory.models import Baselayer, BaselayerDefault
-from mapstory.organizations.models import (OrganizationMapStory,
-                                           OrganizationMembership)
+from mapstory.organizations.models import OrganizationMembership
 from mapstory.search.utils import update_es_index
 from mapstory.thumbnails.tasks import create_mapstory_thumbnail_tx_aware
 
@@ -41,14 +38,14 @@ from .utils import datetime_to_seconds, parse_date_time
 @transaction.atomic
 def save_mapstory(request):
     config = json.loads(request.body)
-    print config
+    print(config)
 
     if config['storyID']:
         mapstory = MapStory.objects.get(pk=config['storyID'])
-        print("Found a mapstory, it is", mapstory)
+        print(("Found a mapstory, it is", mapstory))
     else:
         mapstory = MapStory(owner=request.user)
-        print("There was no MapStory, making a new one.", mapstory)
+        print(("There was no MapStory, making a new one.", mapstory))
 
     mapstory.save()
     config['storyID'] = mapstory.id
@@ -147,7 +144,7 @@ def delete_mapstory(request, story_id):
         return HttpResponse("Not allowed", status=403)
 
 
-def mapstory_view(request, slug, snapshot=None, template='composer_new/composer.html'):
+def mapstory_view(request, slug, template='composer_new/composer.html'):
     """
     The view that returns the map viewer opened to
     the mapstory with the given ID.
@@ -161,15 +158,11 @@ def mapstory_view(request, slug, snapshot=None, template='composer_new/composer.
     else:
         access_token = None
 
-    if snapshot is None:
-        config = story_obj.viewer_json(request, access_token)
-    else:
-        config = snapshot_config(snapshot, story_obj, request.user)
-
+    config = story_obj.viewer_json(request, access_token)
     config['about']['detail_url'] = slug
 
     layers = json.dumps({"defaultLayer": BaselayerDefault.objects.first().layer.name,
-                                    "layers":  map(lambda x: x.to_object(), Baselayer.objects.all())})
+                                    "layers":  [x.to_object() for x in Baselayer.objects.all()]})
 
     return render_to_response(template, RequestContext(request, {
         'config': json.dumps(config),
@@ -219,7 +212,7 @@ def story_generate_thumbnail(request, storyid):
 def composer_new_view(request, template='composer_new/composer.html'):
     map_obj, config = new_map_config(request)
     layers = json.dumps({"defaultLayer": BaselayerDefault.objects.first().layer.name,
-                                    "layers":  map(lambda x: x.to_object(), Baselayer.objects.all())})
+                                    "layers":  [x.to_object() for x in Baselayer.objects.all()]})
 
     return render_to_response(template, RequestContext(request, {
         'layers': layers,
@@ -233,7 +226,7 @@ def composer_view(request, slug, template='composer_new/composer.html'):
     config = story_obj.viewer_json(request)
 
     layers = json.dumps({"defaultLayer": BaselayerDefault.objects.first().layer.name,
-                                    "layers":  map(lambda x: x.to_object(), Baselayer.objects.all())})
+                                    "layers":  [x.to_object() for x in Baselayer.objects.all()]})
 
     return render_to_response(template, RequestContext(request, {
         'config': json.dumps(config),
@@ -256,7 +249,7 @@ def _resolve_map(request, id, permission='base.change_resourcebase',
     return map_obj
 
 
-def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
+def map_detail(request, slug, template='maps/map_detail.html'):
     '''
     The view that show details of each map
     '''
@@ -276,10 +269,7 @@ def map_detail(request, slug, snapshot=None, template='maps/map_detail.html'):
     else:
         access_token = None
 
-    if snapshot is None:
-        config = map_obj.viewer_json(request, access_token)
-    else:
-        config = snapshot_config(snapshot, map_obj, request.user, access_token)
+    config = map_obj.viewer_json(request, access_token)
 
     config = json.dumps(config)
     layers = MapLayer.objects.filter(map=map_obj.id)

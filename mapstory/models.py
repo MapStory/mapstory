@@ -63,7 +63,7 @@ class Sponsor(db.models.Model):
         ordering = ['order']
 
     def image_tag(self):
-        return u'<img src="%s" />' % self.url()
+        return '<img src="%s" />' % self.url()
     image_tag.short_description = 'Image'
     image_tag.allow_tags = True
 

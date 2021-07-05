@@ -40,7 +40,7 @@ class LayersCreateTest(MapStoryTestMixin):
             # Ensure Geoserver is running.
             assert gs_catalog.about()
         except socket_error as e:
-            print(e.__dict__)
+            print((e.__dict__))
             self.skipTest('Geoserver must be running for this test.')
 
         self.username, self.password = self.create_user(

@@ -20,7 +20,7 @@ class GeoAxisProvider(OAuth2Provider):
     account_class = GeoAxisAccount
 
     def get_default_scope(self):
-        return map(str.strip, os.getenv('ALLAUTH_GEOAXIS_SCOPES', 'UserProfile.me').split(','))
+        return list(map(str.strip, os.getenv('ALLAUTH_GEOAXIS_SCOPES', 'UserProfile.me').split(',')))
 
     def extract_uid(self, data):
         return str(data['uid'])

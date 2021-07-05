@@ -101,7 +101,7 @@ class ProfileDetailViewTest(MapStoryTestMixin):
     def test_profile_detail_not_found(self):
         # Should build detail URL correctly
         self.assertEqual(reverse('profile_detail', kwargs={
-                         'slug': 'nonexistent'}), u'/storyteller/nonexistent/')
+                         'slug': 'nonexistent'}), '/storyteller/nonexistent/')
         # Should not find this user
         response = self.client.get(
             reverse('profile_detail', kwargs={'slug': 'nonexistent'}))
@@ -128,7 +128,7 @@ class ProfileDetailViewTest(MapStoryTestMixin):
         otherUser = getTestUser()
         other_url = reverse('profile_edit', kwargs={
                             'username': otherUser.username})
-        self.assertEqual(other_url, u'/storyteller/edit/%s/' %
+        self.assertEqual(other_url, '/storyteller/edit/%s/' %
                          otherUser.username)
 
         # Anonymous users should be redirected to login form

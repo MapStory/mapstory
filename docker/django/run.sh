@@ -45,8 +45,6 @@ for i do # loop over $@
         #python manage.py migrate journal --noinput
         #python manage.py migrate layers --noinput
         #python manage.py migrate groups --noinput
-        echo '    syncdb'
-        python manage.py syncdb --noinput
         echo '    migrate'
         python manage.py migrate --noinput
         echo '    load initial data'

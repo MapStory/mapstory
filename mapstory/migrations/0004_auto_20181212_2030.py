@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import migrations, models
 
@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
             name='BaselayerDefault',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('layer', models.OneToOneField(to='mapstory.Baselayer')),
+                ('layer', models.OneToOneField(to='mapstory.Baselayer', on_delete=models.CASCADE)),
             ],
         ),
         migrations.RemoveField(

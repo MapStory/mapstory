@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('initiatives', '0001_initial'),
     ]
@@ -30,41 +29,49 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='initiative',
             name='facebook',
-            field=models.ForeignKey(related_name='facebook', blank=True, to='initiatives.InitiativeSocialMedia', null=True),
+            field=models.ForeignKey(related_name='facebook', blank=True, to='initiatives.InitiativeSocialMedia',
+                                    null=True, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='initiative',
             name='github',
-            field=models.ForeignKey(related_name='github', blank=True, to='initiatives.InitiativeSocialMedia', null=True),
+            field=models.ForeignKey(related_name='github', blank=True, to='initiatives.InitiativeSocialMedia',
+                                    null=True, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='initiative',
             name='instagram',
-            field=models.ForeignKey(related_name='instagram', blank=True, to='initiatives.InitiativeSocialMedia', null=True),
+            field=models.ForeignKey(related_name='instagram', blank=True, to='initiatives.InitiativeSocialMedia',
+                                    null=True, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='initiative',
             name='linkedin',
-            field=models.ForeignKey(related_name='linkedin', blank=True, to='initiatives.InitiativeSocialMedia', null=True),
+            field=models.ForeignKey(related_name='linkedin', blank=True, to='initiatives.InitiativeSocialMedia',
+                                    null=True, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='initiative',
             name='twitter',
-            field=models.ForeignKey(related_name='twitter', blank=True, to='initiatives.InitiativeSocialMedia', null=True),
+            field=models.ForeignKey(related_name='twitter', blank=True, to='initiatives.InitiativeSocialMedia',
+                                    null=True, on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='initiative',
             name='url0',
-            field=models.ForeignKey(related_name='url0', blank=True, to='initiatives.InitiativeURL', null=True),
+            field=models.ForeignKey(related_name='url0', blank=True, to='initiatives.InitiativeURL', null=True,
+                                    on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='initiative',
             name='url1',
-            field=models.ForeignKey(related_name='url1', blank=True, to='initiatives.InitiativeURL', null=True),
+            field=models.ForeignKey(related_name='url1', blank=True, to='initiatives.InitiativeURL', null=True,
+                                    on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='initiative',
             name='url2',
-            field=models.ForeignKey(related_name='url2', blank=True, to='initiatives.InitiativeURL', null=True),
+            field=models.ForeignKey(related_name='url2', blank=True, to='initiatives.InitiativeURL', null=True,
+                                    on_delete=models.CASCADE),
         ),
     ]
