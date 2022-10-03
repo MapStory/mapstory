@@ -1,6 +1,6 @@
 import re
 
-from geonode.layers.models import Layer
+from geonode.layers.models import Dataset
 from geonode.favorite.utils import \
     get_favorite_info as geonode_get_favorite_info
 from mapstory.mapstories.models import Map, MapStory

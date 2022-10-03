@@ -17,7 +17,7 @@ from geonode.api.api import (FILTER_TYPES, ProfileResource, RegionResource,
 from geonode.api.authorization import GeoNodeAuthorization
 from geonode.base.models import ResourceBase
 from geonode.documents.models import Document
-from geonode.layers.models import Layer
+from geonode.layers.models import Dataset
 from mapstory.mapstories.models import Map, MapStory
 
 if settings.HAYSTACK_SEARCH:

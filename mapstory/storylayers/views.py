@@ -36,7 +36,7 @@ from geonode.documents.models import get_related_documents
 from geonode.geoserver.helpers import gs_catalog, ogc_server_settings
 from geonode.geoserver.views import layer_acls, resolve_user
 from geonode.groups.models import GroupProfile
-from geonode.layers.models import Layer
+from geonode.layers.models import Dataset
 from geonode.layers.tasks import delete_layer
 from geonode.layers.views import (_PERMISSION_MSG_DELETE, _PERMISSION_MSG_VIEW,
                                   _resolve_layer)
@@ -53,7 +53,6 @@ from mapstory.mapstories.models import Map
 from mapstory.models import Baselayer, BaselayerDefault
 from mapstory.organizations.models import OrganizationMembership
 from mapstory.utils import has_exception, parse_wfst_response, print_exception
-from osgeo_importer.utils import UploadError, launder
 from owslib.feature.schema import get_schema
 
 logger = logging.getLogger("geonode.layers.views")
@@ -85,25 +84,20 @@ def layer_create(request, template='upload/layer_create.html'):
 
         # Launder the name of each attribute to ensure that there's no spaces or special characters,
         # as they will break the functionality of adding and editing features.
-        for attribute in configuration_options['featureType']['attributes']['attribute']:
-            attribute['name'] = launder(attribute['name'])
+        # for attribute in configuration_options['featureType']['attributes']['attribute']:
+        #     attribute['name'] = launder(attribute['name'])
 
         creator = GeoServerLayerCreator()
         try:
             layers = creator.handle(
                 configuration_options=configuration_options)
 
-        except UploadError as e:
-            errors = True
-            error_messages.append(
-                (configuration_options['featureType']['name'], e.message))
-
         if request.is_ajax():
             if errors:
                 return HttpResponse(json.dumps({'status': 'failure', 'errors': error_messages}), status=400,
                                     content_type='application/json')
             if layers:
-                layer_names = [{'name': layer.name, 'url': layer.get_absolute_url()} for layer in Layer.objects.filter(name__in=[n[0] for n in layers])]
+                layer_names = [{'name': layer.name, 'url': layer.get_absolute_url()} for layer in Dataset.objects.filter(name__in=[n[0] for n in layers])]
 
                 return HttpResponse(json.dumps({'status': 'success', 'layers': layer_names}), status=201,
                                     content_type='application/json')
@@ -517,7 +511,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
     # center/zoom don't matter; the viewer will center on the layer bounds
     map_obj = GXPMap(
-        sender=Layer,
+        sender=Dataset,
         projection=getattr(
             settings,
             'DEFAULT_MAP_CRS',
@@ -620,7 +614,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
                 if metadata_form.cleaned_data['category'] is not None:
                     new_category = TopicCategory.objects.get(
                         id=metadata_form.cleaned_data['category'].id)
-                    Layer.objects.filter(id=layer.id).update(
+                    Dataset.objects.filter(id=layer.id).update(
                         category=new_category)
                 layer.title = metadata_form.cleaned_data['title']
                 layer.language = metadata_form.cleaned_data['language']
@@ -719,7 +713,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "share_description": share_description,
         "organizations": admin_memberships,
         "initiatives": ini_memberships,
-        "layers": json.dumps({"defaultLayer": BaselayerDefault.objects.first().layer.name,
+        "layers": json.dumps({"defaultLayer": BaselayerDefault.objects.first().dataset.name,
                               "layers":  [x.to_object() for x in Baselayer.objects.all()]})
         # "online": (layer.remote_service.probe == 200) if layer.storeType == "remoteStore" else True
     }
@@ -895,7 +889,7 @@ def layer_remove(request, layername, template='layers/layer_remove.html'):
 
 
 def layer_detail_id(request, layerid):
-    layer = get_object_or_404(Layer, pk=layerid)
+    layer = get_object_or_404(Dataset, pk=layerid)
     return layer_detail(request, layer.typename)
 
 

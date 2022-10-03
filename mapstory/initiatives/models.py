@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.db import models
 from django.utils.text import slugify
 
-from geonode.layers.models import Layer
+from geonode.layers.models import Dataset
 from mapstory.mapstories.models import MapStory
 from mapstory.teams.models import Team
 
@@ -208,13 +208,13 @@ class InitiativeLayer(models.Model):
     """
     membership = models.ForeignKey(InitiativeMembership, on_delete=models.CASCADE)
     initiative = models.ForeignKey(Initiative, on_delete=models.CASCADE)
-    layer = models.ForeignKey(Layer, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     is_featured = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return '%s' % self.layer
+        return '%s' % self.dataset
 
 
 class InitiativeMapStory(models.Model):

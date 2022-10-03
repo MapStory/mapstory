@@ -161,7 +161,7 @@ def mapstory_view(request, slug, template='composer_new/composer.html'):
     config = story_obj.viewer_json(request, access_token)
     config['about']['detail_url'] = slug
 
-    layers = json.dumps({"defaultLayer": BaselayerDefault.objects.first().layer.name,
+    layers = json.dumps({"defaultLayer": BaselayerDefault.objects.first().dataset.name,
                                     "layers":  [x.to_object() for x in Baselayer.objects.all()]})
 
     return render_to_response(template, RequestContext(request, {
@@ -211,7 +211,7 @@ def story_generate_thumbnail(request, storyid):
 
 def composer_new_view(request, template='composer_new/composer.html'):
     map_obj, config = new_map_config(request)
-    layers = json.dumps({"defaultLayer": BaselayerDefault.objects.first().layer.name,
+    layers = json.dumps({"defaultLayer": BaselayerDefault.objects.first().dataset.name,
                                     "layers":  [x.to_object() for x in Baselayer.objects.all()]})
 
     return render_to_response(template, RequestContext(request, {
@@ -225,7 +225,7 @@ def composer_view(request, slug, template='composer_new/composer.html'):
         request, slug, 'base.change_resourcebase', _PERMISSION_MSG_SAVE)
     config = story_obj.viewer_json(request)
 
-    layers = json.dumps({"defaultLayer": BaselayerDefault.objects.first().layer.name,
+    layers = json.dumps({"defaultLayer": BaselayerDefault.objects.first().dataset.name,
                                     "layers":  [x.to_object() for x in Baselayer.objects.all()]})
 
     return render_to_response(template, RequestContext(request, {

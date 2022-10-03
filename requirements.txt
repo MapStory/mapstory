@@ -1,7 +1,6 @@
 -e ./deps/geonode
 -e ./deps/django-mailer
 -e ./deps/django-maploom
--e ./deps/django-osgeo-importer
 -e ./deps/icon-commons
 
 django-slack==5.16.2
@@ -34,14 +33,3 @@ pick
 
 # Change when https://github.com/garnertb/django-classification-banner/pull/6 is merged
 git+https://github.com/cuttlefish/django-classification-banner.git@footer
-
-# # Pinned dependencies for geonode
-# beautifulsoup4==4.6.0
-# django-autocomplete-light==2.3.3
-# django-model-utils==3.0.0
-# elasticsearch==1.6.0
-# lxml==3.6.2
-# Pillow==5.1.0
-# Django==1.11.29
-GDAL==2.4.0
-# pyproj==1.9.5.1

@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.test import Client
 
 from geonode.base.models import TopicCategory
-from geonode.layers.models import Layer
+from geonode.layers.models import Dataset
 from mapstory.mapstories.models import Map
 from mapstory.tests.MapStoryTestMixin import MapStoryTestMixin
 from mapstory.tests.populate_test_data import create_models

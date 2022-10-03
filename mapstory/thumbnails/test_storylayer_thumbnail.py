@@ -8,7 +8,7 @@ from unittest import skip
 from django.test import TestCase
 from PIL import Image, ImageChops
 
-from geonode.layers.models import Layer
+from geonode.layers.models import Dataset
 from geonode.maps.models import MapLayer
 from mapstory.mapstories.models import Map, MapStory
 from mapstory.tests.integration.geogig_uploader import GeoGigUploaderBase

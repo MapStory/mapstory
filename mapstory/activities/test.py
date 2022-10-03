@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import TestCase
 
-from geonode.maps.models import Layer
+from geonode.maps.models import Dataset
 from geonode.people.models import Profile
 from icon_commons.models import Collection, Icon
 from mapstory.tests import utils as test_utils
@@ -64,7 +64,7 @@ class SocialTests(MapStoryTestMixin):
 
     def test_user_actions_stream(self):
         # Register the things
-        registry.register(Layer)
+        registry.register(Dataset)
         registry.register(Comment)
         registry.register(Profile)
 

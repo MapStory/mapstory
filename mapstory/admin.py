@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib import admin
 
-from geonode.layers.admin import LayerAdmin
-from geonode.layers.models import Layer
+from geonode.layers.admin import DatasetAdmin
+from geonode.layers.models import Dataset
 from geonode.people.admin import ProfileAdmin as UserAdmin
 from mapstory.export import export_via_model
 from mapstory.flag import admin as flag_admin
@@ -146,7 +146,7 @@ class MapStoryAdmin(admin.ModelAdmin):
     list_filter = ('featured', )
 
 
-class ExtendedLayerAdmin(LayerAdmin):
+class ExtendedDatasetAdmin(DatasetAdmin):
     list_display_links = ('id',)
     list_display = (
         'id',
@@ -177,8 +177,8 @@ class BaselayerDefaultAdmin(admin.ModelAdmin):
     model = BaselayerDefault
 
 
-admin.site.unregister(Layer)
-admin.site.register(Layer, ExtendedLayerAdmin)
+admin.site.unregister(Dataset)
+admin.site.register(Dataset, ExtendedDatasetAdmin)
 admin.site.register(MapStory, MapStoryAdmin)
 admin.site.register(GetPage, GetPageAdmin)
 admin.site.register(GetPageContent, GetPageContentAdmin)

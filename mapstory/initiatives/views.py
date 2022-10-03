@@ -91,9 +91,9 @@ def initiative_detail(request, slug):
         membership = memberships.first()
 
     for l in ini_layers:
-        share_url = "https://%s/layers/%s" % (request.get_host(), l.layer.name)
+        share_url = "https://%s/layers/%s" % (request.get_host(), l.dataset.name)
         layers.append({
-            'layer': l.layer,
+            'layer': l.dataset,
             'url': share_url,
             'is_featured': l.is_featured
         })
