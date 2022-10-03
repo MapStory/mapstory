@@ -195,10 +195,10 @@ class TestOrganizations(TestCase):
         o = get_test_organization()
         m = models.OrganizationMembership.objects.create(
             user=get_test_user(), organization=o, is_admin=True)
-        count = models.OrganizationLayer.objects.all().count()
+        count = models.OrganizationDataset.objects.all().count()
         o.add_layer(layer, m)
         self.assertEqual(
-            count + 1, models.OrganizationLayer.objects.all().count())
+            count + 1, models.OrganizationDataset.objects.all().count())
 
     def test_organization_page_content(self):
         o = get_test_organization()
@@ -558,7 +558,7 @@ class TestOrganizations(TestCase):
             user=usr,
             is_admin=True,
         )
-        initial_layer_count = models.OrganizationLayer.objects.count()
+        initial_layer_count = models.OrganizationDataset.objects.count()
 
         # Attempt to login the client
         self.assertTrue(self.client.login(
@@ -579,7 +579,7 @@ class TestOrganizations(TestCase):
             expected_url=reverse("organizations:detail", kwargs={'slug': org.slug}))
         # Should update the Organization's layer count
         self.assertEqual(initial_layer_count + 1,
-                         models.OrganizationLayer.objects.count())
+                         models.OrganizationDataset.objects.count())
 
     def test_unauthorized_manager_access(self):
         o = get_test_organization()

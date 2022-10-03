@@ -35,7 +35,7 @@ from taggit.models import Tag, TaggedItem
 from geonode import geoserver, qgis_server  # noqa
 from geonode.base.models import TopicCategory
 from geonode.documents.models import Document
-from geonode.layers.models import Layer
+from geonode.layers.models import Dataset
 from geonode.maps.models import Map, MapLayer
 from geonode.people.models import Profile
 from geonode.utils import check_ogc_backend

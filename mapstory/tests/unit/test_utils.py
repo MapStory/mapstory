@@ -1,15 +1,10 @@
-from unittest import skip
-
-from django.urls import reverse
 from django.http import HttpResponse
 from django.test import TestCase
+from geonode.maps.models import Dataset
 
-from geonode.maps.models import Layer
 from mapstory.tests import utils
-
-from ...tests.AdminClient import AdminClient
 from ...tests.MapStoryTestMixin import MapStoryTestMixin
-from ...utils import Link, error_response, parse_schema
+from ...utils import Link, error_response
 
 
 class TestUtils(MapStoryTestMixin):
@@ -32,11 +27,11 @@ class TestUtils(MapStoryTestMixin):
         Tests the layer creation helper method
         """
         owner = utils.get_test_user()
-        initial_count = Layer.objects.all().count()
+        initial_count = Dataset.objects.all().count()
         layer = utils.create_layer("Test title", "A descriptiion", owner)
-        final_count = Layer.objects.all().count()
+        final_count = Dataset.objects.all().count()
         self.assertEqual(final_count, initial_count + 1)
-        self.assertIsInstance(layer, Layer)
+        self.assertIsInstance(layer, Dataset)
         self.assertEqual(layer.owner_id, owner.id)
         self.assertEqual(layer.title, "Test title")
 

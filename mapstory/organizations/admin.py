@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import (JoinRequest, Organization, OrganizationLayer,
+from .models import (JoinRequest, Organization, OrganizationDataset,
                      OrganizationMapStory, OrganizationMembership,
                      OrganizationSocialMedia, OrganizationURL)
 
@@ -19,7 +19,7 @@ class OrganizationURLInline(admin.StackedInline):
 
 class OrganizationLayersInline(admin.StackedInline):
     """Shows Layers Inline"""
-    model = OrganizationLayer
+    model = OrganizationDataset
 
 
 class OrganizationMapstoryInline(admin.StackedInline):

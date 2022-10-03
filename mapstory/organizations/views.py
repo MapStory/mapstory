@@ -25,7 +25,7 @@ def organization_detail(request, slug):
         if request.POST.get("add_featured_layer"):
             layer_pk = request.POST.get("layer_pk")
             found_layer = get_object_or_404(
-                models.OrganizationLayer, organization=org, layer__pk=layer_pk)
+                models.OrganizationDataset, organization=org, layer__pk=layer_pk)
             found_layer.is_featured = True
             found_layer.save()
             messages.success(request, "Added Layer to Featured")
@@ -33,14 +33,14 @@ def organization_detail(request, slug):
         elif request.POST.get("remove_layer"):
             layer_pk = request.POST.get("layer_pk")
             found_layer = get_object_or_404(
-                models.OrganizationLayer, organization=org, layer__pk=layer_pk)
+                models.OrganizationDataset, organization=org, layer__pk=layer_pk)
             found_layer.delete()
             messages.success(request, "Removed Layer from Organization")
 
         elif request.POST.get("remove_featured_layer"):
             layer_pk = request.POST.get("layer_pk")
             found_layer = get_object_or_404(
-                models.OrganizationLayer, organization=org, layer__pk=layer_pk)
+                models.OrganizationDataset, organization=org, layer__pk=layer_pk)
             found_layer.is_featured = False
             found_layer.save()
             messages.success(request, "Removed Layer from Featured")
@@ -69,7 +69,7 @@ def organization_detail(request, slug):
             messages.success(request, "Added MapStory to Featured")
 
     members = models.OrganizationMembership.objects.filter(organization=org)
-    org_layers = models.OrganizationLayer.objects.filter(organization=org)
+    org_layers = models.OrganizationDataset.objects.filter(organization=org)
     org_mapstories = models.OrganizationMapStory.objects.filter(
         organization=org)
 
@@ -84,9 +84,9 @@ def organization_detail(request, slug):
         membership = memberships.first()
 
     for l in org_layers:
-        share_url = "https://%s/layers/%s" % (request.get_host(), l.layer.name)
+        share_url = "https://%s/layers/%s" % (request.get_host(), l.dataset.name)
         layers.append({
-            'layer': l.layer,
+            'layer': l.dataset,
             'url': share_url,
             'is_featured': l.is_featured
         })
@@ -175,7 +175,7 @@ def add_layer(request, slug, layer_pk):
     if request.POST:
         # Check if not already added
         org = get_object_or_404(models.Organization, slug=slug)
-        found = models.OrganizationLayer.objects.filter(
+        found = models.OrganizationDataset.objects.filter(
             organization=org, layer_id=layer_pk)
 
         if found.count() > 0:
@@ -184,7 +184,7 @@ def add_layer(request, slug, layer_pk):
                 request, "This layer has already been added to this Organization.")
         else:
             # Add the Layer
-            obj = models.OrganizationLayer()
+            obj = models.OrganizationDataset()
             obj.organization = org
             obj.layer_id = layer_pk
             obj.membership = membership

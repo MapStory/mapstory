@@ -16,7 +16,6 @@ from geonode.people.models import Profile
 from icon_commons.models import Icon
 from geonode.favorite.models import Favorite
 from mapstory.journal.models import JournalEntry
-from osgeo_importer.forms import UploadFileForm
 
 from .forms import (DeactivateProfileForm, EditGeonodeProfileForm,
                     EditMapstoryProfileForm, EditStoryScapesProfileForm)
@@ -40,7 +39,7 @@ class ProfileDetail(DetailView):
         ctx['icons'] = Icon.objects.filter(owner=self.object)
         ctx['action_list'] = actor_stream(ctx['profile'])
         # need to render the form
-        ctx['form'] = UploadFileForm()
+        # ctx['form'] = UploadFileForm()
         ctx['interests'] = json.dumps(
             self.object.mapstoryprofile.interests_slug_list())
 

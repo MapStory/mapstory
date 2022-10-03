@@ -234,4 +234,4 @@ def get_sponsors():
 
 
 db.models.signals.post_save.connect(
-    geonode.base.models.resourcebase_post_save, sender=MapStory)
+    geonode.resource.utils.resourcebase_post_save, sender=MapStory)

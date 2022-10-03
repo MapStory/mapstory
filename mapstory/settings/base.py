@@ -114,7 +114,6 @@ INSTALLED_APPS += (
     'crispy_forms',
     'threadedcomments',
     'django_comments',
-    'osgeo_importer',
     'solo',
     'coverage',
     'django_classification_banner',
@@ -370,26 +369,6 @@ if USE_AWS_S3_MEDIA:
     MEDIA_URL = "https://%s/%s/" % (AWS_S3_BUCKET_DOMAIN, MEDIAFILES_LOCATION)
     DEFAULT_FILE_STORAGE = 'mapstory.s3_storages.MediaStorage'
 
-#
-# Django OSGEO Importer Settings
-#
-IMPORT_HANDLERS = (
-    'mapstory.import_handlers.TruncatedNameHandler',
-    'osgeo_importer.handlers.BigDateFieldConverterHandler',
-    'osgeo_importer.handlers.geoserver.GeoserverPublishHandler',
-    'osgeo_importer.handlers.geoserver.GeoServerBoundsHandler',
-    'osgeo_importer.handlers.geoserver.GeoServerTimeHandler',
-    'osgeo_importer.handlers.geoserver.GeoWebCacheHandler',
-    'osgeo_importer.handlers.geonode.GeoNodePublishHandler',
-    'mapstory.import_handlers.LayerAppendHandler'
-)
-
-OSGEO_IMPORTER_GEONODE_ENABLED = True
-OSGEO_DATASTORE = 'datastore'
-# Soft time limit for the import_object celery task of django_osgeo_importer, should be changed later after testing.
-IMPORT_TASK_SOFT_TIME_LIMIT = 1800
-PROJECTION_DIRECTORY = os.path.join(os.path.dirname(pyproj.__file__), 'data/')
-
 DEFAULT_IMPORTER_CONFIG = {
     'configureTime': True,
     'editable': True,
@@ -584,8 +563,6 @@ LOGGING = {
             "handlers": ["console"], "level": "INFO", },
         "elasticsearch": {
             "handlers": ["console"], "level": "ERROR", },
-        "osgeo_importer": {
-            "handlers": ["console"], "level": "DEBUG", },
     },
 }
 

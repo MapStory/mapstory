@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.db import models
 from django.utils.text import slugify
 
-from geonode.layers.models import Layer
+from geonode.layers.models import Dataset
 from mapstory.mapstories.models import MapStory
 from mapstory.teams.models import Team
 
@@ -169,7 +169,7 @@ class Organization(Team):
         :return: The OrganizationLayer object created.
         """
         # TODO: Check if membership is allowed to add layer
-        return OrganizationLayer.objects.create(organization=self, layer=layer, membership=membership)
+        return OrganizationDataset.objects.create(organization=self, layer=layer, membership=membership)
 
     def add_mapstory(self, mapstory, membership):
         """Adds a Mapstory to the Organization.
@@ -184,7 +184,7 @@ class Organization(Team):
         return OrganizationMembership.objects.filter(organization=self).count()
 
     def get_layer_count(self):
-        return OrganizationLayer.objects.filter(organization=self).count()
+        return OrganizationDataset.objects.filter(organization=self).count()
 
     def get_mapstory_count(self):
         return OrganizationMapStory.objects.filter(organizastion=self).count()
@@ -212,11 +212,11 @@ class OrganizationMembership(models.Model):
         verbose_name_plural = 'Memberships'
 
 
-class OrganizationLayer(models.Model):
+class OrganizationDataset(models.Model):
     """Represents a Layer that is sponsored by an Organization"""
     membership = models.ForeignKey(OrganizationMembership, on_delete=models.CASCADE)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
-    layer = models.ForeignKey(Layer, on_delete=models.CASCADE)
+    dataset = models.ForeignKey(Dataset, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     is_featured = models.BooleanField(default=False)

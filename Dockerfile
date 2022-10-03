@@ -1,4 +1,4 @@
-FROM python:3.8.11
+FROM python:3.10.2-buster
 
 ENV MEDIA_ROOT /var/lib/mapstory/media
 ENV STATIC_ROOT /var/lib/mapstory/static
@@ -26,12 +26,42 @@ RUN set -ex \
         unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Install WSGI server and python tools
+# To get GDAL 3.2.1 to fix this issue https://github.com/OSGeo/gdal/issues/1692
+# TODO: The following line should be removed if base image upgraded to Bullseye
+RUN echo "deb http://deb.debian.org/debian/ bullseye main contrib non-free" | tee /etc/apt/sources.list.d/debian.list
+
+# This section is borrowed from the official Django image but adds GDAL and others
+RUN apt-get update -y && apt-get upgrade -y
+
+# Prepraing dependencies
+RUN apt-get install -y \
+    libgdal-dev libpq-dev libxml2-dev \
+    libxml2 libxslt1-dev zlib1g-dev libjpeg-dev \
+    libmemcached-dev libldap2-dev libsasl2-dev libffi-dev
+
+RUN apt-get install -y --no-install-recommends \
+    gcc zip gettext geoip-bin cron \
+    postgresql-client-13 \
+    sqlite3 spatialite-bin libsqlite3-mod-spatialite \
+    python3-all-dev python3-dev \
+    python3-gdal python3-psycopg2 python3-ldap \
+    python3-pip python3-pil python3-lxml python3-pylibmc \
+    uwsgi uwsgi-plugin-python3 \
+    firefox-esr
+
+RUN apt-get install -y devscripts build-essential debhelper pkg-kde-tools sharutils
+# RUN git clone https://salsa.debian.org/debian-gis-team/proj.git /tmp/proj
+# RUN cd /tmp/proj && debuild -i -us -uc -b && dpkg -i ../*.deb
+
+# Install pip packages
+RUN pip3 install uwsgi \
+    && pip install pip --upgrade \
+    && pip install pygdal==$(gdal-config --version).* flower==0.9.4
+
+# Install python tools
 RUN set -ex \
     && pip install --no-cache-dir \
         coveralls \
-        gunicorn \
-        paver \
         pycodestyle \
         pylint \
         pylint-django \
@@ -46,15 +76,6 @@ RUN set -ex \
         libxml2-dev \
         libgdal-dev \
         libspatialite-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install phantomjs
-ENV QT_QPA_PLATFORM minimal
-RUN set -ex \
-    && echo "deb http://deb.debian.org/debian stretch-backports main" >> /etc/apt/sources.list \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends \
-        phantomjs \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node and related tools
@@ -89,10 +110,10 @@ COPY --chown=mapstory:mapstory deps ./deps
 # Install dependencies from requirements.txt
 COPY --chown=mapstory:mapstory requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-COPY epsg_extra /usr/local/lib/python3.8/dist-packages/pyproj/data/
+COPY epsg_extra /usr/local/lib/python3.10/dist-packages/pyproj/data/
 # The httplib2 python library uses its own CA certificates.
 # Add the system and self-signed CAs.
-RUN cat /etc/ssl/certs/ca-certificates.crt >> /usr/local/lib/python3.8/site-packages/httplib2/cacerts.txt
+RUN cat /etc/ssl/certs/ca-certificates.crt >> /usr/local/lib/python3.10/site-packages/httplib2/cacerts.txt
 
 # Copy in the code
 COPY --chown=mapstory:mapstory mapstory ./mapstory
@@ -112,8 +133,7 @@ WORKDIR $APP_PATH/mapstory/static
 RUN set -ex \
     && /opt/run.sh --collect-static \
     && yarn cache clean \
-    && rm -rf ~/.cache/bower \
-    && rm -rf /tmp/phantomjs
+    && rm -rf ~/.cache/bower
 
 WORKDIR $APP_PATH
 VOLUME $STATIC_ROOT

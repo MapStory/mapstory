@@ -4,12 +4,10 @@ from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from geonode.maps.views import map_view
 from geonode.urls import urlpatterns as geonode_urls
-from osgeo_importer.urls import urlpatterns as importer_urlpatterns
 from tastypie.api import Api
 
 from mapstory.api.urls import api as mapstory_api
 from mapstory.geoserver.urls import urlpatterns as geoserver_urls
-from mapstory.importers import UploadedLayerResource
 from mapstory.mapstories.urls import urlpatterns as mapstories_urls
 from mapstory.mapstory_profile.urls import urlpatterns as mapstory_profile_urls
 from mapstory.storylayers.urls import urlpatterns as layers_urls
@@ -17,8 +15,6 @@ from mapstory.views import (GetPageView, IndexView, LeaderListView, SearchView,
                             baselayer_view, maploom_new_map)
 
 importer_api = Api(api_name='importer-api')
-# Overwrite Importer URL Routes
-importer_api.register(UploadedLayerResource())
 
 urlpatterns = [
     # Home
@@ -71,8 +67,6 @@ urlpatterns += mapstories_urls
 urlpatterns += mapstory_profile_urls
 
 urlpatterns += [url(r'', include(importer_api.urls))]
-
-urlpatterns += importer_urlpatterns
 
 if settings.LOCAL_CONTENT:
     urlpatterns = static(settings.STATIC_URL + "assets", document_root=settings.LOCAL_ROOT +
